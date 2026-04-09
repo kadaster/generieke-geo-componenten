@@ -1,6 +1,6 @@
 {
   "name": "@kadaster/ggc-map",
-  "version": "23.1.2",
+  "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
@@ -15,6 +15,11 @@
     "tslib": "^2.3.1"
   },
   "publishConfig": {
-    "directory": "../../dist/ggc-map"
-  }
+    "directory": "../../dist/ggc-map",
+    "access": "public"
+  },
+  "repository": {
+    "url": "https://github.com/kadaster/generieke-geo-componenten"
+  },
+  "license": "EUPL-1.2"
 }

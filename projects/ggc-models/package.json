@@ -5,6 +5,11 @@
     "tslib": "^2.3.1"
   },
   "publishConfig": {
-    "directory": "../../dist/ggc-models"
-  }
+    "directory": "../../dist/ggc-models",
+    "access": "public"
+  },
+  "repository": {
+    "url": "https://github.com/kadaster/generieke-geo-componenten"
+  },
+  "license": "EUPL-1.2"
 }
