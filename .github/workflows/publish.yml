@@ -1,0 +1,149 @@
+name: Create releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        type: choice
+        description: Version bump
+        options:
+          - patch
+          - minor
+          - major
+      ggc_map:
+        type: boolean
+        description: Release ggc-map
+        default: false
+      ggc_search_location:
+        type: boolean
+        description: Release ggc-search-location
+        default: false
+      ggc_models:
+        type: boolean
+        description: Release ggc-models
+        default: false
+
+jobs:
+  bump_versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Bump versions
+        env:
+          VERSION_BUMP: ${{ github.event.inputs.version_bump }}
+          GGC_MAP: ${{ github.event.inputs.ggc_map }}
+          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
+          GGC_MODELS: ${{ github.event.inputs.ggc_models }}
+        run: |
+          set -e
+
+
+          bump_and_tag() {
+            PROJECT=$1
+
+            echo "📦 Bumping $PROJECT ($VERSION_BUMP)"
+
+            cd "projects/$PROJECT"
+
+            # bump version
+            npm version "$VERSION_BUMP" --no-git-tag-version
+
+            # read name + version from package.json
+            PACKAGE_NAME=$(node -p "require('./package.json').name")
+            PACKAGE_VERSION=$(node -p "require('./package.json').version")
+
+            TAG="${PACKAGE_NAME}@${PACKAGE_VERSION}"
+
+            echo "🏷️ Creating tag $TAG"
+            git tag "$TAG"
+
+            cd -
+          }
+
+
+          if [ "$GGC_MAP" = "true" ]; then
+            bump_and_tag "ggc-map"
+          fi
+
+          if [ "$GGC_SEARCH_LOCATION" = "true" ]; then
+            bump_and_tag "ggc-search-location"
+          fi
+
+          if [ "$GGC_MODELS" = "true" ]; then
+            bump_and_tag "ggc-models"
+          fi
+
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add projects/**/package.json
+          git commit -m "chore: bump package versions (${{ github.event.inputs.version_bump }})" || echo "Nothing to commit"
+
+      - name: Push commits and tags
+        uses: ad-m/github-push-action@v1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tags: true
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GGC_MAP: ${{ github.event.inputs.ggc_map }}
+          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
+          GGC_MODELS: ${{ github.event.inputs.ggc_models }}
+        run: |
+          set -e
+
+          build_and_publish() {
+            PROJECT=$1
+
+            echo "🏗️ Building $PROJECT"
+            npm run "build:$PROJECT"
+
+            DIST_DIR="dist/$PROJECT"
+
+            if [ ! -d "$DIST_DIR" ]; then
+              echo "❌ Dist directory not found: $DIST_DIR"
+              exit 1
+            fi
+
+            cd "$DIST_DIR"
+
+            PACKAGE_NAME=$(node -p "require('./package.json').name")
+            PACKAGE_VERSION=$(node -p "require('./package.json').version")
+
+            echo "📦 Publishing $PACKAGE_NAME@$PACKAGE_VERSION"
+
+            # Check if version already exists on npm
+            if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version >/dev/null 2>&1; then
+              echo "⚠️ $PACKAGE_NAME@$PACKAGE_VERSION already exists on npm. Skipping."
+            else
+              npm publish
+              echo "✅ Published $PACKAGE_NAME@$PACKAGE_VERSION"
+            fi
+
+            cd -
+          }
+
+          if [ "$GGC_MAP" = "true" ]; then
+            build_and_publish "ggc-map"
+          fi
+
+          if [ "$GGC_SEARCH_LOCATION" = "true" ]; then
+            build_and_publish "ggc-search-location"
+          fi
+
+          if [ "$GGC_MODELS" = "true" ]; then
+            build_and_publish "ggc-models"
+          fi
