@@ -23,12 +23,13 @@ on:
         description: Release ggc-models
         default: false
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: write
+
 jobs:
   bump_versions:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write  # Required for OIDC
-      contents: write
     strategy:
       matrix:
         node-version: [ 22.x ]
