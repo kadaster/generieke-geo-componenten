@@ -97,7 +97,6 @@
     "check:ggc-toolbar": "npm run lint:ggc-toolbar && npm run test:cov:ggc-toolbar && npm run build:ggc-toolbar",
     "check:all": "npm run check:ggc-models && npm run check:ggc-conversion && npm run check:ggc-search && npm run check:ggc-search-location && npm run check:ggc-feature-info && npm run check:ggc-dataset-tree && npm run check:ggc-dataset-legend && npm run check:ggc-map && npm run check:ggc-print && npm run check:ggc-map-feedback && npm run check:ggc-location && npm run check:ggc-cesium && npm run check:ggc-shared && npm run check:ggc-toolbar",
     "version": "npm run build:all",
-    "lerna": "lerna",
     "tsdocs:generate": "typedoc --options typedoc.json"
   },
   "private": true,
@@ -157,7 +156,6 @@
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "lerna": "^9.0.3",
     "ng-packagr": "^21.1.0",
     "ngx-highlightjs": "^14.0.1",
     "ol": "^10.7.0",

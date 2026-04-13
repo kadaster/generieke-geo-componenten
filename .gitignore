@@ -47,7 +47,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-/lerna-debug.log
 /projects/ggc-map/node_modules/
 /projects/ggc-location/node_modules/
 /projects/ggc-search-location/node_modules/
