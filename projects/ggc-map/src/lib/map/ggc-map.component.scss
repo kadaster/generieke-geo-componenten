@@ -1,0 +1,78 @@
+.ggc-ol-map {
+  height: 100%;
+  width: 100%;
+}
+
+::ng-deep {
+  /*Attribution styling voor de ggc-layer componenten*/
+  .ol-attribution li {
+    font-size: 1.1rem;
+    line-height: 1.375rem;
+  }
+
+  .ol-viewport canvas {
+    /* Fixes pinch-zoom bug on Chrome / Edge */
+    touch-action: none;
+  }
+
+  .ol-hidden {
+    display: none;
+  }
+
+  .map-control:not(.ol-hidden) {
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    order: 1;
+    padding: 2px 0;
+    position: relative;
+
+    &:has(.map-control-reset) {
+      order: 0;
+    }
+
+    button[aria-expanded="false"] + ul {
+      display: none;
+    }
+
+    button[aria-expanded="true"] + ul {
+      align-items: flex-start;
+      background: white;
+      border: 1px solid #bfcddf;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 3rem;
+      position: absolute;
+      padding: 0.5em 1em;
+      right: 5rem;
+      top: 0;
+
+      li {
+        list-style-type: none;
+        white-space: nowrap;
+
+        &::before {
+          content: none;
+        }
+      }
+    }
+  }
+
+  .ol-overlaycontainer-stopevent {
+    align-items: flex-end;
+    justify-content: flex-end;
+    display: flex;
+    flex-direction: column;
+    padding-right: 1.5em;
+    padding-bottom: 1.5em;
+
+    .ol-overlay-container {
+      top: 0;
+      left: 0;
+    }
+  }
+}

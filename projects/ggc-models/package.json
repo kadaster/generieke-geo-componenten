@@ -1,0 +1,15 @@
+{
+  "name": "@kadaster/ggc-models",
+  "version": "0.0.5",
+  "dependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "directory": "../../dist/ggc-models",
+    "access": "public"
+  },
+  "repository": {
+    "url": "https://github.com/kadaster/generieke-geo-componenten"
+  },
+  "license": "EUPL-1.2"
+}

@@ -1,0 +1,44 @@
+# This repository adheres to the publiccode.yml standard by including this
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/publiccodeyml/publiccode.yml
+
+publiccodeYmlVersion: "0.5"
+
+name: Generieke Geo Componenten
+url: https://github.com/kadaster/generieke-geo-componenten
+landingURL: https://github.com/kadaster/generieke-geo-componenten
+softwareType: library
+developmentStatus: stable
+
+categories:
+  - geographic-information-systems
+  - application-development
+  - it-development
+
+platforms:
+  - web
+
+description:
+  nl:
+    shortDescription:
+      Generieke Geo Componenten zijn developer-vriendelijke bouwstenen om snel een kaartviewer te kunnen ontwikkelen.
+    longDescription: >
+      Het doel van de Generieke Geo Componenten is om developer-vriendelijke bouwstenen te leveren aan ontwikkelaars zodat deze snel een specifieke kaartviewer kunnen ontwikkelen met de gewenste functionaliteit. Bovendien zijn deze componenten flexibel (configureerbaar), functioneel goed uit te breiden en naar eigen smaak te stylen.
+    features:
+      - Kaartviewer
+
+legal:
+  license: EUPL-1.2
+  mainCopyrightOwner: Dienst voor het kadaster en de openbare registers (Kadaster)
+
+localisation:
+  availableLanguages:
+    - nl
+  localisationReady: true
+
+maintenance:
+  type: internal
+  contacts:
+    - name: Team Generieke Geo Services (GGS)
+      email: ggc@kadaster.nl
+      affiliation: Dienst voor het kadaster en de openbare registers (Kadaster)

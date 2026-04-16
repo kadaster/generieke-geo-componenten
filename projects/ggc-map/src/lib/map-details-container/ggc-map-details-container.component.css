@@ -1,0 +1,14 @@
+.ggc-map-details-container {
+  display: inline-block;
+}
+
+/* styling for child componenten of map-details-container*/
+::ng-deep .ggc-mouse-position,
+::ng-deep .ggc-scale-denominator,
+::ng-deep .ggc-scale-line,
+::ng-deep .ggc-zoom-level {
+  display: inline-block;
+  float: left;
+  position: relative;
+  margin-right: 10px;
+}

@@ -1,0 +1,38 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2020",
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "target": "ES2022",
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2019", "esnext", "dom"],
+    "paths": {
+      "@kadaster/ggc-map": ["dist/ggc-map"],
+      "@kadaster/ggc-models": ["dist/ggc-models"],
+      "@kadaster/ggc-search-location": [
+        "dist/ggc-search-location"
+      ]
+    },
+    "useDefineForClassFields": false
+  },
+  "references": [
+    {
+      "path": "./projects/library-app/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/library-app/tsconfig.spec.json"
+    }
+  ]
+}

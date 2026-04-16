@@ -25,20 +25,23 @@ on:
 
 permissions:
   id-token: write  # Required for OIDC
+  contents: write
 
 jobs:
   bump_versions:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        node-version: [ 24.x ]
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v6
-
-      - name: Setup Node
+      - uses: actions/checkout@v6
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
-          node-version: 22
-
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+      - run: npm ci
       - name: Bump versions
         env:
           VERSION_BUMP: ${{ github.event.inputs.version_bump }}
@@ -48,8 +51,7 @@ jobs:
         run: |
           set -e
 
-
-          bump_and_tag() {
+          bump() {
             PROJECT=$1
 
             echo "📦 Bumping $PROJECT ($VERSION_BUMP)"
@@ -58,6 +60,42 @@ jobs:
 
             # bump version
             npm version "$VERSION_BUMP" --no-git-tag-version
+
+            cd -
+          }
+
+          if [ "$GGC_MAP" = "true" ]; then
+            bump "ggc-map"
+          fi
+
+          if [ "$GGC_SEARCH_LOCATION" = "true" ]; then
+            bump "ggc-search-location"
+          fi
+
+          if [ "$GGC_MODELS" = "true" ]; then
+            bump "ggc-models"
+          fi
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add projects/**/package.json
+          git commit -m "chore: bump package versions (${{ github.event.inputs.version_bump }})" || echo "Nothing to commit"
+
+      - name: Tag versions
+        env:
+          GGC_MAP: ${{ github.event.inputs.ggc_map }}
+          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
+          GGC_MODELS: ${{ github.event.inputs.ggc_models }}
+        run: |
+          set -e
+
+          tag() {
+            PROJECT=$1
+
+            cd "projects/$PROJECT"
 
             # read name + version from package.json
             PACKAGE_NAME=$(node -p "require('./package.json').name")
@@ -71,34 +109,25 @@ jobs:
             cd -
           }
 
-
           if [ "$GGC_MAP" = "true" ]; then
-            bump_and_tag "ggc-map"
+            tag "ggc-map"
           fi
 
           if [ "$GGC_SEARCH_LOCATION" = "true" ]; then
-            bump_and_tag "ggc-search-location"
+            tag "ggc-search-location"
           fi
 
           if [ "$GGC_MODELS" = "true" ]; then
-            bump_and_tag "ggc-models"
+            tag "ggc-models"
           fi
-
-
-      - name: Commit changes
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-          git add projects/**/package.json
-          git commit -m "chore: bump package versions (${{ github.event.inputs.version_bump }})" || echo "Nothing to commit"
 
       - name: Push commits and tags
         uses: ad-m/github-push-action@v1.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tags: true
-
+          branch: ${{ github.ref }}
+      - run: npm run build:all --if-present
       - name: Publish to npm
         env:
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
@@ -109,9 +138,6 @@ jobs:
 
           build_and_publish() {
             PROJECT=$1
-
-            echo "🏗️ Building $PROJECT"
-            npm run "build:$PROJECT"
 
             DIST_DIR="dist/$PROJECT"
 
@@ -131,7 +157,8 @@ jobs:
             if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version >/dev/null 2>&1; then
               echo "⚠️ $PACKAGE_NAME@$PACKAGE_VERSION already exists on npm. Skipping."
             else
-              npm publish
+              # workaround voor https://github.com/actions/setup-node/issues/1440
+              NODE_AUTH_TOKEN="" npm publish
               echo "✅ Published $PACKAGE_NAME@$PACKAGE_VERSION"
             fi
 

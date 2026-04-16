@@ -1,0 +1,5 @@
+/*unset styling when scaleline is added within map-details-container*/
+::ng-deep .ggc-scale-line .ol-scale-line {
+  bottom: unset;
+  position: unset;
+}

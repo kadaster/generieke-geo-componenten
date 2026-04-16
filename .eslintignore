@@ -1,0 +1,4 @@
+projects/ggc-map/node_modules/*
+projects/ggc-shared/node_modules/*
+projects/ggc-location/node_modules/*
+projects/ggc-search-location/node_modules/*

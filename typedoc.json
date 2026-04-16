@@ -1,0 +1,18 @@
+{
+  "entryPoints": [
+    "projects/ggc-map/src/public-api.ts",
+    "projects/ggc-models/src/public-api.ts",
+    "projects/ggc-search-location/src/public-api.ts"
+  ],
+  "tsconfig": "tsconfig.typedoc.json",
+  "out": "./docs-builder/doc_source/tsdocs",
+  "entryPointStrategy": "expand",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "includeVersion": false,
+  "readme": "none",
+  "excludeNotDocumented": true,
+  "projectDocuments": ["GGC-readme-nl.md"],
+  "hideGenerator": true,
+  "customFooterHtml": "&copy; Documentatie: Dienst voor het kadaster en de openbare registers (Kadaster)<br />Deze documentatie is gelicentieerd onder <a href=\"https://github.com/kadaster/generieke-geo-componenten/blob/main/LICENCE.md\" target=\"_blank\">EUPL v1.2</a>"
+}

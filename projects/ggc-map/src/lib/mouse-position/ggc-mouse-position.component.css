@@ -1,0 +1,6 @@
+/*unset styling when ol-mouse-position is added within mapDetailsContainer*/
+::ng-deep .ggc-mouse-position .ol-mouse-position {
+  position: unset;
+  top: unset;
+  right: unset;
+}
