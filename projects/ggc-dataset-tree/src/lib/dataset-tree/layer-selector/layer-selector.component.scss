@@ -1,0 +1,24 @@
+.ggc-dt-btn-ls-active {
+  font-weight: bold;
+}
+
+.ggc-dt-layer-btn {
+  padding-left: 10px;
+}
+
+table {
+  cursor: pointer;
+  .w-1 {
+    width: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .text-end {
+    text-align: right;
+  }
+
+  td[colspan="3"] {
+    padding-left: 15px;
+  }
+}

@@ -1,0 +1,44 @@
+<div
+  #toolbarItem
+  class="ggc-toolbar-item"
+  role="presentation"
+  [ngClass]="{ active: _active }"
+>
+  <button
+    class="btn btn-tools-sm"
+    role="tab"
+    (click)="onClick()"
+    [id]="id + '-btn'"
+    [title]="title"
+  >
+    @if (icon?.length > 0) {
+      <span
+        class="btn-tools-sm-icon"
+        aria-hidden="true"
+        [ngClass]="icon"
+      ></span>
+    }
+    @if (label?.length > 0) {
+      <span>{{ label }}</span>
+    }
+    @if (svg?.length > 0) {
+      <img [src]="svg" height="30" alt="icon" />
+    }
+    <span class="sr-only visually-hidden">{{ title }}</span>
+  </button>
+</div>
+<ng-template #toolbarItemTemplate class="ggc-toolbar-item-content">
+  <div class="card-body card-body-tools ggc-toolbar-content">
+    <div class="tab-content">
+      <div
+        [ngClass]="{ active: _active, 'd-sm-none': !_active }"
+        [id]="id"
+        class="tab-pane"
+        role="tabpanel"
+        [attr.aria-labelledby]="id + '-btn'"
+      >
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+</ng-template>

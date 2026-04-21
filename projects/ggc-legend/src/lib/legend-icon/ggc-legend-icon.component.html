@@ -1,0 +1,15 @@
+<ul>
+  @for (icon of icons; track icon) {
+    <li>
+      <figure class="ggc-dl-iconlist">
+        <img
+          class="ggc-dl-iconlist-image"
+          src="{{ icon.imageUrl }}"
+          alt="{{ icon.text }}"
+          role="presentation"
+        />
+        <figcaption class="ggc-dl-iconlist-text">{{ icon.text }}</figcaption>
+      </figure>
+    </li>
+  }
+</ul>

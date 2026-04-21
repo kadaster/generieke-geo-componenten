@@ -3,6 +3,82 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ggc-dataset-tree": {
+      "projectType": "library",
+      "root": "projects/ggc-dataset-tree",
+      "sourceRoot": "projects/ggc-dataset-tree/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-dataset-tree/tsconfig.lib.json",
+            "project": "projects/ggc-dataset-tree/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-dataset-tree/tsconfig.lib.prod.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ggc-dataset-tree/src/test.ts",
+            "tsConfig": "projects/ggc-dataset-tree/tsconfig.spec.json",
+            "karmaConfig": "projects/ggc-dataset-tree/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-dataset-tree/**/*.ts",
+              "projects/ggc-dataset-tree/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "ggc-legend": {
+      "projectType": "library",
+      "root": "projects/ggc-legend",
+      "sourceRoot": "projects/ggc-legend/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-legend/tsconfig.lib.json",
+            "project": "projects/ggc-legend/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-legend/tsconfig.lib.prod.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ggc-legend/src/test.ts",
+            "tsConfig": "projects/ggc-legend/tsconfig.spec.json",
+            "karmaConfig": "projects/ggc-legend/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-legend/**/*.ts",
+              "projects/ggc-legend/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "ggc-map": {
       "root": "projects/ggc-map",
       "sourceRoot": "projects/ggc-map/src",
@@ -102,6 +178,44 @@
             "lintFilePatterns": [
               "projects/ggc-search-location/**/*.ts",
               "projects/ggc-search-location/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "ggc-toolbar": {
+      "projectType": "library",
+      "root": "projects/ggc-toolbar",
+      "sourceRoot": "projects/ggc-toolbar/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-toolbar/tsconfig.lib.json",
+            "project": "projects/ggc-toolbar/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-toolbar/tsconfig.lib.prod.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ggc-toolbar/src/test.ts",
+            "tsConfig": "projects/ggc-toolbar/tsconfig.spec.json",
+            "karmaConfig": "projects/ggc-toolbar/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-toolbar/**/*.ts",
+              "projects/ggc-toolbar/**/*.html"
             ]
           }
         }

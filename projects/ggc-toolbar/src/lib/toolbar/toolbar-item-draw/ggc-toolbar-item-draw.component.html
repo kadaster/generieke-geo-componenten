@@ -1,0 +1,108 @@
+<ul class="card-tools-btn-list" role="toolbar" aria-label="Teken menu">
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools stop"
+      aria-label="Stop tekenen"
+      title="Stop tekenen"
+      (click)="stopDrawing()"
+    >
+      <span [ngClass]="stopIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools point"
+      aria-label="Punt tekenen"
+      [ngClass]="{ active: activeDraw === 'Point' }"
+      title="Punt tekenen"
+      (click)="draw('Point')"
+    >
+      <span [ngClass]="drawIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools line"
+      aria-label="Lijn tekenen"
+      [ngClass]="{ active: activeDraw === 'Line' }"
+      title="Lijn tekenen"
+      (click)="draw('Line')"
+    >
+      <span [ngClass]="drawLineIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools circle"
+      aria-label="Cirkel tekenen"
+      [ngClass]="{ active: activeDraw === 'Circle' }"
+      title="Cirkel tekenen"
+      (click)="draw('Circle')"
+    >
+      <span [ngClass]="drawCircleIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools square"
+      aria-label="Rechthoek tekenen"
+      [ngClass]="{ active: activeDraw === 'Rectangle' }"
+      title="Rechthoek tekenen"
+      (click)="draw('Rectangle')"
+    >
+      <span [ngClass]="drawRectangleIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools polygon"
+      aria-label="Vlak tekenen"
+      [ngClass]="{ active: activeDraw === 'Polygon' }"
+      title="Vlak tekenen"
+      (click)="draw('Polygon')"
+    >
+      <span [ngClass]="drawPolygonIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools move"
+      [ngClass]="{ active: activeDraw === 'move' }"
+      aria-label="Tekening verplaatsen"
+      title="Tekening verplaatsen"
+      (click)="move()"
+    >
+      <span [ngClass]="moveIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools edit"
+      [ngClass]="{ active: activeDraw === 'edit' }"
+      aria-label="Tekening bewerken"
+      title="Tekening bewerken"
+      (click)="edit()"
+    >
+      <span [ngClass]="editIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools erase"
+      aria-label="Tekening wissen"
+      title="Tekening wissen"
+      (click)="eraseDrawLayer()"
+    >
+      <span [ngClass]="deleteIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+</ul>

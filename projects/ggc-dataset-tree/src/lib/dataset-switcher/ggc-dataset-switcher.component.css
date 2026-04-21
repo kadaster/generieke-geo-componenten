@@ -1,0 +1,38 @@
+[type="radio"] {
+  position: absolute;
+  top: -20px;
+}
+
+.ggc-ds-switcher-label {
+  cursor: pointer;
+  margin: 10px;
+  padding: 10px;
+}
+
+.ggc-ds-switcher-label-img {
+  height: 150px;
+  width: 150px;
+  margin: 10px;
+}
+
+input[type="radio"]:checked + .ggc-ds-switcher-label {
+  box-shadow: 0 0 4px 4px #307cb3;
+}
+
+input[type="radio"]:focus + .ggc-ds-switcher-label {
+  box-shadow: 0 0 6px 6px #307cb3;
+}
+
+input[type="radio"] + .ggc-ds-switcher-label:hover {
+  box-shadow: 0 0 6px 6px #307cb3;
+}
+
+.ggc-ds-switcher-radio-container {
+  position: relative;
+  overflow: hidden;
+}
+
+ggc-ds-switcher-label:focus,
+ggc-ds-switcher-label:checked {
+  box-shadow: 0 0 3px 2px #307cb3;
+}

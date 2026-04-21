@@ -1,0 +1,30 @@
+<ng-container>
+  <div
+    class="ggc-dt-layer ggc-dt-layer-btn"
+    [ngClass]="{ 'ggc-dt-layer-disabled': !enabled }"
+    role="checkbox"
+    [attr.aria-checked]="visible"
+    (click)="toggleVisibility()"
+    (keydown.space)="$event.preventDefault(); toggleVisibility()"
+    tabindex="0"
+  >
+    @if (!enabled) {
+      <span class="{{ iconDisabled }}"></span>
+    } @else if (!visible) {
+      <span class="ggc-dt-ls-layer-unchecked {{ iconUnchecked }}"></span>
+    } @else {
+      <span class="ggc-dt-ls-layer-checked {{ iconChecked }}"></span>
+    }
+    <span class="ggc-dt-ls-layer-title">
+      <ng-container
+        [ngTemplateOutlet]="
+          layerLabelComponent ? layerLabelComponent : defaultValueLayerTemplate
+        "
+        [ngTemplateOutletContext]="{
+          layer: layer
+        }"
+      ></ng-container>
+      <ng-template #defaultValueLayerTemplate>{{ title }}</ng-template>
+    </span>
+  </div>
+</ng-container>

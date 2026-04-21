@@ -1,0 +1,20 @@
+button.ggc-dl-dataset-name {
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ggc-dl-dataset-name {
+  font-weight: bold;
+}
+
+.ggc-dl-dataset-name[aria-expanded="true"] > .ggc-dl-dataset-toggle-collapsed {
+  display: none;
+}
+
+.ggc-dl-dataset-name[aria-expanded="false"] > .ggc-dl-dataset-toggle-expanded {
+  display: none;
+}
+
