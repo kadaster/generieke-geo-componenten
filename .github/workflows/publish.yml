@@ -179,7 +179,7 @@ jobs:
       - run: npm run build:all --if-present
       - name: Publish to npm
         env:
-          GGC_DATASET_LEGEND: ${{ github.event.inputs.ggc_dataset_legend }}
+          GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
