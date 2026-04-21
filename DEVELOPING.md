@@ -40,7 +40,12 @@ Ga naar Settings en zoek op prettier (Languages & Frameworks > Javascript > Pret
 
 ## Releaseproces van componenten
 
-TODO: beschrijven nadat proces is ingericht met GitHub Actions/NPM
+1. Zorg ervoor dat alle wijzigingen zijn gemerged
+2. Start de ["Create releases" workflow](https://github.com/kadaster/generieke-geo-componenten/actions/workflows/publish.yml) op de `main` branch
+3. Kies voor patch, minor of major
+4. Kies de componenten die je wilt releasen en start de workflow
+
+Wil je bijvoorbeeld voor 2 componenten een patch release en voor 2 andere componenten een minor release maken, start dan de workflow 2x.
 
 ## TS docs.
 
