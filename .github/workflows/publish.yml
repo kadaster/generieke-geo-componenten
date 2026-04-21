@@ -10,17 +10,29 @@ on:
           - patch
           - minor
           - major
+      ggc_dataset_tree:
+        type: boolean
+        description: Release ggc-map
+        default: false
+      ggc_legend:
+        type: boolean
+        description: Release ggc-map
+        default: false
       ggc_map:
         type: boolean
         description: Release ggc-map
+        default: false
+      ggc_models:
+        type: boolean
+        description: Release ggc-models
         default: false
       ggc_search_location:
         type: boolean
         description: Release ggc-search-location
         default: false
-      ggc_models:
+      ggc_toolbar:
         type: boolean
-        description: Release ggc-models
+        description: Release ggc-toolbar
         default: false
 
 permissions:
@@ -52,9 +64,12 @@ jobs:
       - name: Bump versions
         env:
           VERSION_BUMP: ${{ github.event.inputs.version_bump }}
+          GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
-          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
+          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
+          GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
         run: |
           set -e
 
@@ -71,16 +86,28 @@ jobs:
             cd -
           }
 
+          if [ "$GGC_DATASET_TREE" = "true" ]; then
+            bump "ggc-dataset-tree"
+          fi
+
+          if [ "$GGC_LEGEND" = "true" ]; then
+            bump "ggc-legend"
+          fi
+
           if [ "$GGC_MAP" = "true" ]; then
             bump "ggc-map"
+          fi
+
+          if [ "$GGC_MODELS" = "true" ]; then
+            bump "ggc-models"
           fi
 
           if [ "$GGC_SEARCH_LOCATION" = "true" ]; then
             bump "ggc-search-location"
           fi
 
-          if [ "$GGC_MODELS" = "true" ]; then
-            bump "ggc-models"
+          if [ "$GGC_TOOLBAR" = "true" ]; then
+            bump "ggc-toolbar"
           fi
 
       - name: Commit changes
@@ -93,9 +120,12 @@ jobs:
 
       - name: Tag versions
         env:
+          GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
-          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
+          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
+          GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
         run: |
           set -e
 
@@ -116,16 +146,28 @@ jobs:
             cd -
           }
 
+          if [ "$GGC_DATASET_TREE" = "true" ]; then
+            tag "ggc-dataset-tree"
+          fi
+
+          if [ "$GGC_LEGEND" = "true" ]; then
+            tag "ggc-legend"
+          fi
+
           if [ "$GGC_MAP" = "true" ]; then
             tag "ggc-map"
+          fi
+
+          if [ "$GGC_MODELS" = "true" ]; then
+            tag "ggc-models"
           fi
 
           if [ "$GGC_SEARCH_LOCATION" = "true" ]; then
             tag "ggc-search-location"
           fi
 
-          if [ "$GGC_MODELS" = "true" ]; then
-            tag "ggc-models"
+          if [ "$GGC_TOOLBAR" = "true" ]; then
+            tag "ggc-toolbar"
           fi
 
       - name: Push commits and tags
@@ -137,9 +179,12 @@ jobs:
       - run: npm run build:all --if-present
       - name: Publish to npm
         env:
+          GGC_DATASET_LEGEND: ${{ github.event.inputs.ggc_dataset_legend }}
+          GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
-          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
+          GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
+          GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
         run: |
           set -e
 
@@ -172,14 +217,26 @@ jobs:
             cd -
           }
 
+          if [ "$GGC_DATASET_LEGEND" = "true" ]; then
+            tag "ggc-dataset-legend"
+          fi
+
+          if [ "$GGC_LEGEND" = "true" ]; then
+            tag "ggc-legend"
+          fi
+
           if [ "$GGC_MAP" = "true" ]; then
             build_and_publish "ggc-map"
+          fi
+
+          if [ "$GGC_MODELS" = "true" ]; then
+            build_and_publish "ggc-models"
           fi
 
           if [ "$GGC_SEARCH_LOCATION" = "true" ]; then
             build_and_publish "ggc-search-location"
           fi
 
-          if [ "$GGC_MODELS" = "true" ]; then
-            build_and_publish "ggc-models"
+          if [ "$GGC_TOOLBAR" = "true" ]; then
+            build_and_publish "ggc-toolbar"
           fi
