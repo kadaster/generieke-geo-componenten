@@ -54,7 +54,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        step: [lint:ggc-cesium, lint:ggc-dataset-tree, lint:ggc-feature-info]
+        step: [ggc-cesium, ggc-dataset-tree, ggc-feature-info, ggc-legend, ggc-map, ggc-models, search-location, toolbar]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -66,11 +66,14 @@ jobs:
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
-      - run: npm run {{ matrix.step }}
+      - run: npm run lint:${{ matrix.step }}
 
   test:
     runs-on: ubuntu-latest
     needs: build
+    strategy:
+      matrix:
+        step: [ ggc-cesium, ggc-dataset-tree, ggc-feature-info, ggc-legend, ggc-map, search-location, toolbar ]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -87,4 +90,4 @@ jobs:
         with:
           path: dist
           key: dist-${{ github.sha }}
-      - run: npm run test:cov:all
+      - run: npm run test:${{ matrix.step }}
