@@ -54,7 +54,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        step: [ggc-cesium, ggc-dataset-tree, ggc-feature-info, ggc-legend, ggc-map, ggc-models, search-location, toolbar]
+        step: [ggc-cesium, ggc-dataset-tree, ggc-feature-info, ggc-legend, ggc-map, ggc-models, ggc-search-location, ggc-toolbar]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -73,7 +73,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        step: [ ggc-cesium, ggc-dataset-tree, ggc-feature-info, ggc-legend, ggc-map, search-location, toolbar ]
+        step: [ ggc-cesium, ggc-dataset-tree, ggc-feature-info, ggc-legend, ggc-map, ggc-search-location, ggc-toolbar ]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
