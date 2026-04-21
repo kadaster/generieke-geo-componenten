@@ -10,19 +10,19 @@ We beloven om te handelen en te communiceren op een manier die bijdraagt aan een
 
 Voorbeelden van gedrag dat bijdraagt aan een positieve omgeving voor onze community:
 
-* Empathie en vriendelijkheid tonen tegenover andere mensen
-* Verschillende meningen, standpunten en ervaringen respecteren
-* Constructieve feedback geven en gracieus accepteren
-* Verantwoordelijkheid aanvaarden en excuses aanbieden aan degenen die door onze fouten zijn getroffen, en leren van de ervaring
-* Focussen op wat het beste is voor de algemene gemeenschap, niet alleen voor ons als individuen
+- Empathie en vriendelijkheid tonen tegenover andere mensen
+- Verschillende meningen, standpunten en ervaringen respecteren
+- Constructieve feedback geven en gracieus accepteren
+- Verantwoordelijkheid aanvaarden en excuses aanbieden aan degenen die door onze fouten zijn getroffen, en leren van de ervaring
+- Focussen op wat het beste is voor de algemene gemeenschap, niet alleen voor ons als individuen
 
 Voorbeelden van onaanvaardbaar gedrag zijn:
 
-* Het gebruik van geseksualiseerde taal of beelden en seksuele aandacht of toenadering van welke aard dan ook
-* "Trollen", beledigende of denigrerende opmerkingen en persoonlijke- of politieke aanvallen
-* Openbare- of privé-intimidatie
-* Publiceren van persoonlijke informatie van anderen, zoals een fysiek adres of e-mail adres, zonder hun uitdrukkelijke toestemming
-* Ander gedrag dat redelijkerwijs als ongepast zou kunnen worden beschouwd in een professionele setting
+- Het gebruik van geseksualiseerde taal of beelden en seksuele aandacht of toenadering van welke aard dan ook
+- "Trollen", beledigende of denigrerende opmerkingen en persoonlijke- of politieke aanvallen
+- Openbare- of privé-intimidatie
+- Publiceren van persoonlijke informatie van anderen, zoals een fysiek adres of e-mail adres, zonder hun uitdrukkelijke toestemming
+- Ander gedrag dat redelijkerwijs als ongepast zou kunnen worden beschouwd in een professionele setting
 
 ## Handhaving
 

@@ -1,8 +1,11 @@
 {
   "entryPoints": [
+    "projects/ggc-dataset-tree/src/public-api.ts",
+    "projects/ggc-legend/src/public-api.ts",
     "projects/ggc-map/src/public-api.ts",
     "projects/ggc-models/src/public-api.ts",
-    "projects/ggc-search-location/src/public-api.ts"
+    "projects/ggc-search-location/src/public-api.ts",
+    "projects/ggc-toolbar/src/public-api.ts"
   ],
   "tsconfig": "tsconfig.typedoc.json",
   "out": "./docs-builder/doc_source/tsdocs",

@@ -24,7 +24,7 @@ on:
         default: false
 
 permissions:
-  id-token: write  # Required for OIDC
+  id-token: write # Required for OIDC
   contents: write
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 24.x ]
+        node-version: [24.x]
     steps:
       - uses: actions/create-github-app-token@v3
         id: app-token
@@ -46,8 +46,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'npm'
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
       - run: npm ci
       - name: Bump versions
         env:

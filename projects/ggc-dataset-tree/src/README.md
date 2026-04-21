@@ -3,28 +3,31 @@
 De Generieke Geo Componenten (GGC) helpen softwareontwikkelaars om snel een kaartviewer te ontwikkelen.
 
 Deze Angular front-end componenten kunnen in de eigen applicatie geïnstalleerd worden. Hiermee kan de kracht van OpenLayers kaartpresentatie snel en eenvoudig geïmplementeerd worden, gecombineerd met:
-* zoeken op de kaart
-* legenda
-* kaartselectie
-* toolbar met tekenen, meten en bewerken op de kaart
+
+- zoeken op de kaart
+- legenda
+- kaartselectie
+- toolbar met tekenen, meten en bewerken op de kaart
 
 Binnenkort komen ook extra componenten beschikbaar voor:
-* presenteren van object-informatie
-* 3D kaartpresentatie (met Cesium)
-* printen
-* bestandsconversie
+
+- presenteren van object-informatie
+- 3D kaartpresentatie (met Cesium)
+- printen
+- bestandsconversie
 
 ## Voordelen
 
 De Generieke Geo Componenten bieden de volgende voordelen:
-* Responsive design voor mobiel, tablet en desktop
-* Digitaal toegankelijk (WCAG 2.1 AA)
-* Up-to-date met de nieuwste framework versies
-* Eenvoudig te implementeren, te configureren en te stylen
-* Makkelijk aan te passen
-* Robuust, met hoge testdekking
-* Lage onderhoudsinspanning
-* Light-weight, door alleen componenten te laden die nodig zijn
+
+- Responsive design voor mobiel, tablet en desktop
+- Digitaal toegankelijk (WCAG 2.1 AA)
+- Up-to-date met de nieuwste framework versies
+- Eenvoudig te implementeren, te configureren en te stylen
+- Makkelijk aan te passen
+- Robuust, met hoge testdekking
+- Lage onderhoudsinspanning
+- Light-weight, door alleen componenten te laden die nodig zijn
 
 De componenten kunnen afzonderlijk óf in samenwerking gebruikt worden. Hierdoor kun je zelf bepalen welke interactie wenselijk is in de applicatie.
 
@@ -56,6 +59,7 @@ Voor de dataset-tree is Bootstrap (versie 4.6.6) vereist.
 In plaats van Bootstrap zou ook een eigen huisstijl gebruikt kunnen worden, die ook gebruik maakt van Bootstrap.
 
 ## Dataset-Tree
+
 Alle onderdelen van het dataset-structuurcomponent (thema's, datasets en kaartlagen) zijn standaard voorzien van inspringing (padding-left)
 zodat de verschillende niveau's in het dataset-structuurcomponent overzichtelijker worden.
 
@@ -68,6 +72,7 @@ De iconen voor het open- en dichtklappen van een thema en dataset kunnen ingeste
 Ook kunnen de iconen rechts of links uitgelijnd worden.
 
 ## Dataset-switcher
+
 Om in de viewer de gebruiker de mogelijkheid te geven eenvoudig van kaartlagen (bijvoorbeeld een achtergrond) te wisselen,
 is een zogeheten ggc-dataset-switcher aanwezig.
 
@@ -76,6 +81,7 @@ Met dit switch component wordt een lijst getoond van 1 of meerdere kaartlagen.
 Deze kaartlagen worden getoond als een button met een naam en/of een plaatje.
 
 ### Dataset-switcher buttons
+
 Een van de benodigde onderdelen om de dataset-switcher goed te laten werken zijn DatasetSwitcherButtons.
 Deze buttons werken als een radio button en representeren uiteindelijk welke kaartlagen er getoond worden.
 De 1e button zal standaard geactiveerd worden.

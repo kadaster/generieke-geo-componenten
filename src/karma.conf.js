@@ -10,19 +10,19 @@ module.exports = function (config, dir = "../coverage/ggc-library", files) {
       require("karma-chrome-launcher"),
       require("karma-jasmine-html-reporter"),
       require("karma-coverage"),
-      require("@angular-devkit/build-angular/plugins/karma"),
+      require("@angular-devkit/build-angular/plugins/karma")
     ],
     client: {
-      clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
       dir: require("path").join(__dirname, dir),
       reporters: [
         { type: "lcovonly", subdir: "." },
         { type: "html", subdir: "." },
-        { type: "text-summary" },
+        { type: "text-summary" }
       ],
-      fixWebpackSourcePaths: true,
+      fixWebpackSourcePaths: true
     },
     reporters: ["progress", "kjhtml"],
     port: 9876,
@@ -33,11 +33,11 @@ module.exports = function (config, dir = "../coverage/ggc-library", files) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: "ChromeHeadless",
-        flags: ["--no-sandbox"],
-      },
+        flags: ["--no-sandbox"]
+      }
     },
     singleRun: true,
     restartOnFileChange: true,
-    files: files,
+    files: files
   });
 };

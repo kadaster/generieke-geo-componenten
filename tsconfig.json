@@ -19,11 +19,12 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2019", "esnext", "dom"],
     "paths": {
+      "@kadaster/ggc-dataset-tree": ["dist/ggc-dataset-tree"],
+      "@kadaster/ggc-legend": ["dist/ggc-legend"],
       "@kadaster/ggc-map": ["dist/ggc-map"],
       "@kadaster/ggc-models": ["dist/ggc-models"],
-      "@kadaster/ggc-search-location": [
-        "dist/ggc-search-location"
-      ]
+      "@kadaster/ggc-search-location": ["dist/ggc-search-location"],
+      "@kadaster/ggc-toolbar": ["dist/ggc-toolbar"]
     },
     "useDefineForClassFields": false
   },

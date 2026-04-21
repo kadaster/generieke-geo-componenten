@@ -3,15 +3,16 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@kadaster/ggc-map": [
-        "projects/ggc-map/src/public-api.ts"
+      "@kadaster/ggc-dataset-tree": [
+        "projects/ggc-dataset-tree/src/public-api.ts"
       ],
-      "@kadaster/ggc-models": [
-        "projects/ggc-models/src/public-api.ts"
-      ],
+      "@kadaster/ggc-legend": ["projects/ggc-legend/src/public-api.ts"],
+      "@kadaster/ggc-map": ["projects/ggc-map/src/public-api.ts"],
+      "@kadaster/ggc-models": ["projects/ggc-models/src/public-api.ts"],
       "@kadaster/ggc-search-location": [
         "projects/ggc-search-location/src/public-api.ts"
-      ]
+      ],
+      "@kadaster/ggc-toolbar": ["projects/ggc-toolbar/src/public-api.ts"]
     }
   },
   "include": ["projects/**/*.ts"],

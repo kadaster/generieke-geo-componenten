@@ -20,8 +20,7 @@ platforms:
 
 description:
   nl:
-    shortDescription:
-      Generieke Geo Componenten zijn developer-vriendelijke bouwstenen om snel een kaartviewer te kunnen ontwikkelen.
+    shortDescription: Generieke Geo Componenten zijn developer-vriendelijke bouwstenen om snel een kaartviewer te kunnen ontwikkelen.
     longDescription: >
       Het doel van de Generieke Geo Componenten is om developer-vriendelijke bouwstenen te leveren aan ontwikkelaars zodat deze snel een specifieke kaartviewer kunnen ontwikkelen met de gewenste functionaliteit. Bovendien zijn deze componenten flexibel (configureerbaar), functioneel goed uit te breiden en naar eigen smaak te stylen.
     features:
