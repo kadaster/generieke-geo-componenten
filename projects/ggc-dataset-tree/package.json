@@ -12,7 +12,8 @@
     "tslib": "^2.3.1"
   },
   "publishConfig": {
-    "directory": "../../dist/ggc-dataset-tree"
+    "directory": "../../dist/ggc-dataset-tree",
+    "access": "public"
   },
   "repository": {
     "url": "https://github.com/kadaster/generieke-geo-componenten"
