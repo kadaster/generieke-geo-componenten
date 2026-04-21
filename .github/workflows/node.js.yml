@@ -24,4 +24,4 @@ jobs:
       - run: npm ci
       - run: npm run build:all --if-present
       - run: npm run lint:all
-      - run: npm test
+      - run: npm run test:cov:all
