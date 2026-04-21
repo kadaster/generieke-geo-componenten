@@ -79,6 +79,44 @@
         }
       }
     },
+    "ggc-feature-info": {
+      "projectType": "library",
+      "root": "projects/ggc-feature-info",
+      "sourceRoot": "projects/ggc-feature-info/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-feature-info/tsconfig.lib.json",
+            "project": "projects/ggc-feature-info/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-feature-info/tsconfig.lib.prod.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ggc-feature-info/src/test.ts",
+            "tsConfig": "projects/ggc-feature-info/tsconfig.spec.json",
+            "karmaConfig": "projects/ggc-feature-info/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-feature-info/**/*.ts",
+              "projects/ggc-feature-info/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "ggc-home": {
       "projectType": "application",
       "schematics": {

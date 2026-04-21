@@ -1,0 +1,35 @@
+/* tab */
+.ggc-fi-tab {
+  background-color: var(--white, white);
+  border-bottom: 1px solid var(--gray-18, #ccc);
+  margin: 0 0;
+  overflow: hidden;
+}
+
+/* tab buttons that are used to open the tab content */
+.ggc-fi-tab button {
+  background-color: var(--gray-01, #f1f1f1);
+  border-bottom: none;
+  border-left: none;
+  border-top: 1px solid var(--white, white);
+  border-right: 1px solid var(--white, white);
+  padding: 4px 14px;
+  transition: 0.4s;
+}
+
+/* background color of buttons on hover */
+.ggc-fi-tab button:hover {
+  background-color: var(--gray-18, #ddd);
+}
+
+/* active/current tab */
+.ggc-fi-tab button.active {
+  background-color: var(--primary, #007395);
+  color: var(--white, white);
+  cursor: default;
+}
+
+/* inactive tab */
+.ggc-fi-tab button.inactive {
+  color: var(--gray-43, #888);
+}

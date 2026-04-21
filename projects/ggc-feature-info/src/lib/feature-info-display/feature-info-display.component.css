@@ -1,0 +1,7 @@
+dt,
+dd {
+  white-space: pre-line;
+  &:empty {
+    display: none;
+  }
+}
