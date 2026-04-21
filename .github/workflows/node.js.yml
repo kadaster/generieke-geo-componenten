@@ -42,7 +42,12 @@ jobs:
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
-      - run: npm run build:all --if-present
+      - run: npm run build:all
+      - name: Cache dist
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: dist-${{ github.sha }}
 
   lint:
     runs-on: ubuntu-latest
@@ -74,4 +79,9 @@ jobs:
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Restore dist
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: dist-${{ github.sha }}
       - run: npm run test:cov:all
