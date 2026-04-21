@@ -13,5 +13,9 @@
   },
   "publishConfig": {
     "directory": "../../dist/ggc-dataset-tree"
-  }
+  },
+  "repository": {
+    "url": "https://github.com/kadaster/generieke-geo-componenten"
+  },
+  "license": "EUPL-1.2"
 }

@@ -26,8 +26,7 @@ export class GgcLegendConnectService {
   async loadGgcCesiumSharedLayerService(): Promise<void> {
     if (!this.ggcCesiumSharedLayerService) {
       try {
-        const module =
-          await import("@kadaster/ggc-cesium");
+        const module = await import("@kadaster/ggc-cesium");
         this.ggcCesiumSharedLayerService = this.injector.get(
           module.GgcSharedLayerService
         );

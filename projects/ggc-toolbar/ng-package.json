@@ -4,5 +4,17 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "allowedNonPeerDependencies": ["@kadaster/ggc-models"]
+  "allowedNonPeerDependencies": ["@kadaster/ggc-models"],
+  "assets": [
+    {
+      "glob": "README.md",
+      "input": "src",
+      "output": "."
+    },
+    {
+      "glob": "LICENSE.md",
+      "input": "src",
+      "output": "."
+    }
+  ]
 }

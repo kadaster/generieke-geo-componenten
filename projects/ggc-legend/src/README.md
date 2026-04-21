@@ -1,4 +1,4 @@
-# Generieke Geo Componenten - ggc-toolbar
+# Generieke Geo Componenten - ggc-legend
 
 De Generieke Geo Componenten (GGC) helpen softwareontwikkelaars om snel een kaartviewer te ontwikkelen.
 

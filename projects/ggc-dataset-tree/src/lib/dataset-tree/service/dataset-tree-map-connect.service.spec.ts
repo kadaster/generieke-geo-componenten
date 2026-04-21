@@ -2,10 +2,7 @@ import { DatasetTreeMapConnectService } from "./dataset-tree-map-connect.service
 import { TestBed } from "@angular/core/testing";
 import { EMPTY, of } from "rxjs";
 import { GgcDatasetTreeConnectService } from "./connect.service";
-import {
-  DEFAULT_CESIUM_MAPINDEX,
-  ViewerType
-} from "@kadaster/ggc-models";
+import { DEFAULT_CESIUM_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
 
 describe("DatasetTreeMapConnectService", () => {
   let service: DatasetTreeMapConnectService;
