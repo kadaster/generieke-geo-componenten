@@ -1,9 +1,10 @@
-<div ngMenuBar (focusin)="onFocusIn()">
+<div ngMenuBar (focusin)="onFocusIn()" tabindex="0">
   <div
     ngMenuItem
     #fileEl
     class="menu-bar-item"
     value="Voorbeelden"
+    tabindex="0"
     (click)="openVoorbeelden()"
     (keydown.enter)="openVoorbeelden()"
   >
@@ -41,6 +42,7 @@
         <div
           ngMenuItem
           value="Quick start"
+          tabindex="0"
           (click)="openQuickstart()"
           (keydown.enter)="openQuickstart()"
         >
@@ -90,6 +92,7 @@
         <div
           ngMenuItem
           value="GitHub"
+          tabindex="0"
           (click)="openGithub()"
           (keydown.enter)="openGithub()"
         >
@@ -102,6 +105,7 @@
         <div
           ngMenuItem
           value="Changelog"
+          tabindex="0"
           (click)="openChangelog()"
           (keydown.enter)="openChangelog()"
         >
@@ -114,6 +118,7 @@
         <div
           ngMenuItem
           value="Releases"
+          tabindex="0"
           (click)="openReleases()"
           (keydown.enter)="openReleases()"
         >

@@ -35,9 +35,9 @@ export class ExampleMeasure extends ExampleFormatComponent {
   measuring = signal<MapComponentDrawTypes | undefined>(undefined);
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
 
+  protected readonly mapIndex = "measure";
   private readonly httpClient = inject(HttpClient);
   private readonly drawService = inject(GgcDrawService);
-  protected readonly mapIndex = "measure";
   private readonly measureLayer = "measure";
 
   constructor() {
