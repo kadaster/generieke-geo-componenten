@@ -218,11 +218,11 @@ jobs:
           }
 
           if [ "$GGC_DATASET_LEGEND" = "true" ]; then
-            tag "ggc-dataset-legend"
+            build_and_publish "ggc-dataset-legend"
           fi
 
           if [ "$GGC_LEGEND" = "true" ]; then
-            tag "ggc-legend"
+            build_and_publish "ggc-legend"
           fi
 
           if [ "$GGC_MAP" = "true" ]; then
