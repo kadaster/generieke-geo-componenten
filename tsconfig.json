@@ -19,7 +19,9 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2019", "esnext", "dom"],
     "paths": {
+      "@kadaster/ggc-cesium": ["dist/ggc-cesium"],
       "@kadaster/ggc-dataset-tree": ["dist/ggc-dataset-tree"],
+      "@kadaster/ggc-feature-info": ["dist/ggc-feature-info"],
       "@kadaster/ggc-legend": ["dist/ggc-legend"],
       "@kadaster/ggc-map": ["dist/ggc-map"],
       "@kadaster/ggc-models": ["dist/ggc-models"],

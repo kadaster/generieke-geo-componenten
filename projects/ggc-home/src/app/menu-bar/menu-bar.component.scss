@@ -18,7 +18,7 @@
   border: 1px solid var(--nl-link-color);
   background-color: var(--ggc-nav-bar-background-color);
 }
-[ngMenu][data-visible='false'] {
+[ngMenu][data-visible="false"] {
   display: none;
 }
 [ngMenuItem] {
@@ -30,7 +30,8 @@
   padding: 0.5rem;
 }
 
-[ngMenuItem]:focus, [ngMenuItem]:hover {
+[ngMenuItem]:focus,
+[ngMenuItem]:hover {
   outline: 2px solid var(--nl-link-color);
 }
 [ngMenuItem] .icon {
@@ -41,6 +42,6 @@
   flex: 1;
   opacity: 0.875;
 }
-[ngMenuItem]:not([aria-expanded='true']) .arrow {
+[ngMenuItem]:not([aria-expanded="true"]) .arrow {
   opacity: 0.5;
 }

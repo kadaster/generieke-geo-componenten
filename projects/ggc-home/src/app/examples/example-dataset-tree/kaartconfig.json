@@ -23,14 +23,14 @@
     "type": "wms",
     "url": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0",
     "layers": [
-        {
-          "layerId": "luchtfoto",
-          "title": "Luchtfoto Actueel Ortho 8cm RGB (WMS)",
-          "visible": false,
-          "layerName": "Actueel_orthoHR",
-          "zIndex": -20
-        }
-      ]
+      {
+        "layerId": "luchtfoto",
+        "title": "Luchtfoto Actueel Ortho 8cm RGB (WMS)",
+        "visible": false,
+        "layerName": "Actueel_orthoHR",
+        "zIndex": -20
+      }
+    ]
   },
   {
     "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",

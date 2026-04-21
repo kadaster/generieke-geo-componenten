@@ -6,9 +6,7 @@
         "datasetName": "Achtergrond",
         "services": [
           {
-            "layers": [
-              {"layerId": "brtAchtergrondkaartStandaard"}
-            ]
+            "layers": [{ "layerId": "brtAchtergrondkaartStandaard" }]
           }
         ]
       }
@@ -21,10 +19,7 @@
         "datasetName": "Bestuurlijke gebieden (wms)",
         "services": [
           {
-            "layers": [
-              { "layerId": "provincies"},
-              { "layerId": "gemeenten" }
-            ]
+            "layers": [{ "layerId": "provincies" }, { "layerId": "gemeenten" }]
           }
         ]
       }

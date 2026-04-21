@@ -1,6 +1,8 @@
 {
   "entryPoints": [
+    "projects/ggc-cesium/src/public-api.ts",
     "projects/ggc-dataset-tree/src/public-api.ts",
+    "projects/ggc-feature-info/src/public-api.ts",
     "projects/ggc-legend/src/public-api.ts",
     "projects/ggc-map/src/public-api.ts",
     "projects/ggc-models/src/public-api.ts",

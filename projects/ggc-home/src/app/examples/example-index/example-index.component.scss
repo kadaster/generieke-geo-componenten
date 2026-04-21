@@ -9,9 +9,10 @@ a {
   margin-bottom: 15px;
   height: $card-heigth !important;
 
-  .card-body{
+  .card-body {
     overflow: hidden;
-    padding: var(--ggc-card-padding-block-top) var(--ggc-card-padding-block-end) 0 var(--ggc-card-padding-block-start);
+    padding: var(--ggc-card-padding-block-top) var(--ggc-card-padding-block-end)
+      0 var(--ggc-card-padding-block-start);
 
     .card-title {
       font-weight: bold;
@@ -33,16 +34,15 @@ a {
   .card-img-top {
     aspect-ratio: 1 / 1;
     display: block;
-    width:calc($card-heigth - 1px);
-    height:calc($card-heigth - 1px);
+    width: calc($card-heigth - 1px);
+    height: calc($card-heigth - 1px);
     border-radius: 0 var(--ggc-border-radius-md) var(--ggc-border-radius-md) 0;
   }
-
-
 }
 
 .body {
-  padding: var(--ggc-space-300) var(--ggc-space-500) var(--ggc-space-300) var(--ggc-space-500);
+  padding: var(--ggc-space-300) var(--ggc-space-500) var(--ggc-space-300)
+    var(--ggc-space-500);
 }
 
 h3 {
@@ -73,8 +73,8 @@ h3 {
 }
 
 .tag-component {
-    color: var(--ggc-color-cool-grey-500);
-    border: 1px solid var(--ggc-color-cool-grey-500);
+  color: var(--ggc-color-cool-grey-500);
+  border: 1px solid var(--ggc-color-cool-grey-500);
 }
 
 .tag-technical {

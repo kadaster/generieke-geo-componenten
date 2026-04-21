@@ -8,8 +8,8 @@
         "services": [
           {
             "layers": [
-              {"layerId": "brtAchtergrondkaartStandaard"},
-              {"layerId": "brtAchtergrondkaartGrijs"}
+              { "layerId": "brtAchtergrondkaartStandaard" },
+              { "layerId": "brtAchtergrondkaartGrijs" }
             ]
           }
         ]
@@ -19,9 +19,7 @@
         "infoUrl": "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/a301ddc7-c26f-42d8-b367-509ae5ae47d0",
         "services": [
           {
-            "layers": [
-              {"layerId": "luchtfoto"}
-            ]
+            "layers": [{ "layerId": "luchtfoto" }]
           }
         ]
       }
@@ -37,7 +35,7 @@
           {
             "layers": [
               { "layerId": "landsgrens" },
-              { "layerId": "provincies"},
+              { "layerId": "provincies" },
               { "layerId": "gemeenten" }
             ]
           }
@@ -48,9 +46,9 @@
         "services": [
           {
             "layers": [
-              {"layerId": "gebiedsindelingen-provincies"},
-              {"layerId": "vectortile-bgt"},
-              {"layerId": "logoImage"}
+              { "layerId": "gebiedsindelingen-provincies" },
+              { "layerId": "vectortile-bgt" },
+              { "layerId": "logoImage" }
             ]
           }
         ]
