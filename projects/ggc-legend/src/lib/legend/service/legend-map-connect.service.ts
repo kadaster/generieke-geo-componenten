@@ -56,12 +56,12 @@ export class GgcLegendMapConnectService {
    * @param mapIndex De mapIndex waarvoor alle legenda's worden teruggegeven.
    */
   async getCurrentActiveLegends(mapIndex: string): Promise<LayerLegend[]> {
-    const mapLegends: LayerLegend[] = (
-      await this.getMapLayerService()
-    ).getCurrentActiveLegends(mapIndex);
-    const cesiumLegends: LayerLegend[] = (
-      await this.getCesiumSharedLayerService()
-    ).getCurrentActiveLegends();
+    const mapLegends: LayerLegend[] =
+      (await this.getMapLayerService())?.getCurrentActiveLegends(mapIndex) ??
+      [];
+    const cesiumLegends: LayerLegend[] =
+      (await this.getCesiumSharedLayerService())?.getCurrentActiveLegends() ??
+      [];
     return mapLegends.concat(cesiumLegends);
   }
 
