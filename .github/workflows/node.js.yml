@@ -23,11 +23,29 @@ jobs:
       - run: npm run build:all --if-present
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 24.x ]
     needs: build
     steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - run: npm run lint:all
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 24.x ]
     needs: build
     steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - run: npm test
