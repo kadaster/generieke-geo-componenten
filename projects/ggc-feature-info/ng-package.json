@@ -3,5 +3,17 @@
   "dest": "../../dist/ggc-feature-info",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    {
+      "glob": "README.md",
+      "input": "src",
+      "output": "."
+    },
+    {
+      "glob": "LICENSE.md",
+      "input": "src",
+      "output": "."
+    }
+  ]
 }

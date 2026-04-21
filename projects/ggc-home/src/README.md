@@ -33,7 +33,7 @@ De componenten kunnen afzonderlijk óf in samenwerking gebruikt worden. Hierdoor
 
 ## Licentie
 
-Dit project is gratis en open-source software, gelicentieerd onder de [Attribution-ShareAlike 4.0 International](LICENSE.md).
+Dit project is gratis en open-source software, gelicentieerd onder de [CC BY-SA 4.0 licentie](LICENSE.md).
 
 ## Documentatie
 
