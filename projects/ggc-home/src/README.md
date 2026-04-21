@@ -33,7 +33,7 @@ De componenten kunnen afzonderlijk óf in samenwerking gebruikt worden. Hierdoor
 
 ## Licentie
 
-Dit project is gratis en open-source software, gelicentieerd onder de [European Union Public License (EUPL) v1.2](LICENSE.md).
+Dit project is gratis en open-source software, gelicentieerd onder de [Attribution-ShareAlike 4.0 International](LICENSE.md).
 
 ## Documentatie
 

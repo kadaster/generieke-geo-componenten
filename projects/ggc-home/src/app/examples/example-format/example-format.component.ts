@@ -29,7 +29,7 @@ export class ExampleFormatComponent {
   @Input() urlTreeConfig: string;
 
   protected baseUrlCode =
-    "https://git.dev.cloud.kadaster.nl/ggc/ggs-ggc-library/src/branch/master/projects/library-app/src/app/examples/";
+    "https://git.dev.cloud.kadaster.nl/ggc/ggs-ggc-library/src/branch/master/projects/ggc-home/src/app/examples/";
   private readonly router = inject(Router);
 
   goToPage(routerLink: string) {

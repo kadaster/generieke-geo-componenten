@@ -5,7 +5,7 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["projects/library-app/tsconfig.(app|spec).json"]
+        "project": ["projects/ggc-home/tsconfig.(app|spec).json"]
       },
       "rules": {
         "@angular-eslint/directive-selector": [
