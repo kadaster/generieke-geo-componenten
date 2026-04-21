@@ -1,0 +1,72 @@
+<ul class="card-tools-btn-list" role="toolbar" aria-label="Meet menu">
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools stop"
+      aria-label="Stop meten"
+      title="Stop meten"
+      (click)="stopMeasure()"
+    >
+      <span [ngClass]="stopIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools point"
+      aria-label="Lengte meten"
+      title="Lengte meten"
+      [ngClass]="{ active: activeMeasure === 'line' }"
+      (click)="measureLine()"
+    >
+      <span [ngClass]="measureLineIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools line"
+      aria-label="Oppervlakte meten"
+      title="Oppervlakte meten"
+      [ngClass]="{ active: activeMeasure === 'polygon' }"
+      (click)="measurePolygon()"
+    >
+      <span [ngClass]="measurePolygonIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools move"
+      [ngClass]="{ active: activeMeasure === 'move' }"
+      aria-label="Meting verplaatsen"
+      title="Meting verplaatsen"
+      (click)="move()"
+    >
+      <span [ngClass]="moveIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools edit"
+      [ngClass]="{ active: activeMeasure === 'edit' }"
+      aria-label="Meting bewerken"
+      title="Meting bewerken"
+      (click)="edit()"
+    >
+      <span [ngClass]="editIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+  <li class="card-tools-btn-list-item">
+    <button
+      type="button"
+      class="btn btn-tools circle"
+      aria-label="Meting wissen"
+      title="Meting wissen"
+      (click)="eraseMeasureLayer()"
+    >
+      <span [ngClass]="deleteIcon" aria-hidden="true"></span>
+    </button>
+  </li>
+</ul>

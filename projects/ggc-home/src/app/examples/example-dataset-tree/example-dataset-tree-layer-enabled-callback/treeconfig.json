@@ -1,0 +1,28 @@
+[
+  {
+    "themeName": "Achtergrond",
+    "datasets": [
+      {
+        "datasetName": "Achtergrond",
+        "services": [
+          {
+            "layers": [{ "layerId": "brtAchtergrondkaartStandaard" }]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "themeName": "Dataset",
+    "datasets": [
+      {
+        "datasetName": "Bestuurlijke gebieden (wms)",
+        "services": [
+          {
+            "layers": [{ "layerId": "provincies" }, { "layerId": "gemeenten" }]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "type": "vector",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (mapbox legend)",
+        "activeLegend": {
+          "name": "Standaard",
+          "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox"
+        },
+        "legendIndex": 1,
+        "style": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox",
+        "visible": true,
+        "zIndex": -10,
+        "enableOverzoom": true
+      }
+    ]
+  },
+  {
+    "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "type": "vector",
+    "layers": [
+      {
+        "layerId": "kadastrale-kaart-png",
+        "title": "Kadastrale kaart (png legend)",
+        "layerName": "standaard",
+        "activeLegend": {
+          "legendUrl": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/styles/standaardvisualisatie__netherlandsrdnewquad/legend"
+        },
+        "legendIndex": 3,
+        "style": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/styles/standaardvisualisatie__netherlandsrdnewquad?f=mapbox",
+        "visible": true,
+        "enableOverzoom": true
+      }
+    ]
+  },
+  {
+    "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "type": "vector",
+    "layers": [
+      {
+        "layerId": "kadastrale-kaart-mapbox",
+        "title": "Kadastrale kaart (mapbox legend)",
+        "layerName": "standaard",
+        "activeLegend": {
+          "name": "Standaard",
+          "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/styles/standaardvisualisatie__netherlandsrdnewquad?f=mapbox"
+        },
+        "legendIndex": 2,
+        "style": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/styles/standaardvisualisatie__netherlandsrdnewquad?f=mapbox",
+        "visible": true,
+        "enableOverzoom": true
+      }
+    ]
+  }
+]

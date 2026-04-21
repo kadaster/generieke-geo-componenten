@@ -4,10 +4,10 @@ module.exports = {
       https: false,
       zlib: false,
       http: false,
-      url: false,
-    },
+      url: false
+    }
   },
   module: {
-    unknownContextCritical: false,
-  },
+    unknownContextCritical: false
+  }
 };

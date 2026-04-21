@@ -1,0 +1,65 @@
+<div class="utrecht-document">
+  <div class="ggc-nav-bar__container">
+    <div class="skiplink">
+      <a (click)="$event.preventDefault(); focusContent()" href=""
+        >Naar hoofdinhoud</a
+      >
+    </div>
+    <nav class="ggc-nav-bar">
+      <ul class="ggc-nav-bar__list ggc-nav-bar__list">
+        <li class="ggc-nav-bar__item ggc-nav-bar__heading" id="heading">
+          <a class="nl-link ggc-link ggc-nav-bar__link" href="/">
+            <span> GGC Home </span>
+          </a>
+        </li>
+      </ul>
+      <app-menu-bar></app-menu-bar>
+    </nav>
+  </div>
+
+  <router-outlet></router-outlet>
+
+  <footer class="utrecht-page-footer ggc-page-footer ggc-page-footer--primary">
+    <div class="ggc-page-footer__content ggc-page-footer__wrapper">
+      <div class="ggc-page-footer__title">
+        <p class="nl-heading rhc-heading footer-title">
+          Generieke Geo Componenten
+        </p>
+        <h2 class="invisible-heading">Footer-menu</h2>
+      </div>
+      <div class="utrecht-column-layout">
+        <div class="ggc-page-footer__section">
+          <ul
+            role="list"
+            class="utrecht-link-list utrecht-link-list--html-ul rhc-link-list"
+          >
+            <li class="utrecht-link-list__item">
+              <a
+                href="https://github.com/kadaster/generieke-geo-componenten"
+                target="_blank"
+                class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
+              >
+                Praat mee op Github<span
+                  class="fa fa-external-link icon-suffix"
+                  aria-hidden="true"
+                ></span>
+              </a>
+            </li>
+            <li class="utrecht-link-list__item">
+              <a
+                href="https://formulieren.kadaster.nl/contact_toegankelijkheid"
+                target="_blank"
+                class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
+              >
+                Toegankelijkheid<span
+                  class="fa fa-external-link icon-suffix"
+                  aria-hidden="true"
+                ></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,22 @@
+export enum Tags {
+  CONTROLS = "controls",
+  DATASET = "dataset",
+  DRAW = "draw",
+  HIGHLIGHT = "highlight",
+  IMPORT = "import",
+  KEYBOARD = "keyboard",
+  LAYER = "layer",
+  LEGEND = "legend",
+  LOCATION = "location",
+  MEASURE = "measure",
+  MODIFY = "modify",
+  OGC_API = "OGC API",
+  SCALE = "scale",
+  SEARCH = "search",
+  SELECT = "select",
+  SNAP = "snap",
+  STYLE = "style",
+  TOOLBAR = "toolbar",
+  TRACE = "trace",
+  ZOOM = "zoom"
+}

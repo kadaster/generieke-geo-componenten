@@ -1,0 +1,58 @@
+<app-example-format
+  [codeHtmlPath]="'code/examples/example-measure/example-draw-style/example-draw-style.component.html'"
+  [codeScssPath]="'code/examples/example-measure/example-draw-style/example-draw-style.component.scss'"
+  [codeTypescriptPath]="'code/examples/example-measure/example-draw-style/example-draw-style.component.ts'"
+  [kaartConfigFilePath]="'code/examples/example-measure/example-draw-style/kaartconfig.json'"
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-draw/example-draw/example-draw-style/example-draw-style.component.html"
+  urlCodeScss="example-draw/example-draw/example-draw-style/example-draw-style.scss"
+  urlCodeTypescript="example-draw/example-draw/example-draw-style/example-draw-style.component.ts"
+  urlGitHub=""
+  urlKaartConfig="example-draw-style/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig=""
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-geometrys>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>
+      In onderstaand voorbeeld zijn de tekenstijlen voor een actieve tekening en
+      een afgeronde tekening aangepast. Het is ook mogelijk om de tekenstijl in
+      te stellen voor een niet valide tekening (zie
+      <a [routerLink]="['/draw-adv']">tekenen uitgebreid</a>).
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div>
+          <b>Meten</b>
+          <div class="d-flex flex-column align-items-stretch">
+            <button [class.active]="drawing()" (click)="drawLine()">
+              Lijn meten
+            </button>
+            <hr />
+            <button (click)="finishCurrentDraw()">Tekening afronden</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [minZoomlevel]="6"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

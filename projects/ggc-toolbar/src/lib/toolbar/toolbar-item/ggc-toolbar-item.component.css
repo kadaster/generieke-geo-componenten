@@ -1,0 +1,3 @@
+.ggc-toolbar-content:has(> div.tab-content > div:empty) {
+  display: none;
+}

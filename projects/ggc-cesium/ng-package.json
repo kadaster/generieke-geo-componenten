@@ -1,0 +1,20 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ggc-cesium",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "allowedNonPeerDependencies": ["@kadaster/ggc-models"],
+  "assets": [
+    {
+      "glob": "README.md",
+      "input": "src",
+      "output": "."
+    },
+    {
+      "glob": "LICENSE.md",
+      "input": "src",
+      "output": "."
+    }
+  ]
+}

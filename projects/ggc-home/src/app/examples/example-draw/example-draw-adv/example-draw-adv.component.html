@@ -1,0 +1,92 @@
+<app-example-format
+  [codeHtmlPath]="'code/examples/example-draw/example-draw-adv/example-draw-adv.component.html'"
+  [codeScssPath]="'code/examples/example-draw/example-draw-adv/example-draw-adv.component.scss'"
+  [codeTypescriptPath]="'code/examples/example-draw/example-draw-adv/example-draw-adv.component.ts'"
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-draw/example-draw-adv/example-draw-adv.component.html"
+  urlCodeScss="example-draw/example-draw-adv/example-draw-adv.component.scss"
+  urlCodeTypescript="example-draw/example-draw-adv/example-draw-adv.component.ts"
+  urlGitHub=""
+  urlKaartConfig="example-draw-options/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig=""
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>
+      Instelmogelijkheden voor tekenen met behulp van <code>drawOptions</code>:
+      <br />- Validatie (<code>validators</code>) <br />- Maximaal aantal punten
+      per figuur (<code>maxPoints</code>)
+    </p>
+    <p>
+      In onderstaand voorbeeld worden polygonen gevalideerd. Polygonen die
+      groter zijn dan 3.000 km² of (gedeeltelijk) getekend zijn in de
+      noordelijke helft van Nederland, zijn niet valide. Invalide tekeningen
+      krijgen tijdens het tekenen de stijl <code>invalidDrawStyle</code>, en na
+      afronding <code>invalidFinishDrawStyle</code>. Ook worden polygonen na het
+      zetten zetten van het derde punt (<code>maxPoints</code> =
+      {{ maxPointsExample }}) automatisch afgerond.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-10 col-sm-10">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+
+      <div class="col-md-2 col-sm-2">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              (change)="goToPage('/draw-basic')"
+              aria-labelledby="extraOptionsLabel"
+              type="checkbox"
+              checked
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <fieldset class="ggc-fieldset">
+          <legend>Zet opties aan of uit:</legend>
+
+          <div class="d-flex flex-column align-items-stretch">
+            <label>
+              <input
+                (change)="toggleInvalidDrawStyle()"
+                type="checkbox"
+                [checked]="validatorsEnabled()"
+              />
+              Validatie
+            </label>
+            <label>
+              <input
+                (change)="toggleMaxPoints()"
+                type="checkbox"
+                [checked]="maxPoints() !== undefined"
+              />
+              Max {{ maxPointsExample }} punten
+            </label>
+            <hr />
+            <button (click)="finishDrawing()">Tekening afronden</button>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</app-example-format>

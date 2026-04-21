@@ -1,0 +1,212 @@
+<main id="main-content" tabindex="-1">
+  <div class="body">
+    <h1>Voorbeelden</h1>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="mb-4">
+          <label for="search" class="fw-bold">Zoek</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              id="search"
+              type="search"
+              placeholder="Zoeken…"
+              [value]="searchTerm"
+              (input)="searchTerm = $any($event.target).value ?? ''"
+            />
+            <span class="input-group-text">
+              <i class="fa fa-search"></i>
+            </span>
+          </div>
+        </div>
+        <div class="mt-2 d-flex flex-column gap-2">
+          <fieldset class="row justify-content-between">
+            <legend class="col-auto fw-bold py-1">Thema's</legend>
+            <span id="thema-filter-hint" class="visually-hidden">
+              Als geen thema geselecteerd is, worden alle resultaten getoond.
+            </span>
+            @if (selectedThemes.size > 0) {
+              <div class="col-auto fw-bold">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="clearThemeFilter()"
+                >
+                  Reset thema's
+                </button>
+              </div>
+            }
+            @for (theme of availableThemes; track theme) {
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [id]="'theme-' + theme"
+                  [checked]="selectedThemes.has(theme)"
+                  (change)="toggleTheme(theme)"
+                />
+                <label class="form-check-label" [for]="'theme-' + theme">
+                  <span>{{ theme }}</span>
+                  <span class="text-muted ms-1"
+                    >({{ countThemes(theme) }})</span
+                  >
+                </label>
+              </div>
+            }
+          </fieldset>
+        </div>
+        <div class="mt-2 d-flex flex-column gap-2">
+          <fieldset class="row justify-content-between">
+            <legend class="col-auto fw-bold py-1">Componenten</legend>
+            <span id="component-filter-hint" class="visually-hidden">
+              Als geen component geselecteerd is, worden alle resultaten
+              getoond.
+            </span>
+            @if (selectedComponents.size > 0) {
+              <div class="col-auto fw-bold">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="clearComponentFilter()"
+                >
+                  Reset componenten
+                </button>
+              </div>
+            }
+            @for (component of availableComponents; track component) {
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [id]="'component-' + component"
+                  [checked]="selectedComponents.has(component)"
+                  (change)="toggleComponent(component)"
+                />
+                <label
+                  class="form-check-label"
+                  [for]="'component-' + component"
+                >
+                  <span>{{ component }}</span>
+                  <span class="text-muted ms-1"
+                    >({{ countComponents(component) }})</span
+                  >
+                </label>
+              </div>
+            }
+          </fieldset>
+        </div>
+        <div class="mt-2 d-flex flex-column gap-2">
+          <fieldset class="row justify-content-between">
+            <legend class="col-auto fw-bold py-1">Tag's</legend>
+            <span id="tag-filter-hint" class="visually-hidden">
+              Als geen tag geselecteerd is, worden alle resultaten getoond.
+            </span>
+            @if (selectedTags.size > 0) {
+              <div class="col-auto fw-bold">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="clearTagFilter()"
+                >
+                  Reset tag's
+                </button>
+              </div>
+            }
+            @for (tag of availableTags; track tag) {
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [id]="'tag-' + tag"
+                  [checked]="selectedTags.has(tag)"
+                  (change)="toggleTag(tag)"
+                />
+                <label class="form-check-label" [for]="'tag-' + tag">
+                  <span>{{ tag }}</span>
+                  <span class="text-muted ms-1">({{ countTags(tag) }})</span>
+                </label>
+              </div>
+            }
+          </fieldset>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <small class="text-muted d-block mt-1 text-end">
+          Resultaten: {{ filteredCards().length }} / {{ cards.length }}
+        </small>
+        @if (groupedCards.length > 0) {
+          @for (group of groupedCards; track group.theme) {
+            <h3 class="mt-0">{{ group.theme }}</h3>
+            <div class="row">
+              @for (card of group.cards; track card.route) {
+                <div class="col-12 col-xxl-6">
+                  <div class="card h-100 mb-3">
+                    <a
+                      [routerLink]="card.route"
+                      class="d-flex flex-column h-100"
+                    >
+                      <div class="row h-100 justify-content-around">
+                        <div class="col-7 d-flex flex-column h-100">
+                          <div class="card-body">
+                            <h4
+                              class="card-title nl-heading nl-heading--level-5"
+                            >
+                              {{ card.title }}
+                            </h4>
+                            @if (card.introduction) {
+                              <p class="card-text nl-paragraph ggc-paragraph">
+                                {{ card.introduction }}
+                              </p>
+                            }
+                          </div>
+                          <div class="tags-container">
+                            @if (card.components.length > 0) {
+                              <div class="tag">
+                                @for (
+                                  component of card.components;
+                                  track component
+                                ) {
+                                  <span
+                                    class="badge rounded-pill tag-component mx-1"
+                                  >
+                                    {{ component.toLocaleLowerCase() }}
+                                  </span>
+                                }
+                              </div>
+                            }
+                            @if (card.tags.length > 0) {
+                              <div class="tag">
+                                @for (tag of card.tags | sort; track tag) {
+                                  <span
+                                    class="badge rounded-pill tag-technical mx-1"
+                                  >
+                                    {{ tag.toLocaleLowerCase() }}
+                                  </span>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                        <div class="col-5">
+                          @if (card.imageLocation) {
+                            <img
+                              class="card-img-top float-end"
+                              [src]="card.imageLocation"
+                              [alt]="`Card ${card.title}`"
+                            />
+                          }
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <p>Geen resultaten gevonden.</p>
+        }
+      </div>
+    </div>
+  </div>
+</main>

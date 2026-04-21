@@ -263,6 +263,19 @@ export class GgcSearchLocationComponent implements OnInit {
   }
 
   /**
+   * Handelt paste-events in het inputveld af.
+   * @param $event De ClipboardEvent vanuit het inputveld.
+   */
+  onPaste($event: ClipboardEvent) {
+    const text = $event.clipboardData?.getData("text");
+    if (text) {
+      setTimeout(() => {
+        this.searchForSuggestions(text);
+      }, 100);
+    }
+  }
+
+  /**
    * Handelt navigatie binnen de lijst met suggesties af.
    * @param $event De KeyboardEvent vanuit de suggestielijst.
    */

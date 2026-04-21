@@ -1,0 +1,10 @@
+<div
+  #cesiumViewer
+  [id]="cesiumElementId"
+  class="scale-viewer"
+  tabindex="-1"
+  (click)="getFocus()"
+  (keydown)="onKeyDown($event)"
+  [attr.role]="ariaRole"
+  [attr.aria-label]="ariaLabel"
+></div>

@@ -1,0 +1,49 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-search-location_src_lib_search-location_ggc-search-location.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="'code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component.html'"
+  [codeTypescriptPath]="'code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component.ts'"
+  [codeScssPath]="'code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component.scss'"
+  urlCodeHtml="example-snapping/example-search-location-woonplaats/example-search-location-woonplaats.component.html"
+  urlCodeTypescript="example-snapping/example-search-location-woonplaats/example-search-location-woonplaats.component.ts"
+  urlCodeScss="example-snapping/example-search-location-woonplaats/example-search-location-woonplaats.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div>
+      <ggc-search-location
+        (events)="logSearchComponentEvents($event)"
+        [searchLocationOptions]="searchLocationOptions"
+      ></ggc-search-location>
+    </div>
+    <div class="map-container">
+      <ggc-map></ggc-map>
+    </div>
+    <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+    <!-- DOCS:END functionality -->
+  </div>
+
+  <div page-tips>
+    <p>
+      Met behulp van 'setCustomCollections' wordt alleen gezocht in een
+      specifieke collecties. In onderstaand voorbeeld wordt alleen gezocht in de
+      Woonplaatsen collectie.
+    </p>
+  </div>
+</app-example-format>

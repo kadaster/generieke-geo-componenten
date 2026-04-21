@@ -1,0 +1,77 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs=""
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="'code/examples/example-legend/example-legend-zoom/example-legend-zoom.component.html'"
+  [codeTypescriptPath]="'code/examples/example-legend/example-legend-zoom/example-legend-zoom.component.ts'"
+  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
+  [kaartConfigFilePath]="'code/examples/example-legend/example-legend-zoom/kaartconfig.json'"
+  urlCodeHtml="example-legend/example-legend/example-legend-zoom/example-legend-zoom.component.html"
+  urlCodeTypescript="example-legend/example-legend/example-legend-zoom/example-legend-zoom.component.ts"
+  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
+  urlKaartConfig="example-legend/kaartconfig.json"
+  urlTreeConfig="example-legend/treeconfig.json"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In combinatie met een ggc-map component, worden automatisch de legenda's
+      getoond van alle zichtbare kaartlagen. Het legenda component laat
+      standaard alleen legenda's zien van kaartlagen die op dat moment zichtbaar
+      zijn met het huidige zoomniveau. Deze instelling is aan te passen via de
+      input <code>alwaysEnableLegends</code>.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div class="row always-enabled-toggle">
+          <h6 id="alwaysEnabledLabel">
+            Laat legenda's altijd zien (alwaysEnableLegends)
+          </h6>
+          <label class="switch">
+            <input
+              type="checkbox"
+              aria-labelledby="alwaysEnabledLabel"
+              (change)="toggleAlwaysEnableLegends()"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="legend-container">
+          <b>Legenda</b>
+          <ggc-legend
+            [mapIndex]="mapIndex"
+            [alwaysEnableLegends]="alwaysEnableLegends()"
+            [collapsable]="true"
+            [defaultExpanded]="true"
+          ></ggc-legend>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map
+            [webServices]="mapConfig"
+            [mapIndex]="mapIndex"
+            [maxZoomlevel]="16"
+            [minZoomlevel]="3"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

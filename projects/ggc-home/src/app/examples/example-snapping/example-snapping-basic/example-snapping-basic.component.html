@@ -1,0 +1,64 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs=""
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="'code/examples/example-snapping/example-snapping-basic/example-snapping-basic.component.html'"
+  [codeTypescriptPath]="'code/examples/example-snapping/example-snapping-basic/example-snapping-basic.component.ts'"
+  [codeScssPath]="'code/examples/example-snapping/example-snapping-basic/example-snapping-basic.component.scss'"
+  urlCodeHtml="example-snapping/example-snapping-basic/example-snapping-basic.component.html"
+  urlCodeTypescript="example-snapping/example-snapping-basic/example-snapping-basic.component.ts"
+  urlCodeScss="example-snapping/example-snapping-basic/example-snapping-basic.component.scss"
+>
+  <div page-labels>
+    @for (tag of componentInfo.tags; track tag) {
+      <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+    }
+  </div>
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Wanneer snappen is ingeschakeld, dan “plakt” een punt dat je tekent of
+      bewerkt automatisch vast aan een punt of lijn van een ander object dat al
+      op de kaart staat. Hierdoor sluiten objecten exact op elkaar aan. Snappen
+      kan gebruikt worden bij het tekenen van nieuwe objecten en bij het
+      aanpassen van bestaande objecten.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <div class="col-md-7 col-sm-12">
+        <!-- DOCS:START functionality -->
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex"></ggc-map>
+        </div>
+        <ggc-geojson-layer [options]="optionsProvincie"></ggc-geojson-layer>
+        <ggc-layer-brt-achtergrondkaart
+          [mapIndex]="mapIndex"
+        ></ggc-layer-brt-achtergrondkaart>
+        <!-- DOCS:END functionality -->
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              type="checkbox"
+              aria-labelledby="extraOptionsLabel"
+              (change)="goToPage('/snapping-advanced')"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div page-tips>
+    <p>Met behulp van SnapOptions kan snappen worden geconfigureerd.</p>
+  </div>
+</app-example-format>

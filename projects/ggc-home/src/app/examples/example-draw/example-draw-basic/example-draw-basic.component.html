@@ -1,0 +1,98 @@
+<app-example-format
+  [codeHtmlPath]="'code/examples/example-draw/example-draw-basic/example-draw-basic.component.html'"
+  [codeScssPath]="'code/examples/example-draw/example-draw-basic/example-draw-basic.component.scss'"
+  [codeTypescriptPath]="'code/examples/example-draw/example-draw-basic/example-draw-basic.component.ts'"
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-draw/example-draw-basic/example-draw-basic.component.html"
+  urlCodeScss="example-draw/example-draw-basic/example-draw-basic.component.scss"
+  urlCodeTypescript="example-draw/example-draw-basic/example-draw-basic.component.ts"
+  urlGitHub=""
+  urlKaartConfig="example-draw-options/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig=""
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>De tekening kan ook afgerond worden met een dubbele rechtermuis klik.</p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-10 col-sm-10">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+
+      <div class="col-md-2 col-sm-1">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              (change)="goToPage('/draw-adv')"
+              aria-labelledby="extraOptionsLabel"
+              type="checkbox"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <fieldset class="ggc-fieldset">
+          <legend>Kies een figuur om te tekenen:</legend>
+          <div class="d-flex flex-column align-items-stretch">
+            <button
+              [class.active]="activeDrawType() === mapComponentDrawTypes.POINT"
+              (click)="startDrawPoint()"
+            >
+              Punt
+            </button>
+            <button
+              [class.active]="
+                activeDrawType() === mapComponentDrawTypes.LINESTRING
+              "
+              (click)="startDrawLine()"
+            >
+              Lijn
+            </button>
+            <button
+              [class.active]="
+                activeDrawType() === mapComponentDrawTypes.RECTANGLE
+              "
+              (click)="startDrawRectangle()"
+            >
+              Rechthoek
+            </button>
+            <button
+              [class.active]="activeDrawType() === mapComponentDrawTypes.CIRCLE"
+              (click)="startDrawCircle()"
+            >
+              Cirkel
+            </button>
+            <button
+              [class.active]="
+                activeDrawType() === mapComponentDrawTypes.POLYGON
+              "
+              (click)="startDrawPolygon()"
+            >
+              Polygoon
+            </button>
+            <hr />
+            <button (click)="finishDrawing()">Tekening afronden</button>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</app-example-format>

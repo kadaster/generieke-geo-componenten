@@ -1,0 +1,66 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-layer-image_src_lib_layer-image_ggc-layer-image.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="'code/examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.component.html'"
+  [codeTypescriptPath]="'code/examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.component.ts'"
+  [codeScssPath]="'code/examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.component.scss'"
+  urlCodeHtml="example-snapping/example-layer-geojson-wfs/example-layer-geojson-wfs.component.html"
+  urlCodeTypescript="example-snapping/example-layer-geojson-wfs/example-layer-geojson-wfs.component.ts"
+  urlCodeScss="example-snapping/example-layer-geojson-wfs/example-layer-geojson-wfs.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In het voorbeeld hieronder is een GeoJSON-kaart met provinciegrenzen als
+      laag toegevoegd aan de kaart.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <div class="col-md-8 col-sm-10">
+        <!-- DOCS:START functionality -->
+        <div class="map-container">
+          <ggc-map>
+            <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+            @if (useCustomStyles) {
+              <ggc-geojson-layer
+                [options]="optionsProvincieCustomStyle"
+              ></ggc-geojson-layer>
+            } @else {
+              <ggc-geojson-layer
+                [options]="optionsProvincie"
+              ></ggc-geojson-layer>
+            }
+          </ggc-map>
+        </div>
+        <!-- DOCS:END functionality -->
+      </div>
+      <div class="col-md-1 col-sm-1">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Custom styling</h6>
+          <label class="switch">
+            <input
+              type="checkbox"
+              aria-labelledby="extraOptionsLabel"
+              (change)="useCustomStyles = !useCustomStyles"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-example-format>

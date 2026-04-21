@@ -1,0 +1,49 @@
+@if (
+  featureInfoCollectionArrayInternal &&
+  featureInfoCollectionArrayInternal.length > 0
+) {
+  <div
+    class="ggc-fi-tab"
+    role="tablist"
+    [attr.aria-labelledby]="ariaLabelledBy ? ariaLabelledBy : null"
+    [attr.aria-label]="ariaLabelledBy ? null : ariaLabel"
+  >
+    @for (info of featureInfoCollectionArrayInternal; track info) {
+      <button
+        [id]="'tab-' + info.layerName"
+        role="tab"
+        [attr.aria-controls]="'tabpanel-' + info.layerName"
+        [attr.aria-selected]="info.layerName === selectedTab"
+        [ngClass]="{
+          active: info.layerName === selectedTab,
+          inactive: info.layerName !== selectedTab
+        }"
+        (click)="
+          featureInfoCollectionArrayInternal.length > 1
+            ? onTabClicked(info.layerName)
+            : null
+        "
+      >
+        <ng-container
+          [ngTemplateOutlet]="
+            tabComponent ? tabComponent : defaultValueTemplate
+          "
+          [ngTemplateOutletContext]="{
+            layerName: info.layerName,
+            active: info.layerName === selectedTab
+          }"
+        ></ng-container>
+        <ng-template #defaultValueTemplate>{{ info.layerName }}</ng-template>
+      </button>
+    }
+  </div>
+}
+<div
+  class="ggc-fi-tab-content"
+  [attr.id]="'tabpanel-' + selectedTab"
+  role="tabpanel"
+  [attr.aria-labelledby]="'tab-' + selectedTab"
+  tabIndex="0"
+>
+  <ng-content></ng-content>
+</div>

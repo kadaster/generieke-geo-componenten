@@ -1,0 +1,25 @@
+<div
+  role="radiogroup"
+  class="ggc-ds-switcher-radio-container"
+  aria-label="Datasets"
+>
+  @for (button of datasetSwitcherButtons; track button) {
+    <input
+      class="ggc-ds-switcher-radio-button"
+      type="radio"
+      (change)="handleChangeEvent($event)"
+      name="ggc-ds-switcher-radio-buttons"
+      value="{{ button.name }}"
+      id="{{ button.name }}"
+      [checked]="button.name === activeTheme?.themeName"
+    />
+    <label class="ggc-ds-switcher-label" for="{{ button.name }}">
+      <img
+        class="ggc-ds-switcher-label-img"
+        alt=""
+        src="{{ button.imageUrl }}"
+      />
+      <span class="ggc-ds-switcher-label-txt">{{ button.name }}</span>
+    </label>
+  }
+</div>

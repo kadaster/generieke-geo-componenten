@@ -1,0 +1,104 @@
+<ng-container [ngSwitch]="type">
+  <ng-container *ngSwitchCase="featureInfoDisplayTypeEnum.LIST">
+    <dl class="ggc-fi-list-item">
+      <ng-container *ngFor="let key of objectKeys | featureinfokeys">
+        <ng-container
+          *ngIf="
+            !headerValueTemplates.has(key) || headerValueTemplates.get(key)
+          "
+        >
+          <dt class="ggc-fi-list-title">
+            <ng-container
+              [ngTemplateOutlet]="
+                headerValueTemplates.get(key)
+                  ? headerValueTemplates.get(key)
+                  : defaultValueTemplateHeader
+              "
+              [ngTemplateOutletContext]="{
+                $implicit: key,
+                value: displayFeature[key],
+                properties: displayFeature
+              }"
+            ></ng-container>
+            <ng-template #defaultValueTemplateHeader>{{ key }}</ng-template>
+          </dt>
+          <dd class="ggc-fi-list-content">
+            <ng-container
+              [ngTemplateOutlet]="
+                contentValueTemplates.get(key)
+                  ? contentValueTemplates.get(key)
+                  : defaultValueTemplate
+              "
+              [ngTemplateOutletContext]="{
+                $implicit: key,
+                value: displayFeature[key],
+                properties: displayFeature
+              }"
+            ></ng-container>
+            <ng-template #defaultValueTemplate>{{
+              displayFeature[key]
+            }}</ng-template>
+          </dd>
+        </ng-container>
+      </ng-container>
+    </dl>
+  </ng-container>
+  <ng-container *ngSwitchCase="featureInfoDisplayTypeEnum.TABLE">
+    <table class="ggc-fi-table table">
+      <caption class="sr-only visually-hidden">
+        Presentatie van feature data in tabelvorm
+      </caption>
+      <thead class="ggc-fi-thead">
+        <tr>
+          <th class="ggc-fi-col-first" scope="col">Naam</th>
+          <th class="ggc-fi-col-second" scope="col">Waarde</th>
+        </tr>
+      </thead>
+      <tbody class="ggc-fi-tbody">
+        <ng-container *ngFor="let key of objectKeys | featureinfokeys">
+          <ng-container
+            *ngIf="
+              !headerValueTemplates.has(key) || headerValueTemplates.get(key)
+            "
+          >
+            <tr>
+              <td>
+                <ng-container
+                  [ngTemplateOutlet]="
+                    headerValueTemplates.has(key)
+                      ? headerValueTemplates.get(key)
+                      : defaultValueTemplateHeader
+                  "
+                  [ngTemplateOutletContext]="{
+                    $implicit: key,
+                    value: displayFeature[key],
+                    properties: displayFeature
+                  }"
+                ></ng-container>
+                <ng-template #defaultValueTemplateHeader>{{ key }}</ng-template>
+              </td>
+              <td>
+                <ng-container
+                  class="ggc-fi-list-content"
+                  [ngTemplateOutlet]="
+                    contentValueTemplates.get(key)
+                      ? contentValueTemplates.get(key)
+                      : defaultValueTemplate
+                  "
+                  [ngTemplateOutletContext]="{
+                    $implicit: key,
+                    value: displayFeature[key],
+                    properties: displayFeature
+                  }"
+                ></ng-container>
+                <ng-template #defaultValueTemplate>{{
+                  displayFeature[key]
+                }}</ng-template>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </ng-container>
+</ng-container>

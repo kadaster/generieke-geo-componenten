@@ -30,6 +30,7 @@
       "
       (keyup)="onInputUp($event)"
       (keyup.enter)="searchOnEnter()"
+      (paste)="onPaste($event)"
       (focus)="onInputFocus()"
       [value]="inputValue"
       class="form-control"

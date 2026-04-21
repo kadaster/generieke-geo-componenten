@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "declarationMap": false,
+    "paths": {
+      "@kadaster/ggc-cesium": [
+        "projects/ggc-dataset-tree/src/typings/dataset-tree-shims.d.ts"
+      ],
+      "@kadaster/ggc-map": [
+        "projects/ggc-dataset-tree/src/typings/dataset-tree-shims.d.ts"
+      ],
+      "@kadaster/ggc-models": ["dist/ggc-models"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true,
+    "compilationMode": "partial"
+  }
+}

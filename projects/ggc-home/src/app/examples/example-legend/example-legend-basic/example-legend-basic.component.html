@@ -1,0 +1,64 @@
+<app-example-format
+  [codeHtmlPath]="'code/examples/example-legend/example-legend-basic/example-legend-basic.component.html'"
+  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
+  [codeTypescriptPath]="'code/examples/example-legend/example-legend-basic/example-legend-basic.component.ts'"
+  [kaartConfigFilePath]="'code/examples/example-legend/example-legend-basic/kaartconfig.json'"
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-legend/example-legend/example-legend-basic/example-legend-basic.component.html"
+  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
+  urlCodeTypescript="example-legend/example-legend/example-legend-basic/example-legend-basic.component.ts"
+  urlKaartConfig="example-legend/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig="example-legend/treeconfig.json"
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In combinatie met een ggc-map component, worden automatisch de legenda's
+      getoond van alle zichtbare kaartlagen.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div class="legend-container">
+          <b>Legenda</b>
+          <ggc-legend [collapsable]="false" [mapIndex]="mapIndex"></ggc-legend>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+      <div class="col-md-1 col-sm-1">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              (change)="goToPage('/legend-advanced')"
+              aria-labelledby="extraOptionsLabel"
+              type="checkbox"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-example-format>

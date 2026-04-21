@@ -1,0 +1,119 @@
+@if (hideTree) {
+  @for (dataset of datasets; track dataset; let datasetIndex = $index) {
+    <ng-container
+      *ngTemplateOutlet="
+        datasetRow;
+        context: { dataset: dataset, datasetIndex: datasetIndex }
+      "
+    ></ng-container>
+  }
+} @else {
+  <table class="w-100 ggc-dt-dataset" aria-hidden="true">
+    <tbody>
+      @for (dataset of datasets; track dataset; let datasetIndex = $index) {
+        <tr
+          class="ggc-dt-btn-ls-collapse"
+          (click)="toggleCollapse($event, dataset)"
+          (keydown.enter)="toggleCollapse($event, dataset)"
+          tabindex="0"
+        >
+          @if (!iconAlignRight) {
+            <td class="w-1">
+              @if (dataset.open) {
+                <span class="ggc-dt-expanded icons {{ iconExpanded }}"></span>
+              } @else {
+                <span class="ggc-dt-collapsed icons {{ iconCollapsed }}"></span>
+              }
+            </td>
+          }
+          <td
+            [ngClass]="{
+              'ggc-dt-btn-ls-active':
+                getActiveLayerCount(dataset) > 0 || dataset.open
+            }"
+          >
+            {{ dataset.datasetName }} {{ generateCountString(dataset) }}
+          </td>
+          <td class="w-1">
+            <ng-container
+              [ngTemplateOutlet]="
+                datasetLabelComponent
+                  ? datasetLabelComponent
+                  : defaultValueDatasetTemplate
+              "
+              [ngTemplateOutletContext]="{
+                dataset: dataset
+              }"
+            ></ng-container>
+            <ng-template #defaultValueDatasetTemplate>
+              @if (
+                !(
+                  dataset.infoUrl === null ||
+                  dataset.infoUrl === "" ||
+                  dataset.infoUrl === undefined
+                )
+              ) {
+                <a
+                  href="{{ dataset.infoUrl }}"
+                  target="_blank"
+                  rel="noopener"
+                  title="Meer informatie"
+                  aria-label="Meer informatie"
+                >
+                  <span class="sr-only visually-hidden"
+                    >(opent een nieuwe pagina)</span
+                  >
+                  <span class="ggc-dt-info info {{ iconInfoUrl }}"></span>
+                </a>
+              }
+            </ng-template>
+          </td>
+          @if (iconAlignRight) {
+            <td class="w-1 text-end">
+              @if (dataset.open) {
+                <span class="ggc-dt-expanded icons {{ iconExpanded }}"></span>
+              } @else {
+                <span class="ggc-dt-collapsed icons {{ iconCollapsed }}"></span>
+              }
+            </td>
+          }
+        </tr>
+        @if (dataset.open) {
+          <ng-container
+            *ngTemplateOutlet="
+              datasetRow;
+              context: { dataset: dataset, datasetIndex: datasetIndex }
+            "
+          ></ng-container>
+        }
+      }
+    </tbody>
+  </table>
+}
+<ng-template #datasetRow let-dataset="dataset" let-datasetIndex="datasetIndex">
+  <tr>
+    <td [attr.colspan]="hideTree ? 1 : 3">
+      <div
+        [attr.aria-labelledby]="'#btn' + themeIndex + '-ls' + datasetIndex"
+        id="th{{ themeIndex }}-ls{{ datasetIndex }}"
+        class="ggc-dt-layer-container"
+      >
+        @for (service of dataset.services; track service) {
+          @for (layer of service.layers; track layer) {
+            <ggc-layer-toggle
+              [layer]="layer"
+              [iconDisabled]="iconDisabled"
+              [iconChecked]="iconChecked"
+              [iconUnchecked]="iconUnchecked"
+              [mapIndex]="mapIndex"
+              [viewerType]="viewerType"
+              [layerLabelComponent]="layerLabelComponent"
+              [layerEnabledCallback]="layerEnabledCallback"
+            >
+            </ggc-layer-toggle>
+          }
+        }
+      </div>
+    </td>
+  </tr>
+</ng-template>

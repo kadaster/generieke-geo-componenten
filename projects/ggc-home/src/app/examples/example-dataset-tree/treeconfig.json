@@ -1,0 +1,58 @@
+[
+  {
+    "themeName": "Achtergrond kaart",
+    "datasets": [
+      {
+        "datasetName": "BRT Achtergrond",
+        "infoUrl": "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/6d23a02b-5a8a-447e-a481-ddb2a085c1fa",
+        "services": [
+          {
+            "layers": [
+              { "layerId": "brtAchtergrondkaartStandaard" },
+              { "layerId": "brtAchtergrondkaartGrijs" }
+            ]
+          }
+        ]
+      },
+      {
+        "datasetName": "Luchtfoto",
+        "infoUrl": "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/a301ddc7-c26f-42d8-b367-509ae5ae47d0",
+        "services": [
+          {
+            "layers": [{ "layerId": "luchtfoto" }]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "themeName": "Een andere data verzameling",
+    "datasets": [
+      {
+        "datasetName": "Bestuurlijke gebieden (wms)",
+        "infoUrl": "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/208bc283-7c66-4ce7-8ad3-1cf3e8933fb5",
+        "services": [
+          {
+            "layers": [
+              { "layerId": "landsgrens" },
+              { "layerId": "provincies" },
+              { "layerId": "gemeenten" }
+            ]
+          }
+        ]
+      },
+      {
+        "datasetName": "Overige lagen",
+        "services": [
+          {
+            "layers": [
+              { "layerId": "gebiedsindelingen-provincies" },
+              { "layerId": "vectortile-bgt" },
+              { "layerId": "logoImage" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

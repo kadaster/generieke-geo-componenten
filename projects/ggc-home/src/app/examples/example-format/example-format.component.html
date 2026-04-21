@@ -1,0 +1,287 @@
+<div class="page">
+  <header class="header">
+    <div class="title-row">
+      <h1>{{ title }}</h1>
+      <nav class="header-links">
+        @if (urlVoorbeelden) {
+          <a href="{{ urlVoorbeelden }}">Voorbeelden</a>
+        }
+        @if (urlChangelog) {
+          <a href="{{ urlChangelog }}">Changelog</a>
+        }
+      </nav>
+    </div>
+    <div class="labels">
+      <ng-content select="[page-labels]"></ng-content>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="introduction">
+      <div class="row">
+        <div class="col-12 page-introduction">
+          <ng-content select="[page-introduction]"></ng-content>
+        </div>
+      </div>
+    </section>
+
+    <section class="functionality">
+      <div class="row">
+        <div class="col-12">
+          <ng-content select="[page-functionality]"></ng-content>
+        </div>
+      </div>
+    </section>
+
+    <section class="tips-tricks">
+      <div class="row">
+        <div class="col-12">
+          <div class="callout">
+            <ng-content select="[page-tips]"></ng-content>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="row">
+      <h2>Code</h2>
+      <p>
+        Bekijk de
+        <a href="{{ urlTSDocs }}" target="_blank"
+          >Technische documentatie (TS Docs)<span
+            class="fa fa-external-link icon-suffix"
+            aria-hidden="true"
+          ></span
+        ></a>
+      </p>
+      <div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active"
+              id="html-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#html"
+              type="button"
+              role="tab"
+              aria-controls="html"
+              aria-selected="true"
+            >
+              HTML
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="scss-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#scss"
+              type="button"
+              role="tab"
+              aria-controls="scss"
+              aria-selected="false"
+            >
+              SCSS
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="typescript-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#typescript"
+              type="button"
+              role="tab"
+              aria-controls="typescript"
+              aria-selected="false"
+            >
+              Typescript
+            </button>
+          </li>
+          @if (kaartConfigFilePath) {
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="kaart-json-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#kaart-json"
+                type="button"
+                role="tab"
+                aria-controls="kaart-json"
+                aria-selected="false"
+              >
+                Kaart Configuration (json)
+              </button>
+            </li>
+          }
+          @if (treeConfigFilePath) {
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tree-json-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#tree-json"
+                type="button"
+                role="tab"
+                aria-controls="tree-json"
+                aria-selected="false"
+              >
+                DatasetTree Configuration (json)
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+      <div class="tab-content" id="myTabContent">
+        <div
+          class="tab-pane fade"
+          id="typescript"
+          role="tabpanel"
+          aria-labelledby="typescript-tab"
+        >
+          <section class="codeTypescript">
+            <div class="col-12">
+              <p>
+                Open in
+                <a href="{{ baseUrlCode }}{{ urlCodeTypescript }}"
+                  >GitHub<span
+                    class="fa fa-external-link icon-suffix"
+                    aria-hidden="true"
+                  ></span
+                ></a>
+              </p>
+              @if (codeTypescriptPath) {
+                <pre><code
+                  [highlight]="codeTypescriptPath | codeFromUrl | async"
+                  language="typescript"
+                ></code></pre>
+              }
+              @if (!codeTypescriptPath) {
+                <pre><code language="typescript">
+              <ng-content select="[page-typescript]"></ng-content>
+            </code></pre>
+              }
+            </div>
+          </section>
+        </div>
+        <div
+          class="tab-pane fade show active"
+          id="html"
+          role="tabpanel"
+          aria-labelledby="html-tab"
+        >
+          <section class="codeHtml">
+            <div class="col-12">
+              <p>
+                Open in
+                <a href="{{ baseUrlCode }}{{ urlCodeHtml }}"
+                  >GitHub<span
+                    class="fa fa-external-link icon-suffix"
+                    aria-hidden="true"
+                  ></span
+                ></a>
+              </p>
+              @if (codeHtmlPath) {
+                <pre><code
+                    [highlight]="(codeHtmlPath | codeFromUrl | async)
+              | extractDocsSectionPipe : 'functionality'"
+                    language="html"
+                  ></code></pre>
+              }
+              @if (!codeHtmlPath) {
+                <pre><code language="html">
+              <ng-content select="[page-html]"></ng-content>
+            </code></pre>
+              }
+            </div>
+          </section>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="scss"
+          role="tabpanel"
+          aria-labelledby="scss-tab"
+        >
+          <section class="codeScss">
+            <div class="col-12">
+              <p>
+                Open in
+                <a href="{{ baseUrlCode }}{{ urlCodeScss }}"
+                  >GitHub<span
+                    class="fa fa-external-link icon-suffix"
+                    aria-hidden="true"
+                  ></span
+                ></a>
+              </p>
+              @if (codeScssPath) {
+                <pre><code
+                    [highlight]="(codeScssPath | codeFromUrl | async)"
+                    language="scss"
+                  ></code></pre>
+              }
+              @if (!codeScssPath) {
+                <pre><code language="scss">
+              <ng-content select="[page-scss]"></ng-content>
+            </code></pre>
+              }
+            </div>
+          </section>
+        </div>
+        @if (kaartConfigFilePath) {
+          <div
+            class="tab-pane fade"
+            id="kaart-json"
+            role="tabpanel"
+            aria-labelledby="kaart-json-tab"
+          >
+            <section class="jsonConfig">
+              <div class="col-12">
+                <p>
+                  Open in
+                  <a href="{{ baseUrlCode }}{{ urlKaartConfig }}"
+                    >GitHub<span
+                      class="fa fa-external-link icon-suffix"
+                      aria-hidden="true"
+                    ></span
+                  ></a>
+                </p>
+                <pre><code
+                    [highlight]="(kaartConfigFilePath | codeFromUrl | async)"
+                    language="json"
+                  ></code></pre>
+              </div>
+            </section>
+          </div>
+        }
+
+        @if (treeConfigFilePath) {
+          <div
+            class="tab-pane fade"
+            id="tree-json"
+            role="tabpanel"
+            aria-labelledby="tree-json-tab"
+          >
+            <section class="jsonConfig">
+              <div class="col-12">
+                <p>
+                  Open in
+                  <a href="{{ baseUrlCode }}{{ urlTreeConfig }}"
+                    >GitHub<span
+                      class="fa fa-external-link icon-suffix"
+                      aria-hidden="true"
+                    ></span
+                  ></a>
+                </p>
+
+                <pre><code
+                  [highlight]="(treeConfigFilePath | codeFromUrl | async)"
+                  language="json"
+                ></code></pre>
+              </div>
+            </section>
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>

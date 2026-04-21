@@ -1,0 +1,16 @@
+.ggc-dl-iconlist {
+  margin: 3px;
+}
+
+.ggc-dl-iconlist-text {
+  margin-left: 10px;
+  display: inline-block;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  li:before {
+    content: none;
+  }
+}

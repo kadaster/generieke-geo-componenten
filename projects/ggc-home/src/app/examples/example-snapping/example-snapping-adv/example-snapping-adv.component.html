@@ -1,0 +1,132 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs=""
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="'code/examples/example-snapping/example-snapping-adv/example-snapping-adv.component.html'"
+  [codeTypescriptPath]="'code/examples/example-snapping/example-snapping-adv/example-snapping-adv.component.ts'"
+  [codeScssPath]="'code/examples/example-snapping/example-snapping-adv/example-snapping-adv.component.scss'"
+  urlCodeHtml="example-snapping/example-snapping-adv/example-snapping-adv.component.html"
+  urlCodeTypescript="example-snapping/example-snapping-adv/example-snapping-adv.component.ts"
+  urlCodeScss="example-snapping/example-snapping-adv/example-snapping-adv.component.scss"
+>
+  <div page-labels>
+    @for (tag of componentInfo.tags; track tag) {
+      <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+    }
+  </div>
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Wanneer snappen is ingeschakeld, dan “plakt” een punt dat je tekent of
+      bewerkt automatisch vast aan een punt of lijn van een ander object dat al
+      op de kaart staat. Hierdoor sluiten objecten exact op elkaar aan. Snappen
+      kan gebruikt worden bij het tekenen van nieuwe objecten en bij het
+      aanpassen van bestaande objecten.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <div class="col-md-7 col-sm-12">
+        <!-- DOCS:START functionality -->
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex"></ggc-map>
+        </div>
+        <ggc-geojson-layer [options]="optionsProvincie"></ggc-geojson-layer>
+        <ggc-layer-brt-achtergrondkaart
+          [mapIndex]="mapIndex"
+        ></ggc-layer-brt-achtergrondkaart>
+        <!-- DOCS:END functionality -->
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              type="checkbox"
+              checked
+              aria-labelledby="extraOptionsLabel"
+              (change)="goToPage('/snapping-basic')"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="options">
+          <p>
+            <strong>Instelbare SnapOptions:</strong>
+            <label for="pixelTolerance"> Snap afstand (pixelTolerance): </label>
+            <input
+              [value]="pixelTolerance"
+              type="text"
+              id="pixelTolerance"
+              [(ngModel)]="pixelTolerance"
+              (change)="setPixelTolerance($event)"
+            /><br /><br />
+            Snappen op meerdere lagen: <br />
+            <label>
+              <input
+                type="checkbox"
+                [checked]="snapDrawLayer"
+                (change)="toggleSnapDrawLayer()"
+              />
+              tekenlaag</label
+            ><br />
+            <label>
+              <input
+                type="checkbox"
+                [checked]="snapProvincieLayer"
+                (change)="toggleSnapProvincieLayer()"
+              />
+              provincielaag</label
+            ><br />
+            <br />
+            Snappen op:<br />
+            <label>
+              <input
+                type="checkbox"
+                [checked]="snapOptions.edge"
+                (change)="toggleEdge()"
+              />
+              edges (lijnen)</label
+            ><br />
+            <label>
+              <input
+                type="checkbox"
+                [checked]="snapOptions.vertex"
+                (change)="toggleVertex()"
+              />
+              vertices (punten op een lijn)</label
+            ><br />
+            <label>
+              <input
+                type="checkbox"
+                [checked]="snapOptions.intersection"
+                (change)="toggleIntersection()"
+              />
+              intersections (kruisende lijnen)</label
+            ><br />
+            <label>
+              <input
+                type="checkbox"
+                [checked]="segmentersEnabled"
+                (change)="toggleSegmenterSnapping()"
+              />
+              segmenten (in voorbeeld: midden van een segment)
+            </label>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div page-tips>
+    <p>
+      Let op: Segmenters overschrijven het standaard snap gedrag voor de
+      meegegeven geometrie typen.
+    </p>
+  </div>
+</app-example-format>

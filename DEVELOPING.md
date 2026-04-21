@@ -22,8 +22,8 @@ gemaakte build wordt hiermee toegevoegd aan de `package.json` van de afnemende a
 
 💡 Soms werkt het lokaal builden en installeren niet direct. Een van de volgende oplossingen kan hierbij helpen:
 
--   Voeg in `angular.json` de volgende property toe: `projects.<project-name>.architect.build.options.preserveSymlinks: true`
--   De cache kan in de weg zitten wanneer er meerdere keren een package wordt gebouwd met hetzelfde versienummer. Dit kan je voorkomen door in `projects/<package-naam>/package.json` het versienummer in te vullen.
+- Voeg in `angular.json` de volgende property toe: `projects.<project-name>.architect.build.options.preserveSymlinks: true`
+- De cache kan in de weg zitten wanneer er meerdere keren een package wordt gebouwd met hetzelfde versienummer. Dit kan je voorkomen door in `projects/<package-naam>/package.json` het versienummer in te vullen.
 
 ## Linter
 
@@ -34,9 +34,9 @@ draait en automatisch fixes doet.
 
 Ga naar Settings en zoek op prettier (Languages & Frameworks > Javascript > Prettier)
 
--   Kies [x] Automatic Prettier configuration
--   Kies [x] Run on save
--   Klik op [ OK ]
+- Kies [x] Automatic Prettier configuration
+- Kies [x] Run on save
+- Klik op [ OK ]
 
 ## Releaseproces van componenten
 

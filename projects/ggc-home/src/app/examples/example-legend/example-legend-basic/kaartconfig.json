@@ -1,0 +1,43 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/legend.png"
+        },
+        "visible": true,
+        "zIndex": -10
+      }
+    ]
+  },
+  {
+    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
+    "title": "Bestuurlijke gebieden",
+    "type": "wms",
+    "layers": [
+      {
+        "layerId": "gemeenten",
+        "title": "Gemeenten",
+        "layerName": "gemeentegebied",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Gemeentegebied/Gemeentegebied.png"
+        },
+        "visible": true
+      },
+      {
+        "layerId": "provincies",
+        "title": "Provincies",
+        "layerName": "provinciegebied",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Provinciegebied/Provinciegebied.png"
+        },
+        "visible": true
+      }
+    ]
+  }
+]

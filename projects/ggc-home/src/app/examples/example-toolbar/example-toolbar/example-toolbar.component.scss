@@ -1,0 +1,39 @@
+.map-container {
+  align-items: stretch;
+  display: flex;
+  height: 100%;
+  justify-content: stretch;
+  min-height: 80vh;
+  position: relative;
+  width: 100%;
+
+  & > * {
+    flex-basis: 100%;
+    flex-grow: 1;
+  }
+}
+
+ggc-toolbar-item::ng-deep {
+  button {
+    &:hover,
+    &:active,
+    &:focus {
+      border: 1px solid black;
+    }
+  }
+}
+
+ggc-toolbar-item-draw ::ng-deep,
+ggc-toolbar-item-measure::ng-deep {
+  ul {
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+  button {
+    &:hover,
+    &:active,
+    &:focus {
+      border: 1px solid black;
+    }
+  }
+}

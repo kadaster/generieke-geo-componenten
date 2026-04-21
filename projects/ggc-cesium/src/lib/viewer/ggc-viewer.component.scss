@@ -1,0 +1,13 @@
+::ng-deep .cesium-widget {
+  position: absolute;
+}
+
+.scale-viewer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+::ng-deep .cesium-viewer .cesium-widget-credits {
+  display: var(--displayLogo);
+}

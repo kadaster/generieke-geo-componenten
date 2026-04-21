@@ -1,0 +1,72 @@
+<div class="gc-controls d-inline-flex">
+  <div class="gc-controls-item gc-controls-nav d-flex flex-column">
+    <div
+      class="justify-content-around gc-controls-nav cesium-control map-control"
+    >
+      <button
+        (click)="rotateUp()"
+        class="btn cesium-control-top"
+        title="Beweeg naar boven"
+        type="button"
+      >
+        <span [ngClass]="upIcon" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="d-inline-flex flex-row cesium-control map-control">
+      <button
+        (click)="rotateLeft()"
+        class="btn cesium-control-left"
+        title="Beweeg naar links"
+        type="button"
+      >
+        <span [ngClass]="leftIcon" aria-hidden="true"></span>
+      </button>
+      <button
+        (click)="setCameraPositionToDefault()"
+        class="btn cesium-control-default-camera-position"
+        title="Zet de camera in de standaard positie"
+        type="button"
+      >
+        <span [ngClass]="defaultCameraPosition" aria-hidden="true"></span>
+      </button>
+      <button
+        (click)="rotateRight()"
+        class="btn cesium-control-right"
+        title="Beweeg naar rechts"
+        type="button"
+      >
+        <span [ngClass]="rightIcon" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="d-flex justify-content-around cesium-control map-control">
+      <button
+        (click)="rotateDown()"
+        class="btn cesium-control-bottom"
+        title="Beweeg naar beneden"
+        type="button"
+      >
+        <span [ngClass]="downIcon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="d-flex flex-column align-self-end gc-controls-item gc-controls-zoom pl-2 ps-2 cesium-control map-control"
+  >
+    <button
+      (click)="moveForward()"
+      class="btn cesium-control-top"
+      title="Zoom in"
+      type="button"
+    >
+      <span [ngClass]="plusIcon" aria-hidden="true"></span>
+    </button>
+    <button
+      (click)="moveBackward()"
+      class="btn cesium-control-bottom"
+      title="Zoom uit"
+      type="button"
+    >
+      <span [ngClass]="minusIcon" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>

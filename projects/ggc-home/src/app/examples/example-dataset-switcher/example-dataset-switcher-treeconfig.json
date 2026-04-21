@@ -1,0 +1,87 @@
+[
+  {
+    "themeName": "BRT-A standaard",
+    "datasets": [
+      {
+        "datasetName": "BRT Achtergrondkaart",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "brt-achtergrondkaart-standaard"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "themeName": "BRT-A Grijs",
+    "datasets": [
+      {
+        "datasetName": "BRT Achtergrondkaart",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "brt-achtergrondkaart-grijs"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "themeName": "BRT-A Pastel",
+    "datasets": [
+      {
+        "datasetName": "BRT Achtergrondkaart",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "brt-achtergrondkaart-pastel"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "themeName": "BRT-A Water",
+    "datasets": [
+      {
+        "datasetName": "BRT Achtergrondkaart",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "brt-achtergrondkaart-water"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "themeName": "Luchtfoto",
+    "datasets": [
+      {
+        "datasetName": "Luchtfoto",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "luchtfoto_actueel_orthohr"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

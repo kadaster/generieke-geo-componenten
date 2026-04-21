@@ -1,0 +1,48 @@
+@if (currentFeature) {
+  @if (!pagerIsHidden) {
+    <nav aria-label="Navigatie door objecten">
+      <ul class="pagination ggc-fi-pager">
+        <li class="ggc-fi-pager-previous">
+          <button
+            (click)="goToPreviousFeature()"
+            class="btn btn-sm"
+            [disabled]="!hasPreviousFeature()"
+            title="Vorige"
+            aria-label="Vorige"
+          >
+            {{ pagerPrevious }}
+          </button>
+        </li>
+        <li class="ggc-fi-pager-value">
+          {{ currentFeatureIndex + 1 }} van
+          {{
+            displayFeaturesProperties ? displayFeaturesProperties.length : ""
+          }}
+        </li>
+        <li class="ggc-fi-pager-next">
+          <button
+            (click)="goToNextFeature()"
+            class="btn btn-sm"
+            [disabled]="!hasNextFeature()"
+            title="Volgende"
+            aria-label="Volgende"
+          >
+            {{ pagerNext }}
+          </button>
+        </li>
+      </ul>
+    </nav>
+  }
+  <ggc-feature-info-display
+    [type]="featureInfoDisplayType"
+    [hideEmptyFields]="hideEmptyFields"
+    [currentFeature]="currentFeature"
+    [headerValueTemplates]="customHeaderValueTemplates"
+    [contentValueTemplates]="customValueTemplates"
+    [hideEmptyFieldWithKeys]="hideEmptyFieldWithKeys"
+  ></ggc-feature-info-display>
+}
+@if (showEmptyMessage && !currentFeature) {
+  <span class="ggc-fi-empty">{{ emptyInfo }}</span>
+}
+<ng-content></ng-content>

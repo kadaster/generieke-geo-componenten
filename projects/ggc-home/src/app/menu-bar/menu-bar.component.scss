@@ -1,0 +1,47 @@
+[ngMenuBar]:has(:focus-visible) {
+  outline: 1px solid var(--nl-link-color);
+}
+
+[ngMenuBar] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background-color: var(--ggc-nav-bar-background-color);
+}
+
+[ngMenu] {
+  margin: 0;
+  width: 15rem;
+  padding: 0.25rem;
+  border: 1px solid var(--nl-link-color);
+  background-color: var(--ggc-nav-bar-background-color);
+}
+[ngMenu][data-visible="false"] {
+  display: none;
+}
+[ngMenuItem] {
+  outline: none;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+[ngMenuItem]:focus,
+[ngMenuItem]:hover {
+  outline: 2px solid var(--nl-link-color);
+}
+[ngMenuItem] .icon {
+  opacity: 0.875;
+  font-size: 1.25rem;
+}
+[ngMenuItem] .label {
+  flex: 1;
+  opacity: 0.875;
+}
+[ngMenuItem]:not([aria-expanded="true"]) .arrow {
+  opacity: 0.5;
+}

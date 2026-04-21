@@ -1,0 +1,101 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "visible": false,
+        "zIndex": -20
+      },
+      {
+        "layerId": "brtAchtergrondkaartGrijs",
+        "title": "BRT achtergrond kaart Grijs (WMTS)",
+        "layerName": "grijs",
+        "visible": true,
+        "zIndex": -20
+      }
+    ]
+  },
+  {
+    "type": "wms",
+    "url": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0",
+    "layers": [
+      {
+        "layerId": "luchtfoto",
+        "title": "Luchtfoto Actueel Ortho 8cm RGB (WMS)",
+        "visible": false,
+        "layerName": "Actueel_orthoHR",
+        "zIndex": -20
+      }
+    ]
+  },
+  {
+    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
+    "type": "wms",
+    "layers": [
+      {
+        "layerId": "landsgrens",
+        "title": "Landsgrens (minResolution: 107)",
+        "layerName": "landgebied",
+        "minResolution": 107
+      },
+      {
+        "layerId": "provincies",
+        "title": "Provincies (minResolution: 53.76, maxResolution: 216)",
+        "layerName": "provinciegebied",
+        "maxResolution": 216,
+        "minResolution": 53.76
+      },
+      {
+        "layerId": "gemeenten",
+        "title": "Gemeenten (maxResolution: 107.52)",
+        "layerName": "gemeentegebied",
+        "maxResolution": 107.52,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "type": "geojson",
+    "url": "https://service.pdok.nl/cbs/gebiedsindelingen/2023/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=provincie_gegeneraliseerd&outputformat=application/json",
+    "layers": [
+      {
+        "layerId": "gebiedsindelingen-provincies",
+        "title": "Provincies (WFS geojson)",
+        "zIndex": 20,
+        "visible": false
+      }
+    ]
+  },
+  {
+    "type": "vector",
+    "url": "https://api.pdok.nl/lv/bgt/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "layers": [
+      {
+        "layerId": "vectortile-bgt",
+        "title": "Basisregistratie Grootschalige Topografie (OGC API Tiles (minResolution: 0.42, maxResolution: 0.84))",
+        "minResolution": 0.42,
+        "maxResolution": 0.84,
+        "zIndex": 10,
+        "visible": false,
+        "style": "https://api.pdok.nl/lv/bgt/ogc/v1/styles/bgt_standaardvisualisatie__netherlandsrdnewquad?f=mapbox"
+      }
+    ]
+  },
+  {
+    "type": "image",
+    "url": "code/examples/example-dataset-tree/logokadaster.png",
+    "layers": [
+      {
+        "title": "Kadaster Logo Apeldoorn (Image)",
+        "imageExtent": [192000, 465000, 197500, 468000],
+        "layerId": "logoImage",
+        "visible": false,
+        "zIndex": 20
+      }
+    ]
+  }
+]

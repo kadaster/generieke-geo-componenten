@@ -1,0 +1,79 @@
+<div class="ggc-dl-active">
+  @if (!legends || legends.length === 0) {
+    <span>Geen datasets geselecteerd!</span>
+  } @else {
+    @for (
+      legend of legends;
+      track legend;
+      let lastItem = $last;
+      let idx = $index
+    ) {
+      @if (legendIsEnabled(legend) || alwaysEnableLegends) {
+        <div
+          class="ggc-dl-dataset"
+          [class.ggc-dl-dataset-expanded]="!collapsable || legend.expanded"
+        >
+          @if (showLegendsName) {
+            @if (collapsable) {
+              <button
+                class="ggc-dl-dataset-name"
+                [attr.aria-expanded]="legend.expanded || false"
+                [attr.aria-controls]="'ggc-legend-' + idx"
+                (click)="toggleLegendInternal(legend)"
+                (keyup)="toggleLegendInternal(legend, $event)"
+              >
+                <span
+                  class="ggc-dl-dataset-toggle-collapsed {{ iconCollapsed }}"
+                ></span>
+                <span
+                  class="ggc-dl-dataset-toggle-expanded {{ iconExpanded }}"
+                ></span>
+                {{ legend.name }}
+              </button>
+            } @else {
+              <span class="ggc-dl-dataset-name">
+                {{ legend.name }}
+              </span>
+            }
+          }
+          @if (!collapsable || (collapsable && legend.expanded)) {
+            <div id="ggc-legend-{{ idx }}">
+              @for (layerLegend of legend.layerLegends; track layerLegend) {
+                @if (layerLegend.layerEnabled || alwaysEnableLegends) {
+                  <ng-container
+                    *ngTemplateOutlet="
+                      layerLegendtemplate;
+                      context: { layerLegend }
+                    "
+                  ></ng-container>
+                }
+              }
+            </div>
+          }
+          @if (!lastItem) {
+            <p></p>
+          }
+        </div>
+      }
+    }
+  }
+</div>
+
+<ng-template #layerLegendtemplate let-layerLegend="layerLegend">
+  @if (isLegendUrl(layerLegend.legend)) {
+    <ggc-legend-url
+      [legend]="layerLegend.legend"
+      [layerName]="layerLegend.layerName"
+    ></ggc-legend-url>
+  } @else if (isIconListArray(layerLegend.legend)) {
+    <ggc-legend-icon [icons]="layerLegend.legend"></ggc-legend-icon>
+  } @else if (isVectorTileStyle(layerLegend.legend)) {
+    <ggc-legend-mapbox [style]="layerLegend.legend"></ggc-legend-mapbox>
+  } @else {
+    <ggc-legend-empty
+      [legend]="layerLegend.legend"
+      [showEmptyLegendMessage]="showEmptyLegendMessage"
+      [emptyLegendMessage]="emptyLegendMessage"
+    ></ggc-legend-empty>
+  }
+</ng-template>

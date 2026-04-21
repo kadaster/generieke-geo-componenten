@@ -124,8 +124,8 @@ Vanwege toepassing binnen Nederlandse overheidsprojecten is toegankelijkheid wet
 
 - Meld beveiligingsproblemen **NIET** via publieke issues
 - Volg het Kadaster Responsible Disclosure / Security Policy:
-  - Nederlands: https://www.kadaster.nl/disclaimer/responsible-disclosure
-  - English: https://www.kadaster.nl/about-us/legal-disclaimer/responsible-disclosure
+    - Nederlands: https://www.kadaster.nl/disclaimer/responsible-disclosure
+    - English: https://www.kadaster.nl/about-us/legal-disclaimer/responsible-disclosure
 
 ## Licentie
 

@@ -1,0 +1,23 @@
+.ggc-dt-theme {
+  padding-left: 10px;
+}
+
+.ggc-dt-btn-ts-active {
+  font-weight: bold;
+}
+
+table {
+  cursor: pointer;
+  .w-1 {
+    width: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .text-end {
+    text-align: right;
+  }
+
+  td[colspan="2"] {
+    padding-left: 15px;
+  }
+}

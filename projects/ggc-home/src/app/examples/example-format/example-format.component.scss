@@ -1,0 +1,189 @@
+/* Importeer het Highlight.js thema: */
+@import url("//cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css");
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.page {
+  padding: 20px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  h1 {
+    margin: 0 0 0 4px;
+  }
+}
+
+.header-links {
+  display: flex;
+  gap: 1.25rem;
+
+  a {
+    font-size: 0.9rem;
+    color: #5a5a5a;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.page-introduction::before {
+  content: "Toelichting: ";
+  font-weight: bold;
+}
+
+.labels {
+  margin-bottom: 8px;
+  margin-left: 8px;
+
+  .label {
+    font-size: 0.85em;
+    color: #1e6bd6;
+    text-decoration: none;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .label:hover {
+    text-decoration: underline;
+  }
+}
+
+.row {
+  margin-bottom: 1.2rem;
+}
+
+.options-toggle {
+  margin: 0 0 0 0;
+}
+
+.introduction {
+  background-color: #f5f7fa;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.content {
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.functionality {
+  margin: 0 auto;
+  padding: 1rem 1rem;
+}
+
+.map-container {
+  height: 100%;
+  min-height: 400px;
+  max-height: 600px;
+
+  overflow: hidden;
+  position: relative;
+}
+
+.options {
+  border: 1px solid #dcdfe6;
+  padding: 16px;
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+.callout {
+  background-color: #f5f7fa;
+  border: 1px solid #dcdfe6;
+  padding: 16px;
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+.callout:empty {
+  display: none;
+}
+
+.callout::before {
+  content: "Tip: ";
+  font-weight: bold;
+}
+
+pre {
+  border: 1px solid #dcdfe6;
+  padding: 16px;
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+code {
+  font-family: Consolas, Monaco, "Courier New", monospace;
+  font-size: 0.9rem;
+}
+
+input[type="text"] {
+  width: 30px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+  margin-left: 6px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

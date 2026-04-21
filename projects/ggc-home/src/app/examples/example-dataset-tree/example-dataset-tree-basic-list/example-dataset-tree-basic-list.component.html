@@ -1,0 +1,56 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs=""
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="'code/examples/example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component.html'"
+  [codeTypescriptPath]="'code/examples/example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component.ts'"
+  [codeScssPath]="'code/examples/example-dataset-tree/example-dataset-tree.component.scss'"
+  [kaartConfigFilePath]="'code/examples/example-dataset-tree/kaartconfig.json'"
+  [treeConfigFilePath]="'code/examples/example-dataset-tree/treeconfig.json'"
+  urlCodeHtml="example-dataset-tree/example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-dataset-label-template.component.html"
+  urlCodeTypescript="example-dataset-tree/example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-templates.component.ts"
+  urlCodeScss="example-dataset-tree/example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component.scss"
+  urlKaartConfig="example-dataset-tree/kaartconfig.json"
+  urlTreeConfig="example-dataset-tree/treeconfig.json"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-4 col-sm-6">
+        <div class="dataset-tree-container">
+          <ggc-dataset-tree
+            [themes]="datasetTreeConfig"
+            [mapIndex]="mapIndex"
+            [hideTree]="true"
+          ></ggc-dataset-tree>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
+        </div>
+        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+
+  <div page-tips>
+    <p></p>
+  </div>
+</app-example-format>

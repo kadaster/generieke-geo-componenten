@@ -1,0 +1,9 @@
+.gc-controls {
+  .map-control {
+    display: flex;
+  }
+  .cesium-control > button {
+    border-radius: 0;
+    background: white;
+  }
+}

@@ -3,28 +3,31 @@
 De Generieke Geo Componenten (GGC) helpen softwareontwikkelaars om snel een kaartviewer te ontwikkelen.
 
 Deze Angular front-end componenten kunnen in de eigen applicatie geïnstalleerd worden. Hiermee kan de kracht van OpenLayers kaartpresentatie snel en eenvoudig geïmplementeerd worden, gecombineerd met:
-* zoeken op de kaart
-* legenda
-* kaartweergave kiezen
-* toolbar met tekenen, meten en bewerken op de kaart
+
+- zoeken op de kaart
+- legenda
+- kaartweergave kiezen
+- toolbar met tekenen, meten en bewerken op de kaart
 
 Binnenkort komen ook extra componenten beschikbaar voor:
-* presenteren van object-informatie
-* 3D kaartpresentatie (met Cesium)
-* printen
-* bestandsconversie
+
+- presenteren van object-informatie
+- 3D kaartpresentatie (met Cesium)
+- printen
+- bestandsconversie
 
 ## Voordelen
 
 De Generieke Geo Componenten bieden de volgende voordelen:
-* Responsive design voor mobiel, tablet en desktop
-* Digitaal toegankelijk (WCAG 2.1 AA)
-* Up-to-date met de nieuwste framework versies
-* Eenvoudig te implementeren, te configureren en te stylen
-* Makkelijk aan te passen
-* Robuust, met hoge testdekking
-* Lage onderhoudsinspanning
-* Light-weight, door alleen componenten te laden die nodig zijn
+
+- Responsive design voor mobiel, tablet en desktop
+- Digitaal toegankelijk (WCAG 2.1 AA)
+- Up-to-date met de nieuwste framework versies
+- Eenvoudig te implementeren, te configureren en te stylen
+- Makkelijk aan te passen
+- Robuust, met hoge testdekking
+- Lage onderhoudsinspanning
+- Light-weight, door alleen componenten te laden die nodig zijn
 
 De componenten kunnen afzonderlijk óf in samenwerking gebruikt worden. Hierdoor kun je zelf bepalen welke interactie wenselijk is in de applicatie.
 

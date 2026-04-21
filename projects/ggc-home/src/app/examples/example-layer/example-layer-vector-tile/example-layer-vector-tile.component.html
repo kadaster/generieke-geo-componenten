@@ -1,0 +1,44 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-layer-image_src_lib_layer-image_ggc-layer-image.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="'code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.component.html'"
+  [codeTypescriptPath]="'code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.component.ts'"
+  [codeScssPath]="'code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.component.scss'"
+  urlCodeHtml="example-snapping/example-layer-vector-tile/example-layer-vector-tile.component.html"
+  urlCodeTypescript="example-snapping/example-layer-vector-tile/example-layer-vector-tile.component.ts"
+  urlCodeScss="example-snapping/example-layer-vector-tile/example-layer-vector-tile.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In het voorbeeld hieronder is de BRT achtergrondkaart als Vector Tiles
+      laag toegevoegd aan de kaart via de OGC API. Door het meegeven van een
+      style, kan de stijl van de kaartlaag aangepast worden (in dit voorbeeld:
+      dark mode).
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="map-container">
+      <ggc-map>
+        <ggc-vector-tile-layer
+          [options]="vectorTileLayerOptions"
+        ></ggc-vector-tile-layer>
+      </ggc-map>
+    </div>
+    <!-- DOCS:END functionality -->
+  </div>
+</app-example-format>

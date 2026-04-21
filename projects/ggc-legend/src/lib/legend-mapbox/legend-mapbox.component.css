@@ -1,0 +1,63 @@
+.ggc-dl-mapbox-legendContainer {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  max-height: 100%;
+  padding: 5px;
+  margin: 5px;
+  min-height: 0;
+}
+
+.ggc-dl-mapbox-legend-item {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: center;
+  flex: 0 1 auto;
+}
+
+.ggc-dl-mapbox-legend-text {
+  margin-left: 1rem;
+}
+
+.ggc-dl-mapbox-legend-group-title {
+  font-weight: bold;
+  margin: 0 0 0 0;
+}
+
+/* Eerste groep: grootste */
+.legend-index-0 {
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  margin: 1rem 0 0;
+}
+
+/* Tweede groep: iets kleiner */
+.legend-index-1 {
+  font-size: 1.1rem;
+}
+
+/* Derde groep: nog kleiner */
+.legend-index-2 {
+  font-size: 1rem;
+}
+
+/* Optioneel: standaard voor alle andere */
+.legend-index-3,
+.legend-index-4,
+.legend-index-5 {
+  font-size: 0.8rem;
+}
+
+ul {
+  list-style: none;
+  margin-left: 1rem;
+  padding-inline-start: 0;
+}
+
+.ggc-dl-mapbox-legendContainer li::before {
+  content: none;
+}
