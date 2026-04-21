@@ -23,7 +23,7 @@ jobs:
           cache: "npm"
       - run: npm ci
       - name: Cache node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
@@ -38,13 +38,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - run: npm run build:all
       - name: Cache dist
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: dist
           key: dist-${{ github.sha }}
@@ -72,7 +72,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
@@ -100,12 +100,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Restore dist
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: dist
           key: dist-${{ github.sha }}
