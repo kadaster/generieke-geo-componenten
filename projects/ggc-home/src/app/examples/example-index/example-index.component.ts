@@ -40,9 +40,7 @@ interface GroupedCards {
   theme: string;
   cards: ComponentInfo[];
 }
-import {
-  ExampleDatasetSwitcherRadioButtonsComponent
-} from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
+import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 
 @Component({
   selector: "app-example-index",

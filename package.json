@@ -41,7 +41,7 @@
     "lint:fix:ggc-models": "ng lint --project ggc-models --fix",
     "lint:fix:ggc-search-location": "ng lint --project ggc-search-location --fix",
     "lint:fix:ggc-toolbar": "ng lint --project ggc-toolbar --fix",
-    "lint:fix:all": "npm run lint:fix:ggc-cesium && npm run lint:fix:ggc-dataset-tree && npm run lint:fix:ggc-feature-info && npm run lint:fix:ggc-legend && npm run lint:fix:ggc-map && npm run lint:fix:ggc-models && npm run lint:fix:ggc-search-location && npm run lint:fix:ggc-toolbar",
+    "lint:fix:all": "npm run lint:fix:ggc-cesium && npm run lint:fix:ggc-dataset-tree && npm run lint:fix:ggc-home && npm run lint:fix:ggc-feature-info && npm run lint:fix:ggc-legend && npm run lint:fix:ggc-map && npm run lint:fix:ggc-models && npm run lint:fix:ggc-search-location && npm run lint:fix:ggc-toolbar",
     "build:ggc-cesium": "ng build --project ggc-cesium --configuration production",
     "build:ggc-dataset-tree": "ng build --project ggc-dataset-tree --configuration production",
     "build:ggc-feature-info": "ng build --project ggc-feature-info --configuration production",

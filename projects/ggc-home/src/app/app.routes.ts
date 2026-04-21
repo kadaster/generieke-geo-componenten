@@ -37,9 +37,7 @@ import { ExampleDrawCenterDrawComponent } from "./examples/example-draw/example-
 import { ExampleMeasure } from "./examples/example-measure/example-measure/example-measure.component";
 import { ExampleDrawStyle } from "./examples/example-draw/example-draw-style/example-draw-style.component";
 import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
-import {
-  ExampleDatasetSwitcherRadioButtonsComponent
-} from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
+import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 
 export const routes: Routes = [
   {

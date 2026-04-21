@@ -3,10 +3,7 @@ import { ExampleFormatComponent } from "../../example-format/example-format.comp
 import { FormsModule } from "@angular/forms";
 import { GgcLegendComponent } from "@kadaster/ggc-legend";
 import { ComponentInfo } from "../../component-info.model";
-import {
-  GgcMapComponent,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { HttpClient } from "@angular/common/http";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";

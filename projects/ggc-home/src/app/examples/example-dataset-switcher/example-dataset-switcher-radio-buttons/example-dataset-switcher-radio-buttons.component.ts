@@ -1,8 +1,5 @@
 import { Component, inject } from "@angular/core";
-import {
-  GgcMapComponent,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import {
@@ -30,8 +27,7 @@ export class ExampleDatasetSwitcherRadioButtonsComponent {
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher-radio-buttons",
     title: "Dataset wisselen (radio buttons)",
-    introduction:
-      "Eén of meerdere kaartlagen wisselen met een radio button.",
+    introduction: "Eén of meerdere kaartlagen wisselen met een radio button.",
     components: [Components.GGC_DATASET_SWITCHER],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],

@@ -18,10 +18,7 @@ import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-draw-adv",
-  imports: [
-    ExampleFormatComponent,
-    GgcMapComponent
-  ],
+  imports: [ExampleFormatComponent, GgcMapComponent],
   templateUrl: "./example-draw-adv.component.html",
   styleUrl: "./example-draw-adv.component.scss"
 })

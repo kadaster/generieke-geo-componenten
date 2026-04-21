@@ -1,8 +1,5 @@
 import { Component, inject } from "@angular/core";
-import {
-  GgcMapComponent,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import {
@@ -30,8 +27,7 @@ export class ExampleDatasetSwitcherBasicComponent {
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher",
     title: "Dataset wisselen",
-    introduction:
-      "Eén of meerdere kaartlagen wisselen met een grafische knop.",
+    introduction: "Eén of meerdere kaartlagen wisselen met een grafische knop.",
     components: [Components.GGC_DATASET_SWITCHER],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],

@@ -1,9 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import {
-  GgcMapComponent,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent } from "@kadaster/ggc-legend";
 import { ComponentInfo } from "../../component-info.model";
 import { HttpClient } from "@angular/common/http";

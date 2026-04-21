@@ -7,10 +7,7 @@ import {
   GgcMapService,
   Webservice
 } from "@kadaster/ggc-map";
-import {
-  GgcDatasetTreeComponent,
-  Theme
-} from "@kadaster/ggc-dataset-tree";
+import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { DecimalPipe } from "@angular/common";
