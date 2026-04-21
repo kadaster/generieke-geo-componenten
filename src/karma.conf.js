@@ -39,5 +39,7 @@ module.exports = function (config, dir = "../coverage/ggc-library", files) {
     singleRun: true,
     restartOnFileChange: true,
     files: files,
+    browserNoActivityTimeout: 60000,
+    browserDisconnectTimeout: 60000,
   });
 };
