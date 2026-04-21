@@ -12,11 +12,11 @@ on:
           - major
       ggc_dataset_tree:
         type: boolean
-        description: Release ggc-map
+        description: Release ggc-dataset-tree
         default: false
       ggc_legend:
         type: boolean
-        description: Release ggc-map
+        description: Release ggc-legend
         default: false
       ggc_map:
         type: boolean
