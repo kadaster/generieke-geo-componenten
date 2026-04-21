@@ -19,7 +19,7 @@
   "exclude": [
     "**/*.spec.ts",
     "**/*.d.ts",
-    "projects/library-app/**/*",
+    "projects/ggc-home/**/*",
     "src/**/*",
     "dist/**/*",
     "out-tsc/**/*",

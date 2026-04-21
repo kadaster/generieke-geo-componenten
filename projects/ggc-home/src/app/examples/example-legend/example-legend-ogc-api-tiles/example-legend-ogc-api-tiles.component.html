@@ -1,0 +1,66 @@
+<app-example-format
+  [codeHtmlPath]="
+    'code/examples/example-legend/example-legend-ogc-api-tiles/example-legend-ogc-api-tiles.component.html'
+  "
+  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
+  [codeTypescriptPath]="
+    'code/examples/example-legend/example-legend-ogc-api-tiles/example-legend-ogc-api-tiles.component.ts'
+  "
+  [kaartConfigFilePath]="
+    'code/examples/example-legend/example-legend-ogc-api-tiles/kaartconfig.json'
+  "
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-legend/example-legend/example-legend-ogc-api-tiles/example-legend-ogc-api-tiles.component.html"
+  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
+  urlCodeTypescript="example-legend/example-legend/example-legend-ogc-api-tiles/example-legend-ogc-api-tiles.component.ts"
+  urlKaartConfig="example-legend/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig="example-legend/treeconfig.json"
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Deze kunnen gegenereerd worden op basis van een mapbox style sheet,
+      waarbij legenda items alfabetisch worden weergegeven. Ook kan er een png
+      of svg worden gebruikt als legenda.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div class="legend-container">
+          <b>Legenda</b>
+          <ggc-legend
+            [collapsable]="true"
+            [defaultExpanded]="false"
+            [mapIndex]="mapIndex"
+          ></ggc-legend>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map
+            [mapIndex]="mapIndex"
+            [webServices]="mapConfig"
+            [minZoomlevel]="12"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

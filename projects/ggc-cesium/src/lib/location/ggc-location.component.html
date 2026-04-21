@@ -1,0 +1,12 @@
+<div class="gc-controls d-inline-flex">
+  <div
+    class="d-flex flex-column align-self-end gc-controls-item gc-controls-zoom pl-2 ps-2 cesium-control map-control"
+  >
+    <button (click)="zoomToLocation()" [title]="tooltip">
+      <div>
+        <ng-content></ng-content>
+      </div>
+      <span [class]="icon"></span>
+    </button>
+  </div>
+</div>

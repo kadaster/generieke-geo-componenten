@@ -1,0 +1,126 @@
+[
+  {
+    "type": "wmts",
+    "url": " https://service.pdok.nl/lv/bgt/wmts/v1_0?",
+    "layers": [
+      {
+        "title": "BGT standaard",
+        "layerName": "standaardvisualisatie",
+        "layerId": "standaardvisualisatie",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/lv/bgt/wmts/v1_0/standaardvisualisatie/legend.png"
+        },
+        "minResolution": 0.0525,
+        "maxResolution": 0.84,
+        "attributions": "BGT standaard"
+      },
+      {
+        "title": "BGT iconen",
+        "layerName": "icoonvisualisatie",
+        "layerId": "icoonvisualisatie",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/lv/bgt/wmts/v1_0/icoonvisualisatie/legend.png"
+        },
+        "minResolution": 0.0525,
+        "maxResolution": 0.105,
+        "attributions": "BGT iconen",
+        "zIndex": 1
+      }
+    ]
+  },
+  {
+    "type": "wms",
+    "url": "https://service.pdok.nl/brt/topraster/wms/v1_0?",
+    "layers": [
+      {
+        "title": "TOP1000",
+        "layerName": "top1000raster",
+        "layerId": "top1000raster",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top1000raster/default.png"
+        },
+        "minResolution": 215.04,
+        "maxResolution": 430.081,
+        "attributions": "TOP1000 raster",
+        "tiled": true
+      },
+      {
+        "title": "TOP500",
+        "layerName": "top500raster",
+        "layerId": "top500raster",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top500raster/default.png"
+        },
+        "minResolution": 107.52,
+        "maxResolution": 215.04,
+        "attributions": "TOP500 raster",
+        "tiled": true
+      },
+      {
+        "title": "TOP250",
+        "layerName": "top250raster",
+        "layerId": "top250raster",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top250raster/default.png"
+        },
+        "minResolution": 53.76,
+        "maxResolution": 107.52,
+        "attributions": "TOP250 raster",
+        "tiled": true
+      },
+      {
+        "title": "TOP100",
+        "layerName": "top100raster",
+        "layerId": "top100raster",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top100raster/default.png"
+        },
+        "minResolution": 13.44,
+        "maxResolution": 53.76,
+        "attributions": "TOP100 raster",
+        "tiled": true
+      },
+      {
+        "title": "TOP50",
+        "layerName": "top50raster",
+        "layerId": "top50raster",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top50raster/default.png"
+        },
+        "minResolution": 6.72,
+        "maxResolution": 13.44,
+        "attributions": "TOP50 raster",
+        "tiled": true
+      },
+      {
+        "title": "TOP25",
+        "layerName": "top25raster",
+        "layerId": "top25raster",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top25raster/default.png"
+        },
+        "minResolution": 3.36,
+        "maxResolution": 6.72,
+        "attributions": "TOP25 raster",
+        "tiled": true
+      }
+    ]
+  },
+  {
+    "type": "wmts",
+    "url": "https://service.pdok.nl/brt/top10nl/wmts/v1_0?",
+    "layers": [
+      {
+        "title": "TOP10",
+        "layerName": "top10nl",
+        "layerId": "top10nl",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/top10nl/wmts/v1_0/top10nl/legend.png"
+        },
+        "minResolution": 0.84,
+        "maxResolution": 3.35,
+        "attributions": "TOP10nl"
+      }
+    ]
+  }
+]

@@ -1,0 +1,212 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-layer-image_src_lib_layer-image_ggc-layer-image.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="
+    'code/examples/example-layer/example-layer-advanced/example-layer-advanced.component.html'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-layer/example-layer-advanced/example-layer-advanced.component.ts'
+  "
+  [codeScssPath]="
+    'code/examples/example-layer/example-layer-advanced/example-layer-advanced.component.scss'
+  "
+  urlCodeHtml="example-snapping/example-layer-advanced/example-layer-advanced.component.html"
+  urlCodeTypescript="example-snapping/example-layer-advanced/example-layer-advanced.component.ts"
+  urlCodeScss="example-snapping/example-layer-advanced/example-layer-advanced.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld zijn meerdere configuratie-instellingen meegegeven aan de
+      (WMS) kaartlagen. Met behulp van deze layerOptions, kan worden bepaald
+      hoe, wanneer en waar een laag wordt getoond. De
+      <code>GgcCapabilitiesService</code> wordt gebruikt om van een WMS
+      capabilities (waaronder de beschikbare lagen) op te halen.
+    </p>
+    <p>
+      Verder zijn de <code>minZoomlevel</code> en
+      <code>maxZoomlevel</code> gebruikt om het in- en uitzoomen te beperken.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <div class="col-md-4 col-sm-6">
+        <fieldset>
+          <legend>Kaartlaag toevoegen of verwijderen:</legend>
+
+          <div>
+            <input
+              type="radio"
+              id="aan"
+              name="natura2000"
+              (change)="switchLayer()"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="aan"
+              checked
+            />
+            <label for="aan">Zet Natura 2000 aan (<code>addWmsLayer</code>)</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="uit"
+              name="natura2000"
+              (change)="switchLayer()"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="uit"
+            />
+            <label for="uit">Zet Natura 2000 uit (<code>removeLayer</code>)</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>
+            Volgorde van de kaartlaag met de wandelroutes aanpassen met behulp
+            van de z-index:
+          </legend>
+
+          <div>
+            <input
+              type="radio"
+              id="0"
+              name="zindex"
+              [(ngModel)]="selectedZIndex"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="0"
+            />
+            <label for="0"
+              >Achter de achtergrondkaart (<code>zIndex=0</code>)</label
+            >
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="5"
+              name="zindex"
+              [(ngModel)]="selectedZIndex"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="5"
+            />
+            <label for="5"
+              >Achter het Natura 2000 gebied (<code>zIndex=5</code>)</label
+            >
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="20"
+              name="zindex"
+              [(ngModel)]="selectedZIndex"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="20"
+            />
+            <label for="20">Op de voorgrond (<code>zIndex=20</code>)</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>
+            Doorzichtigheid van het Natura 2000 gebied aanpassen:
+          </legend>
+          <div>
+            <input
+              type="radio"
+              id="opacity25"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="25"
+            />
+            <label for="opacity25"
+            >25% (<code>opacity=0.25</code>)</label
+            >
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="opacity50"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="50"
+            />
+            <label for="opacity50"
+            >50% (<code>opacity=0.5</code>)</label
+            >
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="opacity75"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="75"
+            />
+            <label for="opacity75"
+            >75% (<code>opacity=0.75</code>)</label
+            >
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="opacity100"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="100"
+            />
+            <label for="opacity100"
+            >100% (<code>opacity=1</code>)</label
+            >
+          </div>
+
+        </fieldset>
+      </div>
+
+      <div class="col-md-8 col-sm-14">
+        <!-- DOCS:START functionality -->
+        <div class="map-container">
+          <ggc-map [minZoomlevel]="5" [maxZoomlevel]="12">
+            <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+            @switch (selectedZIndex) {
+              @case ("20") {
+                <ggc-wms-layer [options]="wandelrouteZIndex20"></ggc-wms-layer>
+              }
+              @case ("5") {
+                <ggc-wms-layer [options]="wandelrouteZIndex5"></ggc-wms-layer>
+              }
+              @default {
+                <ggc-wms-layer
+                  [options]="wandelrouteZIndexMin5"
+                ></ggc-wms-layer>
+              }
+            }
+          </ggc-map>
+        </div>
+        <!-- DOCS:END functionality -->
+      </div>
+    </div>
+  </div>
+</app-example-format>

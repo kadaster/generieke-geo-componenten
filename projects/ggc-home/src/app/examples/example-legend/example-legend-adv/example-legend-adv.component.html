@@ -1,0 +1,124 @@
+<app-example-format
+  [codeHtmlPath]="
+    'code/examples/example-legend/example-legend-adv/example-legend-adv.component.html'
+  "
+  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
+  [codeTypescriptPath]="
+    'code/examples/example-legend/example-legend-adv/example-legend-adv.component.ts'
+  "
+  [kaartConfigFilePath]="
+    'code/examples/example-legend/example-legend-adv/kaartconfig.json'
+  "
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-legend/example-legend/example-legend-adv/example-legend-adv.component.html"
+  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
+  urlCodeTypescript="example-legend/example-legend/example-legend-adv/example-legend-adv.component.ts"
+  urlKaartConfig="example-legend-adv/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig=""
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In combinatie met een ggc-map component, worden automatisch de legenda's
+      getoond van alle zichtbare kaartlagen.
+    </p>
+    <p>Instelmogelijkheden voor legenda:</p>
+    <ul>
+      <li>Legenda's in-/uitklapbaar</li>
+      <li>Volgorde van kaartlagen in de legenda</li>
+      <li>Titels van kaartlagen weergeven/verbergen</li>
+      <li>Melding tonen bij kaartlagen zonder legenda</li>
+    </ul>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div>
+          <label>
+            <input [(ngModel)]="collapsable" type="checkbox" />
+            Maak de legenda in/uitklapbaar
+          </label>
+        </div>
+        <div>
+          <label>
+            <input [(ngModel)]="showLegendsName" type="checkbox" />
+            Toon een titel boven een legenda
+          </label>
+        </div>
+        <br />
+        <div>
+          Alle legenda items:
+          <br />
+          <button
+            (click)="collapseAll()"
+            [disabled]="!collapsable"
+            class="btn btn-small btn-outline-primary"
+          >
+            Inklappen
+          </button>
+          <button
+            (click)="expandAll()"
+            [disabled]="!collapsable"
+            class="btn btn-small btn-outline-primary"
+          >
+            Uitklappen
+          </button>
+        </div>
+        <br />
+        <div class="legend-container">
+          <b>Legenda</b>
+          <ggc-legend
+            [collapsable]="collapsable"
+            [defaultExpanded]="false"
+            [emptyLegendMessage]="emptyLegendMessage"
+            [iconCollapsed]="iconCollapsed"
+            [iconExpanded]="iconExpanded"
+            [mapIndex]="mapIndex"
+            [showEmptyLegendMessage]="showEmptyLegendMessage"
+            [showLegendsName]="showLegendsName"
+          ></ggc-legend>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map
+            [mapIndex]="mapIndex"
+            [webServices]="mapConfig"
+            [minZoomlevel]="6"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+
+      <div class="col-md-1 col-sm-1">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              (change)="goToPage('/legend-basic')"
+              aria-labelledby="extraOptionsLabel"
+              checked
+              type="checkbox"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-example-format>

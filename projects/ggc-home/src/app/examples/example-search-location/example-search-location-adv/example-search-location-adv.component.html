@@ -1,0 +1,87 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-search-location_src_lib_search-location_ggc-search-location.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="
+    'code/examples/example-search-location/example-search-location-adv/example-search-location-adv.component.html'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-search-location/example-search-location-adv/example-search-location-adv.component.ts'
+  "
+  [codeScssPath]="
+    'code/examples/example-search-location/example-search-location-adv/example-search-location-adv.component.scss'
+  "
+  urlCodeHtml="example-snapping/example-search-location/example-search-location.component.html"
+  urlCodeTypescript="example-snapping/example-search-location/example-search-location.component.ts"
+  urlCodeScss="example-snapping/example-search-location/example-search-location.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Met behulp van SearchLocationOptions kunnen verschillende mogelijkheden
+      van de zoekfunctie ingesteld worden, zoals bijvoorbeeld het zoomen en het
+      markeren van het zoekresultaat. In dit voorbeeld staan zoomen en markeren
+      van het zoekresultaat automatisch aan.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-9 col-sm-10">
+        <div>
+          <ggc-search-location
+            (events)="logSearchComponentEvents($event)"
+            [searchLocationOptions]="searchLocationOptions()"
+          ></ggc-search-location>
+        </div>
+        <div class="map-container">
+          <ggc-map></ggc-map>
+        </div>
+        <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+        <!-- DOCS:END functionality -->
+      </div>
+      <div class="col-md-3 col-sm-1">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              type="checkbox"
+              checked
+              aria-labelledby="extraOptionsLabel"
+              (change)="goToPage('/search-location')"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="row search-results-options">
+          <label>
+            <input type="checkbox" [(ngModel)]="zoomToResult" />
+            Zoom naar het zoekresultaat
+          </label>
+          <label>
+            <input type="checkbox" [(ngModel)]="markResult" />
+            Markeer het zoekresultaat
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div page-tips>
+    <p>
+      Met behulp van AdditionalSuggestion kan in andere bronnen worden gezocht.
+    </p>
+  </div>
+</app-example-format>

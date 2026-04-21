@@ -1,0 +1,59 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brt-achtergrondkaart-standaard",
+        "title": "Standaard",
+        "layerName": "standaard",
+        "activeLegend": null,
+        "visible": false,
+        "zIndex": -10,
+        "minResolution": 0.21
+      },
+      {
+        "layerId": "brt-achtergrondkaart-grijs",
+        "title": "Grijs",
+        "layerName": "grijs",
+        "activeLegend": null,
+        "visible": false,
+        "zIndex": -10,
+        "minResolution": 0.21
+      },
+      {
+        "layerId": "brt-achtergrondkaart-pastel",
+        "title": "Pastel",
+        "layerName": "pastel",
+        "activeLegend": null,
+        "visible": false,
+        "zIndex": -10,
+        "minResolution": 0.21
+      },
+      {
+        "layerId": "brt-achtergrondkaart-water",
+        "title": "Water",
+        "layerName": "water",
+        "activeLegend": null,
+        "visible": true,
+        "zIndex": -10,
+        "minResolution": 0.21
+      }
+    ]
+  },
+  {
+    "url": "https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "luchtfoto_actueel_orthohr",
+        "title": "Luchtfoto Actueel Ortho 8cm RGB",
+        "layerName": "Actueel_orthoHR",
+        "activeLegend": null,
+        "visible": false,
+        "zIndex": -10,
+        "minResolution": 0.0525
+      }
+    ]
+  }
+]

@@ -1,0 +1,97 @@
+$card-heigth: 180px;
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.card {
+  margin-bottom: 15px;
+  height: $card-heigth !important;
+
+  .card-body{
+    overflow: hidden;
+    padding: var(--ggc-card-padding-block-top) var(--ggc-card-padding-block-end) 0 var(--ggc-card-padding-block-start);
+
+    .card-title {
+      font-weight: bold;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    p.card-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  .card-img-top {
+    aspect-ratio: 1 / 1;
+    display: block;
+    width:calc($card-heigth - 1px);
+    height:calc($card-heigth - 1px);
+    border-radius: 0 var(--ggc-border-radius-md) var(--ggc-border-radius-md) 0;
+  }
+
+
+}
+
+.body {
+  padding: var(--ggc-space-300) var(--ggc-space-500) var(--ggc-space-300) var(--ggc-space-500);
+}
+
+h3 {
+  margin-top: 0.5rem;
+  color: var(--nl-paragraph-color);
+  font-weight: var(--basis-text-font-weight-bold);
+  font-size: var(--nl-heading-level-6-font-size);
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.3rem 0.6rem 0.6rem 0.6rem;
+  gap: var(--ggc-data-badge-button-column-gap);
+  margin-top: auto;
+}
+
+.tag {
+  padding-top: var(--ggc-space-25);
+  padding-bottom: var(--ggc-space-25);
+  flex: 1 1 100%;
+
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+  mask-image: linear-gradient(to right, black 80%, transparent 100%);
+}
+
+.tag-component {
+    color: var(--ggc-color-cool-grey-500);
+    border: 1px solid var(--ggc-color-cool-grey-500);
+}
+
+.tag-technical {
+  color: var(--ggc-color-primary-500);
+  border: 1px solid var(--ggc-color-primary-500);
+}
+
+.badge {
+  font-size: var(--ggc-text-font-size-xs);
+  background-color: var(--ggc-color-wit);
+}
+
+label {
+  cursor: pointer;
+}
+
+legend {
+  font-size: var(--ggc-text-font-size-md);
+  margin-bottom: 0;
+}

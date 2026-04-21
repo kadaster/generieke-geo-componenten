@@ -1,0 +1,109 @@
+<app-example-format
+  [codeHtmlPath]="
+    'code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.html'
+  "
+  [codeScssPath]="
+    'code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.scss'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts'
+  "
+  [kaartConfigFilePath]="'code/examples/example-dataset-tree/kaartconfig.json'"
+  [title]="componentInfo.title"
+  [treeConfigFilePath]="'code/examples/example-dataset-tree/treeconfig.json'"
+  urlChangelog=""
+  urlCodeHtml="example-dataset-tree/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.html"
+  urlCodeScss="example-dataset-tree/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.scss"
+  urlCodeTypescript="example-dataset-tree/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts"
+  urlKaartConfig="example-dataset-tree/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig="example-dataset-tree/treeconfig.json"
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Door middel van zgn. angular template fragments kan extra functionaliteit
+      en styling worden toegevoegd aan dataset- en of layerlabels
+      <br />
+      Zo wordt er in dit voorbeeld een dataset-label template getoond met een
+      aangepaste knop en een layer-label template met functionaliteit om te
+      zoomen naar de resolutie van de laag.
+    </p>
+    <p>
+      <strong>Let op:</strong>
+      De [ggcLayerLabelTemplate] wordt in zijn geheel toegevoegd binnen een
+      klikbaar element aan het dataset-structuurcomponent. Als aan
+      [ggcLayerLabelTemplate] een klikbaar element wordt toegevoegd, is deze
+      mogelijk niet meer toegankelijk voor screen readers. Dit komt doordat dit
+      resulteert in een genest klikbaar element.
+    </p>
+  </div>
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-4 col-sm-6">
+        <div class="dataset-tree-container">
+          <ggc-dataset-tree
+            [expandTreeOnInit]="true"
+            [mapIndex]="mapIndex"
+            [themes]="datasetTreeConfig"
+          >
+            <!-- START DATASET LABEL TEMPLATE-->
+            <ng-template [ggcDatasetLabelTemplate]="" let-value="dataset">
+              <!-- Custom html voor een dataset label -->
+              @if (value && value.infoUrl) {
+                <a
+                  (click)="$event.stopPropagation()"
+                  class="ggc-dt-info"
+                  href="{{ value.infoUrl }}"
+                  rel="noopener"
+                  target="_blank"
+                  title="Meer informatie over deze {{
+                    getTypeOfDataset(value)
+                  }} service"
+                >
+                  <span class="ggc-dt-ds-label {{ getTypeOfDataset(value) }}">
+                    {{ getTypeOfDataset(value) }}
+                  </span>
+                </a>
+              }
+            </ng-template>
+            <!-- END DATASET LABEL TEMPLATE-->
+            <!-- START LAYER LABEL TEMPLATE-->
+            <ng-template [ggcLayerLabelTemplate]="" let-value="layer">
+              @if (value && getEnabled(value.layerId)) {
+                <span class="layer-label">{{ getTitle(value.layerId) }}</span>
+              } @else {
+                <span
+                  (click)="zoomToVisible(value.layerId)"
+                  class="layer-label-inactive"
+                  title="Zoom naar laag resolutie"
+                  >{{ getTitle(value.layerId) }}</span
+                >
+              }
+            </ng-template>
+            <!-- END LAYER LABEL TEMPLATE-->
+          </ggc-dataset-tree>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
+        </div>
+        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
+      </div>
+    </div>
+    <p></p>
+  </div>
+</app-example-format>

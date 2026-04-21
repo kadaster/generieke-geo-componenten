@@ -3,6 +3,44 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ggc-cesium": {
+      "projectType": "library",
+      "root": "projects/ggc-cesium",
+      "sourceRoot": "projects/ggc-cesium/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-cesium/tsconfig.lib.json",
+            "project": "projects/ggc-cesium/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-cesium/tsconfig.lib.prod.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ggc-cesium/src/test.ts",
+            "tsConfig": "projects/ggc-cesium/tsconfig.spec.json",
+            "karmaConfig": "projects/ggc-cesium/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-cesium/**/*.ts",
+              "projects/ggc-cesium/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "ggc-dataset-tree": {
       "projectType": "library",
       "root": "projects/ggc-dataset-tree",
@@ -36,6 +74,100 @@
             "lintFilePatterns": [
               "projects/ggc-dataset-tree/**/*.ts",
               "projects/ggc-dataset-tree/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "ggc-home": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/ggc-home",
+      "sourceRoot": "projects/ggc-home/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/ggc-home/src/main.ts",
+            "tsConfig": "projects/ggc-home/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/ggc-home/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/ggc-home/src/app",
+                "output": "/code/"
+              }
+            ],
+            "sourceMap": {
+              "styles": true,
+              "scripts": true,
+              "vendor": true
+            },
+            "styles": [
+              "projects/ggc-home/src/styles.scss",
+              "node_modules/ol/ol.css",
+              "@cesium/widgets/Source/widgets.css"
+            ],
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/popper.js/dist/umd/popper.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "3MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "ggc-home:build:production"
+            },
+            "development": {
+              "buildTarget": "ggc-home:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-home/**/*.ts",
+              "projects/ggc-home/**/*.html"
             ]
           }
         }

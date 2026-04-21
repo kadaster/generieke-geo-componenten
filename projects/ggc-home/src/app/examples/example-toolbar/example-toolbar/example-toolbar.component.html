@@ -1,0 +1,91 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-search-location_src_lib_search-location_ggc-search-location.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="
+    'code/examples/example-toolbar/example-toolbar/example-toolbar.component.html'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-toolbar/example-toolbar/example-toolbar.component.ts'
+  "
+  [codeScssPath]="
+    'code/examples/example-toolbar/example-toolbar/example-toolbar.component.scss'
+  "
+  urlCodeHtml="example-toolbar/example-toolbar/example-toolbar.component.html"
+  urlCodeTypescript="example-toolbar/example-toolbar/example-toolbar.component.ts"
+  urlCodeScss="example-toolbar/example-toolbar/example-toolbar.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div>
+      <ggc-toolbar class="toolbar-position">
+        <ggc-toolbar-item
+          icon="fas fa-ruler"
+          (activeChanged)="changeMeasureState($event)"
+          [title]="'Meten'"
+        >
+          @if (measureActive) {
+            <ggc-toolbar-item-measure
+              stopIcon="fas fa-mouse-pointer"
+              measureLineIcon="fas fa-ruler-horizontal"
+              measurePolygonIcon="fas fa-ruler-combined"
+              moveIcon="far fa-hand-paper"
+              editIcon="fas fa-pencil-alt"
+              deleteIcon="fas fa-eraser"
+            ></ggc-toolbar-item-measure>
+          }
+        </ggc-toolbar-item>
+        <ggc-toolbar-item
+          icon="fas fa-pencil-alt"
+          (activeChanged)="changeDrawState($event)"
+          [title]="'Tekenen'"
+        >
+          @if (drawActive) {
+            <ggc-toolbar-item-draw
+              stopIcon="fas fa-mouse-pointer"
+              drawIcon="fas fa-circle"
+              drawLineIcon="fas fa-project-diagram"
+              drawCircleIcon="far fa-dot-circle"
+              drawRectangleIcon="far fa-square"
+              drawPolygonIcon="fas fa-draw-polygon"
+              deleteIcon="fas fa-trash-alt"
+              moveIcon="far fa-hand-paper"
+              editIcon="fas fa-pencil-alt"
+            ></ggc-toolbar-item-draw>
+          }
+        </ggc-toolbar-item>
+        <ggc-toolbar-item
+          icon="fas fa-link"
+          [clickCallback]="copyLocation.bind(this)"
+          title="Copy location"
+        >
+        </ggc-toolbar-item>
+      </ggc-toolbar>
+    </div>
+    <div class="map-container">
+      <ggc-map></ggc-map>
+    </div>
+    <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+    <!-- DOCS:END functionality -->
+  </div>
+  <div page-tips>
+    <p>
+      De toolbar kan gebruikt worden voor het uitvoeren van Draw en Measure functies op de kaart. Daarnaast kunnen er custom knoppen worden toegevoegd om extra functionaliteiten aan de toolbar toe te voegen.
+    </p>
+  </div>
+</app-example-format>

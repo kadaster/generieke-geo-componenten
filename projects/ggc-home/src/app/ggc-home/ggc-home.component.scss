@@ -1,0 +1,9 @@
+.card-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 16px;
+  max-inline-size: 1360px;
+  margin-inline: auto;
+  block-size: 100%;
+  padding: 0 16px 16px 16px;
+}

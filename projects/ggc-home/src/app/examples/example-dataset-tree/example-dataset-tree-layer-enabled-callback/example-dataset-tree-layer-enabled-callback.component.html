@@ -1,0 +1,72 @@
+<app-example-format
+  [codeHtmlPath]="
+    'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.html'
+  "
+  [codeScssPath]="
+    'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.scss'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.ts'
+  "
+  [kaartConfigFilePath]="'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/kaartconfig.json'"
+  [title]="componentInfo.title"
+  [treeConfigFilePath]="'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/treeconfig.json'"
+  urlChangelog=""
+  urlCodeHtml="example-dataset-tree/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.html"
+  urlCodeScss="example-dataset-tree/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.scss"
+  urlCodeTypescript="example-dataset-tree/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.ts"
+  urlKaartConfig="example-dataset-tree/example-dataset-tree-layer-enabled-callback/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig="example-dataset-tree/example-dataset-tree-layer-enabled-callback/treeconfig.json"
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+  </div>
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-4 col-sm-6">
+        <div class="dataset-tree-container">
+          <ggc-dataset-tree
+            [expandTreeOnInit]="true"
+            [mapIndex]="mapIndex"
+            [themes]="datasetTreeConfig"
+            [layerEnabledCallback]="layerEnabledCallback"
+            [showOnlyDatasets]="true"
+          >
+          </ggc-dataset-tree>
+        </div>
+        <label class="switch mt-2">
+          <input
+            type="checkbox"
+            aria-labelledby="extraOptionsLabel"
+            [(ngModel)]="gemeentesEnabled"
+            (change)="gemeentesChanged()"
+          />
+          <span class="slider round"></span>
+          <span class="text-nowrap"
+            >Gemeentes {{ gemeentesEnabled ? "Actief" : "Inactief" }}</span
+          >
+        </label>
+      </div>
+      <!-- DOCS:END functionality -->
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
+        </div>
+        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
+      </div>
+    </div>
+    <p></p>
+  </div>
+</app-example-format>

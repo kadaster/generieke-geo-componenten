@@ -1,0 +1,131 @@
+<div ngMenuBar (focusin)="onFocusIn()">
+  <div
+    ngMenuItem
+    #fileEl
+    class="menu-bar-item"
+    value="Voorbeelden"
+    (click)="openVoorbeelden()"
+    (keydown.enter)="openVoorbeelden()"
+  >
+    Voorbeelden
+  </div>
+  <div
+    ngMenuItem
+    #docsEl
+    #docsItem="ngMenuItem"
+    class="menu-bar-item"
+    value="Docs"
+    [submenu]="docsMenu()"
+  >
+    Documentatie<span
+    class="fa fa-chevron-down icon-suffix"
+    aria-hidden="true"
+  ></span>
+  </div>
+  <ng-template
+    [cdkConnectedOverlayOpen]="rendered()"
+    [cdkConnectedOverlay]="{ origin: docsEl, usePopover: 'inline' }"
+    [cdkConnectedOverlayPositions]="[
+      {
+        originX: 'end',
+        originY: 'bottom',
+        overlayX: 'end',
+        overlayY: 'top',
+        offsetY: 4
+      }
+    ]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #docsMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div
+          ngMenuItem
+          value="Quick start"
+          (click)="openQuickstart()"
+          (keydown.enter)="openQuickstart()"
+        >
+          <span class="label">Quick start</span>
+        </div>
+        <div ngMenuItem value="Documentatie (TSDocs)">
+          <span class="label">Documentatie (TSDocs)</span><span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+  <div
+    ngMenuItem
+    #codeEl
+    #codeItem="ngMenuItem"
+    class="menu-bar-item"
+    value="Code"
+    [submenu]="codeMenu()"
+  >
+    Code<span
+    class="fa fa-chevron-down icon-suffix"
+    aria-hidden="true"
+  ></span>
+  </div>
+  <ng-template
+    [cdkConnectedOverlayOpen]="rendered()"
+    [cdkConnectedOverlay]="{ origin: codeEl, usePopover: 'inline' }"
+    [cdkConnectedOverlayPositions]="[
+      {
+        originX: 'end',
+        originY: 'bottom',
+        overlayX: 'end',
+        overlayY: 'top',
+        offsetY: 4
+      }
+    ]"
+    cdkAttachPopoverAsChild
+  >
+    <div
+      ngMenu
+      #codeMenu="ngMenu"
+      (itemSelected)="selectMenuItem($event)"
+      (selectionchange)="selectMenuItem($event)"
+    >
+      <ng-template ngMenuContent>
+        <div
+          ngMenuItem
+          value="GitHub"
+          (click)="openGithub()"
+          (keydown.enter)="openGithub()"
+        >
+          <span class="label">GitHub</span
+          ><span
+            class="fa fa-external-link icon-suffix"
+            aria-hidden="true"
+          ></span>
+        </div>
+        <div
+          ngMenuItem
+          value="Changelog"
+          (click)="openChangelog()"
+          (keydown.enter)="openChangelog()"
+        >
+          <span class="label">Changelog</span
+          ><span
+            class="fa fa-external-link icon-suffix"
+            aria-hidden="true"
+          ></span>
+        </div>
+        <div
+          ngMenuItem
+          value="Releases"
+          (click)="openReleases()"
+          (keydown.enter)="openReleases()"
+        >
+          <span class="label">Releases</span
+          ><span
+            class="fa fa-external-link icon-suffix"
+            aria-hidden="true"
+          ></span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

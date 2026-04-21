@@ -1,0 +1,88 @@
+<app-example-format
+  [codeHtmlPath]="
+    'code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.component.html'
+  "
+  [codeScssPath]="
+    'code/examples/example-draw/example-draw-center-draw.component.scss'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.component.ts'
+  "
+  [kaartConfigFilePath]="
+    'code/examples/example-draw/example-draw-center-draw/kaartconfig.json'
+  "
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-draw/example-draw/example-draw-center-draw/example-draw-center-draw-center-draw.component.html"
+  urlCodeScss="example-draw/example-draw/example-draw.component.scss"
+  urlCodeTypescript="example-draw/example-draw/example-draw-center-draw/example-draw-center-draw-center-draw.component.ts"
+  urlGitHub=""
+  urlKaartConfig="example-draw-center-draw/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig=""
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>
+      Kies een vorm om te tekenen. Beweeg het middelpunt van de kaart door de
+      kaart te verplaatsen. Voeg punten toe aan de tekening met 'Voeg punt toe
+      aan tekening'.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div>
+          <b>Tekenen</b>
+          <div class="d-flex flex-column align-items-stretch">
+            <button
+              [class.active]="activeDrawType() === mapComponentDrawTypes.POINT"
+              (click)="startDrawPoint()"
+            >
+              Teken punt
+            </button>
+            <button
+              [class.active]="
+                activeDrawType() === mapComponentDrawTypes.LINESTRING
+              "
+              (click)="startDrawLine()"
+            >
+              Teken lijn
+            </button>
+            <button
+              [class.active]="
+                activeDrawType() === mapComponentDrawTypes.POLYGON
+              "
+              (click)="startDrawPolygon()"
+            >
+              Teken polygon
+            </button>
+            <hr />
+            <div class="d-flex flex-column align-items-stretch">
+              <button (click)="setPoint()">Voeg punt toe aan tekening</button>
+            </div>
+            <hr />
+            <button (click)="stopDrawing()">Tekening afronden</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9 col-sm-10">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [minZoomlevel]="6"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

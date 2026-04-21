@@ -1,0 +1,55 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/app",
+    "types": [],
+    "paths": {
+      "@kadaster/ggc-search": [
+        "projects/ggc-search/src/public-api.ts"
+      ],
+      "@kadaster/ggc-search-location": [
+        "projects/ggc-search-location/src/public-api.ts"
+      ],
+      "@kadaster/ggc-feature-info": [
+        "projects/ggc-feature-info/src/public-api.ts"
+      ],
+      "@kadaster/ggc-map-feedback": [
+        "projects/ggc-map-feedback/src/public-api.ts"
+      ],
+      "@kadaster/ggc-map": [
+        "projects/ggc-map/src/public-api.ts"
+      ],
+      "@kadaster/ggc-models": [
+        "projects/ggc-models/src/public-api.ts"
+      ],
+      "@kadaster/ggc-print": [
+        "projects/ggc-print/src/public-api.ts"
+      ],
+      "@kadaster/ggc-dataset-tree": [
+        "projects/ggc-dataset-tree/src/public-api.ts"
+      ],
+      "@kadaster/ggc-legend": [
+        "projects/ggc-legend/src/public-api.ts"
+      ],
+      "@kadaster/ggc-location": [
+        "projects/ggc-location/src/public-api.ts"
+      ],
+      "@kadaster/ggc-conversion": [
+        "projects/ggc-conversion/src/public-api.ts"
+      ],
+      "@kadaster/ggc-cesium": [
+        "projects/ggc-cesium/src/public-api.ts"
+      ],
+      "@kadaster/ggc-toolbar": [
+        "projects/ggc-toolbar/src/public-api.ts"
+      ],
+      "@kadaster/ggc-shared/*": [
+        "projects/ggc-shared/*/public-api.ts"
+      ]
+    }
+  },
+  "include": ["src/**/*.ts", "polyfills.ts"],
+  "exclude": ["src/**/*.spec.ts"]
+}

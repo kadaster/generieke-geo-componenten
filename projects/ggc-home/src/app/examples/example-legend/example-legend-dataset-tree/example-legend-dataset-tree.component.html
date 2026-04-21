@@ -1,0 +1,72 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs=""
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="
+    'code/examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component.html'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component.ts'
+  "
+  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
+  [kaartConfigFilePath]="
+    'code/examples/example-legend/example-legend-dataset-tree/kaartconfig.json'
+  "
+  urlCodeHtml="example-legend/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component.html"
+  urlCodeTypescript="example-legend/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component.ts"
+  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
+  urlKaartConfig="example-legend/kaartconfig.json"
+  urlTreeConfig="example-legend/treeconfig.json"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In combinatie met een ggc-map component, worden automatisch de legenda's
+      getoond van alle zichtbare kaartlagen.
+    </p>
+    <p>
+      In combinatie met kaartlagen aan/-uitzetten (ggc-dataset-tree), reageert
+      de de legenda automatisch op lagen die aan of uit worden gezet. De
+      volgorde waarop legenda's worden toegevoegd kan ingesteld worden door
+      middel van de
+      <code>legendIndex</code> (default: bovenaan).
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div class="dataset-tree-container">
+          <ggc-dataset-tree
+            [themes]="datasetTreeConfig"
+            [expandTreeOnInit]="true"
+          ></ggc-dataset-tree>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [maxZoomlevel]="16"></ggc-map>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="legend-container">
+          <b>Legenda</b>
+          <ggc-legend></ggc-legend>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

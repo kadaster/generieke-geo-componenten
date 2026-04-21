@@ -1,0 +1,36 @@
+:host {
+  pointer-events: none;
+}
+
+.gc-controls {
+  .map-control {
+    display: flex;
+  }
+  .cesium-control > button {
+    border-radius: 0;
+    background: white;
+    pointer-events: auto;
+
+    &.cesium-control-top {
+      border-top-left-radius: 0.3rem;
+      border-top-right-radius: 0.3rem;
+    }
+    &.cesium-control-left {
+      border-top-left-radius: 0.3rem;
+      border-bottom-left-radius: 0.3rem;
+    }
+    &.cesium-control-right {
+      border-top-right-radius: 0.3rem;
+      border-bottom-right-radius: 0.3rem;
+    }
+    &.cesium-control-bottom {
+      border-bottom-left-radius: 0.3rem;
+      border-bottom-right-radius: 0.3rem;
+    }
+  }
+
+  .cesium-control > button:hover {
+    background-color: #ebebeb;
+    border-color: #666666;
+  }
+}

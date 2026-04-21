@@ -1,0 +1,56 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-search-location_src_lib_search-location_ggc-search-location.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="
+    'code/examples/example-toolbar/example-toolbar-location/example-toolbar-location.component.html'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-toolbar/example-toolbar-location/example-toolbar-location.component.ts'
+  "
+  [codeScssPath]="
+    'code/examples/example-toolbar/example-toolbar-location/example-toolbar-location.component.scss'
+  "
+  urlCodeHtml="example-toolbar/example-toolbar-location/example-toolbar-location.component.html"
+  urlCodeTypescript="example-toolbar/example-toolbar-location/example-toolbar-location.component.ts"
+  urlCodeScss="example-toolbar/example-toolbar-location/example-toolbar-location.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div>
+      <ggc-toolbar class="toolbar-position">
+        <ggc-toolbar-item
+          icon="fa-solid fa-location-crosshairs"
+          [clickCallback]="goToCurrentLocation.bind(this)"
+          title="Huidige locatie"
+        >
+        </ggc-toolbar-item>
+      </ggc-toolbar>
+    </div>
+    <div class="map-container">
+      <ggc-map></ggc-map>
+    </div>
+    <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+    <!-- DOCS:END functionality -->
+  </div>
+  <div page-tips>
+    <p>
+      Met behulp van GgcSearchLocationService en GgcMapService kan er een knop getoond worden voor het ophalen en tonen van de huidige locatie op de kaart.
+    </p>
+  </div>
+</app-example-format>

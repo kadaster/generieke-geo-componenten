@@ -1,0 +1,30 @@
+[
+  {
+    "themeName": "Achtergrond kaart",
+    "datasets": [
+      {
+        "datasetName": "BRT Achtergrond",
+        "infoUrl": "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/6d23a02b-5a8a-447e-a481-ddb2a085c1fa",
+        "services": [
+          {
+            "layers": [{ "layerId": "brtAchtergrondkaartStandaard" }]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "themeName": "Bestuurlijke gebieden",
+    "datasets": [
+      {
+        "datasetName": "Bestuurlijke gebieden (wms)",
+        "infoUrl": "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/208bc283-7c66-4ce7-8ad3-1cf3e8933fb5",
+        "services": [
+          {
+            "layers": [{ "layerId": "provincies" }, { "layerId": "gemeenten" }]
+          }
+        ]
+      }
+    ]
+  }
+]

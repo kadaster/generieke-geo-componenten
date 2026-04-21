@@ -1,0 +1,48 @@
+<app-example-format
+  [title]="componentInfo.title"
+  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-layer-image_src_lib_layer-image_ggc-layer-image.component.GgcSearchLocationComponent.html"
+  urlVoorbeelden=""
+  urlChangelog=""
+  [codeHtmlPath]="
+    'code/examples/example-layer/example-layer-image/example-layer-image.component.html'
+  "
+  [codeTypescriptPath]="
+    'code/examples/example-layer/example-layer-image/example-layer-image.component.ts'
+  "
+  [codeScssPath]="
+    'code/examples/example-layer/example-layer-image/example-layer-image.component.scss'
+  "
+  urlCodeHtml="example-snapping/example-layer-image/example-layer-image.component.html"
+  urlCodeTypescript="example-snapping/example-layer-image/example-layer-image.component.ts"
+  urlCodeScss="example-snapping/example-layer-image/example-layer-image.component.scss"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In het voorbeeld hieronder is een afbeelding (PNG) van een bestemmingsplan
+      als laag toegevoegd aan de kaart. In de <code>imageExtent</code> staan de
+      RD-co&ouml;rdinaten waar de image op de kaart wordt getoond.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="map-container">
+      <ggc-map [minZoomlevel]="5">
+        <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+        <ggc-image-layer [options]="imageLayerOptions"></ggc-image-layer>
+      </ggc-map>
+    </div>
+    <!-- DOCS:END functionality -->
+  </div>
+</app-example-format>

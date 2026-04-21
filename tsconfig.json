@@ -30,10 +30,10 @@
   },
   "references": [
     {
-      "path": "./projects/library-app/tsconfig.app.json"
+      "path": "./projects/ggc-home/tsconfig.app.json"
     },
     {
-      "path": "./projects/library-app/tsconfig.spec.json"
+      "path": "./projects/ggc-home/tsconfig.spec.json"
     }
   ]
 }

@@ -1,0 +1,29 @@
+.map-container {
+  align-items: stretch;
+  display: flex;
+  height: 100%;
+  justify-content: stretch;
+  min-height: 80vh;
+  position: relative;
+  width: 100%;
+
+  & > * {
+    flex-basis: 100%;
+    flex-grow: 1;
+  }
+}
+.legend-container {
+  border: gray 1px solid;
+  padding: 5px;
+  text-align: left;
+}
+.btn {
+  margin: 3px;
+}
+
+:host ::ng-deep .legend-container .ggc-dl-dataset-name {
+  text-align: left;
+  justify-content: flex-start;
+  width: 100%;
+}
+
