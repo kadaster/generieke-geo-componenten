@@ -29,7 +29,7 @@ import {
   createFlyToOptions,
   getCameraValues
 } from "../utils/camera-utils";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import {
   CameraOptions,
   CameraPosition,
@@ -37,7 +37,6 @@ import {
   GeoJsonConfig,
   LookAtObject,
   SelectionConfig,
-  SelectionEvent,
   TilesetConfig,
   ViewerOptions,
   Webservice
