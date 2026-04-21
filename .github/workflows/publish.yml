@@ -217,8 +217,8 @@ jobs:
             cd -
           }
 
-          if [ "$GGC_DATASET_LEGEND" = "true" ]; then
-            build_and_publish "ggc-dataset-legend"
+          if [ "$GGC_DATASET_TREE" = "true" ]; then
+            build_and_publish "ggc-dataset-tree"
           fi
 
           if [ "$GGC_LEGEND" = "true" ]; then
