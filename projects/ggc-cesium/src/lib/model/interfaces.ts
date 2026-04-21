@@ -8,10 +8,7 @@ import {
   ScreenSpaceEventType
 } from "@cesium/engine";
 import { DrawingType } from "./enums";
-import {
-  LegendType,
-  Webservice3DType
-} from "@kadaster/ggc-models";
+import { LegendType, Webservice3DType } from "@kadaster/ggc-models";
 
 export interface Position {
   lat: number;

@@ -1,12 +1,12 @@
 {
   "name": "@kadaster/ggc-cesium",
-  "version": "9.0.3",
+  "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@cesium/engine": "21.0.1",
     "@cesium/widgets": "13.2.1",
-    "@kadaster/ggc-dataset-tree": ">=13",
+    "@kadaster/ggc-dataset-tree": ">=0",
     "jsonschema": "^1.4.1",
     "url": "^0.11.3"
   },
