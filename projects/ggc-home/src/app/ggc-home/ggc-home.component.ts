@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnInit,
   ViewEncapsulation
 } from "@angular/core";
 import {

@@ -42,7 +42,7 @@ export class MenuBarComponent {
     }
   }
 
-  selectMenuItem(e: any) {
+  selectMenuItem() {
     debugger;
   }
 

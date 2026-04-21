@@ -51,7 +51,7 @@ export class ExampleMeasureOwnStyleLabel extends ExampleFormatComponent {
       });
 
     this.drawService.setDrawStyle(this.measureLayer, {
-      drawingDrawStyle: function (feature, resolution) {
+      drawingDrawStyle: function () {
         return [
           new Style({
             stroke: new Stroke({

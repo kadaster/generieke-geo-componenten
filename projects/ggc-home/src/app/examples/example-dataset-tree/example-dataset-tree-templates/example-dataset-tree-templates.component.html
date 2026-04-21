@@ -79,6 +79,7 @@
                 <span class="layer-label">{{ getTitle(value.layerId) }}</span>
               } @else {
                 <span
+                  (keydown)="zoomToVisible(value.layerId)"
                   (click)="zoomToVisible(value.layerId)"
                   tabindex="0"
                   class="layer-label-inactive"
