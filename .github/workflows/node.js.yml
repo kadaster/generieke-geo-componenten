@@ -8,13 +8,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [24.x]
-
     steps:
       - uses: actions/checkout@v6
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,5 +21,13 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build:all --if-present
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - run: npm run lint:all
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - run: npm test
