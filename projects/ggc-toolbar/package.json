@@ -1,6 +1,6 @@
 {
   "name": "@kadaster/ggc-toolbar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0"
