@@ -37,10 +37,19 @@ import { GgcLayerService } from "../service/select/ggc-layer.service";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 /**
- * `<ggc-map></ggc-map>` toont een 2D kaart waar verschillende lagen aan toegevoegd kunnen worden.
+ * `<ggc-map></ggc-map>` toont een 2D kaart waar verschillende lagen aan toegevoegd
+ * kunnen worden.
  *
- * Let op: om de kaarten te tonen, moet het `ggc-map` element een specifieke hoogte meekrijgen vanuit CSS, zoals in het voorbeeld hieronder.
+ * Let op: om de kaarten te tonen, moet het `ggc-map` element een specifieke
+ * hoogte meekrijgen vanuit CSS, zoals in het voorbeeld hieronder.
  *
+ * Dit component vormt het hart van de GGC kaartarchitectuur en is
+ *  verantwoordelijk voor:
+ *   - initialisatie en vernietiging van de OpenLayers Map
+ *   - koppelen van kaart‑events aan GGC‑events
+ *   - laden van webservices en lagen
+ *   - selectie, tekenen en loading‑status
+ *  *
  * @example
  * kaartConfig = [
  *     {
@@ -68,21 +77,31 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   styleUrls: ["./ggc-map.component.scss"]
 })
 export class GgcMapComponent implements AfterViewInit, OnDestroy {
-  /** Naam van de kaart waarop getekend wordt. */
+  /** Unieke naam/index van de kaart */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
 
-  /** tabIndex van de kaart kan aangepast worden t.b.v. toetsenbordbesturing */
+  /** tabIndex t.b.v. toetsenbordnavigatie */
   @Input() mapTabIndex: number | undefined = undefined;
 
-  /** ariaRole van de kaart */
+  /** ARIA role voor accessibility */
   @Input() ariaRole = "application";
 
-  /** ariaLabel van de kaart */
+  /** ARIA label voor screenreaders */
   @Input() ariaLabel = "viewer";
 
+  /**
+   * Output event‑stream van het kaartcomponent.
+   *
+   * Emit o.a.:
+   * - MAPINITIALIZED
+   * - SINGLECLICK
+   * - ZOOMEND / ZOOMENDLOCATION
+   * - LOADING
+   */
   @Output() events: EventEmitter<MapComponentEvent> =
     new EventEmitter<MapComponentEvent>();
 
+  /** DOM‑element waarin de kaart gerenderd wordt */
   @ViewChild("mapElement", { static: true })
   private readonly mapElement: ElementRef;
   private readonly eventsMap: EventsKey[] = [];
@@ -107,14 +126,19 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   private isLoading$: Subscription;
   private _webServices: Webservice[];
 
-  /** Lijst van webservices die lagen bevatten voor de kaart. */
+  /**
+   * Webservices met lagen die op de kaart geladen moeten worden.
+   */
   @Input()
   set webServices(webservices: Webservice[]) {
     this._webServices = webservices;
     this.loadWebservices();
   }
 
-  /** minZoomlevel van de kaart */
+  /**
+   * minZoomlevel van de kaart
+   * Waarde wordt geclamped binnen CRS‑limieten.
+   */
   @Input()
   set minZoomlevel(value: number) {
     this._minZoomlevel = Math.max(
@@ -127,7 +151,10 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     return this._minZoomlevel;
   }
 
-  /** maxZoomlevel van de kaart */
+  /**
+   * Maximum zoomlevel van de kaart.
+   * Waarde wordt geclamped binnen CRS‑limieten.
+   */
   @Input()
   set maxZoomlevel(value: number) {
     this._maxZoomlevel = Math.max(
@@ -140,6 +167,13 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     return this._maxZoomlevel;
   }
 
+  /**
+   * Initialiseert de kaart nadat de view beschikbaar is.
+   *
+   * - valideert zoomlevels
+   * - creëert de OpenLayers map
+   * - koppelt OL‑events aan GGC‑events
+   */
   ngAfterViewInit(): void {
     if (this._minZoomlevel > this._maxZoomlevel) {
       this.events.emit(
@@ -182,6 +216,10 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Verwerkt alle OpenLayers events en vertaalt deze
+   * naar GGC MapComponent events.
+   */
   processEvent(mapEvent: MapEvent | RenderEvent | ObjectEvent) {
     switch (mapEvent.type) {
       case this.OL_CHANGE_RESOLUTION:
@@ -242,18 +280,27 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Laadt webservices en hun lagen via de LayerService.
+   */
   private loadWebservices() {
     if (this._webServices) {
       this.ggcLayerService.loadWebservices(this._webServices, this.mapIndex);
     }
   }
 
+  /**
+   * Haalt huidige kaartpositie en zoomniveau op.
+   */
   getLocationFromMapEvent(mapEvent: MapEvent): MapViewState {
     const zoom = mapEvent.map.getView().getZoom() as number;
     const coordinate = mapEvent.map.getView().getCenter() as Coordinate;
     return new MapViewState(coordinate, zoom);
   }
 
+  /**
+   * Opruimen van events, subscriptions en map‑resources.
+   */
   ngOnDestroy() {
     // Unsubscribe from Observable by key
     while (this.eventsMap.length > 0) {
@@ -277,6 +324,9 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     this.coreMapService.destroyMap(this.mapIndex);
   }
 
+  /**
+   * Initialiseert de loader‑events van de kaart.
+   */
   private initializeLoader(): void {
     this.isLoading$ = this.coreLoadingService
       .isLoading(this.mapIndex)

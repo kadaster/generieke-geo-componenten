@@ -1,9 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
 import { EventsKey } from "ol/events";
-import { Circle } from "ol/style";
-import Style, { StyleFunction } from "ol/style/Style";
-import { Type } from "ol/geom/Geometry";
 import { Geometry, LineString, Point, Polygon } from "ol/geom";
 import { Draw, Modify, Snap, Translate } from "ol/interaction";
 import { DrawEvent, GeometryFunction } from "ol/interaction/Draw";
@@ -20,15 +17,16 @@ import { MapComponentEventTypes } from "../../model/map-component-event.model";
 import { ModifyInteractionEventTypes } from "../../model/modify-interaction-event.model";
 
 import { CoreDrawService } from "./core-draw.service";
+import Style from "ol/style/Style";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
 import { CoreSnapService } from "./core-snap.service";
-import { CenterDraw } from "../center-draw";
+import { CenterDraw } from "../center-interaction/center-draw";
 import { Coordinate } from "ol/coordinate";
 import createSpyObj = jasmine.createSpyObj;
 import Spy = jasmine.Spy;
-import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-import RenderFeature from "ol/render/Feature";
+import View from "ol/View";
+import { CenterModify } from "../center-interaction/center-modify";
+import {customDrawStyle, customFinishDrawStyle} from "./draw-styles";
 
 describe("CoreDrawService", () => {
   const mapIndex = "TEST_MAP";
@@ -99,15 +97,15 @@ describe("CoreDrawService", () => {
       service["drawInteractions"].set(mapIndex, drawInteraction);
       spyOn(coreMapService, "checkMapIndex").and.returnValue(true);
       spyOn(drawInteraction, "appendCoordinates").and.stub();
-      service.appendCoordinates(mapIndex, coordinates1);
-      service.appendCoordinates(mapIndex, coordinates2);
+      service.appendCoordinates(coordinates1, mapIndex);
+      service.appendCoordinates(coordinates2, mapIndex);
       expect(drawInteraction.appendCoordinates).toHaveBeenCalledTimes(2);
     });
     it("should NOT call appendcoordinates if the mapIndex does not exist", () => {
       const drawInteraction = createDrawInteraction();
       service["drawInteractions"].set(mapIndex, drawInteraction);
       spyOn(drawInteraction, "appendCoordinates").and.stub();
-      service.appendCoordinates(mapIndex, coordinates1);
+      service.appendCoordinates(coordinates1, mapIndex);
       expect(drawInteraction.appendCoordinates).not.toHaveBeenCalled();
     });
   });
@@ -792,33 +790,6 @@ describe("CoreDrawService", () => {
     });
   });
 
-  describe("wasMeasuring", () => {
-    it("should return true if showSegmentLength === true", () => {
-      expect(
-        CoreDrawService["wasMeasuring"]({ showTotalLength: true })
-      ).toEqual(true);
-    });
-
-    it("should return true if showTotalLength === true", () => {
-      expect(
-        CoreDrawService["wasMeasuring"]({ showTotalLength: true })
-      ).toEqual(true);
-    });
-
-    it("should return true if showArea === true", () => {
-      expect(CoreDrawService["wasMeasuring"]({ showArea: true })).toEqual(true);
-    });
-
-    it("should return false if nothing was measured", () => {
-      const options = {
-        showArea: false,
-        showTotalLength: false,
-        showSegmentLength: false
-      };
-      expect(CoreDrawService["wasMeasuring"](options)).toEqual(false);
-    });
-  });
-
   describe("getDrawType", () => {
     it("should return 'none' when mesureoptions is empty", () => {
       expect(service.getDrawType({})).toEqual("none");
@@ -1036,6 +1007,52 @@ describe("CoreDrawService", () => {
       expect((result as Draw)["geometryFunction_"]).toBe(geoFunction);
     });
   });
+
+  describe("center modify", () => {
+    it("should remove active interaction and add CenterModify", () => {
+      const mapIndex = "map-1";
+      const layerName = "layer-1";
+      const map = new OlMap({
+        view: new View({
+          center: [100, 100],
+          zoom: 10
+        })
+      });
+
+      spyOn(service, "removeActiveCenterInteraction");
+      spyOn(coreMapService, "getMap").and.returnValue(map);
+
+      const result = service.startCenterModify(layerName, mapIndex);
+
+      expect((service as any).activeCenterInteraction).toBe(result);
+      expect((service as any).modifyInteractions.get(mapIndex)).toBe(result);
+    });
+
+    it("should start modify current point", () => {
+      const map = new OlMap({
+        view: new View({ center: [100, 100] })
+      });
+      spyOn(coreMapService, "getMap").and.returnValue(map);
+
+      const centerModify: CenterModify = service.startCenterModify(
+        "Kees",
+        "index200"
+      );
+
+      const startModspy = spyOn(centerModify as any, "startModifyCurrentPoint");
+      service.startCenterModifyCurrentPoint();
+      expect(startModspy).toHaveBeenCalled();
+    });
+
+    it("should cleanup and remove active center interaction", () => {
+      const interaction = jasmine.createSpyObj("CenterBase", ["cleanup"]);
+      service["activeCenterInteraction"] = interaction;
+
+      service.removeActiveCenterInteraction("map-1");
+
+      expect(interaction.cleanup).toHaveBeenCalled();
+    });
+  });
 });
 
 function createVectorLayer(): VectorLayer<VectorSource<Feature<Geometry>>> {
@@ -1043,171 +1060,6 @@ function createVectorLayer(): VectorLayer<VectorSource<Feature<Geometry>>> {
     source: new VectorSource()
   });
 }
-
-export const customFinishDrawStyle: StyleFunction = (
-  feature: Feature<Geometry> | RenderFeature
-): Style | Style[] | void => {
-  const width = 1;
-  const styles: Map<Type, Style[] | undefined> = new Map();
-
-  styles.set("Polygon", [
-    new Style({
-      fill: new Fill({
-        color: [200, 200, 200, 0.5]
-      })
-    }),
-    new Style({
-      stroke: new Stroke({
-        color: "#424447",
-        width
-      })
-    })
-  ]);
-  styles.set("MultiPolygon", styles.get("Polygon"));
-
-  styles.set("LineString", [
-    new Style({
-      stroke: new Stroke({
-        color: "white",
-        width: width + 2
-      })
-    }),
-    new Style({
-      stroke: new Stroke({
-        color: "green",
-        width
-      })
-    })
-  ]);
-  styles.set("MultiLineString", styles.get("LineString"));
-
-  styles.set("Point", [
-    new Style({
-      image: new Circle({
-        radius: width * 2,
-        fill: new Fill({
-          color: "green"
-        }),
-        stroke: new Stroke({
-          color: "white",
-          width: width / 2
-        })
-      }),
-      zIndex: Infinity
-    })
-  ]);
-  styles.set("MultiPoint", styles.get("Point"));
-  styles.set("GeometryCollection", [
-    ...(styles.get("Polygon") as Style[]),
-    ...(styles.get("LineString") as Style[]),
-    ...(styles.get("Point") as Style[])
-  ]);
-
-  const fill = new Fill({
-    color: "white"
-  });
-  const stroke = new Stroke({
-    color: "blue",
-    width: 1.25
-  });
-
-  styles.set("Circle", [
-    new Style({
-      image: new Circle({
-        fill,
-        stroke,
-        radius: 5
-      }),
-      fill,
-      stroke
-    })
-  ]);
-
-  const type = feature.getGeometry()?.getType();
-  if (type) {
-    return styles.get(type);
-  }
-};
-
-export const customDrawStyle: StyleFunction = (
-  feature: Feature<Geometry> | RenderFeature
-) => {
-  const width = 3;
-  const styles: Map<Type, Style[] | undefined> = new Map();
-
-  styles.set("Polygon", [
-    new Style({
-      fill: new Fill({
-        color: [255, 255, 255, 0.5]
-      })
-    }),
-    new Style({
-      stroke: new Stroke({
-        color: "#008296",
-        width: width + 2
-      })
-    })
-  ]);
-  styles.set("MultiPolygon", styles.get("Polygon"));
-
-  styles.set("LineString", [
-    new Style({
-      stroke: new Stroke({
-        color: "#008296",
-        width: width + 2
-      })
-    }),
-    new Style({
-      stroke: new Stroke({
-        color: "#008296",
-        width
-      })
-    })
-  ]);
-  styles.set("MultiLineString", styles.get("LineString"));
-
-  styles.set("Point", [
-    new Style({
-      image: new Circle({
-        radius: width * 2,
-        fill: new Fill({
-          color: "red"
-        }),
-        stroke: new Stroke({
-          color: "white",
-          width: width / 2
-        })
-      }),
-      zIndex: Infinity
-    })
-  ]);
-  styles.set("MultiPoint", styles.get("Point"));
-
-  const fill = new Fill({
-    color: "red"
-  });
-  const stroke = new Stroke({
-    color: "red",
-    width: 1.25
-  });
-
-  styles.set("Circle", [
-    new Style({
-      image: new Circle({
-        fill,
-        stroke,
-        radius: 5
-      }),
-      fill,
-      stroke
-    })
-  ]);
-
-  const type = feature.getGeometry()?.getType();
-  if (type) {
-    return styles.get(type);
-  }
-};
 
 function createStyleLikeMap(): StyleLikeMap {
   return {

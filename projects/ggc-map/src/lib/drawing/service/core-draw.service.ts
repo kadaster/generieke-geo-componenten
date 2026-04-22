@@ -34,11 +34,20 @@ import { CoreMeasureDrawStyleService } from "./core-measure-draw-style.service";
 import { Coordinate } from "ol/coordinate";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
 import { CoreSnapService } from "./core-snap.service";
-import { CenterDraw, CenterDrawOptions } from "../center-draw";
+import {
+  CenterDraw,
+  CenterDrawOptions
+} from "../center-interaction/center-draw";
 import { TraceOptions } from "../../model/trace-options";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { DrawValidator } from "../draw-validator";
+import { CenterBase } from "../center-interaction/center-base";
+import {
+  CenterModify,
+  CenterModifyOptions
+} from "../center-interaction/center-modify";
+import { StyleLike } from "ol/style/Style";
 
 @Injectable({
   providedIn: "root"
@@ -57,7 +66,8 @@ export class CoreDrawService {
   );
   private readonly coreDrawLayerService = inject(CoreDrawLayerService);
   private readonly coreSnapService = inject(CoreSnapService);
-  private readonly modifyInteractions: Map<string, Modify> = new Map();
+  private readonly modifyInteractions: Map<string, Modify | CenterModify> =
+    new Map();
   private readonly moveInteractions: Map<string, Translate> = new Map();
   private validLineStringOrPolygon = false;
 
@@ -73,6 +83,56 @@ export class CoreDrawService {
   private readonly drawStyleMap: Map<string, StyleLikeMap> = new Map();
   private readonly modifyListenersMap: Map<string, EventsKey[]> = new Map();
   private readonly moveListenersMap: Map<string, EventsKey[]> = new Map();
+  private activeCenterInteraction: CenterBase | undefined;
+
+  startCenterInteraction(mapIndex: string, croshairStyle?: StyleLike) {
+    const activeCenterBase = new CenterBase({
+      crossHairStyle: croshairStyle
+    });
+    this.coreMapService.getMap(mapIndex).addInteraction(activeCenterBase);
+  }
+
+  startCenterModify(
+    layerName: string,
+    mapIndex: string,
+    options?: CenterModifyOptions
+  ): CenterModify {
+    this.removeActiveCenterInteraction(mapIndex);
+    const targetSource = this.coreDrawLayerService
+      .getDrawLayer(layerName, mapIndex)
+      .getSource()!;
+    if (options && !options.targetSource) {
+      options.targetSource = targetSource;
+    }
+    const centerModify = new CenterModify(
+      options ?? ({ targetSource } as CenterModifyOptions)
+    );
+    this.activeCenterInteraction = centerModify;
+    const map = this.coreMapService.getMap(mapIndex);
+    map.addInteraction(centerModify);
+    this.modifyInteractions.set(mapIndex, centerModify);
+    return centerModify;
+  }
+
+  startCenterModifyCurrentPoint() {
+    if (this.activeCenterInteraction instanceof CenterModify) {
+      this.activeCenterInteraction.startModifyCurrentPoint();
+    }
+  }
+
+  stopCenterModifyCurrentPoint() {
+    if (this.activeCenterInteraction instanceof CenterModify) {
+      this.activeCenterInteraction.finishModify();
+    }
+  }
+
+  removeActiveCenterInteraction(mapIndex: string) {
+    if (this.activeCenterInteraction) {
+      this.activeCenterInteraction.cleanup();
+      const map = this.coreMapService.getMap(mapIndex);
+      map.removeInteraction(this.activeCenterInteraction);
+    }
+  }
 
   addFeatureToLayer(
     layerName: string,
@@ -90,7 +150,19 @@ export class CoreDrawService {
     return this.coreMapService.decideMapComponentEventType(exists, mapIndex);
   }
 
-  appendCoordinates(mapIndex: string, coordinates: Coordinate) {
+  removeFeatureFromLayer(
+    layerName: string,
+    mapIndex: string,
+    feature: Feature<Geometry>
+  ) {
+    const exists = this.coreMapService.checkMapIndex(mapIndex);
+    if (exists) {
+      const layer = this.coreDrawLayerService.getDrawLayer(layerName, mapIndex);
+      layer.getSource()!.removeFeature(feature);
+    }
+  }
+
+  appendCoordinates(coordinates: Coordinate, mapIndex: string) {
     const mapIndexExists = this.coreMapService.checkMapIndex(mapIndex);
     if (mapIndexExists) {
       const drawInteraction = this.drawInteractions.get(mapIndex);
@@ -259,7 +331,6 @@ export class CoreDrawService {
       const valid =
         this.coreDrawValidationService.checkAndRemoveValidators(mapIndex);
       const areaOrLength = calculateAreaOrLength(event.feature);
-      const geometry = event.feature.getGeometry();
       event.feature.setProperties({
         areaOrLength,
         measurement: this.getDrawType(drawOptions)
@@ -467,6 +538,9 @@ export class CoreDrawService {
       unByKey(this.modifyListenersMap.get(mapIndex) as EventsKey[]);
       this.modifyListenersMap.delete(mapIndex);
       this.modifyInteractions.delete(mapIndex);
+      if (interaction instanceof CenterModify) {
+        interaction.finishModify();
+      }
       this.coreMapService.getMap(mapIndex).removeInteraction(interaction);
     }
   }
@@ -607,7 +681,6 @@ export class CoreDrawService {
 
         const map = this.coreMapService.getMap(mapIndex);
         map.addInteraction(drawInteraction);
-
         /* need to snap to tracing layer after
          * drawInteraction is initiated */
         if (this.shouldTrace(traceOptions, options)) {
@@ -663,17 +736,12 @@ export class CoreDrawService {
         ...drawOptions,
         crossHairStyle: styleLikeMap?.crossHairStyle
       };
-      return new CenterDraw(centerDrawOptions);
+      const centerDraw = new CenterDraw(centerDrawOptions);
+      this.removeActiveCenterInteraction(mapIndex);
+      this.activeCenterInteraction = centerDraw;
+      return centerDraw;
     }
     return new Draw(drawOptions);
-  }
-
-  private static wasMeasuring(drawOptions: DrawOptions): boolean {
-    return (
-      !!drawOptions.showSegmentLength ||
-      !!drawOptions.showTotalLength ||
-      !!drawOptions.showArea
-    );
   }
 
   private isValidOnFinishByMethod(currentSketch: Feature<Geometry> | null) {

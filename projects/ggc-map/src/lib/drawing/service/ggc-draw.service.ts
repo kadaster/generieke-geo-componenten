@@ -16,6 +16,8 @@ import { Coordinate } from "ol/coordinate";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
 import { TraceOptions } from "../../model/trace-options";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { StyleLike } from "ol/style/Style";
+import { CenterModifyOptions } from "../center-interaction/center-modify";
 
 /**
  * Service voor het beheren van teken- en bewerkingsinteracties op de kaart.
@@ -29,6 +31,64 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 export class GgcDrawService {
   private readonly coreDrawService = inject(CoreDrawService);
   private readonly coreDrawLayerService = inject(CoreDrawLayerService);
+
+  /**
+   * Start een interactie met het midden van de kaart (draw of modify),
+   * toont een crosshair
+   *
+   * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
+   * @param croshairStyle - Optioneel: een alternatieve stijl voor de crosshair
+   */
+  startCenterInteraction(mapIndex: string, croshairStyle?: StyleLike) {
+    this.coreDrawService.startCenterInteraction(mapIndex, croshairStyle);
+  }
+  /**
+   * Stopt een Centerinteraction, de bestaande center interactie (draw of modify)
+   * wordt gestopt en de crosshair verwijderd.
+   * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
+   */
+  stopCenterInteractions(mapIndex: string) {
+    this.stopDraw(mapIndex);
+    this.stopModify(mapIndex);
+    this.coreDrawService.removeActiveCenterInteraction(mapIndex);
+  }
+
+  /**
+   * Start het wijzigen van objecten met behulp van het centrum van de kaart.
+   *
+   * @param layerName - Naam van de laag met de te wijzigen objecten.
+   * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
+   * @param options - Optioneel: options voor:
+   *    - de laag,
+   *    - de stijl voor het highlighten van objecten,
+   *    - de stijl voor het highlighten van een te wijzigen punt van een object
+   *    - de toetsenbordknoppen voor het tabben door punten van een object
+   */
+  startCenterModify(
+    layerName: string,
+    mapIndex: string,
+    options?: CenterModifyOptions
+  ) {
+    this.coreDrawService.startCenterModify(layerName, mapIndex, options);
+  }
+
+  /**
+   * Start het wijzigen van een punt (highlighted vertex of tussenpunt)
+   * van een object in de te wijzigen laag met behulp van het centrum van de kaart.
+   */
+  startCenterModifyCurrentPoint() {
+    this.coreDrawService.startCenterModifyCurrentPoint();
+  }
+
+  /**
+   * Stopt het wijzigen van een punt (highlighted vertex of tussenpunt)
+   * van een object in de te wijzigen laag met behulp van het centrum van de kaart.
+   */
+  stopCenterModifyCurrentPoint() {
+    this.coreDrawService.stopCenterModifyCurrentPoint();
+  }
+
+  // einde toetsenbord
 
   /**
    * Voegt een feature toe aan een bestaande tekenlaag.
@@ -46,6 +106,18 @@ export class GgcDrawService {
     return this.coreDrawService.addFeatureToLayer(layerName, mapIndex, feature);
   }
 
+  removeFeatureFromLayer(
+    layerName: string,
+    feature: Feature<Geometry>,
+    mapIndex = DEFAULT_MAPINDEX
+  ) {
+    return this.coreDrawService.removeFeatureFromLayer(
+      layerName,
+      mapIndex,
+      feature
+    );
+  }
+
   /**
    * Voegt een coördinaat toe aan de huidige actieve tekening.
    *
@@ -53,7 +125,7 @@ export class GgcDrawService {
    * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
    */
   appendCoordinates(coordinates: Coordinate, mapIndex = DEFAULT_MAPINDEX) {
-    this.coreDrawService.appendCoordinates(mapIndex, coordinates);
+    this.coreDrawService.appendCoordinates(coordinates, mapIndex);
   }
 
   /**
@@ -315,23 +387,6 @@ export class GgcDrawService {
    */
   toggleLayer(layerName: string, mapIndex: string = DEFAULT_MAPINDEX): void {
     this.coreDrawService.toggleLayer(layerName, mapIndex);
-  }
-
-  /**
-   * @deprecated Gebruik `resetDrawStyle` in plaats van deze methode.
-   *
-   * Reset de meetstijl van de opgegeven laag naar de standaardstijl.
-   *
-   * @param layerName - Naam van de laag.
-   * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
-   * @param drawOptions - Opties voor de tekenstijl. Default: leeg object.
-   */
-  resetMeasureStyle(
-    layerName: string,
-    mapIndex: string = DEFAULT_MAPINDEX,
-    drawOptions: DrawOptions = {}
-  ) {
-    this.resetDrawStyle(layerName, mapIndex, drawOptions);
   }
 
   /**

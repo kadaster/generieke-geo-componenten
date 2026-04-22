@@ -103,13 +103,13 @@ export class ThemeSelectorComponent implements OnInit {
 
   private _themes: Theme[];
 
-  private coreDatasetTreeService = inject(CoreDatasetTreeService);
+  private readonly coreDatasetTreeService = inject(CoreDatasetTreeService);
   private readonly datasetTreeMapConnectService = inject(
     DatasetTreeMapConnectService
   );
 
-  private totalLayerCount: Map<Theme, number> = new Map();
-  private activeLayerCount: Map<Theme, number> = new Map();
+  private readonly totalLayerCount: Map<Theme, number> = new Map();
+  private readonly activeLayerCount: Map<Theme, number> = new Map();
 
   /**
    * Geeft de huidige lijst van themes terug.

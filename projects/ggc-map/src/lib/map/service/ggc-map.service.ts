@@ -3,17 +3,12 @@ import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import WKT from "ol/format/WKT";
 import { Geometry } from "ol/geom";
-import Point from "ol/geom/Point";
 import BaseLayer from "ol/layer/Base";
 import VectorLayer from "ol/layer/Vector";
 import OlMap from "ol/Map";
-import MapBrowserEvent from "ol/MapBrowserEvent";
 import VectorSource from "ol/source/Vector";
 import { StyleLike } from "ol/style/Style";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+import { MapComponentEvent } from "../../model/map-component-event.model";
 import { CoreMapService } from "./core-map.service";
 import { SearchResultDoc } from "./SearchResultDoc.model";
 import { Extent } from "ol/extent";
@@ -21,7 +16,22 @@ import { ZoomOptions } from "./ZoomOptions.model";
 import { GeoJSON } from "ol/format";
 import { FormatType } from "../../enum/format-type";
 import { Observable } from "rxjs";
-import { DEFAULT_MAPINDEX, LayerChangedEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  LayerChangedEvent
+} from "@kadaster/ggc-models";
+
+/**
+ * Service die kaartfunctionaliteit aanbiedt voor:
+ *
+ * - Opvragen van kaarten en lagen
+ * - Zoomen naar coördinaten, geometrieën en extensies
+ * - Highlight- en selection-lagen beheren
+ * - Interactie met (PDOK) zoekresultaten
+ *
+ * Deze service abstraheert OpenLayers-details en zorgt voor consistente
+ * {@link MapComponentEvent}-afhandeling.
+ */
 
 @Injectable({
   providedIn: "root"
@@ -29,14 +39,32 @@ import { DEFAULT_MAPINDEX, LayerChangedEvent } from "@kadaster/ggc-models";
 export class GgcMapService {
   private readonly coreMapService = inject(CoreMapService);
 
+  /**
+   * Geeft een observable die notificaties uitstuurt wanneer lagen wijzigen.
+   *
+   * @returns Observable met {@link LayerChangedEvent}
+   */
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
     return this.coreMapService.getLayerChangedObservable();
   }
 
+  /**
+   * Haalt een OpenLayers map op, op basis van mapIndex.
+   *
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @returns OpenLayers {@link OlMap}
+   */
   getMap(mapIndex?: string): OlMap {
     return this.coreMapService.getMap(mapIndex);
   }
 
+  /**
+   * Haalt een kaartlaag op, op basis van layerID en mapIndex.
+   *
+   * @param layerId Unieke laag-id
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @returns De kaartlaag of `undefined` indien niet gevonden
+   */
   getLayer(
     layerId: string,
     mapIndex = DEFAULT_MAPINDEX
@@ -44,6 +72,14 @@ export class GgcMapService {
     return this.coreMapService.getLayer(layerId, mapIndex);
   }
 
+  /**
+   * Haalt een extra vectorlaag op (bijvoorbeeld highlight- of selectionlaag),
+   * op basis van een layerName en mapIndex.
+   *
+   * @param layer Naam van de extra laag
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @returns VectorLayer of `undefined`
+   */
   getExtraLayer(
     layer: string,
     mapIndex = DEFAULT_MAPINDEX
@@ -51,6 +87,12 @@ export class GgcMapService {
     return this.coreMapService.getExtraLayer(layer, mapIndex);
   }
 
+  /**
+   * Bepaalt de hoogste z-index van zichtbare lagen binnen een kaart.
+   *
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @returns Hoogste z-index
+   */
   getMaxZIndex(mapIndex?: string): number {
     let maxZIndex = Number.MIN_SAFE_INTEGER;
     for (const layer of this.getMap(mapIndex).getAllLayers()) {
@@ -64,6 +106,15 @@ export class GgcMapService {
     return maxZIndex;
   }
 
+  /**
+   * Zoomt de kaart naar een specifieke coördinaat.
+   * Wacht indien nodig tot de kaart volledig is gerenderd.
+   *
+   * @param coord Doelcoördinaat
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @param maxZoom Optioneel maximum zoomniveau
+   * @returns Promise met {@link MapComponentEvent}
+   */
   zoomToCoordinate(
     coord: Coordinate,
     mapIndex = DEFAULT_MAPINDEX,
@@ -93,28 +144,13 @@ export class GgcMapService {
   }
 
   /**
-   * @deprecated
-   * In de volgende major versie krijgt 'zoomToGeometry' de properties van 'zoomToGeometryWithZoomOptions'
-   **/
-  zoomToGeometry(
-    geometry: string | Geometry,
-    mapIndex = DEFAULT_MAPINDEX,
-    maxZoom?: number,
-    formatType = FormatType.WKT
-  ): MapComponentEvent {
-    return this.zoomToGeometryWithZoomOptions(
-      geometry,
-      {
-        mapIndex,
-        fitOptions: { maxZoom }
-      },
-      formatType
-    );
-  }
-
-  /**
-   * @deprecated
-   **/
+   * Zoomt naar een geometrie met uitgebreide zoomopties.
+   *
+   * @param geometry Geometrie als WKT, GeoJSON of OpenLayers Geometry
+   * @param zoomOptions Opties voor mapIndex en fit
+   * @param formatType Formaat van string-geometrie
+   * @returns {@link MapComponentEvent}
+   */
   zoomToGeometryWithZoomOptions(
     geometry: string | Geometry,
     zoomOptions: ZoomOptions,
@@ -136,6 +172,13 @@ export class GgcMapService {
     return this.coreMapService.decideMapComponentEventType(false, mapIndex);
   }
 
+  /**
+   * Zoomt naar een gegeven bounding box (extent).
+   *
+   * @param bbox Extent in kaartprojectie
+   * @param zoomOptions Optioneel Zoom- en fitopties
+   * @returns {@link MapComponentEvent}
+   */
   zoomToExtent(bbox: Extent, zoomOptions?: ZoomOptions): MapComponentEvent {
     const mapIndex = zoomOptions?.mapIndex ?? DEFAULT_MAPINDEX;
     if (this.coreMapService.checkMapIndex(mapIndex)) {
@@ -148,6 +191,15 @@ export class GgcMapService {
     return this.coreMapService.decideMapComponentEventType(false, mapIndex);
   }
 
+  /**
+   * Markeert een geometrie op de highlightlaag.
+   * Bestaande markeringen worden eerst verwijderd.
+   *
+   * @param geometry Geometrie als string of OpenLayers Geometry
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @param formatType Formaat van de string-geometrie (enum FormatType)
+   * @returns {@link MapComponentEvent}
+   */
   markFeature(
     geometry: string | Geometry,
     mapIndex = DEFAULT_MAPINDEX,
@@ -170,6 +222,156 @@ export class GgcMapService {
     return this.coreMapService.decideMapComponentEventType(false, mapIndex);
   }
 
+  /**
+   * Voegt één of meerdere features toe aan de highlightlaag.
+   * De features worden zichtbaar gemaakt met de huidige highlightstijl.
+   *
+   * @param features Array van OpenLayers features met geometrie
+   * @param mapIndex Index van de kaart waarop de features worden
+   * toegevoegd (default: DEFAULT_MAPINDEX)
+   * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
+   */
+
+  addFeaturesToHighlightLayer(
+    features: Feature<Geometry>[],
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): MapComponentEvent {
+    return this.coreMapService.addFeaturesToHighlightLayer(features, mapIndex);
+  }
+
+  /**
+   * Verwijdert alle features uit de highlightlaag.
+   *
+   * @param mapIndex Index van de kaart waarvoor de highlightlaag wordt
+   * geleegd (default: DEFAULT_MAPINDEX)
+   * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
+   */
+  clearHighlightLayer(mapIndex: string = DEFAULT_MAPINDEX): MapComponentEvent {
+    return this.coreMapService.clearHighlightLayer(mapIndex);
+  }
+
+  /**
+   * Wijzigt de stijl die wordt gebruikt voor het renderen van features
+   * in de highlightlaag.
+   *
+   * @param styleLike OpenLayers StyleLike
+   * @param mapIndex Index van de kaart waarop de stijl wordt
+   * aangepast (default: DEFAULT_MAPINDEX)
+   */
+  changeHighlightLayerStyle(
+    styleLike: StyleLike,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ) {
+    this.coreMapService.changeHighlightLayerStyle(styleLike, mapIndex);
+  }
+
+  /**
+   * Voegt één of meerdere features toe aan de selectionlaag.
+   * Deze laag wordt doorgaans gebruikt voor geselecteerde objecten.
+   *
+   * @param features Array van OpenLayers features met geometrie
+   * @param mapIndex Index van de kaart waarop de features worden
+   * toegevoegd (default: DEFAULT_MAPINDEX)
+   * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
+   */
+  addFeaturesToSelectionLayer(
+    features: Feature<Geometry>[],
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): MapComponentEvent {
+    return this.coreMapService.addFeaturesToSelectionLayer(features, mapIndex);
+  }
+
+  /**
+   * Verwijdert alle features uit de selectionlaag.
+   *
+   * @param mapIndex Index van de kaart waarvoor de selectionlaag wordt
+   * geleegd (default: DEFAULT_MAPINDEX)
+   * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
+   */
+  clearSelectionLayer(mapIndex: string = DEFAULT_MAPINDEX): MapComponentEvent {
+    return this.coreMapService.clearSelectionLayer(mapIndex);
+  }
+
+  /**
+   * Past de stijl aan waarmee features in de selectionlaag
+   * worden weergegeven.
+   *
+   * @param styleLike OpenLayers stijl of stijl-functie
+   * @param mapIndex Index van de kaart waarop de stijl wordt
+   * aangepast (default: DEFAULT_MAPINDEX)
+   */
+  changeSelectionLayerStyle(
+    styleLike: StyleLike,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ) {
+    this.coreMapService.changeSelectionLayerStyle(styleLike, mapIndex);
+  }
+
+  /**
+   * Controleert of de kaart zich op het maximale zoomniveau bevindt.
+   *
+   * @param mapIndex Index van de kaart waarvoor het zoomniveau wordt
+   * gecontroleerd (default: DEFAULT_MAPINDEX)
+   * @returns `true` indien het huidige zoomniveau gelijk is aan het maximale
+   * zoomniveau, anders `false`
+   */
+  isMaxZoomlevel(mapIndex: string = DEFAULT_MAPINDEX): boolean {
+    const view = this.coreMapService.getMap(mapIndex).getView();
+    return view.getZoom() === view.getMaxZoom();
+  }
+
+  /**
+   * Geeft de geometrie of – indien niet aanwezig – het centroïde
+   * uit een PDOK zoekresultaat.
+   *
+   * @param pdokDoc PDOK zoekresultaatdocument
+   * @returns WKT-representatie van geometrie of centroïde, of `undefined`
+   */
+  private getGeometrieOrCentroide(pdokDoc: SearchResultDoc) {
+    if (pdokDoc.geometrie_rd) {
+      return pdokDoc.geometrie_rd;
+    }
+    if (pdokDoc.centroide_rd) {
+      return pdokDoc.centroide_rd;
+    }
+  }
+
+  /**
+   * Haalt het eerste {@link SearchResultDoc} object uit een event.
+   *
+   * @param evt Event met PDOK zoekresultaten
+   * @returns Het eerste zoekresultaatdocument of `undefined`
+   */
+  private getSearchResultDocFromEvent(evt: any): SearchResultDoc | undefined {
+    let pdokDoc: SearchResultDoc | undefined;
+    if (evt.value && evt.value.docs && evt.value.docs.length > 0) {
+      pdokDoc = evt.value.docs[0];
+    }
+    return pdokDoc;
+  }
+
+  /**
+   * Bepaalt de geometrie- of centroïdecoördinaten uit een PDOK-event.
+   *
+   * @param evt Event met PDOK zoekresultaten
+   * @returns WKT-representatie van coördinaten of `undefined`
+   */
+  private getCoordinatesFromEvent(evt: SearchResultDoc): string | undefined {
+    let coordinates: string | undefined;
+    const pdokDoc = this.getSearchResultDocFromEvent(evt);
+    if (pdokDoc) {
+      const geometrieOrCentroide = this.getGeometrieOrCentroide(pdokDoc);
+      if (geometrieOrCentroide) {
+        coordinates = geometrieOrCentroide;
+      }
+    }
+    return coordinates;
+  }
+
+  /**
+   * Zet een stringrepresentatie van een geometrie om naar een
+   * OpenLayers Geometry.
+   */
   private transformStringToGeometry(
     geometry: string,
     formatType = FormatType.WKT
@@ -181,240 +383,5 @@ export class GgcMapService {
       default:
         return new WKT().readGeometry(geometry);
     }
-  }
-
-  /**
-   * @deprecated
-   **/
-  zoomToPdokResult(
-    evt: any,
-    mapIndex?: string,
-    maxZoom?: number
-  ): MapComponentEvent {
-    return this.zoomToPdokResultWithZoomOptions(evt, {
-      mapIndex,
-      fitOptions: { maxZoom }
-    });
-  }
-
-  /**
-   * @deprecated
-   **/
-  zoomToPdokResultWithZoomOptions(
-    evt: any,
-    zoomOptions: ZoomOptions
-  ): MapComponentEvent {
-    if (this.coreMapService.checkMapIndex(zoomOptions.mapIndex)) {
-      const coordinates = this.getCoordinatesFromEvent(evt);
-      return coordinates
-        ? this.zoomToGeometryWithZoomOptions(coordinates, zoomOptions)
-        : new MapComponentEvent(
-            MapComponentEventTypes.UNSUCCESSFUL,
-            zoomOptions.mapIndex || DEFAULT_MAPINDEX,
-            "Coordinaat voor zoomToPdokResult op de kaart kon niet worden bepaald"
-          );
-    }
-    return this.coreMapService.decideMapComponentEventType(
-      false,
-      zoomOptions.mapIndex
-    );
-  }
-
-  /**
-   * @deprecated
-   **/
-  zoomToPdokResultAndSimulateClick(
-    evt: any,
-    mapIndex?: string,
-    maxZoom?: number
-  ): MapComponentEvent {
-    return this.zoomToPdokResultAndSimulateClickWithZoomOptions(evt, {
-      mapIndex,
-      fitOptions: { maxZoom }
-    });
-  }
-
-  /**
-   * @deprecated
-   **/
-  zoomToPdokResultAndSimulateClickWithZoomOptions(
-    evt: any,
-    zoomOptions: ZoomOptions
-  ): MapComponentEvent {
-    const mapIndex = zoomOptions.mapIndex;
-    if (this.coreMapService.checkMapIndex(zoomOptions.mapIndex)) {
-      this.zoomToPdokResultWithZoomOptions(evt, zoomOptions);
-      const coordinate = this.getCentroidRdFromPdokResult(evt);
-      if (!coordinate) {
-        return new MapComponentEvent(
-          MapComponentEventTypes.UNSUCCESSFUL,
-          mapIndex || DEFAULT_MAPINDEX,
-          "Coordinaat voor simuleren klik op de kaart kon niet worden bepaald"
-        );
-      } else {
-        const map = this.coreMapService.getMap(mapIndex);
-        // het is niet mogelijk de ol.MapBrowserEvent constructor
-        // te gebruiken vandaar deze manier van event creatie
-        const browserEvent: MapBrowserEvent = {
-          type: "singleclick",
-          map: this.getMap(mapIndex),
-          coordinate,
-          pixel: map.getPixelFromCoordinate(coordinate)
-        } as MapBrowserEvent;
-        map.dispatchEvent(browserEvent);
-        return this.coreMapService.decideMapComponentEventType(true, mapIndex);
-      }
-    }
-    return this.coreMapService.decideMapComponentEventType(false, mapIndex);
-  }
-
-  /**
-   * @deprecated
-   **/
-  zoomToPdokResultAndMark(
-    evt: any,
-    mapIndex?: string,
-    maxZoom?: number
-  ): MapComponentEvent {
-    return this.zoomToPdokResultAndMarkWithZoomOptions(evt, {
-      mapIndex,
-      fitOptions: { maxZoom }
-    });
-  }
-
-  /**
-   * @deprecated
-   **/
-  zoomToPdokResultAndMarkWithZoomOptions(
-    evt: any,
-    zoomOptions: ZoomOptions
-  ): MapComponentEvent {
-    const mapIndex = zoomOptions.mapIndex;
-    if (this.coreMapService.checkMapIndex(mapIndex)) {
-      this.zoomToPdokResultWithZoomOptions(evt, zoomOptions);
-      const coordinates = this.getCoordinatesFromEvent(evt);
-      if (coordinates) {
-        const olFeature: Feature<Geometry>[] = new WKT().readFeatures(
-          coordinates
-        );
-        this.clearHighlightLayer(mapIndex);
-        this.addFeaturesToHighlightLayer(olFeature, mapIndex);
-        return this.coreMapService.decideMapComponentEventType(true, mapIndex);
-      } else {
-        return new MapComponentEvent(
-          MapComponentEventTypes.UNSUCCESSFUL,
-          mapIndex || DEFAULT_MAPINDEX,
-          "Coordinaat voor zoomToPdokResultAndMark op de kaart kon niet worden bepaald"
-        );
-      }
-    }
-    return this.coreMapService.decideMapComponentEventType(false, mapIndex);
-  }
-
-  /**
-   * @deprecated
-   **/
-  getCentroidRdFromPdokResult(evt: any): Coordinate | undefined {
-    let coordinateRd: Coordinate | undefined;
-    const pdokDoc: SearchResultDoc | undefined =
-      this.getSearchResultDocFromEvent(evt);
-    if (pdokDoc) {
-      const centroidRd = pdokDoc.centroide_rd;
-      if (centroidRd) {
-        // Een centroide is een punt, dus we weten dat het een point betreft, vandaar de cast.
-        const point: Point = this.transformStringToGeometry(
-          centroidRd
-        ) as Point;
-        coordinateRd = point.getCoordinates();
-      }
-    }
-    return coordinateRd;
-  }
-
-  /**
-   * @deprecated
-   **/
-  getGeometryFromPdokResult(evt: any): Geometry | undefined {
-    let geometry: Geometry | undefined;
-    const pdokDoc: SearchResultDoc | undefined =
-      this.getSearchResultDocFromEvent(evt);
-    if (pdokDoc) {
-      const geometryRd = pdokDoc.geometrie_rd;
-      if (geometryRd) {
-        const readGeometry: Geometry = new WKT().readGeometry(geometryRd);
-        geometry = readGeometry.getSimplifiedGeometry(0);
-      }
-    }
-    return geometry;
-  }
-
-  addFeaturesToHighlightLayer(
-    features: Feature<Geometry>[],
-    mapIndex: string = DEFAULT_MAPINDEX
-  ): MapComponentEvent {
-    return this.coreMapService.addFeaturesToHighlightLayer(features, mapIndex);
-  }
-
-  clearHighlightLayer(mapIndex: string = DEFAULT_MAPINDEX): MapComponentEvent {
-    return this.coreMapService.clearHighlightLayer(mapIndex);
-  }
-
-  changeHighlightLayerStyle(
-    styleLike: StyleLike,
-    mapIndex: string = DEFAULT_MAPINDEX
-  ) {
-    this.coreMapService.changeHighlightLayerStyle(styleLike, mapIndex);
-  }
-
-  addFeaturesToSelectionLayer(
-    features: Feature<Geometry>[],
-    mapIndex: string = DEFAULT_MAPINDEX
-  ): MapComponentEvent {
-    return this.coreMapService.addFeaturesToSelectionLayer(features, mapIndex);
-  }
-
-  clearSelectionLayer(mapIndex: string = DEFAULT_MAPINDEX): MapComponentEvent {
-    return this.coreMapService.clearSelectionLayer(mapIndex);
-  }
-
-  changeSelectionLayerStyle(
-    styleLike: StyleLike,
-    mapIndex: string = DEFAULT_MAPINDEX
-  ) {
-    this.coreMapService.changeSelectionLayerStyle(styleLike, mapIndex);
-  }
-
-  isMaxZoomlevel(mapIndex: string = DEFAULT_MAPINDEX): boolean {
-    const view = this.coreMapService.getMap(mapIndex).getView();
-    return view.getZoom() === view.getMaxZoom();
-  }
-
-  private getGeometrieOrCentroide(pdokDoc: SearchResultDoc) {
-    if (pdokDoc.geometrie_rd) {
-      return pdokDoc.geometrie_rd;
-    }
-    if (pdokDoc.centroide_rd) {
-      return pdokDoc.centroide_rd;
-    }
-  }
-
-  private getSearchResultDocFromEvent(evt: any): SearchResultDoc | undefined {
-    let pdokDoc: SearchResultDoc | undefined;
-    if (evt.value && evt.value.docs && evt.value.docs.length > 0) {
-      pdokDoc = evt.value.docs[0];
-    }
-    return pdokDoc;
-  }
-
-  private getCoordinatesFromEvent(evt: SearchResultDoc): string | undefined {
-    let coordinates: string | undefined;
-    const pdokDoc = this.getSearchResultDocFromEvent(evt);
-    if (pdokDoc) {
-      const geometrieOrCentroide = this.getGeometrieOrCentroide(pdokDoc);
-      if (geometrieOrCentroide) {
-        coordinates = geometrieOrCentroide;
-      }
-    }
-    return coordinates;
   }
 }

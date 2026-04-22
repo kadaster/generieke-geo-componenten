@@ -16,13 +16,11 @@ export * from "./lib/service/select/selection-type.enum";
 export * from "./lib/core/constants";
 export * from "./lib/core/service/ggc-crs-config.service";
 export * from "./lib/core/model/crs-config.model";
-export { ObservableMapWrapper } from "./lib/core/utils/ObservableMapWrapper";
 export * from "./lib/service/select/ggc-selection.service";
 export {
   FeatureCollectionForLayer,
   FeatureCollectionForCoordinate
 } from "./lib/service/select/selection-state.model";
-
 export * from "./lib/utils/conversions";
 export * from "./lib/utils/epsg28992";
 export * from "./lib/utils/cluster-utils";
@@ -47,7 +45,6 @@ export * from "./lib/mouse-position/ggc-mouse-position.component";
 export * from "./lib/scale-denominator/ggc-scale-denominator.component";
 export * from "./lib/scale-line/ggc-scale-line.component";
 export * from "./lib/zoom-level/ggc-zoom-level.component";
-
 export * from "./lib/pipes/coordinate-format.pipe";
 export * from "./lib/service/select/ggc-layer.service";
 export * from "./lib/enum/format-type";

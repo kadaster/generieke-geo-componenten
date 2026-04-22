@@ -26,14 +26,34 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   styleUrls: ["./ggc-mouse-position.component.css"],
   standalone: true
 })
+
+/**
+ * Component dat de actuele muispositie op een OpenLayers‑kaart weergeeft.
+ *
+ * Ondersteunt:
+ * - verschillende coördinatenstelsels
+ * - string- of callback‑gebaseerde formattering
+ * - optionele weergave binnen een MapDetailsContainer
+ */
 export class GgcMousePositionComponent implements OnInit, OnDestroy {
+  /**
+   * Optionele injectie van de MapDetailsContainer.
+   * Indien aanwezig wordt de mouse position daarin gerenderd.
+   */
   mapDetailsContainer = inject(GgcMapDetailsContainerComponent, {
     optional: true
   });
 
+  /** Aantal decimalen voor coördinaten */
   @Input() decimalDigits = 2;
+
+  /** Index van de kaart waarop de mouse position wordt toegepast */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
+
+  /** Placeholder tekst wanneer geen coördinaat beschikbaar is */
   @Input() placeholder = " ";
+
+  /** Doelprojectie waarin de coördinaten worden getoond */
   @Input() projection = epsg28992;
 
   private readonly coreMapService = inject(CoreMapService);
@@ -42,9 +62,15 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   private map: OlMap;
   private mode: "string" | "callback" = "string";
   private mousePositionControl: MousePosition;
+
+  /**
+   * Referentie naar het HTML-element
+   * waarin de mouse position wordt gerenderd.
+   */
   @ViewChild("ggcMousePosition", { static: true })
   private readonly ggcMousePosition: ElementRef;
 
+  /** Geeft het huidige ingestelde coördinaatformaat terug */
   get format(): string | CoordinateFormat {
     return this._format;
   }
@@ -55,6 +81,7 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
     this._format = value;
   }
 
+  /** Initialiseert de MousePosition control en voegt deze toe aan de kaart */
   ngOnInit() {
     this.mousePositionControl = new MousePosition(
       this.createMousePositionOptions()
@@ -63,12 +90,16 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
     this.setMousePositionControlOnMap();
   }
 
+  /** Verwijdert de MousePosition control bij component destruction */
   ngOnDestroy() {
     if (this.map !== undefined) {
       this.map.removeControl(this.mousePositionControl);
     }
   }
 
+  /**
+   * Maakt de configuratie-opties aan voor de MousePosition control.
+   */
   createMousePositionOptions(): MousePositionOptions {
     const options: MousePositionOptions = {
       projection: this.crsConfigService.getRdNewCrsConfig().projectionCode,
@@ -82,6 +113,9 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
     return options;
   }
 
+  /**
+   * Koppelt de coördinaatformatter aan de MousePosition control.
+   */
   private setCoordinateFormatOnMousePositionControl() {
     // 'bind' wordt hier gebruikt om de context van het component mee te geven
     // zodat de methode wordt uitgevoerd binnen de context van deze class in plaats van binnen OpenLayers.
@@ -90,6 +124,10 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Converteert en formatteert een coördinaat
+   * naar een string geschikt voor weergave.
+   */
   private createCoordinateFormat(coord: number[] | undefined): string {
     if (!coord) {
       return "";
@@ -114,6 +152,9 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Voegt de MousePosition control toe aan de actuele kaart.
+   */
   private setMousePositionControlOnMap() {
     this.map = this.coreMapService.getMap(this.mapIndex);
     this.map.addControl(this.mousePositionControl);

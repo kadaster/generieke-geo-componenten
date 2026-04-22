@@ -12,7 +12,10 @@ import { of } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
-import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  Webservice2DType
+} from "@kadaster/ggc-models";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
