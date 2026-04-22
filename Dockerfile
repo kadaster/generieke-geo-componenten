@@ -12,7 +12,7 @@ COPY package*.json /etc/nginx/html/
 COPY . .
 
 # Build production app
-RUN npm run build library-app -- --output-path dist/ggc-home
+RUN npm run build ggc-home -- --output-path dist/ggc-home
 
 # Create actual container
 FROM ${REGISTRY}nginxinc/nginx-unprivileged:1.29-alpine
