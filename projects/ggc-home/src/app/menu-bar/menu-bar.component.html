@@ -48,7 +48,11 @@
         >
           <span class="label">Quick start</span>
         </div>
-        <div ngMenuItem value="Documentatie (TSDocs)">
+        <div ngMenuItem
+             value="Documentatie (TSDocs)"
+             (click)="openTsDocs()"
+             (keydown.enter)="openTsDocs()"
+        >
           <span class="label">Documentatie (TSDocs)</span
           ><span
             class="fa fa-external-link icon-suffix"

@@ -54,6 +54,10 @@ export class MenuBarComponent {
     this.router.navigate(["/quick-start"]);
   }
 
+  openTsDocs() {
+    this.router.navigate(["/tsdocs/index.html"]);
+  }
+
   openGithub() {
     window.open(
       "https://github.com/kadaster/generieke-geo-componenten",
