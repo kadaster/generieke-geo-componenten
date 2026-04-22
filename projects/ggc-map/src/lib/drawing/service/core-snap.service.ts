@@ -11,7 +11,7 @@ import {
   createUnsnapExtendedEvent,
   SnapExtendedEvent
 } from "../../model/snap-extended-event.model";
-import { ObservableMapWrapper } from "../../core/utils/ObservableMapWrapper";
+import { ObservableMapWrapper } from "@kadaster/ggc-models";
 import { Subject } from "rxjs";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
 

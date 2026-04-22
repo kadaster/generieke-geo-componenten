@@ -26,7 +26,7 @@ import createSpyObj = jasmine.createSpyObj;
 import Spy = jasmine.Spy;
 import View from "ol/View";
 import { CenterModify } from "../center-interaction/center-modify";
-import {customDrawStyle, customFinishDrawStyle} from "./draw-styles";
+import { customDrawStyle, customFinishDrawStyle } from "./draw-styles";
 
 describe("CoreDrawService", () => {
   const mapIndex = "TEST_MAP";

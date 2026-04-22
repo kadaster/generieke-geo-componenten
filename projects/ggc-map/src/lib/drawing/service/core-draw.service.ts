@@ -13,7 +13,7 @@ import Draw, {
 } from "ol/interaction/Draw";
 import { unByKey } from "ol/Observable";
 import { Observable, Subject } from "rxjs";
-import { ObservableMapWrapper } from "../../core/utils/ObservableMapWrapper";
+import { ObservableMapWrapper } from "@kadaster/ggc-models";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { calculateAreaOrLength } from "../measure-styles";
 import {

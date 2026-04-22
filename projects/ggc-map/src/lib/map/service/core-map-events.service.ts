@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import MapEvent from "ol/MapEvent";
 import { Observable, ReplaySubject, Subject } from "rxjs";
-import { ObservableMapWrapper } from "../../core/utils/ObservableMapWrapper";
+import { ObservableMapWrapper } from "@kadaster/ggc-models";
 import { CoreLoadingService } from "./core-loading.service";
 
 @Injectable({

@@ -13,7 +13,7 @@ interface SubjectLike<O> extends Observable<O> {
 
 export class ObservableMapWrapper<K, O> {
   private readonly create: () => SubjectLike<O>;
-  private map: Map<K, ObservableMap<O>>;
+  private readonly map: Map<K, ObservableMap<O>>;
 
   constructor(create: () => SubjectLike<O>) {
     this.map = new Map<K, ObservableMap<O>>();
