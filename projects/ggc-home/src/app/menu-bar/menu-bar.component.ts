@@ -55,7 +55,7 @@ export class MenuBarComponent {
   }
 
   openTsDocs() {
-    this.router.navigate(["/tsdocs/index.html"]);
+    globalThis.location.href = `${document.baseURI}tsdocs/index.html`;
   }
 
   openGithub() {
