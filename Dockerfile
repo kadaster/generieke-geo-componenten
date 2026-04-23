@@ -10,7 +10,7 @@ RUN adduser --home /etc/ggc-home --disabled-password --gecos "" ggc-home
 COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
 
 # Nginx + startup
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY startup/start-application.sh /var/appdata/run/start-application.sh
 
 RUN chmod +x /var/appdata/run/start-application.sh \
