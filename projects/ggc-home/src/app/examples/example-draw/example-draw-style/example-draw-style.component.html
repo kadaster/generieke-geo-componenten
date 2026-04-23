@@ -1,8 +1,8 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-measure/example-draw-style/example-draw-style.component.html'"
-  [codeScssPath]="'code/examples/example-measure/example-draw-style/example-draw-style.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-measure/example-draw-style/example-draw-style.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-measure/example-draw-style/kaartconfig.json'"
+  [codeHtmlPath]="'code/examples/example-draw/example-draw-style/example-draw-style.component.html'"
+  [codeScssPath]="'code/examples/example-draw/example-draw-style/example-draw-style.component.scss'"
+  [codeTypescriptPath]="'code/examples/example-draw/example-draw-style/example-draw-style.component.ts'"
+  [kaartConfigFilePath]="'code/examples/example-draw/example-draw-style/kaartconfig.json'"
   [title]="componentInfo.title"
   urlChangelog=""
   urlCodeHtml="example-draw/example-draw/example-draw-style/example-draw-style.component.html"
@@ -25,9 +25,20 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      In onderstaand voorbeeld zijn de tekenstijlen voor een actieve tekening en
-      een afgeronde tekening aangepast. Het is ook mogelijk om de tekenstijl in
-      te stellen voor een niet valide tekening (zie
+      Met behulp van <code>setDrawStyle</code> kunnen eigen custom stijlen
+      worden toegepast op (afgeronde/invalide) tekeningen.
+    </p>
+    <p>In onderstaand voorbeeld zijn aangepast:</p>
+    <ul>
+      <li>Stijl actieve tekening via <code>drawingDrawStyle</code>.</li>
+      <li>
+        Stijl afgeronde tekening via
+        <code>finishDrawStyle</code>.
+      </li>
+    </ul>
+    <p>
+      Aanvullend is het ook mogelijk om de tekenstijl in te stellen voor een
+      niet valide tekening (zie
       <a [routerLink]="['/draw-adv']">tekenen uitgebreid</a>).
     </p>
   </div>
@@ -37,10 +48,10 @@
       <!-- DOCS:START functionality -->
       <div class="col-md-3 col-sm-6">
         <div>
-          <b>Meten</b>
+          <b>Tekenen</b>
           <div class="d-flex flex-column align-items-stretch">
             <button [class.active]="drawing()" (click)="drawLine()">
-              Lijn meten
+              Lijn tekenen
             </button>
             <hr />
             <button (click)="finishCurrentDraw()">Tekening afronden</button>

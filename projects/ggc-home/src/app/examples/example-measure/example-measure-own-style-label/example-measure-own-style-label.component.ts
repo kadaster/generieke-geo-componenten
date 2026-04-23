@@ -11,7 +11,6 @@ import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Fill, Style, Text } from "ol/style";
-import Stroke from "ol/style/Stroke";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
@@ -32,6 +31,30 @@ export class ExampleMeasureOwnStyleLabel extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.png"
   } as ComponentInfo;
+  segmentLengthLabelStyle = new Style({
+    text: new Text({
+      text: "Meten",
+      fill: new Fill({
+        color: "#000000"
+      }),
+      backgroundFill: new Fill({
+        color: "rgba(244,125,46,0.93)"
+      }),
+      padding: [5, 6, 5, 6],
+      offsetY: -15
+    })
+  });
+  lengthLabelStyle = new Style({
+    text: new Text({
+      fill: new Fill({ color: "#ffffff" }),
+      font: "12px Courier New",
+      backgroundFill: new Fill({
+        color: "rgba(97,50,19,0.93)"
+      }),
+      padding: [5, 6, 5, 6],
+      offsetY: -15
+    })
+  });
 
   mapConfig: Webservice[];
   measuring = model(false);
@@ -51,33 +74,8 @@ export class ExampleMeasureOwnStyleLabel extends ExampleFormatComponent {
       });
 
     this.drawService.setDrawStyle(this.measureLayer, {
-      drawingDrawStyle: function () {
-        return [
-          new Style({
-            stroke: new Stroke({
-              color: "#008296",
-              width: 3
-            }),
-            text: new Text({
-              text: "Meten",
-              fill: new Fill({
-                color: "#000000"
-              }),
-              backgroundFill: new Fill({
-                color: "rgba(244,125,46,0.93)"
-              }),
-              padding: [5, 6, 5, 6],
-              offsetY: -15
-            })
-          }),
-          new Style({
-            stroke: new Stroke({
-              color: "#008296",
-              width: 3
-            })
-          })
-        ];
-      }
+      segmentLengthLabelStyle: this.segmentLengthLabelStyle,
+      lengthLabelStyle: this.lengthLabelStyle
     });
 
     setTimeout(() => {
@@ -90,7 +88,7 @@ export class ExampleMeasureOwnStyleLabel extends ExampleFormatComponent {
     this.drawService.startDraw(
       this.measureLayer,
       MapComponentDrawTypes.LINESTRING,
-      {}
+      { showSegmentLength: true, showTotalLength: true }
     );
   }
 

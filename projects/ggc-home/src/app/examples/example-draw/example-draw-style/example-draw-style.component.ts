@@ -25,17 +25,18 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-draw-style.component.scss"
 })
 export class ExampleDrawStyle extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-style",
     title: "Tekenen met eigen styling",
-    introduction: "Toepassen van eigen tekenstijl tijdens het tekenen.",
+    introduction: "Toepassen van eigen stijl tijdens het tekenen.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW, Tags.STYLE],
     imageLocation:
       "code/examples/example-draw/example-draw-style/example-draw-style.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   drawing = model(false);
 

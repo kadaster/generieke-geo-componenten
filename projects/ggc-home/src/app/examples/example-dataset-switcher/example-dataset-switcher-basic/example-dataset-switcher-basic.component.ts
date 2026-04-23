@@ -24,6 +24,7 @@ import { Themes } from "../../themes.enum";
   styleUrl: "./example-dataset-switcher-basic.component.scss"
 })
 export class ExampleDatasetSwitcherBasicComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher",
     title: "Dataset wisselen",
@@ -34,7 +35,7 @@ export class ExampleDatasetSwitcherBasicComponent {
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:START
   mapConfig: Webservice[];
   datasetSwitcherConfig: Theme[];
 

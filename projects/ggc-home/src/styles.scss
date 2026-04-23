@@ -13357,3 +13357,7 @@ button.ggc-language-navigation__link:hover {
     flex-grow: 0;
   }
 }
+
+p + ul {
+  margin-top: -15px;
+}

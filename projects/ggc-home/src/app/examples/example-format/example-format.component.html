@@ -152,7 +152,8 @@
               </p>
               @if (codeTypescriptPath) {
                 <pre><code
-                  [highlight]="codeTypescriptPath | codeFromUrl | async"
+                  [highlight]="(codeTypescriptPath | codeFromUrl | async)
+              | extractDocsSectionPipe : 'functionality' : 'typescript'"
                   language="typescript"
                 ></code></pre>
               }
@@ -184,7 +185,7 @@
               @if (codeHtmlPath) {
                 <pre><code
                     [highlight]="(codeHtmlPath | codeFromUrl | async)
-              | extractDocsSectionPipe : 'functionality'"
+              | extractDocsSectionPipe : 'functionality' : 'html'"
                     language="html"
                   ></code></pre>
               }

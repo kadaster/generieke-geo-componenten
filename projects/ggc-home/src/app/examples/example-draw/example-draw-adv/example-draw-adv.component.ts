@@ -23,6 +23,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-draw-adv.component.scss"
 })
 export class ExampleDrawAdvComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-adv",
     title: "Tekenen met de muis",
@@ -33,7 +34,7 @@ export class ExampleDrawAdvComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   readonly maxPointsExample = 4;
   maxPoints = signal<number | undefined>(this.maxPointsExample);
