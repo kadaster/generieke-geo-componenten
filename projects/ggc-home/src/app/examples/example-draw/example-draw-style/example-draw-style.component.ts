@@ -13,7 +13,6 @@ import { Components } from "../../components.enum";
 import { Style } from "ol/style";
 import Stroke from "ol/style/Stroke";
 import { RouterModule } from "@angular/router";
-import CircleStyle from "ol/style/Circle";
 import Fill from "ol/style/Fill";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
@@ -38,7 +37,7 @@ export class ExampleDrawStyle extends ExampleFormatComponent {
   } as ComponentInfo;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
-  drawing = model(false);
+  drawing = model("line");
 
   private readonly httpClient = inject(HttpClient);
   private readonly drawService = inject(GgcDrawService);
@@ -59,12 +58,9 @@ export class ExampleDrawStyle extends ExampleFormatComponent {
             stroke: new Stroke({
               color: "#760096",
               width: 6
-            })
-          }),
-          new Style({
-            stroke: new Stroke({
-              color: "#760096",
-              width: 4
+            }),
+            fill: new Fill({
+              color: "rgba(118,0,150,0.3)"
             })
           })
         ];
@@ -76,31 +72,8 @@ export class ExampleDrawStyle extends ExampleFormatComponent {
               color: "#1c9600",
               width: 6
             }),
-            image: new CircleStyle({
-              radius: 6,
-              fill: new Fill({
-                color: "#008296"
-              }),
-              stroke: new Stroke({
-                color: "white",
-                width: 2
-              })
-            })
-          }),
-          new Style({
-            stroke: new Stroke({
-              color: "#1c9600",
-              width: 4
-            }),
-            image: new CircleStyle({
-              radius: 6,
-              fill: new Fill({
-                color: "#008296"
-              }),
-              stroke: new Stroke({
-                color: "white",
-                width: 2
-              })
+            fill: new Fill({
+              color: "rgba(255,196,0,0.51)"
             })
           })
         ];
@@ -113,10 +86,19 @@ export class ExampleDrawStyle extends ExampleFormatComponent {
   }
 
   drawLine() {
-    this.drawing.set(true);
+    this.drawing.set("line");
     this.drawService.startDraw(
       this.drawLayer,
       MapComponentDrawTypes.LINESTRING,
+      {}
+    );
+  }
+
+  drawPolygon() {
+    this.drawing.set("polygon");
+    this.drawService.startDraw(
+      this.drawLayer,
+      MapComponentDrawTypes.POLYGON,
       {}
     );
   }

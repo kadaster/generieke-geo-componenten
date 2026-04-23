@@ -50,8 +50,14 @@
         <div>
           <b>Tekenen</b>
           <div class="d-flex flex-column align-items-stretch">
-            <button [class.active]="drawing()" (click)="drawLine()">
+            <button [class.active]="drawing() === 'line'" (click)="drawLine()">
               Lijn tekenen
+            </button>
+            <button
+              [class.active]="drawing() === 'polygon'"
+              (click)="drawPolygon()"
+            >
+              Polygoon tekenen
             </button>
             <hr />
             <button (click)="finishCurrentDraw()">Tekening afronden</button>

@@ -264,13 +264,13 @@ export const routes: Routes = [
   },
   {
     path: "draw-style",
-    title: "Tekenen stijlen | GGC-Home",
+    title: "Tekenen styling | GGC-Home",
     component: ExampleDrawStyle,
     data: { label: "draw-style" }
   },
   {
     path: "measure-own-style-label",
-    title: "Meten stijlen | GGC-Home",
+    title: "Meten styling | GGC-Home",
     component: ExampleMeasureOwnStyleLabel,
     data: { label: "measure-own-style-label" }
   }
