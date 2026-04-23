@@ -24,6 +24,7 @@ import { Themes } from "../../themes.enum";
   styleUrl: "./example-dataset-switcher-radio-buttons.component.scss"
 })
 export class ExampleDatasetSwitcherRadioButtonsComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher-radio-buttons",
     title: "Dataset wisselen (radio buttons)",
@@ -34,7 +35,7 @@ export class ExampleDatasetSwitcherRadioButtonsComponent {
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   datasetSwitcherConfig: Theme[];
 

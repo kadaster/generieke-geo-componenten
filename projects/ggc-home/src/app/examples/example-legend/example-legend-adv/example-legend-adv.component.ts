@@ -20,6 +20,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "../example-legend.component.scss"
 })
 export class ExampleLegendAdvComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-advanced",
     title: "Legenda tonen (uitgebreid)",
@@ -29,6 +30,7 @@ export class ExampleLegendAdvComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-legend/example-legend-basic/example-legend-basic.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
   // Custom icons

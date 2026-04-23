@@ -23,6 +23,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-wms.component.scss"
 })
 export class ExampleLayerWmsComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wms",
     title: "Kaartlaag: WMS",
@@ -33,7 +34,7 @@ export class ExampleLayerWmsComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-wms/example-layer-wms.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   wmsLayerOptions: WmsLayerOptions = {
     layers: ["woonplaats"],
     url: "https://service.pdok.nl/kadaster/bag/wms/v2_0",

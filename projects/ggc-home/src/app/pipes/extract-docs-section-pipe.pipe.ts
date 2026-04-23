@@ -30,7 +30,7 @@ export class ExtractDocsSectionPipePipe implements PipeTransform {
   }
 
   private normalizeIndent(block: string): string {
-    const lines = block.replace(/\t/g, " ").split("\n");
+    const lines = block.replaceAll("\t", " ").split("\n");
 
     // verwijder lege regels aan begin
     while (lines.length > 0 && lines[0].trim() === "") {
@@ -38,7 +38,7 @@ export class ExtractDocsSectionPipePipe implements PipeTransform {
     }
 
     // verwijder lege regels aan einde
-    while (lines.length > 0 && lines[lines.length - 1].trim() === "") {
+    while (lines.length > 0 && lines.at(-1)!.trim() === "") {
       lines.pop();
     }
 

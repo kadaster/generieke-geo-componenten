@@ -21,6 +21,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-measure-own-style-label.component.scss"
 })
 export class ExampleMeasureOwnStyleLabel extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/measure-own-style-label",
     title: "Meten met eigen label styling",
@@ -31,6 +32,7 @@ export class ExampleMeasureOwnStyleLabel extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   segmentLengthLabelStyle = new Style({
     text: new Text({
       text: "Meten",

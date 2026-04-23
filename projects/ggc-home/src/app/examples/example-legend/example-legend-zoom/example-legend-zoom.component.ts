@@ -15,6 +15,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "../example-legend.component.scss"
 })
 export class ExampleLegendZoomComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-zoom",
     title: "Legenda tonen (zoomniveau)",
@@ -26,6 +27,7 @@ export class ExampleLegendZoomComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-legend/example-legend-zoom/example-legend-zoom.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
 

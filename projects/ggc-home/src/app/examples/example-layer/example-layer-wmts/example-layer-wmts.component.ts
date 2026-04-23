@@ -24,6 +24,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-wmts.component.scss"
 })
 export class ExampleLayerWmtsComponent implements AfterViewInit {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wmts",
     title: "Kaartlaag: WMTS",
@@ -34,7 +35,7 @@ export class ExampleLayerWmtsComponent implements AfterViewInit {
     imageLocation:
       "code/examples/example-layer/example-layer-wmts/example-layer-wmts.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   wmtsLayerOptions: WmtsLayerOptions = {
     layer: "Kadastralekaart",
     url: "https://service.pdok.nl/kadaster/kadastralekaart/wmts/v5_0"

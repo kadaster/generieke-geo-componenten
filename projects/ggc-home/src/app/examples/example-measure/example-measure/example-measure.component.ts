@@ -20,6 +20,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-measure.component.scss"
 })
 export class ExampleMeasure extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/measure",
     title: "Meten",
@@ -30,7 +31,7 @@ export class ExampleMeasure extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-measure/example-measure/example-measure.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   measuring = signal<MapComponentDrawTypes | undefined>(undefined);
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;

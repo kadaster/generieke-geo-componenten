@@ -26,6 +26,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-geojson-wfs.component.scss"
 })
 export class ExampleLayerGeojsonWfsComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-wfs",
     title: "Kaartlaag: GeoJSON WFS",
@@ -36,7 +37,7 @@ export class ExampleLayerGeojsonWfsComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   optionsProvincie: GeojsonLayerOptions = {
     url: "https://service.pdok.nl/cbs/gebiedsindelingen/2026/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=provincie_gegeneraliseerd&outputformat=application/json",
     zIndex: 10

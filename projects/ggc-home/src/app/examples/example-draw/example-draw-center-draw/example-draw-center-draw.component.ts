@@ -30,6 +30,7 @@ export class ExampleDrawCenterDrawComponent
   extends ExampleFormatComponent
   implements OnInit
 {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-center-draw",
     title: "Tekenen met centrum van kaart",
@@ -40,7 +41,7 @@ export class ExampleDrawCenterDrawComponent
     imageLocation:
       "code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeDrawType = signal<MapComponentDrawTypes | undefined>(undefined);
 

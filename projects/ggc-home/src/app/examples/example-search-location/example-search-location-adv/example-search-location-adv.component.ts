@@ -30,6 +30,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-search-location-adv.component.scss"
 })
 export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-adv",
     title: "Locatie zoeken (uitgebreid)",
@@ -39,7 +40,7 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   readonly searchLocationOptions = computed(() => {
     return {
       alternativeSuggestionsFirst: true,

@@ -31,6 +31,7 @@ export class ExampleDatasetTreeBasicListComponent
   extends ExampleFormatComponent
   implements OnInit
 {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-basic-list",
     title: "Kaartlagen aan-/uitzetten (lijst)",
@@ -41,6 +42,7 @@ export class ExampleDatasetTreeBasicListComponent
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];

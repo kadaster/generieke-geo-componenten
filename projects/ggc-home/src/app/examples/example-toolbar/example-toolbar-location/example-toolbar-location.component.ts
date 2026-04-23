@@ -30,6 +30,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-toolbar-location.component.scss"
 })
 export class ExampleToolbarLocation extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/toolbar-location",
     title: "Toolbar met huidige locatie tonen",
@@ -41,7 +42,7 @@ export class ExampleToolbarLocation extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-toolbar/example-toolbar-location/example-toolbar-location.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   private readonly searchLocationService = inject(GgcSearchLocationService);
   private readonly mapService = inject(GgcMapService);
 

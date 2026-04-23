@@ -38,6 +38,7 @@ export class ExampleDatasetTreeLayerEnabledCallback
   extends ExampleFormatComponent
   implements OnInit
 {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-layer-enabled-callback",
     title: "Dataset Tree dataset (de)activeren",
@@ -49,6 +50,7 @@ export class ExampleDatasetTreeLayerEnabledCallback
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];

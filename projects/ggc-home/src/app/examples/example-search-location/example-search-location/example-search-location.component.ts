@@ -28,6 +28,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-search-location.component.scss"
 })
 export class ExampleSearchLocationComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location",
     title: "Locatie zoeken",
@@ -38,7 +39,7 @@ export class ExampleSearchLocationComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   searchLocationOptions = {
     alternativeSuggestionsFirst: true,
     collectionIdTranslations: new Map<string, string>([

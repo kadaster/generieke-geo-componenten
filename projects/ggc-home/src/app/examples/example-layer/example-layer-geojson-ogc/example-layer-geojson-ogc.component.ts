@@ -24,6 +24,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-geojson-ogc.component.scss"
 })
 export class ExampleLayerGeojsonOgcComponent implements AfterViewInit {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-ogc",
     title: "Kaartlaag: GeoJSON OGC",
@@ -34,7 +35,7 @@ export class ExampleLayerGeojsonOgcComponent implements AfterViewInit {
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   optionsBuurt: GeojsonLayerOptions = {
     url: "https://api.pdok.nl/lv/bgt/ogc/v1/collections/buurt/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=100&bbox=189555,465100,200880,473760&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/28992&datetime=2024-10-15T00:00:00.000Z",
     zIndex: 10,

@@ -34,6 +34,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-toolbar.component.scss"
 })
 export class ExampleToolbar extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/toolbar",
     title: "Toolbar",
@@ -44,7 +45,7 @@ export class ExampleToolbar extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-toolbar/example-toolbar/example-toolbar.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   protected measureActive = false;
   protected drawActive = false;
 

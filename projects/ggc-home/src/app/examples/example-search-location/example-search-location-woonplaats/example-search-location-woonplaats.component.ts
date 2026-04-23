@@ -29,6 +29,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-search-location-woonplaats.component.scss"
 })
 export class ExampleSearchLocationWoonplaatsComponent implements OnInit {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-woonplaats",
     title: "Locatie zoeken (in collecties)",
@@ -40,7 +41,7 @@ export class ExampleSearchLocationWoonplaatsComponent implements OnInit {
     imageLocation:
       "code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   searchLocationOptions = {
     zoomToResult: true,
     markResult: true

@@ -28,6 +28,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-advanced.component.scss"
 })
 export class ExampleLayerAdvancedComponent implements OnInit {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-advanced",
     title: "Kaartlagen: HTML configuratie",
@@ -39,7 +40,7 @@ export class ExampleLayerAdvancedComponent implements OnInit {
     imageLocation:
       "code/examples/example-layer/example-layer-advanced/example-layer-advanced.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   wandelrouteLayerOptions: WmsLayerOptions = {
     layers: ["landelijke-wandelroutes", "streekpaden"],
     url: "https://service.pdok.nl/wandelnet/landelijke-wandelroutes/wms/v1_0",

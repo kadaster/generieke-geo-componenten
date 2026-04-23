@@ -42,6 +42,7 @@ export class ExampleDatasetTreeTemplatesComponent
   extends ExampleFormatComponent
   implements OnInit
 {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-label-template",
     title: "Dataset Tree label templates",
@@ -53,6 +54,7 @@ export class ExampleDatasetTreeTemplatesComponent
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];

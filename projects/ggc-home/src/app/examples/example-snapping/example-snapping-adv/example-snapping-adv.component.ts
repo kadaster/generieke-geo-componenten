@@ -39,6 +39,7 @@ export class ExampleSnappingAdvComponent
   drawService = inject(GgcDrawService);
   snapService = inject(GgcSnapService);
 
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/snapping-advanced",
     title: "Snapping (verbinden, uitgebreid)",
@@ -49,7 +50,7 @@ export class ExampleSnappingAdvComponent
     imageLocation:
       "code/examples/example-snapping/example-snapping-basic/example-snapping-basic.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   drawLayer = "drawLayerAdvanced";
   mapIndex = "snappingAdvanced";
   pixelTolerance = 10;

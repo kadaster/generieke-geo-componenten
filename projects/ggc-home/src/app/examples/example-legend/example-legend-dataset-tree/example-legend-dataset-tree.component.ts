@@ -21,6 +21,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "../example-legend.component.scss"
 })
 export class ExampleLegendDatasetTreeComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-dataset-tree",
     title: "Legend met dataset-tree",
@@ -32,6 +33,7 @@ export class ExampleLegendDatasetTreeComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];

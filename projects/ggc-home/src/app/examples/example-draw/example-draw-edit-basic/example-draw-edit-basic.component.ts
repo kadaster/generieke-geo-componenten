@@ -28,6 +28,7 @@ export enum EditType {
   styleUrl: "./example-draw-edit-basic.component.scss"
 })
 export class ExampleDrawEditBasicComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-edit-basic",
     title: "Verplaatsen en bewerken met de muis",
@@ -39,7 +40,7 @@ export class ExampleDrawEditBasicComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-draw/example-draw-edit-basic/example-draw-edit-basic.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeEditType = signal<EditType>(EditType.MOVE);
 

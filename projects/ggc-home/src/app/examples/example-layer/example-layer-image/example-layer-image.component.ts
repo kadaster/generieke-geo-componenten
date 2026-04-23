@@ -24,6 +24,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-image.component.scss"
 })
 export class ExampleLayerImageComponent implements AfterViewInit {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-image",
     title: "Kaartlaag: Image",
@@ -34,7 +35,7 @@ export class ExampleLayerImageComponent implements AfterViewInit {
     imageLocation:
       "code/examples/example-layer/example-layer-image/example-layer-image.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   imageLayerOptions: ImageLayerOptions = {
     url: "/code/examples/example-layer/example-layer-image/bestemmingsplan.png",
     layerName: "Bestemmingsplan",

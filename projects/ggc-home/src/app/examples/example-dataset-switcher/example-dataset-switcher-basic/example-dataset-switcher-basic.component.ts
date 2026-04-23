@@ -35,7 +35,7 @@ export class ExampleDatasetSwitcherBasicComponent {
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.png"
   } as ComponentInfo;
-  // DOCS-SKIP:START
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   datasetSwitcherConfig: Theme[];
 

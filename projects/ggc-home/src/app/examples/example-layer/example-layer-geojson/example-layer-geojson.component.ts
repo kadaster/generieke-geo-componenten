@@ -23,6 +23,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-geojson.component.scss"
 })
 export class ExampleLayerGeojsonComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson",
     title: "Kaartlaag: GeoJSON",
@@ -33,7 +34,7 @@ export class ExampleLayerGeojsonComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-geojson/example-layer-geojson.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   optionsGelderland: GeojsonLayerOptions = {
     url: "/code/examples/example-layer/example-layer-geojson/gelderland.json",
     zIndex: 10

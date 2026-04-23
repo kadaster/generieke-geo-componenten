@@ -21,6 +21,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-vector-tile.component.scss"
 })
 export class ExampleLayerVectorTileComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-vector-tile",
     title: "Kaartlaag: Vector Tile",
@@ -31,7 +32,7 @@ export class ExampleLayerVectorTileComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   vectorTileLayerOptions: VectorTileLayerOptions = {
     attributions: "PDOK",
     url: "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",

@@ -20,6 +20,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-basic.component.scss"
 })
 export class ExampleLayerBasicComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-basic",
     title: "Kaartlaag: BRT achtergrondkaart",
@@ -30,4 +31,5 @@ export class ExampleLayerBasicComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-basic/example-layer-basic.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
 }

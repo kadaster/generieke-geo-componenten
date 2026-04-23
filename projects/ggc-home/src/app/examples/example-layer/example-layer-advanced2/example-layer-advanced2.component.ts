@@ -19,6 +19,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-layer-advanced2.component.scss"
 })
 export class ExampleLayerAdvanced2Component {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-advanced2",
     title: "Kaartlagen: JSON configuratie",
@@ -30,7 +31,7 @@ export class ExampleLayerAdvanced2Component {
     imageLocation:
       "code/examples/example-layer/example-layer-advanced2/example-layer-advanced2.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   readonly kaartConfig = [
     {
       url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",

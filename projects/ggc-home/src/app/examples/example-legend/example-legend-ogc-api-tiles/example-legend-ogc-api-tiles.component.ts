@@ -21,6 +21,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "../example-legend.component.scss"
 })
 export class ExampleLegendOgcApiTilesComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-ogc-api-tiles",
     title: "Legend OGC API Tiles",
@@ -32,6 +33,7 @@ export class ExampleLegendOgcApiTilesComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-legend/example-legend-ogc-api-tiles/example-legend-ogc-api-tiles.png"
   } as ComponentInfo;
+  // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
 

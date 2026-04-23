@@ -19,6 +19,7 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-draw-basic.component.scss"
 })
 export class ExampleDrawBasicComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-basic",
     title: "Tekenen met de muis",
@@ -30,7 +31,7 @@ export class ExampleDrawBasicComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeDrawType = signal<MapComponentDrawTypes | undefined>(undefined);
 
