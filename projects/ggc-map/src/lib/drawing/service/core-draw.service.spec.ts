@@ -286,14 +286,9 @@ describe("CoreDrawService", () => {
         "addSnappingForTracing"
       );
 
-      service.startDraw(
-        layerName,
-        mapIndex,
-        MapComponentDrawTypes.POLYGON,
-        {
-          maxPoints: 42
-        }
-      );
+      service.startDraw(layerName, mapIndex, MapComponentDrawTypes.POLYGON, {
+        maxPoints: 42
+      });
 
       expect(addTracingSpy).toHaveBeenCalledTimes(1);
       expect(addSnappingForTracingSpy).toHaveBeenCalledTimes(1);
@@ -331,15 +326,10 @@ describe("CoreDrawService", () => {
         "addSnappingForTracing"
       );
 
-      service.startDraw(
-        layerName,
-        mapIndex,
-        MapComponentDrawTypes.POLYGON,
-        {
-          centerDraw: true,
-          maxPoints: 42
-        }
-      );
+      service.startDraw(layerName, mapIndex, MapComponentDrawTypes.POLYGON, {
+        centerDraw: true,
+        maxPoints: 42
+      });
 
       expect(addTracingSpy).toHaveBeenCalledTimes(0);
       expect(addSnappingForTracingSpy).toHaveBeenCalledTimes(0);
