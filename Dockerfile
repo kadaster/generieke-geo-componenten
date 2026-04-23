@@ -1,40 +1,36 @@
+ARG REGISTRY
+
 FROM ${REGISTRY}nginxinc/nginx-unprivileged:1.29-alpine
 
 WORKDIR /etc/nginx/html
 
 USER root
-RUN adduser \
-    --home /etc/ggc-home \
-    --disabled-password \
-    --gecos "" \
-    ggc-home
+RUN adduser --home /etc/ggc-home --disabled-password --gecos "" ggc-home
 
-COPY --chown=ggc-home:ggc-home \
-    dist/ggc-home/browser/ \
-    /etc/nginx/html/
+COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY startup/start-application.sh /var/appdata/run/start-application.sh
 
-RUN mkdir -p \
-      /var/cache/nginx/client_temp \
-      /var/cache/nginx/proxy_temp \
-      /var/cache/nginx/fastcgi_temp \
-      /var/cache/nginx/uwsgi_temp \
-      /var/cache/nginx/scgi_temp \
-      /var/log/nginx \
-      /var/appdata/run \
- && touch /var/log/nginx/error.log
+# Create cache directories
+RUN mkdir -p /var/cache/nginx/client_temp && \
+    mkdir -p /var/cache/nginx/uwsgi_temp && \
+    mkdir -p /var/cache/nginx/proxy_temp && \
+    mkdir -p /var/cache/nginx/fastcgi_temp && \
+    mkdir -p /var/cache/nginx/scgi_temp && \
+    mkdir -p /var/cache/nginx/uwsgi_temp
 
-RUN chown -R ggc-home:ggc-home \
-      /etc/nginx \
-      /etc/nginx/html \
-      /var/cache/nginx \
-      /var/log/nginx \
-      /var/appdata \
-      /tmp \
- && chmod +x /var/appdata/run/start-application.sh \
- && chmod -R a+rX /etc/nginx/html /tmp
+# Create log directory and file, set permissions
+RUN mkdir -p /var/log/nginx && \
+    touch /var/log/nginx/error.log && \
+    chown -R ggc-home:ggc-home /var/log/nginx && \
+    chown -R ggc-home:ggc-home /etc/nginx/html/
+
+# Permissions adjustments
+RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ /tmp && \
+    chmod +x /var/appdata/run/start-application.sh
+
+RUN chmod -R a+rwX /etc/nginx/html/ /tmp
 
 USER ggc-home
 
