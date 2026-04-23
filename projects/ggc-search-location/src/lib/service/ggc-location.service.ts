@@ -12,9 +12,12 @@ import Style from "ol/style/Style";
 import * as proj4x from "proj4";
 import { Observable, Subject, Subscription } from "rxjs";
 import { fromLonLat } from "ol/proj";
-import { defs } from "@kadaster/ggc-map";
 import { GgcSearchLocationConnectService } from "./connect.service";
-import { DEFAULT_MAPINDEX, ObservableMapWrapper } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  defs,
+  ObservableMapWrapper
+} from "@kadaster/ggc-models";
 
 const proj4 = (proj4x as any).default;
 
@@ -48,7 +51,6 @@ export class GgcSearchLocationService {
     new Subject<GeolocationPositionError>();
 
   constructor() {
-    //todo naar kijken, nu een afhankelijkheid naar ggc-map
     proj4.defs("EPSG:28992", defs);
     register(proj4);
   }

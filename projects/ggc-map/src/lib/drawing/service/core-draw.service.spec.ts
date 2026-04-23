@@ -292,12 +292,6 @@ describe("CoreDrawService", () => {
         MapComponentDrawTypes.POLYGON,
         {
           maxPoints: 42
-        },
-        {
-          mapIndex: mapIndex,
-          traceLayerId: "traceLayer",
-          drawLayerId: "drawLayer",
-          pixelTolerance: 10
         }
       );
 
@@ -344,12 +338,6 @@ describe("CoreDrawService", () => {
         {
           centerDraw: true,
           maxPoints: 42
-        },
-        {
-          mapIndex: mapIndex,
-          traceLayerId: "traceLayer",
-          drawLayerId: "drawLayer",
-          pixelTolerance: 10
         }
       );
 
