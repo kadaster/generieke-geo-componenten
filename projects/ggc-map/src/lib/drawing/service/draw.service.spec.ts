@@ -190,8 +190,7 @@ describe("DrawService", () => {
       layerName,
       mapIndex,
       MapComponentDrawTypes.POLYGON,
-      {},
-      undefined
+      {}
     );
   });
 

@@ -1,0 +1,71 @@
+<app-example-format
+  [codeHtmlPath]="'code/examples/example-draw/example-draw-tracing/example-draw-tracing.component.html'"
+  [codeScssPath]="'code/examples/example-draw/example-draw-tracing/example-draw-tracing.component.scss'"
+  [codeTypescriptPath]="'code/examples/example-draw/example-draw-tracing/example-draw-tracing.component.ts'"
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-draw/example-draw-tracing/example-draw-tracing.component.html"
+  urlCodeScss="example-draw/example-draw-tracing/example-draw-tracing.component.scss"
+  urlCodeTypescript="example-draw/example-draw-tracing/example-draw-tracing.component.ts"
+  urlGitHub=""
+  urlKaartConfig="example-draw-options/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig=""
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>
+      Door middel van het aanzetten van de trace optie bij tekenen kan je lijnen
+      of vlakken "overtrekken" uit andere GeoJSON lagen. In dit voorbeeld kunnen
+      Provincie grenzen en Gemeentes worden overgetrokken.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-3 col-sm-6">
+        <div>
+          <b>Tekenen met behulp van traceren (overtrekken)</b>
+          <div class="d-flex flex-column align-items-stretch">
+            <button
+              [class.active]="
+                activeDrawType() === mapComponentDrawTypes.LINESTRING
+              "
+              (click)="startDrawLine()"
+            >
+              Traceer Provincie grens met een Lijn
+            </button>
+            <button
+              [class.active]="
+                activeDrawType() === mapComponentDrawTypes.POLYGON
+              "
+              (click)="startDrawPolygon()"
+            >
+              Traceer Gemeente grens met een Polygoon
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [minZoomlevel]="6">
+            <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+            <ggc-geojson-layer [options]="optionsProvincie"></ggc-geojson-layer>
+            <ggc-geojson-layer [options]="optionsGemeente"></ggc-geojson-layer>
+          </ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

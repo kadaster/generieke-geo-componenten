@@ -14,7 +14,6 @@ import { ModifyInteractionEvent } from "../../model/modify-interaction-event.mod
 import { CoreDrawService } from "./core-draw.service";
 import { Coordinate } from "ol/coordinate";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
-import { TraceOptions } from "../../model/trace-options";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 import { StyleLike } from "ol/style/Style";
 import { CenterModifyOptions } from "../center-interaction/center-modify";
@@ -279,22 +278,14 @@ export class GgcDrawService {
    * @param drawType - Type tekening (bijv. punt, lijn, polygoon).
    * @param drawOptions - Opties voor de tekeninteractie.
    * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
-   * @param traceOptions - Optioneel: trace-opties voor het volgen van bestaande geometrieën.
    */
   startDraw(
     layerName: string,
     drawType: MapComponentDrawTypes,
     drawOptions: DrawOptions,
-    mapIndex: string = DEFAULT_MAPINDEX,
-    traceOptions?: TraceOptions
+    mapIndex: string = DEFAULT_MAPINDEX
   ): void {
-    this.coreDrawService.startDraw(
-      layerName,
-      mapIndex,
-      drawType,
-      drawOptions,
-      traceOptions
-    );
+    this.coreDrawService.startDraw(layerName, mapIndex, drawType, drawOptions);
   }
 
   /**
