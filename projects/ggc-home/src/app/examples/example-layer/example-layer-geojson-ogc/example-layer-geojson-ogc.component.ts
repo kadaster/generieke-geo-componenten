@@ -1,16 +1,17 @@
-import { AfterViewInit, Component, inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
-  GeojsonLayerOptions,
   GgcGeojsonLayerComponent,
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
-  GgcMapService
+  GgcMapService,
+  Webservice
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -23,7 +24,7 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-layer-geojson-ogc.component.html",
   styleUrl: "./example-layer-geojson-ogc.component.scss"
 })
-export class ExampleLayerGeojsonOgcComponent implements AfterViewInit {
+export class ExampleLayerGeojsonOgcComponent {
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-ogc",
     title: "Kaartlaag: GeoJSON OGC",
@@ -35,16 +36,20 @@ export class ExampleLayerGeojsonOgcComponent implements AfterViewInit {
       "code/examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.png"
   } as ComponentInfo;
 
-  optionsBuurt: GeojsonLayerOptions = {
-    url: "https://api.pdok.nl/lv/bgt/ogc/v1/collections/buurt/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=100&bbox=189555,465100,200880,473760&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/28992&datetime=2024-10-15T00:00:00.000Z",
-    zIndex: 10,
-    layerId: "gemeentegebied",
-    maxFeatures: 100
-  };
+  protected mapConfig: Webservice[];
+  protected mapIndex = "GeoJsonOgcExample";
 
+  private readonly httpClient = inject(HttpClient);
   private readonly mapService = inject(GgcMapService);
 
-  ngAfterViewInit(): void {
-    this.mapService.zoomToCoordinate([194195, 465885], undefined, 6);
+  constructor() {
+    this.httpClient
+      .get(
+        "code/examples/example-layer/example-layer-geojson-ogc/kaartconfig.json"
+      )
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+        this.mapService.zoomToCoordinate([194195, 465885], this.mapIndex, 6);
+      });
   }
 }
