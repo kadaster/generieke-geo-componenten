@@ -125,6 +125,12 @@ export class CoreDrawService {
     }
   }
 
+  removeCenterModifyCurrentPoint() {
+    if (this.activeCenterInteraction instanceof CenterModify) {
+      this.activeCenterInteraction.removeModifyCurrentPoint();
+    }
+  }
+
   removeActiveCenterInteraction(mapIndex: string) {
     if (this.activeCenterInteraction) {
       this.activeCenterInteraction.cleanup();

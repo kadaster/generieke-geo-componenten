@@ -87,6 +87,14 @@ export class GgcDrawService {
     this.coreDrawService.stopCenterModifyCurrentPoint();
   }
 
+  /**
+   * Verwijderen van een punt (highlighted vertex of tussenpunt)
+   * van een object in de te wijzigen laag met behulp van het centrum van de kaart.
+   */
+  removeCenterModifyCurrentPoint() {
+    this.coreDrawService.removeCenterModifyCurrentPoint();
+  }
+
   // einde toetsenbord
 
   /**

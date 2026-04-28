@@ -111,6 +111,70 @@ export class CenterModify extends CenterBase {
     this.updateCenterPoint();
   }
 
+  removeModifyCurrentPoint(): void {
+    const featureCoordinate = this.getClosestFeatureCoordinate(
+      this.targetSource.getFeatures(),
+      this.centerPoint.getCoordinates(),
+      this.pixelTolerance
+    );
+
+    if (!featureCoordinate) {
+      return;
+    }
+
+    const feature = featureCoordinate.feature;
+    const selectedCoordinate = featureCoordinate.coordinate;
+
+    const isSame = (a: Coordinate, b: Coordinate, tolerance = 1e-8): boolean =>
+      Math.abs(a[0] - b[0]) < tolerance && Math.abs(a[1] - b[1]) < tolerance;
+
+    if (feature.getGeometry() instanceof Point) {
+      this.targetSource.removeFeature(feature);
+    } else if (feature.getGeometry() instanceof LineString) {
+      const lineString = feature.getGeometry() as LineString;
+      const originalCoordinatesLineString = lineString.getCoordinates();
+      if (
+        originalCoordinatesLineString.some((coordinate) =>
+          isSame(coordinate, selectedCoordinate)
+        )
+      ) {
+        const filteredCoordinates = originalCoordinatesLineString.filter(
+          (coordinate) => !isSame(coordinate, selectedCoordinate)
+        );
+        if (filteredCoordinates.length > 0) {
+          lineString.setCoordinates(filteredCoordinates);
+        } else {
+          this.targetSource.removeFeature(feature);
+        }
+      }
+    } else if (feature.getGeometry() instanceof Polygon) {
+      const polygon = feature.getGeometry() as Polygon;
+      const originalCoordinatesPolygon = polygon.getCoordinates()[0];
+      if (
+        originalCoordinatesPolygon.some((coordinate) =>
+          isSame(coordinate, selectedCoordinate)
+        )
+      ) {
+        const filteredCoordinates = originalCoordinatesPolygon.filter(
+          (coordinate) => !isSame(coordinate, selectedCoordinate)
+        );
+        if (filteredCoordinates.length > 0) {
+          const first = filteredCoordinates[0];
+          const last = filteredCoordinates.at(-1);
+
+          if (last && !isSame(first, last)) {
+            filteredCoordinates.push([...first]);
+          }
+
+          polygon.setCoordinates([filteredCoordinates]);
+        } else {
+          this.targetSource.removeFeature(feature);
+        }
+      }
+    }
+    this.updateCenterPoint();
+  }
+
   cleanup() {
     super.cleanup();
     this.finishModify();
