@@ -1,18 +1,21 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
-  GeojsonLayerOptions,
   GgcGeojsonLayerComponent,
   GgcLayerBrtAchtergrondkaartComponent,
-  GgcMapComponent
+  GgcMapComponent,
+  GgcMapService
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
-import Style from "ol/style/Style";
+import Style, { StyleLike } from "ol/style/Style";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
+import { HttpClient } from "@angular/common/http";
+import VectorLayer from "ol/layer/Vector";
 
 @Component({
   selector: "app-example-search-location",
@@ -37,18 +40,34 @@ export class ExampleLayerGeojsonWfsComponent {
       "code/examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.png"
   } as ComponentInfo;
 
-  optionsProvincie: GeojsonLayerOptions = {
-    url: "https://service.pdok.nl/cbs/gebiedsindelingen/2026/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=provincie_gegeneraliseerd&outputformat=application/json",
-    zIndex: 10
-  };
+  protected mapConfig: Webservice[];
+  protected mapIndex = "geoJsonWfs";
 
-  optionsProvincieCustomStyle = {
-    ...this.optionsProvincie,
-    styleLike: new Style({
-      fill: new Fill({ color: [43, 196, 0, 0.3] }),
-      stroke: new Stroke({ color: [245, 66, 66], width: 3 })
-    })
-  };
+  private customStyle: StyleLike = new Style({
+    fill: new Fill({ color: [43, 196, 0, 0.3] }),
+    stroke: new Stroke({ color: [245, 66, 66], width: 3 })
+  });
+  private useCustomStyle = false;
+  private readonly httpClient = inject(HttpClient);
+  private readonly mapService = inject(GgcMapService);
 
-  protected useCustomStyles = false;
+  constructor() {
+    this.httpClient
+      .get(
+        "code/examples/example-layer/example-layer-geojson-wfs/kaartconfig.json"
+      )
+      .subscribe((data) => {
+        console.log(data);
+        this.mapConfig = data as Webservice[];
+      });
+  }
+
+  protected switchStyle() {
+    this.useCustomStyle = !this.useCustomStyle;
+    const geoJsonLayer = this.mapService.getLayer(
+      "gemeentegebied",
+      this.mapIndex
+    ) as VectorLayer;
+    geoJsonLayer.setStyle(this.useCustomStyle ? this.customStyle : undefined);
+  }
 }
