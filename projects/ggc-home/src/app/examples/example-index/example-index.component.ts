@@ -26,6 +26,7 @@ import { ExampleLayerAdvanced2Component } from "../example-layer/example-layer-a
 import { ExampleToolbarLocation } from "../example-toolbar/example-toolbar-location/example-toolbar-location.component";
 import { ExampleToolbar } from "../example-toolbar/example-toolbar/example-toolbar.component";
 import { ExampleDrawBasicComponent } from "../example-draw/example-draw-basic/example-draw-basic.component";
+import { ExampleDrawTracingComponent } from "../example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawEditBasicComponent } from "../example-draw/example-draw-edit-basic/example-draw-edit-basic.component";
 import { ExampleDrawCenterDrawComponent } from "../example-draw/example-draw-center-draw/example-draw-center-draw.component";
 import { ExampleMeasure } from "../example-measure/example-measure/example-measure.component";
@@ -62,6 +63,7 @@ export class ExampleIndexComponent {
     new ExampleDrawStyle().componentInfo,
     new ExampleDatasetTreeTemplatesComponent().componentInfo,
     new ExampleDrawEditBasicComponent().componentInfo,
+    new ExampleDrawTracingComponent().componentInfo,
     new ExampleSearchLocationWoonplaatsComponent().componentInfo,
     new ExampleSnappingBasicComponent().componentInfo,
     new ExampleDatasetSwitcherBasicComponent().componentInfo,

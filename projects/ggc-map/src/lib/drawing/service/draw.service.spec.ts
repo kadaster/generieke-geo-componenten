@@ -48,8 +48,8 @@ describe("DrawService", () => {
     service.appendCoordinates(coordinates, mapIndex);
 
     expect(coreService.appendCoordinates).toHaveBeenCalledWith(
-      mapIndex,
-      coordinates
+      coordinates,
+      mapIndex
     );
   });
 
@@ -190,8 +190,7 @@ describe("DrawService", () => {
       layerName,
       mapIndex,
       MapComponentDrawTypes.POLYGON,
-      {},
-      undefined
+      {}
     );
   });
 

@@ -34,6 +34,21 @@ import {
 @Injectable({
   providedIn: "root"
 })
+
+/**
+ * Centrale service voor het beheren van kaartlagen binnen GGC.
+ *
+ * Verantwoordelijkheden:
+ * - Laden en configureren van webservices en lagen
+ * - Dynamisch toevoegen/verwijderen van kaartlagen
+ * - Synchroniseren van layer‑wijzigingen en legenda‑events
+ * - Bieden van query‑API’s voor zichtbaarheid, status en metadata
+ *
+ * Deze service fungeert als orchestrator tussen:
+ * - configuratie (Webservice / LayerOptions)
+ * - OpenLayers Map
+ * - UI‑componenten (legenda, toggles)
+ */
 export class GgcLayerService {
   private readonly mapService = inject(GgcMapService);
   private readonly appRef = inject(ApplicationRef);
@@ -46,6 +61,10 @@ export class GgcLayerService {
     new Subject();
   private readonly mapConfigurations: Map<string, Webservice[]> = new Map();
 
+  /**
+   * Initialiseert de service en luistert naar
+   * layer changes vanuit de GgcMapService.
+   */
   constructor() {
     this.mapService
       .getLayerChangedObservable()
@@ -58,18 +77,32 @@ export class GgcLayerService {
       });
   }
 
+  /**
+   * Observable voor layer change events.
+   */
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
     return this.layerChangedSubject.asObservable();
   }
 
+  /**
+   * Observable die wordt getriggerd
+   * wanneer een legenda wordt toegevoegd.
+   */
   getLegendAddedObservable(): Observable<LegendAddedEvent> {
     return this.legendAddedSubject.asObservable();
   }
 
+  /**
+   * Observable die wordt getriggerd
+   * wanneer een legenda wordt verwijderd.
+   */
   getLegendRemovedObservable(): Observable<LegendRemovedEvent> {
     return this.legendRemovedSubject.asObservable();
   }
 
+  /**
+   * Geeft alle actieve legenda‑items terug voor de opgegeven kaart.
+   */
   getCurrentActiveLegends(mapIndex: string): LayerLegend[] {
     const result: LayerLegend[] = [];
     const services = this.mapConfigurations.get(mapIndex) ?? [];
@@ -84,6 +117,10 @@ export class GgcLayerService {
     return result;
   }
 
+  /**
+   * Laadt een lijst van webservices
+   * en voegt hun zichtbare lagen toe aan de kaart.
+   */
   loadWebservices(services: Webservice[], mapIndex: string) {
     this.mapConfigurations.set(mapIndex, services);
     for (const service of services) {
@@ -91,6 +128,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
+   */
   private loadWebservice(service: Webservice, mapIndex: string) {
     service.layers = service.layers.map((layerOptions) => {
       const updatedLayer = {
@@ -107,6 +147,9 @@ export class GgcLayerService {
     });
   }
 
+  /**
+   * Voegt een BRT achtergrondkaart toe aan de kaart.
+   */
   addBrtAchtergrondkaartLayer(
     layerOptions: AbstractConfigurableLayerOptions
   ): string | undefined {
@@ -131,6 +174,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Voegt een laag toe aan de kaart op basis van het webservice‑type.
+   */
   addLayer(
     layerOptions: AbstractConfigurableLayerOptions,
     webserviceType: Webservice2DType
@@ -151,6 +197,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Voegt een geojson laag toe aan de kaart.
+   */
   addGeojsonLayer(layerOptions: GeojsonLayerOptions): string | undefined {
     if (layerOptions.mapIndex) {
       const componentRef = createComponent(GgcGeojsonLayerComponent, {
@@ -162,6 +211,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Voegt een image laag toe aan de kaart.
+   */
   addImageLayer(layerOptions: ImageLayerOptions): string | undefined {
     if (layerOptions.mapIndex) {
       const componentRef = createComponent(GgcImageLayerComponent, {
@@ -173,6 +225,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Voegt een vector tile laag toe aan de kaart.
+   */
   addVectorTileLayer(layerOptions: VectorTileLayerOptions): string | undefined {
     if (layerOptions.mapIndex) {
       const componentRef = createComponent(GgcVectorTileLayerComponent, {
@@ -184,6 +239,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Voegt een wms laag toe aan de kaart.
+   */
   addWmsLayer(layerOptions: WmsLayerOptions): string | undefined {
     if (layerOptions.mapIndex) {
       const componentRef = createComponent(GgcWmsLayerComponent, {
@@ -195,6 +253,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Voegt een wmts laag toe aan de kaart.
+   */
   addWmtsLayer(layerOptions: WmtsLayerOptions): string | undefined {
     if (layerOptions.mapIndex) {
       const componentRef = createComponent(GgcWmtsLayerComponent, {
@@ -206,6 +267,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Verwijdert een laag van de kaart en triggert een layer removed event.
+   */
   removeLayer(mapIndex: string, layerId: string) {
     const layer = this.mapService.getLayer(layerId, mapIndex);
     if (layer) {
@@ -218,6 +282,9 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Vraagt een laag op van de kaart.
+   */
   getLayer(
     layerId: string,
     mapIndex = DEFAULT_MAPINDEX
@@ -225,10 +292,19 @@ export class GgcLayerService {
     return this.mapService.getLayer(layerId, mapIndex);
   }
 
+  /**
+   * Geeft de titel van een laag terug op basis van de configuratie.
+   */
   getTitle(layerId: string, mapIndex = DEFAULT_MAPINDEX): string | undefined {
     return this.getLayerConfig(layerId, mapIndex)?.title;
   }
 
+  /**
+   * Geeft de legenda‑index van een laag terug.
+   *
+   * De legenda‑index bepaalt de volgorde waarin legenda‑items
+   * worden weergegeven in de gebruikersinterface.
+   */
   getLegendIndex(
     layerId: string,
     mapIndex = DEFAULT_MAPINDEX
@@ -236,10 +312,16 @@ export class GgcLayerService {
     return this.getLayerConfig(layerId, mapIndex)?.legendIndex;
   }
 
+  /**
+   * Controleert of een laag zichtbaar is.
+   */
   isVisible(layerId: string, mapIndex = DEFAULT_MAPINDEX): boolean {
     return this.mapService.getLayer(layerId, mapIndex) !== undefined;
   }
 
+  /**
+   * Wisselt de zichtbaarheid van een laag.
+   */
   toggleVisibility(layerId: string, mapIndex = DEFAULT_MAPINDEX): boolean {
     if (this.isVisible(layerId, mapIndex)) {
       this.removeLayer(mapIndex, layerId);
@@ -249,6 +331,16 @@ export class GgcLayerService {
     return this.isVisible(layerId, mapIndex);
   }
 
+  /**
+   * Bepaalt of een laag momenteel *enabled* is op basis van resolutie.
+   *
+   * Een laag wordt als enabled beschouwd wanneer de huidige kaartresolutie
+   * binnen de minimale en maximale resolutiegrenzen van de laag valt.
+   *
+   * De resolutiegrenzen worden:
+   * - bij voorkeur gehaald uit de actieve OpenLayers layer
+   * - anders uit de laagconfiguratie
+   */
   getEnabled(layerId: string, mapIndex = DEFAULT_MAPINDEX) {
     let minResolution;
     let maxResolution;
@@ -282,6 +374,15 @@ export class GgcLayerService {
     }
   }
 
+  /**
+   * Zet de zichtbaarheid van meerdere lagen tegelijkertijd.
+   *
+   * Per laag wordt gecontroleerd of:
+   * - deze toegevoegd moet worden (visible = true)
+   * - of verwijderd moet worden (visible = false)
+   *
+   * De methode is idempotent: er worden geen dubbele add/remove acties uitgevoerd.
+   */
   setVisibilityLayers(
     layerIds: string[],
     visible: boolean,
@@ -298,6 +399,12 @@ export class GgcLayerService {
       });
   }
 
+  /**
+   * Geeft het webservice‑type van een laag terug.
+   *
+   * Het type wordt bepaald aan de hand van de configuratie
+   * van de webservice waarin de laag is gedefinieerd.
+   */
   getTypeOfLayer(
     layerId: string,
     mapIndex: string
@@ -309,6 +416,14 @@ export class GgcLayerService {
     })?.type;
   }
 
+  /**
+   * Haalt de configuratie van een laag op.
+   *
+   * De configuratie bevat metadata zoals:
+   * - titel
+   * - legendainformatie
+   * - resolutie‑instellingen
+   */
   getLayerConfig(
     layerId: string,
     mapIndex: string
@@ -319,6 +434,9 @@ export class GgcLayerService {
       .find((layer) => layer.layerId === layerId);
   }
 
+  /**
+   * Emit een event dat aangeeft dat een legenda is toegevoegd.
+   */
   private emitLegendAddedEvent(layerId: string, mapIndex: string) {
     this.legendAddedSubject.next({
       mapIndex: mapIndex,
@@ -326,6 +444,12 @@ export class GgcLayerService {
     });
   }
 
+  /**
+   * Bouwt een legenda‑object op basis van de actuele laagstatus.
+   *
+   * Het resultaat combineert configuratie‑informatie
+   * met runtime‑status (enabled / zichtbaar).
+   */
   private buildLayerLegend(layerId: string, mapIndex: string): LayerLegend {
     return {
       layerId: layerId,
@@ -337,6 +461,9 @@ export class GgcLayerService {
     };
   }
 
+  /**
+   * Geeft de titel terug van de webservice waartoe een laag behoort.
+   */
   private getServiceTitleOfLayer(
     layerId: string,
     mapIndex: string
@@ -348,6 +475,9 @@ export class GgcLayerService {
     })?.title;
   }
 
+  /**
+   * Emit een event dat aangeeft dat een legenda is verwijderd.
+   */
   private emitLegendRemovedEvent(layerId: string, mapIndex: string) {
     this.legendRemovedSubject.next({
       mapIndex: mapIndex,
@@ -355,6 +485,13 @@ export class GgcLayerService {
     });
   }
 
+  /**
+   * Voegt een laag toe op basis van de kaartconfiguratie.
+   *
+   * Wordt gebruikt bij:
+   * - togglen van zichtbaarheid
+   * - batch‑operaties
+   */
   private addLayerFromMapConfig(layerId: string, mapIndex: string) {
     const layerOptions = this.getLayerConfig(layerId, mapIndex);
     const layerType = this.getTypeOfLayer(layerId, mapIndex);
@@ -364,6 +501,10 @@ export class GgcLayerService {
     this.addLayer(layerOptions, layerType);
   }
 
+  /**
+   * Emit een layer changed event
+   * en synchroniseert legenda‑events.
+   */
   private emitLayerChanged(
     layerId: string,
     mapIndex: string,
