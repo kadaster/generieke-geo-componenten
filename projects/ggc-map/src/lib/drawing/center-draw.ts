@@ -78,7 +78,7 @@ export class CenterDraw extends Interaction {
         const crossHairCenterSource = this.crossHairCenterOverlay!.getSource()!;
         this.centerPoint = new Point(center);
         crossHairSource.addFeature(new Feature(this.centerPoint));
-        crossHairCenterSource.addFeature(new Feature(this.centerPoint))
+        crossHairCenterSource.addFeature(new Feature(this.centerPoint));
       }
     } else {
       this.crossHairOverlay!.setMap(map);

@@ -38,7 +38,10 @@ export class GgcDrawService {
    * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
    * @param croshairStyle - Optioneel: een alternatieve stijl voor de crosshair
    */
-  startCenterInteraction(mapIndex: string, croshairStyle?: StyleLike) {
+  startCenterInteraction(
+    mapIndex = DEFAULT_MAPINDEX,
+    croshairStyle?: StyleLike
+  ) {
     this.coreDrawService.startCenterInteraction(mapIndex, croshairStyle);
   }
   /**
@@ -46,7 +49,7 @@ export class GgcDrawService {
    * wordt gestopt en de crosshair verwijderd.
    * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
    */
-  stopCenterInteractions(mapIndex: string) {
+  stopCenterInteractions(mapIndex = DEFAULT_MAPINDEX) {
     this.stopDraw(mapIndex);
     this.stopModify(mapIndex);
     this.coreDrawService.removeActiveCenterInteraction(mapIndex);
@@ -65,7 +68,7 @@ export class GgcDrawService {
    */
   startCenterModify(
     layerName: string,
-    mapIndex: string,
+    mapIndex = DEFAULT_MAPINDEX,
     options?: CenterModifyOptions
   ) {
     this.coreDrawService.startCenterModify(layerName, mapIndex, options);

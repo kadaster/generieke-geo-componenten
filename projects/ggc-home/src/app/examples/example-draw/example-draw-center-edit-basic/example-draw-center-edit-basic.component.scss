@@ -1,0 +1,19 @@
+.map-container {
+  align-items: stretch;
+  display: flex;
+  height: 100%;
+  justify-content: stretch;
+  min-height: 80vh;
+  position: relative;
+  width: 100%;
+
+  & > * {
+    flex-basis: 100%;
+    flex-grow: 1;
+  }
+}
+
+button.active {
+  background-color: #0071eb;
+  color: #fff;
+}

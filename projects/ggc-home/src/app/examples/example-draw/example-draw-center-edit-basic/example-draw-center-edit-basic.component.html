@@ -1,0 +1,77 @@
+<app-example-format
+  [codeHtmlPath]="'code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.html'"
+  [codeScssPath]="'code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.scss'"
+  [codeTypescriptPath]="'code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.ts'"
+  [title]="componentInfo.title"
+  urlChangelog=""
+  urlCodeHtml="example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.html"
+  urlCodeScss="example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.scss"
+  urlCodeTypescript="example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.ts"
+  urlGitHub=""
+  urlKaartConfig="example-draw-options/kaartconfig.json"
+  urlTSDocs=""
+  urlTreeConfig=""
+  urlVoorbeelden=""
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>
+      In onderstaande voorbeeld kan een aantal bestaande tekeningen worden
+      verplaatst of bewerkt. Bij bewerk tekening kunnen bestanade punten
+      verplaatst, of nieuwe punten toegevoegd worden.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-md-9 col-sm-10">
+        <div class="map-container">
+          <ggc-map
+            [webServices]="mapConfig"
+            (events)="onMapEvent($event)"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+
+      <div class="col-md-2 col-sm-2">
+        <div class="d-flex flex-column align-items-stretch">
+          <button
+            style="background-color: #b7f48e"
+            (click)="startCenterModify()"
+          >
+            Start bewerk tekening
+          </button>
+          <br />
+          <button
+            style="background-color: rgb(223, 216, 118)"
+            (click)="startCenterModifyCurrentPoint()"
+          >
+            (Hoek-)Punt bewerken</button
+          ><br />
+          <button
+            style="background-color: #ef9a90"
+            (click)="removeCenterModifyCurrentPoint()"
+          >
+            Verwijder Hoekpunt</button
+          ><br />
+          <button
+            style="background-color: rgb(223, 181, 118)"
+            (click)="stopCenterModifyCurrentPoint()"
+          >
+            Stop (Hoek-)Punt bewerken
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-example-format>
