@@ -1,23 +1,22 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
-  GeojsonLayerOptions,
-  GgcGeojsonLayerComponent,
   GgcLayerBrtAchtergrondkaartComponent,
-  GgcMapComponent
+  GgcMapComponent,
+  Webservice
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
   imports: [
     GgcMapComponent,
     ExampleFormatComponent,
-    GgcLayerBrtAchtergrondkaartComponent,
-    GgcGeojsonLayerComponent
+    GgcLayerBrtAchtergrondkaartComponent
   ],
   templateUrl: "./example-layer-geojson.component.html",
   styleUrl: "./example-layer-geojson.component.scss"
@@ -34,8 +33,16 @@ export class ExampleLayerGeojsonComponent {
       "code/examples/example-layer/example-layer-geojson/example-layer-geojson.png"
   } as ComponentInfo;
 
-  optionsGelderland: GeojsonLayerOptions = {
-    url: "/code/examples/example-layer/example-layer-geojson/gelderland.json",
-    zIndex: 10
-  };
+  protected mapConfig: Webservice[];
+
+  private readonly httpClient = inject(HttpClient);
+
+  constructor() {
+    this.httpClient
+      .get("code/examples/example-layer/example-layer-geojson/kaartconfig.json")
+      .subscribe((data) => {
+        console.log(data);
+        this.mapConfig = data as Webservice[];
+      });
+  }
 }

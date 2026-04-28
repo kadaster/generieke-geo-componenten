@@ -6,7 +6,9 @@
   [codeHtmlPath]="'code/examples/example-layer/example-layer-geojson/example-layer-geojson.component.html'"
   [codeTypescriptPath]="'code/examples/example-layer/example-layer-geojson/example-layer-geojson.component.ts'"
   [codeScssPath]="'code/examples/example-layer/example-layer-geojson/example-layer-geojson.component.scss'"
-  [kaartConfigFilePath]="'code/examples/example-layer/example-layer-geojson/gelderland.json'"
+  [kaartConfigFilePath]="'code/examples/example-layer/example-layer-geojson/kaartconfig.json'"
+  [extraConfigFilePath]="'code/examples/example-layer/example-layer-geojson/gelderland.json'"
+  [extraConfigLabel]="`GeoJson (gelderland.json)`"
   urlCodeHtml="example-snapping/example-layer-geojson/example-layer-geojson.component.html"
   urlCodeTypescript="example-snapping/example-layer-geojson/example-layer-geojson.component.ts"
   urlCodeScss="example-snapping/example-layer-geojson/example-layer-geojson.component.scss"
@@ -32,10 +34,7 @@
   <div page-functionality>
     <!-- DOCS:START functionality -->
     <div class="map-container">
-      <ggc-map>
-        <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
-        <ggc-geojson-layer [options]="optionsGelderland"></ggc-geojson-layer>
-      </ggc-map>
+      <ggc-map [webServices]="mapConfig"></ggc-map>
     </div>
     <!-- DOCS:END functionality -->
   </div>

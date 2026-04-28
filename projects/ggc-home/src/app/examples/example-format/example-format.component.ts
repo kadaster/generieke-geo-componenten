@@ -21,7 +21,8 @@ export class ExampleFormatComponent {
   @Input() codeTypescriptPath: string | undefined;
   @Input() codeScssPath: string | undefined;
   @Input() kaartConfigFilePath: string | undefined;
-  @Input() treeConfigFilePath: string | undefined;
+  @Input() extraConfigFilePath: string | undefined;
+  @Input() extraConfigLabel: string | undefined;
   @Input() urlCodeHtml: string;
   @Input() urlCodeTypescript: string;
   @Input() urlCodeScss: string;
