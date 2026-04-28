@@ -33,7 +33,7 @@ De componenten kunnen afzonderlijk óf in samenwerking gebruikt worden. Hierdoor
 
 ## Licentie
 
-Dit project is gratis en open-source software, gelicentieerd onder de [European Union Public License (EUPL) v1.2](LICENSE.md). De documentatie in GGC Home (onder `/projects/library-app`) is gelicentieerd onder [Creative Commons Attribution Share Alike 4.0 International (`CC-BY-SA-4.0`)](https://creativecommons.org/licenses/by-sa/4.0/deed.nl).
+Dit project is gratis en open-source software, gelicentieerd onder de [European Union Public License (EUPL) v1.2](LICENSE.md). De documentatie in GGC Home (onder `/projects/ggc-home`) is gelicentieerd onder [Creative Commons Attribution Share Alike 4.0 International (`CC-BY-SA-4.0`)](https://creativecommons.org/licenses/by-sa/4.0/deed.nl).
 
 ## Documentatie
 
