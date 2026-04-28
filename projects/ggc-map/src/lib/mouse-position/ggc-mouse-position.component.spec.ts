@@ -10,8 +10,8 @@ import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
 import { GgcMapDetailsContainerComponent } from "../map-details-container/ggc-map-details-container.component";
 import { CoreMapService } from "../map/service/core-map.service";
 import { CoordinateFormatPipe } from "../pipes/coordinate-format.pipe";
-import { defs } from "../utils/epsg28992";
 import { GgcMousePositionComponent } from "./ggc-mouse-position.component";
+import { defs } from "@kadaster/ggc-models";
 
 const proj4 = (proj4x as any).default;
 

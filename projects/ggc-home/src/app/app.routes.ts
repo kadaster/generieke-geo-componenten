@@ -38,6 +38,7 @@ import { ExampleMeasure } from "./examples/example-measure/example-measure/examp
 import { ExampleDrawStyle } from "./examples/example-draw/example-draw-style/example-draw-style.component";
 import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
+import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
 
 export const routes: Routes = [
   {
@@ -255,6 +256,12 @@ export const routes: Routes = [
     title: "draw-center-draw",
     component: ExampleDrawCenterDrawComponent,
     data: { label: "draw-center-draw" }
+  },
+  {
+    path: "draw-tracing",
+    title: "draw-tracing",
+    component: ExampleDrawTracingComponent,
+    data: { label: "draw-tracing" }
   },
   {
     path: "measure",

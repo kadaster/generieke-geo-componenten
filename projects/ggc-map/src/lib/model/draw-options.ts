@@ -51,4 +51,10 @@ export interface DrawOptions {
    * @returns Weer te geven tekst voor het oppervlaktelabel.
    */
   areaM2ToTextFunction?: (area: number) => string;
+
+  trace?: boolean;
+
+  traceSourceId?: string;
+
+  traceSnapTolerance?: number;
 }
