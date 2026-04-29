@@ -6,6 +6,7 @@
   [codeHtmlPath]="'code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.component.html'"
   [codeTypescriptPath]="'code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.component.ts'"
   [codeScssPath]="'code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.component.scss'"
+  [kaartConfigFilePath]="'code/examples/example-layer/example-layer-vector-tile/kaartconfig.json'"
   urlCodeHtml="example-snapping/example-layer-vector-tile/example-layer-vector-tile.component.html"
   urlCodeTypescript="example-snapping/example-layer-vector-tile/example-layer-vector-tile.component.ts"
   urlCodeScss="example-snapping/example-layer-vector-tile/example-layer-vector-tile.component.scss"
@@ -33,11 +34,7 @@
   <div page-functionality>
     <!-- DOCS:START functionality -->
     <div class="map-container">
-      <ggc-map>
-        <ggc-vector-tile-layer
-          [options]="vectorTileLayerOptions"
-        ></ggc-vector-tile-layer>
-      </ggc-map>
+      <ggc-map [webServices]="mapConfig"></ggc-map>
     </div>
     <!-- DOCS:END functionality -->
   </div>

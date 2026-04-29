@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
   GgcMapComponent,
   GgcVectorTileLayerComponent,
@@ -9,6 +9,8 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -32,13 +34,17 @@ export class ExampleLayerVectorTileComponent {
       "code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.png"
   } as ComponentInfo;
 
-  vectorTileLayerOptions: VectorTileLayerOptions = {
-    attributions: "PDOK",
-    url: "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
-    getFeatureInfoOnSingleclick: true,
-    zIndex: 0,
-    style:
-      "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/darkmode__netherlandsrdnewquad?f=json",
-    enableOverzoom: true
-  };
+  protected mapConfig: Webservice[];
+
+  private readonly httpClient = inject(HttpClient);
+
+  constructor() {
+    this.httpClient
+      .get(
+        "code/examples/example-layer/example-layer-vector-tile/kaartconfig.json"
+      )
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+      });
+  }
 }
