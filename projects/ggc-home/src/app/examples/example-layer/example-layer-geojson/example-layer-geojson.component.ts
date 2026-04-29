@@ -21,7 +21,10 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-geojson.component.html",
   styleUrl: "./example-layer-geojson.component.scss"
 })
-export class ExampleLayerGeojsonComponent extends ExampleFormatComponent {
+export class ExampleLayerGeojsonComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson",
@@ -40,8 +43,7 @@ export class ExampleLayerGeojsonComponent extends ExampleFormatComponent {
 
   private readonly httpClient = inject(HttpClient);
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-layer/example-layer-geojson/kaartconfig.json")
       .subscribe((data) => {

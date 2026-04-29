@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
@@ -23,7 +23,10 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-wms.component.html",
   styleUrl: "./example-layer-wms.component.scss"
 })
-export class ExampleLayerWmsComponent extends ExampleFormatComponent {
+export class ExampleLayerWmsComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wms",
@@ -42,8 +45,7 @@ export class ExampleLayerWmsComponent extends ExampleFormatComponent {
 
   private readonly httpClient = inject(HttpClient);
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-layer/example-layer-wms/kaartconfig.json")
       .subscribe((data) => {
