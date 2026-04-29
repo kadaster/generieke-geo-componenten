@@ -26,8 +26,9 @@ export class ExampleLayerWmsComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wms",
-    title: "Kaartlaag: WMS",
-    introduction: "Voeg een WMS-laag toe aan de kaart.",
+    title: "Kaartlaag toevoegen: WMS (raster)",
+    introduction:
+      "Voeg een afbeelding als laag toe aan de kaart met Web Map Service (WMS).",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],

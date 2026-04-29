@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GgcDrawService,
@@ -18,7 +18,10 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-draw-basic.component.html",
   styleUrl: "./example-draw-basic.component.scss"
 })
-export class ExampleDrawBasicComponent extends ExampleFormatComponent {
+export class ExampleDrawBasicComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-basic",
@@ -40,8 +43,7 @@ export class ExampleDrawBasicComponent extends ExampleFormatComponent {
   private readonly drawService = inject(GgcDrawService);
   private readonly drawLayer = "draw";
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-draw/kaartconfig.json")
       .subscribe((data) => {

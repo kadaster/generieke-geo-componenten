@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ExampleLayerAdvancedComponent } from "./example-layer-advanced.component";
+import { ExampleLayerHtmlConfig } from "./example-layer-html-config.component";
 
 describe("ExampleLayerGeojsonComponent", () => {
-  let component: ExampleLayerAdvancedComponent;
-  let fixture: ComponentFixture<ExampleLayerAdvancedComponent>;
+  let component: ExampleLayerHtmlConfig;
+  let fixture: ComponentFixture<ExampleLayerHtmlConfig>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExampleLayerAdvancedComponent]
+      imports: [ExampleLayerHtmlConfig]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ExampleLayerAdvancedComponent);
+    fixture = TestBed.createComponent(ExampleLayerHtmlConfig);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

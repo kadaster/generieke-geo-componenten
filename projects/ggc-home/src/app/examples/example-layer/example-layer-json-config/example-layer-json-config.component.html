@@ -3,17 +3,19 @@
   urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-layer-image_src_lib_layer-image_ggc-layer-image.component.GgcSearchLocationComponent.html"
   urlVoorbeelden=""
   urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-layer/example-layer-advanced2/example-layer-advanced2.component.html'"
-  [codeTypescriptPath]="'code/examples/example-layer/example-layer-advanced2/example-layer-advanced2.component.ts'"
-  [codeScssPath]="'code/examples/example-layer/example-layer-advanced2/example-layer-advanced2.component.scss'"
-  urlCodeHtml="example-snapping/example-layer-advanced2/example-layer-advanced2.component.html"
-  urlCodeTypescript="example-snapping/example-layer-advanced2/example-layer-advanced2.component.ts"
-  urlCodeScss="example-snapping/example-layer-advanced2/example-layer-advanced2.component.scss"
+  [codeHtmlPath]="'code/examples/example-layer/example-layer-json-config/example-layer-json-config.component.html'"
+  [codeTypescriptPath]="'code/examples/example-layer/example-layer-json-config/example-layer-json-config.component.ts'"
+  [codeScssPath]="'code/examples/example-layer/example-layer-json-config/example-layer-json-config.component.scss'"
+  urlCodeHtml="example-snapping/example-layer-json-config/example-layer-json-config.component.html"
+  urlCodeTypescript="example-snapping/example-layer-json-config/example-layer-json-config.component.ts"
+  urlCodeScss="example-snapping/example-layer-json-config/example-layer-json-config.component.scss"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -23,14 +25,24 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld zijn meerdere configuratie-instellingen meegegeven aan de
-      kaartlagen. Met behulp van deze layerOptions, kan worden bepaald hoe,
-      wanneer en waar een laag wordt getoond.
+      Om kaarten te tonen met ggc-map moet een configuratie ingesteld worden.
+      Configuratie met JSON wordt aangeraden, zodat alle ggc-componenten
+      eenvoudig met elkaar kunnen samenwerken.
     </p>
     <p>
-      Verder zijn de <code>minZoomlevel</code> en
-      <code>maxZoomlevel</code> gebruikt om het in- en uitzoomen te beperken.
+      Dit voorbeeld laat de JSON-configuratie zien. Met de <code>layerOptions</code> wordt
+      bepaald hoe, wanneer en waar een kaartlaag wordt getoond:
     </p>
+    <ul>
+      <li>
+        Met <code>minZoom</code> en <code>maxZoom</code> worden het uitzoomen
+        beperkt.
+      </li>
+      <li>
+        Met <code>opacity</code> wordt de doorzichtigheid van een kaartlaag
+        aangepast.
+      </li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -70,8 +82,7 @@
 
         <fieldset>
           <legend>
-            Volgorde van de kaartlaag met de wandelroutes aanpassen met behulp
-            van de z-index:
+            Kaartlaag 'wandelroutes' hoger of lager tonen met z-index:
           </legend>
 
           <div>

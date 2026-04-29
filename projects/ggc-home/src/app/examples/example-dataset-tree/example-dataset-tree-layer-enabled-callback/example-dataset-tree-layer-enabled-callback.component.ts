@@ -41,9 +41,9 @@ export class ExampleDatasetTreeLayerEnabledCallback
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-layer-enabled-callback",
-    title: "Dataset Tree dataset (de)activeren",
+    title: "Kaartlaag keuze aan-/uitzetten",
     introduction:
-      "Met een custom callback kan de status van een kaartlaag worden aangepast op basis van de dataset en/of de laag.",
+      "De bediening van kaartlagen in de dataset-tree kan aan-/uitgezet worden. Dit kan per kaartlaag ingesteld worden.",
     components: [Components.GGC_DATASET_TREE],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],
@@ -54,14 +54,14 @@ export class ExampleDatasetTreeLayerEnabledCallback
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
-  gemeentesEnabled = true;
+  gemeentesEnabled = false;
   protected resolution: number | undefined;
   protected dataset: any;
+  private readonly connectService = inject(DatasetTreeMapConnectService);
+  private readonly httpClient = inject(HttpClient);
+  private readonly layerService = inject(GgcLayerService);
   private readonly mapEventsService = inject(GgcMapEventsService);
   private readonly mapService = inject(GgcMapService);
-  private readonly layerService = inject(GgcLayerService);
-  private readonly httpClient = inject(HttpClient);
-  private readonly connectService = inject(DatasetTreeMapConnectService);
 
   layerEnabledCallback: LayerEnabledCallback = ({ layer, isEnabled }) => {
     if (layer.layerId === "gemeenten") {
@@ -76,8 +76,7 @@ export class ExampleDatasetTreeLayerEnabledCallback
     return isEnabled;
   };
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get(
         "code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/kaartconfig.json"
@@ -92,9 +91,6 @@ export class ExampleDatasetTreeLayerEnabledCallback
       .subscribe((data) => {
         this.datasetTreeConfig = data as Theme[];
       });
-  }
-
-  ngOnInit() {
     this.mapEventsService
       .getZoomendObservableForMap(this.mapIndex)
       .subscribe(() => {

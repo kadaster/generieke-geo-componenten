@@ -45,9 +45,9 @@ export class ExampleDatasetTreeTemplatesComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-label-template",
-    title: "Dataset Tree label templates",
+    title: "Label bij kaartlaag keuze",
     introduction:
-      "Met behulp van de dataset tree kunnen kaartlagen aan of uitgevinkt worden.",
+      "Bij kaartlagen in de dataset-tree kunnen labels getoond worden.",
     components: [Components.GGC_DATASET_TREE],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],
@@ -68,8 +68,7 @@ export class ExampleDatasetTreeTemplatesComponent
 
   private readonly datasetTypeCache = new Map<string, string>();
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-dataset-tree/kaartconfig.json")
       .subscribe((data) => {
@@ -80,9 +79,6 @@ export class ExampleDatasetTreeTemplatesComponent
       .subscribe((data) => {
         this.datasetTreeConfig = data as Theme[];
       });
-  }
-
-  ngOnInit() {
     this.mapEventsService
       .getZoomendObservableForMap(this.mapIndex)
       .subscribe(() => {

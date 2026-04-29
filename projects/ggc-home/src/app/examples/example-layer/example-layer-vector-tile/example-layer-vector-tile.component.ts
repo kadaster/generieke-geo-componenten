@@ -24,8 +24,9 @@ export class ExampleLayerVectorTileComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-vector-tile",
-    title: "Kaartlaag: Vector Tile",
-    introduction: "Voeg een Vector Tile laag toe aan de kaart.",
+    title: "Kaartlaag toevoegen: OGC API - Tiles (Vector Tile)",
+    introduction:
+      "Voeg een Vector Tile laag toe aan de kaart met OGC API - Tiles.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.OGC_API, Tags.LAYER],

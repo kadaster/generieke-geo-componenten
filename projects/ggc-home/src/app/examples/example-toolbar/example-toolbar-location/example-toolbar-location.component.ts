@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   FormatType,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -29,7 +29,10 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-toolbar-location.component.html",
   styleUrl: "./example-toolbar-location.component.scss"
 })
-export class ExampleToolbarLocation extends ExampleFormatComponent {
+export class ExampleToolbarLocation
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/toolbar-location",
@@ -46,8 +49,7 @@ export class ExampleToolbarLocation extends ExampleFormatComponent {
   private readonly searchLocationService = inject(GgcSearchLocationService);
   private readonly mapService = inject(GgcMapService);
 
-  constructor() {
-    super();
+  ngOnInit(): void {
     this.searchLocationService
       .getLocationEventsObservable()
       .subscribe((location) => {

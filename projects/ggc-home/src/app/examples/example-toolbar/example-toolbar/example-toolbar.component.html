@@ -13,7 +13,9 @@
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -66,7 +68,7 @@
         <ggc-toolbar-item
           icon="fas fa-link"
           [clickCallback]="copyLocation.bind(this)"
-          title="Copy location"
+          title="Kopieer locatie"
         >
         </ggc-toolbar-item>
       </ggc-toolbar>

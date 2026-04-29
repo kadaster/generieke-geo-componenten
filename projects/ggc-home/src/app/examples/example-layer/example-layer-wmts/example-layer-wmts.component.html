@@ -13,7 +13,9 @@
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -23,8 +25,10 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In het voorbeeld hieronder is een WMTS-kaart met de kadastrale kaart als
-      laag toegevoegd aan de kaart.
+      In dit voorbeeld is de kadastrale kaart met perceelsgrenzen als laag
+      toegevoegd aan de kaart. Deze kaartlaag wordt als meerdere afbeeldingen
+      (bijv. PNG, JPEG, ...) door ggc-map opgevraagd bij een Web Map Tile
+      Service. Een WMTS biedt vaak snellere responstijden dan een WMS.
     </p>
   </div>
 

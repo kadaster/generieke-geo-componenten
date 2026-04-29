@@ -27,8 +27,9 @@ export class ExampleLayerGeojsonOgcComponent implements AfterViewInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-ogc",
-    title: "Kaartlaag: GeoJSON OGC",
-    introduction: "Voeg een GeoJSON OGC laag toe aan de kaart.",
+    title: "Kaartlaag toevoegen: OGC API - Features (GeoJSON)",
+    introduction:
+      "Voeg een GeoJSON laag toe aan de kaart met OGC API - Features.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.OGC_API],

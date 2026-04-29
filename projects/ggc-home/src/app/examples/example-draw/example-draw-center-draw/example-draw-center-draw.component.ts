@@ -95,8 +95,7 @@ export class ExampleDrawCenterDrawComponent
   private readonly drawService = inject(GgcDrawService);
   private readonly drawLayer = "draw";
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get(
         "code/examples/example-draw/example-draw-center-draw/kaartconfig.json"
@@ -105,9 +104,7 @@ export class ExampleDrawCenterDrawComponent
         this.mapConfig = data as Webservice[];
       });
     this.drawService.setDrawStyle(this.drawLayer, this.styleMap);
-  }
 
-  ngOnInit() {
     setTimeout(() => {
       this.startDrawLine();
       this.setPoint();

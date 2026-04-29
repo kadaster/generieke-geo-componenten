@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
@@ -23,12 +23,13 @@ import { Themes } from "../../themes.enum";
   templateUrl: "./example-dataset-switcher-basic.component.html",
   styleUrl: "./example-dataset-switcher-basic.component.scss"
 })
-export class ExampleDatasetSwitcherBasicComponent {
+export class ExampleDatasetSwitcherBasicComponent implements OnInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher",
     title: "Dataset wisselen",
-    introduction: "Eén of meerdere kaartlagen wisselen met een grafische knop.",
+    introduction:
+      "Eén of meerdere kaartlagen verwisselen met een grafische knop.",
     components: [Components.GGC_DATASET_SWITCHER],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],
@@ -68,7 +69,7 @@ export class ExampleDatasetSwitcherBasicComponent {
   ];
   private readonly httpClient = inject(HttpClient);
 
-  constructor() {
+  ngOnInit() {
     this.httpClient
       .get(
         "code/examples/example-dataset-switcher/example-dataset-switcher-kaartconfig.json"

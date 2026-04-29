@@ -5,11 +5,9 @@ import { ExampleSearchLocationComponent } from "./examples/example-search-locati
 import { ExampleIndexComponent } from "./examples/example-index/example-index.component";
 import { ExampleDatasetTreeBasicComponent } from "./examples/example-dataset-tree/example-dataset-tree-basic/example-dataset-tree-basic.component";
 import { ExampleDatasetTreeAdvComponent } from "./examples/example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component";
-import { ExampleLegendBasicComponent } from "./examples/example-legend/example-legend-basic/example-legend-basic.component";
 import { ExampleLegendAdvComponent } from "./examples/example-legend/example-legend-adv/example-legend-adv.component";
 import { ExampleLegendZoomComponent } from "./examples/example-legend/example-legend-zoom/example-legend-zoom.component";
 import { ExampleLegendDatasetTreeComponent } from "./examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component";
-import { ExampleLegendOgcApiTilesComponent } from "./examples/example-legend/example-legend-ogc-api-tiles/example-legend-ogc-api-tiles.component";
 import { ExampleDatasetTreeTemplatesComponent } from "./examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component";
 import { ExampleDatasetSwitcherBasicComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component";
 import { ExampleSearchLocationWoonplaatsComponent } from "./examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component";
@@ -24,9 +22,8 @@ import { ExampleLayerGeojsonComponent } from "./examples/example-layer/example-l
 import { ExampleLayerGeojsonWfsComponent } from "./examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.component";
 import { ExampleLayerGeojsonOgcComponent } from "./examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.component";
 import { ExampleLayerVectorTileComponent } from "./examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.component";
-import { ExampleLayerBasicComponent } from "./examples/example-layer/example-layer-basic/example-layer-basic.component";
-import { ExampleLayerAdvancedComponent } from "./examples/example-layer/example-layer-advanced/example-layer-advanced.component";
-import { ExampleLayerAdvanced2Component } from "./examples/example-layer/example-layer-advanced2/example-layer-advanced2.component";
+import { ExampleLayerHtmlConfig } from "./examples/example-layer/example-layer-html-config/example-layer-html-config.component";
+import { ExampleLayerJsonConfig } from "./examples/example-layer/example-layer-json-config/example-layer-json-config.component";
 import { ExampleToolbarLocation } from "./examples/example-toolbar/example-toolbar-location/example-toolbar-location.component";
 import { ExampleToolbar } from "./examples/example-toolbar/example-toolbar/example-toolbar.component";
 import { QuickstartComponent } from "./quickstart/quickstart.component";
@@ -100,22 +97,16 @@ export const routes: Routes = [
     data: { label: "Layer Vector Tile" }
   },
   {
-    path: "layer-basic",
-    title: "Layer | GGC-Home",
-    component: ExampleLayerBasicComponent,
-    data: { label: "Layer (basic)" }
-  },
-  {
-    path: "layer-advanced",
+    path: "layer-html-config",
     title: "Layer-html-config | GGC-Home ",
-    component: ExampleLayerAdvancedComponent,
-    data: { label: "Layer (advanced)" }
+    component: ExampleLayerHtmlConfig,
+    data: { label: "Layer HTML config" }
   },
   {
-    path: "layer-advanced2",
+    path: "layer-json-config",
     title: "Layer-JSON-config | GGC-Home",
-    component: ExampleLayerAdvanced2Component,
-    data: { label: "Layer (advanced)" }
+    component: ExampleLayerJsonConfig,
+    data: { label: "Layer JSON config)" }
   },
   {
     path: "snapping-basic",
@@ -184,12 +175,6 @@ export const routes: Routes = [
     data: { label: "dataset-switcher" }
   },
   {
-    path: "legend-basic",
-    title: "Legenda | GGC-Home",
-    component: ExampleLegendBasicComponent,
-    data: { label: "legend-basic" }
-  },
-  {
     path: "legend-advanced",
     title: "Legenda-uitgebreid | GGC-Home",
     component: ExampleLegendAdvComponent,
@@ -207,12 +192,6 @@ export const routes: Routes = [
     title: "Legenda Dataset | GGC-Home",
     component: ExampleLegendDatasetTreeComponent,
     data: { label: "legend-dataset-tree" }
-  },
-  {
-    path: "legend-ogc-api-tiles",
-    title: "Legenda OGC API Tiles | GGC-Home",
-    component: ExampleLegendOgcApiTilesComponent,
-    data: { label: "legend-dataset-tree ogc-api-tiles" }
   },
   {
     path: "dataset-tree-layer-enabled-callback",

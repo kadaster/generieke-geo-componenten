@@ -17,13 +17,20 @@
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
   <div page-introduction>
     <p>
       {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Dit kan per kaartlaag ingesteld worden met een custom callback. In dit
+      voorbeeld is de kaartlag met Gemeenten instelbaar. Deze kaartlaag wordt
+      automatisch uitgezet als de kaartlaag op inactief wordt gezet.
     </p>
   </div>
   <div page-functionality>
@@ -49,7 +56,7 @@
           />
           <span class="slider round"></span>
           <span class="text-nowrap"
-            >Gemeentes {{ gemeentesEnabled ? "Actief" : "Inactief" }}</span
+            >Gemeenten {{ gemeentesEnabled ? "Actief" : "Inactief" }}</span
           >
         </label>
       </div>

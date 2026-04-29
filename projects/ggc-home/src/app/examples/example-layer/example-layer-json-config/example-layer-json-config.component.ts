@@ -15,21 +15,20 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
-  templateUrl: "./example-layer-advanced2.component.html",
-  styleUrl: "./example-layer-advanced2.component.scss"
+  templateUrl: "./example-layer-json-config.component.html",
+  styleUrl: "./example-layer-json-config.component.scss"
 })
-export class ExampleLayerAdvanced2Component {
+export class ExampleLayerJsonConfig {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
-    route: "/layer-advanced2",
-    title: "Kaartlagen: JSON configuratie",
-    introduction:
-      "Voeg verschillende kaartlagen toe aan de kaart d.m.v. JSON (de aanbevolen manier).",
+    route: "/layer-json-config",
+    title: "Kaartlagen instellen met JSON (dynamisch)",
+    introduction: "Voeg kaartlagen toe aan de kaart met JSON (aanbevolen).",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],
     imageLocation:
-      "code/examples/example-layer/example-layer-advanced2/example-layer-advanced2.png"
+      "code/examples/example-layer/example-layer-json-config/example-layer-json-config.png"
   } as ComponentInfo;
   // DOCS-SKIP:END
   readonly kaartConfig = [

@@ -13,7 +13,9 @@
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -23,8 +25,9 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In het voorbeeld hieronder is een WMS-kaart met woonplaatsgrenzen als laag
-      toegevoegd aan de kaart.
+      In dit voorbeeld zijn de woonplaatsgrenzen als laag toegevoegd aan de
+      kaart. Deze kaartlaag wordt als afbeelding (bijv. PNG, JPEG, ...) door
+      ggc-map opgevraagd bij een Web Map Service.
     </p>
   </div>
 

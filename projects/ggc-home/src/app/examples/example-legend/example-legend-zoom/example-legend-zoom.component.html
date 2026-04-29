@@ -16,7 +16,9 @@
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -26,11 +28,14 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In combinatie met een ggc-map component, worden automatisch de legenda's
-      getoond van alle zichtbare kaartlagen. Het legenda component laat
-      standaard alleen legenda's zien van kaartlagen die op dat moment zichtbaar
-      zijn met het huidige zoomniveau. Deze instelling is aan te passen via de
-      input <code>alwaysEnableLegends</code>.
+      De legenda wordt automatisch bijgewerkt als er kaartlagen in de
+      kaartcomponent (ggc-map) zichtbaar worden of verdwijnen.
+    </p>
+    <p>
+      Het legenda component laat standaard alleen legenda's zien van kaartlagen
+      die zichtbaar zijn op het gekozen zoomniveau. De
+      <code>alwaysEnableLegends</code> instelling zorgt ervoor dat altijd alle
+      legenda's worden getoond.
     </p>
   </div>
 
@@ -72,6 +77,19 @@
         </div>
       </div>
       <!-- DOCS:END functionality -->
+      <div class="col-md-1 col-sm-1">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              (change)="goToPage('/legend-advanced')"
+              aria-labelledby="extraOptionsLabel"
+              type="checkbox"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
     </div>
   </div>
 </app-example-format>

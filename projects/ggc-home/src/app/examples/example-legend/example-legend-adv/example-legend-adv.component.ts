@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent, GgcLegendService } from "@kadaster/ggc-legend";
@@ -19,7 +19,10 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-legend-adv.component.html",
   styleUrl: "../example-legend.component.scss"
 })
-export class ExampleLegendAdvComponent extends ExampleFormatComponent {
+export class ExampleLegendAdvComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-advanced",
@@ -44,8 +47,7 @@ export class ExampleLegendAdvComponent extends ExampleFormatComponent {
   private readonly httpClient = inject(HttpClient);
   private readonly legendService = inject(GgcLegendService);
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-legend/example-legend-adv/kaartconfig.json")
       .subscribe((data) => {

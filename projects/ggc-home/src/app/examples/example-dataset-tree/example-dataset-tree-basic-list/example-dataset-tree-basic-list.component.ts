@@ -52,8 +52,7 @@ export class ExampleDatasetTreeBasicListComponent
   private readonly mapService = inject(GgcMapService);
   private readonly httpClient = inject(HttpClient);
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-dataset-tree/kaartconfig.json")
       .subscribe((data) => {
@@ -64,9 +63,6 @@ export class ExampleDatasetTreeBasicListComponent
       .subscribe((data) => {
         this.datasetTreeConfig = data as Theme[];
       });
-  }
-
-  ngOnInit() {
     this.mapEventsService
       .getZoomendObservableForMap(this.mapIndex)
       .subscribe(() => {

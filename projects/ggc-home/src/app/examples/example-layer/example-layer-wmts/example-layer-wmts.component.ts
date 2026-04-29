@@ -27,8 +27,9 @@ export class ExampleLayerWmtsComponent implements AfterViewInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wmts",
-    title: "Kaartlaag: WMTS",
-    introduction: "Voeg een WMTS-laag toe aan de kaart.",
+    title: "Kaartlaag toevoegen: WMTS (raster)",
+    introduction:
+      "Voeg een afbeelding als laag toe aan de kaart met Web Map Tile Service (WMTS).",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],

@@ -16,7 +16,9 @@
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -26,15 +28,18 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In combinatie met een ggc-map component, worden automatisch de legenda's
-      getoond van alle zichtbare kaartlagen.
+      De legenda wordt automatisch bijgewerkt als er kaartlagen in de
+      kaartcomponent (ggc-map) zichtbaar worden of verdwijnen. Als kaartlagen
+      worden aan/-uitgezet (met ggc-dataset-tree), dan wordt de legenda ook
+      automatisch bijgewerkt. De volgorde van de legenda's kan ingesteld worden
+      met de <code>legendIndex</code>. Default worden legenda's bovenaan
+      toegevoegd.
     </p>
+
     <p>
-      In combinatie met kaartlagen aan/-uitzetten (ggc-dataset-tree), reageert
-      de de legenda automatisch op lagen die aan of uit worden gezet. De
-      volgorde waarop legenda's worden toegevoegd kan ingesteld worden door
-      middel van de
-      <code>legendIndex</code> (default: bovenaan).
+      <strong>Let op:</strong> automatisch bijwerken van de legenda werkt alleen
+      als de kaartlagen zijn ingesteld met een
+      <a routerLink="/layer-json-config">JSON-configuratie</a>.
     </p>
   </div>
 

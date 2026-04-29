@@ -27,8 +27,8 @@ export class ExampleLayerImageComponent implements AfterViewInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-image",
-    title: "Kaartlaag: Image",
-    introduction: "Voeg een afbeelding als een laag toe aan de kaart.",
+    title: "Kaartlaag toevoegen: Image",
+    introduction: "Voeg een afbeelding als laag toe aan de kaart.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],

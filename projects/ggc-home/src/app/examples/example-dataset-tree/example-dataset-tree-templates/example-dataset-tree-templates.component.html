@@ -17,7 +17,9 @@
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -26,20 +28,23 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Door middel van zgn. angular template fragments kan extra functionaliteit
-      en styling worden toegevoegd aan dataset- en of layerlabels
-      <br />
-      Zo wordt er in dit voorbeeld een dataset-label template getoond met een
-      aangepaste knop en een layer-label template met functionaliteit om te
-      zoomen naar de resolutie van de laag.
+      Met angular template fragments kan extra functionaliteit en styling
+      toegevoegd worden aan dataset- of layerlabels. In dit voorbeeld staan de
+      volgende labels:
     </p>
+    <ul>
+      <li>een dataset-label template met een aangepaste knop, en</li>
+      <li>
+        een layer-label template om in/uit te zoomen naar de resolutie van de
+        laag.
+      </li>
+    </ul>
     <p>
       <strong>Let op:</strong>
-      De [ggcLayerLabelTemplate] wordt in zijn geheel toegevoegd binnen een
-      klikbaar element aan het dataset-structuurcomponent. Als aan
-      [ggcLayerLabelTemplate] een klikbaar element wordt toegevoegd, is deze
-      mogelijk niet meer toegankelijk voor screen readers. Dit komt doordat dit
-      resulteert in een genest klikbaar element.
+      De <code>ggcLayerLabelTemplate</code> wordt volledig toegevoegd binnen een
+      klikbaar element in het dataset-structuurcomponent. Het toevoegen van
+      interactieve elementen aan dit custom template kan invloed hebben op de
+      toegankelijkheid van de dataset-tree.
     </p>
   </div>
   <div page-functionality>

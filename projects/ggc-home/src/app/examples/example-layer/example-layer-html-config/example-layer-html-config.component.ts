@@ -24,21 +24,20 @@ import { Tags } from "../../tags.enum";
     GgcWmsLayerComponent,
     FormsModule
   ],
-  templateUrl: "./example-layer-advanced.component.html",
-  styleUrl: "./example-layer-advanced.component.scss"
+  templateUrl: "./example-layer-html-config.component.html",
+  styleUrl: "./example-layer-html-config.component.scss"
 })
-export class ExampleLayerAdvancedComponent implements OnInit {
+export class ExampleLayerHtmlConfig implements OnInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
-    route: "/layer-advanced",
-    title: "Kaartlagen: HTML configuratie",
-    introduction:
-      "Voeg verschillende kaartlagen toe aan de kaart d.m.v. HTML configuratie.",
+    route: "/layer-html-config",
+    title: "Kaartlagen instellen met HTML (statisch)",
+    introduction: "Voeg kaartlagen toe aan de kaart met HTML configuratie.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],
     imageLocation:
-      "code/examples/example-layer/example-layer-advanced/example-layer-advanced.png"
+      "code/examples/example-layer/example-layer-html-config/example-layer-html-config.png"
   } as ComponentInfo;
   // DOCS-SKIP:END
   wandelrouteLayerOptions: WmsLayerOptions = {

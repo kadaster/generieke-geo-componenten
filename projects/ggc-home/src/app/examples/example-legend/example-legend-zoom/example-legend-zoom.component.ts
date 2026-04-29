@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent } from "@kadaster/ggc-legend";
@@ -14,13 +14,16 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-legend-zoom.component.html",
   styleUrl: "../example-legend.component.scss"
 })
-export class ExampleLegendZoomComponent extends ExampleFormatComponent {
+export class ExampleLegendZoomComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-zoom",
-    title: "Legenda tonen (zoomniveau)",
+    title: "Legenda weergeven",
     introduction:
-      "Toon de legenda van één of meerdere kaartlagen op basis van het zoomniveau.",
+      "Toon de legenda van één of meerdere kaartlagen.",
     components: [Components.GGC_LEGEND],
     theme: [Themes.LEGENDA],
     tags: [Tags.LEGEND, Tags.ZOOM],
@@ -35,8 +38,7 @@ export class ExampleLegendZoomComponent extends ExampleFormatComponent {
 
   private readonly httpClient = inject(HttpClient);
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-legend/example-legend-zoom/kaartconfig.json")
       .subscribe((data) => {

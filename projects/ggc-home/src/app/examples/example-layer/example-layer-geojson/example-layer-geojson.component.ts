@@ -26,7 +26,7 @@ export class ExampleLayerGeojsonComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson",
-    title: "Kaartlaag: GeoJSON",
+    title: "Kaartlaag toevoegen: JSON-format (GeoJSON)",
     introduction: "Voeg een GeoJSON laag toe aan de kaart.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],

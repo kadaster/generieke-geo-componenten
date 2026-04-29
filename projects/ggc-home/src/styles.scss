@@ -344,6 +344,7 @@
   --ggc-color-primary-500: var(--ggc-color-lintblauw-500);
   --ggc-focus-outline-color: var(--ggc-color-zwart);
   --ggc-focus-inverse-outline-color: var(--ggc-color-wit);
+  --ggc-color-code: var(--ggc-color-rood-500);
   --ggc-focus-outline-offset: var(--ggc-space-25);
   --ggc-focus-outline-width: var(--ggc-border-width-md);
   --ggc-rounded-corner-sm-border-radius: var(--ggc-size-half-lint);
@@ -3651,6 +3652,7 @@
   -webkit-font-smoothing: auto !important;
   -moz-osx-font-smoothing: auto !important;
   color: var(--utrecht-document-color, inherit);
+  --bs-code-color: var(--ggc-color-code);
   font-family: var(--utrecht-document-font-family, inherit);
   font-size: var(--utrecht-document-font-size, inherit);
   font-weight: var(--utrecht-document-font-weight, inherit);

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GgcDrawService,
@@ -19,7 +19,7 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-measure.component.html",
   styleUrl: "./example-measure.component.scss"
 })
-export class ExampleMeasure extends ExampleFormatComponent {
+export class ExampleMeasure extends ExampleFormatComponent implements OnInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/measure",
@@ -41,8 +41,7 @@ export class ExampleMeasure extends ExampleFormatComponent {
   private readonly drawService = inject(GgcDrawService);
   private readonly measureLayer = "measure";
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get(
         "code/examples/example-measure/example-measure-own-style-label/kaartconfig.json"

@@ -29,8 +29,9 @@ export class ExampleLayerGeojsonWfsComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-wfs",
-    title: "Kaartlaag: GeoJSON WFS",
-    introduction: "Voeg een GeoJSON WFS laag toe aan de kaart.",
+    title: "Kaartlaag toevoegen: WFS (GeoJSON)",
+    introduction:
+      "Voeg een GeoJSON laag toe aan de kaart met Web Feature Service (WFS).",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],
