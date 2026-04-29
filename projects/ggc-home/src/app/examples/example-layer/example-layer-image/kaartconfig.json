@@ -18,9 +18,7 @@
       {
         "title": "Bestemmingsplan",
         "imageExtent": [193413, 465508, 194660, 466762],
-        "layerId": "logoImage",
-        "visible": true,
-        "zIndex": 200
+        "layerId": "logoImage"
       }
     ]
   }

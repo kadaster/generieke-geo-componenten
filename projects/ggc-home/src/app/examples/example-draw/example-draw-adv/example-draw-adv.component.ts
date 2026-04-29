@@ -37,6 +37,8 @@ export class ExampleDrawAdvComponent
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-draw/example-draw-adv/example-draw-adv.component.ts";
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   readonly maxPointsExample = 4;

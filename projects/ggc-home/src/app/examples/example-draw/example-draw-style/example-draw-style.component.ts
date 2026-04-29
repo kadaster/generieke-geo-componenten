@@ -35,6 +35,7 @@ export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {
     imageLocation:
       "code/examples/example-draw/example-draw-style/example-draw-style.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   drawing = model("line");

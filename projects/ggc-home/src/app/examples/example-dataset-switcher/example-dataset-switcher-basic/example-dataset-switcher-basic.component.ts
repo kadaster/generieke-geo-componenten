@@ -23,7 +23,10 @@ import { Themes } from "../../themes.enum";
   templateUrl: "./example-dataset-switcher-basic.component.html",
   styleUrl: "./example-dataset-switcher-basic.component.scss"
 })
-export class ExampleDatasetSwitcherBasicComponent implements OnInit {
+export class ExampleDatasetSwitcherBasicComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher",
@@ -36,6 +39,7 @@ export class ExampleDatasetSwitcherBasicComponent implements OnInit {
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   datasetSwitcherConfig: Theme[];
@@ -68,6 +72,10 @@ export class ExampleDatasetSwitcherBasicComponent implements OnInit {
     }
   ];
   private readonly httpClient = inject(HttpClient);
+
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     this.httpClient

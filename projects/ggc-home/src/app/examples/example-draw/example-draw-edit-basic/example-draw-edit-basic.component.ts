@@ -44,6 +44,7 @@ export class ExampleDrawEditBasicComponent
     imageLocation:
       "code/examples/example-draw/example-draw-edit-basic/example-draw-edit-basic.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeEditType = signal<EditType>(EditType.MOVE);

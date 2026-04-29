@@ -41,6 +41,7 @@ export class ExampleDatasetTreeAdvComponent
     imageLocation:
       "code/examples/example-dataset-tree-basic/example-dataset-tree-basic.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];

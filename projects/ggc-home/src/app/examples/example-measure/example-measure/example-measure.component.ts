@@ -32,6 +32,7 @@ export class ExampleMeasure extends ExampleFormatComponent implements OnInit {
     imageLocation:
       "code/examples/example-measure/example-measure/example-measure.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   measuring = signal<MapComponentDrawTypes | undefined>(undefined);

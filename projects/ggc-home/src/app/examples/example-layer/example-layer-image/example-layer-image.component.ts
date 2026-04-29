@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcImageLayerComponent,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -24,7 +24,10 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-image.component.html",
   styleUrl: "./example-layer-image.component.scss"
 })
-export class ExampleLayerImageComponent {
+export class ExampleLayerImageComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-image",
@@ -36,14 +39,14 @@ export class ExampleLayerImageComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-image/example-layer-image.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
-  protected mapIndex = "geoJsonWfs";
 
   private readonly httpClient = inject(HttpClient);
   private readonly mapService: GgcMapService = inject(GgcMapService);
 
-  constructor() {
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-layer/example-layer-image/kaartconfig.json")
       .subscribe((data) => {

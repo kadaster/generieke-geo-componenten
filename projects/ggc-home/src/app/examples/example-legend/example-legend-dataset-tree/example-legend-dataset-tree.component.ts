@@ -38,6 +38,7 @@ export class ExampleLegendDatasetTreeComponent
     imageLocation:
       "code/examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
