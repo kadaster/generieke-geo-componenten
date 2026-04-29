@@ -48,7 +48,13 @@
         >
           <span class="label">Quick start</span>
         </div>
-        <div ngMenuItem value="Documentatie (TSDocs)">
+        <div
+          ngMenuItem
+          value="Documentatie (TSDocs)"
+          tabindex="0"
+          (click)="openTsDocs()"
+          (keydown.enter)="openTsDocs()"
+        >
           <span class="label">Documentatie (TSDocs)</span
           ><span
             class="fa fa-external-link icon-suffix"
@@ -104,25 +110,12 @@
         </div>
         <div
           ngMenuItem
-          value="Changelog"
+          value="ReleasesAndChangelog"
           tabindex="0"
-          (click)="openChangelog()"
-          (keydown.enter)="openChangelog()"
+          (click)="openReleasesAndChangelog()"
+          (keydown.enter)="openReleasesAndChangelog()"
         >
-          <span class="label">Changelog</span
-          ><span
-            class="fa fa-external-link icon-suffix"
-            aria-hidden="true"
-          ></span>
-        </div>
-        <div
-          ngMenuItem
-          value="Releases"
-          tabindex="0"
-          (click)="openReleases()"
-          (keydown.enter)="openReleases()"
-        >
-          <span class="label">Releases</span
+          <span class="label">Releases & Changelog</span
           ><span
             class="fa fa-external-link icon-suffix"
             aria-hidden="true"

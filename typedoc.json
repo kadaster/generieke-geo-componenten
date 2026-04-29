@@ -10,7 +10,7 @@
     "projects/ggc-toolbar/src/public-api.ts"
   ],
   "tsconfig": "tsconfig.typedoc.json",
-  "out": "./docs-builder/doc_source/tsdocs",
+  "out": "./projects/ggc-home/public/tsdocs",
   "entryPointStrategy": "expand",
   "excludePrivate": true,
   "excludeProtected": true,

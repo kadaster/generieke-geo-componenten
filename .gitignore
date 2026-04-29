@@ -50,3 +50,6 @@ Thumbs.db
 /projects/ggc-map/node_modules/
 /projects/ggc-location/node_modules/
 /projects/ggc-search-location/node_modules/
+
+# TSDocs
+/projects/ggc-home/public/tsdocs/

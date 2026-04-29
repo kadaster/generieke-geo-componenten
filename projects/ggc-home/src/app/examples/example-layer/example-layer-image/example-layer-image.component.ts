@@ -1,16 +1,17 @@
-import { AfterViewInit, Component, inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
   GgcImageLayerComponent,
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
-  GgcMapService,
-  ImageLayerOptions
+  GgcMapService
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -23,7 +24,7 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-layer-image.component.html",
   styleUrl: "./example-layer-image.component.scss"
 })
-export class ExampleLayerImageComponent implements AfterViewInit {
+export class ExampleLayerImageComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-image",
@@ -36,16 +37,18 @@ export class ExampleLayerImageComponent implements AfterViewInit {
       "code/examples/example-layer/example-layer-image/example-layer-image.png"
   } as ComponentInfo;
   // DOCS-SKIP:END
-  imageLayerOptions: ImageLayerOptions = {
-    url: "/code/examples/example-layer/example-layer-image/bestemmingsplan.png",
-    layerName: "Bestemmingsplan",
-    imageExtent: [193413, 465508, 194660, 466762],
-    zIndex: 200
-  };
+  protected mapConfig: Webservice[];
+  protected mapIndex = "geoJsonWfs";
 
+  private readonly httpClient = inject(HttpClient);
   private readonly mapService: GgcMapService = inject(GgcMapService);
 
-  ngAfterViewInit() {
-    this.mapService.zoomToCoordinate([194195, 465885], undefined, 10);
+  constructor() {
+    this.httpClient
+      .get("code/examples/example-layer/example-layer-image/kaartconfig.json")
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+        this.mapService.zoomToCoordinate([194195, 465985], undefined, 10);
+      });
   }
 }

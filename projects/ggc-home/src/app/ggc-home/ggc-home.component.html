@@ -37,7 +37,7 @@
           <h2 class="nl-heading nl-heading--level-5 ggc-heading">Nieuw</h2>
           <p class="nl-paragraph ggc-paragraph">
             GGC is nu plug & play! Zie
-            <a class="nl-link rhc-link" href="#">documentatie</a>
+            <a class="nl-link rhc-link" [href]="tsdocsUrl">documentatie</a>
             voor meer informatie.
           </p>
         </div>
@@ -108,9 +108,7 @@
                 <path d="M9 6l6 6l-6 6"></path>
               </svg>
             </span>
-            <span class="utrecht-link-list__link-text">
-              Uitleg componenten
-            </span>
+            <span class="utrecht-link-list__link-text"> Voorbeelden </span>
           </a>
         </li>
         <li class="utrecht-link-list__item">
@@ -139,7 +137,7 @@
         </li>
         <li class="utrecht-link-list__item">
           <a
-            href="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/"
+            [href]="tsdocsUrl"
             class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
           >
             <span class="utrecht-icon" role="presentation" aria-hidden="true">
@@ -168,7 +166,7 @@
         </li>
         <li class="utrecht-link-list__item">
           <a
-            href="https://github.com/kadaster/generieke-geo-componenten"
+            [href]="githubUrl"
             class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
           >
             <span class="utrecht-icon" role="presentation" aria-hidden="true">
@@ -225,7 +223,7 @@
         </li>
         <li class="utrecht-link-list__item">
           <a
-            href="https://github.com/kadaster/generieke-geo-componenten/releases"
+            [href]="githubReleasesUrl"
             target="_blank"
             class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
           >

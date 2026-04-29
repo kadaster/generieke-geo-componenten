@@ -114,7 +114,7 @@
               </button>
             </li>
           }
-          @if (treeConfigFilePath) {
+          @if (extraConfigFilePath) {
             <li class="nav-item" role="presentation">
               <button
                 class="nav-link"
@@ -126,7 +126,7 @@
                 aria-controls="tree-json"
                 aria-selected="false"
               >
-                DatasetTree Configuration (json)
+                {{ extraConfigLabel ? extraConfigLabel : "Configuration" }}
               </button>
             </li>
           }
@@ -255,7 +255,7 @@
           </div>
         }
 
-        @if (treeConfigFilePath) {
+        @if (extraConfigFilePath) {
           <div
             class="tab-pane fade"
             id="tree-json"
@@ -275,7 +275,7 @@
                 </p>
 
                 <pre><code
-                  [highlight]="(treeConfigFilePath | codeFromUrl | async)"
+                  [highlight]="(extraConfigFilePath | codeFromUrl | async)"
                   language="json"
                 ></code></pre>
               </div>
