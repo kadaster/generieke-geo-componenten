@@ -4,6 +4,7 @@ import { CodeFromUrlPipe } from "ngx-highlightjs/plus";
 import { Highlight } from "ngx-highlightjs";
 import { AsyncPipe } from "@angular/common";
 import { ExtractDocsSectionPipePipe } from "../../pipes/extract-docs-section-pipe.pipe";
+import { tsdocsUrl } from "../../constants/urls";
 
 @Component({
   selector: "app-example-format",
@@ -15,7 +16,7 @@ import { ExtractDocsSectionPipePipe } from "../../pipes/extract-docs-section-pip
 export class ExampleFormatComponent {
   @Input() title?: string;
   @Input() urlVoorbeelden?: string;
-  @Input() urlTSDocs?: string;
+  @Input() urlTSDocs?: string = tsdocsUrl;
   @Input() urlChangelog?: string;
   @Input() codeHtmlPath: string | undefined;
   @Input() codeTypescriptPath: string | undefined;
