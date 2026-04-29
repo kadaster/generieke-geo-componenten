@@ -26,31 +26,24 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      Met behulp van <code>startModify</code> kunnun bestaande tekeningen worden
-      verplaatst of bewerkt.
+      Met <code>startModify</code> kunnen bestaande tekeningen worden verplaatst
+      of bewerkt.
     </p>
     <ul>
       <li>Verplaats tekening: verplaats bestaande tekeningen.</li>
       <li>
-        Bewerk tekening: bestaande hoekpunten toevoegen (klik op bestaande
-        lijn), verplaatsen of verwijderen (alt+klik op bestaand hoekpunt).
+        Bewerk tekening: nieuwe hoekpunten toevoegen en bestaande hoekpunten
+        verplaatsen of verwijderen.
+        <ul>
+          <li>Punt toevoegen: klik op bestaande lijn</li>
+          <li>Punt verwijderen: alt+klik op bestaand hoekpunt</li>
+        </ul>
       </li>
     </ul>
   </div>
 
   <div page-functionality>
     <div class="row">
-      <!-- DOCS:START functionality -->
-      <div class="col-md-9 col-sm-10">
-        <div class="map-container">
-          <ggc-map
-            [webServices]="mapConfig"
-            (events)="onMapEvent($event)"
-          ></ggc-map>
-        </div>
-      </div>
-      <!-- DOCS:END functionality -->
-
       <div class="col-md-2 col-sm-2">
         <div class="d-flex flex-column align-items-stretch">
           <button
@@ -67,6 +60,16 @@
           </button>
         </div>
       </div>
+      <!-- DOCS:START functionality -->
+      <div class="col-md-9 col-sm-10">
+        <div class="map-container">
+          <ggc-map
+            [webServices]="mapConfig"
+            (events)="onMapEvent($event)"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
     </div>
   </div>
 </app-example-format>

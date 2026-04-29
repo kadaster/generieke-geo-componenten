@@ -33,8 +33,8 @@ export class ExampleDrawCenterDrawComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-center-draw",
-    title: "Tekenen met centrum van kaart",
-    introduction: "Teken met het middelpunt van de kaart.",
+    title: "Tekenen met markering op de kaart",
+    introduction: "Tekenen met vingers (mobiele device) of toetsenbord.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW, Tags.KEYBOARD],

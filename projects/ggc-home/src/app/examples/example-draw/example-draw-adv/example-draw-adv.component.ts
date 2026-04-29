@@ -29,9 +29,9 @@ export class ExampleDrawAdvComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-adv",
-    title: "Tekenen met de muis",
+    title: "Tekenen met de muis (uitgebreid)",
     introduction:
-      "Teken lijnen, polygonen, punten, rechthoeken en cirkels met de muis.",
+      "Teken lijnen, punten, vlakken, rechthoeken en cirkels met de muis.",
     components: [Components.GGC_MAP],
     tags: [Tags.DRAW],
     imageLocation:

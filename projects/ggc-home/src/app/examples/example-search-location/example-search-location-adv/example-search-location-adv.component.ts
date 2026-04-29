@@ -34,7 +34,7 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-adv",
     title: "Locatie zoeken (uitgebreid)",
-    introduction: "Zoek een adres, woonplaats of locatie.",
+    introduction: "Zoek een adres, woonplaats of huidige locatie.",
     components: [Components.GGC_SEARCH_LOCATION],
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:

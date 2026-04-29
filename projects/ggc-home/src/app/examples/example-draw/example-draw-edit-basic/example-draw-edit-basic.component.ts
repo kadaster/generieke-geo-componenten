@@ -37,7 +37,7 @@ export class ExampleDrawEditBasicComponent
     route: "/draw-edit-basic",
     title: "Verplaatsen en bewerken met de muis",
     introduction:
-      "Verplaats en bewerk lijnen, polygonen, punten en rechthoeken met de muis.",
+      "Verplaats en bewerk lijnen, punten, vlakken en rechthoeken met de muis.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW, Tags.MODIFY],

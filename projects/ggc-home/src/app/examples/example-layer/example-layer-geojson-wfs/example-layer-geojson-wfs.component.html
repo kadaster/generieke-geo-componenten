@@ -34,14 +34,7 @@
 
   <div page-functionality>
     <div class="row">
-      <div class="col-md-8 col-sm-10">
-        <!-- DOCS:START functionality -->
-        <div class="map-container">
-          <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
-        </div>
-        <!-- DOCS:END functionality -->
-      </div>
-      <div class="col-md-1 col-sm-1">
+      <div class="col-md-2 col-sm-2">
         <div class="row options-toggle">
           <h6 id="extraOptionsLabel">Custom styling</h6>
           <label class="switch">
@@ -53,6 +46,13 @@
             <span class="slider round"></span>
           </label>
         </div>
+      </div>
+      <div class="col-md-8 col-sm-10">
+        <!-- DOCS:START functionality -->
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
+        </div>
+        <!-- DOCS:END functionality -->
       </div>
     </div>
   </div>

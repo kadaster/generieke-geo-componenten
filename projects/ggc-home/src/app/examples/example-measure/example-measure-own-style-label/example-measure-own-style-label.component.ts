@@ -27,7 +27,7 @@ export class ExampleMeasureOwnStyleLabel
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/measure-own-style-label",
-    title: "Meten met eigen label styling",
+    title: "Gebruiken van een eigen stijl op labels met meetwaarden.",
     introduction: "Toepassen van eigen stijl op labels tijdens het meten.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],

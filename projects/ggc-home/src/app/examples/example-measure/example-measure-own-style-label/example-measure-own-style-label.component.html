@@ -27,21 +27,21 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      Met behulp van <code>setDrawStyle</code> kan custom styling meegegeven
-      worden aan de meetlabels.
+      Met <code>setDrawStyle</code> kan de opmaak van meetlabels aangepast
+      worden met een eigen stijl.
     </p>
-    <p>In onderstaand voorbeeld zijn aangepast:</p>
+    <p>In dit voorbeeld is de weergave van de volgende stijlen aangepast:</p>
     <ul>
       <li>
-        Segment label: tekst en kleur, via <code>segmentLengthLabelStyle</code>.
+        Segment label: tekst en kleur, met <code>segmentLengthLabelStyle</code>.
       </li>
       <li>
-        Totale lengte label: tekst, kleur en font, via
+        Totale lengte label: tekst, kleur en font, met
         <code>lengthLabelStyle</code>.
       </li>
     </ul>
     <p>
-      Aanvullend kan ook het oppervlakte label aangepast worden via
+      Het oppervlakte label kan aangepast worden met
       <code>areaLabelStyle</code>.
     </p>
   </div>
@@ -54,7 +54,7 @@
           <b>Meten</b>
           <div class="d-flex flex-column align-items-stretch">
             <button [class.active]="measuring()" (click)="measureLine()">
-              Lijn tekenen en meten
+              Teken en meet lijn
             </button>
             <hr />
             <button (click)="stopMeasureManual()">

@@ -34,7 +34,7 @@ export class ExampleSearchLocationWoonplaatsComponent implements OnInit {
     route: "/search-location-woonplaats",
     title: "Locatie zoeken (in collecties)",
     introduction:
-      "Zoek naar een adres, woonplaats of locatie in één of meerdere gekozen collections.",
+      "Zoek een adres, woonplaats of locatie in één of meer gekozen collections.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.SEARCH, Tags.LOCATION],

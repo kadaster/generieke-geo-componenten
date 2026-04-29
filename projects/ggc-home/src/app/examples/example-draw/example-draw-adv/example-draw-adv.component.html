@@ -25,19 +25,28 @@
 
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
+    <p>Klik met de muis op de kaart om een vlak te tekenen.</p>
+    <p>Instelmogelijkheden voor tekenen met <code>drawOptions</code>:</p>
+    <ul>
+      <li>Maximaal aantal punten per figuur (<code>maxPoints</code>)</li>
+      <li>Controleren (<code>validators</code>)</li>
+    </ul>
     <p>
-      Instelmogelijkheden voor tekenen met behulp van <code>drawOptions</code>:
-      <br />- Validatie (<code>validators</code>) <br />- Maximaal aantal punten
-      per figuur (<code>maxPoints</code>)
+      In dit voorbeeld worden vlakken (polygonen) na plaatsing van het vierde
+      punt (<code>maxPoints</code> = {{ maxPointsExample }}) automatisch
+      afgerond. Ook worden polygonen gecontroleerd (validatie). Een polygoon is
+      fout (invalide) als:
     </p>
+    <ul>
+      <li>het oppervlak groter is dan 3.000 km², of</li>
+      <li>
+        het geheel of gedeeltelijk ligt in de noordelijke helft van Nederland.
+      </li>
+    </ul>
     <p>
-      In onderstaand voorbeeld worden polygonen gevalideerd. Polygonen die
-      groter zijn dan 3.000 km² of (gedeeltelijk) getekend zijn in de
-      noordelijke helft van Nederland, zijn niet valide. Invalide tekeningen
-      krijgen tijdens het tekenen de stijl <code>invalidDrawStyle</code>, en na
-      afronding <code>invalidFinishDrawStyle</code>. Ook worden polygonen na het
-      zetten zetten van het derde punt (<code>maxPoints</code> =
-      {{ maxPointsExample }}) automatisch afgerond.
+      Bij het tekenen krijgen foutieve polygonen de stijl
+      <code>invalidDrawStyle</code> (rood met blauwe rand). Na afronding krijgen
+      zij <code>invalidFinishDrawStyle</code> (rood). <br />
     </p>
   </div>
 
@@ -74,7 +83,7 @@
                 type="checkbox"
                 [checked]="validatorsEnabled()"
               />
-              Validatie
+              Controleren
             </label>
             <label>
               <input

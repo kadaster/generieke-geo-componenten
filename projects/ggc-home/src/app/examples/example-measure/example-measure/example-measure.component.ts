@@ -24,7 +24,8 @@ export class ExampleMeasure extends ExampleFormatComponent implements OnInit {
   readonly componentInfo: ComponentInfo = {
     route: "/measure",
     title: "Meten",
-    introduction: "Meet lengtes en oppervlaktes tijdens het tekenen.",
+    introduction:
+      "Lengtes en oppervlaktes laten zien bij het tekenen van een figuur.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.MEASURE],

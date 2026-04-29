@@ -36,9 +36,9 @@ export class ExampleToolbarLocation
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/toolbar-location",
-    title: "Toolbar met huidige locatie tonen",
+    title: "Toolbar uitbreiden",
     introduction:
-      "Toolbar met het verkrijgen van de huidige locatie op de kaart.",
+      "Toolbar uitbreiding om huidige locatie op de kaart te laten zien.",
     components: [Components.GGC_TOOLBAR],
     theme: [Themes.WERKBALK],
     tags: [Tags.TOOLBAR, Tags.LOCATION, Tags.CONTROLS],

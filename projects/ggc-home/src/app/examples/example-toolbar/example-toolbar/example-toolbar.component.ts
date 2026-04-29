@@ -18,6 +18,7 @@ import {
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-example-toolbar",
@@ -28,7 +29,8 @@ import { Tags } from "../../tags.enum";
     GgcToolbarComponent,
     GgcToolbarItemComponent,
     GgcToolbarItemMeasureComponent,
-    GgcToolbarItemDrawComponent
+    GgcToolbarItemDrawComponent,
+    RouterLink
   ],
   templateUrl: "./example-toolbar.component.html",
   styleUrl: "./example-toolbar.component.scss"
@@ -38,7 +40,8 @@ export class ExampleToolbar extends ExampleFormatComponent {
   readonly componentInfo: ComponentInfo = {
     route: "/toolbar",
     title: "Toolbar",
-    introduction: "Toolbar met verschillende functionaliteiten icm de kaart.",
+    introduction:
+      "Toolbar met knoppen voor tekenen, bewerken en locatie kopiëren.",
     components: [Components.GGC_TOOLBAR],
     theme: [Themes.WERKBALK],
     tags: [Tags.TOOLBAR, Tags.CONTROLS],

@@ -27,7 +27,7 @@ export class ExampleDrawBasicComponent
     route: "/draw-basic",
     title: "Tekenen met de muis",
     introduction:
-      "Teken lijnen, polygonen, punten, rechthoeken en cirkels met de muis.",
+      "Teken lijnen, punten, vlakken, rechthoeken en cirkels met de muis.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW],

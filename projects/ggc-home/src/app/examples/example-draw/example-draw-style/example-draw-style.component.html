@@ -27,21 +27,21 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      Met behulp van <code>setDrawStyle</code> kunnen eigen custom stijlen
-      worden toegepast op (afgeronde/invalide) tekeningen.
+      Met <code>setDrawStyle</code> kan de opmaak van een tekening aangepast
+      worden met een eigen stijl.
     </p>
-    <p>In onderstaand voorbeeld zijn aangepast:</p>
+    <p>In dit voorbeeld zijn aangepast:</p>
     <ul>
-      <li>Stijl actieve tekening via <code>drawingDrawStyle</code>.</li>
+      <li>Stijl van actieve tekening met <code>drawingDrawStyle</code>.</li>
       <li>
-        Stijl afgeronde tekening via
+        Stijl van afgeronde tekening met
         <code>finishDrawStyle</code>.
       </li>
     </ul>
     <p>
-      Aanvullend is het ook mogelijk om de tekenstijl in te stellen voor een
-      niet valide tekening (zie
-      <a [routerLink]="['/draw-adv']">tekenen uitgebreid</a>).
+      Het is ook mogelijk om de opmaak in te stellen voor een foute tekening
+      (zie
+      <a [routerLink]="['/draw-adv']">Tekenen met de muis</a>).
     </p>
   </div>
 
@@ -53,13 +53,13 @@
           <b>Tekenen</b>
           <div class="d-flex flex-column align-items-stretch">
             <button [class.active]="drawing() === 'line'" (click)="drawLine()">
-              Lijn tekenen
+              Teken lijn
             </button>
             <button
               [class.active]="drawing() === 'polygon'"
               (click)="drawPolygon()"
             >
-              Polygoon tekenen
+              Teken vlak
             </button>
             <hr />
             <button (click)="finishCurrentDraw()">Tekening afronden</button>

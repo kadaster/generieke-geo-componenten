@@ -28,7 +28,7 @@ export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {
   readonly componentInfo: ComponentInfo = {
     route: "/draw-style",
     title: "Tekenen met eigen styling",
-    introduction: "Toepassen van eigen stijl tijdens het tekenen.",
+    introduction: "Gebruiken van een eigen stijl voor het tekenen op de kaart.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW, Tags.STYLE],
