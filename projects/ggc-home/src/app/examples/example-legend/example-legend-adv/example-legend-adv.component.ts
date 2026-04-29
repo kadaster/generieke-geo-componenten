@@ -33,6 +33,7 @@ export class ExampleLegendAdvComponent
     imageLocation:
       "code/examples/example-legend/example-legend-basic/example-legend-basic.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];

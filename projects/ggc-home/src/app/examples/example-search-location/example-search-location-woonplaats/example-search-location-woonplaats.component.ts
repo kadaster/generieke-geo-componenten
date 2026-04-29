@@ -28,7 +28,10 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-search-location-woonplaats.component.html",
   styleUrl: "./example-search-location-woonplaats.component.scss"
 })
-export class ExampleSearchLocationWoonplaatsComponent implements OnInit {
+export class ExampleSearchLocationWoonplaatsComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-woonplaats",
@@ -41,13 +44,19 @@ export class ExampleSearchLocationWoonplaatsComponent implements OnInit {
     imageLocation:
       "code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
+
   searchLocationOptions = {
     zoomToResult: true,
     markResult: true
   } as SearchLocationOptions;
 
   private readonly pdokLocationApiService = inject(PdokLocationApiService);
+
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     this.pdokLocationApiService.collectionsLoaded$

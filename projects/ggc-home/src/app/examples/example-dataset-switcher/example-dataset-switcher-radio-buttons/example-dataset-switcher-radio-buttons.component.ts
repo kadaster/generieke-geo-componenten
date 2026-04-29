@@ -23,7 +23,10 @@ import { Themes } from "../../themes.enum";
   templateUrl: "./example-dataset-switcher-radio-buttons.component.html",
   styleUrl: "./example-dataset-switcher-radio-buttons.component.scss"
 })
-export class ExampleDatasetSwitcherRadioButtonsComponent implements OnInit {
+export class ExampleDatasetSwitcherRadioButtonsComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher-radio-buttons",
@@ -36,6 +39,7 @@ export class ExampleDatasetSwitcherRadioButtonsComponent implements OnInit {
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   datasetSwitcherConfig: Theme[];
@@ -68,6 +72,10 @@ export class ExampleDatasetSwitcherRadioButtonsComponent implements OnInit {
     }
   ];
   private readonly httpClient = inject(HttpClient);
+
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     this.httpClient

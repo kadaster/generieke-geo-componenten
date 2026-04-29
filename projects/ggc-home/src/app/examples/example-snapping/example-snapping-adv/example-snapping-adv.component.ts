@@ -50,7 +50,9 @@ export class ExampleSnappingAdvComponent
     imageLocation:
       "code/examples/example-snapping/example-snapping-basic/example-snapping-basic.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
+
   drawLayer = "drawLayerAdvanced";
   mapIndex = "snappingAdvanced";
   pixelTolerance = 10;
@@ -78,6 +80,10 @@ export class ExampleSnappingAdvComponent
     snapDrawLayers: ["drawLayer"],
     snapLayers: ["provincies"]
   };
+
+  constructor() {
+    super();
+  }
 
   ngOnInit(): void {
     this.drawService.startDraw(

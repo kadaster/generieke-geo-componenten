@@ -41,6 +41,7 @@ export class ExampleDrawCenterDrawComponent
     imageLocation:
       "code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeDrawType = signal<MapComponentDrawTypes | undefined>(undefined);

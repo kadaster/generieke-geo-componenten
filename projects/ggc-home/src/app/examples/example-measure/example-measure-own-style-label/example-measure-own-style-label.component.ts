@@ -35,6 +35,7 @@ export class ExampleMeasureOwnStyleLabel
     imageLocation:
       "code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   segmentLengthLabelStyle = new Style({
     text: new Text({

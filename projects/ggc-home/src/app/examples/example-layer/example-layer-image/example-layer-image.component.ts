@@ -24,7 +24,7 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-image.component.html",
   styleUrl: "./example-layer-image.component.scss"
 })
-export class ExampleLayerImageComponent {
+export class ExampleLayerImageComponent extends ExampleFormatComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-image",
@@ -36,6 +36,7 @@ export class ExampleLayerImageComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-image/example-layer-image.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
   protected mapIndex = "geoJsonWfs";
@@ -44,6 +45,7 @@ export class ExampleLayerImageComponent {
   private readonly mapService: GgcMapService = inject(GgcMapService);
 
   constructor() {
+    super();
     this.httpClient
       .get("code/examples/example-layer/example-layer-image/kaartconfig.json")
       .subscribe((data) => {

@@ -24,7 +24,7 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-wmts.component.html",
   styleUrl: "./example-layer-wmts.component.scss"
 })
-export class ExampleLayerWmtsComponent {
+export class ExampleLayerWmtsComponent extends ExampleFormatComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wmts",
@@ -37,6 +37,7 @@ export class ExampleLayerWmtsComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-wmts/example-layer-wmts.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
 
@@ -44,6 +45,7 @@ export class ExampleLayerWmtsComponent {
   private readonly mapService: GgcMapService = inject(GgcMapService);
 
   constructor() {
+    super();
     this.httpClient
       .get("code/examples/example-layer/example-layer-wmts/kaartconfig.json")
       .subscribe((data) => {

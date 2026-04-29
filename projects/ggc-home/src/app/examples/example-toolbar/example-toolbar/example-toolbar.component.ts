@@ -45,12 +45,17 @@ export class ExampleToolbar extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-toolbar/example-toolbar/example-toolbar.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   protected measureActive = false;
   protected drawActive = false;
 
   private readonly mapService = inject(GgcMapService);
   private readonly drawService = inject(GgcDrawService);
+
+  constructor() {
+    super();
+  }
 
   changeMeasureState(event: ToolbarItemComponentEvent) {
     this.measureActive = event.active;
