@@ -87,7 +87,7 @@
   },
   {
     "type": "image",
-    "url": "code/examples/example-dataset-tree/logokadaster.png",
+    "url": "code/examples/example-dataset-tree/example-dataset-tree-basic/logokadaster.png",
     "layers": [
       {
         "title": "Kadaster Logo Apeldoorn (Image)",
