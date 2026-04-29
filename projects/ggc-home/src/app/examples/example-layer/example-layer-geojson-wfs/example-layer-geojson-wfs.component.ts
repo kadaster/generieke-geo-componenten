@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcGeojsonLayerComponent,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -28,7 +28,7 @@ import VectorLayer from "ol/layer/Vector";
   templateUrl: "./example-layer-geojson-wfs.component.html",
   styleUrl: "./example-layer-geojson-wfs.component.scss"
 })
-export class ExampleLayerGeojsonWfsComponent {
+export class ExampleLayerGeojsonWfsComponent implements OnInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-wfs",
@@ -53,7 +53,7 @@ export class ExampleLayerGeojsonWfsComponent {
   private readonly httpClient = inject(HttpClient);
   private readonly mapService = inject(GgcMapService);
 
-  constructor() {
+  ngOnInit() {
     this.httpClient
       .get(
         "code/examples/example-layer/example-layer-geojson-wfs/kaartconfig.json"

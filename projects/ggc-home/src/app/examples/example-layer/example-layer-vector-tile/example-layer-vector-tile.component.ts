@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcMapComponent,
   GgcVectorTileLayerComponent,
@@ -22,7 +22,7 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-vector-tile.component.html",
   styleUrl: "./example-layer-vector-tile.component.scss"
 })
-export class ExampleLayerVectorTileComponent {
+export class ExampleLayerVectorTileComponent implements OnInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-vector-tile",
@@ -40,7 +40,7 @@ export class ExampleLayerVectorTileComponent {
 
   private readonly httpClient = inject(HttpClient);
 
-  constructor() {
+  ngOnInit() {
     this.httpClient
       .get(
         "code/examples/example-layer/example-layer-vector-tile/kaartconfig.json"
