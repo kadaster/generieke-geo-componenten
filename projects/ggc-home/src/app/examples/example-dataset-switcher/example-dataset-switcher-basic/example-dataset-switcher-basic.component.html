@@ -1,5 +1,6 @@
 <app-example-format
   [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
   urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-dataset-switcher_src_lib_dataset-switcher_ggc-dataset-switcher.component.GgcSearchLocationComponent.html"
   urlVoorbeelden=""
   urlChangelog=""
@@ -11,8 +12,8 @@
   urlCodeScss="example-snapping/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.scss"
   kaartConfigFilePath="code/examples/example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
   extraConfigFilePath="code/examples/example-dataset-switcher/example-dataset-switcher-treeconfig.json"
-  urlKaartConfig="example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
-  urlTreeConfig="example-dataset-switcher/example-dataset-switcher-treeconfig.json"
+  pathKaartConfig="example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
+  pathTreeConfig="example-dataset-switcher/example-dataset-switcher-treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>

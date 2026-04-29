@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
   GgcGeojsonLayerComponent,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -24,7 +24,7 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-geojson-ogc.component.html",
   styleUrl: "./example-layer-geojson-ogc.component.scss"
 })
-export class ExampleLayerGeojsonOgcComponent implements OnInit {
+export class ExampleLayerGeojsonOgcComponent extends ExampleFormatComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-ogc",
@@ -37,6 +37,7 @@ export class ExampleLayerGeojsonOgcComponent implements OnInit {
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
   protected mapIndex = "GeoJsonOgcExample";
@@ -44,7 +45,8 @@ export class ExampleLayerGeojsonOgcComponent implements OnInit {
   private readonly httpClient = inject(HttpClient);
   private readonly mapService = inject(GgcMapService);
 
-  ngOnInit() {
+  constructor() {
+    super();
     this.httpClient
       .get(
         "code/examples/example-layer/example-layer-geojson-ogc/kaartconfig.json"

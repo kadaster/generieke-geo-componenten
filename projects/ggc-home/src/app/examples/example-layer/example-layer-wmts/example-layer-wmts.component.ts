@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
@@ -24,7 +24,7 @@ import { HttpClient } from "@angular/common/http";
   templateUrl: "./example-layer-wmts.component.html",
   styleUrl: "./example-layer-wmts.component.scss"
 })
-export class ExampleLayerWmtsComponent implements OnInit {
+export class ExampleLayerWmtsComponent extends ExampleFormatComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wmts",
@@ -37,13 +37,15 @@ export class ExampleLayerWmtsComponent implements OnInit {
     imageLocation:
       "code/examples/example-layer/example-layer-wmts/example-layer-wmts.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
 
   private readonly httpClient = inject(HttpClient);
   private readonly mapService: GgcMapService = inject(GgcMapService);
 
-  ngOnInit() {
+  constructor() {
+    super();
     this.httpClient
       .get("code/examples/example-layer/example-layer-wmts/kaartconfig.json")
       .subscribe((data) => {

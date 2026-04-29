@@ -29,6 +29,7 @@ export class ExampleLegendZoomComponent
     imageLocation:
       "code/examples/example-legend/example-legend-zoom/example-legend-zoom.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];

@@ -45,6 +45,7 @@ export class ExampleToolbarLocation
     imageLocation:
       "code/examples/example-toolbar/example-toolbar-location/example-toolbar-location.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   private readonly searchLocationService = inject(GgcSearchLocationService);
   private readonly mapService = inject(GgcMapService);

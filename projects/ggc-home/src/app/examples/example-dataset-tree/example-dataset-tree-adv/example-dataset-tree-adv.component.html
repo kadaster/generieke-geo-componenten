@@ -1,5 +1,6 @@
 <app-example-format
   [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
   urlTSDocs=""
   urlVoorbeelden=""
   urlChangelog=""
@@ -12,8 +13,8 @@
   urlCodeHtml="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.html"
   urlCodeTypescript="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts"
   urlCodeScss="example-dataset-tree/example-dataset-tree.component.scss"
-  urlKaartConfig="example-dataset-tree/kaartconfig.json"
-  urlTreeConfig="example-dataset-tree/treeconfig.json"
+  pathKaartConfig="example-dataset-tree/kaartconfig.json"
+  pathTreeConfig="example-dataset-tree/treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>

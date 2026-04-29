@@ -47,6 +47,7 @@ export class ExampleSnappingBasicComponent
     imageLocation:
       "code/examples/example-snapping/example-snapping-basic/example-snapping-basic.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   drawLayer = "drawLayer";
   mapIndex = "snapping";
@@ -71,6 +72,10 @@ export class ExampleSnappingBasicComponent
       })
     })
   };
+
+  constructor() {
+    super();
+  }
 
   ngOnInit(): void {
     this.snapService.stopSnap(this.mapIndex);

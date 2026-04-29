@@ -54,6 +54,7 @@ export class ExampleDatasetTreeTemplatesComponent
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];

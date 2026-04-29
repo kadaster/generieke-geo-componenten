@@ -114,6 +114,22 @@
               </button>
             </li>
           }
+          @if (treeConfigFilePath) {
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tree-json-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#tree-json"
+                type="button"
+                role="tab"
+                aria-controls="tree-json"
+                aria-selected="false"
+              >
+                Datasettree Configuration (json)
+              </button>
+            </li>
+          }
           @if (extraConfigFilePath) {
             <li class="nav-item" role="presentation">
               <button
@@ -143,7 +159,7 @@
             <div class="col-12">
               <p>
                 Open in
-                <a href="{{ baseUrlCode }}{{ urlCodeTypescript }}"
+                <a href="{{ urlCodeTypescript }}"
                   >GitHub<span
                     class="fa fa-external-link icon-suffix"
                     aria-hidden="true"
@@ -175,7 +191,7 @@
             <div class="col-12">
               <p>
                 Open in
-                <a href="{{ baseUrlCode }}{{ urlCodeHtml }}"
+                <a href="{{ urlCodeHtml }}"
                   >GitHub<span
                     class="fa fa-external-link icon-suffix"
                     aria-hidden="true"
@@ -207,7 +223,7 @@
             <div class="col-12">
               <p>
                 Open in
-                <a href="{{ baseUrlCode }}{{ urlCodeScss }}"
+                <a href="{{ urlCodeScss }}"
                   >GitHub<span
                     class="fa fa-external-link icon-suffix"
                     aria-hidden="true"
@@ -239,7 +255,7 @@
               <div class="col-12">
                 <p>
                   Open in
-                  <a href="{{ baseUrlCode }}{{ urlKaartConfig }}"
+                  <a href="{{ urlKaartConfig }}"
                     >GitHub<span
                       class="fa fa-external-link icon-suffix"
                       aria-hidden="true"
@@ -254,7 +270,33 @@
             </section>
           </div>
         }
+        @if (treeConfigFilePath) {
+          <div
+            class="tab-pane fade"
+            id="tree-json"
+            role="tabpanel"
+            aria-labelledby="tree-json-tab"
+          >
+            <section class="jsonConfig">
+              <div class="col-12">
+                <p>
+                  Open in
+                  <a href="{{ urlTreeConfig }}"
+                  >GitHub<span
+                    class="fa fa-external-link icon-suffix"
+                    aria-hidden="true"
+                  ></span
+                  ></a>
+                </p>
 
+                <pre><code
+                  [highlight]="(treeConfigFilePath | codeFromUrl | async)"
+                  language="json"
+                ></code></pre>
+              </div>
+            </section>
+          </div>
+        }
         @if (extraConfigFilePath) {
           <div
             class="tab-pane fade"
@@ -266,7 +308,7 @@
               <div class="col-12">
                 <p>
                   Open in
-                  <a href="{{ baseUrlCode }}{{ urlTreeConfig }}"
+                  <a href="{{ pathTreeConfig }}"
                     >GitHub<span
                       class="fa fa-external-link icon-suffix"
                       aria-hidden="true"

@@ -1,5 +1,6 @@
 <app-example-format
   [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
   urlTSDocs=""
   urlVoorbeelden=""
   urlChangelog=""
@@ -10,8 +11,8 @@
   urlCodeHtml="example-legend/example-legend/example-legend-zoom/example-legend-zoom.component.html"
   urlCodeTypescript="example-legend/example-legend/example-legend-zoom/example-legend-zoom.component.ts"
   urlCodeScss="example-legend/example-legend/example-legend.component.scss"
-  urlKaartConfig="example-legend/kaartconfig.json"
-  urlTreeConfig="example-legend/treeconfig.json"
+  pathKaartConfig="example-legend/kaartconfig.json"
+  pathTreeConfig="example-legend/treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>

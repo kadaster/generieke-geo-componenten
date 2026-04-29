@@ -40,7 +40,9 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location.png"
   } as ComponentInfo;
+  urlComponentModule = import.meta.url;
   // DOCS-SKIP:END
+
   readonly searchLocationOptions = computed(() => {
     return {
       alternativeSuggestionsFirst: true,
@@ -60,6 +62,10 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
 
   protected zoomToResult = signal(true);
   protected markResult = signal(true);
+
+  constructor() {
+    super();
+  }
 
   logSearchComponentEvents(searchComponentEvent: SearchComponentEvent) {
     console.log(searchComponentEvent);
