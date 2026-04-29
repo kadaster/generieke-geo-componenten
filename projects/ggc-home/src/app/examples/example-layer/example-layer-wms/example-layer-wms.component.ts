@@ -1,15 +1,16 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
-  GgcWmsLayerComponent,
-  WmsLayerOptions
+  GgcWmsLayerComponent
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -34,9 +35,15 @@ export class ExampleLayerWmsComponent {
       "code/examples/example-layer/example-layer-wms/example-layer-wms.png"
   } as ComponentInfo;
 
-  wmsLayerOptions: WmsLayerOptions = {
-    layers: ["woonplaats"],
-    url: "https://service.pdok.nl/kadaster/bag/wms/v2_0",
-    tiled: true
-  };
+  protected mapConfig: Webservice[];
+
+  private readonly httpClient = inject(HttpClient);
+
+  constructor() {
+    this.httpClient
+      .get("code/examples/example-layer/example-layer-wms/kaartconfig.json")
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+      });
+  }
 }
