@@ -1,16 +1,17 @@
-import { AfterViewInit, Component, inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
   GgcMapService,
-  GgcWmtsLayerComponent,
-  WmtsLayerOptions
+  GgcWmtsLayerComponent
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -23,7 +24,7 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-layer-wmts.component.html",
   styleUrl: "./example-layer-wmts.component.scss"
 })
-export class ExampleLayerWmtsComponent implements AfterViewInit {
+export class ExampleLayerWmtsComponent {
   readonly componentInfo: ComponentInfo = {
     route: "/layer-wmts",
     title: "Kaartlaag: WMTS",
@@ -35,14 +36,17 @@ export class ExampleLayerWmtsComponent implements AfterViewInit {
       "code/examples/example-layer/example-layer-wmts/example-layer-wmts.png"
   } as ComponentInfo;
 
-  wmtsLayerOptions: WmtsLayerOptions = {
-    layer: "Kadastralekaart",
-    url: "https://service.pdok.nl/kadaster/kadastralekaart/wmts/v5_0"
-  };
+  protected mapConfig: Webservice[];
 
+  private readonly httpClient = inject(HttpClient);
   private readonly mapService: GgcMapService = inject(GgcMapService);
 
-  ngAfterViewInit() {
-    this.mapService.zoomToCoordinate([194195, 465885], undefined, 12);
+  constructor() {
+    this.httpClient
+      .get("code/examples/example-layer/example-layer-wmts/kaartconfig.json")
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+        this.mapService.zoomToCoordinate([194195, 465885], undefined, 12);
+      });
   }
 }
