@@ -57,7 +57,6 @@ export class ExampleLayerGeojsonWfsComponent {
         "code/examples/example-layer/example-layer-geojson-wfs/kaartconfig.json"
       )
       .subscribe((data) => {
-        console.log(data);
         this.mapConfig = data as Webservice[];
       });
   }

@@ -41,7 +41,6 @@ export class ExampleLayerGeojsonComponent {
     this.httpClient
       .get("code/examples/example-layer/example-layer-geojson/kaartconfig.json")
       .subscribe((data) => {
-        console.log(data);
         this.mapConfig = data as Webservice[];
       });
   }

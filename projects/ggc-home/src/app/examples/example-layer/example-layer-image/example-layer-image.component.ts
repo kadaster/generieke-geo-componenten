@@ -46,7 +46,6 @@ export class ExampleLayerImageComponent {
     this.httpClient
       .get("code/examples/example-layer/example-layer-image/kaartconfig.json")
       .subscribe((data) => {
-        console.log(data);
         this.mapConfig = data as Webservice[];
         this.mapService.zoomToCoordinate([194195, 465985], undefined, 10);
       });
