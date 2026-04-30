@@ -21,7 +21,7 @@ export class ExampleLegendZoomComponent
   readonly componentInfo: ComponentInfo = {
     route: "/legend-zoom",
     title: "Legenda weergeven",
-    introduction: "Toon de legenda van één of meerdere kaartlagen.",
+    introduction: "Toon de legenda van één of meer kaartlagen.",
     components: [Components.GGC_LEGEND],
     theme: [Themes.LEGENDA],
     tags: [Tags.LEGEND, Tags.ZOOM],

@@ -30,8 +30,7 @@ export class ExampleDatasetSwitcherRadioButtonsComponent
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher-radio-buttons",
     title: "Dataset wisselen (radio buttons)",
-    introduction:
-      "Eén of meerdere kaartlagen verwisselen met een radio button.",
+    introduction: "Eén of meer kaartlagen verwisselen met een radio button.",
     components: [Components.GGC_DATASET_SWITCHER],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],

@@ -30,8 +30,7 @@ export class ExampleDatasetSwitcherBasicComponent
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher",
     title: "Dataset wisselen",
-    introduction:
-      "Eén of meerdere kaartlagen verwisselen met een grafische knop.",
+    introduction: "Eén of meer kaartlagen verwisselen met een grafische knop.",
     components: [Components.GGC_DATASET_SWITCHER],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],

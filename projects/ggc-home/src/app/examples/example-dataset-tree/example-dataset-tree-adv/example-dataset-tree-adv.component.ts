@@ -33,8 +33,7 @@ export class ExampleDatasetTreeAdvComponent
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-advanced",
     title: "Kaartlagen aan-/uitzetten (boomstructuur, uitgebreid)",
-    introduction:
-      "Zet kaartlagen aan of uit in een lijst met meerdere niveau's.",
+    introduction: "Zet kaartlagen aan of uit in een lijst met meer niveau's.",
     components: [Components.GGC_DATASET_TREE],
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:

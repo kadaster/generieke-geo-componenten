@@ -30,7 +30,7 @@ export class ExampleLegendDatasetTreeComponent
     route: "/legend-dataset-tree",
     title: "Legend automatisch bijwerken na kaartlaag keuze",
     introduction:
-      "Toon de legenda van één of meerdere kaartlagen. Actieve kaartlagen worden automatisch zichtbaar in de legenda.",
+      "Toon de legenda van één of meer kaartlagen. Actieve kaartlagen worden automatisch zichtbaar in de legenda.",
     components: [Components.GGC_LEGEND],
     theme: [Themes.LEGENDA],
     tags: [Tags.LEGEND, Tags.DATASET],
