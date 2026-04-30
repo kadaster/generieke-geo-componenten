@@ -8,7 +8,6 @@ import {
   Webservice
 } from "@kadaster/ggc-map";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { DecimalPipe } from "@angular/common";
 import { Components } from "../../components.enum";
@@ -25,7 +24,7 @@ import { Tags } from "../../tags.enum";
     DecimalPipe
   ],
   templateUrl: "./example-dataset-tree-basic-list.component.html",
-  styleUrl: "./../example-dataset-tree.component.scss"
+  styleUrl: "./example-dataset-tree-basic-list.component.scss"
 })
 export class ExampleDatasetTreeBasicListComponent
   extends ExampleFormatComponent
@@ -42,7 +41,9 @@ export class ExampleDatasetTreeBasicListComponent
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetTreeComponent.html`;
+  urlComponentModule =
+    "example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component.ts";
   // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
@@ -51,7 +52,6 @@ export class ExampleDatasetTreeBasicListComponent
   protected resolution: number | undefined;
   private readonly mapEventsService = inject(GgcMapEventsService);
   private readonly mapService = inject(GgcMapService);
-  private readonly httpClient = inject(HttpClient);
 
   ngOnInit() {
     this.httpClient

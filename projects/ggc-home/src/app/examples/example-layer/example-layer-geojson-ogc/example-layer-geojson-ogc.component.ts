@@ -11,7 +11,6 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -40,12 +39,13 @@ export class ExampleLayerGeojsonOgcComponent
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
   protected mapIndex = "GeoJsonOgcExample";
 
-  private readonly httpClient = inject(HttpClient);
   private readonly mapService = inject(GgcMapService);
 
   ngOnInit() {

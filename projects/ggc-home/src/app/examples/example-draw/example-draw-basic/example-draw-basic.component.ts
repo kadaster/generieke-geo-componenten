@@ -8,7 +8,6 @@ import {
 } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
-import { HttpClient } from "@angular/common/http";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
@@ -34,13 +33,15 @@ export class ExampleDrawBasicComponent
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-draw/example-draw-basic/example-draw-basic.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeDrawType = signal<MapComponentDrawTypes | undefined>(undefined);
 
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
-  private readonly httpClient = inject(HttpClient);
+
   private readonly drawService = inject(GgcDrawService);
   private readonly drawLayer = "draw";
 

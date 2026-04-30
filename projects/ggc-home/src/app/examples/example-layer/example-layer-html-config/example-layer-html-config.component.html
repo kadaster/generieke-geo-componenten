@@ -1,14 +1,6 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-layer-image_src_lib_layer-image_ggc-layer-image.component.GgcSearchLocationComponent.html"
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-layer/example-layer-html-config/example-layer-html-config.component.html'"
-  [codeTypescriptPath]="'code/examples/example-layer/example-layer-html-config/example-layer-html-config.component.ts'"
-  [codeScssPath]="'code/examples/example-layer/example-layer-html-config/example-layer-html-config.component.scss'"
-  urlCodeHtml="example-snapping/example-layer-html-config/example-layer-html-config.component.html"
-  urlCodeTypescript="example-snapping/example-layer-html-config/example-layer-html-config.component.ts"
-  urlCodeScss="example-snapping/example-layer-html-config/example-layer-html-config.component.scss"
+  [pathModule]="urlComponentModule"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>

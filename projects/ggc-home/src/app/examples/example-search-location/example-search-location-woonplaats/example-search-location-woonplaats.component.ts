@@ -44,7 +44,9 @@ export class ExampleSearchLocationWoonplaatsComponent
     imageLocation:
       "code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
   // DOCS-SKIP:END
 
   searchLocationOptions = {

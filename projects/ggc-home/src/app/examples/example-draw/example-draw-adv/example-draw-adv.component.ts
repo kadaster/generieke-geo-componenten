@@ -13,7 +13,6 @@ import Feature from "ol/Feature";
 import { Geometry, Polygon } from "ol/geom";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
-import { HttpClient } from "@angular/common/http";
 import { Tags } from "../../tags.enum";
 
 @Component({
@@ -39,6 +38,7 @@ export class ExampleDrawAdvComponent
   } as ComponentInfo;
   urlComponentModule =
     "example-draw/example-draw-adv/example-draw-adv.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   readonly maxPointsExample = 4;
@@ -58,7 +58,7 @@ export class ExampleDrawAdvComponent
 
   private readonly drawLayer = "draw";
   private readonly drawService = inject(GgcDrawService);
-  private readonly httpClient = inject(HttpClient);
+
   private readonly zuidNederlandBbox = new Polygon([
     [
       [-65659.09753254626, 301541.95029904693],

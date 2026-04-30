@@ -1,18 +1,7 @@
 <app-example-format
   [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
-  urlTSDocs=""
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-legend/example-legend-zoom/example-legend-zoom.component.html'"
-  [codeTypescriptPath]="'code/examples/example-legend/example-legend-zoom/example-legend-zoom.component.ts'"
-  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
-  [kaartConfigFilePath]="'code/examples/example-legend/example-legend-zoom/kaartconfig.json'"
-  urlCodeHtml="example-legend/example-legend/example-legend-zoom/example-legend-zoom.component.html"
-  urlCodeTypescript="example-legend/example-legend/example-legend-zoom/example-legend-zoom.component.ts"
-  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
-  pathKaartConfig="example-legend/kaartconfig.json"
-  pathTreeConfig="example-legend/treeconfig.json"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>

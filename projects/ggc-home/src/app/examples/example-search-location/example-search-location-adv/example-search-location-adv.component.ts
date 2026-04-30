@@ -40,7 +40,9 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-search-location/example-search-location-adv/example-search-location-adv.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
   // DOCS-SKIP:END
 
   readonly searchLocationOptions = computed(() => {

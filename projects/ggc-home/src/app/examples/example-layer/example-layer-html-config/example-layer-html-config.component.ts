@@ -39,6 +39,8 @@ export class ExampleLayerHtmlConfig implements OnInit {
     imageLocation:
       "code/examples/example-layer/example-layer-html-config/example-layer-html-config.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-layer/example-layer-html-config/example-layer-html-config.component.ts";
   // DOCS-SKIP:END
   wandelrouteLayerOptions: WmsLayerOptions = {
     layers: ["landelijke-wandelroutes", "streekpaden"],

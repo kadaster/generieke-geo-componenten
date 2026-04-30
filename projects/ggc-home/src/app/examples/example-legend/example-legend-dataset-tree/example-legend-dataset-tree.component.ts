@@ -1,9 +1,8 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent } from "@kadaster/ggc-legend";
 import { ComponentInfo } from "../../component-info.model";
-import { HttpClient } from "@angular/common/http";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -20,7 +19,7 @@ import { RouterLink } from "@angular/router";
     RouterLink
   ],
   templateUrl: "./example-legend-dataset-tree.component.html",
-  styleUrl: "../example-legend.component.scss"
+  styleUrl: "./example-legend-dataset-tree.component.scss"
 })
 export class ExampleLegendDatasetTreeComponent
   extends ExampleFormatComponent
@@ -38,13 +37,13 @@ export class ExampleLegendDatasetTreeComponent
     imageLocation:
       "code/examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;
   // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
-
-  private readonly httpClient = inject(HttpClient);
 
   ngOnInit() {
     this.httpClient

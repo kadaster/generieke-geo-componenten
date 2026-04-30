@@ -7,7 +7,6 @@ import {
   Webservice
 } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -32,14 +31,16 @@ export class ExampleMeasure extends ExampleFormatComponent implements OnInit {
     imageLocation:
       "code/examples/example-measure/example-measure/example-measure.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-measure/example-measure/example-measure.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   measuring = signal<MapComponentDrawTypes | undefined>(undefined);
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
 
   protected readonly mapIndex = "measure";
-  private readonly httpClient = inject(HttpClient);
+
   private readonly drawService = inject(GgcDrawService);
   private readonly measureLayer = "measure";
 

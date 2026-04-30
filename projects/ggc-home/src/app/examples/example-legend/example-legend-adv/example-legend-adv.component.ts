@@ -3,7 +3,6 @@ import { ExampleFormatComponent } from "../../example-format/example-format.comp
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent, GgcLegendService } from "@kadaster/ggc-legend";
 import { ComponentInfo } from "../../component-info.model";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
@@ -17,7 +16,7 @@ import { Tags } from "../../tags.enum";
     FormsModule
   ],
   templateUrl: "./example-legend-adv.component.html",
-  styleUrl: "../example-legend.component.scss"
+  styleUrl: "./example-legend-adv.component.scss"
 })
 export class ExampleLegendAdvComponent
   extends ExampleFormatComponent
@@ -33,7 +32,9 @@ export class ExampleLegendAdvComponent
     imageLocation:
       "code/examples/example-legend/example-legend-basic/example-legend-basic.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-legend/example-legend-adv/example-legend-adv.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;
   // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
@@ -45,7 +46,6 @@ export class ExampleLegendAdvComponent
   protected showEmptyLegendMessage = true;
   protected emptyLegendMessage = "Er is geen legenda voor deze laag";
 
-  private readonly httpClient = inject(HttpClient);
   private readonly legendService = inject(GgcLegendService);
 
   ngOnInit() {
