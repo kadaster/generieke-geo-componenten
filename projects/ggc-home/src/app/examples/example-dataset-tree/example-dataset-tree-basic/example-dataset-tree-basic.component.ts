@@ -1,15 +1,9 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
-import {
-  GgcMapComponent,
-  GgcMapEventsService,
-  GgcMapService,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapEventsService, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { FormsModule } from "@angular/forms";
-import { DecimalPipe } from "@angular/common";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
@@ -20,8 +14,7 @@ import { Tags } from "../../tags.enum";
     GgcMapComponent,
     GgcDatasetTreeComponent,
     FormsModule,
-    ExampleFormatComponent,
-    DecimalPipe
+    ExampleFormatComponent
   ],
   templateUrl: "./example-dataset-tree-basic.component.html",
   styleUrl: "./example-dataset-tree-basic.component.scss"
