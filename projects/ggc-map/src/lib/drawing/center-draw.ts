@@ -27,7 +27,6 @@ export class CenterDraw extends Interaction {
   private readonly overlay: VectorLayer | undefined;
   // Tijdelijke kaartlaag voor de crosshair
   private crossHairOverlay: VectorLayer | undefined;
-  private crossHairCenterOverlay: VectorLayer | undefined;
   private readonly targetSource: VectorSource | undefined;
   private type: GeometryType;
   private previousCenter: Coordinate | undefined;
@@ -54,15 +53,6 @@ export class CenterDraw extends Interaction {
       updateWhileInteracting: true,
       zIndex: 2
     });
-
-    this.crossHairCenterOverlay = new VectorLayer({
-      source: new VectorSource({
-        useSpatialIndex: false
-      }),
-      // style,
-      updateWhileInteracting: true,
-      zIndex: 3
-    });
   }
 
   setMap(map: OlMap | null): void {
@@ -71,18 +61,14 @@ export class CenterDraw extends Interaction {
       this.registerListeners(map);
       this.overlay!.setMap(map);
       this.crossHairOverlay!.setMap(map);
-      this.crossHairCenterOverlay!.setMap(map);
       const center = map.getView().getCenter();
       if (center) {
         const crossHairSource = this.crossHairOverlay!.getSource()!;
-        const crossHairCenterSource = this.crossHairCenterOverlay!.getSource()!;
         this.centerPoint = new Point(center);
         crossHairSource.addFeature(new Feature(this.centerPoint));
-        crossHairCenterSource.addFeature(new Feature(this.centerPoint));
       }
     } else {
       this.crossHairOverlay!.setMap(map);
-      this.crossHairCenterOverlay!.setMap(map);
       this.overlay!.setMap(map);
       unlistenByKey(this.changeCenterListener);
     }
