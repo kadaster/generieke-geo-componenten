@@ -125,26 +125,27 @@ export class CenterModify extends CenterBase {
     const feature = featureCoordinate.feature;
     const selectedCoordinate = featureCoordinate.coordinate;
 
-    const isSame = (a: Coordinate, b: Coordinate, tolerance = 1e-8): boolean =>
-      Math.abs(a[0] - b[0]) < tolerance && Math.abs(a[1] - b[1]) < tolerance;
-
     if (feature.getGeometry() instanceof Point) {
       this.targetSource.removeFeature(feature);
+      this.modifyOverlay.getSource()?.clear();
+      this.highlightedFeature = undefined;
     } else if (feature.getGeometry() instanceof LineString) {
       const lineString = feature.getGeometry() as LineString;
       const originalCoordinatesLineString = lineString.getCoordinates();
       if (
         originalCoordinatesLineString.some((coordinate) =>
-          isSame(coordinate, selectedCoordinate)
+          coordinatesAreEqual(coordinate, selectedCoordinate)
         )
       ) {
         const filteredCoordinates = originalCoordinatesLineString.filter(
-          (coordinate) => !isSame(coordinate, selectedCoordinate)
+          (coordinate) => !coordinatesAreEqual(coordinate, selectedCoordinate)
         );
-        if (filteredCoordinates.length > 0) {
+        if (filteredCoordinates.length > 1) {
           lineString.setCoordinates(filteredCoordinates);
         } else {
           this.targetSource.removeFeature(feature);
+          this.modifyOverlay.getSource()?.clear();
+          this.highlightedFeature = undefined;
         }
       }
     } else if (feature.getGeometry() instanceof Polygon) {
@@ -152,27 +153,30 @@ export class CenterModify extends CenterBase {
       const originalCoordinatesPolygon = polygon.getCoordinates()[0];
       if (
         originalCoordinatesPolygon.some((coordinate) =>
-          isSame(coordinate, selectedCoordinate)
+          coordinatesAreEqual(coordinate, selectedCoordinate)
         )
       ) {
         const filteredCoordinates = originalCoordinatesPolygon.filter(
-          (coordinate) => !isSame(coordinate, selectedCoordinate)
+          (coordinate) => !coordinatesAreEqual(coordinate, selectedCoordinate)
         );
-        if (filteredCoordinates.length > 0) {
+        if (filteredCoordinates.length > 1) {
           const first = filteredCoordinates[0];
           const last = filteredCoordinates.at(-1);
 
-          if (last && !isSame(first, last)) {
+          if (last && !coordinatesAreEqual(first, last)) {
             filteredCoordinates.push([...first]);
           }
 
           polygon.setCoordinates([filteredCoordinates]);
         } else {
           this.targetSource.removeFeature(feature);
+          this.modifyOverlay.getSource()?.clear();
+          this.highlightedFeature = undefined;
         }
       }
     }
-    this.updateCenterPoint();
+    this.placeSelectedPoint();
+    this.getNewHightlightedFeature();
   }
 
   cleanup() {

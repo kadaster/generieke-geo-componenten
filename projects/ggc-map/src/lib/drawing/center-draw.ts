@@ -26,10 +26,10 @@ export class CenterDraw extends Interaction {
   // Tijdelijke kaartlaag voor de actieve tekening
   private readonly overlay: VectorLayer | undefined;
   // Tijdelijke kaartlaag voor de crosshair
-  private readonly crossHairOverlay: VectorLayer | undefined;
-  private readonly crossHairCenterOverlay: VectorLayer | undefined;
+  private crossHairOverlay: VectorLayer | undefined;
+  private crossHairCenterOverlay: VectorLayer | undefined;
   private readonly targetSource: VectorSource | undefined;
-  private readonly type: GeometryType;
+  private type: GeometryType;
   private previousCenter: Coordinate | undefined;
 
   constructor(options: CenterDrawOptions) {
