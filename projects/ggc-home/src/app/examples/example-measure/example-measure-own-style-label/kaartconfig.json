@@ -14,41 +14,5 @@
         "zIndex": -10
       }
     ]
-  },
-  {
-    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
-    "type": "wms",
-    "layers": [
-      {
-        "layerId": "nederland",
-        "title": "Landsgrens (geen legenda geconfigureerd)",
-        "layerName": "landgebied",
-        "legendIndex": 4,
-        "zIndex": 10
-      }
-    ]
-  },
-  {
-    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
-    "type": "wms",
-    "title": "Bestuurlijke gebieden",
-    "layers": [
-      {
-        "layerId": "gemeenten",
-        "layerName": "gemeentegebied",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Gemeentegebied/Gemeentegebied.png"
-        },
-        "legendIndex": 3
-      },
-      {
-        "layerId": "provincies",
-        "layerName": "provinciegebied",
-        "legendIndex": 2,
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Provinciegebied/Provinciegebied.png"
-        }
-      }
-    ]
   }
 ]

@@ -49,6 +49,15 @@ interface GroupedCards {
 export class ExampleIndexComponent {
   protected searchTerm = "";
   protected selectedThemes = new Set<string>();
+  protected themeOrder = [
+    Themes.KAARTLAGEN,
+    Themes.KAARTBEDIENING,
+    Themes.INFORMATIE_OP_KAART,
+    Themes.LEGENDA,
+    Themes.ZOEKEN,
+    Themes.KAARTWEERGAVE_KIEZEN,
+    Themes.WERKBALK
+  ];
   protected selectedComponents = new Set<string>();
   protected selectedTags = new Set<string>();
   protected cards: ComponentInfo[] = [
@@ -90,8 +99,7 @@ export class ExampleIndexComponent {
       }
     }
 
-    const fixedOrder = [""];
-    return this.sortArrayWithFixedOrder(Array.from(set), fixedOrder);
+    return this.sortArrayWithFixedOrder(Array.from(set), this.themeOrder);
   }
 
   protected get availableComponents(): string[] {
@@ -180,7 +188,11 @@ export class ExampleIndexComponent {
       Object.groupBy(this.filteredCards(), (card) => card.theme.toString())
     )
       .filter(([, value]) => value)
-      .sort(([a], [b]) => a.localeCompare(b))
+      .sort(
+        ([a], [b]) =>
+          this.themeOrder.indexOf(a as Themes) -
+          this.themeOrder.indexOf(b as Themes)
+      )
       .map(([key, value]) => ({
         theme: key,
         cards: value!.slice().sort((c1, c2) => c1.title.localeCompare(c2.title))
