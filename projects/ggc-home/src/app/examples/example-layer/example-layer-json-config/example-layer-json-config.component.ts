@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcLayerService,
   GgcMapComponent,
@@ -11,6 +11,7 @@ import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { Webservice } from "../../../../../../ggc-cesium/src/lib/model/interfaces";
 
 @Component({
   selector: "app-example-search-location",
@@ -18,7 +19,10 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-layer-json-config.component.html",
   styleUrl: "./example-layer-json-config.component.scss"
 })
-export class ExampleLayerJsonConfig {
+export class ExampleLayerJsonConfig
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-json-config",
@@ -33,64 +37,23 @@ export class ExampleLayerJsonConfig {
   urlComponentModule =
     "example-layer/example-layer-json-config/example-layer-json-config.component.ts";
   // DOCS-SKIP:END
-  readonly kaartConfig = [
-    {
-      url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
-      type: "wmts",
-      layers: [
-        {
-          layerId: "brtAchtergrondkaartStandaard",
-          title: "BRT achtergrond kaart Standaard (WMTS)",
-          layerName: "standaard",
-          visible: true,
-          zIndex: 1
-        }
-      ]
-    },
-    {
-      type: "wms",
-      url: "https://service.pdok.nl/rvo/natura2000/wms/v1_0",
-      layers: [
-        {
-          layerId: "natura2000",
-          title: "Natura 2000",
-          visible: true,
-          layerName: "natura2000",
-          zIndex: 10,
-          opacity: 0.75,
-          tiled: true
-        }
-      ]
-    },
-    {
-      type: "wms",
-      url: "https://service.pdok.nl/wandelnet/landelijke-wandelroutes/wms/v1_0",
-      layers: [
-        {
-          layerId: "landelijke-wandelroutes",
-          title: "landelijke-wandelroutes",
-          visible: true,
-          layerName: "landelijke-wandelroutes",
-          zIndex: 20,
-          tiled: true
-        },
-        {
-          layerId: "streekpaden",
-          title: "streekpaden",
-          visible: true,
-          layerName: "streekpaden",
-          zIndex: 20,
-          tiled: true
-        }
-      ]
-    }
-  ];
-
   selectedOpacity = "75";
   selectedZIndex = "20";
 
+  protected mapConfig: Webservice[];
+
   private readonly layerService = inject(GgcLayerService);
   private readonly mapService = inject(GgcMapService);
+
+  ngOnInit() {
+    this.httpClient
+      .get(
+        "code/examples/example-layer/example-layer-json-config/kaartconfig.json"
+      )
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+      });
+  }
 
   protected toggleNatura2000Visibility() {
     this.layerService.toggleVisibility("natura2000");
