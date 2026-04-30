@@ -30,6 +30,8 @@ export class ExampleLayerJsonConfig {
     imageLocation:
       "code/examples/example-layer/example-layer-json-config/example-layer-json-config.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-layer/example-layer-json-config/example-layer-json-config.component.ts";
   // DOCS-SKIP:END
   readonly kaartConfig = [
     {

@@ -12,7 +12,6 @@ import { Components } from "../../components.enum";
 import GeoJSON from "ol/format/GeoJSON";
 import * as polygonExamples from "./ExamplePolygons.json";
 import { altKeyOnly, always, singleClick } from "ol/events/condition";
-import { HttpClient } from "@angular/common/http";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import MapBrowserEvent from "ol/MapBrowserEvent";
@@ -44,14 +43,16 @@ export class ExampleDrawEditBasicComponent
     imageLocation:
       "code/examples/example-draw/example-draw-edit-basic/example-draw-edit-basic.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-draw/example-draw-edit-basic/example-draw-edit-basic.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeEditType = signal<EditType>(EditType.MOVE);
 
   protected readonly editType = EditType;
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
-  private readonly httpClient = inject(HttpClient);
+
   private readonly drawService = inject(GgcDrawService);
   private readonly editLayer = "edit";
 

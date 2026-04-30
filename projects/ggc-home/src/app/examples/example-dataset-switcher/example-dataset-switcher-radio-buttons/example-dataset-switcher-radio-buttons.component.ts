@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
@@ -8,7 +8,6 @@ import {
   Theme,
   GgcDatasetSwitcherComponent
 } from "@kadaster/ggc-dataset-tree";
-import { HttpClient } from "@angular/common/http";
 import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
 import { Themes } from "../../themes.enum";
@@ -39,7 +38,9 @@ export class ExampleDatasetSwitcherRadioButtonsComponent
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetSwitcherComponent.html`;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
   datasetSwitcherConfig: Theme[];
@@ -71,7 +72,6 @@ export class ExampleDatasetSwitcherRadioButtonsComponent
         "code/examples/example-dataset-switcher/thumbnails/luchtfoto.png"
     }
   ];
-  private readonly httpClient = inject(HttpClient);
 
   constructor() {
     super();

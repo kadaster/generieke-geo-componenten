@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
@@ -10,7 +10,6 @@ import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
-import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -39,11 +38,15 @@ export class ExampleLayerWmsComponent
     imageLocation:
       "code/examples/example-layer/example-layer-wms/example-layer-wms.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-layer/example-layer-wms/example-layer-wms.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.WmsLayerOptions.html`;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
 
-  private readonly httpClient = inject(HttpClient);
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     this.httpClient

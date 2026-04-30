@@ -7,7 +7,6 @@ import {
   Webservice
 } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Fill, Style, Text } from "ol/style";
@@ -35,7 +34,9 @@ export class ExampleMeasureOwnStyleLabel
     imageLocation:
       "code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-measure/example-measure-own-style-label/example-measure-own-style-label.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
   segmentLengthLabelStyle = new Style({
     text: new Text({
@@ -65,7 +66,6 @@ export class ExampleMeasureOwnStyleLabel
   mapConfig: Webservice[];
   measuring = model(false);
 
-  private readonly httpClient = inject(HttpClient);
   private readonly drawService = inject(GgcDrawService);
   private readonly measureLayer = "measure";
 

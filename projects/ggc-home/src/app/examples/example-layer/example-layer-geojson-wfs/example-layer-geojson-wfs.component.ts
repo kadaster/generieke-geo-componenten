@@ -14,7 +14,6 @@ import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
-import { HttpClient } from "@angular/common/http";
 import VectorLayer from "ol/layer/Vector";
 
 @Component({
@@ -44,17 +43,18 @@ export class ExampleLayerGeojsonWfsComponent
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
-  protected mapIndex = "geoJsonWfs";
 
-  private customStyle: StyleLike = new Style({
+  private readonly customStyle: StyleLike = new Style({
     fill: new Fill({ color: [43, 196, 0, 0.3] }),
     stroke: new Stroke({ color: [245, 66, 66], width: 3 })
   });
   private useCustomStyle = false;
-  private readonly httpClient = inject(HttpClient);
+
   private readonly mapService = inject(GgcMapService);
 
   ngOnInit() {
@@ -70,8 +70,7 @@ export class ExampleLayerGeojsonWfsComponent
   protected switchStyle() {
     this.useCustomStyle = !this.useCustomStyle;
     const geoJsonLayer = this.mapService.getLayer(
-      "gemeentegebied",
-      this.mapIndex
+      "gemeentegebied"
     ) as VectorLayer;
     geoJsonLayer.setStyle(this.useCustomStyle ? this.customStyle : undefined);
   }

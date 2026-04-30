@@ -1,20 +1,11 @@
 <app-example-format
   [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
-  urlTSDocs=""
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.html'"
-  [codeTypescriptPath]="'code/examples/example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts'"
-  [codeScssPath]="'code/examples/example-dataset-tree/example-dataset-tree.component.scss'"
-  [kaartConfigFilePath]="'code/examples/example-dataset-tree/kaartconfig.json'"
-  [extraConfigFilePath]="'code/examples/example-dataset-tree/treeconfig.json'"
+  [urlTSDocs]="tsDocsUrl"
+  [pathCodeScss]="'example-dataset-tree/example-dataset-tree.component.scss'"
   [extraConfigLabel]="`DatasetTree Configuration (json)`"
-  urlCodeHtml="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.html"
-  urlCodeTypescript="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts"
-  urlCodeScss="example-dataset-tree/example-dataset-tree.component.scss"
   pathKaartConfig="example-dataset-tree/kaartconfig.json"
-  pathTreeConfig="example-dataset-tree/treeconfig.json"
+  pathExtraConfig="example-dataset-tree/treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>

@@ -48,7 +48,9 @@ export class ExampleToolbar extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-toolbar/example-toolbar/example-toolbar.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-toolbar/example-toolbar/example-toolbar.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-toolbar_src_public-api.GgcToolbarComponent.html`;
   // DOCS-SKIP:END
   protected measureActive = false;
   protected drawActive = false;

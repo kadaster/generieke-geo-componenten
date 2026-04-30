@@ -11,7 +11,6 @@ import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
-import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-search-location",
@@ -39,11 +38,12 @@ export class ExampleLayerImageComponent
     imageLocation:
       "code/examples/example-layer/example-layer-image/example-layer-image.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  urlComponentModule =
+    "example-layer/example-layer-image/example-layer-image.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.ImageLayerOptions.html`;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
 
-  private readonly httpClient = inject(HttpClient);
   private readonly mapService: GgcMapService = inject(GgcMapService);
 
   ngOnInit() {

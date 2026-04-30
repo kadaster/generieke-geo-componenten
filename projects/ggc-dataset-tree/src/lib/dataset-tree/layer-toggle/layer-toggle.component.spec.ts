@@ -91,7 +91,7 @@ describe("LayerToggleComponent", () => {
     });
 
     expect(component["title"]).toBe("titleNew");
-    expect(component["visible"]).toBe(true);
+    expect(component["visible"]()).toBe(true);
   });
 
   it("should not update its values on layerchanged event if this is not the layer", () => {

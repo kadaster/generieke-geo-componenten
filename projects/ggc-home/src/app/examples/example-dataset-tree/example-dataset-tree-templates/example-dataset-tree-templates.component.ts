@@ -16,7 +16,6 @@ import {
   LayerLabelTemplateDirective,
   Theme
 } from "@kadaster/ggc-dataset-tree";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { DecimalPipe } from "@angular/common";
 import { ViewerType } from "@kadaster/ggc-models";
@@ -54,7 +53,9 @@ export class ExampleDatasetTreeTemplatesComponent
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.png"
   } as ComponentInfo;
-  urlComponentModule = import.meta.url;
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetTreeComponent.html`;
+  urlComponentModule =
+    "example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts";
   // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
@@ -64,7 +65,7 @@ export class ExampleDatasetTreeTemplatesComponent
   private readonly mapEventsService = inject(GgcMapEventsService);
   private readonly mapService = inject(GgcMapService);
   private readonly layerService = inject(GgcLayerService);
-  private readonly httpClient = inject(HttpClient);
+
   private readonly connectService = inject(DatasetTreeMapConnectService);
 
   private readonly datasetTypeCache = new Map<string, string>();
