@@ -48,7 +48,6 @@ export class ExampleLayerGeojsonWfsComponent
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
-  protected mapIndex = "geoJsonWfs";
 
   private readonly customStyle: StyleLike = new Style({
     fill: new Fill({ color: [43, 196, 0, 0.3] }),
@@ -71,8 +70,7 @@ export class ExampleLayerGeojsonWfsComponent
   protected switchStyle() {
     this.useCustomStyle = !this.useCustomStyle;
     const geoJsonLayer = this.mapService.getLayer(
-      "gemeentegebied",
-      this.mapIndex
+      "gemeentegebied"
     ) as VectorLayer;
     geoJsonLayer.setStyle(this.useCustomStyle ? this.customStyle : undefined);
   }
