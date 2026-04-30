@@ -38,20 +38,20 @@
     "layers": [
       {
         "layerId": "landsgrens",
-        "title": "Landsgrens (minResolution: 107)",
+        "title": "Landsgrens",
         "layerName": "landgebied",
         "minResolution": 107
       },
       {
         "layerId": "provincies",
-        "title": "Provincies (minResolution: 53.76, maxResolution: 216)",
+        "title": "Provincies",
         "layerName": "provinciegebied",
         "maxResolution": 216,
         "minResolution": 53.76
       },
       {
         "layerId": "gemeenten",
-        "title": "Gemeenten (maxResolution: 107.52)",
+        "title": "Gemeenten",
         "layerName": "gemeentegebied",
         "maxResolution": 107.52,
         "visible": true
@@ -76,7 +76,7 @@
     "layers": [
       {
         "layerId": "vectortile-bgt",
-        "title": "Basisregistratie Grootschalige Topografie (OGC API Tiles (minResolution: 0.42, maxResolution: 0.84))",
+        "title": "Basisregistratie Grootschalige Topografie (OGC API Tiles)",
         "minResolution": 0.42,
         "maxResolution": 0.84,
         "zIndex": 10,

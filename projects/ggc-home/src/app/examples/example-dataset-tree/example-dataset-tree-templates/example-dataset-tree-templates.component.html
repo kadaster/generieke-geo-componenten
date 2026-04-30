@@ -86,12 +86,21 @@
                 <span class="layer-label">{{ getTitle(value.layerId) }}</span>
               } @else {
                 <span
-                  (keydown)="zoomToVisible(value.layerId)"
-                  (click)="zoomToVisible(value.layerId)"
+                  role="button"
                   tabindex="0"
                   class="layer-label-inactive"
                   title="Zoom naar laag resolutie"
-                  >{{ getTitle(value.layerId) }}</span
+                  [attr.aria-label]="
+                    'Zoom naar kaartniveau waarop ' +
+                    value.layerId +
+                    ' zichtbaar wordt'
+                  "
+                  (click)="zoomToVisible(value.layerId)"
+                  (keydown.enter)="zoomToVisible(value.layerId)"
+                  (keydown.space)="
+                    $event.preventDefault(); zoomToVisible(value.layerId)
+                  "
+                  >{{ getTitle(value.layerId) }} (zoom naar laag)</span
                 >
               }
             </ng-template>
@@ -104,7 +113,6 @@
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
-        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
       </div>
     </div>
     <p></p>
