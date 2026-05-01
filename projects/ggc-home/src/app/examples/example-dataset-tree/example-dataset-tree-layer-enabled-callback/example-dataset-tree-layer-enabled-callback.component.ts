@@ -15,7 +15,6 @@ import {
   Theme
 } from "@kadaster/ggc-dataset-tree";
 import { FormsModule } from "@angular/forms";
-import { DecimalPipe } from "@angular/common";
 import { ViewerType } from "@kadaster/ggc-models";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -27,8 +26,7 @@ import { Tags } from "../../tags.enum";
     GgcMapComponent,
     GgcDatasetTreeComponent,
     FormsModule,
-    ExampleFormatComponent,
-    DecimalPipe
+    ExampleFormatComponent
   ],
   templateUrl: "./example-dataset-tree-layer-enabled-callback.component.html",
   styleUrl: "./example-dataset-tree-layer-enabled-callback.component.scss"

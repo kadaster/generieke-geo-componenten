@@ -1,8 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  GgcMapComponent,
-  GgcVectorTileLayerComponent
-} from "@kadaster/ggc-map";
+import { GgcMapComponent } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -12,11 +9,7 @@ import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
 
 @Component({
   selector: "app-example-search-location",
-  imports: [
-    GgcMapComponent,
-    ExampleFormatComponent,
-    GgcVectorTileLayerComponent
-  ],
+  imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-vector-tile.component.html",
   styleUrl: "./example-layer-vector-tile.component.scss"
 })

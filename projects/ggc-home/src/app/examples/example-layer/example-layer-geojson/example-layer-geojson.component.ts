@@ -1,9 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  GgcLayerBrtAchtergrondkaartComponent,
-  GgcMapComponent,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -12,11 +8,7 @@ import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-search-location",
-  imports: [
-    GgcMapComponent,
-    ExampleFormatComponent,
-    GgcLayerBrtAchtergrondkaartComponent
-  ],
+  imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-geojson.component.html",
   styleUrl: "./example-layer-geojson.component.scss"
 })

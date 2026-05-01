@@ -9,7 +9,6 @@ import {
 } from "@kadaster/ggc-map";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { FormsModule } from "@angular/forms";
-import { DecimalPipe } from "@angular/common";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
@@ -20,8 +19,7 @@ import { Tags } from "../../tags.enum";
     GgcMapComponent,
     GgcDatasetTreeComponent,
     FormsModule,
-    ExampleFormatComponent,
-    DecimalPipe
+    ExampleFormatComponent
   ],
   templateUrl: "./example-dataset-tree-basic-list.component.html",
   styleUrl: "./example-dataset-tree-basic-list.component.scss"

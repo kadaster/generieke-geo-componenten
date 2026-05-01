@@ -1,10 +1,5 @@
 import { Component, inject, OnInit } from "@angular/core";
-import {
-  GgcLayerBrtAchtergrondkaartComponent,
-  GgcMapComponent,
-  GgcMapService,
-  GgcWmtsLayerComponent
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapService } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -14,12 +9,7 @@ import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
 
 @Component({
   selector: "app-example-search-location",
-  imports: [
-    GgcMapComponent,
-    ExampleFormatComponent,
-    GgcLayerBrtAchtergrondkaartComponent,
-    GgcWmtsLayerComponent
-  ],
+  imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-wmts.component.html",
   styleUrl: "./example-layer-wmts.component.scss"
 })
