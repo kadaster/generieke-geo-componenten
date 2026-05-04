@@ -119,7 +119,7 @@ describe("LayerToggleComponent", () => {
 
     zoomend$.next(new MapEvent("type", new OlMap()));
 
-    expect(component["enabled"]).toBe(true);
+    expect(component["enabled"]()).toBe(true);
   });
 
   it("should send an event on click", async () => {
@@ -145,7 +145,7 @@ describe("LayerToggleComponent", () => {
 
     await (component as any).updateEnabled();
 
-    expect(component["enabled"]).toBe(true);
+    expect(component["enabled"]()).toBe(true);
   });
 
   it("updateEnabled: should set enabled to computedEnabled when no callback is provided", async () => {
@@ -158,7 +158,7 @@ describe("LayerToggleComponent", () => {
 
     await (component as any).updateEnabled();
 
-    expect(component["enabled"]).toBe(false);
+    expect(component["enabled"]()).toBe(false);
   });
 
   it("updateEnabled: should override computedEnabled when callback returns boolean", async () => {
@@ -178,7 +178,7 @@ describe("LayerToggleComponent", () => {
       viewerType: component.viewerType,
       isEnabled: true
     });
-    expect(component["enabled"]).toBe(false);
+    expect(component["enabled"]()).toBe(false);
   });
 
   it("updateEnabled: should not override computedEnabled when callback does not return a boolean", async () => {
@@ -190,6 +190,6 @@ describe("LayerToggleComponent", () => {
 
     await (component as any).updateEnabled();
 
-    expect(component["enabled"]).toBe(false);
+    expect(component["enabled"]()).toBe(false);
   });
 });
