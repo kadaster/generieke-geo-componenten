@@ -48,22 +48,12 @@
         </div>
         <div class="legend-container">
           <b>Legenda</b>
-          <ggc-legend
-            [mapIndex]="mapIndex"
-            [alwaysEnableLegends]="alwaysEnableLegends()"
-            [collapsable]="true"
-            [defaultExpanded]="true"
-          ></ggc-legend>
+          <ggc-legend></ggc-legend>
         </div>
       </div>
       <div class="col-md-6 col-sm-10">
         <div class="map-container">
-          <ggc-map
-            [webServices]="mapConfig"
-            [mapIndex]="mapIndex"
-            [maxZoomlevel]="16"
-            [minZoomlevel]="3"
-          ></ggc-map>
+          <ggc-map [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->

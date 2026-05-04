@@ -70,12 +70,16 @@ export class ExampleDatasetTreeTemplatesComponent
 
   ngOnInit() {
     this.httpClient
-      .get("code/examples/example-dataset-tree/kaartconfig.json")
+      .get(
+        "code/examples/example-dataset-tree/example-dataset-tree-templates/kaartconfig.json"
+      )
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
     this.httpClient
-      .get("code/examples/example-dataset-tree/treeconfig.json")
+      .get(
+        "code/examples/example-dataset-tree/example-dataset-tree-templates/treeconfig.json"
+      )
       .subscribe((data) => {
         this.datasetTreeConfig = data as Theme[];
       });

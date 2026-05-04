@@ -40,12 +40,15 @@
         "layerId": "landsgrens",
         "title": "Landsgrens",
         "layerName": "landgebied",
+        "minResolution": 107,
         "visible": false
       },
       {
         "layerId": "provincies",
         "title": "Provincies",
         "layerName": "provinciegebied",
+        "maxResolution": 216,
+        "minResolution": 53.76,
         "visible": false
       },
       {
