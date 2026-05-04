@@ -159,7 +159,7 @@ export class CenterModify extends CenterBase {
         const filteredCoordinates = originalCoordinatesPolygon.filter(
           (coordinate) => !coordinatesAreEqual(coordinate, selectedCoordinate)
         );
-        if (filteredCoordinates.length > 1) {
+        if (filteredCoordinates.length > 2) {
           const first = filteredCoordinates[0];
           const last = filteredCoordinates.at(-1);
 

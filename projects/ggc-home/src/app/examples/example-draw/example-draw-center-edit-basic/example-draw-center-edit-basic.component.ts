@@ -39,10 +39,11 @@ export class ExampleDrawCenterEditBasicComponent
 
   mapConfig: Webservice[];
 
-  protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
   private readonly httpClient = inject(HttpClient);
   private readonly drawService = inject(GgcDrawService);
   private readonly editLayer = "edit";
+
+  editActive = signal<boolean>(false);
 
   constructor() {
     super();
@@ -64,6 +65,7 @@ export class ExampleDrawCenterEditBasicComponent
 
   startCenterModifyCurrentPoint() {
     this.drawService.startCenterModifyCurrentPoint();
+    this.editActive.set(true);
   }
 
   removeCenterModifyCurrentPoint() {
@@ -72,6 +74,7 @@ export class ExampleDrawCenterEditBasicComponent
 
   stopCenterModifyCurrentPoint() {
     this.drawService.stopCenterModifyCurrentPoint();
+    this.editActive.set(false);
   }
 
   // Toevoegen van tekeningen bij het openen van de kaart
