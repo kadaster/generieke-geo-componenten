@@ -107,7 +107,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
 
   protected title: string;
   protected visible = signal(true);
-  protected enabled = true;
+  protected enabled = signal(true);
 
   private readonly datasetTreeService = inject(CoreDatasetTreeService);
   private readonly datasetTreeMapConnectService = inject(
@@ -206,7 +206,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.enabled = finalEnabled;
+    this.enabled.set(finalEnabled);
   }
 
   private async updateTitleAndVisibility() {
@@ -241,7 +241,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
    * - Als de kaartlaag enabled is, dan wordt de visibility getoggled en wordt er een datasettree event ge-emit.
    */
   public async toggleVisibility() {
-    if (this.enabled) {
+    if (this.enabled()) {
       const updatedVisibility =
         await this.datasetTreeMapConnectService.toggleVisibility(
           this._layer.layerId,

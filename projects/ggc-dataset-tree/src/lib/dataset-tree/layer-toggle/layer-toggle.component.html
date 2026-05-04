@@ -1,14 +1,14 @@
 <ng-container>
   <div
     class="ggc-dt-layer ggc-dt-layer-btn"
-    [ngClass]="{ 'ggc-dt-layer-disabled': !enabled }"
+    [ngClass]="{ 'ggc-dt-layer-disabled': !enabled() }"
     role="checkbox"
     [attr.aria-checked]="visible()"
     (click)="toggleVisibility()"
     (keydown.space)="$event.preventDefault(); toggleVisibility()"
     tabindex="0"
   >
-    @if (!enabled) {
+    @if (!enabled()) {
       <span class="{{ iconDisabled }}"></span>
     } @else if (!visible()) {
       <span class="ggc-dt-ls-layer-unchecked {{ iconUnchecked }}"></span>
