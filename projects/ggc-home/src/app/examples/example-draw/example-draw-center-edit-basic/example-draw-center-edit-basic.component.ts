@@ -9,7 +9,7 @@ import {
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import GeoJSON from "ol/format/GeoJSON";
-import * as polygonExamples from "./ExamplePolygons.json";
+import * as polygonExamples from "./example-polygons.json";
 import { HttpClient } from "@angular/common/http";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
@@ -36,11 +36,14 @@ export class ExampleDrawCenterEditBasicComponent
     imageLocation:
       "code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
   editActive = signal<boolean>(false);
   mapConfig: Webservice[];
 
-  private readonly httpClient = inject(HttpClient);
+  protected readonly httpClient = inject(HttpClient);
   private readonly drawService = inject(GgcDrawService);
   private readonly editLayer = "edit";
 

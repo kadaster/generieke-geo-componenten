@@ -28,6 +28,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   styleUrl: "./example-draw-tracing.component.scss"
 })
 export class ExampleDrawTracingComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-tracing",
     title: "Tekenen met behulp van traceren (overtrekken)",
@@ -39,7 +40,10 @@ export class ExampleDrawTracingComponent extends ExampleFormatComponent {
     imageLocation:
       "code/examples/example-draw/example-draw-tracing/example-draw-tracing.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-draw/example-draw-tracing/example-draw-tracing.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
+  // DOCS-SKIP:END
   activeDrawType = signal<MapComponentDrawTypes | undefined>(undefined);
   optionsProvincie: GeojsonLayerOptions = {
     layerId: "provincies",
