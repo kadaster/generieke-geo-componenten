@@ -11,6 +11,7 @@ import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-example-dataset-tree-basic",
@@ -18,7 +19,8 @@ import { Tags } from "../../tags.enum";
     GgcMapComponent,
     GgcDatasetTreeComponent,
     FormsModule,
-    ExampleFormatComponent
+    ExampleFormatComponent,
+    RouterLink
   ],
   templateUrl: "./example-dataset-tree-adv.component.html",
   styleUrl: "./example-dataset-tree-adv.component.scss"
@@ -30,7 +32,7 @@ export class ExampleDatasetTreeAdvComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-advanced",
-    title: "Kaartlagen aan-/uitzetten (boomstructuur, uitgebreid)",
+    title: "Kaartlagen aan-/uitzetten (uitgebreid)",
     introduction: "Zet kaartlagen aan of uit in een lijst met meer niveau's.",
     components: [Components.GGC_DATASET_TREE],
     tags: [Tags.DATASET, Tags.LAYER],
@@ -62,12 +64,16 @@ export class ExampleDatasetTreeAdvComponent
 
   ngOnInit() {
     this.httpClient
-      .get("code/examples/example-dataset-tree/kaartconfig.json")
+      .get(
+        "code/examples/example-dataset-tree/example-dataset-tree-adv/kaartconfig.json"
+      )
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
     this.httpClient
-      .get("code/examples/example-dataset-tree/treeconfig.json")
+      .get(
+        "code/examples/example-dataset-tree/example-dataset-tree-adv/treeconfig.json"
+      )
       .subscribe((data) => {
         this.datasetTreeConfig = data as Theme[];
       });
