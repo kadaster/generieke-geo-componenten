@@ -306,13 +306,13 @@ describe("DatasetLegendComponent", () => {
   });
 
   it("should add a new legend to the front if serviceName does not exist yet", () => {
-    component["_legends"] = [{ name: "otherServiceName" }];
+    component["_legends"].set([{ name: "otherServiceName" }]);
     component.addLegend({
       layerId: "id",
       serviceTitle: "serviceName",
       legend: { legendUrl: "url" }
     });
-    expect(component["_legends"]).toEqual([
+    expect(component["_legends"]()).toEqual([
       {
         name: "serviceName",
         expanded: true,
@@ -329,7 +329,7 @@ describe("DatasetLegendComponent", () => {
   });
 
   it("should sort legends in addLegend if legendIndices are provided", () => {
-    component["_legends"] = [
+    component["_legends"].set([
       {
         name: "service1",
         expanded: true,
@@ -344,14 +344,14 @@ describe("DatasetLegendComponent", () => {
           { layerId: "id3", legendIndex: 1, legend: { legendUrl: "url3" } }
         ]
       }
-    ];
+    ]);
     // default index = 0
     component.addLegend({
       layerId: "id2",
       serviceTitle: "service2",
       legend: { legendUrl: "url2" }
     });
-    expect(component["_legends"]).toEqual([
+    expect(component["_legends"]()).toEqual([
       {
         name: "service1",
         expanded: true,
@@ -380,7 +380,7 @@ describe("DatasetLegendComponent", () => {
       layerTitle: "layerTitle",
       legend: { legendUrl: "url" }
     });
-    expect(component["_legends"]).toEqual([
+    expect(component["_legends"]()).toEqual([
       {
         name: "layerTitle",
         expanded: true,
@@ -396,7 +396,7 @@ describe("DatasetLegendComponent", () => {
   });
 
   it("should remove a legend", () => {
-    component["_legends"] = [
+    component["_legends"].set([
       {
         name: "layerTitle",
         layerLegends: [
@@ -407,9 +407,9 @@ describe("DatasetLegendComponent", () => {
           }
         ]
       }
-    ];
+    ]);
     component.removeLegend("id");
-    expect(component["_legends"]).toEqual([]);
+    expect(component["_legends"]()).toEqual([]);
   });
 
   const testStyle = {
