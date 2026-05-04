@@ -111,6 +111,74 @@ export class CenterModify extends CenterBase {
     this.updateCenterPoint();
   }
 
+  removeModifyCurrentPoint(): void {
+    const featureCoordinate = this.getClosestFeatureCoordinate(
+      this.targetSource.getFeatures(),
+      this.centerPoint.getCoordinates(),
+      this.pixelTolerance
+    );
+
+    if (!featureCoordinate) {
+      return;
+    }
+
+    const feature = featureCoordinate.feature;
+    const selectedCoordinate = featureCoordinate.coordinate;
+
+    if (feature.getGeometry() instanceof Point) {
+      this.targetSource.removeFeature(feature);
+      this.modifyOverlay.getSource()?.clear();
+      this.highlightedFeature = undefined;
+    } else if (feature.getGeometry() instanceof LineString) {
+      const lineString = feature.getGeometry() as LineString;
+      const originalCoordinatesLineString = lineString.getCoordinates();
+      if (
+        originalCoordinatesLineString.some((coordinate) =>
+          coordinatesAreEqual(coordinate, selectedCoordinate)
+        )
+      ) {
+        const filteredCoordinates = originalCoordinatesLineString.filter(
+          (coordinate) => !coordinatesAreEqual(coordinate, selectedCoordinate)
+        );
+        if (filteredCoordinates.length > 1) {
+          lineString.setCoordinates(filteredCoordinates);
+        } else {
+          this.targetSource.removeFeature(feature);
+          this.modifyOverlay.getSource()?.clear();
+          this.highlightedFeature = undefined;
+        }
+      }
+    } else if (feature.getGeometry() instanceof Polygon) {
+      const polygon = feature.getGeometry() as Polygon;
+      const originalCoordinatesPolygon = polygon.getCoordinates()[0];
+      if (
+        originalCoordinatesPolygon.some((coordinate) =>
+          coordinatesAreEqual(coordinate, selectedCoordinate)
+        )
+      ) {
+        const filteredCoordinates = originalCoordinatesPolygon.filter(
+          (coordinate) => !coordinatesAreEqual(coordinate, selectedCoordinate)
+        );
+        if (filteredCoordinates.length > 2) {
+          const first = filteredCoordinates[0];
+          const last = filteredCoordinates.at(-1);
+
+          if (last && !coordinatesAreEqual(first, last)) {
+            filteredCoordinates.push([...first]);
+          }
+
+          polygon.setCoordinates([filteredCoordinates]);
+        } else {
+          this.targetSource.removeFeature(feature);
+          this.modifyOverlay.getSource()?.clear();
+          this.highlightedFeature = undefined;
+        }
+      }
+    }
+    this.placeSelectedPoint();
+    this.getNewHightlightedFeature();
+  }
+
   cleanup() {
     super.cleanup();
     this.finishModify();
@@ -252,7 +320,10 @@ export class CenterModify extends CenterBase {
   }
 
   private updatePoint() {
-    this.sketchFeature?.setGeometry(this.centerPoint);
+    const center = this.getMap()?.getView().getCenter();
+    if (center) {
+      this.sketchFeature?.setGeometry(new Point(center));
+    }
   }
 
   private updateLineString(geometry: LineString) {

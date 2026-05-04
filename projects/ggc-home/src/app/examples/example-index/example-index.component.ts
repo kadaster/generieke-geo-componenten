@@ -42,6 +42,7 @@ interface GroupedCards {
   cards: ComponentInfo[];
 }
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
+import { ExampleDrawCenterEditBasicComponent } from "../example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 
 @Component({
   selector: "app-example-index",
@@ -63,6 +64,7 @@ export class ExampleIndexComponent {
     new ExampleDrawStyle().componentInfo,
     new ExampleDatasetTreeTemplatesComponent().componentInfo,
     new ExampleDrawEditBasicComponent().componentInfo,
+    new ExampleDrawCenterEditBasicComponent().componentInfo,
     new ExampleDrawTracingComponent().componentInfo,
     new ExampleSearchLocationWoonplaatsComponent().componentInfo,
     new ExampleSnappingBasicComponent().componentInfo,

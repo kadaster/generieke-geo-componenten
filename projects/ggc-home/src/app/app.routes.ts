@@ -39,6 +39,7 @@ import { ExampleDrawStyle } from "./examples/example-draw/example-draw-style/exa
 import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
+import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 
 export const routes: Routes = [
   {
@@ -250,6 +251,12 @@ export const routes: Routes = [
     title: "draw-edit-basic",
     component: ExampleDrawEditBasicComponent,
     data: { label: "draw-edit-basic" }
+  },
+  {
+    path: "draw-center-edit-basic",
+    title: "draw-center-edit-basic",
+    component: ExampleDrawCenterEditBasicComponent,
+    data: { label: "draw-cetner-edit-basic" }
   },
   {
     path: "draw-center-draw",
