@@ -1,18 +1,13 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs=""
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-snapping/example-snapping-adv/example-snapping-adv.component.html'"
-  [codeTypescriptPath]="'code/examples/example-snapping/example-snapping-adv/example-snapping-adv.component.ts'"
-  [codeScssPath]="'code/examples/example-snapping/example-snapping-adv/example-snapping-adv.component.scss'"
-  urlCodeHtml="example-snapping/example-snapping-adv/example-snapping-adv.component.html"
-  urlCodeTypescript="example-snapping/example-snapping-adv/example-snapping-adv.component.ts"
-  urlCodeScss="example-snapping/example-snapping-adv/example-snapping-adv.component.scss"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   <div page-labels>
     @for (tag of componentInfo.tags; track tag) {
-      <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      <span class="badge rounded-pill tag-technical mx-1">{{
+        tag.toLocaleLowerCase()
+      }}</span>
     }
   </div>
 
@@ -27,6 +22,18 @@
       kan gebruikt worden bij het tekenen van nieuwe objecten en bij het
       aanpassen van bestaande objecten.
     </p>
+    <p>Instelmogelijkheden voor snappen:</p>
+    <ul>
+      <li>
+        Snapafstand: de afstand (in pixels) waarbinnen een lijn vastklikt op een
+        object<br />
+      </li>
+      <li>Snappen op meer lagen</li>
+      <li>
+        Snappen op randen (edges), hoekpunten (vertices), snijpunten
+        (intersections) of lijnsegmenten
+      </li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -66,7 +73,7 @@
               [(ngModel)]="pixelTolerance"
               (change)="setPixelTolerance($event)"
             /><br /><br />
-            Snappen op meerdere lagen: <br />
+            Snappen op meer lagen: <br />
             <label>
               <input
                 type="checkbox"

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GgcDrawService,
@@ -8,7 +8,6 @@ import {
 } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
-import { HttpClient } from "@angular/common/http";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
@@ -18,29 +17,35 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-draw-basic.component.html",
   styleUrl: "./example-draw-basic.component.scss"
 })
-export class ExampleDrawBasicComponent extends ExampleFormatComponent {
+export class ExampleDrawBasicComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-basic",
     title: "Tekenen met de muis",
     introduction:
-      "Teken lijnen, polygonen, punten, rechthoeken en cirkels met de muis.",
+      "Teken lijnen, punten, vlakken, rechthoeken en cirkels met de muis.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW],
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-draw/example-draw-basic/example-draw-basic.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeDrawType = signal<MapComponentDrawTypes | undefined>(undefined);
 
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
-  private readonly httpClient = inject(HttpClient);
+
   private readonly drawService = inject(GgcDrawService);
   private readonly drawLayer = "draw";
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-draw/kaartconfig.json")
       .subscribe((data) => {

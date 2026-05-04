@@ -1,23 +1,18 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs=""
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.html'"
-  [codeTypescriptPath]="'code/examples/example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts'"
-  [codeScssPath]="'code/examples/example-dataset-tree/example-dataset-tree.component.scss'"
-  [kaartConfigFilePath]="'code/examples/example-dataset-tree/kaartconfig.json'"
-  [treeConfigFilePath]="'code/examples/example-dataset-tree/treeconfig.json'"
-  urlCodeHtml="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.html"
-  urlCodeTypescript="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts"
-  urlCodeScss="example-dataset-tree/example-dataset-tree.component.scss"
-  urlKaartConfig="example-dataset-tree/kaartconfig.json"
-  urlTreeConfig="example-dataset-tree/treeconfig.json"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathCodeScss]="'example-dataset-tree/example-dataset-tree.component.scss'"
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
+  pathKaartConfig="example-dataset-tree/kaartconfig.json"
+  pathExtraConfig="example-dataset-tree/treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -26,6 +21,16 @@
     <p>
       {{ componentInfo.introduction }}
     </p>
+    <p>Instelmogelijkheden voor ggc-dataset-tree:</p>
+    <ul>
+      <li>Wisselen tussen lijst- of boomstructuur</li>
+    </ul>
+    <p>In de boomstructuur:</p>
+    <ul>
+      <li>Aantal actieve lagen tonen</li>
+      <li>Positie van in-/uitklapiconen</li>
+      <li>Eerste niveau tonen/verbergen</li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -78,7 +83,6 @@
         <div class="map-container">
           <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
         </div>
-        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
       </div>
       <!-- DOCS:END functionality -->
       <div class="col-md-1 col-sm-1">

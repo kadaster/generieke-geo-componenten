@@ -187,3 +187,13 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.tag-technical {
+  color: var(--ggc-color-primary-500);
+  border: 1px solid var(--ggc-color-primary-500);
+}
+
+.badge {
+  font-size: var(--ggc-text-font-size-xs);
+  background-color: var(--ggc-color-wit);
+}

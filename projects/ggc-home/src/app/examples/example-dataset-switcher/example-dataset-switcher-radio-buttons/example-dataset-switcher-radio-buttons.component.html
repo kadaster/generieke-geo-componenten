@@ -1,23 +1,17 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-dataset-switcher_src_lib_dataset-switcher_ggc-dataset-switcher.component.GgcSearchLocationComponent.html"
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.html'"
-  [codeTypescriptPath]="'code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.ts'"
-  [codeScssPath]="'code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.scss'"
-  urlCodeHtml="example-snapping/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.html"
-  urlCodeTypescript="example-snapping/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.ts"
-  urlCodeScss="example-snapping/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.scss"
-  kaartConfigFilePath="code/examples/example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
-  treeConfigFilePath="code/examples/example-dataset-switcher/example-dataset-switcher-treeconfig.json"
-  urlKaartConfig="example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
-  urlTreeConfig="example-dataset-switcher/example-dataset-switcher-treeconfig.json"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [extraConfigLabel]="`Dataset Switcher Configuration (json)`"
+  pathKaartConfig="example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
+  pathExtraConfig="example-dataset-switcher/example-dataset-switcher-treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }

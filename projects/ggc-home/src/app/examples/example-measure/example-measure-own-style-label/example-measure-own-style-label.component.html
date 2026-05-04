@@ -1,23 +1,14 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component.html'"
-  [codeScssPath]="'code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-measure/example-measure-own-style-label/kaartconfig.json'"
   [title]="componentInfo.title"
-  urlChangelog=""
-  urlCodeHtml="example-draw/example-measure/example-measure-own-style-label/example-measure-own-style-label.component.html"
-  urlCodeScss="example-draw/example-measure/example-measure-own-style-label/example-measure-own-style-label.component.scss"
-  urlCodeTypescript="example-draw/example-measure/example-measure-own-style-label/example-measure-own-style-label.component.ts"
-  urlGitHub=""
-  urlKaartConfig="example-measure-own-style-label/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig=""
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -25,8 +16,22 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      In onderstaand voorbeeld zijn de tekst en de kleur van het label
-      aangepast.
+      Met <code>setDrawStyle</code> kan de opmaak van meetlabels aangepast
+      worden met een eigen stijl.
+    </p>
+    <p>In dit voorbeeld is de weergave van de volgende stijlen aangepast:</p>
+    <ul>
+      <li>
+        Segment label: tekst en kleur, met <code>segmentLengthLabelStyle</code>.
+      </li>
+      <li>
+        Totale lengte label: tekst, kleur en font, met
+        <code>lengthLabelStyle</code>.
+      </li>
+    </ul>
+    <p>
+      Het oppervlakte label kan aangepast worden met
+      <code>areaLabelStyle</code>.
     </p>
   </div>
 
@@ -38,7 +43,7 @@
           <b>Meten</b>
           <div class="d-flex flex-column align-items-stretch">
             <button [class.active]="measuring()" (click)="measureLine()">
-              Lijn tekenen en meten
+              Teken en meet lijn
             </button>
             <hr />
             <button (click)="stopMeasureManual()">

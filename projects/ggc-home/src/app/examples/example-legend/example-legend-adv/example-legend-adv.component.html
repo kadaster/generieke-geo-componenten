@@ -1,22 +1,14 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-legend/example-legend-adv/example-legend-adv.component.html'"
-  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-legend/example-legend-adv/example-legend-adv.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-legend/example-legend-adv/kaartconfig.json'"
   [title]="componentInfo.title"
-  urlChangelog=""
-  urlCodeHtml="example-legend/example-legend/example-legend-adv/example-legend-adv.component.html"
-  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
-  urlCodeTypescript="example-legend/example-legend/example-legend-adv/example-legend-adv.component.ts"
-  urlKaartConfig="example-legend-adv/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig=""
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -104,7 +96,7 @@
           <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
             <input
-              (change)="goToPage('/legend-basic')"
+              (change)="goToPage('/legend-zoom')"
               aria-labelledby="extraOptionsLabel"
               checked
               type="checkbox"

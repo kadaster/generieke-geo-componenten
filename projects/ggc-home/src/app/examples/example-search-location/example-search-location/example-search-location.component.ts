@@ -28,17 +28,21 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-search-location.component.scss"
 })
 export class ExampleSearchLocationComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location",
     title: "Locatie zoeken",
-    introduction: "Zoek een adres, woonplaats of locatie.",
+    introduction: "Zoek een adres, woonplaats of huidige locatie.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-search-location/example-search-location/example-search-location.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
+  // DOCS-SKIP:END
   searchLocationOptions = {
     alternativeSuggestionsFirst: true,
     collectionIdTranslations: new Map<string, string>([
@@ -53,6 +57,10 @@ export class ExampleSearchLocationComponent extends ExampleFormatComponent {
     zoomToResult: true,
     markResult: true
   } as SearchLocationOptions;
+
+  constructor() {
+    super();
+  }
 
   logSearchComponentEvents(searchComponentEvent: SearchComponentEvent) {
     console.log(searchComponentEvent);
