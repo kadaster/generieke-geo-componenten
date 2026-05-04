@@ -40,6 +40,7 @@
       <div class="col-md-3 col-sm-6">
         <div>
           <b>Tekenen</b>
+          <p>Rond de tekening af door dubbel te klikken.</p>
           <div class="d-flex flex-column align-items-stretch">
             <button [class.active]="drawing() === 'line'" (click)="drawLine()">
               Teken lijn
@@ -50,8 +51,6 @@
             >
               Teken vlak
             </button>
-            <hr />
-            <button (click)="finishCurrentDraw()">Tekening afronden</button>
           </div>
         </div>
       </div>

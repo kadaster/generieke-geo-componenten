@@ -21,31 +21,12 @@
       De legenda wordt automatisch bijgewerkt als er kaartlagen in de
       kaartcomponent (ggc-map) zichtbaar worden of verdwijnen.
     </p>
-    <p>
-      Het legenda component laat standaard alleen legenda's zien van kaartlagen
-      die zichtbaar zijn op het gekozen zoomniveau. De
-      <code>alwaysEnableLegends</code> instelling zorgt ervoor dat altijd alle
-      legenda's worden getoond.
-    </p>
   </div>
 
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
       <div class="col-md-3 col-sm-6">
-        <div class="row always-enabled-toggle">
-          <h6 id="alwaysEnabledLabel">
-            Laat legenda's altijd zien (alwaysEnableLegends)
-          </h6>
-          <label class="switch">
-            <input
-              type="checkbox"
-              aria-labelledby="alwaysEnabledLabel"
-              (change)="toggleAlwaysEnableLegends()"
-            />
-            <span class="slider round"></span>
-          </label>
-        </div>
         <div class="legend-container">
           <b>Legenda</b>
           <ggc-legend></ggc-legend>

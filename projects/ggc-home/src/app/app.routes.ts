@@ -178,14 +178,14 @@ export const routes: Routes = [
     path: "legend-advanced",
     title: "Legenda-uitgebreid | GGC-Home",
     component: ExampleLegendAdvComponent,
-    data: { label: "legend-basic" }
+    data: { label: "legend-advanced" }
   },
 
   {
-    path: "legend-zoom",
-    title: "Legenda zoom | GGC-Home",
+    path: "legend-basic",
+    title: "Legenda weergeven | GGC-Home",
     component: ExampleLegendZoomComponent,
-    data: { label: "legend-zoom" }
+    data: { label: "legend-basic" }
   },
   {
     path: "legend-dataset-tree",

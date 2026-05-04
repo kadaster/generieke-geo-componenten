@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent, GgcLegendService } from "@kadaster/ggc-legend";
@@ -41,8 +41,10 @@ export class ExampleLegendAdvComponent
   // Custom icons
   protected iconCollapsed = "fa-solid fa-caret-right";
   protected iconExpanded = "fa-solid fa-caret-down";
-  protected collapsable = true;
+  protected collapsable = false;
   protected showLegendsName = true;
+  protected alwaysEnableLegends = signal(false);
+
   protected showEmptyLegendMessage = true;
   protected emptyLegendMessage = "Er is geen legenda voor deze laag";
 
@@ -62,5 +64,9 @@ export class ExampleLegendAdvComponent
 
   protected expandAll() {
     this.legendService.expandAllLegends(this.mapIndex);
+  }
+
+  toggleAlwaysEnableLegends() {
+    this.alwaysEnableLegends.update((value) => !value);
   }
 }
