@@ -56,14 +56,14 @@ export class MenuBarComponent {
   }
 
   openTsDocs() {
-    globalThis.location.href = tsdocsUrl;
+    window.open(tsdocsUrl, "_blank", "noopener,noreferrer");
   }
 
   openGithub() {
-    window.open(githubUrl, "_blank");
+    window.open(githubUrl, "_blank", "noopener,noreferrer");
   }
 
   openReleasesAndChangelog() {
-    window.open(githubReleasesUrl, "_blank");
+    window.open(githubReleasesUrl, "_blank", "noopener,noreferrer");
   }
 }
