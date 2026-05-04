@@ -320,7 +320,10 @@ export class CenterModify extends CenterBase {
   }
 
   private updatePoint() {
-    this.sketchFeature?.setGeometry(this.centerPoint);
+    const center = this.getMap()?.getView().getCenter();
+    if (center) {
+      this.sketchFeature?.setGeometry(new Point(center));
+    }
   }
 
   private updateLineString(geometry: LineString) {
