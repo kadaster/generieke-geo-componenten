@@ -29,6 +29,10 @@ import { ExampleDrawCenterDrawComponent } from "../example-draw/example-draw-cen
 import { ExampleMeasure } from "../example-measure/example-measure/example-measure.component";
 import { ExampleDrawStyle } from "../example-draw/example-draw-style/example-draw-style.component";
 import { ExampleMeasureOwnStyleLabel } from "../example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
+import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
+import { ExampleDrawCenterEditBasicComponent } from "../example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
+import { ExampleMapZoomScalePositionComponent } from "../example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
+
 import { Tags } from "../tags.enum";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
@@ -38,9 +42,6 @@ interface GroupedCards {
   theme: string;
   cards: ComponentInfo[];
 }
-import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
-import { ExampleDrawCenterEditBasicComponent } from "../example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
-import { ExampleMapZoomScalePosition } from "../example-map/example-map-zoom-scale-position";
 
 @Component({
   selector: "app-example-index",
@@ -94,7 +95,7 @@ export class ExampleIndexComponent {
     new ExampleDrawCenterDrawComponent().componentInfo,
     new ExampleMeasure().componentInfo,
     new ExampleMeasureOwnStyleLabel().componentInfo,
-    new ExampleMapZoomScalePosition().componentInfo
+    new ExampleMapZoomScalePositionComponent().componentInfo
   ];
 
   protected get availableThemes(): string[] {
