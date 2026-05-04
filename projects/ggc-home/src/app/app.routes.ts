@@ -37,6 +37,7 @@ import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
+import { ExampleMapZoomScalePosition } from "./examples/example-map/example-map-zoom-scale-position";
 
 export const routes: Routes = [
   {
@@ -266,5 +267,11 @@ export const routes: Routes = [
     title: "Meten styling | GGC-Home",
     component: ExampleMeasureOwnStyleLabel,
     data: { label: "measure-own-style-label" }
+  },
+  {
+    path: "map-zoom-scale-position",
+    title: "Kaart interaction: schaal, zoom en muis positie | GGC-Home",
+    component: ExampleMapZoomScalePosition,
+    data: { label: "map-zoom-scale-position" }
   }
 ];

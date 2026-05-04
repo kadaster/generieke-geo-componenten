@@ -40,6 +40,7 @@ interface GroupedCards {
 }
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 import { ExampleDrawCenterEditBasicComponent } from "../example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
+import { ExampleMapZoomScalePosition } from "../example-map/example-map-zoom-scale-position";
 
 @Component({
   selector: "app-example-index",
@@ -92,7 +93,8 @@ export class ExampleIndexComponent {
     new ExampleToolbarLocation().componentInfo,
     new ExampleDrawCenterDrawComponent().componentInfo,
     new ExampleMeasure().componentInfo,
-    new ExampleMeasureOwnStyleLabel().componentInfo
+    new ExampleMeasureOwnStyleLabel().componentInfo,
+    new ExampleMapZoomScalePosition().componentInfo
   ];
 
   protected get availableThemes(): string[] {

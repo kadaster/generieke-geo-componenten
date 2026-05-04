@@ -1,0 +1,90 @@
+{
+  "themeName": "map example kaartlagen",
+  "datasets": [
+    {
+      "datasetName": "kaartlagen",
+      "services": [
+        {
+          "type": "wmts",
+          "url": " https://service.pdok.nl/lv/bgt/wmts/v1_0?",
+          "layers": [
+            {
+              "name": "BGT standaard",
+              "technicalName": "standaardvisualisatie",
+              "minResolution": 0.0525,
+              "maxResolution": 0.84,
+              "attributions": "BGT standaard"
+            }
+          ]
+        },
+        {
+          "type": "wms",
+          "url": "https://service.pdok.nl/brt/topraster/wms/v1_0?",
+          "layers": [
+            {
+              "name": "TOP1000",
+              "technicalName": "top1000raster",
+              "minResolution": 215.04,
+              "maxResolution": 430.081,
+              "attributions": "TOP1000 raster",
+              "tiled": true
+            },
+            {
+              "name": "TOP500",
+              "technicalName": "top500raster",
+              "minResolution": 107.52,
+              "maxResolution": 215.04,
+              "attributions": "TOP500 raster",
+              "tiled": true
+            },
+            {
+              "name": "TOP250",
+              "technicalName": "top250raster",
+              "minResolution": 53.76,
+              "maxResolution": 107.52,
+              "attributions": "TOP250 raster",
+              "tiled": true
+            },
+            {
+              "name": "TOP100",
+              "technicalName": "top100raster",
+              "minResolution": 13.44,
+              "maxResolution": 53.76,
+              "attributions": "TOP100 raster",
+              "tiled": true
+            },
+            {
+              "name": "TOP50",
+              "technicalName": "top50raster",
+              "minResolution": 6.72,
+              "maxResolution": 13.44,
+              "attributions": "TOP50 raster",
+              "tiled": true
+            },
+            {
+              "name": "TOP25",
+              "technicalName": "top25raster",
+              "minResolution": 3.36,
+              "maxResolution": 6.72,
+              "attributions": "TOP25 raster",
+              "tiled": true
+            }
+          ]
+        },
+        {
+          "type": "wmts",
+          "url": "https://service.pdok.nl/brt/top10nl/wmts/v1_0?",
+          "layers": [
+            {
+              "name": "TOP10",
+              "technicalName": "top10nl",
+              "minResolution": 0.84,
+              "maxResolution": 3.35,
+              "attributions": "TOP10nl"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
