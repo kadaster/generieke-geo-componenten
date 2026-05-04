@@ -66,7 +66,7 @@ describe("LayerToggleComponent", () => {
     component = fixture.componentInstance;
     component.layer = { layerId: "id" };
     component.mapIndex = "mapIndex";
-    component["enabled"] = true;
+    component["enabled"].set(true);
     fixture.detectChanges();
   });
 
@@ -141,7 +141,7 @@ describe("LayerToggleComponent", () => {
       Promise.resolve(undefined as any)
     );
 
-    component["enabled"] = false;
+    component["enabled"].set(false);
 
     await (component as any).updateEnabled();
 
@@ -154,7 +154,7 @@ describe("LayerToggleComponent", () => {
     );
     component.layerEnabledCallback = undefined as any;
 
-    component["enabled"] = true;
+    component["enabled"].set(true);
 
     await (component as any).updateEnabled();
 
