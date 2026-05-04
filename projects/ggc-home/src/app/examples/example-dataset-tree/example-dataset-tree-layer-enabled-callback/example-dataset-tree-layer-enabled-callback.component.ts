@@ -105,12 +105,4 @@ export class ExampleDatasetTreeLayerEnabledCallback
   gemeentesChanged() {
     this.connectService.emitTrigger(ViewerType.TWEE_D, this.mapIndex);
   }
-
-  getEnabled(layerId: string) {
-    return this.layerService.getEnabled(layerId, this.mapIndex);
-  }
-
-  getTitle(layerId: string) {
-    return this.layerService.getTitle(layerId, this.mapIndex);
-  }
 }
