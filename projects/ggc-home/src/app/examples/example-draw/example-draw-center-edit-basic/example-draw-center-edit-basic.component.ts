@@ -3,7 +3,6 @@ import { ExampleFormatComponent } from "../../example-format/example-format.comp
 import {
   GgcDrawService,
   GgcMapComponent,
-  MapComponentDrawTypes,
   MapComponentEventTypes,
   Webservice
 } from "@kadaster/ggc-map";
@@ -25,25 +24,25 @@ export class ExampleDrawCenterEditBasicComponent
   extends ExampleFormatComponent
   implements OnInit
 {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-center-edit-basic",
-    title: "Verplaatsen en bewerken met het toetsenbord",
+    title: "Bewerken met markering op de kaart",
     introduction:
-      "Verplaats en bewerk lijnen, polygonen, punten en rechthoeken met het toetsenbord.",
+      "Bewerk lijnen, punten, vlakken en rechthoeken met vingers (mobiele device) of toetsenbord.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW, Tags.MODIFY],
     imageLocation:
       "code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.png"
   } as ComponentInfo;
-
+  // DOCS-SKIP:END
+  editActive = signal<boolean>(false);
   mapConfig: Webservice[];
 
   private readonly httpClient = inject(HttpClient);
   private readonly drawService = inject(GgcDrawService);
   private readonly editLayer = "edit";
-
-  editActive = signal<boolean>(false);
 
   constructor() {
     super();

@@ -21,10 +21,39 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      In onderstaande voorbeeld kan een aantal bestaande tekeningen worden
-      verplaatst of bewerkt. Bij bewerk tekening kunnen bestanade punten
-      verplaatst, of nieuwe punten toegevoegd worden.
+      Bij het bewerken kan het middelpunt van de kaart gebruikt worden om nauwkeurig te bewerken. <br />
+      Beweeg de kaart onder de markering in het midden. Kies een bestaand
+      hoekpunt om te bewerken of verwijderen, of voeg nieuwe (hoek)punten toe
+      aan de tekening.
     </p>
+    <p>
+      Met <code>startCenterModify</code> kunnen bestaande tekeningen worden
+      bewerkt:
+    </p>
+    <ul>
+      <li>
+        (Hoek-)punt bewerken/toevoegen: nieuwe (hoek)punten toevoegen en
+        bestaande hoekpunten verplaatsen of verwijderen.
+      </li>
+      <ul>
+        <li>
+          Punt toevoegen: verplaats de markering op een bestaande lijn om een
+          nieuw (hoek)punt toe te voegen.
+        </li>
+        <li>
+          Punt verplaatsen: verplaats de markering op een bestaand (hoek)punt om
+          deze te bewerken.
+        </li>
+      </ul>
+      <li>
+        Stop (Hoek)punt bewerken: afronden van het toevoegen of verplaatsen van
+        een (hoek)punt.
+      </li>
+      <li>
+        Verwijder Hoekpunt: verplaats de markering op een bestaand hoekpunt om
+        deze te verwijderen.
+      </li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -35,13 +64,13 @@
             [class.active]="editActive()"
             (click)="startCenterModifyCurrentPoint()"
           >
-            (Hoek-)Punt bewerken/toevoegen</button
+            (Hoek)punt bewerken/toevoegen</button
           ><br />
           <button
             (click)="stopCenterModifyCurrentPoint()"
             [disabled]="!editActive()"
           >
-            Stop (Hoek-)Punt bewerken</button
+            Stop (Hoek)punt bewerken</button
           ><br />
           <button (click)="removeCenterModifyCurrentPoint()">
             Verwijder Hoekpunt
