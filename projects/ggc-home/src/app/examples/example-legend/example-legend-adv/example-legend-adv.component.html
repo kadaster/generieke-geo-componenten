@@ -27,7 +27,7 @@
     <ul>
       <li>Legenda's in-/uitklapbaar maken met <code>collapsable</code></li>
       <li>
-        Volgorde van kaartlagen in de legenda met <code>showLegendsName</code>
+        Volgorde van kaartlagen in de legenda met <code>legendIndex</code>
       </li>
       <li>
         Melding tonen (<code>emptyLegendMessage</code>) bij kaartlagen zonder
@@ -55,6 +55,12 @@
           <label>
             <input [(ngModel)]="showLegendsName" type="checkbox" />
             Toon een titel boven een legenda
+          </label>
+        </div>
+        <div>
+          <label>
+            <input (change)="toggleAlwaysEnableLegends()" type="checkbox" />
+            Laat legenda's altijd zien
           </label>
         </div>
         <div>
@@ -100,11 +106,7 @@
       </div>
       <div class="col-md-6 col-sm-10">
         <div class="map-container">
-          <ggc-map
-            [mapIndex]="mapIndex"
-            [webServices]="mapConfig"
-            [minZoomlevel]="6"
-          ></ggc-map>
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->

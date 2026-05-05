@@ -66,8 +66,4 @@ export class MenuBarComponent {
   openReleasesAndChangelog() {
     window.open(githubReleasesUrl, "_blank", "noopener,noreferrer");
   }
-
-  openDownloadsNpm() {
-    this.router.navigate(["/downloads-npm"]);
-  }
 }

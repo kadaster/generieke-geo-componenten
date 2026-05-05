@@ -25,7 +25,7 @@ export class ExampleLegendAdvComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-advanced",
-    title: "Legenda tonen (uitgebreid)",
+    title: "Legenda weergeven (uitgebreid)",
     introduction: "Toon de legenda van één of meer kaartlagen.",
     components: [Components.GGC_LEGEND],
     tags: [Tags.LEGEND],
