@@ -35,6 +35,7 @@ export class ExampleSnappingBasicComponent
   drawService = inject(GgcDrawService);
   snapService = inject(GgcSnapService);
 
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/snapping-basic",
     title: "Snapping (verbinden)",
@@ -46,7 +47,10 @@ export class ExampleSnappingBasicComponent
     imageLocation:
       "code/examples/example-snapping/example-snapping-basic/example-snapping-basic.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-snapping/example-snapping-basic/example-snapping-basic.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
+  // DOCS-SKIP:END
   drawLayer = "drawLayer";
   mapIndex = "snapping";
   snapOptions: SnapOptions = {
@@ -54,7 +58,7 @@ export class ExampleSnappingBasicComponent
     vertex: true,
     edge: true,
     intersection: true,
-    snapDrawLayers: ["drawLayer"],
+    snapDrawLayers: [this.drawLayer],
     snapLayers: ["provincies"]
   };
 
@@ -71,8 +75,12 @@ export class ExampleSnappingBasicComponent
     })
   };
 
+  constructor() {
+    super();
+  }
+
   ngOnInit(): void {
-    this.snapService.stopSnap(this.mapIndex);
+    this.drawService.stopDraw();
     this.drawService.startDraw(
       this.drawLayer,
       MapComponentDrawTypes.LINESTRING,
@@ -85,7 +93,6 @@ export class ExampleSnappingBasicComponent
         this.mapIndex,
         this.snapOptions
       );
-      console.log("snapOptions: ", this.snapOptions);
     }, 500);
   }
 

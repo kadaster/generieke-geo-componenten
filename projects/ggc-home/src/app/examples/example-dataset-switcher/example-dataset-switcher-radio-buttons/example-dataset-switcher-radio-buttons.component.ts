@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
@@ -8,7 +8,6 @@ import {
   Theme,
   GgcDatasetSwitcherComponent
 } from "@kadaster/ggc-dataset-tree";
-import { HttpClient } from "@angular/common/http";
 import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
 import { Themes } from "../../themes.enum";
@@ -23,18 +22,25 @@ import { Themes } from "../../themes.enum";
   templateUrl: "./example-dataset-switcher-radio-buttons.component.html",
   styleUrl: "./example-dataset-switcher-radio-buttons.component.scss"
 })
-export class ExampleDatasetSwitcherRadioButtonsComponent {
+export class ExampleDatasetSwitcherRadioButtonsComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-switcher-radio-buttons",
     title: "Dataset wisselen (radio buttons)",
-    introduction: "Eén of meerdere kaartlagen wisselen met een radio button.",
+    introduction: "Eén of meer kaartlagen verwisselen met een radio button.",
     components: [Components.GGC_DATASET_SWITCHER],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetSwitcherComponent.html`;
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   datasetSwitcherConfig: Theme[];
 
@@ -65,9 +71,12 @@ export class ExampleDatasetSwitcherRadioButtonsComponent {
         "code/examples/example-dataset-switcher/thumbnails/luchtfoto.png"
     }
   ];
-  private readonly httpClient = inject(HttpClient);
 
   constructor() {
+    super();
+  }
+
+  ngOnInit() {
     this.httpClient
       .get(
         "code/examples/example-dataset-switcher/example-dataset-switcher-kaartconfig.json"

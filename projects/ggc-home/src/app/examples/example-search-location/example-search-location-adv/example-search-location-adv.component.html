@@ -1,19 +1,14 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-search-location_src_lib_search-location_ggc-search-location.component.GgcSearchLocationComponent.html"
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-search-location/example-search-location-adv/example-search-location-adv.component.html'"
-  [codeTypescriptPath]="'code/examples/example-search-location/example-search-location-adv/example-search-location-adv.component.ts'"
-  [codeScssPath]="'code/examples/example-search-location/example-search-location-adv/example-search-location-adv.component.scss'"
-  urlCodeHtml="example-snapping/example-search-location/example-search-location.component.html"
-  urlCodeTypescript="example-snapping/example-search-location/example-search-location.component.ts"
-  urlCodeScss="example-snapping/example-search-location/example-search-location.component.scss"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -23,11 +18,13 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Met behulp van SearchLocationOptions kunnen verschillende mogelijkheden
-      van de zoekfunctie ingesteld worden, zoals bijvoorbeeld het zoomen en het
-      markeren van het zoekresultaat. In dit voorbeeld staan zoomen en markeren
-      van het zoekresultaat automatisch aan.
+      Instelmogelijkheden voor ggc-search-location, met
+      <code>SearchLocationOptions</code>:
     </p>
+    <ul>
+      <li>automatisch inzoomen naar gevonden locatie/gebied</li>
+      <li>automatisch markeren van gevonden locatie/gebied</li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -75,7 +72,8 @@
 
   <div page-tips>
     <p>
-      Met behulp van AdditionalSuggestion kan in andere bronnen worden gezocht.
+      Met <code>AdditionalSuggestion</code> kan in andere bronnen worden
+      gezocht.
     </p>
   </div>
 </app-example-format>

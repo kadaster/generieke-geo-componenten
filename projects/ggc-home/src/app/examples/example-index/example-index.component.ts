@@ -8,10 +8,8 @@ import { ExampleDatasetTreeTemplatesComponent } from "../example-dataset-tree/ex
 import { ExampleDatasetSwitcherBasicComponent } from "../example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component";
 import { ExampleDatasetTreeLayerEnabledCallback } from "../example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component";
 import { ExampleSearchLocationWoonplaatsComponent } from "../example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component";
-import { ExampleLegendBasicComponent } from "../example-legend/example-legend-basic/example-legend-basic.component";
 import { ExampleLegendZoomComponent } from "../example-legend/example-legend-zoom/example-legend-zoom.component";
 import { ExampleLegendDatasetTreeComponent } from "../example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component";
-import { ExampleLegendOgcApiTilesComponent } from "../example-legend/example-legend-ogc-api-tiles/example-legend-ogc-api-tiles.component";
 import { ExampleDatasetTreeBasicListComponent } from "../example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component";
 import { ExampleLayerImageComponent } from "../example-layer/example-layer-image/example-layer-image.component";
 import { ExampleLayerWmsComponent } from "../example-layer/example-layer-wms/example-layer-wms.component";
@@ -20,9 +18,8 @@ import { ExampleLayerGeojsonComponent } from "../example-layer/example-layer-geo
 import { ExampleLayerGeojsonWfsComponent } from "../example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.component";
 import { ExampleLayerGeojsonOgcComponent } from "../example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.component";
 import { ExampleLayerVectorTileComponent } from "../example-layer/example-layer-vector-tile/example-layer-vector-tile.component";
-import { ExampleLayerBasicComponent } from "../example-layer/example-layer-basic/example-layer-basic.component";
-import { ExampleLayerAdvancedComponent } from "../example-layer/example-layer-advanced/example-layer-advanced.component";
-import { ExampleLayerAdvanced2Component } from "../example-layer/example-layer-advanced2/example-layer-advanced2.component";
+import { ExampleLayerHtmlConfig } from "../example-layer/example-layer-html-config/example-layer-html-config.component";
+import { ExampleLayerJsonConfig } from "../example-layer/example-layer-json-config/example-layer-json-config.component";
 import { ExampleToolbarLocation } from "../example-toolbar/example-toolbar-location/example-toolbar-location.component";
 import { ExampleToolbar } from "../example-toolbar/example-toolbar/example-toolbar.component";
 import { ExampleDrawBasicComponent } from "../example-draw/example-draw-basic/example-draw-basic.component";
@@ -35,12 +32,12 @@ import { Tags } from "../tags.enum";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
+import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 
 interface GroupedCards {
   theme: string;
   cards: ComponentInfo[];
 }
-import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 
 @Component({
   selector: "app-example-index",
@@ -52,6 +49,15 @@ import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-
 export class ExampleIndexComponent {
   protected searchTerm = "";
   protected selectedThemes = new Set<string>();
+  protected themeOrder = [
+    Themes.KAARTLAGEN,
+    Themes.KAARTBEDIENING,
+    Themes.INFORMATIE_OP_KAART,
+    Themes.LEGENDA,
+    Themes.ZOEKEN,
+    Themes.KAARTWEERGAVE_KIEZEN,
+    Themes.WERKBALK
+  ];
   protected selectedComponents = new Set<string>();
   protected selectedTags = new Set<string>();
   protected cards: ComponentInfo[] = [
@@ -66,10 +72,8 @@ export class ExampleIndexComponent {
     new ExampleSnappingBasicComponent().componentInfo,
     new ExampleDatasetSwitcherBasicComponent().componentInfo,
     new ExampleDatasetSwitcherRadioButtonsComponent().componentInfo,
-    new ExampleLegendBasicComponent().componentInfo,
     new ExampleLegendZoomComponent().componentInfo,
     new ExampleLegendDatasetTreeComponent().componentInfo,
-    new ExampleLegendOgcApiTilesComponent().componentInfo,
     new ExampleDatasetTreeLayerEnabledCallback().componentInfo,
     new ExampleLayerImageComponent().componentInfo,
     new ExampleLayerWmsComponent().componentInfo,
@@ -78,9 +82,8 @@ export class ExampleIndexComponent {
     new ExampleLayerGeojsonWfsComponent().componentInfo,
     new ExampleLayerGeojsonOgcComponent().componentInfo,
     new ExampleLayerVectorTileComponent().componentInfo,
-    new ExampleLayerBasicComponent().componentInfo,
-    new ExampleLayerAdvancedComponent().componentInfo,
-    new ExampleLayerAdvanced2Component().componentInfo,
+    new ExampleLayerHtmlConfig().componentInfo,
+    new ExampleLayerJsonConfig().componentInfo,
     new ExampleToolbar().componentInfo,
     new ExampleToolbarLocation().componentInfo,
     new ExampleDrawCenterDrawComponent().componentInfo,
@@ -96,8 +99,7 @@ export class ExampleIndexComponent {
       }
     }
 
-    const fixedOrder = [""];
-    return this.sortArrayWithFixedOrder(Array.from(set), fixedOrder);
+    return this.sortArrayWithFixedOrder(Array.from(set), this.themeOrder);
   }
 
   protected get availableComponents(): string[] {
@@ -186,7 +188,11 @@ export class ExampleIndexComponent {
       Object.groupBy(this.filteredCards(), (card) => card.theme.toString())
     )
       .filter(([, value]) => value)
-      .sort(([a], [b]) => a.localeCompare(b))
+      .sort(
+        ([a], [b]) =>
+          this.themeOrder.indexOf(a as Themes) -
+          this.themeOrder.indexOf(b as Themes)
+      )
       .map(([key, value]) => ({
         theme: key,
         cards: value!.slice().sort((c1, c2) => c1.title.localeCompare(c2.title))

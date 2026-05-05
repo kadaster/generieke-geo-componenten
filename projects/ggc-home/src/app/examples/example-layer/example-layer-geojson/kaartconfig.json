@@ -1,0 +1,24 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "zIndex": -10
+      }
+    ]
+  },
+  {
+    "type": "geojson",
+    "url": "/code/examples/example-layer/example-layer-geojson/gelderland.json",
+    "layers": [
+      {
+        "layerId": "Gelderland",
+        "zIndex":  10
+      }
+    ]
+  }
+]

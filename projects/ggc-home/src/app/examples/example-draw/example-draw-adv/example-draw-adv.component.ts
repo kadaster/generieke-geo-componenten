@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -13,7 +13,6 @@ import Feature from "ol/Feature";
 import { Geometry, Polygon } from "ol/geom";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
-import { HttpClient } from "@angular/common/http";
 import { Tags } from "../../tags.enum";
 
 @Component({
@@ -22,18 +21,25 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-draw-adv.component.html",
   styleUrl: "./example-draw-adv.component.scss"
 })
-export class ExampleDrawAdvComponent extends ExampleFormatComponent {
+export class ExampleDrawAdvComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-adv",
-    title: "Tekenen met de muis",
+    title: "Tekenen met de muis (uitgebreid)",
     introduction:
-      "Teken lijnen, polygonen, punten, rechthoeken en cirkels met de muis.",
+      "Teken lijnen, punten, vlakken, rechthoeken en cirkels met de muis.",
     components: [Components.GGC_MAP],
     tags: [Tags.DRAW],
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-draw/example-draw-adv/example-draw-adv.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   readonly maxPointsExample = 4;
   maxPoints = signal<number | undefined>(this.maxPointsExample);
@@ -52,7 +58,7 @@ export class ExampleDrawAdvComponent extends ExampleFormatComponent {
 
   private readonly drawLayer = "draw";
   private readonly drawService = inject(GgcDrawService);
-  private readonly httpClient = inject(HttpClient);
+
   private readonly zuidNederlandBbox = new Polygon([
     [
       [-65659.09753254626, 301541.95029904693],
@@ -63,8 +69,7 @@ export class ExampleDrawAdvComponent extends ExampleFormatComponent {
     ]
   ]);
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-draw/kaartconfig.json")
       .subscribe((data) => {

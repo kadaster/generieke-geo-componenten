@@ -1,23 +1,18 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs=""
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.html'"
-  [codeTypescriptPath]="'code/examples/example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts'"
-  [codeScssPath]="'code/examples/example-dataset-tree/example-dataset-tree.component.scss'"
-  [kaartConfigFilePath]="'code/examples/example-dataset-tree/kaartconfig.json'"
-  [treeConfigFilePath]="'code/examples/example-dataset-tree/treeconfig.json'"
-  urlCodeHtml="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.html"
-  urlCodeTypescript="example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts"
-  urlCodeScss="example-dataset-tree/example-dataset-tree.component.scss"
-  urlKaartConfig="example-dataset-tree/kaartconfig.json"
-  urlTreeConfig="example-dataset-tree/treeconfig.json"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathCodeScss]="'example-dataset-tree/example-dataset-tree.component.scss'"
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
+  pathKaartConfig="example-dataset-tree/kaartconfig.json"
+  pathExtraConfig="example-dataset-tree/treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -25,6 +20,35 @@
   <div page-introduction>
     <p>
       {{ componentInfo.introduction }}
+    </p>
+    <p>Instelmogelijkheden voor de dataset-tree boomstructuur:</p>
+    <ul>
+      <li>Aantal actieve lagen tonen met <code>showActiveCounters</code></li>
+      <li>
+        Positie van in-/uitklapiconen verplaatsen (rechts/links) met
+        <code>iconAlignRight</code>
+      </li>
+      <li>
+        Eerste niveau (Theme) tonen/verbergen met <code>showOnlyDatasets</code>
+      </li>
+      <li>
+        Boomstructuur standaard ingeklapt tonen met
+        <code>expandTreeOnInit</code>
+      </li>
+      <li>
+        Eigen styling voor alle iconen. In dit voorbeeld hebben alle iconen
+        (zoals <code>iconExpanded</code>) een eigen styling.
+      </li>
+    </ul>
+    <p>
+      De optionele <code>infoUrl</code> in de Kaart configuratie (json) wordt
+      achter een dataset getoond als button met een 'i-icoon'. In dit voorbeeld
+      verwijzen deze urls naar informatie van het Nationaal Georegister met een
+      '?-icoon'. Voor het toevoegen van extra functionaliteit en styling aan
+      deze labels, bekijk
+      <a [routerLink]="['/dataset-tree-label-template']"
+        >Label bij kaartlaag keuze</a
+      >.
     </p>
   </div>
 
@@ -34,20 +58,14 @@
       <div class="col-md-4 col-sm-6">
         <div>
           <label>
-            <input type="checkbox" [(ngModel)]="hideTree" />
-            Wissel de style van de dataset-tree (lijst of boom)
-          </label>
-        </div>
-        <div>
-          <label>
             <input type="checkbox" [(ngModel)]="showActiveCounters" />
-            Zet actieve lagen teller aan of uit
+            Toon aantal actieve lagen
           </label>
         </div>
         <div>
           <label>
             <input type="checkbox" [(ngModel)]="iconAlignRight" />
-            Wijzig uitlijning van uit- inklap iconen
+            Wijzig uitlijning van uit- inklap iconen (links/rechts)
           </label>
         </div>
         <div>
@@ -62,7 +80,6 @@
             [themes]="datasetTreeConfig"
             [mapIndex]="mapIndex"
             [expandTreeOnInit]="expandTreeOnInit"
-            [hideTree]="hideTree"
             [showActiveCounters]="showActiveCounters"
             [iconAlignRight]="iconAlignRight"
             [showOnlyDatasets]="showOnlyDatasets"
@@ -78,7 +95,6 @@
         <div class="map-container">
           <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
         </div>
-        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
       </div>
       <!-- DOCS:END functionality -->
       <div class="col-md-1 col-sm-1">

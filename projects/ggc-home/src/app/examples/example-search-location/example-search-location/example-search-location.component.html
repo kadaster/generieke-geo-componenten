@@ -1,19 +1,14 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-search-location_src_lib_search-location_ggc-search-location.component.GgcSearchLocationComponent.html"
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-search-location/example-search-location/example-search-location.component.html'"
-  [codeTypescriptPath]="'code/examples/example-search-location/example-search-location/example-search-location.component.ts'"
-  [codeScssPath]="'code/examples/example-search-location/example-search-location/example-search-location.component.scss'"
-  urlCodeHtml="example-snapping/example-search-location/example-search-location.component.html"
-  urlCodeTypescript="example-snapping/example-search-location/example-search-location.component.ts"
-  urlCodeScss="example-snapping/example-search-location/example-search-location.component.scss"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -57,7 +52,8 @@
   </div>
   <div page-tips>
     <p>
-      Met behulp van AdditionalSuggestion kan in andere bronnen worden gezocht.
+      Met <code>AdditionalSuggestion</code> kan in andere bronnen worden
+      gezocht.
     </p>
   </div>
 </app-example-format>

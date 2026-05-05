@@ -1,29 +1,28 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.html'"
-  [codeScssPath]="'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/kaartconfig.json'"
   [title]="componentInfo.title"
-  [treeConfigFilePath]="'code/examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/treeconfig.json'"
-  urlChangelog=""
-  urlCodeHtml="example-dataset-tree/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.html"
-  urlCodeScss="example-dataset-tree/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.scss"
-  urlCodeTypescript="example-dataset-tree/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.ts"
-  urlKaartConfig="example-dataset-tree/example-dataset-tree-layer-enabled-callback/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig="example-dataset-tree/example-dataset-tree-layer-enabled-callback/treeconfig.json"
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
+  pathKaartConfig="example-dataset-tree/example-dataset-tree-layer-enabled-callback/kaartconfig.json"
+  pathExtraConfig="example-dataset-tree/example-dataset-tree-layer-enabled-callback/treeconfig.json"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
   <div page-introduction>
     <p>
       {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Dit kan per kaartlaag ingesteld worden met een custom callback. In dit
+      voorbeeld is de kaartlag met Gemeenten instelbaar. Deze kaartlaag wordt
+      automatisch uitgezet als de kaartlaag op inactief wordt gezet.
     </p>
   </div>
   <div page-functionality>
@@ -49,7 +48,7 @@
           />
           <span class="slider round"></span>
           <span class="text-nowrap"
-            >Gemeentes {{ gemeentesEnabled ? "Actief" : "Inactief" }}</span
+            >Gemeenten {{ gemeentesEnabled ? "Actief" : "Inactief" }}</span
           >
         </label>
       </div>
@@ -58,7 +57,6 @@
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
-        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
       </div>
     </div>
     <p></p>

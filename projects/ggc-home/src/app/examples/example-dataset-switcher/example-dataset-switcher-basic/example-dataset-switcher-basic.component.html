@@ -1,23 +1,17 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-dataset-switcher_src_lib_dataset-switcher_ggc-dataset-switcher.component.GgcSearchLocationComponent.html"
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.html'"
-  [codeTypescriptPath]="'code/examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.ts'"
-  [codeScssPath]="'code/examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.scss'"
-  urlCodeHtml="example-snapping/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.html"
-  urlCodeTypescript="example-snapping/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.ts"
-  urlCodeScss="example-snapping/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.scss"
-  kaartConfigFilePath="code/examples/example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
-  treeConfigFilePath="code/examples/example-dataset-switcher/example-dataset-switcher-treeconfig.json"
-  urlKaartConfig="example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
-  urlTreeConfig="example-dataset-switcher/example-dataset-switcher-treeconfig.json"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [extraConfigLabel]="`Dataset Switcher Configuration (json)`"
+  pathKaartConfig="example-dataset-switcher/example-dataset-switcher-kaartconfig.json"
+  pathExtraConfig="example-dataset-switcher/example-dataset-switcher-treeconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -33,9 +27,10 @@
     </p>
     <p>
       Om de knoppen van de buttons te koppelen aan de kaartlagen, is het
-      belangrijk om de <code>DatasetSwitcherButton</code> dezelfde naam te geven
-      als de <code>themeName</code> uit de <code>datasetSwitcherConfig</code>.
-      Deze naam wordt ook gebruikt bij het tonen van de knop.
+      noodzakelijk om de <code>name</code> van de
+      <code>DatasetSwitcherButton</code> dezelfde naam te geven als de
+      <code>themeName</code> uit de <code>datasetSwitcherConfig</code>. Deze
+      naam wordt ook gebruikt bij het tonen van de knop.
     </p>
   </div>
 

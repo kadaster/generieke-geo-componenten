@@ -1,19 +1,14 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-search-location_src_lib_search-location_ggc-search-location.component.GgcSearchLocationComponent.html"
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-toolbar/example-toolbar/example-toolbar.component.html'"
-  [codeTypescriptPath]="'code/examples/example-toolbar/example-toolbar/example-toolbar.component.ts'"
-  [codeScssPath]="'code/examples/example-toolbar/example-toolbar/example-toolbar.component.scss'"
-  urlCodeHtml="example-toolbar/example-toolbar/example-toolbar.component.html"
-  urlCodeTypescript="example-toolbar/example-toolbar/example-toolbar.component.ts"
-  urlCodeScss="example-toolbar/example-toolbar/example-toolbar.component.scss"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -66,7 +61,7 @@
         <ggc-toolbar-item
           icon="fas fa-link"
           [clickCallback]="copyLocation.bind(this)"
-          title="Copy location"
+          title="Kopieer locatie"
         >
         </ggc-toolbar-item>
       </ggc-toolbar>
@@ -81,7 +76,8 @@
     <p>
       De toolbar kan gebruikt worden voor het uitvoeren van Draw en Measure
       functies op de kaart. Daarnaast kunnen er custom knoppen worden toegevoegd
-      om extra functionaliteiten aan de toolbar toe te voegen.
+      om extra functionaliteiten aan de toolbar toe te voegen, zie
+      <a routerLink="/toolbar-location">Toolbar uitbreiden</a>.
     </p>
   </div>
 </app-example-format>

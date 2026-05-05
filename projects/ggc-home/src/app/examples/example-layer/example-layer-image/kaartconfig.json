@@ -1,0 +1,25 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "zIndex": -20
+      }
+    ]
+  },
+  {
+    "type": "image",
+    "url": "/code/examples/example-layer/example-layer-image/bestemmingsplan.png",
+    "layers": [
+      {
+        "title": "Bestemmingsplan",
+        "imageExtent": [193413, 465508, 194660, 466762],
+        "layerId": "logoImage"
+      }
+    ]
+  }
+]

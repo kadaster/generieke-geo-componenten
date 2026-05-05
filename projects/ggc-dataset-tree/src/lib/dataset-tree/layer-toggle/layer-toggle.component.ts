@@ -4,7 +4,8 @@ import {
   Input,
   OnInit,
   TemplateRef,
-  OnDestroy
+  OnDestroy,
+  signal
 } from "@angular/core";
 import { DatasetTreeLayer } from "../../model/theme/dataset-tree-webservice.model";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
@@ -105,8 +106,8 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   @Input() layerEnabledCallback: LayerEnabledCallback;
 
   protected title: string;
-  protected visible: boolean;
-  protected enabled = true;
+  protected visible = signal(true);
+  protected enabled = signal(true);
 
   private readonly datasetTreeService = inject(CoreDatasetTreeService);
   private readonly datasetTreeMapConnectService = inject(
@@ -205,7 +206,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.enabled = finalEnabled;
+    this.enabled.set(finalEnabled);
   }
 
   private async updateTitleAndVisibility() {
@@ -215,12 +216,13 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
         this.mapIndex,
         this.viewerType
       )) ?? this.title;
-    this.visible =
+    const newVisible =
       (await this.datasetTreeMapConnectService.isVisible(
         this._layer.layerId,
         this.mapIndex,
         this.viewerType
-      )) ?? this.visible;
+      )) ?? this.visible();
+    this.visible.set(newVisible);
   }
 
   private async subscribeToTrigger() {
@@ -239,7 +241,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
    * - Als de kaartlaag enabled is, dan wordt de visibility getoggled en wordt er een datasettree event ge-emit.
    */
   public async toggleVisibility() {
-    if (this.enabled) {
+    if (this.enabled()) {
       const updatedVisibility =
         await this.datasetTreeMapConnectService.toggleVisibility(
           this._layer.layerId,
@@ -248,7 +250,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
         );
 
       if (updatedVisibility != undefined) {
-        this.visible = updatedVisibility;
+        this.visible.set(updatedVisibility);
         this.datasetTreeService.emitDatasetTreeEvent(
           this._layer.layerId,
           this.mapIndex,

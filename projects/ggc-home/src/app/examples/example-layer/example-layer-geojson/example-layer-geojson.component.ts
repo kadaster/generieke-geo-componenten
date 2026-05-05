@@ -1,10 +1,5 @@
-import { Component } from "@angular/core";
-import {
-  GeojsonLayerOptions,
-  GgcGeojsonLayerComponent,
-  GgcLayerBrtAchtergrondkaartComponent,
-  GgcMapComponent
-} from "@kadaster/ggc-map";
+import { Component, OnInit } from "@angular/core";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -13,19 +8,18 @@ import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-search-location",
-  imports: [
-    GgcMapComponent,
-    ExampleFormatComponent,
-    GgcLayerBrtAchtergrondkaartComponent,
-    GgcGeojsonLayerComponent
-  ],
+  imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-geojson.component.html",
   styleUrl: "./example-layer-geojson.component.scss"
 })
-export class ExampleLayerGeojsonComponent {
+export class ExampleLayerGeojsonComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson",
-    title: "Kaartlaag: GeoJSON",
+    title: "Kaartlaag toevoegen: JSON-format (GeoJSON)",
     introduction: "Voeg een GeoJSON laag toe aan de kaart.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
@@ -33,9 +27,18 @@ export class ExampleLayerGeojsonComponent {
     imageLocation:
       "code/examples/example-layer/example-layer-geojson/example-layer-geojson.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-layer/example-layer-geojson/example-layer-geojson.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;
+  // DOCS-SKIP:END
 
-  optionsGelderland: GeojsonLayerOptions = {
-    url: "/code/examples/example-layer/example-layer-geojson/gelderland.json",
-    zIndex: 10
-  };
+  protected mapConfig: Webservice[];
+
+  ngOnInit() {
+    this.httpClient
+      .get("code/examples/example-layer/example-layer-geojson/kaartconfig.json")
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+      });
+  }
 }

@@ -30,15 +30,20 @@ import { Tags } from "../../tags.enum";
   styleUrl: "./example-search-location-adv.component.scss"
 })
 export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-adv",
     title: "Locatie zoeken (uitgebreid)",
-    introduction: "Zoek een adres, woonplaats of locatie.",
+    introduction: "Zoek een adres, woonplaats of huidige locatie.",
     components: [Components.GGC_SEARCH_LOCATION],
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-search-location/example-search-location-adv/example-search-location-adv.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
+  // DOCS-SKIP:END
 
   readonly searchLocationOptions = computed(() => {
     return {
@@ -59,6 +64,10 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
 
   protected zoomToResult = signal(true);
   protected markResult = signal(true);
+
+  constructor() {
+    super();
+  }
 
   logSearchComponentEvents(searchComponentEvent: SearchComponentEvent) {
     console.log(searchComponentEvent);

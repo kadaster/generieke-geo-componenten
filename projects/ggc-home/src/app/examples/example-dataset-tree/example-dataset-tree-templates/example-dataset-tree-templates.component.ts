@@ -16,9 +16,7 @@ import {
   LayerLabelTemplateDirective,
   Theme
 } from "@kadaster/ggc-dataset-tree";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
-import { DecimalPipe } from "@angular/common";
 import { ViewerType } from "@kadaster/ggc-models";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -31,7 +29,6 @@ import { Tags } from "../../tags.enum";
     GgcDatasetTreeComponent,
     FormsModule,
     ExampleFormatComponent,
-    DecimalPipe,
     DatasetLabelTemplateDirective,
     LayerLabelTemplateDirective
   ],
@@ -42,17 +39,22 @@ export class ExampleDatasetTreeTemplatesComponent
   extends ExampleFormatComponent
   implements OnInit
 {
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dataset-tree-label-template",
-    title: "Dataset Tree label templates",
+    title: "Label bij kaartlaag keuze",
     introduction:
-      "Met behulp van de dataset tree kunnen kaartlagen aan of uitgevinkt worden.",
+      "Bij kaartlagen in de dataset-tree kunnen labels getoond worden.",
     components: [Components.GGC_DATASET_TREE],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.png"
   } as ComponentInfo;
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetTreeComponent.html`;
+  urlComponentModule =
+    "example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts";
+  // DOCS-SKIP:END
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
@@ -61,26 +63,26 @@ export class ExampleDatasetTreeTemplatesComponent
   private readonly mapEventsService = inject(GgcMapEventsService);
   private readonly mapService = inject(GgcMapService);
   private readonly layerService = inject(GgcLayerService);
-  private readonly httpClient = inject(HttpClient);
+
   private readonly connectService = inject(DatasetTreeMapConnectService);
 
   private readonly datasetTypeCache = new Map<string, string>();
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
-      .get("code/examples/example-dataset-tree/kaartconfig.json")
+      .get(
+        "code/examples/example-dataset-tree/example-dataset-tree-templates/kaartconfig.json"
+      )
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
     this.httpClient
-      .get("code/examples/example-dataset-tree/treeconfig.json")
+      .get(
+        "code/examples/example-dataset-tree/example-dataset-tree-templates/treeconfig.json"
+      )
       .subscribe((data) => {
         this.datasetTreeConfig = data as Theme[];
       });
-  }
-
-  ngOnInit() {
     this.mapEventsService
       .getZoomendObservableForMap(this.mapIndex)
       .subscribe(() => {

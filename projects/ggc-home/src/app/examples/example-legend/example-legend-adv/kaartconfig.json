@@ -23,31 +23,8 @@
         "layerId": "nederland",
         "title": "Landsgrens (geen legenda geconfigureerd)",
         "layerName": "landgebied",
-        "legendIndex": 4,
-        "zIndex": 10
-      }
-    ]
-  },
-  {
-    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
-    "type": "wms",
-    "title": "Bestuurlijke gebieden",
-    "layers": [
-      {
-        "layerId": "gemeenten",
-        "layerName": "gemeentegebied",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Gemeentegebied/Gemeentegebied.png"
-        },
-        "legendIndex": 3
-      },
-      {
-        "layerId": "provincies",
-        "layerName": "provinciegebied",
-        "legendIndex": 2,
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Provinciegebied/Provinciegebied.png"
-        }
+        "legendIndex": 1,
+        "zIndex": 3
       }
     ]
   },
@@ -59,7 +36,6 @@
         "layerId": "bgt-meldingen",
         "title": "Terugmeldingen BGT",
         "layerName": "bgtterugmeldingen",
-        "legendIndex": 5,
         "activeLegend": [
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/nieuw.svg",
@@ -89,7 +65,10 @@
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/afgewezen.svg",
             "text": "Afgerond zonder aanpassing"
           }
-        ]
+        ],
+        "legendIndex": 5,
+        "zIndex": 10,
+        "maxResolution": 215.04
       }
     ]
   }

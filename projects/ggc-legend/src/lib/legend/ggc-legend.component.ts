@@ -4,7 +4,8 @@ import {
   inject,
   Input,
   OnInit,
-  Output
+  Output,
+  signal
 } from "@angular/core";
 import { Legend } from "../model/legend.model";
 import {
@@ -122,7 +123,7 @@ export class GgcLegendComponent implements OnInit {
   emptyLegendMessage = "Geen legenda beschikbaar";
 
   /** Interne opslag van de legenda's. */
-  private _legends: Legend[] = [];
+  protected _legends = signal<Legend[]>([]);
 
   /** Service voor het beheren van legenda-acties. */
   private readonly coreLegendService = inject(CoreLegendService);
@@ -135,7 +136,7 @@ export class GgcLegendComponent implements OnInit {
    * Haalt de huidige lijst van legenda's op.
    */
   get legends(): Legend[] {
-    return this._legends;
+    return this._legends();
   }
 
   /**
@@ -145,7 +146,7 @@ export class GgcLegendComponent implements OnInit {
   @Input()
   set legends(value: Legend[]) {
     if (!value) return;
-    this._legends = value;
+    this._legends.set(value);
   }
 
   /**
@@ -203,18 +204,20 @@ export class GgcLegendComponent implements OnInit {
       expanded: this.defaultExpanded,
       layerLegends: [legend]
     };
-    const indexExistingLegend = this._legends.findIndex((datasetLegend) => {
+    const indexExistingLegend = this._legends().findIndex((datasetLegend) => {
       return datasetLegend.name == datasetLegendNew.name;
     });
     if (indexExistingLegend >= 0) {
-      this._legends.at(indexExistingLegend)?.layerLegends?.unshift(legend);
-      this._legends
+      this._legends().at(indexExistingLegend)?.layerLegends?.unshift(legend);
+      this._legends()
         .at(indexExistingLegend)
         ?.layerLegends?.sort(this.sortLayerLegends);
     } else {
-      this._legends.unshift(datasetLegendNew);
+      this._legends().unshift(datasetLegendNew);
     }
-    this._legends.sort(this.sortDatasetLegends);
+    this._legends().sort(this.sortDatasetLegends);
+    this._legends.set([...this._legends()]);
+    console.log(legend);
   }
 
   private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
@@ -237,7 +240,7 @@ export class GgcLegendComponent implements OnInit {
    */
   removeLegend(layerId: string) {
     const remainingDatasetLegends = [];
-    for (const datasetLegend of this._legends) {
+    for (const datasetLegend of this._legends()) {
       const remainingLayerLegends = [];
       for (const layerLegend of datasetLegend.layerLegends ?? []) {
         if (layerLegend.layerId != layerId) {
@@ -249,7 +252,7 @@ export class GgcLegendComponent implements OnInit {
         remainingDatasetLegends.push(datasetLegend);
       }
     }
-    this._legends = remainingDatasetLegends;
+    this._legends.set(remainingDatasetLegends);
   }
 
   /**
@@ -272,11 +275,11 @@ export class GgcLegendComponent implements OnInit {
    */
   private toggleAllLegends(datasetLegendToggle: DatasetLegendToggle): void {
     if (
-      this._legends != null &&
-      Array.isArray(this._legends) &&
+      this._legends() != null &&
+      Array.isArray(this._legends()) &&
       this.mapIndex === datasetLegendToggle.mapIndex
     ) {
-      for (const legend of this._legends) {
+      for (const legend of this._legends()) {
         legend.expanded = datasetLegendToggle.expanded;
       }
     }
@@ -293,7 +296,7 @@ export class GgcLegendComponent implements OnInit {
   ): void {
     if (this.collapsable && (!keyboardEvent || keyboardEvent.key === "Enter")) {
       legend.expanded = !legend.expanded;
-      this.legendsChange.emit(this._legends);
+      this.legendsChange.emit(this._legends());
     }
   }
 
@@ -391,7 +394,7 @@ export class GgcLegendComponent implements OnInit {
   }
 
   private async updateEnabledLayerLegends() {
-    for (const datasetLegend of this._legends) {
+    for (const datasetLegend of this._legends()) {
       for (const layerLegend of datasetLegend.layerLegends ?? []) {
         layerLegend.layerEnabled =
           await this.legendMapConnectService.getEnabled(
