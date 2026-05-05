@@ -28,10 +28,15 @@ export class GgcToolbarConnectService {
   async loadMapService(): Promise<void> {
     if (!this.mapService) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.mapService = this.injector.get(module.GgcMapService);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      } catch (e) {
+        console.debug(
+          `Autoconnect ggc-toolbar met ggc-map is niet gelukt (GgcMapService): ${e}`
+        );
+      }
     }
   }
 
@@ -56,10 +61,15 @@ export class GgcToolbarConnectService {
   async loadDrawService(): Promise<void> {
     if (!this.drawService) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.drawService = this.injector.get(module.GgcDrawService);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      } catch (e) {
+        console.debug(
+          `Autoconnect ggc-toolbar met ggc-map is niet gelukt (GgcDrawService): ${e}`
+        );
+      }
     }
   }
 
@@ -84,7 +94,8 @@ export class GgcToolbarConnectService {
   async loadMapComponentDrawTypes(): Promise<void> {
     if (!this.mapComponentDrawTypes) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.mapComponentDrawTypes = module.MapComponentDrawTypes;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {}

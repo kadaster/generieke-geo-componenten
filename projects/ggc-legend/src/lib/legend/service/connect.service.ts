@@ -26,7 +26,8 @@ export class GgcLegendConnectService {
   async loadGgcCesiumSharedLayerService(): Promise<void> {
     if (!this.ggcCesiumSharedLayerService) {
       try {
-        const module = await import("@kadaster/ggc-cesium");
+        const moduleName = "@kadaster/ggc-cesium";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.ggcCesiumSharedLayerService = this.injector.get(
           module.GgcSharedLayerService
         );
@@ -50,7 +51,8 @@ export class GgcLegendConnectService {
   async loadGgcOLLayerService(): Promise<void> {
     if (!this.ggcOLLayerService) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.ggcOLLayerService = this.injector.get(module.GgcLayerService);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
@@ -73,7 +75,8 @@ export class GgcLegendConnectService {
   async loadGgcOLMapEventsService(): Promise<void> {
     if (!this.ggcOLMapEventsService) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.ggcOLMapEventsService = this.injector.get(
           module.GgcMapEventsService
         );

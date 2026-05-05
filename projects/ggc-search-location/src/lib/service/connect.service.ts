@@ -26,10 +26,15 @@ export class GgcSearchLocationConnectService {
   async loadMapService(): Promise<void> {
     if (!this.mapService) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.mapService = this.injector.get(module.GgcMapService);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      } catch (e) {
+        console.debug(
+          `Autoconnect ggc-search-location met ggc-map is niet gelukt (GgcMapService): ${e}`
+        );
+      }
     }
   }
 

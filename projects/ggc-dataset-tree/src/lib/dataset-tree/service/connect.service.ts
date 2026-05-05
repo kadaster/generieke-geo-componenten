@@ -26,12 +26,17 @@ export class GgcDatasetTreeConnectService {
   async loadGgcCesiumSharedLayerService(): Promise<void> {
     if (!this.ggcCesiumSharedLayerService) {
       try {
-        const module = await import("@kadaster/ggc-cesium");
+        const moduleName = "@kadaster/ggc-cesium";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.ggcCesiumSharedLayerService = this.injector.get(
           module.GgcSharedLayerService
         );
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      } catch (e) {
+        console.debug(
+          `Autoconnect ggc-dataset-tree met ggc-cesium is niet gelukt (GgcSharedLayerService): ${e}`
+        );
+      }
     }
   }
 
@@ -47,10 +52,15 @@ export class GgcDatasetTreeConnectService {
   async loadGgcOLLayerService(): Promise<void> {
     if (!this.ggcOLLayerService) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.ggcOLLayerService = this.injector.get(module.GgcLayerService);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      } catch (e) {
+        console.debug(
+          `Autoconnect ggc-dataset-tree met ggc-map is niet gelukt (GgcLayerService): ${e}`
+        );
+      }
     }
   }
 
@@ -66,12 +76,17 @@ export class GgcDatasetTreeConnectService {
   async loadGgcOLMapEventsService(): Promise<void> {
     if (!this.ggcOLMapEventsService) {
       try {
-        const module = await import("@kadaster/ggc-map");
+        const moduleName = "@kadaster/ggc-map";
+        const module = await import(/* @vite-ignore */ moduleName);
         this.ggcOLMapEventsService = this.injector.get(
           module.GgcMapEventsService
         );
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      } catch (e) {
+        console.debug(
+          `Autoconnect ggc-dataset-tree met ggc-map is niet gelukt (GgcMapEventsService): ${e}`
+        );
+      }
     }
   }
 
