@@ -23,31 +23,8 @@
         "layerId": "nederland",
         "title": "Landsgrens (geen legenda geconfigureerd)",
         "layerName": "landgebied",
-        "legendIndex": 4,
-        "zIndex": 10
-      }
-    ]
-  },
-  {
-    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
-    "type": "wms",
-    "title": "Bestuurlijke gebieden",
-    "layers": [
-      {
-        "layerId": "gemeenten",
-        "layerName": "gemeentegebied",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Gemeentegebied/Gemeentegebied.png"
-        },
-        "legendIndex": 3
-      },
-      {
-        "layerId": "provincies",
-        "layerName": "provinciegebied",
-        "legendIndex": 2,
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Provinciegebied/Provinciegebied.png"
-        }
+        "legendIndex": 1,
+        "zIndex": 3
       }
     ]
   },
@@ -59,7 +36,6 @@
         "layerId": "bgt-meldingen",
         "title": "Terugmeldingen BGT",
         "layerName": "bgtterugmeldingen",
-        "legendIndex": 5,
         "activeLegend": [
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/nieuw.svg",
@@ -89,85 +65,10 @@
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/afgewezen.svg",
             "text": "Afgerond zonder aanpassing"
           }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "wms",
-    "url": "https://service.pdok.nl/brt/topraster/wms/v1_0?",
-    "layers": [
-      {
-        "title": "TOP1000",
-        "layerName": "top1000raster",
-        "layerId": "top1000raster",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top1000raster/default.png"
-        },
-        "minResolution": 215.04,
-        "maxResolution": 430.081,
-        "attributions": "TOP1000 raster",
-        "tiled": true
-      },
-      {
-        "title": "TOP500",
-        "layerName": "top500raster",
-        "layerId": "top500raster",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top500raster/default.png"
-        },
-        "minResolution": 107.52,
-        "maxResolution": 215.04,
-        "attributions": "TOP500 raster",
-        "tiled": true
-      },
-      {
-        "title": "TOP250",
-        "layerName": "top250raster",
-        "layerId": "top250raster",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top250raster/default.png"
-        },
-        "minResolution": 53.76,
-        "maxResolution": 107.52,
-        "attributions": "TOP250 raster",
-        "tiled": true
-      },
-      {
-        "title": "TOP100",
-        "layerName": "top100raster",
-        "layerId": "top100raster",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top100raster/default.png"
-        },
-        "minResolution": 13.44,
-        "maxResolution": 53.76,
-        "attributions": "TOP100 raster",
-        "tiled": true
-      },
-      {
-        "title": "TOP50",
-        "layerName": "top50raster",
-        "layerId": "top50raster",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top50raster/default.png"
-        },
-        "minResolution": 6.72,
-        "maxResolution": 13.44,
-        "attributions": "TOP50 raster",
-        "tiled": true
-      },
-      {
-        "title": "TOP25",
-        "layerName": "top25raster",
-        "layerId": "top25raster",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/brt/topraster/wms/v1_0/legend/top25raster/default.png"
-        },
-        "minResolution": 3.36,
-        "maxResolution": 6.72,
-        "attributions": "TOP25 raster",
-        "tiled": true
+        ],
+        "legendIndex": 5,
+        "zIndex": 10,
+        "maxResolution": 215.04
       }
     ]
   }

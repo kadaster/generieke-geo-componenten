@@ -131,7 +131,6 @@ export class ExampleSnappingAdvComponent
 
   toggleSegmenterSnapping() {
     this.segmentersEnabled = !this.segmentersEnabled;
-
     this.snapOptions.segmenters = this.segmentersEnabled
       ? {
           MultiPolygon: (geom: Geometry) => {
@@ -161,11 +160,16 @@ export class ExampleSnappingAdvComponent
               const midpoint = [(c1[0] + c2[0]) / 2, (c1[1] + c2[1]) / 2];
               segments.push([c1, midpoint], [midpoint, c2]);
             }
-
             return segments;
           }
         }
       : undefined;
+    if (this.segmentersEnabled) {
+      this.snapOptions = {
+        ...this.snapOptions,
+        vertex: true
+      };
+    }
     this.snapService.stopSnap(this.mapIndex);
     this.snapService.startSnap(this.drawLayer, this.mapIndex, this.snapOptions);
   }
