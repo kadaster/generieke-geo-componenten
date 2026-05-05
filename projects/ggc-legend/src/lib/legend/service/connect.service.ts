@@ -31,7 +31,7 @@ export class GgcLegendConnectService {
           module.GgcSharedLayerService
         );
       } catch (e) {
-        console.log(
+        console.debug(
           `Autoconnect ggc-legend met ggc-cesium is niet gelukt (GgcSharedLayerService): ${e}`
         );
       }
@@ -54,7 +54,7 @@ export class GgcLegendConnectService {
         this.ggcOLLayerService = this.injector.get(module.GgcLayerService);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
-        console.warn(
+        console.debug(
           `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcLayerService): ${e}`
         );
       }
@@ -79,7 +79,7 @@ export class GgcLegendConnectService {
         );
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
-        console.warn(
+        console.debug(
           `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcMapEventsService): ${e}`
         );
       }
