@@ -50,39 +50,27 @@ export class MenuBarComponent {
   }
 
   openVoorbeelden() {
-    this.eventTrackerService.trackEvent(
-      "content",
-      "click_intern",
-      "voorbeelden"
-    );
+    this.eventTrackerService.trackEvent("voorbeelden");
     this.router.navigate(["/example-index"]);
   }
 
   openQuickstart() {
-    this.eventTrackerService.trackEvent(
-      "content",
-      "click_intern",
-      "quick_start"
-    );
+    this.eventTrackerService.trackEvent("quick_start");
     this.router.navigate(["/quick-start"]);
   }
 
   openTsDocs() {
-    this.eventTrackerService.trackEvent("content", "click_intern", "tsdocs");
+    this.eventTrackerService.trackEvent("tsdocs");
     window.open(tsdocsUrl, "_blank", "noopener,noreferrer");
   }
 
   openGithub() {
-    this.eventTrackerService.trackEvent("content", "click_intern", "github");
+    this.eventTrackerService.trackEvent("github");
     window.open(githubUrl, "_blank", "noopener,noreferrer");
   }
 
   openReleasesAndChangelog() {
-    this.eventTrackerService.trackEvent(
-      "content",
-      "click_intern",
-      "releases_en_changelog"
-    );
+    this.eventTrackerService.trackEvent("releases_en_changelog");
     window.open(githubReleasesUrl, "_blank", "noopener,noreferrer");
   }
 }

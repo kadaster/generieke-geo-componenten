@@ -20,7 +20,7 @@ describe("EventTrackerService", () => {
   });
 
   it("should track an event", () => {
-    eventTrackerService.trackEvent("content", "click_intern", "testname");
+    eventTrackerService.trackEvent("testname");
 
     expect(piwikTrackerServiceSpy).toHaveBeenCalledWith(
       "content",

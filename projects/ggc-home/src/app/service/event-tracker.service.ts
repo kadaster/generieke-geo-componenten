@@ -7,16 +7,10 @@ import { CustomEventsService } from "@piwikpro/ngx-piwik-pro";
 export class EventTrackerService {
   private readonly customEventsServicePiwik = inject(CustomEventsService);
 
-  // Event category (Button), event action (Click), Custom event name (eventName)
-
-  trackEvent(
-    eventCategory: "content" | "Map" | "Checkbox",
-    eventAction: "click_intern",
-    eventName: string
-  ) {
+  trackEvent(eventName: string) {
     this.customEventsServicePiwik.trackEvent(
-      eventCategory,
-      eventAction,
+      "content",
+      "click_intern",
       eventName
     );
   }

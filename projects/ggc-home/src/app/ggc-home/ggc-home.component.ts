@@ -79,6 +79,6 @@ export class GgcHomeComponent implements AfterViewInit {
   }
 
   trackPiwikEvent(label: string) {
-    this.eventTrackerService.trackEvent("content", "click_intern", label);
+    this.eventTrackerService.trackEvent(label);
   }
 }
