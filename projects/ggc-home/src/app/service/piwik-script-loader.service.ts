@@ -5,8 +5,6 @@ import { environment } from "../../environments/environment";
   providedIn: "root"
 })
 export class PiwikScriptLoaderService {
-  constructor() {}
-
   loadPiwikScript(): void {
     const piwikScriptElement = document.getElementById(
       "piwik-script"
