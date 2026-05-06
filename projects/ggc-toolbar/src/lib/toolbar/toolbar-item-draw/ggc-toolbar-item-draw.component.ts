@@ -96,10 +96,9 @@ export class GgcToolbarItemDrawComponent {
   }
 
   private async initDrawService(): Promise<void> {
-    await this.connectService.loadDrawService();
-    await this.connectService.loadMapComponentDrawTypes();
-    this.drawService = this.connectService.getDrawService();
-    this.mapComponentDrawTypes = this.connectService.getMapComponentDrawTypes();
+    this.drawService = await this.connectService.getDrawService();
+    this.mapComponentDrawTypes =
+      await this.connectService.getMapComponentDrawTypes();
   }
 
   /**

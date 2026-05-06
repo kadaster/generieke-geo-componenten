@@ -1,6 +1,6 @@
 import { DatasetTreeMapConnectService } from "./dataset-tree-map-connect.service";
 import { TestBed } from "@angular/core/testing";
-import { EMPTY, of } from "rxjs";
+import { of, EMPTY } from "rxjs";
 import { GgcDatasetTreeConnectService } from "./connect.service";
 import { DEFAULT_CESIUM_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
 
@@ -11,7 +11,7 @@ describe("DatasetTreeMapConnectService", () => {
   let mockMapLayerService: any;
   let mockMapEventsService: any;
 
-  let mockConnectService: any;
+  let mockConnectService: jasmine.SpyObj<GgcDatasetTreeConnectService>;
 
   beforeEach(async () => {
     mockCesiumLayerService = {
@@ -40,33 +40,27 @@ describe("DatasetTreeMapConnectService", () => {
         .and.returnValue(of("zoom"))
     };
 
-    mockConnectService = {
-      loadGgcCesiumSharedLayerService: jasmine
-        .createSpy()
-        .and.returnValue(Promise.resolve()),
-      getGgcCesiumSharedLayerService: jasmine
-        .createSpy()
-        .and.returnValue(mockCesiumLayerService),
+    mockConnectService = jasmine.createSpyObj("GgcDatasetTreeConnectService", [
+      "getGgcCesiumSharedLayerService",
+      "getGgcOLLayerService",
+      "getGgcOLMapEventsService"
+    ]);
 
-      loadGgcOLLayerService: jasmine
-        .createSpy()
-        .and.returnValue(Promise.resolve()),
-      getGgcOLLayerService: jasmine
-        .createSpy()
-        .and.returnValue(mockMapLayerService),
-
-      loadGgcOLMapEventsService: jasmine
-        .createSpy()
-        .and.returnValue(Promise.resolve()),
-      getGgcOLMapEventsService: jasmine
-        .createSpy()
-        .and.returnValue(mockMapEventsService)
-    };
+    mockConnectService.getGgcCesiumSharedLayerService.and.resolveTo(
+      mockCesiumLayerService
+    );
+    mockConnectService.getGgcOLLayerService.and.resolveTo(mockMapLayerService);
+    mockConnectService.getGgcOLMapEventsService.and.resolveTo(
+      mockMapEventsService
+    );
 
     await TestBed.configureTestingModule({
       providers: [
         DatasetTreeMapConnectService,
-        { provide: GgcDatasetTreeConnectService, useValue: mockConnectService }
+        {
+          provide: GgcDatasetTreeConnectService,
+          useValue: mockConnectService
+        }
       ]
     }).compileComponents();
 
@@ -77,85 +71,91 @@ describe("DatasetTreeMapConnectService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should get the layerChangedObservable in 2D", async () => {
-    const obs = await service.getLayerChangedObservable(ViewerType.TWEE_D);
-    obs.subscribe((val) => {
-      expect(val.layerId).toBe("id-2d");
-      expect(val.mapIndex).toBe("map");
+  describe("layerChangedObservable", () => {
+    it("should return 2D layer stream", async () => {
+      const obs = await service.getLayerChangedObservable(ViewerType.TWEE_D);
+
+      obs.subscribe((val) => {
+        expect(val.layerId).toBe("id-2d");
+        expect(val.mapIndex).toBe("map");
+      });
+
+      expect(mockConnectService.getGgcOLLayerService).toHaveBeenCalled();
+    });
+
+    it("should return 3D layer stream", async () => {
+      const obs = await service.getLayerChangedObservable(ViewerType.DRIE_D);
+
+      obs.subscribe((val) => {
+        expect(val.layerId).toBe("id-3d");
+        expect(val.mapIndex).toBe(DEFAULT_CESIUM_MAPINDEX);
+      });
+
+      expect(
+        mockConnectService.getGgcCesiumSharedLayerService
+      ).toHaveBeenCalled();
     });
   });
 
-  it("should get the layerChangedObservable in 3D", async () => {
-    const obs = await service.getLayerChangedObservable(ViewerType.DRIE_D);
-    obs.subscribe((val) => {
-      expect(val.layerId).toBe("id-3d");
-      expect(val.mapIndex).toBe(DEFAULT_CESIUM_MAPINDEX);
+  describe("zoomendObservable", () => {
+    it("should return observable in 2D", async () => {
+      const obs = await service.getZoomendObservableForMap(
+        "mapIndex",
+        ViewerType.TWEE_D
+      );
+
+      obs.subscribe((val) => {
+        expect(val).toBe("zoom");
+      });
+
+      expect(mockConnectService.getGgcOLMapEventsService).toHaveBeenCalled();
+    });
+
+    it("should return EMPTY in 3D", async () => {
+      const obs = await service.getZoomendObservableForMap(
+        "mapIndex",
+        ViewerType.DRIE_D
+      );
+
+      expect(obs).toBe(EMPTY);
     });
   });
 
-  it("should get the zoomendObservable in 2D", async () => {
-    const obs = await service.getZoomendObservableForMap(
-      "mapIndex",
-      ViewerType.TWEE_D
-    );
-    obs.subscribe((val) => {
-      expect(val).toBe("zoom");
+  describe("metadata methods", () => {
+    it("should get title (2D)", async () => {
+      const result = await service.getTitle("id", "index", ViewerType.TWEE_D);
+
+      expect(result).toBe("title-2d");
     });
-  });
 
-  it("should not get the zoomendObservable in 3D", async () => {
-    const obs = await service.getZoomendObservableForMap(
-      "mapIndex",
-      ViewerType.DRIE_D
-    );
-    expect(obs).toBe(EMPTY);
-  });
+    it("should get title (3D)", async () => {
+      const result = await service.getTitle("id", "index", ViewerType.DRIE_D);
 
-  it("should get the title in 2D", async () => {
-    expect(await service.getTitle("id", "index", ViewerType.TWEE_D)).toBe(
-      "title-2d"
-    );
-  });
+      expect(result).toBe("title-3d");
+    });
 
-  it("should get the title in 3D", async () => {
-    expect(await service.getTitle("id", "index", ViewerType.DRIE_D)).toBe(
-      "title-3d"
-    );
-  });
+    it("should get visibility (2D)", async () => {
+      const result = await service.isVisible("id", "index", ViewerType.TWEE_D);
 
-  it("should get the visibility in 2D", async () => {
-    expect(await service.isVisible("id", "index", ViewerType.TWEE_D)).toBe(
-      false
-    );
-  });
+      expect(result).toBe(false);
+    });
 
-  it("should get the visibility in 3D", async () => {
-    expect(await service.isVisible("id", "index", ViewerType.DRIE_D)).toBe(
-      true
-    );
-  });
+    it("should get visibility (3D)", async () => {
+      const result = await service.isVisible("id", "index", ViewerType.DRIE_D);
 
-  it("should toggle the visibility in 2D", async () => {
-    expect(await service.isVisible("id", "index", ViewerType.TWEE_D)).toBe(
-      false
-    );
-  });
+      expect(result).toBe(true);
+    });
 
-  it("should toggle the visibility in 3D", async () => {
-    expect(await service.isVisible("id", "index", ViewerType.DRIE_D)).toBe(
-      true
-    );
-  });
+    it("should get enabled state (2D)", async () => {
+      const result = await service.getEnabled("id", "index", ViewerType.TWEE_D);
 
-  it("should get enabled in 2D", async () => {
-    expect(await service.isVisible("id", "index", ViewerType.TWEE_D)).toBe(
-      false
-    );
-  });
+      expect(result).toBe(false);
+    });
 
-  it("should get enabled in 3D", async () => {
-    expect(await service.isVisible("id", "index", ViewerType.DRIE_D)).toBe(
-      true
-    );
+    it("should get enabled state (3D)", async () => {
+      const result = await service.getEnabled("id", "index", ViewerType.DRIE_D);
+
+      expect(result).toBe(true);
+    });
   });
 });

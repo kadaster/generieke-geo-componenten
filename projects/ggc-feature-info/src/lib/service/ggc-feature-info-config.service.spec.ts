@@ -9,7 +9,7 @@ import * as locales from "@angular/common/locales/nl";
 
 let service: GgcFeatureInfoConfigService;
 
-describe("FeatureInfoConfigService > ", () => {
+describe("GgcFeatureInfoConfigService > ", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [GgcFeatureInfoConfigService]
