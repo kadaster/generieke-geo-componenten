@@ -2,6 +2,7 @@ import { Component, inject, signal } from "@angular/core";
 
 import { Router, RouterOutlet } from "@angular/router";
 import { MenuBarComponent } from "./menu-bar/menu-bar.component";
+import { PiwikScriptLoaderService } from "./service/piwik-script-loader.service";
 
 @Component({
   selector: "app-root",
@@ -12,6 +13,11 @@ import { MenuBarComponent } from "./menu-bar/menu-bar.component";
 export class App {
   protected readonly title = signal("GGC Home");
   private readonly router = inject(Router);
+  private readonly piwikScriptLoader = inject(PiwikScriptLoaderService);
+
+  constructor() {
+    this.piwikScriptLoader.loadPiwikScript();
+  }
 
   focusContent(): void {
     switch (this.router.url) {

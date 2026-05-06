@@ -3,6 +3,7 @@ import { Menu, MenuBar, MenuContent, MenuItem } from "@angular/aria/menu";
 import { Router } from "@angular/router";
 import { CdkConnectedOverlay } from "@angular/cdk/overlay";
 import { githubReleasesUrl, githubUrl, tsdocsUrl } from "../constants/urls";
+import { EventTrackerService } from "../service/event-tracker.service";
 
 @Component({
   selector: "app-menu-bar",
@@ -16,6 +17,7 @@ export class MenuBarComponent {
   codeMenu = viewChild<Menu<string>>("codeMenu");
   rendered = signal(false);
 
+  private readonly eventTrackerService = inject(EventTrackerService);
   private readonly router = inject(Router);
 
   onFocusIn() {
@@ -48,6 +50,11 @@ export class MenuBarComponent {
   }
 
   openVoorbeelden() {
+    this.eventTrackerService.trackEvent(
+      "content",
+      "click_intern",
+      "voorbeelden"
+    );
     this.router.navigate(["/example-index"]);
   }
 
