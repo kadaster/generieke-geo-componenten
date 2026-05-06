@@ -18,10 +18,13 @@ export class GgcLegendMapConnectService {
    */
   async getLegendAddedObservable(): Promise<Observable<LegendAddedEvent>> {
     const mapObservable: Observable<LegendAddedEvent> =
-      (await this.getMapLayerService())?.getLegendAddedObservable() ?? of();
+      (
+        (await this.connectService.getGgcOLLayerService()) as any
+      )?.getLegendAddedObservable() ?? of();
     const cesiumObservable: Observable<LegendAddedEvent> =
-      (await this.getCesiumSharedLayerService())?.getLegendAddedObservable() ??
-      of();
+      (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      )?.getLegendAddedObservable() ?? of();
     return merge(mapObservable, cesiumObservable);
   }
 
@@ -30,10 +33,12 @@ export class GgcLegendMapConnectService {
    */
   async getLegendRemovedObservable(): Promise<Observable<LegendRemovedEvent>> {
     const mapObservable: Observable<LegendRemovedEvent> =
-      (await this.getMapLayerService())?.getLegendRemovedObservable() ?? of();
+      (
+        (await this.connectService.getGgcOLLayerService()) as any
+      )?.getLegendRemovedObservable() ?? of();
     const cesiumObservable: Observable<LegendRemovedEvent> =
       (
-        await this.getCesiumSharedLayerService()
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
       )?.getLegendRemovedObservable() ?? of();
     return merge(mapObservable, cesiumObservable);
   }
@@ -45,9 +50,9 @@ export class GgcLegendMapConnectService {
   async getZoomendObservableForMap(mapIndex: string): Promise<Observable<any>> {
     // Not implemented for Cesium 3D
     return (
-      (await this.getMapEventsService())?.getZoomendObservableForMap(
-        mapIndex
-      ) ?? EMPTY
+      (
+        (await this.connectService.getGgcOLMapEventsService()) as any
+      )?.getZoomendObservableForMap(mapIndex) ?? EMPTY
     );
   }
 
@@ -57,11 +62,13 @@ export class GgcLegendMapConnectService {
    */
   async getCurrentActiveLegends(mapIndex: string): Promise<LayerLegend[]> {
     const mapLegends: LayerLegend[] =
-      (await this.getMapLayerService())?.getCurrentActiveLegends(mapIndex) ??
-      [];
+      (
+        (await this.connectService.getGgcOLLayerService()) as any
+      )?.getCurrentActiveLegends(mapIndex) ?? [];
     const cesiumLegends: LayerLegend[] =
-      (await this.getCesiumSharedLayerService())?.getCurrentActiveLegends() ??
-      [];
+      (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      )?.getCurrentActiveLegends() ?? [];
     return mapLegends.concat(cesiumLegends);
   }
 
@@ -72,24 +79,14 @@ export class GgcLegendMapConnectService {
    */
   async getEnabled(layerId: string, mapIndex: string) {
     const enabledCesium =
-      (await this.getCesiumSharedLayerService())?.getEnabled(layerId) ?? true;
+      (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      )?.getEnabled(layerId) ?? true;
     const enabledMap =
-      (await this.getMapLayerService())?.getEnabled(layerId, mapIndex) ?? true;
+      ((await this.connectService.getGgcOLLayerService()) as any)?.getEnabled(
+        layerId,
+        mapIndex
+      ) ?? true;
     return enabledCesium && enabledMap;
-  }
-
-  private async getCesiumSharedLayerService() {
-    await this.connectService.loadGgcCesiumSharedLayerService();
-    return this.connectService.getGgcCesiumSharedLayerService();
-  }
-
-  private async getMapLayerService() {
-    await this.connectService.loadGgcOLLayerService();
-    return this.connectService.getGgcOLLayerService();
-  }
-
-  private async getMapEventsService() {
-    await this.connectService.loadGgcOLMapEventsService();
-    return this.connectService.getGgcOLMapEventsService();
   }
 }

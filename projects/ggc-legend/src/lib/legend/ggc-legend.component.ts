@@ -366,9 +366,9 @@ export class GgcLegendComponent implements OnInit {
   }
 
   private async subscribeToLegendAddedObservable() {
-    const LegendAddedObservable =
+    const legendAddedObservable =
       await this.legendMapConnectService.getLegendAddedObservable();
-    LegendAddedObservable.subscribe((event) => {
+    legendAddedObservable.subscribe((event) => {
       if (this.mapIndex == event.mapIndex && event.legend) {
         this.addLegend(event.legend);
       }
@@ -376,9 +376,9 @@ export class GgcLegendComponent implements OnInit {
   }
 
   private async subscribeToLegendRemovedObservable() {
-    const LegendRemovedObservable =
+    const legendRemovedObservable =
       await this.legendMapConnectService.getLegendRemovedObservable();
-    LegendRemovedObservable.subscribe((event) => {
+    legendRemovedObservable.subscribe((event) => {
       if (this.mapIndex == event.mapIndex) {
         this.removeLegend(event.layerId);
       }

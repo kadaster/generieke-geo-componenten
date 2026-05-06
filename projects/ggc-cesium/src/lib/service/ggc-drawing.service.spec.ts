@@ -19,7 +19,7 @@ import { CoreSelectionService } from "./core-selection.service";
 import Spy = jasmine.Spy;
 import objectContaining = jasmine.objectContaining;
 
-describe("DrawingService", () => {
+describe("GgcDrawingService", () => {
   let service: GgcDrawingService;
   let coreViewerServiceSpy: jasmine.SpyObj<CoreViewerService>;
   let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;

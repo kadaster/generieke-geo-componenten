@@ -7,7 +7,7 @@ import { createCesiumMock } from "../viewer/viewer-mock.spec";
 import { Entity } from "@cesium/engine";
 import { cameraUtils } from "../utils/camera-utils";
 
-describe("LocationService", () => {
+describe("GgcLocationService", () => {
   let service: GgcLocationService;
   let coreViewerServiceSpy: jasmine.SpyObj<CoreViewerService>;
   let locationServiceSpy: jasmine.Spy;
