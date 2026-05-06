@@ -19,7 +19,6 @@ export class PiwikScriptLoaderService {
         "./assets/piwik-script/" + environment.piwikScript;
       piwikScriptElement.async = true;
       console.log("piwikScript: ", piwikScriptElement.src);
-
     }
   }
 }
