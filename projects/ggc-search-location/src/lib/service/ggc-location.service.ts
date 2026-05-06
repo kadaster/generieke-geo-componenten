@@ -78,8 +78,7 @@ export class GgcSearchLocationService {
     track: boolean,
     mapIndex = DEFAULT_MAPINDEX
   ): Promise<void> {
-    await this.connectService.loadMapService();
-    const mapService = this.connectService.getMapService();
+    const mapService = (await this.connectService.getMapService()) as any;
     if (mapService) {
       const map = mapService.getMap(mapIndex);
       if (map) {

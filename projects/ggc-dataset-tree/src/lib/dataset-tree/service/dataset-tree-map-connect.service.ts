@@ -58,7 +58,9 @@ export class DatasetTreeMapConnectService {
     viewerType: ViewerType
   ): Promise<Observable<LayerChangedEvent>> {
     if (viewerType === ViewerType.DRIE_D) {
-      return (await this.getCesiumSharedLayerService())
+      return (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      )
         .getLayerChangedObservable()
         .pipe(
           map(
@@ -71,7 +73,9 @@ export class DatasetTreeMapConnectService {
           )
         );
     }
-    return (await this.getMapLayerService()).getLayerChangedObservable();
+    return (
+      (await this.connectService.getGgcOLLayerService()) as any
+    ).getLayerChangedObservable();
   }
 
   /**
@@ -87,9 +91,9 @@ export class DatasetTreeMapConnectService {
       // Not implemented for 3D
       return EMPTY;
     }
-    return (await this.getMapEventsService()).getZoomendObservableForMap(
-      mapIndex
-    );
+    return (
+      (await this.connectService.getGgcOLMapEventsService()) as any
+    ).getZoomendObservableForMap(mapIndex);
   }
 
   /**
@@ -104,9 +108,14 @@ export class DatasetTreeMapConnectService {
     viewerType: ViewerType
   ): Promise<string | undefined> {
     if (viewerType === ViewerType.DRIE_D) {
-      return (await this.getCesiumSharedLayerService()).getTitle(layerId);
+      return (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      ).getTitle(layerId);
     }
-    return (await this.getMapLayerService()).getTitle(layerId, mapIndex);
+    return ((await this.connectService.getGgcOLLayerService()) as any).getTitle(
+      layerId,
+      mapIndex
+    );
   }
 
   /**
@@ -121,9 +130,13 @@ export class DatasetTreeMapConnectService {
     viewerType: ViewerType
   ): Promise<boolean | undefined> {
     if (viewerType === ViewerType.DRIE_D) {
-      return (await this.getCesiumSharedLayerService()).isVisible(layerId);
+      return (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      ).isVisible(layerId);
     }
-    return (await this.getMapLayerService()).isVisible(layerId, mapIndex);
+    return (
+      (await this.connectService.getGgcOLLayerService()) as any
+    ).isVisible(layerId, mapIndex);
   }
 
   /**
@@ -139,14 +152,13 @@ export class DatasetTreeMapConnectService {
     viewerType: ViewerType
   ): Promise<boolean | undefined> {
     if (viewerType === ViewerType.DRIE_D) {
-      return (await this.getCesiumSharedLayerService()).toggleVisibility(
-        layerId
-      );
+      return (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      ).toggleVisibility(layerId);
     }
-    return (await this.getMapLayerService()).toggleVisibility(
-      layerId,
-      mapIndex
-    );
+    return (
+      (await this.connectService.getGgcOLLayerService()) as any
+    ).toggleVisibility(layerId, mapIndex);
   }
 
   /**
@@ -157,9 +169,13 @@ export class DatasetTreeMapConnectService {
    */
   async getEnabled(layerId: string, mapIndex: string, viewerType: ViewerType) {
     if (viewerType === ViewerType.DRIE_D) {
-      return (await this.getCesiumSharedLayerService()).getEnabled(layerId);
+      return (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      ).getEnabled(layerId);
     }
-    return (await this.getMapLayerService()).getEnabled(layerId, mapIndex);
+    return (
+      (await this.connectService.getGgcOLLayerService()) as any
+    ).getEnabled(layerId, mapIndex);
   }
 
   /**
@@ -174,23 +190,12 @@ export class DatasetTreeMapConnectService {
     viewerType: ViewerType
   ): Promise<Webservice2DType | Webservice3DType> {
     if (viewerType === ViewerType.DRIE_D) {
-      return (await this.getCesiumSharedLayerService()).getTypeOfLayer(layerId);
+      return (
+        (await this.connectService.getGgcCesiumSharedLayerService()) as any
+      ).getTypeOfLayer(layerId);
     }
-    return (await this.getMapLayerService()).getTypeOfLayer(layerId, mapIndex);
-  }
-
-  private async getCesiumSharedLayerService() {
-    await this.connectService.loadGgcCesiumSharedLayerService();
-    return this.connectService.getGgcCesiumSharedLayerService();
-  }
-
-  private async getMapLayerService() {
-    await this.connectService.loadGgcOLLayerService();
-    return this.connectService.getGgcOLLayerService();
-  }
-
-  private async getMapEventsService() {
-    await this.connectService.loadGgcOLMapEventsService();
-    return this.connectService.getGgcOLMapEventsService();
+    return (
+      (await this.connectService.getGgcOLLayerService()) as any
+    ).getTypeOfLayer(layerId, mapIndex);
   }
 }
