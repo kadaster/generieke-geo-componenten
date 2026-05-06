@@ -28,5 +28,4 @@ describe("ExampleFormatComponent", () => {
   it("should create", () => {
     expect(component).toBeTruthy();
   });
-
 });
