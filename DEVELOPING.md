@@ -69,3 +69,10 @@ Deze komt in confilct met de peerDependency op ggc-cesium in ggc-shared.
 Het snapshot nummer wordt niet als hoger dan de gevraagde dependency herkend.
 
 Praktisch kan dit opgelost met `npm install --legacy-peer-deps`
+
+## Genereren README bestanden
+De generieke `README.md` wordt samengevoegd met een optioneel `README.project.md` bestand in de map `projects/ggc-xxx/src`. Draai het volgende commando om de README bestanden te genereren:
+
+`npm run generate-readme-files`
+
+De README bestanden worden nu gegenereerd met de juiste titel, licentie en optioneel de project-specifieke README. Controleer voor het committen of de juiste wijzigingen zijn doorgevoerd en of de replaces die gedaan worden nog juist zijn.

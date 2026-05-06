@@ -6,7 +6,7 @@ Deze Angular front-end componenten kunnen in de eigen applicatie geïnstalleerd 
 
 - zoeken op de kaart
 - legenda
-- kaartselectie
+- kaartweergave kiezen
 - toolbar met tekenen, meten en bewerken op de kaart
 
 Binnenkort komen ook extra componenten beschikbaar voor:
