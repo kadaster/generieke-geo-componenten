@@ -105,8 +105,8 @@ export class LayerSelectorComponent implements OnInit {
     DatasetTreeMapConnectService
   );
 
-  private totalLayerCount: Map<Dataset, number> = new Map();
-  private activeLayerCount: Map<Dataset, number> = new Map();
+  private readonly totalLayerCount: Map<Dataset, number> = new Map();
+  private readonly activeLayerCount: Map<Dataset, number> = new Map();
 
   /**
    * Angular lifecycle hook — initialiseert dataset‑configuraties:
@@ -125,7 +125,7 @@ export class LayerSelectorComponent implements OnInit {
       await this.datasetTreeMapConnectService.getLayerChangedObservable(
         this.viewerType
       )
-    ).subscribe((event) => {
+    )?.subscribe((event) => {
       if (event.mapIndex == this.mapIndex) {
         this.handleLayerChanged(event.layerId);
       }

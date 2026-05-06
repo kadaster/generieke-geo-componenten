@@ -28,6 +28,17 @@ export class DatasetTreeMapConnectService {
    */
   private readonly triggerSubject = new Subject<string>();
 
+  private ggcOLLayerService?: any;
+
+  constructor() {
+    this.loadServices();
+  }
+
+  private async loadServices() {
+    this.ggcOLLayerService =
+      (await this.connectService.getGgcOLLayerService()) as any;
+  }
+
   /**
    * Stuur een custom event (trigger).
    */
@@ -73,9 +84,7 @@ export class DatasetTreeMapConnectService {
           )
         );
     }
-    return (
-      (await this.connectService.getGgcOLLayerService()) as any
-    ).getLayerChangedObservable();
+    return this.ggcOLLayerService?.getLayerChangedObservable();
   }
 
   /**
@@ -112,10 +121,7 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).getTitle(layerId);
     }
-    return ((await this.connectService.getGgcOLLayerService()) as any).getTitle(
-      layerId,
-      mapIndex
-    );
+    return this.ggcOLLayerService?.getTitle(layerId, mapIndex);
   }
 
   /**
@@ -134,9 +140,7 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).isVisible(layerId);
     }
-    return (
-      (await this.connectService.getGgcOLLayerService()) as any
-    ).isVisible(layerId, mapIndex);
+    return this.ggcOLLayerService?.isVisible(layerId, mapIndex);
   }
 
   /**
@@ -156,9 +160,7 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).toggleVisibility(layerId);
     }
-    return (
-      (await this.connectService.getGgcOLLayerService()) as any
-    ).toggleVisibility(layerId, mapIndex);
+    return this.ggcOLLayerService?.toggleVisibility(layerId, mapIndex);
   }
 
   /**
@@ -173,9 +175,7 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).getEnabled(layerId);
     }
-    return (
-      (await this.connectService.getGgcOLLayerService()) as any
-    ).getEnabled(layerId, mapIndex);
+    return this.ggcOLLayerService?.getEnabled(layerId, mapIndex) ?? false;
   }
 
   /**
@@ -194,8 +194,6 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).getTypeOfLayer(layerId);
     }
-    return (
-      (await this.connectService.getGgcOLLayerService()) as any
-    ).getTypeOfLayer(layerId, mapIndex);
+    return this.ggcOLLayerService?.getTypeOfLayer(layerId, mapIndex);
   }
 }
