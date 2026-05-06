@@ -14,14 +14,6 @@ export class EventTrackerService {
     eventAction: "click_intern",
     eventName: string
   ) {
-    console.log(
-      "track piwik: ",
-      eventCategory,
-      " - ",
-      eventAction,
-      " - ",
-      eventName
-    );
     this.customEventsServicePiwik.trackEvent(
       eventCategory,
       eventAction,

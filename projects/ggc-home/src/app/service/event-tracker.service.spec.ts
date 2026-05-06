@@ -20,23 +20,12 @@ describe("EventTrackerService", () => {
   });
 
   it("should track an event", () => {
-    eventTrackerService.trackEvent("Button", "testname");
+    eventTrackerService.trackEvent("content", "click_intern", "testname");
 
     expect(piwikTrackerServiceSpy).toHaveBeenCalledWith(
-      "Button",
-      "Click",
+      "content",
+      "click_intern",
       "testname"
-    );
-  });
-
-  it("should track an event with the current state", () => {
-    eventTrackerService.setCurrentFeedbackMode("new");
-    eventTrackerService.trackEventWithFeedbackMode("Button", "testname");
-
-    expect(piwikTrackerServiceSpy).toHaveBeenCalledWith(
-      "Button",
-      "Click",
-      "testname (new)"
     );
   });
 });
