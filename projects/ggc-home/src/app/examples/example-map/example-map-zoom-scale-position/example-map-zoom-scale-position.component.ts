@@ -16,7 +16,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "app-example-map-zoom-scale-position",
   imports: [
     GgcMapComponent,
     GgcScaleLineComponent,
@@ -39,8 +39,9 @@ export class ExampleMapZoomScalePositionComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-zoom-scale-position",
-    title: "Kaart eigenschappen tonen (schaal, zoom niveau en muis positie)",
-    introduction: "",
+    title: "Kaart eigenschappen tonen",
+    introduction:
+      "Componenten die eigenschappen tonen, zoals schaal, zoom niveau en muis positie.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTBEDIENING],
     tags: [Tags.SCALE, Tags.ZOOM, Tags.LOCATION],
