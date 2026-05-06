@@ -17,13 +17,72 @@
     <p>
       {{ componentInfo.introduction }}
     </p>
-    <p>toelichtende tekst</p>
+    <p>
+      Bij een kaart kan je verschillende componenten gebruiken die kaart
+      eigenschappen tonen.
+    </p>
+    <ul>
+      <li>
+        Schaalbalk <code>ggc-scale-line</code>: Toont de huidige schaal van de
+        kaart (in dit voorbeeld in meters/kilometers)
+      </li>
+      <li>
+        Schaal <code>ggc-scale-denominator</code>: Toont de huidige schaal van
+        de kaart
+      </li>
+      <li>
+        Zoomniveau <code>ggc-zoom-level</code>: Toont het huidige zoomniveau van
+        de kaart, hoe verder je bent ingezoomd en hoe meer detail zichtbaar
+        wordt. <br />Een lager getal betekent dat je verder uitgezoomd bent en
+        een groter gebied ziet. <br />De plus en min knoppen in de kaart zoomen
+        in stappen van 1 door het instellen van de
+        <code>constrainResolution</code>.
+      </li>
+      <li>
+        Muispositie <code>ggc-mouse-position</code>: Toont de actuele
+        coördinaten van de muis op de kaart.
+      </li>
+    </ul>
   </div>
 
   <div page-functionality>
     <!-- DOCS:START functionality -->
-    <div class="map-container">
-      <ggc-map [webServices]="mapConfig" [minZoomlevel]="5"></ggc-map>
+    <div class="row">
+      <div class="col-md-6 col-sm-10">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [minZoomlevel]="1"></ggc-map>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-2">
+        <ggc-map-details-container>
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td>Schaalbalk</td>
+                <td><ggc-scale-line></ggc-scale-line></td>
+              </tr>
+              <tr>
+                <td>Schaal</td>
+                <td><ggc-scale-denominator></ggc-scale-denominator></td>
+              </tr>
+              <tr>
+                <td>Zoomniveau</td>
+                <td><ggc-zoom-level></ggc-zoom-level></td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  Muispositie<br />
+                  <ggc-mouse-position
+                    placeholder="coördinaten"
+                    decimalDigits="0"
+                  >
+                  </ggc-mouse-position>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ggc-map-details-container>
+      </div>
     </div>
     <!-- DOCS:END functionality -->
   </div>
