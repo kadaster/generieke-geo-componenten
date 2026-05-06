@@ -59,18 +59,30 @@ export class MenuBarComponent {
   }
 
   openQuickstart() {
+    this.eventTrackerService.trackEvent(
+      "content",
+      "click_intern",
+      "quick_start"
+    );
     this.router.navigate(["/quick-start"]);
   }
 
   openTsDocs() {
+    this.eventTrackerService.trackEvent("content", "click_intern", "tsdocs");
     window.open(tsdocsUrl, "_blank", "noopener,noreferrer");
   }
 
   openGithub() {
+    this.eventTrackerService.trackEvent("content", "click_intern", "github");
     window.open(githubUrl, "_blank", "noopener,noreferrer");
   }
 
   openReleasesAndChangelog() {
+    this.eventTrackerService.trackEvent(
+      "content",
+      "click_intern",
+      "releases_en_changelog"
+    );
     window.open(githubReleasesUrl, "_blank", "noopener,noreferrer");
   }
 }
