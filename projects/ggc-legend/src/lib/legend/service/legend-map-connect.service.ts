@@ -1,11 +1,11 @@
-import { inject, Injectable } from "@angular/core";
-import { GgcLegendConnectService } from "./connect.service";
+import {inject, Injectable} from "@angular/core";
+import {GgcLegendConnectService} from "./connect.service";
 import {
   LayerLegend,
   LegendAddedEvent,
   LegendRemovedEvent
 } from "@kadaster/ggc-models";
-import { EMPTY, merge, Observable, of } from "rxjs";
+import {EMPTY, merge, Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: "root"
