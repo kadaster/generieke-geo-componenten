@@ -15,7 +15,6 @@ import {
 import { NgTemplateOutlet } from "@angular/common";
 import { GgcLegendIconComponent } from "../legend-icon/ggc-legend-icon.component";
 import { GgcLegendUrlComponent } from "../legend-url/ggc-legend-url.component";
-import { LegendMapboxComponent } from "../legend-mapbox/legend-mapbox.component";
 import { LegendEmptyComponent } from "../legend-empty/legend-empty.component";
 import {
   DEFAULT_CESIUM_MAPINDEX,
@@ -24,15 +23,14 @@ import {
   LayerLegend,
   LegendType,
   LegendUrl,
-  VectorTileStyle,
   ViewerType
 } from "@kadaster/ggc-models";
 import { GgcLegendMapConnectService } from "./service/legend-map-connect.service";
 
 /**
  * Het dataset legenda component toont de legenda van kaartlagen
- * Het component ondersteunt verschillende legenda-types zoals iconenlijsten,
- * URL's naar legenda plaatjes en (mapbox) vector tile stijlen.
+ * Het component ondersteunt verschillende legenda-types zoals iconenlijsten en
+ * URL's naar legenda plaatjes.
  * Door <ggc-legend></ggc-legend> op te nemen in de HTML kan de
  * legenda worden gebruikt.
  *
@@ -60,7 +58,6 @@ import { GgcLegendMapConnectService } from "./service/legend-map-connect.service
     GgcLegendIconComponent,
     GgcLegendUrlComponent,
     NgTemplateOutlet,
-    LegendMapboxComponent,
     LegendEmptyComponent
   ],
   styleUrls: ["./ggc-legend.component.css"]
@@ -322,20 +319,6 @@ export class GgcLegendComponent implements OnInit {
       legend !== null &&
       "legendUrl" in legend &&
       legend.legendUrl !== ""
-    );
-  }
-
-  /**
-   * Controleert of een legenda een VectorTileStyle is.
-   * @param legend Het te controleren legenda-object.
-   * @returns True als het een VectorTileStyle is.
-   */
-  protected isVectorTileStyle(legend: LegendType): legend is VectorTileStyle {
-    return (
-      typeof legend === "object" &&
-      legend !== null &&
-      "name" in legend &&
-      "url" in legend
     );
   }
 

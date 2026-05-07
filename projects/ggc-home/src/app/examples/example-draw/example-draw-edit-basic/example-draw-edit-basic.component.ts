@@ -10,7 +10,7 @@ import {
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import GeoJSON from "ol/format/GeoJSON";
-import * as polygonExamples from "./ExamplePolygons.json";
+import * as polygonExamples from "./example-polygons.json";
 import { altKeyOnly, always, singleClick } from "ol/events/condition";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
