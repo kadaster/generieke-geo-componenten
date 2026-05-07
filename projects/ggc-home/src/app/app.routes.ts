@@ -35,6 +35,8 @@ import { ExampleMeasure } from "./examples/example-measure/example-measure/examp
 import { ExampleDrawStyle } from "./examples/example-draw/example-draw-style/example-draw-style.component";
 import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
+import { DownloadsNpmComponent } from "./download-npm/downloads-npm.component";
+import { IntroductionComponent } from "./introduction/introduction.component";
 
 export const routes: Routes = [
   {
@@ -47,6 +49,16 @@ export const routes: Routes = [
     path: "quick-start",
     title: "Quick start | GGC-Home",
     component: QuickstartComponent
+  },
+  {
+    path: "introduction",
+    title: "Introductie | GGC-Home",
+    component: IntroductionComponent
+  },
+  {
+    path: "downloads-npm",
+    title: "Downloads (NPM) | GGC-Home",
+    component: DownloadsNpmComponent
   },
   {
     path: "example-index",

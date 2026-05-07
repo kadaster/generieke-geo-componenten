@@ -73,4 +73,8 @@ export class MenuBarComponent {
     this.eventTrackerService.trackEvent("releases_en_changelog");
     window.open(githubReleasesUrl, "_blank", "noopener,noreferrer");
   }
+
+  openDownloadsNpm() {
+    this.router.navigate(["/downloads-npm"]);
+  }
 }

@@ -6,14 +6,14 @@ import { GgcLegendConnectService } from "./connect.service";
 describe("GgcLegendMapConnectService", () => {
   let service: GgcLegendMapConnectService;
 
-  let mockCesiumLayerService: any;
-  let mockMapLayerService: any;
-  let mockMapEventsService: any;
+  let cesiumLayerService: any;
+  let mapLayerService: any;
+  let mapEventsService: any;
 
-  let mockConnectService: any;
+  let legendConnectSpy: jasmine.SpyObj<GgcLegendConnectService>;
 
   beforeEach(async () => {
-    mockCesiumLayerService = {
+    cesiumLayerService = {
       getLegendAddedObservable: jasmine
         .createSpy()
         .and.returnValue(of("add-3d")),
@@ -26,7 +26,7 @@ describe("GgcLegendMapConnectService", () => {
         .and.returnValue([{ legendUrl: "cesium-legend" }])
     };
 
-    mockMapLayerService = {
+    mapLayerService = {
       getLegendAddedObservable: jasmine
         .createSpy()
         .and.returnValue(of("add-2d")),
@@ -39,39 +39,31 @@ describe("GgcLegendMapConnectService", () => {
         .and.returnValue([{ legendUrl: "map-legend" }])
     };
 
-    mockMapEventsService = {
+    mapEventsService = {
       getZoomendObservableForMap: jasmine
         .createSpy()
         .and.returnValue(of("zoom-2d"))
     };
 
-    mockConnectService = {
-      loadGgcCesiumSharedLayerService: jasmine
-        .createSpy()
-        .and.returnValue(Promise.resolve()),
-      getGgcCesiumSharedLayerService: jasmine
-        .createSpy()
-        .and.returnValue(mockCesiumLayerService),
+    legendConnectSpy = jasmine.createSpyObj("GgcLegendConnectService", [
+      "getGgcCesiumSharedLayerService",
+      "getGgcOLLayerService",
+      "getGgcOLMapEventsService"
+    ]);
 
-      loadGgcOLLayerService: jasmine
-        .createSpy()
-        .and.returnValue(Promise.resolve()),
-      getGgcOLLayerService: jasmine
-        .createSpy()
-        .and.returnValue(mockMapLayerService),
-
-      loadGgcOLMapEventsService: jasmine
-        .createSpy()
-        .and.returnValue(Promise.resolve()),
-      getGgcOLMapEventsService: jasmine
-        .createSpy()
-        .and.returnValue(mockMapEventsService)
-    };
+    legendConnectSpy.getGgcCesiumSharedLayerService.and.resolveTo(
+      cesiumLayerService
+    );
+    legendConnectSpy.getGgcOLLayerService.and.resolveTo(mapLayerService);
+    legendConnectSpy.getGgcOLMapEventsService.and.resolveTo(mapEventsService);
 
     await TestBed.configureTestingModule({
       providers: [
         GgcLegendMapConnectService,
-        { provide: GgcLegendConnectService, useValue: mockConnectService }
+        {
+          provide: GgcLegendConnectService,
+          useValue: legendConnectSpy
+        }
       ]
     }).compileComponents();
 
@@ -82,48 +74,58 @@ describe("GgcLegendMapConnectService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should merge LegendAdded observables from 2D and 3D", async () => {
-    const obs = await service.getLegendAddedObservable();
+  describe("legend added stream", () => {
+    it("should merge 2D and 3D legend added observables", async () => {
+      const obs = await service.getLegendAddedObservable();
 
-    const received: any[] = [];
-    obs.subscribe((val) => received.push(val));
+      const result: any[] = [];
+      obs.subscribe((v) => result.push(v));
 
-    expect(received).toContain("add-2d");
-    expect(received).toContain("add-3d");
-  });
-
-  it("should merge LegendRemoved observables from 2D and 3D", async () => {
-    const obs = await service.getLegendRemovedObservable();
-
-    const received: any[] = [];
-    obs.subscribe((val) => received.push(val));
-
-    expect(received).toContain("remove-2d");
-    expect(received).toContain("remove-3d");
-  });
-
-  it("should get zoomend observable for 2D maps", async () => {
-    const obs = await service.getZoomendObservableForMap("mapIndex");
-
-    obs.subscribe((val) => {
-      expect(val).toBe("zoom-2d");
+      expect(result).toEqual(jasmine.arrayContaining(["add-2d", "add-3d"]));
     });
   });
 
-  it("should concatenate active legends from 2D and 3D", async () => {
-    const legends = await service.getCurrentActiveLegends("mapIndex");
+  describe("legend removed stream", () => {
+    it("should merge 2D and 3D legend removed observables", async () => {
+      const obs = await service.getLegendRemovedObservable();
 
-    expect(legends.length).toBe(2);
-    expect(legends).toContain(
-      jasmine.objectContaining({ legendUrl: "map-legend" })
-    );
-    expect(legends).toContain(
-      jasmine.objectContaining({ legendUrl: "cesium-legend" })
-    );
+      const result: any[] = [];
+      obs.subscribe((v) => result.push(v));
+
+      expect(result).toEqual(
+        jasmine.arrayContaining(["remove-2d", "remove-3d"])
+      );
+    });
   });
 
-  it("should return enabled values", async () => {
-    const enabled = await service.getEnabled("layerId", "mapIndex");
-    expect(enabled).toBeFalse();
+  describe("zoom observable", () => {
+    it("should return zoom observable for 2D maps", async () => {
+      const obs = await service.getZoomendObservableForMap("mapIndex");
+
+      obs.subscribe((val) => {
+        expect(val).toBe("zoom-2d");
+      });
+    });
+  });
+
+  describe("active legends", () => {
+    it("should combine legends from 2D and 3D", async () => {
+      const legends = await service.getCurrentActiveLegends("mapIndex");
+
+      expect(legends).toEqual(
+        jasmine.arrayContaining([
+          jasmine.objectContaining({ legendUrl: "map-legend" }),
+          jasmine.objectContaining({ legendUrl: "cesium-legend" })
+        ])
+      );
+    });
+  });
+
+  describe("enabled state", () => {
+    it("should return combined enabled state", async () => {
+      const enabled = await service.getEnabled("layerId", "mapIndex");
+
+      expect(enabled).toBeFalse();
+    });
   });
 });

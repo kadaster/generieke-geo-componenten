@@ -5,7 +5,7 @@ import { CoreSelectionService } from "./core-selection.service";
 import { GgcSelectionService } from "./ggc-selection.service";
 import { Subject } from "rxjs";
 
-describe("SelectionService", () => {
+describe("GgcSelectionService", () => {
   let service: GgcSelectionService;
   let coreService: jasmine.SpyObj<CoreSelectionService>;
   let selection: SelectionConfig;

@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { Injector } from "@angular/core";
 import { GgcToolbarConnectService } from "./connect.service";
 
-describe("GgcSearchLocationConnectService", () => {
+describe("GgcToolbarConnectService", () => {
   let service: GgcToolbarConnectService;
   let injectorSpy: jasmine.SpyObj<Injector>;
 
@@ -19,93 +19,125 @@ describe("GgcSearchLocationConnectService", () => {
     service = TestBed.inject(GgcToolbarConnectService);
   });
 
-  it("Moet correct geïnitialiseerd worden", () => {
+  function mockModule(overrides: Partial<any> = {}) {
+    return {
+      GgcMapService: class {},
+      GgcDrawService: class {},
+      MapComponentDrawTypes: { polygon: "polygon" },
+      ...overrides
+    };
+  }
+
+  it("moet geïnitialiseerd worden", () => {
     expect(service).toBeTruthy();
   });
 
-  describe("loadMapService", () => {
-    it("Moet de GgcMapService ophalen uit de injector na het laden van de module", async () => {
-      const mockMapService = { name: "MockMapService" };
-      injectorSpy.get.and.returnValue(mockMapService);
-
-      await service.loadMapService();
-
-      expect(injectorSpy.get).toHaveBeenCalled();
-      expect(service.getMapService()).toBe(mockMapService);
-    });
-
-    it("Moet de service maar één keer laden", async () => {
-      const mockMapService = { name: "MockMapService" };
-      injectorSpy.get.and.returnValue(mockMapService);
-
-      await service.loadMapService();
-      await service.loadMapService();
-
-      expect(injectorSpy.get).toHaveBeenCalledTimes(1);
-    });
-
-    it("Moet undefined retourneren als de injector de service niet kan vinden", async () => {
-      injectorSpy.get.and.returnValue(null);
-
-      await service.loadMapService();
-
-      expect(service.getMapService()).toBeNull();
-    });
-
-    it("Moet fouten opvangen als de module niet geladen kan worden", async () => {
-      injectorSpy.get.and.throwError("Module not found");
-
-      await expectAsync(service.loadMapService()).toBeResolved();
-      expect(service.getMapService()).toBeUndefined();
-    });
-  });
-
   describe("getMapService", () => {
-    it("Moet undefined teruggeven als de service nog niet geladen is", () => {
-      expect(service.getMapService()).toBeUndefined();
-    });
-  });
+    it("laadt en retourneert de MapService via de injector", async () => {
+      const module = mockModule();
+      const mockInstance = { name: "MapService" };
 
-  describe("loadDrawService", () => {
-    it("Moet de GgcDrawService ophalen uit de injector na het laden van de module", async () => {
-      const mockDrawService = { name: "MockDrawService" };
-      injectorSpy.get.and.returnValue(mockDrawService);
+      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
+      injectorSpy.get.and.returnValue(mockInstance);
 
-      await service.loadDrawService();
+      const result = await service.getMapService();
 
-      expect(injectorSpy.get).toHaveBeenCalled();
-      expect(service.getDrawService()).toBe(mockDrawService);
+      expect(injectorSpy.get).toHaveBeenCalledWith(module.GgcMapService);
+      expect(result).toBe(mockInstance);
     });
 
-    it("Moet de service maar één keer laden", async () => {
-      const mockDrawService = { name: "MockDrawService" };
-      injectorSpy.get.and.returnValue(mockDrawService);
+    it("cachet de MapService (slechts één injector call)", async () => {
+      const module = mockModule();
+      const mockInstance = { name: "MapService" };
 
-      await service.loadDrawService();
-      await service.loadDrawService();
+      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
+      injectorSpy.get.and.returnValue(mockInstance);
+
+      const first = await service.getMapService();
+      const second = await service.getMapService();
 
       expect(injectorSpy.get).toHaveBeenCalledTimes(1);
+      expect(first).toBe(second);
     });
 
-    it("Moet undefined retourneren als de injector de service niet kan vinden", async () => {
+    it("geeft undefined/null terug als injector niets levert", async () => {
+      const module = mockModule();
+
+      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
       injectorSpy.get.and.returnValue(null);
 
-      await service.loadDrawService();
+      const result = await service.getMapService();
 
-      expect(service.getDrawService()).toBeNull();
+      expect(result).toBeNull();
     });
 
-    it("Moet fouten opvangen als de module niet geladen kan worden", async () => {
-      injectorSpy.get.and.throwError("Module not found");
+    it("vangt fouten bij laden van module", async () => {
+      spyOn<any>(service, "loadMapModule").and.rejectWith("load error");
 
-      await expectAsync(service.loadDrawService()).toBeResolved();
-      expect(service.getDrawService()).toBeUndefined();
+      const result = await service.getMapService();
+
+      expect(result).toBeUndefined();
     });
   });
 
   describe("getDrawService", () => {
-    it("Moet undefined teruggeven als de service nog niet geladen is", () => {
-      expect(service.getDrawService()).toBeUndefined();
+    it("laadt en retourneert de DrawService via de injector", async () => {
+      const module = mockModule();
+      const mockInstance = { name: "DrawService" };
+
+      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
+      injectorSpy.get.and.returnValue(mockInstance);
+
+      const result = await service.getDrawService();
+
+      expect(injectorSpy.get).toHaveBeenCalledWith(module.GgcDrawService);
+      expect(result).toBe(mockInstance);
+    });
+
+    it("cachet de DrawService", async () => {
+      const module = mockModule();
+      const mockInstance = { name: "DrawService" };
+
+      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
+      injectorSpy.get.and.returnValue(mockInstance);
+
+      await service.getDrawService();
+      await service.getDrawService();
+
+      expect(injectorSpy.get).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("getMapComponentDrawTypes", () => {
+    it("laadt en retourneert MapComponentDrawTypes", async () => {
+      const module = mockModule({
+        MapComponentDrawTypes: { point: "point" }
+      });
+
+      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
+
+      const result = await service.getMapComponentDrawTypes();
+
+      expect(result).toEqual({ point: "point" });
+    });
+
+    it("cachet MapComponentDrawTypes", async () => {
+      const module = mockModule();
+
+      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
+
+      const first = await service.getMapComponentDrawTypes();
+      const second = await service.getMapComponentDrawTypes();
+
+      expect(first).toBe(second);
+    });
+
+    it("vangt fouten af bij laden", async () => {
+      spyOn<any>(service, "loadMapModule").and.rejectWith("load error");
+
+      const result = await service.getMapComponentDrawTypes();
+
+      expect(result).toBeUndefined();
     });
   });
 });
