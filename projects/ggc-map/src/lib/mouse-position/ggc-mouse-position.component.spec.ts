@@ -144,6 +144,7 @@ describe("ControlMousePositionComponent", () => {
     try {
       component["createCoordinateFormat"]([155000, 463000]);
     } catch (e) {
+      console.log("error: ", e);
       error = (e as Error).toString();
     }
 
