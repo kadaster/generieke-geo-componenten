@@ -52,9 +52,34 @@ export interface DrawOptions {
    */
   areaM2ToTextFunction?: (area: number) => string;
 
+  /**
+   * Schakelt trace-functionaliteit in tijdens het tekenen.
+   *
+   * Wanneer deze optie op `true` staat, kan de gebruiker
+   * bestaande geometrieën volgen (tracen) tijdens het tekenen
+   * van een nieuwe feature. Dit is handig om nieuwe geometrieën
+   * nauwkeurig uit te lijnen met bestaande objecten.
+   *
+   * @defaultValue false
+   *
+   */
   trace?: boolean;
 
+  /**
+   * De ID van de vector source die gebruikt wordt voor tracing.
+   *
+   * Wanneer tracing is ingeschakeld (`trace: true`), bepaalt deze
+   * optie welke bron de features bevat die gevolgd kunnen worden
+   * tijdens het tekenen.
+   */
+
   traceSourceId?: string;
+
+  /**
+   * De snapping-tolerantie (in pixels) bij tracing.
+   *
+   * @defaultValue 12
+   */
 
   traceSnapTolerance?: number;
 }
