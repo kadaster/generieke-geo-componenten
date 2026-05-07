@@ -91,6 +91,33 @@ export class ExampleIndexComponent {
     new ExampleMeasureOwnStyleLabel().componentInfo
   ];
 
+  constructor() {
+    const storedSelectedThemes = sessionStorage.getItem("selectedThemes");
+    if (storedSelectedThemes) {
+      this.selectedThemes = new Set(JSON.parse(storedSelectedThemes));
+    }
+
+    const storedSelectedComponents = sessionStorage.getItem("selectedComponents");
+    if (storedSelectedComponents) {
+      this.selectedComponents = new Set(JSON.parse(storedSelectedComponents));
+    }
+
+    const storedSelectedTags = sessionStorage.getItem("selectedTags");
+    if (storedSelectedTags) {
+      this.selectedTags = new Set(JSON.parse(storedSelectedTags));
+    }
+
+    const storedSearchTerm = sessionStorage.getItem("searchTerm");
+    if (storedSearchTerm) {
+      this.searchTerm = storedSearchTerm;
+    }
+  }
+
+  storeSearchTerm(value: string) {
+    this.searchTerm = value;
+    sessionStorage.setItem("searchTerm", value);
+  }
+
   protected get availableThemes(): string[] {
     const set = new Set<string>();
     for (const card of this.cards) {
@@ -133,6 +160,7 @@ export class ExampleIndexComponent {
       this.selectedThemes.add(theme);
     }
     this.selectedThemes = new Set(this.selectedThemes);
+    sessionStorage.setItem("selectedThemes", JSON.stringify(Array.from(this.selectedThemes)));
   }
 
   protected toggleComponent(component: string): void {
@@ -142,6 +170,7 @@ export class ExampleIndexComponent {
       this.selectedComponents.add(component);
     }
     this.selectedComponents = new Set(this.selectedComponents);
+    sessionStorage.setItem("selectedComponents", JSON.stringify(Array.from(this.selectedComponents)));
   }
 
   protected toggleTag(tag: string): void {
@@ -151,18 +180,30 @@ export class ExampleIndexComponent {
       this.selectedTags.add(tag);
     }
     this.selectedTags = new Set(this.selectedTags);
+    sessionStorage.setItem("selectedTags", JSON.stringify(Array.from(this.selectedTags)));
+  }
+
+  protected resetFilters(): void {
+    this.clearComponentFilter();
+    this.clearThemeFilter();
+    this.clearTagFilter();
+    this.searchTerm = "";
+    sessionStorage.removeItem("searchTerm");
   }
 
   protected clearThemeFilter(): void {
     this.selectedThemes = new Set<string>();
+    sessionStorage.removeItem("selectedThemes");
   }
 
   protected clearComponentFilter(): void {
     this.selectedComponents = new Set<string>();
+    sessionStorage.removeItem("selectedComponents");
   }
 
   protected clearTagFilter(): void {
     this.selectedTags = new Set<string>();
+    sessionStorage.removeItem("selectedTags");
   }
 
   protected filteredCards(exclude?: string): ComponentInfo[] {
