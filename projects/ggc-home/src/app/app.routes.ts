@@ -36,6 +36,7 @@ import { ExampleDrawStyle } from "./examples/example-draw/example-draw-style/exa
 import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 import { DownloadsNpmComponent } from "./download-npm/downloads-npm.component";
+import { IntroductionComponent } from "./introduction/introduction.component";
 
 export const routes: Routes = [
   {
@@ -48,6 +49,11 @@ export const routes: Routes = [
     path: "quick-start",
     title: "Quick start | GGC-Home",
     component: QuickstartComponent
+  },
+  {
+    path: "introduction",
+    title: "Introductie | GGC-Home",
+    component: IntroductionComponent
   },
   {
     path: "downloads-npm",
