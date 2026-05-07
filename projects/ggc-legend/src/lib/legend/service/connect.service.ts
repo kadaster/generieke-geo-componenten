@@ -1,115 +1,106 @@
-import { inject, Injectable, Injector } from "@angular/core";
+import { inject, Injectable, Injector, Type } from "@angular/core";
 
-/**
- * Service die verantwoordelijk is voor het leggen van de verbinding tussen de legenda
- * en de kaartfunctionaliteit (@kadaster/ggc-map en @kadaster/ggc-cesium).
- *
- * Deze service laadt de MapService dynamisch om circulaire afhankelijkheden te voorkomen
- * en biedt toegang tot kaartgerelateerde acties zoals de legendaUpdate/Remove events.
- */
+type CesiumModule = {
+  GgcSharedLayerService: Type<unknown>;
+};
+
+type GgcMapModule = {
+  GgcLayerService: Type<unknown>;
+  GgcMapEventsService: Type<unknown>;
+};
+
 @Injectable({ providedIn: "root" })
 export class GgcLegendConnectService {
   private readonly injector = inject(Injector);
-  private ggcCesiumSharedLayerService: any;
-  private ggcOLLayerService: any;
-  private ggcOLMapEventsService: any;
+
+  private cesiumModulePromise?: Promise<CesiumModule>;
+  private mapModulePromise?: Promise<GgcMapModule>;
+
+  private ggcCesiumSharedLayerService?: unknown;
+  private ggcOLLayerService?: unknown;
+  private ggcOLMapEventsService?: unknown;
 
   /**
-   * Laadt de Cesium `GgcSharedLayerService` dynamisch vanuit de cesiummodule.
-   *
-   * Controleert eerst of de service al geladen is. Zo niet, dan wordt de module
-   * `@kadaster/ggc-cesium` geïmporteerd en wordt de
-   * `GgcSharedLayerService` verkregen via de `Injector`.
-   *
-   * @returns Een Promise die wordt afgerond zodra de poging tot laden is voltooid.
+   * Lazy load Cesium module (once)
    */
-  async loadGgcCesiumSharedLayerService(): Promise<void> {
-    if (!this.ggcCesiumSharedLayerService) {
-      try {
-        const module = await import("@kadaster/ggc-cesium");
+  private loadCesiumModule(): Promise<CesiumModule> {
+    this.cesiumModulePromise ??= import(
+      /* @vite-ignore */ "@kadaster/ggc-cesium"
+    ).catch((e) => {
+      console.debug(
+        `Autoconnect ggc-legend met ggc-cesium is niet gelukt: ${e}`,
+        e
+      );
+      throw e;
+    });
+    return this.cesiumModulePromise;
+  }
+
+  /**
+   * Lazy load Map module (once)
+   */
+  private loadMapModule(): Promise<GgcMapModule> {
+    this.mapModulePromise ??= import(
+      /* @vite-ignore */ "@kadaster/ggc-map"
+    ).catch((e) => {
+      console.debug(
+        `Autoconnect ggc-legend met ggc-map is niet gelukt: ${e}`,
+        e
+      );
+      throw e;
+    });
+    return this.mapModulePromise;
+  }
+
+  async getGgcCesiumSharedLayerService(): Promise<unknown> {
+    try {
+      if (!this.ggcCesiumSharedLayerService) {
+        const module = await this.loadCesiumModule();
         this.ggcCesiumSharedLayerService = this.injector.get(
           module.GgcSharedLayerService
         );
-      } catch (e) {
-        console.log(
-          `Autoconnect ggc-legend met ggc-cesium is niet gelukt (GgcSharedLayerService): ${e}`
-        );
       }
+      return this.ggcCesiumSharedLayerService;
+    } catch (e) {
+      console.debug(
+        `Autoconnect ggc-legend met ggc-cesium is niet gelukt (GgcSharedLayerService): ${e}`,
+        e
+      );
+      return undefined;
     }
   }
 
-  /**
-   * Laadt de OpenLayers `GgcLayerService` dynamisch vanuit de ggc-map.
-   *
-   * Controleert eerst of de service al geladen is. Zo niet, dan wordt de module
-   * `@kadaster/ggc-map` geïmporteerd en wordt de
-   * `GgcLayerService` verkregen via de `Injector`.
-   *
-   * @returns Een Promise die wordt afgerond zodra de poging tot laden is voltooid.
-   */
-  async loadGgcOLLayerService(): Promise<void> {
-    if (!this.ggcOLLayerService) {
-      try {
-        const module = await import("@kadaster/ggc-map");
+  async getGgcOLLayerService(): Promise<unknown> {
+    try {
+      if (!this.ggcOLLayerService) {
+        const module = await this.loadMapModule();
         this.ggcOLLayerService = this.injector.get(module.GgcLayerService);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {
-        console.warn(
-          `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcLayerService): ${e}`
-        );
       }
+      return this.ggcOLLayerService;
+    } catch (e) {
+      console.debug(
+        `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcLayerService): ${e}`,
+        e
+      );
+      return undefined;
     }
   }
 
-  /**
-   * Laadt de OpenLayers `GgcMapEventsService` dynamisch vanuit de ggc-map.
-   *
-   * Controleert eerst of de service al geladen is. Zo niet, dan wordt de module
-   * `@kadaster/ggc-map` geïmporteerd en wordt de
-   * `GgcMapEventsService` verkregen via de `Injector`.
-   *
-   * @returns Een Promise die wordt afgerond zodra de poging tot laden is voltooid.
-   */
-  async loadGgcOLMapEventsService(): Promise<void> {
-    if (!this.ggcOLMapEventsService) {
-      try {
-        const module = await import("@kadaster/ggc-map");
+  async getGgcOLMapEventsService(): Promise<unknown> {
+    try {
+      if (!this.ggcOLMapEventsService) {
+        const module = await this.loadMapModule();
         this.ggcOLMapEventsService = this.injector.get(
           module.GgcMapEventsService
         );
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {
-        console.warn(
-          `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcMapEventsService): ${e}`
-        );
       }
+      return this.ggcOLMapEventsService;
+    } catch (e) {
+      console.debug(
+        `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcMapEventsService): ${e}`,
+        e
+      );
+      return undefined;
     }
-  }
-
-  /**
-   * Retourneert de instantie van de geladen GgcSharedLayerService van Cesium.
-   *
-   * @returns De `GgcSharedLayerService` instantie of `undefined` als deze nog niet is geladen via {@link loadGgcCesiumSharedLayerService}.
-   */
-  getGgcCesiumSharedLayerService(): any {
-    return this.ggcCesiumSharedLayerService;
-  }
-
-  /**
-   * Retourneert de instantie van de geladen GgcLayerService van ggc-map.
-   *
-   * @returns De `GgcLayerService` instantie of `undefined` als deze nog niet is geladen via {@link loadGgcOLLayerService}.
-   */
-  getGgcOLLayerService(): any {
-    return this.ggcOLLayerService;
-  }
-
-  /**
-   * Retourneert de instantie van de geladen GgcMapEventsService van ggc-map.
-   *
-   * @returns De `GgcMapEventsService` instantie of `undefined` als deze nog niet is geladen via {@link loadGgcOLLayerService}.
-   */
-  getGgcOLMapEventsService(): any {
-    return this.ggcOLMapEventsService;
   }
 }

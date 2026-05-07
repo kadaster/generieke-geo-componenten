@@ -35,6 +35,8 @@ import { ExampleMeasure } from "./examples/example-measure/example-measure/examp
 import { ExampleDrawStyle } from "./examples/example-draw/example-draw-style/example-draw-style.component";
 import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
+import { DownloadsNpmComponent } from "./download-npm/downloads-npm.component";
+import { IntroductionComponent } from "./introduction/introduction.component";
 import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
@@ -50,6 +52,16 @@ export const routes: Routes = [
     path: "quick-start",
     title: "Quick start | GGC-Home",
     component: QuickstartComponent
+  },
+  {
+    path: "introduction",
+    title: "Introductie | GGC-Home",
+    component: IntroductionComponent
+  },
+  {
+    path: "downloads-npm",
+    title: "Downloads (NPM) | GGC-Home",
+    component: DownloadsNpmComponent
   },
   {
     path: "example-index",
@@ -181,14 +193,14 @@ export const routes: Routes = [
     path: "legend-advanced",
     title: "Legenda-uitgebreid | GGC-Home",
     component: ExampleLegendAdvComponent,
-    data: { label: "legend-basic" }
+    data: { label: "legend-advanced" }
   },
 
   {
-    path: "legend-zoom",
-    title: "Legenda zoom | GGC-Home",
+    path: "legend-basic",
+    title: "Legenda weergeven | GGC-Home",
     component: ExampleLegendZoomComponent,
-    data: { label: "legend-zoom" }
+    data: { label: "legend-basic" }
   },
   {
     path: "legend-dataset-tree",

@@ -38,7 +38,7 @@
 
   <div page-functionality>
     <div class="row">
-      <div class="col-md-7 col-sm-12">
+      <div class="col-md-10 col-sm-10">
         <!-- DOCS:START functionality -->
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex"></ggc-map>
@@ -49,7 +49,7 @@
         ></ggc-layer-brt-achtergrondkaart>
         <!-- DOCS:END functionality -->
       </div>
-      <div class="col-md-4 col-sm-12">
+      <div class="col-md-2 col-sm-2">
         <div class="row options-toggle">
           <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
@@ -62,7 +62,7 @@
             <span class="slider round"></span>
           </label>
         </div>
-        <div class="options">
+        <fieldset class="ggc-fieldset">
           <p>
             <strong>Instelbare SnapOptions:</strong>
             <label for="pixelTolerance"> Snap afstand (pixelTolerance): </label>
@@ -125,7 +125,7 @@
               segmenten (in voorbeeld: midden van een segment)
             </label>
           </p>
-        </div>
+        </fieldset>
       </div>
     </div>
   </div>

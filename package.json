@@ -62,7 +62,8 @@
     "check:ggc-toolbar": "npm run lint:ggc-toolbar && npm run test:cov:ggc-toolbar && npm run build:ggc-toolbar",
     "check:all": "npm run check:ggc-models && npm run check:ggc-cesium && npm run check:ggc-dataset-tree && npm run check:ggc-feature-info && npm run check:ggc-legend && npm run check:ggc-map && npm run check:ggc-search-location && npm run check:ggc-toolbar",
     "version": "npm run build:all",
-    "tsdocs:generate": "typedoc --options typedoc.json"
+    "tsdocs:generate": "typedoc --options typedoc.json",
+    "generate-readme-files": "node scripts/generate-readme-files.js"
   },
   "private": true,
   "dependencies": {

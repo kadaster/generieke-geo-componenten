@@ -16,7 +16,10 @@
 
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
-    <p>Klik met de muis op de kaart om een punt te tekenen.</p>
+    <p>
+      Klik met de muis op de kaart om te tekenen. Een lijn en vlak kunnen
+      afgerond worden door dubbel te klikken.
+    </p>
   </div>
 
   <div page-functionality>
@@ -40,6 +43,7 @@
             />
             <span class="slider round"></span>
           </label>
+          <br />
         </div>
 
         <fieldset class="ggc-fieldset">
@@ -81,8 +85,6 @@
             >
               Vlak
             </button>
-            <hr />
-            <button (click)="finishDrawing()">Tekening afronden</button>
           </div>
         </fieldset>
       </div>

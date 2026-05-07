@@ -7,7 +7,7 @@ import { Cartesian3, Rectangle } from "@cesium/engine";
 import { MAX_VIEWDISTANCE, MIN_VIEWDISTANCE } from "../utils/camera-utils";
 import { createCesiumMock } from "../viewer/viewer-mock.spec";
 
-describe("ViewerService", () => {
+describe("GgcViewerService", () => {
   let service: GgcViewerService;
   let coreViewerService: jasmine.SpyObj<CoreViewerService>;
 

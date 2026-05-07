@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent } from "@kadaster/ggc-legend";
@@ -19,7 +19,7 @@ export class ExampleLegendZoomComponent
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
-    route: "/legend-zoom",
+    route: "/legend-basic",
     title: "Legenda weergeven",
     introduction: "Toon de legenda van één of meer kaartlagen.",
     components: [Components.GGC_LEGEND],
@@ -35,17 +35,11 @@ export class ExampleLegendZoomComponent
   mapIndex = "legendExample";
   mapConfig: Webservice[];
 
-  alwaysEnableLegends = signal(false);
-
   ngOnInit() {
     this.httpClient
       .get("code/examples/example-legend/example-legend-zoom/kaartconfig.json")
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
-  }
-
-  toggleAlwaysEnableLegends() {
-    this.alwaysEnableLegends.update((value) => !value);
   }
 }

@@ -21,6 +21,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+      - name: Check readme files
+        run: |
+          npm run generate-readme-files
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "❌ Er zijn wijzigingen na het uitvoeren van het commando. Draai npm run generate-readme-files, controleer en commit de wijzigingen."
+            exit 1
+          else
+            echo "✅ Geen wijzigingen."
+          fi
       - run: npm ci
       - name: Cache node_modules
         uses: actions/cache@v5

@@ -58,7 +58,7 @@ export class ExampleSnappingBasicComponent
     vertex: true,
     edge: true,
     intersection: true,
-    snapDrawLayers: ["drawLayer"],
+    snapDrawLayers: [this.drawLayer],
     snapLayers: ["provincies"]
   };
 
@@ -80,7 +80,7 @@ export class ExampleSnappingBasicComponent
   }
 
   ngOnInit(): void {
-    this.snapService.stopSnap(this.mapIndex);
+    this.drawService.stopDraw();
     this.drawService.startDraw(
       this.drawLayer,
       MapComponentDrawTypes.LINESTRING,
@@ -93,7 +93,6 @@ export class ExampleSnappingBasicComponent
         this.mapIndex,
         this.snapOptions
       );
-      console.log("snapOptions: ", this.snapOptions);
     }, 500);
   }
 

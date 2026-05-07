@@ -42,7 +42,7 @@ export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {
   drawing = model("line");
 
   private readonly drawService = inject(GgcDrawService);
-  private readonly drawLayer = "draw";
+  private readonly drawLayer = "drawLayerWithStyle";
 
   ngOnInit() {
     this.httpClient
@@ -101,9 +101,5 @@ export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {
       MapComponentDrawTypes.POLYGON,
       {}
     );
-  }
-
-  finishCurrentDraw() {
-    this.drawService.finishCurrentDraw();
   }
 }

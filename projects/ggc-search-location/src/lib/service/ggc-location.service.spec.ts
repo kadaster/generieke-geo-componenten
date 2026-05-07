@@ -24,7 +24,6 @@ describe("GgcSearchLocationService", () => {
       ["loadMapService", "getMapService"]
     );
 
-    connectServiceSpy.loadMapService.and.returnValue(Promise.resolve());
     connectServiceSpy.getMapService.and.returnValue(mapServiceMock);
 
     TestBed.configureTestingModule({

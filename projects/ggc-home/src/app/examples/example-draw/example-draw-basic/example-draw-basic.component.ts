@@ -55,12 +55,6 @@ export class ExampleDrawBasicComponent
     this.startDrawLine();
   }
 
-  finishDrawing() {
-    this.drawService.finishCurrentDraw();
-    this.activeDrawType.set(undefined);
-    this.drawService.stopDraw();
-  }
-
   startDrawPoint() {
     this.activeDrawType.set(MapComponentDrawTypes.POINT);
     this.drawService.startDraw(this.drawLayer, MapComponentDrawTypes.POINT, {});

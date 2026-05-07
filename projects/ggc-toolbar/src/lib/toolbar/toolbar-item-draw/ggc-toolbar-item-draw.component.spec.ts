@@ -16,28 +16,24 @@ describe("ToolbarItemDrawComponent", () => {
   let component: GgcToolbarItemDrawComponent;
   let fixture: ComponentFixture<GgcToolbarItemDrawComponent>;
   let debugElement: DebugElement;
+
   let drawServiceSpy: SpyObj<GgcDrawService>;
   let connectServiceSpy: SpyObj<GgcToolbarConnectService>;
 
   beforeEach(waitForAsync(() => {
-    drawServiceSpy = jasmine.createSpyObj("DrawService", [
+    drawServiceSpy = jasmine.createSpyObj("GgcDrawService", [
       "startDraw",
       "stopDraw",
       "clearLayer"
     ]);
 
     connectServiceSpy = jasmine.createSpyObj("GgcToolbarConnectService", [
-      "loadDrawService",
       "getDrawService",
-      "loadMapComponentDrawTypes",
       "getMapComponentDrawTypes"
     ]);
-    connectServiceSpy.loadDrawService.and.returnValue(Promise.resolve());
-    connectServiceSpy.getDrawService.and.returnValue(drawServiceSpy);
-    connectServiceSpy.loadMapComponentDrawTypes.and.returnValue(
-      Promise.resolve()
-    );
-    connectServiceSpy.getMapComponentDrawTypes.and.returnValue(
+
+    connectServiceSpy.getDrawService.and.resolveTo(drawServiceSpy);
+    connectServiceSpy.getMapComponentDrawTypes.and.resolveTo(
       MapComponentDrawTypes
     );
 
@@ -57,6 +53,7 @@ describe("ToolbarItemDrawComponent", () => {
     fixture = TestBed.createComponent(GgcToolbarItemDrawComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+
     await fixture.whenStable();
     fixture.detectChanges();
   });
@@ -67,6 +64,7 @@ describe("ToolbarItemDrawComponent", () => {
 
   it("should show default buttons when they are not overwritten", () => {
     const spans = debugElement.queryAll(By.css("button>span"));
+
     expect(spans.length).toEqual(9);
     expect(spans[0].nativeElement.className).toBe("fal fa-mouse-pointer");
     expect(spans[1].nativeElement.className).toBe("fas fa-circle");
@@ -82,12 +80,13 @@ describe("ToolbarItemDrawComponent", () => {
   it("should show custom button when overwritten", () => {
     component.deleteIcon = "fas fa-eraser";
     fixture.detectChanges();
+
     const spans = debugElement.queryAll(By.css("button>span"));
     expect(spans[8].nativeElement.className).toBe("fas fa-eraser");
   });
 
   describe("events", () => {
-    let event: ToolbarItemDrawComponentEvent;
+    let event!: ToolbarItemDrawComponentEvent;
 
     beforeEach(() => {
       component.drawItemClicked.subscribe(
@@ -95,39 +94,45 @@ describe("ToolbarItemDrawComponent", () => {
       );
     });
 
-    it("should emit event with toolbarItemDrawName is stop when stopDrawing is called", () => {
+    it("should emit STOP when stopDrawing is called", () => {
       component.stopDrawing();
 
+      expect(drawServiceSpy.stopDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.STOP);
     });
 
-    it("should emit event with toolbarItemName is point when drawPoint is called", () => {
+    it("should emit POINT when draw('Point') is called", () => {
       component.draw("Point");
 
+      expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.POINT);
     });
 
-    it("should emit event with toolbarItemName is line when drawLine is called", () => {
+    it("should emit LINE when draw('Line') is called", () => {
       component.draw("Line");
 
+      expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.LINE);
     });
 
-    it("should emit event with toolbarItemName is rectangle when drawRectangle is called", () => {
+    it("should emit RECTANGLE when draw('Rectangle') is called", () => {
       component.draw("Rectangle");
 
+      expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.RECTANGLE);
     });
 
-    it("should emit event with toolbarItemName is polygon when drawPolygon is called", () => {
+    it("should emit POLYGON when draw('Polygon') is called", () => {
       component.draw("Polygon");
 
+      expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.POLYGON);
     });
 
-    it("should emit event with toolbarItemName is clear when eraseDrawLayer is called", () => {
+    it("should emit CLEAR when eraseDrawLayer is called", () => {
       component.eraseDrawLayer();
 
+      expect(drawServiceSpy.clearLayer).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.CLEAR);
     });
   });
