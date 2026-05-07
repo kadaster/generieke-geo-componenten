@@ -71,6 +71,14 @@ De Generieke Geo Componenten bieden de volgende voordelen:
 
 De componenten kunnen afzonderlijk óf in samenwerking gebruikt worden. Hierdoor kun je zelf bepalen welke interactie wenselijk is in de applicatie.
 
+## Lijst van componenten
+- [@kadaster/ggc-dataset-tree](https://www.npmjs.com/package/@kadaster/ggc-dataset-tree)
+- [@kadaster/ggc-legend](https://www.npmjs.com/package/@kadaster/ggc-legend)
+- [@kadaster/ggc-map](https://www.npmjs.com/package/@kadaster/ggc-map)
+- [@kadaster/ggc-models](https://www.npmjs.com/package/@kadaster/ggc-models)
+- [@kadaster/ggc-search-location](https://www.npmjs.com/package/@kadaster/ggc-search-location)
+- [@kadaster/ggc-toolbar](https://www.npmjs.com/package/@kadaster/ggc-toolbar)
+
 ## Licentie
 
 Dit project is gratis en open-source software, gelicentieerd onder de [European Union Public License (EUPL) v1.2](LICENSE.md).
