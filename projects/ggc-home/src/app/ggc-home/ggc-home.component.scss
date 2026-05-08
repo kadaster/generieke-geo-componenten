@@ -7,3 +7,18 @@
   block-size: 100%;
   padding: 0 16px 16px 16px;
 }
+
+.voorbeelden-banner-button {
+  background-color: var(--ggc-color-primary-400);
+  width: 100%;
+  border-width: 0;
+  padding-bottom: 10px;
+  .voorbeelden-banner {
+    width: 100%;
+    height: 100px;
+    background-image: url("/assets/voorbeelden-banner-repeat.png");
+    background-repeat: repeat-x;
+    background-position: calc(50% - 926px) center;
+    background-color: var(--ggc-color-primary-400)
+  }
+}
