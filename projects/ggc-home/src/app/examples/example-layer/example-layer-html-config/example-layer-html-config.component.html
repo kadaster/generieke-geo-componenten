@@ -1,0 +1,205 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Om kaarten te tonen met ggc-map moet een configuratie ingesteld worden.
+      Configuratie met JSON wordt aangeraden, zodat alle ggc-componenten
+      eenvoudig met elkaar kunnen samenwerken.
+    </p>
+    <p>
+      Dit voorbeeld laat de HTML-configuratie zien. De
+      <code>GgcCapabilitiesService</code> wordt gebruikt om van een WMS de
+      capabilities op te halen, zoals de verschillende kaartlagen.
+    </p>
+    <p>
+      Met de <code>layerOptions</code> wordt bepaald hoe, wanneer en waar een
+      kaartlaag wordt getoond:
+    </p>
+    <ul>
+      <li>
+        Met <code>minZoom</code> en <code>maxZoom</code> worden het uitzoomen
+        beperkt.
+      </li>
+      <li>
+        Met <code>opacity</code> wordt de doorzichtigheid van een kaartlaag
+        aangepast.
+      </li>
+    </ul>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <div class="col-md-4 col-sm-6">
+        <fieldset>
+          <legend>Kaartlaag toevoegen of verwijderen:</legend>
+
+          <div>
+            <input
+              type="radio"
+              id="aan"
+              name="natura2000"
+              (change)="switchLayer()"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="aan"
+              checked
+            />
+            <label for="aan"
+              >Zet Natura 2000 aan (<code>addWmsLayer</code>)</label
+            >
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="uit"
+              name="natura2000"
+              (change)="switchLayer()"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="uit"
+            />
+            <label for="uit"
+              >Zet Natura 2000 uit (<code>removeLayer</code>)</label
+            >
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>
+            Kaartlaag 'wandelroutes' hoger of lager tonen met z-index:
+          </legend>
+
+          <div>
+            <input
+              type="radio"
+              id="0"
+              name="zindex"
+              [(ngModel)]="selectedZIndex"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="0"
+            />
+            <label for="0"
+              >Achter de achtergrondkaart (<code>zIndex=0</code>)</label
+            >
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="5"
+              name="zindex"
+              [(ngModel)]="selectedZIndex"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="5"
+            />
+            <label for="5"
+              >Achter het Natura 2000 gebied (<code>zIndex=5</code>)</label
+            >
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="20"
+              name="zindex"
+              [(ngModel)]="selectedZIndex"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="20"
+            />
+            <label for="20">Op de voorgrond (<code>zIndex=20</code>)</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Doorzichtigheid van het Natura 2000 gebied aanpassen:</legend>
+          <div>
+            <input
+              type="radio"
+              id="opacity25"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="25"
+            />
+            <label for="opacity25">25% (<code>opacity=0.25</code>)</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="opacity50"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="50"
+            />
+            <label for="opacity50">50% (<code>opacity=0.5</code>)</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              id="opacity75"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="75"
+            />
+            <label for="opacity75">75% (<code>opacity=0.75</code>)</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="opacity100"
+              name="opacity"
+              (change)="changeOpacity()"
+              [(ngModel)]="selectedOpacity"
+              class="utrecht-radio-button--html-input utrecht-radio-button"
+              value="100"
+            />
+            <label for="opacity100">100% (<code>opacity=1</code>)</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="col-md-8 col-sm-14">
+        <!-- DOCS:START functionality -->
+        <div class="map-container">
+          <ggc-map [minZoomlevel]="5" [maxZoomlevel]="12">
+            <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+            @switch (selectedZIndex) {
+              @case ("20") {
+                <ggc-wms-layer [options]="wandelrouteZIndex20"></ggc-wms-layer>
+              }
+              @case ("5") {
+                <ggc-wms-layer [options]="wandelrouteZIndex5"></ggc-wms-layer>
+              }
+              @default {
+                <ggc-wms-layer
+                  [options]="wandelrouteZIndexMin5"
+                ></ggc-wms-layer>
+              }
+            }
+          </ggc-map>
+        </div>
+        <!-- DOCS:END functionality -->
+      </div>
+    </div>
+  </div>
+</app-example-format>

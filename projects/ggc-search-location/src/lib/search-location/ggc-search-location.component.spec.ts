@@ -45,7 +45,7 @@ describe("GgcSearchLocationComponent", () => {
     ]);
     connectServiceSpy = jasmine.createSpyObj(
       "GgcSearchLocationConnectService",
-      ["loadMapService", "getMapService"]
+      ["getMapService"]
     );
     mapServiceMock = jasmine.createSpyObj("GgcMapService", [
       "zoomToGeometryWithZoomOptions",
@@ -55,7 +55,6 @@ describe("GgcSearchLocationComponent", () => {
     ]);
 
     pdokServiceSpy.searchOnTermChange.and.returnValue(of(null));
-    connectServiceSpy.loadMapService.and.returnValue(Promise.resolve());
     connectServiceSpy.getMapService.and.returnValue(mapServiceMock);
 
     await TestBed.configureTestingModule({
@@ -169,7 +168,6 @@ describe("GgcSearchLocationComponent", () => {
       fixture.detectChanges();
       component.clearSearchTerm();
       flush();
-      expect(connectServiceSpy.loadMapService).toHaveBeenCalled();
       expect(connectServiceSpy.getMapService).toHaveBeenCalled();
       expect(mapServiceMock.clearHighlightLayer).toHaveBeenCalledWith(
         "test-map"

@@ -1,22 +1,14 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-legend/example-legend-adv/example-legend-adv.component.html'"
-  [codeScssPath]="'code/examples/example-legend/example-legend.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-legend/example-legend-adv/example-legend-adv.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-legend/example-legend-adv/kaartconfig.json'"
   [title]="componentInfo.title"
-  urlChangelog=""
-  urlCodeHtml="example-legend/example-legend/example-legend-adv/example-legend-adv.component.html"
-  urlCodeScss="example-legend/example-legend/example-legend.component.scss"
-  urlCodeTypescript="example-legend/example-legend/example-legend-adv/example-legend-adv.component.ts"
-  urlKaartConfig="example-legend-adv/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig=""
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -26,15 +18,26 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In combinatie met een ggc-map component, worden automatisch de legenda's
-      getoond van alle zichtbare kaartlagen.
+      Het legenda component wordt automatisch bijgewerkt als er kaartlagen in de
+      kaartcomponent (ggc-map) zichtbaar worden of verdwijnen. De legenda laat
+      standaard alleen legenda's zien van kaartlagen die zichtbaar zijn op het
+      gekozen zoomniveau.
     </p>
     <p>Instelmogelijkheden voor legenda:</p>
     <ul>
-      <li>Legenda's in-/uitklapbaar</li>
-      <li>Volgorde van kaartlagen in de legenda</li>
-      <li>Titels van kaartlagen weergeven/verbergen</li>
-      <li>Melding tonen bij kaartlagen zonder legenda</li>
+      <li>Legenda's in-/uitklapbaar maken met <code>collapsable</code></li>
+      <li>
+        Volgorde van kaartlagen in de legenda met <code>legendIndex</code>
+      </li>
+      <li>
+        Melding tonen (<code>emptyLegendMessage</code>) bij kaartlagen zonder
+        legenda met <code>showEmptyLegendMessage</code>
+      </li>
+      <li>
+        Kaartlagen altijd tonen, ook als ze niet zichtbaar zijn op de kaart, met
+        <code>alwaysEnableLegends</code>
+      </li>
+      <li>Eigen styling voor iconen voor in-/uitklappen</li>
     </ul>
   </div>
 
@@ -45,13 +48,19 @@
         <div>
           <label>
             <input [(ngModel)]="collapsable" type="checkbox" />
-            Maak de legenda in/uitklapbaar
+            Maak de legenda in/uitklapbaar.
           </label>
         </div>
         <div>
           <label>
             <input [(ngModel)]="showLegendsName" type="checkbox" />
             Toon een titel boven een legenda
+          </label>
+        </div>
+        <div>
+          <label>
+            <input (change)="toggleAlwaysEnableLegends()" type="checkbox" />
+            Laat legenda's altijd zien
           </label>
         </div>
         <br />
@@ -85,16 +94,13 @@
             [mapIndex]="mapIndex"
             [showEmptyLegendMessage]="showEmptyLegendMessage"
             [showLegendsName]="showLegendsName"
+            [alwaysEnableLegends]="alwaysEnableLegends()"
           ></ggc-legend>
         </div>
       </div>
       <div class="col-md-6 col-sm-10">
         <div class="map-container">
-          <ggc-map
-            [mapIndex]="mapIndex"
-            [webServices]="mapConfig"
-            [minZoomlevel]="6"
-          ></ggc-map>
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->

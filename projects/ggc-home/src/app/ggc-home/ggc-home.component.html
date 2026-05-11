@@ -37,7 +37,7 @@
           <h2 class="nl-heading nl-heading--level-5 ggc-heading">Nieuw</h2>
           <p class="nl-paragraph ggc-paragraph">
             GGC is nu plug & play! Zie
-            <a class="nl-link rhc-link" href="#">documentatie</a>
+            <a class="nl-link rhc-link" [href]="tsdocsUrl">documentatie</a>
             voor meer informatie.
           </p>
         </div>
@@ -47,16 +47,14 @@
     <div id="welkom-text">
       <h2 class="nl-heading nl-heading--level-4 ggc-heading">Welkom</h2>
       <p class="nl-paragraph ggc-paragraph">
-        Welkom op GGC-Home. <br />
+        Welkom op de GGC-Home pagina van het Kadaster. <br />
         Op GGC-Home vind je alle informatie om aan de slag te gaan met de
         Generieke Geo Componenten. Het doel van de Generieke Geo Componenten is
         om developer-vriendelijke bouwstenen te leveren aan ontwikkelaars, zodat
         deze snel een specifieke kaartviewer kunnen ontwikkelen met de gewenste
         functionaliteit.<br />
-        Bovendien zijn deze componenten flexibel configureerbaar,functioneel
-        goed uit te breiden en naar eigen smaak te stylen. <br />
-        Bekijk <a class="nl-link rhc-link" href="#">dit kaartvoorbeeld</a> met
-        alle componenten.
+        Bovendien zijn deze componenten flexibel configureerbaar, functioneel
+        goed uit te breiden en naar eigen smaak te stylen.
       </p>
     </div>
     <button
@@ -77,7 +75,7 @@
       >
         <li class="utrecht-link-list__item">
           <a
-            href="#"
+            href="/introduction"
             class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
           >
             <span class="utrecht-icon" role="presentation" aria-hidden="true">
@@ -120,9 +118,7 @@
                 <path d="M9 6l6 6l-6 6"></path>
               </svg>
             </span>
-            <span class="utrecht-link-list__link-text">
-              Uitleg componenten
-            </span>
+            <span class="utrecht-link-list__link-text"> Voorbeelden </span>
           </a>
         </li>
         <li class="utrecht-link-list__item">
@@ -151,8 +147,10 @@
         </li>
         <li class="utrecht-link-list__item">
           <a
-            href="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/"
+            [href]="tsdocsUrl"
             class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <span class="utrecht-icon" role="presentation" aria-hidden="true">
               <svg
@@ -180,8 +178,10 @@
         </li>
         <li class="utrecht-link-list__item">
           <a
-            href="https://github.com/kadaster/generieke-geo-componenten"
+            [href]="githubUrl"
             class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <span class="utrecht-icon" role="presentation" aria-hidden="true">
               <svg
@@ -237,7 +237,7 @@
         </li>
         <li class="utrecht-link-list__item">
           <a
-            href="https://github.com/kadaster/generieke-geo-componenten/releases"
+            [href]="githubReleasesUrl"
             target="_blank"
             class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
           >
@@ -265,6 +265,30 @@
             ></span>
           </a>
         </li>
+        <li class="utrecht-link-list__item">
+          <a
+            href="/downloads-npm"
+            class="utrecht-link utrecht-link--html-a utrecht-link-list__link"
+          >
+            <span class="utrecht-icon" role="presentation" aria-hidden="true">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="tabler-icon tabler-icon-chevron-right"
+              >
+                <path d="M9 6l6 6l-6 6"></path>
+              </svg>
+            </span>
+            <span class="utrecht-link-list__link-text"> Downloads (npm) </span>
+          </a>
+        </li>
       </ul>
     </div>
     <div style="background-color: var(--ggc-color-primary-200)">
@@ -277,7 +301,7 @@
       <div class="card-wrapper">
         <div class="ggc-card-as-link ggc-card-as-link--default card-width">
           <div class="ggc-card-as-link__content">
-            <div class="ggc-card-as-link__heading">PDOK-viewer</div>
+            <div class="ggc-card-as-link__heading">PDOK Viewer</div>
             <div
               class="ggc-card-as-link__image-container"
               data-testid="ggc-card-as-link__image-container"
@@ -316,7 +340,7 @@
         </div>
         <div class="ggc-card-as-link ggc-card-as-link--default card-width">
           <div class="ggc-card-as-link__content">
-            <div class="ggc-card-as-link__heading">WOZ waarde loket</div>
+            <div class="ggc-card-as-link__heading">WOZ-waardeloket</div>
             <div
               class="ggc-card-as-link__image-container"
               data-testid="ggc-card-as-link__image-container"

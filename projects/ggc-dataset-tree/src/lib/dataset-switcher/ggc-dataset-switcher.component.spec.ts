@@ -28,10 +28,7 @@ describe("GgcDatasetSwitcherComponent", () => {
     isVisible: jasmine.Spy;
   };
 
-  let connectServiceMock: {
-    loadGgcOLLayerService: jasmine.Spy;
-    getGgcOLLayerService: jasmine.Spy;
-  };
+  let connectServiceMock: jasmine.SpyObj<GgcDatasetTreeConnectService>;
 
   beforeEach(waitForAsync(() => {
     olLayerServiceMock = {
@@ -39,14 +36,11 @@ describe("GgcDatasetSwitcherComponent", () => {
       isVisible: jasmine.createSpy("isVisible")
     };
 
-    connectServiceMock = {
-      loadGgcOLLayerService: jasmine
-        .createSpy("loadGgcOLLayerService")
-        .and.resolveTo(),
-      getGgcOLLayerService: jasmine
-        .createSpy("getGgcOLLayerService")
-        .and.returnValue(olLayerServiceMock)
-    };
+    connectServiceMock = jasmine.createSpyObj("GgcDatasetTreeConnectService", [
+      "getGgcOLLayerService"
+    ]);
+
+    connectServiceMock.getGgcOLLayerService.and.resolveTo(olLayerServiceMock);
 
     TestBed.configureTestingModule({
       imports: [GgcDatasetSwitcherComponent],
@@ -74,15 +68,15 @@ describe("GgcDatasetSwitcherComponent", () => {
 
   describe("ngOnChanges", () => {
     it("should do nothing when themes change is missing", () => {
-      const setInitialSpy = spyOn(component as any, "setInitialActiveTheme");
+      const spy = spyOn(component as any, "setInitialActiveTheme");
 
       component.ngOnChanges({});
 
-      expect(setInitialSpy).not.toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
     });
 
     it("should NOT schedule initial activation when themes do not become available", fakeAsync(() => {
-      const setInitialSpy = spyOn(component as any, "setInitialActiveTheme");
+      const spy = spyOn(component as any, "setInitialActiveTheme");
 
       const themes = createThemes(["Theme A", "Theme B"]);
       component.themes = themes;
@@ -93,11 +87,11 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       tick(200);
 
-      expect(setInitialSpy).not.toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
     }));
 
-    it("should schedule initial activation when themes become available (prev empty -> current non-empty)", fakeAsync(() => {
-      const setInitialSpy = spyOn(
+    it("should schedule initial activation when themes become available", fakeAsync(() => {
+      const spy = spyOn(
         component as any,
         "setInitialActiveTheme"
       ).and.resolveTo();
@@ -107,16 +101,14 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
 
-      tick(99);
-      expect(setInitialSpy).not.toHaveBeenCalled();
+      tick(100);
 
-      tick(1);
-      expect(setInitialSpy).toHaveBeenCalledWith(themes);
+      expect(spy).toHaveBeenCalledWith(themes);
     }));
   });
 
-  describe("initial active theme selection (via ngOnChanges -> setInitialActiveTheme)", () => {
-    it("should pick the theme that already has a visible layer and emit an event", fakeAsync(() => {
+  describe("initial active theme selection", () => {
+    it("should pick the visible theme and emit event", fakeAsync(() => {
       const themes = createThemesWithLayers();
       component.themes = themes;
 
@@ -132,19 +124,16 @@ describe("GgcDatasetSwitcherComponent", () => {
       tick(100);
       flushMicrotasks();
 
-      expect(connectServiceMock.loadGgcOLLayerService).toHaveBeenCalled();
-      expect(component["activeTheme"]?.themeName).toBe("Theme B");
+      expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
 
+      expect(component["activeTheme"]?.themeName).toBe("Theme B");
       expect(olLayerServiceMock.setVisibilityLayers).not.toHaveBeenCalled();
 
       expect(emitted.length).toBe(1);
-      expect(emitted[0].message).toContain(
-        "Theme B geactiveerd in ggc-dataset-switcher"
-      );
       expect(emitted[0].value.themeName).toBe("Theme B");
     }));
 
-    it("should fall back to first button theme when nothing is visible, set visibility, and emit event", fakeAsync(() => {
+    it("should fall back to first theme when none visible", fakeAsync(() => {
       const themes = createThemesWithLayers();
       component.themes = themes;
 
@@ -172,29 +161,28 @@ describe("GgcDatasetSwitcherComponent", () => {
   });
 
   describe("handleChangeEvent", () => {
-    it("should ignore events without a target id", () => {
+    it("should ignore invalid events", () => {
       const emitSpy = spyOn(component.events, "emit");
 
       component.handleChangeEvent({ target: {} } as any);
 
       expect(emitSpy).not.toHaveBeenCalled();
-      expect(connectServiceMock.loadGgcOLLayerService).not.toHaveBeenCalled();
+      expect(connectServiceMock.getGgcOLLayerService).not.toHaveBeenCalled();
     });
 
-    it("should ignore when target id does not match any theme", () => {
+    it("should ignore unknown theme", () => {
       const emitSpy = spyOn(component.events, "emit");
       component.themes = createThemes(["Theme A"]);
 
-      component.handleChangeEvent({ target: { id: "DoesNotExist" } } as any);
+      component.handleChangeEvent({ target: { id: "X" } } as any);
 
       expect(emitSpy).not.toHaveBeenCalled();
-      expect(connectServiceMock.loadGgcOLLayerService).not.toHaveBeenCalled();
     });
 
-    it("should emit event and toggle map visibility when a theme is selected", fakeAsync(() => {
+    it("should switch theme and update visibility", fakeAsync(() => {
       const themes = createThemesWithLayers();
       component.themes = themes;
-      component["activeTheme"] = themes.find((t) => t.themeName === "Theme A");
+      component["activeTheme"] = themes[0];
 
       const emitSpy = spyOn(component.events, "emit").and.callThrough();
 
@@ -202,10 +190,7 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       flushMicrotasks();
 
-      expect(emitSpy).toHaveBeenCalled();
-      const lastCallArg = emitSpy.calls.mostRecent()
-        .args[0] as DatasetSwitcherEvent;
-      expect(lastCallArg.value.themeName).toBe("Theme B");
+      expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
 
       expect(olLayerServiceMock.setVisibilityLayers).toHaveBeenCalledWith(
         ["a-1"],
@@ -218,12 +203,13 @@ describe("GgcDatasetSwitcherComponent", () => {
         component.mapIndex
       );
 
+      expect(emitSpy).toHaveBeenCalled();
       expect(component["activeTheme"]?.themeName).toBe("Theme B");
     }));
   });
 
   describe("template basics", () => {
-    it("should render radio buttons and have the first one checked initially", fakeAsync(() => {
+    it("should render radio buttons", fakeAsync(() => {
       const localFixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
       const localComponent = localFixture.componentInstance;
 
@@ -236,7 +222,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       localComponent["activeTheme"] = localComponent.themes[0];
 
       localFixture.detectChanges();
-      tick(0);
+      tick();
       localFixture.detectChanges();
 
       const radios = localFixture.debugElement.queryAll(

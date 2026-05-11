@@ -1,23 +1,17 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.html'"
-  [codeScssPath]="'code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-dataset-tree/kaartconfig.json'"
   [title]="componentInfo.title"
-  [treeConfigFilePath]="'code/examples/example-dataset-tree/treeconfig.json'"
-  urlChangelog=""
-  urlCodeHtml="example-dataset-tree/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.html"
-  urlCodeScss="example-dataset-tree/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.scss"
-  urlCodeTypescript="example-dataset-tree/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts"
-  urlKaartConfig="example-dataset-tree/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig="example-dataset-tree/treeconfig.json"
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
+  pathKaartConfig="example-dataset-tree/kaartconfig.json"
+  pathExtraConfig="example-dataset-tree/treeconfig.json"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -26,20 +20,23 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Door middel van zgn. angular template fragments kan extra functionaliteit
-      en styling worden toegevoegd aan dataset- en of layerlabels
-      <br />
-      Zo wordt er in dit voorbeeld een dataset-label template getoond met een
-      aangepaste knop en een layer-label template met functionaliteit om te
-      zoomen naar de resolutie van de laag.
+      Met angular template fragments kan extra functionaliteit en styling
+      toegevoegd worden aan dataset- of layerlabels. In dit voorbeeld staan de
+      volgende labels:
     </p>
+    <ul>
+      <li>een dataset-label template met een aangepaste knop, en</li>
+      <li>
+        een layer-label template om in/uit te zoomen naar de resolutie van de
+        laag.
+      </li>
+    </ul>
     <p>
       <strong>Let op:</strong>
-      De [ggcLayerLabelTemplate] wordt in zijn geheel toegevoegd binnen een
-      klikbaar element aan het dataset-structuurcomponent. Als aan
-      [ggcLayerLabelTemplate] een klikbaar element wordt toegevoegd, is deze
-      mogelijk niet meer toegankelijk voor screen readers. Dit komt doordat dit
-      resulteert in een genest klikbaar element.
+      De <code>ggcLayerLabelTemplate</code> wordt volledig toegevoegd binnen een
+      klikbaar element in het dataset-structuurcomponent. Het toevoegen van
+      interactieve elementen aan dit custom template kan invloed hebben op de
+      toegankelijkheid van de dataset-tree.
     </p>
   </div>
   <div page-functionality>
@@ -79,12 +76,21 @@
                 <span class="layer-label">{{ getTitle(value.layerId) }}</span>
               } @else {
                 <span
-                  (keydown)="zoomToVisible(value.layerId)"
-                  (click)="zoomToVisible(value.layerId)"
+                  role="button"
                   tabindex="0"
                   class="layer-label-inactive"
                   title="Zoom naar laag resolutie"
-                  >{{ getTitle(value.layerId) }}</span
+                  [attr.aria-label]="
+                    'Zoom naar kaartniveau waarop ' +
+                    value.layerId +
+                    ' zichtbaar wordt'
+                  "
+                  (click)="zoomToVisible(value.layerId)"
+                  (keydown.enter)="zoomToVisible(value.layerId)"
+                  (keydown.space)="
+                    $event.preventDefault(); zoomToVisible(value.layerId)
+                  "
+                  >{{ getTitle(value.layerId) }} (zoom naar laag)</span
                 >
               }
             </ng-template>
@@ -97,7 +103,6 @@
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
-        <p>Huidige resolutie: {{ resolution | number: "1.2-2" }}</p>
       </div>
     </div>
     <p></p>

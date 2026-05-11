@@ -1,9 +1,8 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcLegendComponent, GgcLegendService } from "@kadaster/ggc-legend";
 import { ComponentInfo } from "../../component-info.model";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
@@ -17,33 +16,41 @@ import { Tags } from "../../tags.enum";
     FormsModule
   ],
   templateUrl: "./example-legend-adv.component.html",
-  styleUrl: "../example-legend.component.scss"
+  styleUrl: "./example-legend-adv.component.scss"
 })
-export class ExampleLegendAdvComponent extends ExampleFormatComponent {
+export class ExampleLegendAdvComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-advanced",
-    title: "Legenda tonen (uitgebreid)",
-    introduction: "Toon de legenda van één of meerdere kaartlagen.",
+    title: "Legenda weergeven (uitgebreid)",
+    introduction: "Toon de legenda van één of meer kaartlagen.",
     components: [Components.GGC_LEGEND],
     tags: [Tags.LEGEND],
     imageLocation:
       "code/examples/example-legend/example-legend-basic/example-legend-basic.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-legend/example-legend-adv/example-legend-adv.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;
+  // DOCS-SKIP:END
   mapIndex = "legendExample";
   mapConfig: Webservice[];
   // Custom icons
   protected iconCollapsed = "fa-solid fa-caret-right";
   protected iconExpanded = "fa-solid fa-caret-down";
-  protected collapsable = true;
+  protected collapsable = false;
   protected showLegendsName = true;
+  protected alwaysEnableLegends = signal(false);
+
   protected showEmptyLegendMessage = true;
   protected emptyLegendMessage = "Er is geen legenda voor deze laag";
 
-  private readonly httpClient = inject(HttpClient);
   private readonly legendService = inject(GgcLegendService);
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-legend/example-legend-adv/kaartconfig.json")
       .subscribe((data) => {
@@ -57,5 +64,9 @@ export class ExampleLegendAdvComponent extends ExampleFormatComponent {
 
   protected expandAll() {
     this.legendService.expandAllLegends(this.mapIndex);
+  }
+
+  toggleAlwaysEnableLegends() {
+    this.alwaysEnableLegends.update((value) => !value);
   }
 }

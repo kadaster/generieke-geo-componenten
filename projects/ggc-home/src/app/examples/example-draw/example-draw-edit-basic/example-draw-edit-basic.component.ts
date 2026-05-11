@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GgcDrawService,
@@ -11,10 +11,10 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import GeoJSON from "ol/format/GeoJSON";
 import * as polygonExamples from "./ExamplePolygons.json";
-import { always } from "ol/events/condition";
-import { HttpClient } from "@angular/common/http";
+import { altKeyOnly, always, singleClick } from "ol/events/condition";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import MapBrowserEvent from "ol/MapBrowserEvent";
 
 export enum EditType {
   MOVE = "move",
@@ -27,30 +27,40 @@ export enum EditType {
   templateUrl: "./example-draw-edit-basic.component.html",
   styleUrl: "./example-draw-edit-basic.component.scss"
 })
-export class ExampleDrawEditBasicComponent extends ExampleFormatComponent {
+export class ExampleDrawEditBasicComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-edit-basic",
     title: "Verplaatsen en bewerken met de muis",
     introduction:
-      "Verplaats en bewerk lijnen, polygonen, punten en rechthoeken met de muis.",
+      "Verplaats en bewerk lijnen, punten, vlakken en rechthoeken met de muis.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW, Tags.MODIFY],
     imageLocation:
       "code/examples/example-draw/example-draw-edit-basic/example-draw-edit-basic.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-draw/example-draw-edit-basic/example-draw-edit-basic.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
+  // DOCS-SKIP:END
   mapConfig: Webservice[];
   activeEditType = signal<EditType>(EditType.MOVE);
 
   protected readonly editType = EditType;
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
-  private readonly httpClient = inject(HttpClient);
+
   private readonly drawService = inject(GgcDrawService);
   private readonly editLayer = "edit";
 
-  constructor() {
-    super();
+  deleteCondition = (mapBrowserEvent: MapBrowserEvent) => {
+    return altKeyOnly(mapBrowserEvent) && singleClick(mapBrowserEvent);
+  };
+
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-draw/kaartconfig.json")
       .subscribe((data) => {
@@ -60,7 +70,7 @@ export class ExampleDrawEditBasicComponent extends ExampleFormatComponent {
     this.drawService.startMove(this.editLayer);
   }
 
-  // In dit voorbeeld worden alleen de editLayer en de voorwaarde voor het toevoegen
+  // In dit voorbeeld worden de editLayer en de voorwaarden voor het verwijderen en toevoegen
   // van punten aan een geometrie meegegeven aan de startModify().
   startModify() {
     this.activeEditType.set(EditType.MODIFY);
@@ -68,7 +78,7 @@ export class ExampleDrawEditBasicComponent extends ExampleFormatComponent {
       this.editLayer,
       undefined,
       {},
-      undefined,
+      this.deleteCondition,
       always
     );
   }

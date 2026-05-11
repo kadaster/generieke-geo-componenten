@@ -2,6 +2,7 @@ import { Component, inject, signal, viewChild } from "@angular/core";
 import { Menu, MenuBar, MenuContent, MenuItem } from "@angular/aria/menu";
 import { Router } from "@angular/router";
 import { CdkConnectedOverlay } from "@angular/cdk/overlay";
+import { githubReleasesUrl, githubUrl, tsdocsUrl } from "../constants/urls";
 
 @Component({
   selector: "app-menu-bar",
@@ -54,25 +55,19 @@ export class MenuBarComponent {
     this.router.navigate(["/quick-start"]);
   }
 
+  openTsDocs() {
+    window.open(tsdocsUrl, "_blank", "noopener,noreferrer");
+  }
+
   openGithub() {
-    window.open(
-      "https://github.com/kadaster/generieke-geo-componenten",
-      "_blank"
-    );
+    window.open(githubUrl, "_blank", "noopener,noreferrer");
   }
 
-  openChangelog() {
-    window.open(
-      "https://github.com/kadaster/generieke-geo-componenten/releases",
-      "_blank"
-    );
+  openReleasesAndChangelog() {
+    window.open(githubReleasesUrl, "_blank", "noopener,noreferrer");
   }
 
-  openReleases() {
-    // kan eventueel ook naar NPMJS
-    window.open(
-      "https://github.com/kadaster/generieke-geo-componenten/releases",
-      "_blank"
-    );
+  openDownloadsNpm() {
+    this.router.navigate(["/downloads-npm"]);
   }
 }

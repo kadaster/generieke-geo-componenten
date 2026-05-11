@@ -161,9 +161,8 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * @param theme - The theme dat geactiveerd moet worden.
    */
   private async processMap(theme: Theme): Promise<void> {
-    await this.datasetTreeConnectService.loadGgcOLLayerService();
     const ggcOLLayerService =
-      this.datasetTreeConnectService.getGgcOLLayerService() as
+      (await this.datasetTreeConnectService.getGgcOLLayerService()) as
         | GgcOlLayerServiceLike
         | undefined;
 
@@ -230,9 +229,8 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
   private async setInitialActiveTheme(themes: Theme[]): Promise<void> {
     if (!themes.length) return;
 
-    await this.datasetTreeConnectService.loadGgcOLLayerService();
     const ggcOLLayerService =
-      this.datasetTreeConnectService.getGgcOLLayerService() as
+      (await this.datasetTreeConnectService.getGgcOLLayerService()) as
         | GgcOlLayerServiceLike
         | undefined;
 

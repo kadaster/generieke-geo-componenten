@@ -1,0 +1,52 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "visible": true,
+        "zIndex": 1
+      }
+    ]
+  },
+  {
+    "type": "wms",
+    "url": "https://service.pdok.nl/rvo/natura2000/wms/v1_0",
+    "layers": [
+      {
+        "layerId": "natura2000",
+        "title": "Natura 2000",
+        "visible": true,
+        "layerName": "natura2000",
+        "zIndex": 10,
+        "opacity": 0.75,
+        "tiled": true
+      }
+    ]
+  },
+  {
+    "type": "wms",
+    "url": "https://service.pdok.nl/wandelnet/landelijke-wandelroutes/wms/v1_0",
+    "layers": [
+      {
+        "layerId": "landelijke-wandelroutes",
+        "title": "landelijke-wandelroutes",
+        "visible": true,
+        "layerName": "landelijke-wandelroutes",
+        "zIndex": 20,
+        "tiled": true
+      },
+      {
+        "layerId": "streekpaden",
+        "title": "streekpaden",
+        "visible": true,
+        "layerName": "streekpaden",
+        "zIndex": 20,
+        "tiled": true
+      }
+    ]
+  }
+]

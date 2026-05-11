@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   FormatType,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -29,24 +29,30 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-toolbar-location.component.html",
   styleUrl: "./example-toolbar-location.component.scss"
 })
-export class ExampleToolbarLocation extends ExampleFormatComponent {
+export class ExampleToolbarLocation
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/toolbar-location",
-    title: "Toolbar met huidige locatie tonen",
+    title: "Toolbar uitbreiden",
     introduction:
-      "Toolbar met het verkrijgen van de huidige locatie op de kaart.",
+      "Toolbar uitbreiding om huidige locatie op de kaart te laten zien.",
     components: [Components.GGC_TOOLBAR],
     theme: [Themes.WERKBALK],
     tags: [Tags.TOOLBAR, Tags.LOCATION, Tags.CONTROLS],
     imageLocation:
       "code/examples/example-toolbar/example-toolbar-location/example-toolbar-location.png"
   } as ComponentInfo;
-
+  urlComponentModule =
+    "example-toolbar/example-toolbar-location/example-toolbar-location.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-toolbar_src_public-api.GgcToolbarComponent.html`;
+  // DOCS-SKIP:END
   private readonly searchLocationService = inject(GgcSearchLocationService);
   private readonly mapService = inject(GgcMapService);
 
-  constructor() {
-    super();
+  ngOnInit(): void {
     this.searchLocationService
       .getLocationEventsObservable()
       .subscribe((location) => {

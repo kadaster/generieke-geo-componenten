@@ -28,18 +28,26 @@ import { Tags } from "../../tags.enum";
   templateUrl: "./example-search-location-woonplaats.component.html",
   styleUrl: "./example-search-location-woonplaats.component.scss"
 })
-export class ExampleSearchLocationWoonplaatsComponent implements OnInit {
+export class ExampleSearchLocationWoonplaatsComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-woonplaats",
     title: "Locatie zoeken (in collecties)",
     introduction:
-      "Zoek naar een adres, woonplaats of locatie in één of meerdere gekozen collections.",
+      "Zoek een adres, woonplaats of locatie in één of meer gekozen collections.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
+  // DOCS-SKIP:END
 
   searchLocationOptions = {
     zoomToResult: true,
@@ -47,6 +55,10 @@ export class ExampleSearchLocationWoonplaatsComponent implements OnInit {
   } as SearchLocationOptions;
 
   private readonly pdokLocationApiService = inject(PdokLocationApiService);
+
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     this.pdokLocationApiService.collectionsLoaded$

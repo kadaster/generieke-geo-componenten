@@ -1,23 +1,14 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.component.html'"
-  [codeScssPath]="'code/examples/example-draw/example-draw-center-draw.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-draw/example-draw-center-draw/kaartconfig.json'"
   [title]="componentInfo.title"
-  urlChangelog=""
-  urlCodeHtml="example-draw/example-draw/example-draw-center-draw/example-draw-center-draw-center-draw.component.html"
-  urlCodeScss="example-draw/example-draw/example-draw.component.scss"
-  urlCodeTypescript="example-draw/example-draw/example-draw-center-draw/example-draw-center-draw-center-draw.component.ts"
-  urlGitHub=""
-  urlKaartConfig="example-draw-center-draw/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig=""
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -25,9 +16,13 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      Kies een vorm om te tekenen. Beweeg het middelpunt van de kaart door de
-      kaart te verplaatsen. Voeg punten toe aan de tekening met 'Voeg punt toe
-      aan tekening'.
+      Bij het tekenen kan het middelpunt van de kaart gebruikt worden om
+      nauwkeurig te tekenen.
+    </p>
+    <p>
+      Kies een figuur (punt, lijn, vlak) om te tekenen. Beweeg de kaart onder de
+      markering in het midden. Voeg punten toe aan de tekening met 'Voeg punt
+      toe aan tekening'.
     </p>
   </div>
 
@@ -58,7 +53,7 @@
               "
               (click)="startDrawPolygon()"
             >
-              Teken polygon
+              Teken vlak
             </button>
             <hr />
             <div class="d-flex flex-column align-items-stretch">

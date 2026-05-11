@@ -1,20 +1,16 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs="https://docs.kadaster.nl/ggc/ggs-ggc-library/tsdocs/classes/ggc-layer-image_src_lib_layer-image_ggc-layer-image.component.GgcSearchLocationComponent.html"
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-layer/example-layer-geojson/example-layer-geojson.component.html'"
-  [codeTypescriptPath]="'code/examples/example-layer/example-layer-geojson/example-layer-geojson.component.ts'"
-  [codeScssPath]="'code/examples/example-layer/example-layer-geojson/example-layer-geojson.component.scss'"
-  [kaartConfigFilePath]="'code/examples/example-layer/example-layer-geojson/gelderland.json'"
-  urlCodeHtml="example-snapping/example-layer-geojson/example-layer-geojson.component.html"
-  urlCodeTypescript="example-snapping/example-layer-geojson/example-layer-geojson.component.ts"
-  urlCodeScss="example-snapping/example-layer-geojson/example-layer-geojson.component.scss"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathExtraConfig]="'example-layer/example-layer-geojson/gelderland.json'"
+  [extraConfigLabel]="`GeoJson Gelderland (json)`"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -24,18 +20,15 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In het voorbeeld hieronder is een GeoJSON-kaart van provincie Gelderland
-      als laag toegevoegd aan de kaart.
+      In dit voorbeeld is de provincie Gelderland als laag toegevoegd aan de
+      kaart. Deze kaartlaag wordt als JSON-format aangeboden aan ggc-map.
     </p>
   </div>
 
   <div page-functionality>
     <!-- DOCS:START functionality -->
     <div class="map-container">
-      <ggc-map>
-        <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
-        <ggc-geojson-layer [options]="optionsGelderland"></ggc-geojson-layer>
-      </ggc-map>
+      <ggc-map [webServices]="mapConfig"></ggc-map>
     </div>
     <!-- DOCS:END functionality -->
   </div>

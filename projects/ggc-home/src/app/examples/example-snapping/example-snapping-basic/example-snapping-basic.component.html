@@ -1,18 +1,13 @@
 <app-example-format
   [title]="componentInfo.title"
-  urlTSDocs=""
-  urlVoorbeelden=""
-  urlChangelog=""
-  [codeHtmlPath]="'code/examples/example-snapping/example-snapping-basic/example-snapping-basic.component.html'"
-  [codeTypescriptPath]="'code/examples/example-snapping/example-snapping-basic/example-snapping-basic.component.ts'"
-  [codeScssPath]="'code/examples/example-snapping/example-snapping-basic/example-snapping-basic.component.scss'"
-  urlCodeHtml="example-snapping/example-snapping-basic/example-snapping-basic.component.html"
-  urlCodeTypescript="example-snapping/example-snapping-basic/example-snapping-basic.component.ts"
-  urlCodeScss="example-snapping/example-snapping-basic/example-snapping-basic.component.scss"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   <div page-labels>
     @for (tag of componentInfo.tags; track tag) {
-      <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+      <span class="badge rounded-pill tag-technical mx-1">{{
+        tag.toLocaleLowerCase()
+      }}</span>
     }
   </div>
 
@@ -31,7 +26,7 @@
 
   <div page-functionality>
     <div class="row">
-      <div class="col-md-7 col-sm-12">
+      <div class="col-md-10 col-sm-10">
         <!-- DOCS:START functionality -->
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex"></ggc-map>
@@ -42,7 +37,7 @@
         ></ggc-layer-brt-achtergrondkaart>
         <!-- DOCS:END functionality -->
       </div>
-      <div class="col-md-4 col-sm-12">
+      <div class="col-md-2 col-sm-1">
         <div class="row options-toggle">
           <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
@@ -59,6 +54,6 @@
   </div>
 
   <div page-tips>
-    <p>Met behulp van SnapOptions kan snappen worden geconfigureerd.</p>
+    <p>Met <code>SnapOptions</code> kan snappen worden geconfigureerd.</p>
   </div>
 </app-example-format>

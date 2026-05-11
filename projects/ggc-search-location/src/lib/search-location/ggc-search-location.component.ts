@@ -225,11 +225,9 @@ export class GgcSearchLocationComponent implements OnInit {
     this.searchTerm$.next(this.inputValue);
     this.resetSuggestionsAndResult();
     if (this.searchLocationOptions?.markResult) {
-      await this.connectService.loadMapService();
-      const mapService = this.connectService.getMapService();
-      if (mapService) {
-        mapService.clearHighlightLayer(this.searchLocationOptions?.mapIndex);
-      }
+      ((await this.connectService.getMapService()) as any)?.clearHighlightLayer(
+        this.searchLocationOptions?.mapIndex
+      );
     }
   }
 
@@ -464,8 +462,7 @@ export class GgcSearchLocationComponent implements OnInit {
     feature: PdokLocationApiSearchFeature | number[]
   ): Promise<void> {
     if (this.searchLocationOptions?.zoomToResult) {
-      await this.connectService.loadMapService();
-      const mapService = this.connectService.getMapService();
+      const mapService = (await this.connectService.getMapService()) as any;
       if (mapService) {
         if (Array.isArray(feature)) {
           mapService.zoomToGeometryWithZoomOptions(
@@ -503,8 +500,7 @@ export class GgcSearchLocationComponent implements OnInit {
     feature: PdokLocationApiSearchFeature | number[]
   ): Promise<void> {
     if (this.searchLocationOptions?.markResult) {
-      await this.connectService.loadMapService();
-      const mapService = this.connectService.getMapService();
+      const mapService = (await this.connectService.getMapService()) as any;
       if (mapService) {
         if (Array.isArray(feature)) {
           mapService.markFeature(

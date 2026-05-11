@@ -1,23 +1,14 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-measure/example-measure/example-measure.component.html'"
-  [codeScssPath]="'code/examples/example-measure/example-measure/example-measure.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-measure/example-measure/example-measure.component.ts'"
-  [kaartConfigFilePath]="'code/examples/example-measure/example-measure/kaartconfig.json'"
   [title]="componentInfo.title"
-  urlChangelog=""
-  urlCodeHtml="example-draw/example-measure/example-measure/example-measure.component.html"
-  urlCodeScss="example-draw/example-measure/example-measure/example-measure.component.scss"
-  urlCodeTypescript="example-draw/example-measure/example-measure/example-measure-.component.ts"
-  urlGitHub=""
-  urlKaartConfig="example-measure/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig=""
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
@@ -25,17 +16,24 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      Instelmogelijkheden voor meten met behulp van <code>drawOptions</code>:
-      <br />- Lengte van elk segment tonen (<code>showSegmentLength</code>)
-      <br />- Totale lengte van alle segmenten tonen
-      (<code>showTotalLength</code>) <br />- Oppervlakte van een polygoon tonen
-      (<code>showArea</code>)
+      In dit voorbeeld zie je bij het tekenen van een lijn de lengte van ieder
+      lijnstuk en de totale lengte van de hele lijn. Bij het tekenen van een
+      vlak (polygoon) zie je de lengte van ieder lijnstuk en de oppervlakte.
     </p>
-    <p>
-      In onderstaand voorbeeld worden bij het tekenen van een lijn de
-      segmentlengte en totale lengte getoond. Bij het tekenen van een polygoon
-      worden de segmentlengte en oppervlakte getoond.
-    </p>
+    <p>Instelmogelijkheden voor meten met <code>drawOptions</code>:</p>
+    <ul>
+      <li>
+        Lengte van elk lijnstuk (segment) laten zien
+        (<code>showSegmentLength</code>)
+      </li>
+      <li>
+        Totale lengte van alle lijnstukken laten zien
+        (<code>showTotalLength</code>)
+      </li>
+      <li>
+        Oppervlakte van een vlak (polygoon) laten zien (<code>showArea</code>)
+      </li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -49,13 +47,13 @@
               [class.active]="measuring() === mapComponentDrawTypes.LINESTRING"
               (click)="measureLine()"
             >
-              Lijn tekenen en meten
+              Teken en meet lijn
             </button>
             <button
               [class.active]="measuring() === mapComponentDrawTypes.POLYGON"
               (click)="measurePolygon()"
             >
-              Polygon tekenen en meten
+              Teken en meet vlak
             </button>
             <hr />
             <button (click)="stopMeasureManual()">

@@ -1,7 +1,13 @@
-import { inject, Injectable, Injector } from "@angular/core";
+import { inject, Injectable, Injector, Type } from "@angular/core";
+
+type GgcMapModule = {
+  GgcMapService: Type<unknown>;
+  GgcDrawService: Type<unknown>;
+  MapComponentDrawTypes: unknown;
+};
 
 /**
- * Service die verantwoordelijk is voor het leggen van de verbinding tussen de search-location-component
+ * Service die verantwoordelijk is voor het leggen van de verbinding tussen de toolbar
  * en de kaartfunctionaliteit (@kadaster/ggc-map).
  *
  * Deze service laadt de MapService dynamisch om circulaire afhankelijkheden te voorkomen
@@ -12,91 +18,64 @@ import { inject, Injectable, Injector } from "@angular/core";
 })
 export class GgcToolbarConnectService {
   private readonly injector = inject(Injector);
-  private mapService: any;
-  private drawService: any;
-  private mapComponentDrawTypes: any;
+
+  private modulePromise?: Promise<GgcMapModule>;
+
+  private mapService?: unknown;
+  private drawService?: unknown;
+  private mapComponentDrawTypes?: unknown;
 
   /**
-   * Laadt de `GgcMapService` dynamisch vanuit de kaartmodule.
-   *
-   * Controleert eerst of de service al geladen is. Zo niet, dan wordt de module
-   * `@kadaster/ggc-map` geïmporteerd en wordt de
-   * `GgcMapService` verkregen via de `Injector`.
-   *
-   * @returns Een Promise die wordt afgerond zodra de poging tot laden is voltooid.
+   * Zorgt dat de module slechts één keer geladen wordt.
    */
-  async loadMapService(): Promise<void> {
-    if (!this.mapService) {
-      try {
-        const module = await import("@kadaster/ggc-map");
+  private loadMapModule(): Promise<GgcMapModule> {
+    this.modulePromise ??= import(/* @vite-ignore */ "@kadaster/ggc-map").catch(
+      (e) => {
+        console.debug(
+          `Autoconnect ggc-toolbar met ggc-map is niet gelukt: ${e}`
+        );
+        throw e;
+      }
+    );
+    return this.modulePromise;
+  }
+
+  async getMapService(): Promise<unknown> {
+    try {
+      if (!this.mapService) {
+        const module = await this.loadMapModule();
         this.mapService = this.injector.get(module.GgcMapService);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      }
+      return this.mapService;
+    } catch (e) {
+      console.debug("getMapService mislukt:", e);
+      return undefined;
     }
   }
 
-  /**
-   * Retourneert de instantie van de geladen MapService.
-   *
-   * @returns De `GgcMapService` instantie of `undefined` als deze nog niet is geladen via {@link loadMapService}.
-   */
-  getMapService(): any {
-    return this.mapService;
-  }
-
-  /**
-   * Laadt de `GgcDrawService` dynamisch vanuit de kaartmodule.
-   *
-   * Controleert eerst of de service al geladen is. Zo niet, dan wordt de module
-   * `@kadaster/ggc-map` geïmporteerd en wordt de
-   * `GgcDrawService` verkregen via de `Injector`.
-   *
-   * @returns Een Promise die wordt afgerond zodra de poging tot laden is voltooid.
-   */
-  async loadDrawService(): Promise<void> {
-    if (!this.drawService) {
-      try {
-        const module = await import("@kadaster/ggc-map");
+  async getDrawService(): Promise<unknown> {
+    try {
+      if (!this.drawService) {
+        const module = await this.loadMapModule();
         this.drawService = this.injector.get(module.GgcDrawService);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      }
+      return this.drawService;
+    } catch (e) {
+      console.debug("getDrawService mislukt:", e);
+      return undefined;
     }
   }
 
-  /**
-   * Retourneert de instantie van de geladen DrawService.
-   *
-   * @returns De `GgcDrawService` instantie of `undefined` als deze nog niet is geladen via {@link loadDrawService}.
-   */
-  getDrawService(): any {
-    return this.drawService;
-  }
-
-  /**
-   * Laadt de `MapComponentDrawTypes` dynamisch vanuit de kaartmodule.
-   *
-   * Controleert eerst of de service al geladen is. Zo niet, dan wordt de module
-   * `@kadaster/ggc-map` geïmporteerd en wordt de
-   * `MapComponentDrawTypes` verkregen via de `Injector`.
-   *
-   * @returns Een Promise die wordt afgerond zodra de poging tot laden is voltooid.
-   */
-  async loadMapComponentDrawTypes(): Promise<void> {
-    if (!this.mapComponentDrawTypes) {
-      try {
-        const module = await import("@kadaster/ggc-map");
+  async getMapComponentDrawTypes(): Promise<unknown> {
+    try {
+      if (!this.mapComponentDrawTypes) {
+        const module = await this.loadMapModule();
         this.mapComponentDrawTypes = module.MapComponentDrawTypes;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      }
+      return this.mapComponentDrawTypes;
+    } catch (e) {
+      console.debug("getMapComponentDrawTypes mislukt:", e);
+      return undefined;
     }
-  }
-
-  /**
-   * Retourneert de instantie van de geladen MapComponentDrawTypes.
-   *
-   * @returns De `MapComponentDrawTypes` instantie of `undefined` als deze nog niet is geladen via {@link loadMapComponentDrawTypes}.
-   */
-  getMapComponentDrawTypes(): any {
-    return this.mapComponentDrawTypes;
   }
 }

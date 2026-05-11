@@ -1,11 +1,5 @@
-import { AfterViewInit, Component, inject } from "@angular/core";
-import {
-  GeojsonLayerOptions,
-  GgcGeojsonLayerComponent,
-  GgcLayerBrtAchtergrondkaartComponent,
-  GgcMapComponent,
-  GgcMapService
-} from "@kadaster/ggc-map";
+import { Component, inject, OnInit } from "@angular/core";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -14,37 +8,43 @@ import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-search-location",
-  imports: [
-    GgcMapComponent,
-    ExampleFormatComponent,
-    GgcLayerBrtAchtergrondkaartComponent,
-    GgcGeojsonLayerComponent
-  ],
+  imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-geojson-ogc.component.html",
   styleUrl: "./example-layer-geojson-ogc.component.scss"
 })
-export class ExampleLayerGeojsonOgcComponent implements AfterViewInit {
+export class ExampleLayerGeojsonOgcComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-geojson-ogc",
-    title: "Kaartlaag: GeoJSON OGC",
-    introduction: "Voeg een GeoJSON OGC laag toe aan de kaart.",
+    title: "Kaartlaag toevoegen: OGC API - Features (GeoJSON)",
+    introduction:
+      "Voeg een GeoJSON laag toe aan de kaart met OGC API - Features.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.OGC_API],
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.png"
   } as ComponentInfo;
-
-  optionsBuurt: GeojsonLayerOptions = {
-    url: "https://api.pdok.nl/lv/bgt/ogc/v1/collections/buurt/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=100&bbox=189555,465100,200880,473760&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/28992&datetime=2024-10-15T00:00:00.000Z",
-    zIndex: 10,
-    layerId: "gemeentegebied",
-    maxFeatures: 100
-  };
+  urlComponentModule =
+    "example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;
+  // DOCS-SKIP:END
+  protected mapConfig: Webservice[];
+  protected mapIndex = "GeoJsonOgcExample";
 
   private readonly mapService = inject(GgcMapService);
 
-  ngAfterViewInit(): void {
-    this.mapService.zoomToCoordinate([194195, 465885], undefined, 6);
+  ngOnInit() {
+    this.httpClient
+      .get(
+        "code/examples/example-layer/example-layer-geojson-ogc/kaartconfig.json"
+      )
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+        this.mapService.zoomToCoordinate([194195, 465885], this.mapIndex, 6);
+      });
   }
 }

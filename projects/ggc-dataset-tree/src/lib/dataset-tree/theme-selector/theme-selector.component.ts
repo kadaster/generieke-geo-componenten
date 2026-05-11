@@ -147,7 +147,7 @@ export class ThemeSelectorComponent implements OnInit {
       await this.datasetTreeMapConnectService.getLayerChangedObservable(
         this.viewerType
       )
-    ).subscribe((event) => {
+    )?.subscribe((event) => {
       if (event.mapIndex == this.mapIndex) {
         this.handleLayerChanged(event.layerId);
       }

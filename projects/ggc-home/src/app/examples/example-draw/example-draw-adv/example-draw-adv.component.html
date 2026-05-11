@@ -1,41 +1,43 @@
 <app-example-format
-  [codeHtmlPath]="'code/examples/example-draw/example-draw-adv/example-draw-adv.component.html'"
-  [codeScssPath]="'code/examples/example-draw/example-draw-adv/example-draw-adv.component.scss'"
-  [codeTypescriptPath]="'code/examples/example-draw/example-draw-adv/example-draw-adv.component.ts'"
   [title]="componentInfo.title"
-  urlChangelog=""
-  urlCodeHtml="example-draw/example-draw-adv/example-draw-adv.component.html"
-  urlCodeScss="example-draw/example-draw-adv/example-draw-adv.component.scss"
-  urlCodeTypescript="example-draw/example-draw-adv/example-draw-adv.component.ts"
-  urlGitHub=""
-  urlKaartConfig="example-draw-options/kaartconfig.json"
-  urlTSDocs=""
-  urlTreeConfig=""
-  urlVoorbeelden=""
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  pathKaartConfig="example-draw/kaartconfig.json"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
       @for (tag of componentInfo.tags; track tag) {
-        <span class="badge bg-primary mx-1">{{ tag.toLocaleLowerCase() }}</span>
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
       }
     </div>
   }
 
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
+    <p>Klik met de muis op de kaart om een vlak te tekenen.</p>
+    <p>Instelmogelijkheden voor tekenen met <code>drawOptions</code>:</p>
+    <ul>
+      <li>Maximaal aantal punten per figuur (<code>maxPoints</code>)</li>
+      <li>Controleren (<code>validators</code>)</li>
+    </ul>
     <p>
-      Instelmogelijkheden voor tekenen met behulp van <code>drawOptions</code>:
-      <br />- Validatie (<code>validators</code>) <br />- Maximaal aantal punten
-      per figuur (<code>maxPoints</code>)
+      In dit voorbeeld worden vlakken (polygonen) na plaatsing van het vierde
+      punt (<code>maxPoints</code> = {{ maxPointsExample }}) automatisch
+      afgerond. Ook worden polygonen gecontroleerd (validatie). Een polygoon is
+      fout (invalide) als:
     </p>
+    <ul>
+      <li>het oppervlak groter is dan 3.000 km², of</li>
+      <li>
+        het geheel of gedeeltelijk ligt in de noordelijke helft van Nederland.
+      </li>
+    </ul>
     <p>
-      In onderstaand voorbeeld worden polygonen gevalideerd. Polygonen die
-      groter zijn dan 3.000 km² of (gedeeltelijk) getekend zijn in de
-      noordelijke helft van Nederland, zijn niet valide. Invalide tekeningen
-      krijgen tijdens het tekenen de stijl <code>invalidDrawStyle</code>, en na
-      afronding <code>invalidFinishDrawStyle</code>. Ook worden polygonen na het
-      zetten zetten van het derde punt (<code>maxPoints</code> =
-      {{ maxPointsExample }}) automatisch afgerond.
+      Bij het tekenen krijgen foutieve polygonen de stijl
+      <code>invalidDrawStyle</code> (rood met blauwe rand). Na afronding krijgen
+      zij <code>invalidFinishDrawStyle</code> (rood). <br />
     </p>
   </div>
 
@@ -72,7 +74,7 @@
                 type="checkbox"
                 [checked]="validatorsEnabled()"
               />
-              Validatie
+              Controleren
             </label>
             <label>
               <input

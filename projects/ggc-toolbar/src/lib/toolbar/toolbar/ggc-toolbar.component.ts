@@ -74,10 +74,9 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
   }
 
   async init(): Promise<void> {
-    await this.connectService.loadMapService();
-    const mapService = this.connectService.getMapService();
+    const mapService = await this.connectService.getMapService();
     if (mapService) {
-      this.map = mapService.getMap(this.mapIndex);
+      this.map = (mapService as any).getMap(this.mapIndex);
     }
   }
 

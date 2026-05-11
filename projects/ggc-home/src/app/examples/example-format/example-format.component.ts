@@ -4,6 +4,8 @@ import { CodeFromUrlPipe } from "ngx-highlightjs/plus";
 import { Highlight } from "ngx-highlightjs";
 import { AsyncPipe } from "@angular/common";
 import { ExtractDocsSectionPipePipe } from "../../pipes/extract-docs-section-pipe.pipe";
+import { tsdocsUrl } from "../../constants/urls";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-example-format",
@@ -14,25 +16,90 @@ import { ExtractDocsSectionPipePipe } from "../../pipes/extract-docs-section-pip
 })
 export class ExampleFormatComponent {
   @Input() title?: string;
-  @Input() urlVoorbeelden?: string;
-  @Input() urlTSDocs?: string;
-  @Input() urlChangelog?: string;
-  @Input() codeHtmlPath: string | undefined;
-  @Input() codeTypescriptPath: string | undefined;
-  @Input() codeScssPath: string | undefined;
-  @Input() kaartConfigFilePath: string | undefined;
-  @Input() treeConfigFilePath: string | undefined;
-  @Input() urlCodeHtml: string;
-  @Input() urlCodeTypescript: string;
-  @Input() urlCodeScss: string;
-  @Input() urlKaartConfig: string;
-  @Input() urlTreeConfig: string;
+  @Input() extraConfigLabel: string | undefined;
+  @Input() urlTSDocs?: string = tsdocsUrl;
+
+  protected urlCodeTypescript: string | undefined;
+  protected urlCodeHtml: string | undefined;
+  protected urlCodeScss: string | undefined;
+  protected urlKaartConfig: string | undefined;
+  protected urlExtraConfig: string | undefined;
+
+  protected _pathCodeHtml: string | undefined;
+  protected _pathCodeTypescript: string | undefined;
+  protected _pathCodeScss: string | undefined;
+  protected _pathKaartConfig: string | undefined;
+  protected _pathExtraConfig: string | undefined;
 
   protected baseUrlCode =
-    "https://git.dev.cloud.kadaster.nl/ggc/ggs-ggc-library/src/branch/master/projects/ggc-home/src/app/examples/";
+    "https://github.com/kadaster/generieke-geo-componenten/blob/main/projects/ggc-home/src/app/examples/";
+
+  protected readonly httpClient = inject(HttpClient);
   private readonly router = inject(Router);
+
+  @Input()
+  set pathCodeScss(value: string) {
+    this._pathCodeScss = "code/examples/" + value;
+    this.urlCodeScss = this.baseUrlCode + value;
+  }
+
+  @Input()
+  set pathKaartConfig(value: string) {
+    this._pathKaartConfig = "code/examples/" + value;
+    this.urlKaartConfig = this.baseUrlCode + value;
+  }
+
+  @Input()
+  set pathExtraConfig(value: string) {
+    this._pathExtraConfig = "code/examples/" + value;
+    this.urlExtraConfig = this.baseUrlCode + value;
+  }
+
+  // input will be the path of the typescript example
+  // For example: "example-draw/example-draw-adv/example-draw-adv.component.ts"
+  @Input()
+  set pathModule(pathModule: string) {
+    this.updateUrls(pathModule);
+  }
 
   goToPage(routerLink: string) {
     this.router.navigate([routerLink]);
+  }
+
+  private updateUrls(pathModule: string) {
+    this._pathCodeHtml = "code/examples/" + pathModule.replace(".ts", ".html");
+    this.urlCodeHtml = this.baseUrlCode + pathModule.replace(".ts", ".html");
+    this._pathCodeTypescript = "code/examples/" + pathModule;
+    this.urlCodeTypescript = this.baseUrlCode + pathModule;
+
+    const pathScss = pathModule.replace(".ts", ".scss");
+    this.httpClient.get("code/examples/" + pathScss).subscribe({
+      next: () => {
+        this._pathCodeScss = "code/examples/" + pathScss;
+        this.urlCodeScss = this.baseUrlCode + pathScss;
+      },
+      error: (err) => {
+        if (err.status !== 404) {
+          this._pathCodeScss = "code/examples/" + pathScss;
+          this.urlCodeScss = this.baseUrlCode + pathScss;
+        }
+      }
+    });
+
+    // replace the ts file with kaartconfig.json
+    const pathKaartconfig =
+      pathModule.split("/").slice(0, -1).join("/") + "/kaartconfig.json";
+    this.httpClient.get("code/examples/" + pathKaartconfig).subscribe({
+      next: () => {
+        this._pathKaartConfig = "code/examples/" + pathKaartconfig;
+        this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
+      },
+      error: (err) => {
+        if (err.status !== 404) {
+          this._pathKaartConfig = "code/examples/" + pathKaartconfig;
+          this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
+        }
+      }
+    });
   }
 }

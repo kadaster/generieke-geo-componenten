@@ -13,7 +13,7 @@ import {
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import { Geometry, MultiPolygon } from "ol/geom";
+import { Geometry, LineString, MultiPolygon } from "ol/geom";
 import { Segment } from "ol/interaction/Snap";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -39,6 +39,7 @@ export class ExampleSnappingAdvComponent
   drawService = inject(GgcDrawService);
   snapService = inject(GgcSnapService);
 
+  // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/snapping-advanced",
     title: "Snapping (verbinden, uitgebreid)",
@@ -49,6 +50,10 @@ export class ExampleSnappingAdvComponent
     imageLocation:
       "code/examples/example-snapping/example-snapping-basic/example-snapping-basic.png"
   } as ComponentInfo;
+  urlComponentModule =
+    "example-snapping/example-snapping-adv/example-snapping-adv.component.ts";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
+  // DOCS-SKIP:END
 
   drawLayer = "drawLayerAdvanced";
   mapIndex = "snappingAdvanced";
@@ -74,11 +79,12 @@ export class ExampleSnappingAdvComponent
     vertex: true,
     edge: true,
     intersection: true,
-    snapDrawLayers: ["drawLayer"],
+    snapDrawLayers: [this.drawLayer],
     snapLayers: ["provincies"]
   };
 
   ngOnInit(): void {
+    this.drawService.stopDraw();
     this.drawService.startDraw(
       this.drawLayer,
       MapComponentDrawTypes.LINESTRING,
@@ -92,6 +98,7 @@ export class ExampleSnappingAdvComponent
         this.snapOptions
       );
     }, 500);
+    this.updateSnapLayers();
   }
 
   ngOnDestroy(): void {
@@ -124,7 +131,6 @@ export class ExampleSnappingAdvComponent
 
   toggleSegmenterSnapping() {
     this.segmentersEnabled = !this.segmentersEnabled;
-
     this.snapOptions.segmenters = this.segmentersEnabled
       ? {
           MultiPolygon: (geom: Geometry) => {
@@ -136,16 +142,36 @@ export class ExampleSnappingAdvComponent
                 for (let i = 0; i < cords.length - 1; i++) {
                   const c1 = cords[i];
                   const c2 = cords[i + 1];
-
                   const midpoint = [(c1[0] + c2[0]) / 2, (c1[1] + c2[1]) / 2];
-                  segments.push([c1, midpoint, c2]);
+                  segments.push([c1, midpoint], [midpoint, c2]);
                 }
               }
+            }
+            return segments;
+          },
+          LineString: (geom: Geometry) => {
+            const line = geom as LineString;
+            const segments: Segment[] = [];
+            const coords = line.getCoordinates();
+
+            for (let i = 0; i < coords.length - 1; i++) {
+              const c1 = coords[i];
+              const c2 = coords[i + 1];
+              const midpoint = [(c1[0] + c2[0]) / 2, (c1[1] + c2[1]) / 2];
+              segments.push([c1, midpoint], [midpoint, c2]);
             }
             return segments;
           }
         }
       : undefined;
+    if (this.segmentersEnabled) {
+      this.snapOptions = {
+        ...this.snapOptions,
+        vertex: true
+      };
+    }
+    this.snapService.stopSnap(this.mapIndex);
+    this.snapService.startSnap(this.drawLayer, this.mapIndex, this.snapOptions);
   }
 
   toggleSnapDrawLayer(): void {
