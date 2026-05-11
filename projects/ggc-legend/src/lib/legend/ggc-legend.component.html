@@ -67,8 +67,6 @@
     ></ggc-legend-url>
   } @else if (isIconListArray(layerLegend.legend)) {
     <ggc-legend-icon [icons]="layerLegend.legend"></ggc-legend-icon>
-  } @else if (isVectorTileStyle(layerLegend.legend)) {
-    <ggc-legend-mapbox [style]="layerLegend.legend"></ggc-legend-mapbox>
   } @else {
     <ggc-legend-empty
       [legend]="layerLegend.legend"

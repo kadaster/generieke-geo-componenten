@@ -5,7 +5,7 @@
  * - Een mapbox vector tile stijl (`VectorTileStyle`)
  * - Of `undefined` als er geen legenda is.
  */
-export type LegendType = IconList[] | LegendUrl | VectorTileStyle | undefined;
+export type LegendType = IconList[] | LegendUrl | undefined;
 
 /**
  * Legenda-informatie voor een specifieke laag.
@@ -51,17 +51,6 @@ export type LegendUrl = {
   /** Volledige URL naar de legenda-afbeelding. */
   legendUrl: string;
 };
-
-// todo deze kan er volgensmij uit in de ggc-legend story (een vector style wordt een svg wat een url is)
-export class VectorTileStyle {
-  name: string;
-  url: string;
-
-  constructor(name: string, url: string) {
-    this.name = name;
-    this.url = url;
-  }
-}
 
 /**
  * Enum voor de triggers van een legend event.
