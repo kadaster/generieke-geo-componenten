@@ -10,6 +10,7 @@ import {
   GgcMapService
 } from "@kadaster/ggc-map";
 import { githubReleasesUrl, githubUrl, tsdocsUrl } from "../constants/urls";
+import { Router } from "@angular/router";
 import { EventTrackerService } from "../service/event-tracker.service";
 
 @Component({
@@ -79,9 +80,14 @@ export class GgcHomeComponent implements AfterViewInit {
   protected mapIndex = "banner";
   private readonly eventTrackerService = inject(EventTrackerService);
   private readonly mapService: GgcMapService = inject(GgcMapService);
+  private readonly router = inject(Router);
 
   ngAfterViewInit() {
     this.mapService.zoomToCoordinate([138650, 487959], "banner-home", 5);
+  }
+
+  openVoorbeelden() {
+    this.router.navigate(["/example-index"]);
   }
 
   trackPiwikEvent(label: string) {
