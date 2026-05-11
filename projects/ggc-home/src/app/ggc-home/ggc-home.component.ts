@@ -27,7 +27,7 @@ export class GgcHomeComponent implements AfterViewInit {
   navItems = [
     {
       label: "Introductie",
-      route: "#",
+      route: "/introduction",
       piwikEvent: "introductie",
       externalLink: false
     },
@@ -67,6 +67,12 @@ export class GgcHomeComponent implements AfterViewInit {
       route: this.githubReleasesUrl,
       piwikEvent: "releases_en_changelog",
       externalLink: true
+    },
+    {
+      label: "Downloads (npm)",
+      route: "/downloads-npm",
+      piwikEvent: "downloads_npm",
+      externalLink: false
     }
   ];
 

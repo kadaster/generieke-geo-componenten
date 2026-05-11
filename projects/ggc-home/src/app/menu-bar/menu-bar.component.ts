@@ -75,6 +75,7 @@ export class MenuBarComponent {
   }
 
   openDownloadsNpm() {
+    this.eventTrackerService.trackEvent("downloads_npm");
     this.router.navigate(["/downloads-npm"]);
   }
 }
