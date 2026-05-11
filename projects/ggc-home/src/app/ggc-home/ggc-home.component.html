@@ -59,11 +59,12 @@
         alle componenten.
       </p>
     </div>
-    <button class="voorbeelden-banner-button">
-      <span
-        class="nl-heading nl-heading--level-4 ggc-heading"
-        style="color: white"
-      >
+    <button
+      class="voorbeelden-banner-button"
+      (click)="openVoorbeelden()"
+      (keydown.enter)="openVoorbeelden()"
+    >
+      <span class="nl-heading nl-heading--level-4 ggc-heading">
         Bekijk de voorbeelden pagina
       </span>
       <div class="voorbeelden-banner"></div>
