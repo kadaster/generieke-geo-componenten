@@ -49,7 +49,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
  *   - koppelen van kaart‑events aan GGC‑events
  *   - laden van webservices en lagen
  *   - selectie, tekenen en loading‑status
- *  *
+ *
  * @example
  * kaartConfig = [
  *     {
