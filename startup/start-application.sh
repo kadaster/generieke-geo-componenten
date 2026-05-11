@@ -9,5 +9,16 @@ set -x
 
 env
 
+# Startup script based on the ENV variable STARTAPP. This is set via the deploy-cloud-<env>.yml config file
+
+echo "Get file location"
+# If KEYs necessary then replace.
+export mainFileName="$(ls /etc/nginx/html/main*.js)"
+# substitute environment variable
+echo "Substitute this key for:$ENV_PIWIK_SCRIPT"
+envsubst '\$ENV_PIWIK_SCRIPT' < $mainFileName > /tmp/main.tmp
+# move modified files to original location
+mv /tmp/main.tmp "${mainFileName}"
+
 # run nginx
 nginx -g 'daemon off;'
