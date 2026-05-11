@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { AfterViewInit, Component, inject, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GgcDrawService,
@@ -22,7 +22,7 @@ import { Tags } from "../../tags.enum";
 })
 export class ExampleDrawCenterEditBasicComponent
   extends ExampleFormatComponent
-  implements OnInit
+  implements AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
@@ -56,9 +56,8 @@ export class ExampleDrawCenterEditBasicComponent
       });
   }
 
-  ngOnInit() {
-    this.drawService.stopDraw();
-    setTimeout(() => this.startCenterModify(), 100);
+  ngAfterViewInit() {
+    this.startCenterModify();
   }
 
   startCenterModify() {
@@ -82,15 +81,10 @@ export class ExampleDrawCenterEditBasicComponent
   // Toevoegen van tekeningen bij het openen van de kaart
   onMapEvent(mapComponentEvent: any) {
     if (mapComponentEvent.type === MapComponentEventTypes.MAPINITIALIZED) {
-      this.addGeoJsonToActiveLayer();
-    }
-  }
-
-  // Ophalen van tekeningen om aan de kaart toe te voegen
-  addGeoJsonToActiveLayer() {
-    const features = new GeoJSON().readFeatures(polygonExamples).slice(0, 5);
-    for (const feature of features) {
-      this.drawService.addFeatureToLayer(this.editLayer, feature);
+      const features = new GeoJSON().readFeatures(polygonExamples).slice(0, 5);
+      for (const feature of features) {
+        this.drawService.addFeatureToLayer(this.editLayer, feature);
+      }
     }
   }
 }

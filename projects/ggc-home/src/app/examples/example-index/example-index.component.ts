@@ -37,7 +37,6 @@ import { Tags } from "../tags.enum";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
-import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 
 interface GroupedCards {
   theme: string;
