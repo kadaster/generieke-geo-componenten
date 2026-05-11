@@ -217,7 +217,6 @@ export class GgcLegendComponent implements OnInit {
     }
     this._legends().sort(this.sortDatasetLegends);
     this._legends.set([...this._legends()]);
-    console.log(legend);
   }
 
   private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
