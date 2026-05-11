@@ -30,6 +30,7 @@ export class GgcHomeComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.mapService.zoomToCoordinate([138650, 487959], "banner-home", 5);
   }
+
   openVoorbeelden() {
     this.router.navigate(["/example-index"]);
   }
