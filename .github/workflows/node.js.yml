@@ -72,7 +72,8 @@ jobs:
             ggc-map,
             ggc-models,
             ggc-search-location,
-            ggc-toolbar
+            ggc-toolbar,
+            ggc-home
           ]
     steps:
       - uses: actions/checkout@v6

@@ -4,7 +4,12 @@
     <div class="row">
       <div class="col-md-3">
         <div class="col-auto fw-bold reset-all">
-          @if (selectedThemes.size > 0 || selectedTags.size > 0 || selectedComponents.size > 0 || (searchTerm?.length ?? 0) > 0) {
+          @if (
+            selectedThemes.size > 0 ||
+            selectedTags.size > 0 ||
+            selectedComponents.size > 0 ||
+            (searchTerm?.length ?? 0) > 0
+          ) {
             <button
               type="button"
               class="btn btn-sm btn-outline-secondary"

@@ -102,7 +102,9 @@ export class ExampleIndexComponent {
       this.selectedThemes = new Set(JSON.parse(storedSelectedThemes));
     }
 
-    const storedSelectedComponents = sessionStorage.getItem(this.selectedComponentsKey);
+    const storedSelectedComponents = sessionStorage.getItem(
+      this.selectedComponentsKey
+    );
     if (storedSelectedComponents) {
       this.selectedComponents = new Set(JSON.parse(storedSelectedComponents));
     }
@@ -165,7 +167,10 @@ export class ExampleIndexComponent {
       this.selectedThemes.add(theme);
     }
     this.selectedThemes = new Set(this.selectedThemes);
-    sessionStorage.setItem(this.selectedThemesKey, JSON.stringify(Array.from(this.selectedThemes)));
+    sessionStorage.setItem(
+      this.selectedThemesKey,
+      JSON.stringify(Array.from(this.selectedThemes))
+    );
   }
 
   protected toggleComponent(component: string): void {
@@ -175,7 +180,10 @@ export class ExampleIndexComponent {
       this.selectedComponents.add(component);
     }
     this.selectedComponents = new Set(this.selectedComponents);
-    sessionStorage.setItem(this.selectedComponentsKey, JSON.stringify(Array.from(this.selectedComponents)));
+    sessionStorage.setItem(
+      this.selectedComponentsKey,
+      JSON.stringify(Array.from(this.selectedComponents))
+    );
   }
 
   protected toggleTag(tag: string): void {
@@ -185,7 +193,10 @@ export class ExampleIndexComponent {
       this.selectedTags.add(tag);
     }
     this.selectedTags = new Set(this.selectedTags);
-    sessionStorage.setItem(this.selectedTagsKey, JSON.stringify(Array.from(this.selectedTags)));
+    sessionStorage.setItem(
+      this.selectedTagsKey,
+      JSON.stringify(Array.from(this.selectedTags))
+    );
   }
 
   protected resetFilters(): void {
