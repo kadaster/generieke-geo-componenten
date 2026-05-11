@@ -3,6 +3,7 @@ import { Menu, MenuBar, MenuContent, MenuItem } from "@angular/aria/menu";
 import { Router } from "@angular/router";
 import { CdkConnectedOverlay } from "@angular/cdk/overlay";
 import { githubReleasesUrl, githubUrl, tsdocsUrl } from "../constants/urls";
+import { EventTrackerService } from "../service/event-tracker.service";
 
 @Component({
   selector: "app-menu-bar",
@@ -16,6 +17,7 @@ export class MenuBarComponent {
   codeMenu = viewChild<Menu<string>>("codeMenu");
   rendered = signal(false);
 
+  private readonly eventTrackerService = inject(EventTrackerService);
   private readonly router = inject(Router);
 
   onFocusIn() {
@@ -48,26 +50,32 @@ export class MenuBarComponent {
   }
 
   openVoorbeelden() {
+    this.eventTrackerService.trackEvent("voorbeelden");
     this.router.navigate(["/example-index"]);
   }
 
   openQuickstart() {
+    this.eventTrackerService.trackEvent("quick_start");
     this.router.navigate(["/quick-start"]);
   }
 
   openTsDocs() {
+    this.eventTrackerService.trackEvent("tsdocs");
     window.open(tsdocsUrl, "_blank", "noopener,noreferrer");
   }
 
   openGithub() {
+    this.eventTrackerService.trackEvent("github");
     window.open(githubUrl, "_blank", "noopener,noreferrer");
   }
 
   openReleasesAndChangelog() {
+    this.eventTrackerService.trackEvent("releases_en_changelog");
     window.open(githubReleasesUrl, "_blank", "noopener,noreferrer");
   }
 
   openDownloadsNpm() {
+    this.eventTrackerService.trackEvent("downloads_npm");
     this.router.navigate(["/downloads-npm"]);
   }
 }

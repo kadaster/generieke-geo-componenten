@@ -175,6 +175,12 @@
                   "maximumError": "8kB"
                 }
               ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/ggc-home/src/environments/environment.ts",
+                  "with": "projects/ggc-home/src/environments/environment.prod.ts"
+                }
+              ],
               "outputHashing": "all"
             },
             "development": {
