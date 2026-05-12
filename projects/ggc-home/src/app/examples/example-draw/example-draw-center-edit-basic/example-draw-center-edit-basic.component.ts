@@ -19,6 +19,9 @@ import * as polygonExamples from "./example-polygons.json";
 import { HttpClient } from "@angular/common/http";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { StyleLikeMap } from "../../../../../../ggc-map/src/lib/model/draw-interaction-event.model";
+import Style from "ol/style/Style";
+import { Icon } from "ol/style";
 
 @Component({
   selector: "app-example-draw-center-edit-basic",
@@ -53,6 +56,19 @@ export class ExampleDrawCenterEditBasicComponent
   private readonly drawService = inject(GgcDrawService);
   private readonly editLayer = "edit";
 
+  private readonly styleMap: StyleLikeMap = {
+    crossHairStyle: new Style({
+      image: new Icon({
+        src: "assets/RoosGeel.svg",
+        scale: 0.5
+      })
+    })
+  };
+
+  constructor() {
+    super();
+  }
+
   ngOnInit() {
     this.httpClient
       .get("code/examples/example-draw/kaartconfig.json")
@@ -61,6 +77,7 @@ export class ExampleDrawCenterEditBasicComponent
       });
   }
   ngAfterViewInit() {
+    this.drawService.setDrawStyle(this.editLayer, this.styleMap);
     this.startCenterModify();
   }
 

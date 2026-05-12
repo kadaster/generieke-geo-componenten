@@ -64,6 +64,9 @@ export class CoreMeasureDrawStyleService {
         drawOptions
       );
     });
+    if (measureStyles.crossHairStyle) {
+      styleLikeMap.crossHairStyle = measureStyles.crossHairStyle;
+    }
     return styleLikeMap;
   }
 

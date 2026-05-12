@@ -100,12 +100,18 @@ export class CoreDrawService {
     const targetSource = this.coreDrawLayerService
       .getDrawLayer(layerName, mapIndex)
       .getSource()!;
-    if (options && !options.targetSource) {
-      options.targetSource = targetSource;
-    }
-    const centerModify = new CenterModify(
-      options ?? ({ targetSource } as CenterModifyOptions)
-    );
+    options = {
+      targetSource: targetSource,
+      crossHairStyle: this.decideAndGetStyles(
+        layerName,
+        mapIndex,
+        "Polygon",
+        {},
+        true
+      )?.crossHairStyle,
+      ...options
+    };
+    const centerModify = new CenterModify(options);
     this.activeCenterInteraction = centerModify;
     const map = this.coreMapService.getMap(mapIndex);
     map.addInteraction(centerModify);
