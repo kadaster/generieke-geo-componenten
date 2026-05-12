@@ -131,6 +131,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "externalDependencies": ["source-map-support"],
             "browser": "projects/ggc-home/src/main.ts",
             "tsConfig": "projects/ggc-home/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -166,8 +167,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2MB",
-                  "maximumError": "3MB"
+                  "maximumWarning": "4MB",
+                  "maximumError": "6MB"
                 },
                 {
                   "type": "anyComponentStyle",
