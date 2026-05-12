@@ -6,12 +6,19 @@ import { AsyncPipe } from "@angular/common";
 import { ExtractDocsSectionPipePipe } from "../../pipes/extract-docs-section-pipe.pipe";
 import { tsdocsUrl } from "../../constants/urls";
 import { HttpClient } from "@angular/common/http";
+import { ExtractImportsPipe } from "../../pipes/extract-imports.pipe";
 
 @Component({
   selector: "app-example-format",
   templateUrl: "./example-format.component.html",
   styleUrl: "./example-format.component.scss",
-  imports: [Highlight, CodeFromUrlPipe, AsyncPipe, ExtractDocsSectionPipePipe],
+  imports: [
+    Highlight,
+    CodeFromUrlPipe,
+    AsyncPipe,
+    ExtractDocsSectionPipePipe,
+    ExtractImportsPipe
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class ExampleFormatComponent {
