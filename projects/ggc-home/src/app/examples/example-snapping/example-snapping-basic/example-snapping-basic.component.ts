@@ -75,10 +75,6 @@ export class ExampleSnappingBasicComponent
     })
   };
 
-  constructor() {
-    super();
-  }
-
   ngOnInit(): void {
     this.drawService.stopDraw();
     this.drawService.startDraw(
