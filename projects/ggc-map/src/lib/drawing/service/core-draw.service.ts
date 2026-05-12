@@ -111,13 +111,7 @@ export class CoreDrawService {
       )?.crossHairStyle,
       ...options
     };
-
-    if (options && !options.targetSource) {
-      options.targetSource = targetSource;
-    }
-    const centerModify = new CenterModify(
-      options ?? ({ targetSource } as CenterModifyOptions)
-    );
+    const centerModify = new CenterModify(options);
     this.activeCenterInteraction = centerModify;
     const map = this.coreMapService.getMap(mapIndex);
     map.addInteraction(centerModify);
