@@ -14,16 +14,18 @@
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
     <p>
-      Door middel van het aanzetten van de trace optie bij tekenen kan je lijnen
-      of vlakken "overtrekken" uit andere GeoJSON lagen. In dit voorbeeld kunnen
-      Provincie grenzen en Gemeentes worden overgetrokken.
+      Bij tekenen kunnen lijnen of vlakken worden gevolgd uit andere GeoJSON
+      kaartlagen met <code>trace</code> uit de <code>DrawOptions</code>.
+      <br />
+      In dit voorbeeld kunnen Provinciegrenzen en Gemeentegrenzen worden
+      nagetekend.
     </p>
   </div>
 
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-md-3 col-sm-6">
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
         <div>
           <b>Tekenen met behulp van traceren (overtrekken)</b>
           <div class="d-flex flex-column align-items-stretch">
@@ -46,13 +48,9 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-sm-10">
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
         <div class="map-container">
-          <ggc-map [minZoomlevel]="6">
-            <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
-            <ggc-geojson-layer [options]="optionsProvincie"></ggc-geojson-layer>
-            <ggc-geojson-layer [options]="optionsGemeente"></ggc-geojson-layer>
-          </ggc-map>
+          <ggc-map [minZoomlevel]="6" [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->

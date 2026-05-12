@@ -17,39 +17,33 @@
     <p>
       {{ componentInfo.introduction }}
     </p>
+    In dit voorbeeld worden getoond:
+    <br />
     <ul>
       <li>
-        Schaalbalk <code>ggc-scale-line</code>: Toont de huidige schaal van de
-        kaart (in dit voorbeeld in meters/kilometers)
+        Schaalbalk <code>ggc-scale-line</code>: toont de huidige schaal van de
+        kaart in een schaalbalk (in dit voorbeeld in meters/kilometers)
       </li>
       <li>
-        Schaal <code>ggc-scale-denominator</code>: Toont de huidige schaal van
-        de kaart
+        Schaal <code>ggc-scale-denominator</code>: toont het huidige schaalgetal
+        van de kaart.
       </li>
       <li>
-        Zoomniveau <code>ggc-zoom-level</code>: Toont het huidige zoomniveau van
-        de kaart, hoe verder je bent ingezoomd en hoe meer detail zichtbaar
-        wordt. <br />Een lager getal betekent dat je verder uitgezoomd bent en
-        een groter gebied ziet. <br />De plus en min knoppen in de kaart zoomen
-        in stappen van 1 door het instellen van de
-        <code>constrainResolution</code>.
+        Zoomniveau <code>ggc-zoom-level</code>: : toont het huidige zoomniveau
+        van de kaart.
       </li>
       <li>
-        Muispositie <code>ggc-mouse-position</code>: Toont de actuele
+        Muispositie <code>ggc-mouse-position</code>: : toont de actuele
         coördinaten van de muis op de kaart.
       </li>
     </ul>
+    Let op: De schaal is bij benadering en is afhankelijk van schermresolutie.
   </div>
 
   <div page-functionality>
     <!-- DOCS:START functionality -->
     <div class="row">
-      <div class="col-md-6 col-sm-10">
-        <div class="map-container">
-          <ggc-map [webServices]="mapConfig" [minZoomlevel]="1"></ggc-map>
-        </div>
-      </div>
-      <div class="col-md-6 col-sm-2">
+      <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5">
         <ggc-map-details-container>
           <table class="table table-sm">
             <tbody>
@@ -78,6 +72,11 @@
             </tbody>
           </table>
         </ggc-map-details-container>
+      </div>
+      <div class="col-xl-10 col-lg-9 col-md-8 col-sm-7">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [minZoomlevel]="6"></ggc-map>
+        </div>
       </div>
     </div>
     <!-- DOCS:END functionality -->

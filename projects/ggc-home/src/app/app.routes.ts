@@ -246,7 +246,7 @@ export const routes: Routes = [
   },
   {
     path: "draw-center-edit-basic",
-    title: "draw-center-edit-basic",
+    title: "Tekenen centrum kaart | GGC-Home",
     component: ExampleDrawCenterEditBasicComponent,
     data: { label: "draw-cetner-edit-basic" }
   },
@@ -258,7 +258,7 @@ export const routes: Routes = [
   },
   {
     path: "draw-tracing",
-    title: "draw-tracing",
+    title: "Tracing | GGC-Home",
     component: ExampleDrawTracingComponent,
     data: { label: "draw-tracing" }
   },
@@ -282,7 +282,7 @@ export const routes: Routes = [
   },
   {
     path: "example-map-zoom-scale-position",
-    title: "Kaart interaction: schaal, zoom en muis positie | GGC-Home",
+    title: "Kaart eigenschappen tonen | GGC-Home",
     component: ExampleMapZoomScalePositionComponent,
     data: { label: "example-map-zoom-scale-position" }
   }

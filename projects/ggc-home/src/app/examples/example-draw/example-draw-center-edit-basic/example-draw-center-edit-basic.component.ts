@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, inject, signal } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnInit,
+  signal
+} from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GgcDrawService,
@@ -22,7 +28,7 @@ import { Tags } from "../../tags.enum";
 })
 export class ExampleDrawCenterEditBasicComponent
   extends ExampleFormatComponent
-  implements AfterViewInit
+  implements OnInit, AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
@@ -47,15 +53,13 @@ export class ExampleDrawCenterEditBasicComponent
   private readonly drawService = inject(GgcDrawService);
   private readonly editLayer = "edit";
 
-  constructor() {
-    super();
+  ngOnInit() {
     this.httpClient
       .get("code/examples/example-draw/kaartconfig.json")
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
   }
-
   ngAfterViewInit() {
     this.startCenterModify();
   }

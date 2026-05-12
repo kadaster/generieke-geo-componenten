@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -7,33 +7,31 @@ import { Tags } from "../../tags.enum";
 import {
   GeojsonLayerOptions,
   GgcDrawService,
-  GgcGeojsonLayerComponent,
-  GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
-  MapComponentDrawTypes
+  MapComponentDrawTypes,
+  Webservice
 } from "@kadaster/ggc-map";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { Webservice2DType } from "@kadaster/ggc-models";
+import Fill from "ol/style/Fill";
 
 @Component({
   selector: "app-example-draw-tracing",
-  imports: [
-    ExampleFormatComponent,
-    GgcMapComponent,
-    GgcLayerBrtAchtergrondkaartComponent,
-    GgcGeojsonLayerComponent
-  ],
+  imports: [ExampleFormatComponent, GgcMapComponent],
   templateUrl: "./example-draw-tracing.component.html",
   styleUrl: "./example-draw-tracing.component.scss"
 })
-export class ExampleDrawTracingComponent extends ExampleFormatComponent {
+export class ExampleDrawTracingComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/draw-tracing",
-    title: "Tekenen met behulp van traceren (overtrekken)",
+    title: "Tekenen met traceren",
     introduction:
-      "Teken een lijn of polygon, door middel van het overtrekken van een lijn of vlak uit een bestaande GeoJSON laag",
+      "Bij het tekenen automatisch bestaande lijnen of vlakken volgen.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRAW, Tags.TRACE],
@@ -44,36 +42,91 @@ export class ExampleDrawTracingComponent extends ExampleFormatComponent {
     "example-draw/example-draw-tracing/example-draw-tracing.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
+  mapConfig: Webservice[] = [
+    {
+      url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+      type: Webservice2DType.WMTS,
+      layers: [
+        {
+          layerId: "brtAchtergrondkaartGrijs",
+          title: "BRT achtergrond kaart Grijs(WMTS)",
+          layerName: "grijs",
+          zIndex: -20
+        }
+      ]
+    },
+    {
+      type: Webservice2DType.GEOJSON,
+      url: "https://service.pdok.nl/cbs/gebiedsindelingen/2026/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=provincie_gegeneraliseerd&outputformat=application/json",
+      layers: [
+        {
+          layerId: "provincies",
+          title: "Provincies",
+          zIndex: 20,
+          styleLike: new Style({
+            stroke: new Stroke({
+              color: "orange",
+              width: 2
+            })
+          })
+        } as GeojsonLayerOptions
+      ]
+    },
+    {
+      type: Webservice2DType.GEOJSON,
+      url: "https://service.pdok.nl/cbs/gebiedsindelingen/2023/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=gemeente_gegeneraliseerd&outputformat=application/json",
+      layers: [
+        {
+          layerId: "gemeentes",
+          title: "Gemeentes",
+          zIndex: 10,
+          styleLike: new Style({
+            stroke: new Stroke({
+              color: "black",
+              width: 1
+            })
+          })
+        } as GeojsonLayerOptions
+      ]
+    }
+  ];
   activeDrawType = signal<MapComponentDrawTypes | undefined>(undefined);
-  optionsProvincie: GeojsonLayerOptions = {
-    layerId: "provincies",
-    url: "https://service.pdok.nl/cbs/gebiedsindelingen/2023/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=provincie_gegeneraliseerd&outputformat=application/json",
-    styleLike: new Style({
-      stroke: new Stroke({
-        color: "orange",
-        width: 2
-      })
-    }),
-    zIndex: 2
-  };
-  optionsGemeente: GeojsonLayerOptions = {
-    layerId: "gemeentes",
-    url: "https://service.pdok.nl/cbs/gebiedsindelingen/2023/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=gemeente_gegeneraliseerd&outputformat=application/json",
-    styleLike: new Style({
-      stroke: new Stroke({
-        color: "black",
-        width: 1
-      })
-    })
-  };
   protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
-  protected mapIndex = "trace-map";
   private readonly drawService = inject(GgcDrawService);
   private readonly drawLayer = "draw";
 
-  constructor() {
-    super();
-    this.drawService.stopDraw();
+  ngOnInit() {
+    this.drawService.setDrawStyle(this.drawLayer, {
+      drawingDrawStyle: function () {
+        return [
+          new Style({
+            stroke: new Stroke({
+              color: "#760096",
+              width: 6
+            }),
+            fill: new Fill({
+              color: "rgba(118,0,150,0.3)"
+            })
+          })
+        ];
+      },
+      finishDrawStyle: function () {
+        return [
+          new Style({
+            stroke: new Stroke({
+              color: "#1c9600",
+              width: 6
+            }),
+            fill: new Fill({
+              color: "rgba(255,196,0,0.51)"
+            })
+          })
+        ];
+      }
+    });
+    setTimeout(() => {
+      this.startDrawLine();
+    }, 500);
   }
 
   startDrawLine() {
@@ -81,18 +134,20 @@ export class ExampleDrawTracingComponent extends ExampleFormatComponent {
     this.drawService.startDraw(
       this.drawLayer,
       MapComponentDrawTypes.LINESTRING,
-      { trace: true, traceSourceId: "provincies", traceSnapTolerance: 10 },
-      DEFAULT_MAPINDEX
+      {
+        trace: true,
+        traceSourceId: "provincies",
+        traceSnapTolerance: 10
+      }
     );
   }
 
   startDrawPolygon() {
     this.activeDrawType.set(MapComponentDrawTypes.POLYGON);
-    this.drawService.startDraw(
-      this.drawLayer,
-      MapComponentDrawTypes.POLYGON,
-      { trace: true, traceSourceId: "gemeentes", traceSnapTolerance: 20 },
-      DEFAULT_MAPINDEX
-    );
+    this.drawService.startDraw(this.drawLayer, MapComponentDrawTypes.POLYGON, {
+      trace: true,
+      traceSourceId: "gemeentes",
+      traceSnapTolerance: 10
+    });
   }
 }

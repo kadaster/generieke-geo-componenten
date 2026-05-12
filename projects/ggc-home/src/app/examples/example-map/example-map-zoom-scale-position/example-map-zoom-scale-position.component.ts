@@ -41,7 +41,7 @@ export class ExampleMapZoomScalePositionComponent
     route: "/example-map-zoom-scale-position",
     title: "Kaart eigenschappen tonen",
     introduction:
-      "Componenten die eigenschappen tonen, zoals schaal, zoom niveau en muis positie.",
+      "Toon kaartinformatie zoals schaal, zoom niveau en muispositie.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTBEDIENING],
     tags: [Tags.SCALE, Tags.ZOOM, Tags.LOCATION],
@@ -57,9 +57,6 @@ export class ExampleMapZoomScalePositionComponent
   protected mapConfig: Webservice[];
   private readonly mapService = inject(GgcMapService);
 
-  constructor() {
-    super();
-  }
   ngOnInit() {
     this.mapService.getMap().getView().setConstrainResolution(true);
     this.httpClient
