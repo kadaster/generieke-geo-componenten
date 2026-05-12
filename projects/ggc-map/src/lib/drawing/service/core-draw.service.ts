@@ -100,6 +100,18 @@ export class CoreDrawService {
     const targetSource = this.coreDrawLayerService
       .getDrawLayer(layerName, mapIndex)
       .getSource()!;
+    options = {
+      targetSource: targetSource,
+      crossHairStyle: this.decideAndGetStyles(
+        layerName,
+        mapIndex,
+        "Polygon",
+        {},
+        true
+      )?.crossHairStyle,
+      ...options
+    };
+
     if (options && !options.targetSource) {
       options.targetSource = targetSource;
     }
