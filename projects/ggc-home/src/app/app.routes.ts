@@ -246,7 +246,7 @@ export const routes: Routes = [
   },
   {
     path: "draw-center-edit-basic",
-    title: "Tekenen centrum kaart | GGC-Home",
+    title: "Bewerken centrum kaart | GGC-Home",
     component: ExampleDrawCenterEditBasicComponent,
     data: { label: "draw-cetner-edit-basic" }
   },
