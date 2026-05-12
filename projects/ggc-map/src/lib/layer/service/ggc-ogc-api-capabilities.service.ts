@@ -13,7 +13,7 @@ import {
   CapabilitiesServiceLayerStyle,
   CapabilitiesServiceLayer
 } from "./ggc-capabilities.service";
-import { epsg28992, zoomlevelToResolution } from "../../utils/epsg28992";
+import { zoomlevelToResolution } from "../../utils/epsg28992";
 
 /**
  * Service voor het ophalen en vertalen van OGCAPI capabilities naar GGC objecten.

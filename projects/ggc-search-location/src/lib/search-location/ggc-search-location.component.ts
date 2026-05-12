@@ -158,8 +158,8 @@ export class GgcSearchLocationComponent implements OnInit {
     // Subscribe to searchSuggestionService.search
     this.pdokLocationApiService
       .searchOnTermChange(
-        this.searchTerm$
-        //this.searchLocationOptions?.alternativeSuggestionsFirst  todo TMS-10796
+        this.searchTerm$,
+        this.searchLocationOptions?.alternativeSuggestionsFirst
       )
       .subscribe({
         next: (results: PdokLocationApiSearchResponse | null) => {

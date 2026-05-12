@@ -1,0 +1,12 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brt-achtergrondkaart-standaard",
+        "layerName": "standaard"
+      }
+    ]
+  }
+]

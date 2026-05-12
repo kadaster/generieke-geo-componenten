@@ -71,6 +71,7 @@ Het snapshot nummer wordt niet als hoger dan de gevraagde dependency herkend.
 Praktisch kan dit opgelost met `npm install --legacy-peer-deps`
 
 ## Genereren README bestanden
+
 De generieke `README.md` wordt samengevoegd met een optioneel `README.project.md` bestand in de map `projects/ggc-xxx/src`. Draai het volgende commando om de README bestanden te genereren:
 
 `npm run generate-readme-files`

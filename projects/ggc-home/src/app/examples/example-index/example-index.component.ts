@@ -23,16 +23,19 @@ import { ExampleLayerJsonConfig } from "../example-layer/example-layer-json-conf
 import { ExampleToolbarLocation } from "../example-toolbar/example-toolbar-location/example-toolbar-location.component";
 import { ExampleToolbar } from "../example-toolbar/example-toolbar/example-toolbar.component";
 import { ExampleDrawBasicComponent } from "../example-draw/example-draw-basic/example-draw-basic.component";
+import { ExampleDrawTracingComponent } from "../example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawEditBasicComponent } from "../example-draw/example-draw-edit-basic/example-draw-edit-basic.component";
 import { ExampleDrawCenterDrawComponent } from "../example-draw/example-draw-center-draw/example-draw-center-draw.component";
 import { ExampleMeasure } from "../example-measure/example-measure/example-measure.component";
 import { ExampleDrawStyle } from "../example-draw/example-draw-style/example-draw-style.component";
 import { ExampleMeasureOwnStyleLabel } from "../example-measure/example-measure-own-style-label/example-measure-own-style-label.component";
+import { ExampleDrawCenterEditBasicComponent } from "../example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
+import { ExampleMapZoomScalePositionComponent } from "../example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
+import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 import { Tags } from "../tags.enum";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
-import { ExampleDatasetSwitcherRadioButtonsComponent } from "../example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 
 interface GroupedCards {
   theme: string;
@@ -68,6 +71,8 @@ export class ExampleIndexComponent {
     new ExampleDrawStyle().componentInfo,
     new ExampleDatasetTreeTemplatesComponent().componentInfo,
     new ExampleDrawEditBasicComponent().componentInfo,
+    new ExampleDrawCenterEditBasicComponent().componentInfo,
+    new ExampleDrawTracingComponent().componentInfo,
     new ExampleSearchLocationWoonplaatsComponent().componentInfo,
     new ExampleSnappingBasicComponent().componentInfo,
     new ExampleDatasetSwitcherBasicComponent().componentInfo,
@@ -88,7 +93,8 @@ export class ExampleIndexComponent {
     new ExampleToolbarLocation().componentInfo,
     new ExampleDrawCenterDrawComponent().componentInfo,
     new ExampleMeasure().componentInfo,
-    new ExampleMeasureOwnStyleLabel().componentInfo
+    new ExampleMeasureOwnStyleLabel().componentInfo,
+    new ExampleMapZoomScalePositionComponent().componentInfo
   ];
 
   private selectedComponentsKey = "selectedComponents";

@@ -37,6 +37,9 @@ import { ExampleMeasureOwnStyleLabel } from "./examples/example-measure/example-
 import { ExampleDatasetSwitcherRadioButtonsComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component";
 import { DownloadsNpmComponent } from "./download-npm/downloads-npm.component";
 import { IntroductionComponent } from "./introduction/introduction.component";
+import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
+import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
+import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
 
 export const routes: Routes = [
   {
@@ -242,10 +245,22 @@ export const routes: Routes = [
     data: { label: "draw-edit-basic" }
   },
   {
+    path: "draw-center-edit-basic",
+    title: "Bewerken centrum kaart | GGC-Home",
+    component: ExampleDrawCenterEditBasicComponent,
+    data: { label: "draw-cetner-edit-basic" }
+  },
+  {
     path: "draw-center-draw",
     title: "Bewerken centrum kaart | GGC-Home",
     component: ExampleDrawCenterDrawComponent,
     data: { label: "draw-center-draw" }
+  },
+  {
+    path: "draw-tracing",
+    title: "Tracing | GGC-Home",
+    component: ExampleDrawTracingComponent,
+    data: { label: "draw-tracing" }
   },
   {
     path: "measure",
@@ -264,5 +279,11 @@ export const routes: Routes = [
     title: "Meten styling | GGC-Home",
     component: ExampleMeasureOwnStyleLabel,
     data: { label: "measure-own-style-label" }
+  },
+  {
+    path: "example-map-zoom-scale-position",
+    title: "Kaart eigenschappen tonen | GGC-Home",
+    component: ExampleMapZoomScalePositionComponent,
+    data: { label: "example-map-zoom-scale-position" }
   }
 ];

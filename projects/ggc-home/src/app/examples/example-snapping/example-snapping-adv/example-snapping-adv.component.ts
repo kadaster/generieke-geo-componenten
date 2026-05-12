@@ -83,6 +83,10 @@ export class ExampleSnappingAdvComponent
     snapLayers: ["provincies"]
   };
 
+  constructor() {
+    super();
+  }
+
   ngOnInit(): void {
     this.drawService.stopDraw();
     this.drawService.startDraw(

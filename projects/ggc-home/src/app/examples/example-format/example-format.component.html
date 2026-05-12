@@ -47,6 +47,20 @@
           ></span
         ></a>
       </p>
+      @if (_pathCodeTypescript) {
+        <p>
+          Benodigde imports:
+          <code
+            >npm install
+            {{
+              _pathCodeTypescript
+                | codeFromUrl
+                | async
+                | extractImportsPipe: "@kadaster/"
+            }}</code
+          >
+        </p>
+      }
       <div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">

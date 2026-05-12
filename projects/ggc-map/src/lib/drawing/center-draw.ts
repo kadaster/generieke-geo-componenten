@@ -194,8 +194,7 @@ export class CenterDraw extends Interaction {
       } else {
         this.abortDrawing();
       }
-    }
-    if (this.sketchGeometry instanceof Polygon) {
+    } else if (this.sketchGeometry instanceof Polygon) {
       const coords = this.sketchGeometry.getCoordinates()[0];
       if (coords && coords.length > 3) {
         coords.splice(coords.length - 3, 1);

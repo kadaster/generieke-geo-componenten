@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { GgcMapComponent, GgcMapService } from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import Style, { StyleLike } from "ol/style/Style";
@@ -8,7 +8,6 @@ import Stroke from "ol/style/Stroke";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import { Webservice } from "@kadaster/ggc-cesium/src/lib/model/interfaces";
 import VectorLayer from "ol/layer/Vector";
 
 @Component({

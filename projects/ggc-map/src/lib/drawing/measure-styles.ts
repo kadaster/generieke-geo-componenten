@@ -12,6 +12,7 @@ import Style, {
   StyleFunction,
   StyleLike
 } from "ol/style/Style";
+import CircleStyle from "ol/style/Circle";
 
 const white = [255, 255, 255, 1];
 const svgColorWhite = "#fff";
@@ -41,15 +42,23 @@ export const labelImageStyle: Icon = new Icon({
   )
 });
 
-export const crossHairImageStyle: StyleLike = new Style({
-  image: new Icon({
-    src: URL.createObjectURL(
-      new Blob([getCrosshairSvg()], {
-        type: "image/svg+xml"
-      })
-    )
+export const crossHairImageStyle: StyleLike = [
+  new Style({
+    image: new Icon({
+      src: URL.createObjectURL(
+        new Blob([getCrosshairSvg()], {
+          type: "image/svg+xml"
+        })
+      )
+    })
+  }),
+  new Style({
+    image: new CircleStyle({
+      radius: 2,
+      fill: new Fill({ color: "#000000" })
+    })
   })
-});
+];
 
 export const segmentLabelImageStyle: Icon = new Icon({
   src: URL.createObjectURL(

@@ -16,8 +16,8 @@
     "url": "https://service.pdok.nl/cbs/gebiedsindelingen/2026/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=provincie_gegeneraliseerd&outputformat=application/json",
     "layers": [
       {
-        "layerId": "gemeentegebied",
-        "title": "Gemeentegebied",
+        "layerId": "provincies",
+        "title": "Provincies",
         "zIndex": 20
       }
     ]

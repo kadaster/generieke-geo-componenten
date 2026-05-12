@@ -4,7 +4,7 @@ import OlMap from "ol/Map";
 import { unByKey } from "ol/Observable";
 import { BehaviorSubject, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
-import { ObservableMapWrapper } from "../../core/utils/ObservableMapWrapper";
+import { ObservableMapWrapper } from "@kadaster/ggc-models";
 
 @Injectable({
   providedIn: "root"

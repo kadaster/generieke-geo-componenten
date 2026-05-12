@@ -9,8 +9,8 @@ import { CameraOptions } from "../model/interfaces";
   providedIn: "root"
 })
 export class GgcLocationService {
-  private coreViewerService = inject(CoreViewerService);
-  private geolocationPositionError: Subject<GeolocationPositionError> =
+  private readonly coreViewerService = inject(CoreViewerService);
+  private readonly geolocationPositionError: Subject<GeolocationPositionError> =
     new Subject<GeolocationPositionError>();
   private marked: Entity | undefined = undefined;
   private markerSvg: string;
