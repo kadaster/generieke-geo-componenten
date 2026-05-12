@@ -193,9 +193,17 @@ export class GgcLegendComponent implements OnInit {
    * Voegt de meegegeven layer-legenda toe aan dit legenda component.
    * Nieuwe legenda's worden standaard bovenaan toegevoegd.
    * Als naam wordt de serviceTitle en anders de layerTitle gebruikt. Mocht er al een legenda zijn met dezelfde naam, dan worden deze samen gegroepeerd.
+   * Indien er geen legenda is meegegeven, maar wel een titel. Dan wordt de titel ook niet getoond indien `showEmptyLegendMessage = false`.
    * @param legend De legenda om toe te voegen
    */
   addLegend(legend: LayerLegend) {
+    if (
+      !this.isLegendUrl(legend.legend) &&
+      !this.isIconListArray(legend.legend) &&
+      !this.showEmptyLegendMessage
+    ) {
+      return;
+    }
     const datasetLegendNew: Legend = {
       name: legend.serviceTitle ?? legend.layerTitle ?? "",
       expanded: this.defaultExpanded,
@@ -214,7 +222,6 @@ export class GgcLegendComponent implements OnInit {
     }
     this._legends().sort(this.sortDatasetLegends);
     this._legends.set([...this._legends()]);
-    console.log(legend);
   }
 
   private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
