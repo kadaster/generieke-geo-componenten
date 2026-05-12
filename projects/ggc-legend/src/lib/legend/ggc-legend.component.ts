@@ -196,6 +196,9 @@ export class GgcLegendComponent implements OnInit {
    * @param legend De legenda om toe te voegen
    */
   addLegend(legend: LayerLegend) {
+    if (!this.isLegendUrl(legend.legend) && !this.isIconListArray(legend.legend) && !this.showEmptyLegendMessage) {
+      return;
+    }
     const datasetLegendNew: Legend = {
       name: legend.serviceTitle ?? legend.layerTitle ?? "",
       expanded: this.defaultExpanded,
@@ -214,7 +217,6 @@ export class GgcLegendComponent implements OnInit {
     }
     this._legends().sort(this.sortDatasetLegends);
     this._legends.set([...this._legends()]);
-    console.log(legend);
   }
 
   private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
