@@ -86,7 +86,7 @@ Dit project is gratis en open-source software, gelicentieerd onder de [European 
 
 ## Documentatie
 
-Bekijk onze [voorbeelden](TODO), de [quick start](TODO) of de [TSDocs](TODO).
+Bekijk onze [voorbeelden](https://generiekegeocomponenten.nl/example-index), de [quick start](https://generiekegeocomponenten.nl/quick-start) of de [TSDocs](https://www.generiekegeocomponenten.nl/tsdocs/).
 
 © Documentatie: Dienst voor het kadaster en de openbare registers (Kadaster). Deze documentatie (met uitzondering van de TSDocs) is gelicentieerd onder CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
 
