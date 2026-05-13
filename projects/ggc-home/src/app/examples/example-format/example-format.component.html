@@ -53,10 +53,7 @@
           <code
             >npm install
             {{
-              _pathCodeTypescript
-                | codeFromUrl
-                | async
-                | extractImportsPipe: "@kadaster/"
+              _pathCodeTypescript | codeFromUrl | async | extractImportsPipe
             }}</code
           >
         </p>

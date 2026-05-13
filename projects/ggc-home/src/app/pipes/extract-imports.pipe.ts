@@ -1,42 +1,27 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import ts from "typescript";
 
 @Pipe({
   name: "extractImportsPipe"
 })
 export class ExtractImportsPipe implements PipeTransform {
-  transform(source: string | null, key: string): string {
-    if (!source || !key) return source ?? "";
-    return this.getKadasterImports(source, key).join(" ");
+  transform(source: string | null): string {
+    if (!source) return source ?? "";
+    return this.getKadasterImports(source).join(" ");
   }
 
-  private getKadasterImports(sourceCode: string, key: string): string[] {
-    const sourceFile = ts.createSourceFile(
-      "file.ts",
-      sourceCode,
-      ts.ScriptTarget.Latest,
-      true
-    );
+  private getKadasterImports(sourceCode: string): string[] {
+    const regex = /import\s+[^'"]*['"](@kadaster\/[^'"]+)['"]/g;
+    const result = new Set<string>();
 
-    const imports: string[] = [];
+    for (const match of sourceCode.matchAll(regex)) {
+      const fullImport = match[1]; // bijv: @kadaster/abc/def
 
-    sourceFile.forEachChild((node) => {
-      if (ts.isImportDeclaration(node)) {
-        const moduleSpecifier = node.moduleSpecifier
-          .getText()
-          .replace(/['"]/g, "");
-
-        if (moduleSpecifier.startsWith(key)) {
-          const parts = moduleSpecifier.split("/");
-
-          // "@scope/package" = eerste 2 delen
-          imports.push(
-            parts.length >= 2 ? `${parts[0]}/${parts[1]}` : moduleSpecifier
-          );
-        }
+      const parts = fullImport.split("/");
+      if (parts.length >= 2) {
+        result.add(`${parts[0]}/${parts[1]}`);
       }
-    });
+    }
 
-    return [...new Set(imports)];
+    return [...result];
   }
 }
