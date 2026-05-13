@@ -16,13 +16,13 @@
   margin-top: 10px;
   text-align: left;
   span {
-    color: var(--ggc-color-primary-100);
+    color: var(--ggc-color-primary-100) !important;
   }
   .voorbeelden-banner {
     width: 100%;
     height: 100px;
     background-image: url("/assets/voorbeelden-banner-align-left.png");
     background-repeat: repeat-x;
-    background-color: var(--ggc-color-primary-400)
+    background-color: var(--ggc-color-primary-400);
   }
 }
