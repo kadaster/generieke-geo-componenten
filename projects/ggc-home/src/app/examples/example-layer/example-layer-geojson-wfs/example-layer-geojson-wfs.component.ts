@@ -58,9 +58,7 @@ export class ExampleLayerGeojsonWfsComponent
 
   protected switchStyle() {
     this.useCustomStyle = !this.useCustomStyle;
-    const geoJsonLayer = this.mapService.getLayer(
-      "gemeentegebied"
-    ) as VectorLayer;
+    const geoJsonLayer = this.mapService.getLayer("provincies") as VectorLayer;
     geoJsonLayer.setStyle(this.useCustomStyle ? this.customStyle : undefined);
   }
 }

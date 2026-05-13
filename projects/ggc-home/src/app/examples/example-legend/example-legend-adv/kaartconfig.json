@@ -16,19 +16,6 @@
     ]
   },
   {
-    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
-    "type": "wms",
-    "layers": [
-      {
-        "layerId": "nederland",
-        "title": "Landsgrens (geen legenda geconfigureerd)",
-        "layerName": "landgebied",
-        "legendIndex": 1,
-        "zIndex": 3
-      }
-    ]
-  },
-  {
     "type": "wms",
     "url": "https://service.pdok.nl/kadaster/bgt-terugmeldingen/wms/v1_0",
     "layers": [
