@@ -12,9 +12,10 @@ import {
   CoreLegendService,
   DatasetLegendToggle
 } from "./service/core-legend.service";
-import { NgTemplateOutlet } from "@angular/common";
+import { JsonPipe, NgTemplateOutlet } from "@angular/common";
 import { GgcLegendIconComponent } from "../legend-icon/ggc-legend-icon.component";
 import { GgcLegendUrlComponent } from "../legend-url/ggc-legend-url.component";
+import { LegendMapboxComponent } from "../legend-mapbox/legend-mapbox.component";
 import { LegendEmptyComponent } from "../legend-empty/legend-empty.component";
 import {
   DEFAULT_CESIUM_MAPINDEX,
@@ -23,14 +24,15 @@ import {
   LayerLegend,
   LegendType,
   LegendUrl,
+  VectorTileStyle,
   ViewerType
 } from "@kadaster/ggc-models";
 import { GgcLegendMapConnectService } from "./service/legend-map-connect.service";
 
 /**
  * Het dataset legenda component toont de legenda van kaartlagen
- * Het component ondersteunt verschillende legenda-types zoals iconenlijsten en
- * URL's naar legenda plaatjes.
+ * Het component ondersteunt verschillende legenda-types zoals iconenlijsten,
+ * URL's naar legenda plaatjes en (mapbox) vector tile stijlen.
  * Door <ggc-legend></ggc-legend> op te nemen in de HTML kan de
  * legenda worden gebruikt.
  *
@@ -58,7 +60,8 @@ import { GgcLegendMapConnectService } from "./service/legend-map-connect.service
     GgcLegendIconComponent,
     GgcLegendUrlComponent,
     NgTemplateOutlet,
-    LegendEmptyComponent
+    LegendMapboxComponent,
+    LegendEmptyComponent,
   ],
   styleUrls: ["./ggc-legend.component.css"]
 })
@@ -200,6 +203,7 @@ export class GgcLegendComponent implements OnInit {
     if (
       !this.isLegendUrl(legend.legend) &&
       !this.isIconListArray(legend.legend) &&
+      !this.isVectorTileStyle(legend.legend) &&
       !this.showEmptyLegendMessage
     ) {
       return;
@@ -310,6 +314,10 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een IconList[] is.
    */
   protected isIconListArray(legend: LegendType): legend is IconList[] {
+    console.log(
+      "Hallo is IconListArrayl",
+      Array.isArray(legend) && legend.length > 0 && "imageUrl" in legend[0]
+    );
     return (
       Array.isArray(legend) && legend.length > 0 && "imageUrl" in legend[0]
     );
@@ -321,11 +329,40 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een LegendUrl is.
    */
   protected isLegendUrl(legend: LegendType): legend is LegendUrl {
+    console.log(
+      "Hallo is LegendUrl",
+      typeof legend === "object" &&
+        legend !== null &&
+        "legendUrl" in legend &&
+        legend.legendUrl !== ""
+    );
     return (
       typeof legend === "object" &&
       legend !== null &&
       "legendUrl" in legend &&
       legend.legendUrl !== ""
+    );
+  }
+
+  /**
+   * Controleert of een legenda een VectorTileStyle is.
+   * @param legend Het te controleren legenda-object.
+   * @returns True als het een VectorTileStyle is.
+   */
+  protected isVectorTileStyle(legend: LegendType): legend is VectorTileStyle {
+    console.log(legend);
+    console.log(
+      "Hallo isVectorTileStyle",
+      typeof legend === "object" &&
+        legend !== null &&
+        "name" in legend &&
+        "url" in legend
+    );
+    return (
+      typeof legend === "object" &&
+      legend !== null &&
+      "name" in legend &&
+      "url" in legend
     );
   }
 

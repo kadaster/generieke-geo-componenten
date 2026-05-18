@@ -3,11 +3,20 @@ import { By } from "@angular/platform-browser";
 import { Legend } from "../model/legend.model";
 import { GgcLegendComponent } from "./ggc-legend.component";
 import { CoreLegendService } from "./service/core-legend.service";
+import { MapboxStyleService } from "../legend-mapbox/service/mapbox-style.service";
+import { of } from "rxjs";
+import {
+  LayerType,
+  LegendItem,
+  MapboxStyle
+} from "../legend-mapbox/model/legend-mapbox.model";
+import { provideZoneChangeDetection } from "@angular/core";
 
 describe("DatasetLegendComponent", () => {
   let component: GgcLegendComponent;
   let fixture: ComponentFixture<GgcLegendComponent>;
   let legendService: CoreLegendService;
+  let mapboxStyleServiceSpy: jasmine.SpyObj<MapboxStyleService>;
 
   const collapsableDatasetLegend: Legend[] = [
     {
@@ -51,6 +60,19 @@ describe("DatasetLegendComponent", () => {
     ]
   };
 
+  const legendMapbox: Legend = {
+    name: "blub",
+    layerLegends: [
+      {
+        layerId: "blub",
+        legend: {
+          name: "test",
+          url: "assets/mapbox/testStyle.json"
+        }
+      }
+    ]
+  };
+
   const legendEmpty: Legend = {
     name: "BAG Terugmeldingen leeg",
     layerLegends: [
@@ -70,6 +92,20 @@ describe("DatasetLegendComponent", () => {
   }));
 
   beforeEach(async () => {
+    mapboxStyleServiceSpy = jasmine.createSpyObj("MapboxStyleService", [
+      "getMapboxStyle",
+      "removeRasterLayers",
+      "getItems",
+      "getLayersids"
+    ]);
+
+    await TestBed.configureTestingModule({
+      providers: [
+        { provide: MapboxStyleService, useValue: mapboxStyleServiceSpy },
+        provideZoneChangeDetection()
+      ]
+      // eventueel je componenten of andere providers
+    }).compileComponents();
     fixture = TestBed.createComponent(GgcLegendComponent);
     legendService = TestBed.inject(CoreLegendService);
 
@@ -160,6 +196,35 @@ describe("DatasetLegendComponent", () => {
       expect(iconSrc).toEqual("assets/icons/afgerond.svg");
       expect(iconAlt).toEqual("afgerond");
       expect(textValue).toEqual("afgerond");
+    }
+  );
+
+  it(
+    "when there is a dataset with vectorTileStyle, " +
+      "the html should contain a ggc-legend-mapbox component with a legendItem with title = (zee)water",
+    async () => {
+      component.legends = [legendMapbox];
+      mapboxStyleServiceSpy.getMapboxStyle.and.returnValue(
+        // @ts-ignore
+        of(testStyle as MapboxStyle)
+      );
+      mapboxStyleServiceSpy.getItems.and.returnValue(
+        mapboxLegendItems as LegendItem[]
+      );
+      mapboxStyleServiceSpy.getLayersids.and.returnValue([
+        "Onderlegger Nederland"
+      ]);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+      const mapboxNode = fixture.debugElement.query(
+        By.css("ggc-legend-mapbox")
+      );
+      expect(mapboxNode).toBeDefined();
+      const legendText = fixture.debugElement.query(
+        By.css(".ggc-dl-mapbox-legend-text")
+      );
+      expect(legendText.nativeElement.firstChild.data).toEqual("(zee)water");
     }
   );
 
@@ -346,4 +411,71 @@ describe("DatasetLegendComponent", () => {
     component.removeLegend("id");
     expect(component["_legends"]()).toEqual([]);
   });
+  const testStyle = {
+    version: 8,
+    metadata: {
+      "ol:webfonts":
+        "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/resources/fonts/{font-family}/{fontweight}{-fontstyle}.css",
+      "gokoala:title-items": "id"
+    },
+    name: "",
+    sprite: "",
+    id: "achtergrondkaart_standaard",
+    pitch: 0,
+    center: [5.3878, 52.1561],
+    glyphs:
+      "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/resources/fonts/{fontstack}/{range}.pbf",
+    layers: [
+      {
+        id: "Onderlegger Nederland",
+        type: LayerType.Fill,
+        paint: {
+          "fill-color": [
+            "match",
+            ["get", "vistext"],
+            "(zee)water",
+            "#80BDE3",
+            "transparent"
+          ]
+        },
+        source: "brt",
+        "source-layer": "nederland"
+      }
+    ],
+    sources: {
+      brt: {
+        type: "vector",
+        tiles: [
+          "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt"
+        ],
+        minzoom: 0,
+        maxzoom: 12
+      }
+    }
+  };
+  const mapboxLegendItems: LegendItem[] = [
+    {
+      name: "Onderlegger Nederland",
+      title: "(zee)water",
+      geoType: LayerType.Fill,
+      style: [],
+      sourceLayer: "nederland",
+      properties: {
+        vistext: "(zee)water",
+        size: "1"
+      },
+      feature: undefined
+    },
+    {
+      name: "Onderlegger Nederland",
+      title: "Nederland",
+      geoType: LayerType.Fill,
+      style: [],
+      sourceLayer: "nederland",
+      properties: {
+        size: "1"
+      },
+      feature: undefined
+    }
+  ];
 });
