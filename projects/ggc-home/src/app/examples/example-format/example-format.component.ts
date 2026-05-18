@@ -80,33 +80,43 @@ export class ExampleFormatComponent {
     this.urlCodeTypescript = this.baseUrlCode + pathModule;
 
     const pathScss = pathModule.replace(".ts", ".scss");
-    this.httpClient.get("code/examples/" + pathScss).subscribe({
-      next: () => {
-        this._pathCodeScss = "code/examples/" + pathScss;
-        this.urlCodeScss = this.baseUrlCode + pathScss;
-      },
-      error: (err) => {
-        if (err.status !== 404) {
-          this._pathCodeScss = "code/examples/" + pathScss;
-          this.urlCodeScss = this.baseUrlCode + pathScss;
+    this.httpClient
+      .get("code/examples/" + pathScss, {
+        responseType: "text",
+        observe: "response"
+      })
+      .subscribe({
+        next: (response) => {
+          const contentType = response.headers.get("Content-Type") ?? "";
+          if (!contentType.includes("text/html")) {
+            this._pathCodeScss = "code/examples/" + pathScss;
+            this.urlCodeScss = this.baseUrlCode + pathScss;
+          }
+        },
+        error: (err) => {
+          if (err.status !== 404) {
+            this._pathCodeScss = "code/examples/" + pathScss;
+            this.urlCodeScss = this.baseUrlCode + pathScss;
+          }
         }
-      }
-    });
+      });
 
-    // replace the ts file with kaartconfig.json
-    const pathKaartconfig =
-      pathModule.split("/").slice(0, -1).join("/") + "/kaartconfig.json";
-    this.httpClient.get("code/examples/" + pathKaartconfig).subscribe({
-      next: () => {
-        this._pathKaartConfig = "code/examples/" + pathKaartconfig;
-        this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
-      },
-      error: (err) => {
-        if (err.status !== 404) {
+    // replace the ts file with kaartconfig.json if not already set through @Input
+    if (!this._pathKaartConfig) {
+      const pathKaartconfig =
+        pathModule.split("/").slice(0, -1).join("/") + "/kaartconfig.json";
+      this.httpClient.get("code/examples/" + pathKaartconfig).subscribe({
+        next: () => {
           this._pathKaartConfig = "code/examples/" + pathKaartconfig;
           this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
+        },
+        error: (err) => {
+          if (err.status !== 404) {
+            this._pathKaartConfig = "code/examples/" + pathKaartconfig;
+            this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
+          }
         }
-      }
-    });
+      });
+    }
   }
 }

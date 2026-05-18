@@ -16,8 +16,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-measure-own-style-label",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule],
-  templateUrl: "./example-measure-own-style-label.component.html",
-  styleUrl: "./example-measure-own-style-label.component.scss"
+  templateUrl: "./example-measure-own-style-label.component.html"
 })
 export class ExampleMeasureOwnStyleLabel
   extends ExampleFormatComponent

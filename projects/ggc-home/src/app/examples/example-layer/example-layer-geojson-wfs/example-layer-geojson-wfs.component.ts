@@ -13,8 +13,7 @@ import VectorLayer from "ol/layer/Vector";
 @Component({
   selector: "app-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
-  templateUrl: "./example-layer-geojson-wfs.component.html",
-  styleUrl: "./example-layer-geojson-wfs.component.scss"
+  templateUrl: "./example-layer-geojson-wfs.component.html"
 })
 export class ExampleLayerGeojsonWfsComponent
   extends ExampleFormatComponent

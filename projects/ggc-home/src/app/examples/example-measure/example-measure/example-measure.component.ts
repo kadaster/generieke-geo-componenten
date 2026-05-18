@@ -15,8 +15,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-measure",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule],
-  templateUrl: "./example-measure.component.html",
-  styleUrl: "./example-measure.component.scss"
+  templateUrl: "./example-measure.component.html"
 })
 export class ExampleMeasure extends ExampleFormatComponent implements OnInit {
   // DOCS-SKIP:START

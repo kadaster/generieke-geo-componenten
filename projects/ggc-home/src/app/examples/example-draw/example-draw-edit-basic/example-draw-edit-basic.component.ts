@@ -24,8 +24,7 @@ export enum EditType {
 @Component({
   selector: "app-example-draw-edit-basic",
   imports: [ExampleFormatComponent, GgcMapComponent],
-  templateUrl: "./example-draw-edit-basic.component.html",
-  styleUrl: "./example-draw-edit-basic.component.scss"
+  templateUrl: "./example-draw-edit-basic.component.html"
 })
 export class ExampleDrawEditBasicComponent
   extends ExampleFormatComponent

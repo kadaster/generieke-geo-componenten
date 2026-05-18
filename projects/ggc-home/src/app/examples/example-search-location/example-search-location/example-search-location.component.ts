@@ -24,8 +24,7 @@ import { Tags } from "../../tags.enum";
     GgcSearchLocationComponent,
     ExampleFormatComponent
   ],
-  templateUrl: "./example-search-location.component.html",
-  styleUrl: "./example-search-location.component.scss"
+  templateUrl: "./example-search-location.component.html"
 })
 export class ExampleSearchLocationComponent extends ExampleFormatComponent {
   // DOCS-SKIP:START
