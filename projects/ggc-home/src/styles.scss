@@ -350,13 +350,13 @@
   --ggc-dot-badge-color: var(--ggc-color-rood-500);
   --ggc-dot-badge-size: var(--ggc-size-quarter-lint);
   --ggc-expandable-checkbox-group-details-margin-block-start: var(
-      --ggc-space-100
+    --ggc-space-100
   );
   --ggc-expandable-checkbox-group-summary-margin-block-end: var(
-      --ggc-space-100
+    --ggc-space-100
   );
   --ggc-expandable-checkbox-group-summary-margin-block-start: var(
-      --ggc-space-100
+    --ggc-space-100
   );
   --ggc-file-input-column-gap: var(--ggc-space-150);
   --ggc-file-input-row-gap: var(--ggc-space-150);
@@ -426,18 +426,18 @@
   --ggc-navigation-list-item-padding-block: var(--ggc-space-150);
   --ggc-navigation-list-item-padding-inline: var(--ggc-space-200);
   --ggc-navigation-list-item-active-background-color: var(
-      --ggc-color-cool-grey-100
+    --ggc-color-cool-grey-100
   );
   --ggc-navigation-list-item-hover-background-color: var(
-      --ggc-color-cool-grey-50
+    --ggc-color-cool-grey-50
   );
   --ggc-navigation-list-item-content-column-gap: var(--ggc-space-100);
   --ggc-navigation-list-item-content-row-gap: var(--ggc-space-50);
   --ggc-navigation-list-item-description-line-height: var(
-      --ggc-text-line-height-md
+    --ggc-text-line-height-md
   );
   --ggc-navigation-list-item-icon-start-border-radius: var(
-      --ggc-border-radius-round
+    --ggc-border-radius-round
   );
   --ggc-navigation-list-item-icon-start-padding-block: var(--ggc-space-100);
   --ggc-navigation-list-item-icon-start-padding-inline: var(--ggc-space-100);
@@ -510,30 +510,30 @@
   --ggc-card-as-link-metadata-color: var(--ggc-color-foreground-subtle);
   --ggc-card-as-link-focus-background-color: var(--ggc-color-primary-50);
   --ggc-card-as-link-full-bleed-color: var(
-      --ggc-color-foreground-on-dark-color
+    --ggc-color-foreground-on-dark-color
   );
   --ggc-card-as-link-heading-color: var(--ggc-color-primary-500);
   --ggc-card-as-link-heading-font-size: var(--ggc-text-font-size-lg);
   --ggc-card-as-link-heading-font-weight: var(--ggc-text-font-weight-strong);
   --ggc-card-as-link-horizontal-background-color: var(--ggc-color-primary-500);
   --ggc-card-as-link-horizontal-color: var(
-      --ggc-color-foreground-on-dark-color
+    --ggc-color-foreground-on-dark-color
   );
   --ggc-data-badge-button-hover-background-color: var(--ggc-color-primary-500);
   --ggc-data-summary-font-family: var(--ggc-text-font-family-default);
   --ggc-data-summary-item-value-font-weight: var(
-      --ggc-text-font-weight-default
+    --ggc-text-font-weight-default
   );
   --ggc-data-summary-item-key-font-weight: var(--ggc-text-font-weight-strong);
   --ggc-data-summary-item-color: var(--ggc-color-foreground-default);
   --ggc-data-summary-font-size: var(--ggc-text-font-size-md);
   --ggc-expandable-checkbox-group-summary-color: var(
-      --ggc-color-foreground-link
+    --ggc-color-foreground-link
   );
   --ggc-file-border-color: var(--ggc-color-primary-500);
   --ggc-file-error-border-color: var(--ggc-color-negative-default);
   --ggc-form-field-radio-option-font-weight: var(
-      --ggc-text-font-weight-default
+    --ggc-text-font-weight-default
   );
   --ggc-hero-heading-font-weight: var(--ggc-text-font-weight-strong);
   --ggc-hero-heading-font-size: var(--ggc-text-font-size-xl);
@@ -549,7 +549,7 @@
   --ggc-message-list-item-icon-color: var(--ggc-color-foreground-default);
   --ggc-message-list-item-content-font-size: var(--ggc-text-font-size-md);
   --ggc-message-list-item-label-font-family: var(
-      --ggc-text-font-family-default
+    --ggc-text-font-family-default
   );
   --ggc-message-list-item-label-font-size: var(--ggc-text-font-size-md);
   --ggc-message-list-item-label-font-weight: var(--ggc-text-font-weight-strong);
@@ -568,28 +568,28 @@
   --ggc-nav-bar-border-color: var(--ggc-color-primary-400);
   --ggc-navigation-list-item-background-color: var(--ggc-color-bg-document);
   --ggc-navigation-list-item-focus-background-color: var(
-      --ggc-color-primary-50
+    --ggc-color-primary-50
   );
   --ggc-navigation-list-item-description-color: var(
-      --ggc-color-foreground-subtle
+    --ggc-color-foreground-subtle
   );
   --ggc-navigation-list-item-description-font-size: var(
-      --ggc-text-font-size-md
+    --ggc-text-font-size-md
   );
   --ggc-navigation-list-item-icon-end-color: var(--ggc-color-foreground-subtle);
   --ggc-navigation-list-item-icon-start-background-color: var(
-      --ggc-color-foreground-default
+    --ggc-color-foreground-default
   );
   --ggc-navigation-list-item-icon-start-color: var(
-      --ggc-color-foreground-on-dark-color
+    --ggc-color-foreground-on-dark-color
   );
   --ggc-navigation-list-item-label-color: var(--ggc-color-foreground-default);
   --ggc-navigation-list-item-label-font-family: var(
-      --ggc-text-font-family-default
+    --ggc-text-font-family-default
   );
   --ggc-navigation-list-item-label-font-size: var(--ggc-text-font-size-xl);
   --ggc-navigation-list-item-label-font-weight: var(
-      --ggc-text-font-weight-strong
+    --ggc-text-font-weight-strong
   );
   --ggc-sidenav-link-font-size: var(--ggc-text-font-size-md);
   --ggc-sidenav-link-font-family: var(--ggc-text-font-family-default);
@@ -684,22 +684,22 @@
   .nl-link:any-link {
     --_nl-link-forced-colors-color: LinkText;
     color: var(
-        --_nl-link-state-color,
-        var(--nl-link-color, var(--_nl-link-forced-colors-color))
+      --_nl-link-state-color,
+      var(--nl-link-color, var(--_nl-link-forced-colors-color))
     );
     text-decoration-color: var(
-        --_nl-link-state-text-decoration-color,
-        var(--nl-link-text-decoration-color, currentcolor)
+      --_nl-link-state-text-decoration-color,
+      var(--nl-link-text-decoration-color, currentcolor)
     );
     text-decoration-line: var(
-        --_nl-link-state-text-decoration-line,
-        var(--nl-link-text-decoration-line, underline)
+      --_nl-link-state-text-decoration-line,
+      var(--nl-link-text-decoration-line, underline)
     );
     text-decoration-skip-ink: all;
     text-decoration-thickness: max(
       var(
-          --_nl-link-state-text-decoration-thickness,
-          var(--nl-link-text-decoration-thickness)
+        --_nl-link-state-text-decoration-thickness,
+        var(--nl-link-text-decoration-thickness)
       ),
       1px
     );
@@ -708,20 +708,20 @@
 
   .ggc-card-as-link {
     border-end-end-radius: var(
-        --ggc-card-as-link-border-end-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-end-start-radius: var(
-        --ggc-card-as-link-border-end-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-end-radius: var(
-        --ggc-card-as-link-border-start-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-start-radius: var(
-        --ggc-card-as-link-border-start-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     box-sizing: border-box;
     column-gap: var(--ggc-card-as-link-column-gap, 16px);
@@ -758,20 +758,20 @@
 
   .ggc-card-as-link--full-bleed {
     --ggc-card-as-link-heading-color: var(
-        --ggc-card-as-link-full-bleed-color,
-        white
+      --ggc-card-as-link-full-bleed-color,
+      white
     );
     --ggc-card-as-link-metadata-color: var(
-        --ggc-card-as-link-full-bleed-metadata-color,
-        var(--ggc-card-as-link-full-bleed-color, white)
+      --ggc-card-as-link-full-bleed-metadata-color,
+      var(--ggc-card-as-link-full-bleed-color, white)
     );
     color: var(--ggc-card-as-link-full-bleed-color, white);
   }
 
   .ggc-card-as-link--horizontal {
     --ggc-card-as-link-heading-color: var(
-        --ggc-card-as-link-horizontal-color,
-        white
+      --ggc-card-as-link-horizontal-color,
+      white
     );
     color: var(--ggc-card-as-link-horizontal-color, white);
     flex-direction: row;
@@ -828,24 +828,24 @@
 
   .ggc-card-as-link--horizontal .ggc-card-as-link__content {
     border-end-end-radius: var(
-        --ggc-card-as-link-border-end-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-end-start-radius: var(
-        --ggc-card-as-link-border-end-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-end-radius: var(
-        --ggc-card-as-link-border-start-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-start-radius: var(
-        --ggc-card-as-link-border-start-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     background-color: var(
-        --ggc-card-as-link-horizontal-background-color,
-        #154273
+      --ggc-card-as-link-horizontal-background-color,
+      #154273
     );
     border-end-start-radius: 0;
     border-start-start-radius: 0;
@@ -854,13 +854,16 @@
     flex-direction: row;
     padding-block-end: var(--ggc-card-as-link-horizontal-padding-block-end, 0);
     padding-block-start: var(
-        --ggc-card-as-link-horizontal-padding-block-start,
-        0
+      --ggc-card-as-link-horizontal-padding-block-start,
+      0
     );
-    padding-inline-end: var(--ggc-card-as-link-horizontal-padding-inline-end, 0);
+    padding-inline-end: var(
+      --ggc-card-as-link-horizontal-padding-inline-end,
+      0
+    );
     padding-inline-start: var(
-        --ggc-card-as-link-horizontal-padding-inline-start,
-        0
+      --ggc-card-as-link-horizontal-padding-inline-start,
+      0
     );
     row-gap: var(--ggc-card-as-link-row-gap, 12px);
   }
@@ -871,20 +874,20 @@
 
   .ggc-card-as-link--horizontal .ggc-card-as-link__image {
     border-end-end-radius: var(
-        --ggc-card-as-link-border-end-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-end-start-radius: var(
-        --ggc-card-as-link-border-end-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-end-radius: var(
-        --ggc-card-as-link-border-start-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-start-radius: var(
-        --ggc-card-as-link-border-start-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     aspect-ratio: 1/1;
     border-end-end-radius: 0;
@@ -893,34 +896,40 @@
   }
 
   .ggc-card-as-link--full-bleed .ggc-card-as-link__footer {
-    padding-block-end: var(--ggc-card-as-link-full-bleed-padding-block-end, 16px);
-    padding-block-start: var(
-        --ggc-card-as-link-full-bleed-padding-block-start,
-        16px
+    padding-block-end: var(
+      --ggc-card-as-link-full-bleed-padding-block-end,
+      16px
     );
-    padding-inline-end: var(--ggc-card-as-link-full-bleed-padding-inline-end, 0);
+    padding-block-start: var(
+      --ggc-card-as-link-full-bleed-padding-block-start,
+      16px
+    );
+    padding-inline-end: var(
+      --ggc-card-as-link-full-bleed-padding-inline-end,
+      0
+    );
     padding-inline-start: var(
-        --ggc-card-as-link-full-bleed-padding-inline-start,
-        0
+      --ggc-card-as-link-full-bleed-padding-inline-start,
+      0
     );
   }
 
   .ggc-card-as-link--full-bleed .ggc-card-as-link__image {
     border-end-end-radius: var(
-        --ggc-card-as-link-border-end-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-end-start-radius: var(
-        --ggc-card-as-link-border-end-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-end-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-end-radius: var(
-        --ggc-card-as-link-border-start-end-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-end-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-start-radius: var(
-        --ggc-card-as-link-border-start-start-radius,
-        var(--ggc-card-as-link-border-radius, 5px)
+      --ggc-card-as-link-border-start-start-radius,
+      var(--ggc-card-as-link-border-radius, 5px)
     );
     block-size: 100%;
     filter: brightness(var(--ggc-card-as-link-full-bleed-opacity, 0.5));
@@ -1021,7 +1030,7 @@
 
   .ggc-page-footer--primary-outlined {
     --utrecht-page-footer-background-color: var(
-        --ggc-page-footer-outlined-background-color
+      --ggc-page-footer-outlined-background-color
     );
     --utrecht-page-footer-color: var(--ggc-page-footer-text-color);
     border-block-start-color: var(--ggc-page-footer-outlined-border-color);
@@ -1140,7 +1149,7 @@
   --utrecht-radio-button-active-border-color: var(--ggc-color-lintblauw-400);
   --utrecht-radio-button-active-border-width: var(--ggc-border-width-sm);
   --utrecht-radio-button-disabled-background-color: var(
-      --ggc-color-cool-grey-300
+    --ggc-color-cool-grey-300
   );
   --utrecht-radio-button-disabled-border-color: var(--ggc-color-cool-grey-400);
   --utrecht-radio-button-hover-border-color: var(--ggc-color-lintblauw-300);
@@ -1148,31 +1157,31 @@
   --utrecht-radio-button-focus-border-color: var(--ggc-color-lintblauw-500);
   --utrecht-radio-button-focus-border-width: var(--ggc-border-width-md);
   --utrecht-radio-button-checked-background-color: var(
-      --ggc-color-lintblauw-500
+    --ggc-color-lintblauw-500
   );
   --utrecht-radio-button-checked-border-color: var(--ggc-color-transparent);
   --utrecht-radio-button-checked-border-width: var(--ggc-border-width-sm);
   --utrecht-radio-button-checked-color: var(--ggc-color-wit);
   --utrecht-radio-button-checked-active-background-color: var(
-      --ggc-color-lintblauw-400
+    --ggc-color-lintblauw-400
   );
   --utrecht-radio-button-checked-active-border-color: var(
-      --ggc-color-transparent
+    --ggc-color-transparent
   );
   --utrecht-radio-button-checked-active-border-width: var(
-      --ggc-border-width-sm
+    --ggc-border-width-sm
   );
   --utrecht-radio-button-checked-active-color: var(--ggc-color-wit);
   --utrecht-radio-button-checked-hover-background-color: var(
-      --ggc-color-lintblauw-300
+    --ggc-color-lintblauw-300
   );
   --utrecht-radio-button-checked-hover-border-color: var(
-      --ggc-color-transparent
+    --ggc-color-transparent
   );
   --utrecht-radio-button-checked-hover-border-width: var(--ggc-border-width-sm);
   --utrecht-radio-button-checked-hover-color: var(--ggc-color-wit);
   --utrecht-radio-button-checked-focus-border-color: var(
-      --ggc-color-lintblauw-500
+    --ggc-color-lintblauw-500
   );
   --utrecht-radio-button-checked-focus-border-width: var(--ggc-border-width-md);
   --utrecht-radio-button-checked-focus-color: var(--ggc-color-lintblauw-500);
@@ -1247,42 +1256,45 @@
 
   .utrecht-alert {
     --nl-heading-level-1-color: var(
-        --_utrecht-alert-color,
-        var(--utrecht-alert-color)
+      --_utrecht-alert-color,
+      var(--utrecht-alert-color)
     );
     --nl-heading-level-2-color: var(
-        --_utrecht-alert-color,
-        var(--utrecht-alert-color)
+      --_utrecht-alert-color,
+      var(--utrecht-alert-color)
     );
     --nl-heading-level-3-color: var(
-        --_utrecht-alert-color,
-        var(--utrecht-alert-color)
+      --_utrecht-alert-color,
+      var(--utrecht-alert-color)
     );
     --nl-heading-level-4-color: var(
-        --_utrecht-alert-color,
-        var(--utrecht-alert-color)
+      --_utrecht-alert-color,
+      var(--utrecht-alert-color)
     );
     --nl-heading-level-5-color: var(
-        --_utrecht-alert-color,
-        var(--utrecht-alert-color)
+      --_utrecht-alert-color,
+      var(--utrecht-alert-color)
     );
-    --nl-paragraph-color: var(--_utrecht-alert-color, var(--utrecht-alert-color));
+    --nl-paragraph-color: var(
+      --_utrecht-alert-color,
+      var(--utrecht-alert-color)
+    );
   }
 
   .utrecht-alert {
     background-color: var(
-        --_utrecht-alert-background-color,
-        var(--utrecht-alert-background-color)
+      --_utrecht-alert-background-color,
+      var(--utrecht-alert-background-color)
     );
     border-color: var(
-        --_utrecht-alert-border-color,
-        var(--utrecht-alert-border-color)
+      --_utrecht-alert-border-color,
+      var(--utrecht-alert-border-color)
     );
     border-radius: var(--utrecht-alert-border-radius, 0);
     border-style: solid;
     border-width: var(
-        --_utrecht-alert-border-width,
-        var(--utrecht-alert-border-width, 0)
+      --_utrecht-alert-border-width,
+      var(--utrecht-alert-border-width, 0)
     );
     color: var(--_utrecht-alert-color, var(--utrecht-alert-color));
     column-gap: var(--utrecht-alert-column-gap);
@@ -1292,7 +1304,8 @@
       var(--utrecht-space-around, 0) * var(--utrecht-alert-margin-block-end, 0)
     );
     margin-block-start: calc(
-      var(--utrecht-space-around, 0) * var(--utrecht-alert-margin-block-start, 0)
+      var(--utrecht-space-around, 0) *
+        var(--utrecht-alert-margin-block-start, 0)
     );
     padding-block-end: var(--utrecht-alert-padding-block-end);
     padding-block-start: var(--utrecht-alert-padding-block-start);
@@ -1302,11 +1315,13 @@
 
   .utrecht-alert__icon {
     --utrecht-icon-color: var(
-        --_utrecht-alert-icon-color,
-        var(--utrecht-alert-icon-color)
+      --_utrecht-alert-icon-color,
+      var(--utrecht-alert-icon-color)
     );
     --utrecht-icon-size: var(--utrecht-alert-icon-size);
-    --utrecht-icon-inset-block-start: var(--utrecht-alert-icon-inset-block-start);
+    --utrecht-icon-inset-block-start: var(
+      --utrecht-alert-icon-inset-block-start
+    );
   }
 
   .utrecht-alert__content {
@@ -1321,7 +1336,9 @@
 
   .utrecht-alert--info {
     --_utrecht-alert-icon-color: var(--utrecht-alert-icon-info-color);
-    --_utrecht-alert-background-color: var(--utrecht-alert-info-background-color);
+    --_utrecht-alert-background-color: var(
+      --utrecht-alert-info-background-color
+    );
     --_utrecht-alert-border-color: var(--utrecht-alert-info-border-color);
     --_utrecht-alert-border-width: var(--utrecht-alert-info-border-width);
     --_utrecht-alert-color: var(--utrecht-alert-info-color);
@@ -1357,7 +1374,7 @@
     border-end-start-radius: var(--utrecht-figure-img-border-end-start-radius);
     border-start-end-radius: var(--utrecht-figure-img-border-start-end-radius);
     border-start-start-radius: var(
-        --utrecht-figure-img-border-start-start-radius
+      --utrecht-figure-img-border-start-start-radius
     );
   }
 
@@ -1393,26 +1410,26 @@
   .utrecht-link {
     --utrecht-icon-size: var(--utrecht-link-icon-size, 1em);
     color: var(
-        --_utrecht-link-state-color,
-        var(--utrecht-link-color, var(--_utrecht-link-forced-colors-color))
+      --_utrecht-link-state-color,
+      var(--utrecht-link-color, var(--_utrecht-link-forced-colors-color))
     );
   }
 
   .utrecht-link:any-link {
     --_utrecht-link-forced-colors-color: linktext;
     text-decoration-color: var(
-        --_utrecht-link-state-text-decoration-color,
-        var(--utrecht-link-text-decoration-color, currentColor)
+      --_utrecht-link-state-text-decoration-color,
+      var(--utrecht-link-text-decoration-color, currentColor)
     );
     text-decoration-line: var(
-        --_utrecht-link-state-text-decoration,
-        var(--utrecht-link-text-decoration, underline)
+      --_utrecht-link-state-text-decoration,
+      var(--utrecht-link-text-decoration, underline)
     );
     text-decoration-skip-ink: all;
     text-decoration-thickness: max(
       var(
-          --_utrecht-link-state-text-decoration-thickness,
-          var(--utrecht-link-text-decoration-thickness)
+        --_utrecht-link-state-text-decoration-thickness,
+        var(--utrecht-link-text-decoration-thickness)
       ),
       1px
     );
@@ -1424,10 +1441,10 @@
     --_utrecht-link-forced-colors-color: linktext;
     --_utrecht-link-state-color: var(--utrecht-link-hover-color);
     --_utrecht-link-state-text-decoration: var(
-        --utrecht-link-hover-text-decoration
+      --utrecht-link-hover-text-decoration
     );
     --_utrecht-link-state-text-decoration-thickness: var(
-        --utrecht-link-hover-text-decoration-thickness
+      --utrecht-link-hover-text-decoration-thickness
     );
     text-decoration-skip: none;
     text-decoration-skip-ink: none;
@@ -1435,7 +1452,9 @@
 
   .utrecht-link--html-span:focus-visible,
   .utrecht-link--html-a:focus-visible {
-    --_utrecht-focus-ring-box-shadow: 0 0 0 var(--utrecht-focus-outline-width, 0) var(--utrecht-focus-inverse-outline-color, transparent);
+    --_utrecht-focus-ring-box-shadow: 0 0 0
+      var(--utrecht-focus-outline-width, 0)
+      var(--utrecht-focus-inverse-outline-color, transparent);
     box-shadow: var(--_utrecht-focus-ring-box-shadow);
     outline-color: var(--utrecht-focus-outline-color, revert);
     outline-offset: var(--utrecht-focus-outline-offset, revert);
@@ -1443,12 +1462,12 @@
     outline-width: var(--utrecht-focus-outline-width, revert);
     z-index: 1;
     --_utrecht-link-state-text-decoration: var(
-        --utrecht-link-focus-visible-text-decoration,
-        var(--utrecht-link-focus-text-decoration)
+      --utrecht-link-focus-visible-text-decoration,
+      var(--utrecht-link-focus-text-decoration)
     );
     --_utrecht-link-state-text-decoration-thickness: var(
-        --utrecht-link-focus-visible-text-decoration-thickness,
-        var(--utrecht-link-focus-text-decoration-thickness)
+      --utrecht-link-focus-visible-text-decoration-thickness,
+      var(--utrecht-link-focus-text-decoration-thickness)
     );
     z-index: var(--utrecht-stack-focus-z-index, 1);
   }
@@ -1468,23 +1487,23 @@
 
   .utrecht-link-list {
     --utrecht-icon-inset-block-start: var(
-        --utrecht-link-list-icon-inset-block-start
+      --utrecht-link-list-icon-inset-block-start
     );
     --utrecht-icon-size: var(--utrecht-link-list-icon-size);
     --utrecht-link-icon-size: var(--utrecht-link-list-icon-size);
     --utrecht-link-text-decoration: var(
-        --utrecht-link-list-link-text-decoration,
-        none
+      --utrecht-link-list-link-text-decoration,
+      none
     );
     display: flex;
     flex-direction: column;
     margin-block-end: calc(
       var(--utrecht-space-around, 0) *
-      var(--utrecht-link-list-margin-block-end, 0)
+        var(--utrecht-link-list-margin-block-end, 0)
     );
     margin-block-start: calc(
       var(--utrecht-space-around, 0) *
-      var(--utrecht-link-list-margin-block-start, 0)
+        var(--utrecht-link-list-margin-block-start, 0)
     );
     row-gap: var(--utrecht-link-list-row-gap);
   }
@@ -1566,24 +1585,24 @@
   .utrecht-radio-button:focus,
   .utrecht-radio-button--focus {
     --utrecht-radio-button-checked-color: var(
-        --utrecht-radio-button-checked-background-color,
-        inherit
+      --utrecht-radio-button-checked-background-color,
+      inherit
     );
   }
 
   .utrecht-radio-button:disabled,
   .utrecht-radio-button--disabled {
     --utrecht-radio-button-checked-color: var(
-        --utrecht-radio-button-disabled-color,
-        inherit
+      --utrecht-radio-button-disabled-color,
+      inherit
     );
   }
 
   .utrecht-radio-button:invalid,
   .utrecht-radio-button--invalid {
     --utrecht-radio-button-background-color: var(
-        --utrecht-radio-button-invalid-background-color,
-        inherit
+      --utrecht-radio-button-invalid-background-color,
+      inherit
     );
   }
 
@@ -1598,44 +1617,43 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    margin-block-end: 0;
-    margin-block-start: 0;
-    margin-inline-end: 0;
-    margin-inline-start: 0;
+    margin: 0.4rem;
     --_utrecht-radio-button-background-color: var(
-        --_utrecht-radio-button-interactive-background-color,
-        var(
-            --_utrecht-radio-button-state-background-color,
-            var(--utrecht-radio-button-background-color)
-        )
+      --_utrecht-radio-button-interactive-background-color,
+      var(
+        --_utrecht-radio-button-state-background-color,
+        var(--utrecht-radio-button-background-color)
+      )
     );
     --_utrecht-radio-button-border-color: var(
-        --_utrecht-radio-button-interactive-border-color,
-        var(
-            --_utrecht-radio-button-state-border-color,
-            var(--utrecht-radio-button-border-color, currentColor)
-        )
+      --_utrecht-radio-button-interactive-border-color,
+      var(
+        --_utrecht-radio-button-state-border-color,
+        var(--utrecht-radio-button-border-color, currentColor)
+      )
     );
     --_utrecht-radio-button-border-width: var(
-        --_utrecht-radio-button-interactive-border-width,
-        var(
-            --_utrecht-radio-button-state-border-width,
-            var(--utrecht-radio-button-border-width)
-        )
+      --_utrecht-radio-button-interactive-border-width,
+      var(
+        --_utrecht-radio-button-state-border-width,
+        var(--utrecht-radio-button-border-width)
+      )
     );
     --_utrecht-radio-button-color: var(
-        --_utrecht-radio-button-interactive-color,
-        var(
-            --_utrecht-radio-button-state-color,
-            var(--utrecht-radio-button-color, currentColor)
-        )
+      --_utrecht-radio-button-interactive-color,
+      var(
+        --_utrecht-radio-button-state-color,
+        var(--utrecht-radio-button-color, currentColor)
+      )
     );
     --_utrecht-radio-button-icon-size: 0;
     background-color: var(--_utrecht-radio-button-background-color);
     background-image: radial-gradient(
-        circle,
-        var(--_utrecht-radio-button-color, transparent) calc(var(--_utrecht-radio-button-icon-size, 50%) - 5%),
-        var(--_utrecht-radio-button-background-color, currentColor) var(--_utrecht-radio-button-icon-size, 50%)
+      circle,
+      var(--_utrecht-radio-button-color, transparent)
+        calc(var(--_utrecht-radio-button-icon-size, 50%) - 5%),
+      var(--_utrecht-radio-button-background-color, currentColor)
+        var(--_utrecht-radio-button-icon-size, 50%)
     );
     background-position: center;
     background-repeat: no-repeat;
@@ -1647,7 +1665,7 @@
     border-width: var(--_utrecht-radio-button-border-width);
     cursor: var(--utrecht-action-activate-cursor, revert);
     inline-size: var(--utrecht-radio-button-size, 1em);
-    margin-inline-end: var(--utrecht-radio-button-margin-inline-end);
+    //margin-inline-end: var(--utrecht-radio-button-margin-inline-end);
     min-block-size: 12px;
     min-inline-size: 12px;
     -webkit-print-color-adjust: exact;
@@ -1658,97 +1676,102 @@
   }
 
   .utrecht-radio-button--checked {
-    --_utrecht-radio-button-icon-size: var(--utrecht-radio-button-icon-size, 50%);
+    --_utrecht-radio-button-icon-size: var(
+      --utrecht-radio-button-icon-size,
+      50%
+    );
     --_utrecht-radio-button-state-background-color: var(
-        --utrecht-radio-button-checked-background-color
+      --utrecht-radio-button-checked-background-color
     );
     --_utrecht-radio-button-state-border-color: var(
-        --utrecht-radio-button-checked-border-color
+      --utrecht-radio-button-checked-border-color
     );
     --_utrecht-radio-button-state-border-width: var(
-        --utrecht-radio-button-checked-border-width
+      --utrecht-radio-button-checked-border-width
     );
     --_utrecht-radio-button-state-color: var(
-        --utrecht-radio-button-checked-color
+      --utrecht-radio-button-checked-color
     );
     --_utrecht-radio-button-state-active-background-color: var(
-        --utrecht-radio-button-checked-active-background-color
+      --utrecht-radio-button-checked-active-background-color
     );
     --_utrecht-radio-button-state-active-border-color: var(
-        --utrecht-radio-button-checked-active-border-color
+      --utrecht-radio-button-checked-active-border-color
     );
     --_utrecht-radio-button-state-active-border-width: var(
-        --utrecht-radio-button-checked-active-border-width
+      --utrecht-radio-button-checked-active-border-width
     );
     --_utrecht-radio-button-state-active-color: var(
-        --utrecht-radio-button-checked-active-color
+      --utrecht-radio-button-checked-active-color
     );
     --_utrecht-radio-button-state-focus-background-color: var(
-        --utrecht-radio-button-checked-focus-background-color
+      --utrecht-radio-button-checked-focus-background-color
     );
     --_utrecht-radio-button-state-focus-border-color: var(
-        --utrecht-radio-button-checked-focus-border-color
+      --utrecht-radio-button-checked-focus-border-color
     );
     --_utrecht-radio-button-state-focus-border-width: var(
-        --utrecht-radio-button-checked-focus-border-width
+      --utrecht-radio-button-checked-focus-border-width
     );
     --_utrecht-radio-button-state-focus-color: var(
-        --utrecht-radio-button-checked-focus-color
+      --utrecht-radio-button-checked-focus-color
     );
     --_utrecht-radio-button-state-hover-background-color: var(
-        --utrecht-radio-button-checked-hover-background-color
+      --utrecht-radio-button-checked-hover-background-color
     );
     --_utrecht-radio-button-state-hover-border-color: var(
-        --utrecht-radio-button-checked-hover-border-color
+      --utrecht-radio-button-checked-hover-border-color
     );
     --_utrecht-radio-button-state-hover-border-width: var(
-        --utrecht-radio-button-checked-hover-border-width
+      --utrecht-radio-button-checked-hover-border-width
     );
     --_utrecht-radio-button-state-hover-color: var(
-        --utrecht-radio-button-checked-hover-color
+      --utrecht-radio-button-checked-hover-color
     );
   }
 
   .utrecht-radio-button--hover {
     --_utrecht-radio-button-interactive-background-color: var(
-        --_utrecht-radio-button-state-hover-background-color,
-        var(--utrecht-radio-button-hover-background-color)
+      --_utrecht-radio-button-state-hover-background-color,
+      var(--utrecht-radio-button-hover-background-color)
     );
     --_utrecht-radio-button-interactive-border-color: var(
-        --_utrecht-radio-button-state-hover-border-color,
-        var(--utrecht-radio-button-hover-border-color)
+      --_utrecht-radio-button-state-hover-border-color,
+      var(--utrecht-radio-button-hover-border-color)
     );
     --_utrecht-radio-button-interactive-border-width: var(
-        --_utrecht-radio-button-state-hover-border-width,
-        var(--utrecht-radio-button-hover-border-width)
+      --_utrecht-radio-button-state-hover-border-width,
+      var(--utrecht-radio-button-hover-border-width)
     );
     --_utrecht-radio-button-interactive-color: var(
-        --_utrecht-radio-button-state-hover-color,
-        var(--utrecht-radio-button-hover-color)
+      --_utrecht-radio-button-state-hover-color,
+      var(--utrecht-radio-button-hover-color)
     );
   }
 
   .utrecht-radio-button--focus {
     --_utrecht-radio-button-interactive-background-color: var(
-        --_utrecht-radio-button-state-focus-background-color,
-        var(--utrecht-radio-button-focus-background-color)
+      --_utrecht-radio-button-state-focus-background-color,
+      var(--utrecht-radio-button-focus-background-color)
     );
     --_utrecht-radio-button-interactive-border-color: var(
-        --_utrecht-radio-button-state-focus-border-color,
-        var(--utrecht-radio-button-focus-border-color)
+      --_utrecht-radio-button-state-focus-border-color,
+      var(--utrecht-radio-button-focus-border-color)
     );
     --_utrecht-radio-button-interactive-border-width: var(
-        --_utrecht-radio-button-state-focus-border-width,
-        var(--utrecht-radio-button-focus-border-width)
+      --_utrecht-radio-button-state-focus-border-width,
+      var(--utrecht-radio-button-focus-border-width)
     );
     --_utrecht-radio-button-interactive-color: var(
-        --_utrecht-radio-button-state-focus-color,
-        var(--utrecht-radio-button-focus-color)
+      --_utrecht-radio-button-state-focus-color,
+      var(--utrecht-radio-button-focus-color)
     );
   }
 
   .utrecht-radio-button--focus-visible {
-    --_utrecht-focus-ring-box-shadow: 0 0 0 var(--utrecht-focus-outline-width, 0) var(--utrecht-focus-inverse-outline-color, transparent);
+    --_utrecht-focus-ring-box-shadow: 0 0 0
+      var(--utrecht-focus-outline-width, 0)
+      var(--utrecht-focus-inverse-outline-color, transparent);
     box-shadow: var(--_utrecht-focus-ring-box-shadow);
     outline-color: var(--utrecht-focus-outline-color, revert);
     outline-offset: var(--utrecht-focus-outline-offset, revert);
@@ -1759,68 +1782,68 @@
 
   .utrecht-radio-button--active {
     --_utrecht-radio-button-interactive-background-color: var(
-        --_utrecht-radio-button-state-active-background-color,
-        var(--utrecht-radio-button-active-background-color)
+      --_utrecht-radio-button-state-active-background-color,
+      var(--utrecht-radio-button-active-background-color)
     );
     --_utrecht-radio-button-interactive-border-color: var(
-        --_utrecht-radio-button-state-active-border-color,
-        var(--utrecht-radio-button-active-border-color)
+      --_utrecht-radio-button-state-active-border-color,
+      var(--utrecht-radio-button-active-border-color)
     );
     --_utrecht-radio-button-interactive-border-width: var(
-        --_utrecht-radio-button-state-active-border-width,
-        var(--utrecht-radio-button-active-border-width)
+      --_utrecht-radio-button-state-active-border-width,
+      var(--utrecht-radio-button-active-border-width)
     );
     --_utrecht-radio-button-interactive-color: var(
-        --_utrecht-radio-button-state-active-color,
-        var(--utrecht-radio-button-active-color)
+      --_utrecht-radio-button-state-active-color,
+      var(--utrecht-radio-button-active-color)
     );
   }
 
   .utrecht-radio-button--disabled {
     --_utrecht-radio-button-background-color: var(
-        --utrecht-radio-button-disabled-background-color,
-        var(--utrecht-radio-button-background-color)
+      --utrecht-radio-button-disabled-background-color,
+      var(--utrecht-radio-button-background-color)
     );
     --_utrecht-radio-button-border-color: var(
-        --utrecht-radio-button-disabled-border-color,
-        var(--utrecht-radio-button-border-color)
+      --utrecht-radio-button-disabled-border-color,
+      var(--utrecht-radio-button-border-color)
     );
     --_utrecht-radio-button-border-width: var(
-        --utrecht-radio-button-disabled-border-width,
-        var(--utrecht-radio-button-border-width)
+      --utrecht-radio-button-disabled-border-width,
+      var(--utrecht-radio-button-border-width)
     );
     --_utrecht-radio-button-color: var(
-        --utrecht-radio-button-disabled-color,
-        var(--utrecht-radio-button-color)
+      --utrecht-radio-button-disabled-color,
+      var(--utrecht-radio-button-color)
     );
     --_utrecht-radio-button-focus-background-color: var(
-        --_utrecht-radio-button-background-color
+      --_utrecht-radio-button-background-color
     );
     --_utrecht-radio-button-focus-border-color: var(
-        --_utrecht-radio-button-border-color
+      --_utrecht-radio-button-border-color
     );
     --_utrecht-radio-button-focus-border-width: var(
-        --_utrecht-radio-button-border-width
+      --_utrecht-radio-button-border-width
     );
     --_utrecht-radio-button-focus-color: var(--_utrecht-radio-button-color);
     --_utrecht-radio-button-active-background-color: var(
-        --_utrecht-radio-button-background-color
+      --_utrecht-radio-button-background-color
     );
     --_utrecht-radio-button-active-border-color: var(
-        --_utrecht-radio-button-border-color
+      --_utrecht-radio-button-border-color
     );
     --_utrecht-radio-button-active-border-width: var(
-        --_utrecht-radio-button-border-width
+      --_utrecht-radio-button-border-width
     );
     --_utrecht-radio-button-active-color: var(--_utrecht-radio-button-color);
     --_utrecht-radio-button-hover-background-color: var(
-        --_utrecht-radio-button-background-color
+      --_utrecht-radio-button-background-color
     );
     --_utrecht-radio-button-hover-border-color: var(
-        --_utrecht-radio-button-border-color
+      --_utrecht-radio-button-border-color
     );
     --_utrecht-radio-button-hover-border-width: var(
-        --_utrecht-radio-button-border-width
+      --_utrecht-radio-button-border-width
     );
     --_utrecht-radio-button-hover-color: var(--_utrecht-radio-button-color);
     cursor: var(--utrecht-action-disabled-cursor, not-allowed);
@@ -1828,116 +1851,119 @@
 
   .utrecht-radio-button--invalid {
     border-color: var(
-        --utrecht-radio-button-invalid-border-color,
-        var(--utrecht-radio-button-border-color)
+      --utrecht-radio-button-invalid-border-color,
+      var(--utrecht-radio-button-border-color)
     );
     border-width: var(
-        --utrecht-radio-button-invalid-border-width,
-        var(--utrecht-radio-button-border-width)
+      --utrecht-radio-button-invalid-border-width,
+      var(--utrecht-radio-button-border-width)
     );
     color: var(
-        --utrecht-radio-button-invalid-color,
-        var(--utrecht-radio-button-color)
+      --utrecht-radio-button-invalid-color,
+      var(--utrecht-radio-button-color)
     );
   }
 
   .utrecht-radio-button--html-input:checked {
-    --_utrecht-radio-button-icon-size: var(--utrecht-radio-button-icon-size, 50%);
+    --_utrecht-radio-button-icon-size: var(
+      --utrecht-radio-button-icon-size,
+      50%
+    );
     --_utrecht-radio-button-state-background-color: var(
-        --utrecht-radio-button-checked-background-color
+      --utrecht-radio-button-checked-background-color
     );
     --_utrecht-radio-button-state-border-color: var(
-        --utrecht-radio-button-checked-border-color
+      --utrecht-radio-button-checked-border-color
     );
     --_utrecht-radio-button-state-border-width: var(
-        --utrecht-radio-button-checked-border-width
+      --utrecht-radio-button-checked-border-width
     );
     --_utrecht-radio-button-state-color: var(
-        --utrecht-radio-button-checked-color
+      --utrecht-radio-button-checked-color
     );
     --_utrecht-radio-button-state-active-background-color: var(
-        --utrecht-radio-button-checked-active-background-color
+      --utrecht-radio-button-checked-active-background-color
     );
     --_utrecht-radio-button-state-active-border-color: var(
-        --utrecht-radio-button-checked-active-border-color
+      --utrecht-radio-button-checked-active-border-color
     );
     --_utrecht-radio-button-state-active-border-width: var(
-        --utrecht-radio-button-checked-active-border-width
+      --utrecht-radio-button-checked-active-border-width
     );
     --_utrecht-radio-button-state-active-color: var(
-        --utrecht-radio-button-checked-active-color
+      --utrecht-radio-button-checked-active-color
     );
     --_utrecht-radio-button-state-focus-background-color: var(
-        --utrecht-radio-button-checked-focus-background-color
+      --utrecht-radio-button-checked-focus-background-color
     );
     --_utrecht-radio-button-state-focus-border-color: var(
-        --utrecht-radio-button-checked-focus-border-color
+      --utrecht-radio-button-checked-focus-border-color
     );
     --_utrecht-radio-button-state-focus-border-width: var(
-        --utrecht-radio-button-checked-focus-border-width
+      --utrecht-radio-button-checked-focus-border-width
     );
     --_utrecht-radio-button-state-focus-color: var(
-        --utrecht-radio-button-checked-focus-color
+      --utrecht-radio-button-checked-focus-color
     );
     --_utrecht-radio-button-state-hover-background-color: var(
-        --utrecht-radio-button-checked-hover-background-color
+      --utrecht-radio-button-checked-hover-background-color
     );
     --_utrecht-radio-button-state-hover-border-color: var(
-        --utrecht-radio-button-checked-hover-border-color
+      --utrecht-radio-button-checked-hover-border-color
     );
     --_utrecht-radio-button-state-hover-border-width: var(
-        --utrecht-radio-button-checked-hover-border-width
+      --utrecht-radio-button-checked-hover-border-width
     );
     --_utrecht-radio-button-state-hover-color: var(
-        --utrecht-radio-button-checked-hover-color
+      --utrecht-radio-button-checked-hover-color
     );
   }
 
   .utrecht-radio-button--html-input:disabled {
     --_utrecht-radio-button-background-color: var(
-        --utrecht-radio-button-disabled-background-color,
-        var(--utrecht-radio-button-background-color)
+      --utrecht-radio-button-disabled-background-color,
+      var(--utrecht-radio-button-background-color)
     );
     --_utrecht-radio-button-border-color: var(
-        --utrecht-radio-button-disabled-border-color,
-        var(--utrecht-radio-button-border-color)
+      --utrecht-radio-button-disabled-border-color,
+      var(--utrecht-radio-button-border-color)
     );
     --_utrecht-radio-button-border-width: var(
-        --utrecht-radio-button-disabled-border-width,
-        var(--utrecht-radio-button-border-width)
+      --utrecht-radio-button-disabled-border-width,
+      var(--utrecht-radio-button-border-width)
     );
     --_utrecht-radio-button-color: var(
-        --utrecht-radio-button-disabled-color,
-        var(--utrecht-radio-button-color)
+      --utrecht-radio-button-disabled-color,
+      var(--utrecht-radio-button-color)
     );
     --_utrecht-radio-button-focus-background-color: var(
-        --_utrecht-radio-button-background-color
+      --_utrecht-radio-button-background-color
     );
     --_utrecht-radio-button-focus-border-color: var(
-        --_utrecht-radio-button-border-color
+      --_utrecht-radio-button-border-color
     );
     --_utrecht-radio-button-focus-border-width: var(
-        --_utrecht-radio-button-border-width
+      --_utrecht-radio-button-border-width
     );
     --_utrecht-radio-button-focus-color: var(--_utrecht-radio-button-color);
     --_utrecht-radio-button-active-background-color: var(
-        --_utrecht-radio-button-background-color
+      --_utrecht-radio-button-background-color
     );
     --_utrecht-radio-button-active-border-color: var(
-        --_utrecht-radio-button-border-color
+      --_utrecht-radio-button-border-color
     );
     --_utrecht-radio-button-active-border-width: var(
-        --_utrecht-radio-button-border-width
+      --_utrecht-radio-button-border-width
     );
     --_utrecht-radio-button-active-color: var(--_utrecht-radio-button-color);
     --_utrecht-radio-button-hover-background-color: var(
-        --_utrecht-radio-button-background-color
+      --_utrecht-radio-button-background-color
     );
     --_utrecht-radio-button-hover-border-color: var(
-        --_utrecht-radio-button-border-color
+      --_utrecht-radio-button-border-color
     );
     --_utrecht-radio-button-hover-border-width: var(
-        --_utrecht-radio-button-border-width
+      --_utrecht-radio-button-border-width
     );
     --_utrecht-radio-button-hover-color: var(--_utrecht-radio-button-color);
     cursor: var(--utrecht-action-disabled-cursor, not-allowed);
@@ -1946,40 +1972,45 @@
   .utrecht-radio-button--html-input:invalid,
   .utrecht-radio-button--html-input[aria-invalid="true"] {
     border-color: var(
-        --utrecht-radio-button-invalid-border-color,
-        var(--utrecht-radio-button-border-color)
+      --utrecht-radio-button-invalid-border-color,
+      var(--utrecht-radio-button-border-color)
     );
     border-width: var(
-        --utrecht-radio-button-invalid-border-width,
-        var(--utrecht-radio-button-border-width)
+      --utrecht-radio-button-invalid-border-width,
+      var(--utrecht-radio-button-border-width)
     );
     color: var(
-        --utrecht-radio-button-invalid-color,
-        var(--utrecht-radio-button-color)
+      --utrecht-radio-button-invalid-color,
+      var(--utrecht-radio-button-color)
     );
   }
 
-  .utrecht-radio-button--html-input:focus:not([aria-disabled="true"], :disabled) {
+  .utrecht-radio-button--html-input:focus:not(
+      [aria-disabled="true"],
+      :disabled
+    ) {
     --_utrecht-radio-button-interactive-background-color: var(
-        --_utrecht-radio-button-state-focus-background-color,
-        var(--utrecht-radio-button-focus-background-color)
+      --_utrecht-radio-button-state-focus-background-color,
+      var(--utrecht-radio-button-focus-background-color)
     );
     --_utrecht-radio-button-interactive-border-color: var(
-        --_utrecht-radio-button-state-focus-border-color,
-        var(--utrecht-radio-button-focus-border-color)
+      --_utrecht-radio-button-state-focus-border-color,
+      var(--utrecht-radio-button-focus-border-color)
     );
     --_utrecht-radio-button-interactive-border-width: var(
-        --_utrecht-radio-button-state-focus-border-width,
-        var(--utrecht-radio-button-focus-border-width)
+      --_utrecht-radio-button-state-focus-border-width,
+      var(--utrecht-radio-button-focus-border-width)
     );
     --_utrecht-radio-button-interactive-color: var(
-        --_utrecht-radio-button-state-focus-color,
-        var(--utrecht-radio-button-focus-color)
+      --_utrecht-radio-button-state-focus-color,
+      var(--utrecht-radio-button-focus-color)
     );
   }
 
   .utrecht-radio-button--html-input:focus-visible {
-    --_utrecht-focus-ring-box-shadow: 0 0 0 var(--utrecht-focus-outline-width, 0) var(--utrecht-focus-inverse-outline-color, transparent);
+    --_utrecht-focus-ring-box-shadow: 0 0 0
+      var(--utrecht-focus-outline-width, 0)
+      var(--utrecht-focus-inverse-outline-color, transparent);
     box-shadow: var(--_utrecht-focus-ring-box-shadow);
     outline-color: var(--utrecht-focus-outline-color, revert);
     outline-offset: var(--utrecht-focus-outline-offset, revert);
@@ -1988,44 +2019,47 @@
     z-index: 1;
   }
 
-  .utrecht-radio-button--html-input:hover:not([aria-disabled="true"], :disabled) {
+  .utrecht-radio-button--html-input:hover:not(
+      [aria-disabled="true"],
+      :disabled
+    ) {
     --_utrecht-radio-button-interactive-background-color: var(
-        --_utrecht-radio-button-state-hover-background-color,
-        var(--utrecht-radio-button-hover-background-color)
+      --_utrecht-radio-button-state-hover-background-color,
+      var(--utrecht-radio-button-hover-background-color)
     );
     --_utrecht-radio-button-interactive-border-color: var(
-        --_utrecht-radio-button-state-hover-border-color,
-        var(--utrecht-radio-button-hover-border-color)
+      --_utrecht-radio-button-state-hover-border-color,
+      var(--utrecht-radio-button-hover-border-color)
     );
     --_utrecht-radio-button-interactive-border-width: var(
-        --_utrecht-radio-button-state-hover-border-width,
-        var(--utrecht-radio-button-hover-border-width)
+      --_utrecht-radio-button-state-hover-border-width,
+      var(--utrecht-radio-button-hover-border-width)
     );
     --_utrecht-radio-button-interactive-color: var(
-        --_utrecht-radio-button-state-hover-color,
-        var(--utrecht-radio-button-hover-color)
+      --_utrecht-radio-button-state-hover-color,
+      var(--utrecht-radio-button-hover-color)
     );
   }
 
   .utrecht-radio-button--html-input:active:not(
-    [aria-disabled="true"],
-    :disabled
-  ) {
+      [aria-disabled="true"],
+      :disabled
+    ) {
     --_utrecht-radio-button-interactive-background-color: var(
-        --_utrecht-radio-button-state-active-background-color,
-        var(--utrecht-radio-button-active-background-color)
+      --_utrecht-radio-button-state-active-background-color,
+      var(--utrecht-radio-button-active-background-color)
     );
     --_utrecht-radio-button-interactive-border-color: var(
-        --_utrecht-radio-button-state-active-border-color,
-        var(--utrecht-radio-button-active-border-color)
+      --_utrecht-radio-button-state-active-border-color,
+      var(--utrecht-radio-button-active-border-color)
     );
     --_utrecht-radio-button-interactive-border-width: var(
-        --_utrecht-radio-button-state-active-border-width,
-        var(--utrecht-radio-button-active-border-width)
+      --_utrecht-radio-button-state-active-border-width,
+      var(--utrecht-radio-button-active-border-width)
     );
     --_utrecht-radio-button-interactive-color: var(
-        --_utrecht-radio-button-state-active-color,
-        var(--utrecht-radio-button-active-color)
+      --_utrecht-radio-button-state-active-color,
+      var(--utrecht-radio-button-active-color)
     );
   }
 
@@ -2033,10 +2067,10 @@
     --_nl-link-forced-colors-color: LinkText;
     --_nl-link-state-color: var(--ggc-color-donkerblauw-500);
     --_nl-link-state-text-decoration-line: var(
-        --nl-link-hover-text-decoration-line
+      --nl-link-hover-text-decoration-line
     );
     --_nl-link-state-text-decoration-thickness: var(
-        --nl-link-hover-text-decoration-thickness
+      --nl-link-hover-text-decoration-thickness
     );
     text-decoration-skip-ink: none;
   }
@@ -2134,57 +2168,56 @@
 
   .nl-heading--level-1 {
     margin-block-end: var(
-        --nl-heading-level-1-margin-block-end,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-1-margin-block-end,
+      var(--ggc-space-0, 0)
     );
     margin-block-start: var(
-        --nl-heading-level-1-margin-block-start,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-1-margin-block-start,
+      var(--ggc-space-0, 0)
     );
   }
 
   .nl-heading--level-2 {
     margin-block-end: var(
-        --nl-heading-level-2-margin-block-end,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-2-margin-block-end,
+      var(--ggc-space-0, 0)
     );
     margin-block-start: var(
-        --nl-heading-level-2-margin-block-start,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-2-margin-block-start,
+      var(--ggc-space-0, 0)
     );
   }
 
   .nl-heading--level-3 {
     margin-block-end: var(
-        --nl-heading-level-3-margin-block-end,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-3-margin-block-end,
+      var(--ggc-space-0, 0)
     );
     margin-block-start: var(
-        --nl-heading-level-3-margin-block-start,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-3-margin-block-start,
+      var(--ggc-space-0, 0)
     );
   }
 
   .nl-heading--level-4 {
     margin-block-end: var(
-        --nl-heading-level-4-margin-block-end,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-4-margin-block-end,
+      var(--ggc-space-0, 0)
     );
     margin-block-start: var(
-        --nl-heading-level-4-margin-block-start,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-4-margin-block-start,
+      var(--ggc-space-0, 0)
     );
   }
 
   .nl-heading--level-5 {
     margin-block-end: var(
-        --nl-heading-level-5-margin-block-end,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-5-margin-block-end,
+      var(--ggc-space-0, 0)
     );
     margin-block-start: var(
-        --nl-heading-level-5-margin-block-start,
-        var(--ggc-space-0, 0)
+      --nl-heading-level-5-margin-block-start,
+      var(--ggc-space-0, 0)
     );
   }
-
 }
