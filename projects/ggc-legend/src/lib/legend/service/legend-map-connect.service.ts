@@ -14,7 +14,7 @@ export class GgcLegendMapConnectService {
   private readonly connectService = inject(GgcLegendConnectService);
 
   /**
-   * Returns the observable die events emit als een legenda is toegevoegd aan een 2D of 2D kaart.
+   * Returns the observable die events emit als een legenda is toegevoegd aan een 2D of 3D kaart.
    */
   async getLegendAddedObservable(): Promise<Observable<LegendAddedEvent>> {
     const mapObservable: Observable<LegendAddedEvent> =
@@ -29,7 +29,7 @@ export class GgcLegendMapConnectService {
   }
 
   /**
-   * Returns the observable die events emit als een legenda is weggehaald van een 2D of 2D kaart.
+   * Returns the observable die events emit als een legenda is weggehaald van een 2D of 3D kaart.
    */
   async getLegendRemovedObservable(): Promise<Observable<LegendRemovedEvent>> {
     const mapObservable: Observable<LegendRemovedEvent> =

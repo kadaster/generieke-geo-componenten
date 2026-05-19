@@ -37,7 +37,7 @@ export class ExampleMapZoomScalePositionComponent
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
-    route: "/example-map-zoom-scale-position",
+    route: "/map-zoom-scale-position",
     title: "Kaart eigenschappen tonen",
     introduction:
       "Toon kaartinformatie zoals schaal, zoom niveau en muispositie.",

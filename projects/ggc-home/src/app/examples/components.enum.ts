@@ -4,5 +4,6 @@ export enum Components {
   GGC_LEGEND = "ggc-legend",
   GGC_MAP = "ggc-map",
   GGC_SEARCH_LOCATION = "ggc-search-location",
-  GGC_TOOLBAR = "ggc-toolbar"
+  GGC_TOOLBAR = "ggc-toolbar",
+  GGC_FEATURE_INFO = "ggc-feature-info"
 }

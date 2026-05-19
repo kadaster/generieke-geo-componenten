@@ -18,5 +18,6 @@ export enum Tags {
   STYLE = "style",
   TOOLBAR = "toolbar",
   TRACE = "trace",
-  ZOOM = "zoom"
+  ZOOM = "zoom",
+  FEATURE_INFO = "featureInfo"
 }

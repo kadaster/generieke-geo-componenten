@@ -36,6 +36,7 @@ import { Tags } from "../tags.enum";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
+import { ExampleFeatureInfoBasicComponent } from "../example-map/example-feature-info-basic/example-feature-info-basic.component";
 
 interface GroupedCards {
   theme: string;
@@ -94,7 +95,8 @@ export class ExampleIndexComponent {
     new ExampleDrawCenterDrawComponent().componentInfo,
     new ExampleMeasure().componentInfo,
     new ExampleMeasureOwnStyleLabel().componentInfo,
-    new ExampleMapZoomScalePositionComponent().componentInfo
+    new ExampleMapZoomScalePositionComponent().componentInfo,
+    new ExampleFeatureInfoBasicComponent().componentInfo
   ];
 
   private selectedComponentsKey = "selectedComponents";

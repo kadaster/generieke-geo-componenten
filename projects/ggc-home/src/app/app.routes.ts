@@ -40,6 +40,7 @@ import { IntroductionComponent } from "./introduction/introduction.component";
 import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
+import { ExampleFeatureInfoBasicComponent } from "./examples/example-map/example-feature-info-basic/example-feature-info-basic.component";
 
 export const routes: Routes = [
   {
@@ -281,9 +282,15 @@ export const routes: Routes = [
     data: { label: "measure-own-style-label" }
   },
   {
-    path: "example-map-zoom-scale-position",
+    path: "map-zoom-scale-position",
     title: "Kaart eigenschappen tonen | GGC-Home",
     component: ExampleMapZoomScalePositionComponent,
     data: { label: "example-map-zoom-scale-position" }
+  },
+  {
+    path: "feature-info-basic",
+    title: "Feature Info tonen | GGC-Home",
+    component: ExampleFeatureInfoBasicComponent,
+    data: { label: "example-feature-info-basic" }
   }
 ];
