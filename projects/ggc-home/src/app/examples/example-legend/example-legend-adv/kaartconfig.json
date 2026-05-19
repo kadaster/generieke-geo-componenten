@@ -1,17 +1,20 @@
 [
   {
-    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
-    "type": "wmts",
+    "type": "vector",
+    "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
     "layers": [
       {
-        "layerId": "brtAchtergrondkaartStandaard",
-        "title": "BRT achtergrond kaart Standaard (WMTS)",
-        "layerName": "standaard",
+        "layerId": "vectortile-brt",
+        "title": "BRT achtergrondkaart (standaard)",
+        "zIndex": 0,
+        "style": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox",
+        "enableOverzoom": true,
+        "zIndex": -10,
         "legendIndex": 1,
         "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/legend.png"
-        },
-        "zIndex": -10
+          "name": "standaard__netherlandsrdnewquad",
+          "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox"
+        }
       }
     ]
   },
@@ -53,7 +56,7 @@
             "text": "Afgerond zonder aanpassing"
           }
         ],
-        "legendIndex": 5,
+        "legendIndex": 2,
         "zIndex": 10,
         "maxResolution": 215.04
       }

@@ -5,7 +5,7 @@
  * - Een mapbox vector tile stijl (`VectorTileStyle`)
  * - Of `undefined` als er geen legenda is.
  */
-export type LegendType = IconList[] | LegendUrl | undefined;
+export type LegendType = IconList[] | LegendUrl | VectorTileStyle | undefined;
 
 /**
  * Legenda-informatie voor een specifieke laag.
@@ -50,6 +50,11 @@ export type IconList = {
 export type LegendUrl = {
   /** Volledige URL naar de legenda-afbeelding. */
   legendUrl: string;
+};
+
+export type VectorTileStyle = {
+  name: string;
+  url: string;
 };
 
 /**

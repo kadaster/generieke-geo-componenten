@@ -57,7 +57,7 @@ export class GgcLegendMapConnectService {
   }
 
   /**
-   * Returns een lijst van actieve legena's voor de kaart met de opgegeven mapIndex. Let op, de mapIndex is alleen relevant voor een 2D kaart.
+   * Returns een lijst van actieve legenda's voor de kaart met de opgegeven mapIndex. Let op, de mapIndex is alleen relevant voor een 2D kaart.
    * @param mapIndex De mapIndex waarvoor alle legenda's worden teruggegeven.
    */
   async getCurrentActiveLegends(mapIndex: string): Promise<LayerLegend[]> {
