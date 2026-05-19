@@ -23,8 +23,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-draw-center-edit-basic",
   imports: [ExampleFormatComponent, GgcMapComponent],
-  templateUrl: "./example-draw-center-edit-basic.component.html",
-  styleUrl: "./example-draw-center-edit-basic.component.scss"
+  templateUrl: "./example-draw-center-edit-basic.component.html"
 })
 export class ExampleDrawCenterEditBasicComponent
   extends ExampleFormatComponent

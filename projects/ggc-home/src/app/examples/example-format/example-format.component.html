@@ -53,10 +53,7 @@
           <code
             >npm install
             {{
-              _pathCodeTypescript
-                | codeFromUrl
-                | async
-                | extractImportsPipe: "@kadaster/"
+              _pathCodeTypescript | codeFromUrl | async | extractImportsPipe
             }}</code
           >
         </p>
@@ -199,10 +196,10 @@
               </p>
               @if (_pathCodeHtml) {
                 <pre><code
-                    [highlight]="(_pathCodeHtml | codeFromUrl | async)
+                  [highlight]="(_pathCodeHtml | codeFromUrl | async)
               | extractDocsSectionPipe : 'functionality' : 'html'"
-                    language="html"
-                  ></code></pre>
+                  language="html"
+                ></code></pre>
               }
               @if (!_pathCodeHtml) {
                 <pre><code language="html">
@@ -212,40 +209,42 @@
             </div>
           </section>
         </div>
-        <div
-          class="tab-pane fade"
-          id="scss"
-          role="tabpanel"
-          aria-labelledby="scss-tab"
-        >
-          <section class="codeScss">
-            <div class="col-12">
-              <p>
-                Open in
-                <a
-                  href="{{ urlCodeScss }}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >GitHub<span
-                    class="fa fa-external-link icon-suffix"
-                    aria-hidden="true"
-                  ></span
-                ></a>
-              </p>
-              @if (_pathCodeScss) {
-                <pre><code
+        @if (_pathCodeScss) {
+          <div
+            class="tab-pane fade"
+            id="scss"
+            role="tabpanel"
+            aria-labelledby="scss-tab"
+          >
+            <section class="codeScss">
+              <div class="col-12">
+                <p>
+                  Open in
+                  <a
+                    href="{{ urlCodeScss }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >GitHub<span
+                      class="fa fa-external-link icon-suffix"
+                      aria-hidden="true"
+                    ></span
+                  ></a>
+                </p>
+                @if (_pathCodeScss) {
+                  <pre><code
                     [highlight]="(_pathCodeScss | codeFromUrl | async)"
                     language="scss"
                   ></code></pre>
-              }
-              @if (!_pathCodeScss) {
-                <pre><code language="scss">
+                }
+                @if (!_pathCodeScss) {
+                  <pre><code language="scss">
               <ng-content select="[page-scss]"></ng-content>
             </code></pre>
-              }
-            </div>
-          </section>
-        </div>
+                }
+              </div>
+            </section>
+          </div>
+        }
         @if (_pathKaartConfig) {
           <div
             class="tab-pane fade"
@@ -268,9 +267,9 @@
                   ></a>
                 </p>
                 <pre><code
-                    [highlight]="(_pathKaartConfig | codeFromUrl | async)"
-                    language="json"
-                  ></code></pre>
+                  [highlight]="(_pathKaartConfig | codeFromUrl | async)"
+                  language="json"
+                ></code></pre>
               </div>
             </section>
           </div>

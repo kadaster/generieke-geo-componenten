@@ -41,7 +41,7 @@ export class ExampleLegendAdvComponent
   // Custom icons
   protected iconCollapsed = "fa-solid fa-caret-right";
   protected iconExpanded = "fa-solid fa-caret-down";
-  protected collapsable = false;
+  protected collapsable = true;
   protected showLegendsName = true;
   protected alwaysEnableLegends = signal(false);
 

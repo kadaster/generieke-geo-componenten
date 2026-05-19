@@ -25,8 +25,7 @@ import { Tags } from "../../tags.enum";
     GgcSearchLocationComponent,
     ExampleFormatComponent
   ],
-  templateUrl: "./example-search-location-woonplaats.component.html",
-  styleUrl: "./example-search-location-woonplaats.component.scss"
+  templateUrl: "./example-search-location-woonplaats.component.html"
 })
 export class ExampleSearchLocationWoonplaatsComponent
   extends ExampleFormatComponent

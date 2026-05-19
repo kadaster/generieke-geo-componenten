@@ -49,26 +49,7 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-md-3 col-sm-6">
-        <div>
-          <label>
-            <input [(ngModel)]="collapsable" type="checkbox" />
-            Maak de legenda in/uitklapbaar.
-          </label>
-        </div>
-        <div>
-          <label>
-            <input [(ngModel)]="showLegendsName" type="checkbox" />
-            Toon een titel boven een legenda
-          </label>
-        </div>
-        <div>
-          <label>
-            <input (change)="toggleAlwaysEnableLegends()" type="checkbox" />
-            Laat legenda's altijd zien
-          </label>
-        </div>
-        <br />
+      <div class="col-xl-2 col-md-3 col-sm-12">
         <div>
           Alle legenda items:
           <br />
@@ -103,14 +84,14 @@
           ></ggc-legend>
         </div>
       </div>
-      <div class="col-md-6 col-sm-10">
+      <div class="col-xl-8 col-md-7 col-sm-12">
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->
 
-      <div class="col-md-1 col-sm-1">
+      <div class="col-xl-2 col-md-2 col-sm-12">
         <div class="row options-toggle">
           <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
@@ -121,6 +102,25 @@
               type="checkbox"
             />
             <span class="slider round"></span>
+          </label>
+        </div>
+        <br />
+        <div>
+          <label>
+            <input [(ngModel)]="collapsable" type="checkbox" />
+            Maak de legenda in/uitklapbaar.
+          </label>
+        </div>
+        <div>
+          <label>
+            <input [(ngModel)]="showLegendsName" type="checkbox" />
+            Toon een titel boven een legenda
+          </label>
+        </div>
+        <div>
+          <label>
+            <input (change)="toggleAlwaysEnableLegends()" type="checkbox" />
+            Laat legenda's altijd zien
           </label>
         </div>
       </div>

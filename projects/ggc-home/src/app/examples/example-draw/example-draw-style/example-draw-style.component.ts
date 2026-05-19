@@ -19,8 +19,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-draw-style",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule, RouterModule],
-  templateUrl: "./example-draw-style.component.html",
-  styleUrl: "./example-draw-style.component.scss"
+  templateUrl: "./example-draw-style.component.html"
 })
 export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {
   // DOCS-SKIP:START

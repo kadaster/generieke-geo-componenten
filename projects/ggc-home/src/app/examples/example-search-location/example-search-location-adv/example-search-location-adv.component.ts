@@ -26,8 +26,7 @@ import { Tags } from "../../tags.enum";
     ExampleFormatComponent,
     ReactiveFormsModule
   ],
-  templateUrl: "./example-search-location-adv.component.html",
-  styleUrl: "./example-search-location-adv.component.scss"
+  templateUrl: "./example-search-location-adv.component.html"
 })
 export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
   // DOCS-SKIP:START

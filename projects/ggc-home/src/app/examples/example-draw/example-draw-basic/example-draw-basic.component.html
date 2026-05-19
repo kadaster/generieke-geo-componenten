@@ -25,27 +25,7 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-md-10 col-sm-10">
-        <div class="map-container">
-          <ggc-map [webServices]="mapConfig"></ggc-map>
-        </div>
-      </div>
-      <!-- DOCS:END functionality -->
-
-      <div class="col-md-2 col-sm-1">
-        <div class="row options-toggle">
-          <h6 id="extraOptionsLabel">Extra opties</h6>
-          <label class="switch">
-            <input
-              (change)="goToPage('/draw-adv')"
-              aria-labelledby="extraOptionsLabel"
-              type="checkbox"
-            />
-            <span class="slider round"></span>
-          </label>
-          <br />
-        </div>
-
+      <div class="col-xl-2 col-md-3 col-sm-12">
         <fieldset class="ggc-fieldset">
           <legend>Kies een figuur om te tekenen:</legend>
           <div class="d-flex flex-column align-items-stretch">
@@ -87,6 +67,27 @@
             </button>
           </div>
         </fieldset>
+      </div>
+      <div class="col-xl-8 col-md-7 col-sm-12">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+
+      <div class="col-xl-2 col-md-2 col-sm-12">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              (change)="goToPage('/draw-adv')"
+              aria-labelledby="extraOptionsLabel"
+              type="checkbox"
+            />
+            <span class="slider round"></span>
+          </label>
+          <br />
+        </div>
       </div>
     </div>
   </div>
