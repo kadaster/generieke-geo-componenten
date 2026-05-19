@@ -14,8 +14,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-draw-basic",
   imports: [ExampleFormatComponent, GgcMapComponent],
-  templateUrl: "./example-draw-basic.component.html",
-  styleUrl: "./example-draw-basic.component.scss"
+  templateUrl: "./example-draw-basic.component.html"
 })
 export class ExampleDrawBasicComponent
   extends ExampleFormatComponent

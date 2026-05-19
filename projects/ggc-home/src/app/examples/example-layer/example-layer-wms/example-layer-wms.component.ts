@@ -9,8 +9,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
-  templateUrl: "./example-layer-wms.component.html",
-  styleUrl: "./example-layer-wms.component.scss"
+  templateUrl: "./example-layer-wms.component.html"
 })
 export class ExampleLayerWmsComponent
   extends ExampleFormatComponent

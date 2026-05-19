@@ -29,8 +29,7 @@ import { Tags } from "../../tags.enum";
     ReactiveFormsModule,
     FormsModule
   ],
-  templateUrl: "./example-snapping-adv.component.html",
-  styleUrl: "./example-snapping-adv.component.scss"
+  templateUrl: "./example-snapping-adv.component.html"
 })
 export class ExampleSnappingAdvComponent
   extends ExampleFormatComponent

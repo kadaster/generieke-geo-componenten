@@ -19,8 +19,7 @@ import Fill from "ol/style/Fill";
 @Component({
   selector: "app-example-draw-tracing",
   imports: [ExampleFormatComponent, GgcMapComponent],
-  templateUrl: "./example-draw-tracing.component.html",
-  styleUrl: "./example-draw-tracing.component.scss"
+  templateUrl: "./example-draw-tracing.component.html"
 })
 export class ExampleDrawTracingComponent
   extends ExampleFormatComponent

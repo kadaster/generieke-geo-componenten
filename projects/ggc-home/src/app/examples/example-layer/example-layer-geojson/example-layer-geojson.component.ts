@@ -9,8 +9,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
-  templateUrl: "./example-layer-geojson.component.html",
-  styleUrl: "./example-layer-geojson.component.scss"
+  templateUrl: "./example-layer-geojson.component.html"
 })
 export class ExampleLayerGeojsonComponent
   extends ExampleFormatComponent

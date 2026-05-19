@@ -55,26 +55,7 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-md-4 col-sm-6">
-        <div>
-          <label>
-            <input type="checkbox" [(ngModel)]="showActiveCounters" />
-            Toon aantal actieve lagen
-          </label>
-        </div>
-        <div>
-          <label>
-            <input type="checkbox" [(ngModel)]="iconAlignRight" />
-            Wijzig uitlijning van uit- inklap iconen (links/rechts)
-          </label>
-        </div>
-        <div>
-          <label>
-            <input type="checkbox" [(ngModel)]="showOnlyDatasets" />
-            Verberg of toon hoogste niveau in de boom (theme)
-          </label>
-        </div>
-        <br />
+      <div class="col-xl-3 col-md-3 col-sm-12">
         <div class="dataset-tree-container">
           <ggc-dataset-tree
             [themes]="datasetTreeConfig"
@@ -91,13 +72,13 @@
           ></ggc-dataset-tree>
         </div>
       </div>
-      <div class="col-md-6 col-sm-10">
+      <div class="col-xl-7 col-md-6 col-sm-12">
         <div class="map-container">
           <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->
-      <div class="col-md-1 col-sm-1">
+      <div class="col-xl-2 col-md-2 col-sm-12">
         <div class="row options-toggle">
           <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
@@ -108,6 +89,25 @@
               (change)="goToPage('/dataset-tree-basic')"
             />
             <span class="slider round"></span>
+          </label>
+        </div>
+        <br />
+        <div>
+          <label>
+            <input type="checkbox" [(ngModel)]="showActiveCounters" />
+            Toon aantal actieve lagen
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" [(ngModel)]="iconAlignRight" />
+            Wijzig uitlijning van uit- inklap iconen (links/rechts)
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" [(ngModel)]="showOnlyDatasets" />
+            Verberg of toon hoogste niveau in de boom (theme)
           </label>
         </div>
       </div>

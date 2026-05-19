@@ -9,8 +9,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
-  templateUrl: "./example-layer-image.component.html",
-  styleUrl: "./example-layer-image.component.scss"
+  templateUrl: "./example-layer-image.component.html"
 })
 export class ExampleLayerImageComponent
   extends ExampleFormatComponent

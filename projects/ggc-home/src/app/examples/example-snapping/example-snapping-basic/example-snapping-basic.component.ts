@@ -25,8 +25,7 @@ import { Tags } from "../../tags.enum";
     ExampleFormatComponent,
     GgcGeojsonLayerComponent
   ],
-  templateUrl: "./example-snapping-basic.component.html",
-  styleUrl: "./example-snapping-basic.component.scss"
+  templateUrl: "./example-snapping-basic.component.html"
 })
 export class ExampleSnappingBasicComponent
   extends ExampleFormatComponent
