@@ -12,7 +12,7 @@ import {
   CoreLegendService,
   DatasetLegendToggle
 } from "./service/core-legend.service";
-import { JsonPipe, NgTemplateOutlet } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import { GgcLegendIconComponent } from "../legend-icon/ggc-legend-icon.component";
 import { GgcLegendUrlComponent } from "../legend-url/ggc-legend-url.component";
 import { LegendMapboxComponent } from "../legend-mapbox/legend-mapbox.component";
@@ -61,7 +61,7 @@ import { GgcLegendMapConnectService } from "./service/legend-map-connect.service
     GgcLegendUrlComponent,
     NgTemplateOutlet,
     LegendMapboxComponent,
-    LegendEmptyComponent,
+    LegendEmptyComponent
   ],
   styleUrls: ["./ggc-legend.component.css"]
 })
