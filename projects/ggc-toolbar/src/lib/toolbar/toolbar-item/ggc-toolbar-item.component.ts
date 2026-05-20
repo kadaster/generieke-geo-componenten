@@ -86,6 +86,8 @@ export class GgcToolbarItemComponent {
   @Output() activeChanged: EventEmitter<ToolbarItemComponentEvent> =
     new EventEmitter<ToolbarItemComponentEvent>();
 
+  // NOSONAR: Non-cryptographic random value used only as a DOM id.
+  // No security-sensitive context.
   protected id = Math.random().toString(36).substring(2);
   protected _active = false;
 
