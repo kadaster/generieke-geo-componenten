@@ -4,8 +4,8 @@ import { Geometry } from "ol/geom";
 import { Observable } from "rxjs";
 import { MapComponentEvent } from "../../model/map-component-event.model";
 import { CoreSelectionService } from "./core-selection.service";
-import { SelectionModeTypes } from "./selection-type.enum";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { SelectOptions } from "../../model/select-options";
 
 @Injectable({
   providedIn: "root"
@@ -22,6 +22,7 @@ export class GgcSelectionService {
   private readonly coreSelectionService = inject(CoreSelectionService);
 
   /**
+   * Deprecated
    * Zet de selectiemodus voor de kaart op single select.
    * Hierbij kan telkens slechts één object geselecteerd zijn.
    *
@@ -29,13 +30,14 @@ export class GgcSelectionService {
    * de selectiemodus wordt ingesteld
    */
   setSingleselectMode(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.setSelectionModeFormapIndex(
-      SelectionModeTypes.SINGLE_SELECT,
+    this.coreSelectionService.startSelection(
+      { selectMode: "single" },
       mapIndex
     );
   }
 
   /**
+   * Deprecated
    * Zet de selectiemodus voor de kaart op multi select.
    * Hierbij kunnen meerdere objecten tegelijk geselecteerd worden.
    *
@@ -43,10 +45,24 @@ export class GgcSelectionService {
    * de selectiemodus wordt ingesteld
    */
   setMultiselectMode(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.setSelectionModeFormapIndex(
-      SelectionModeTypes.MULTI_SELECT,
-      mapIndex
-    );
+    this.coreSelectionService.startSelection({ selectMode: "multi" }, mapIndex);
+  }
+
+  /**
+   * Start selectie
+   */
+  startSelect(
+    options: SelectOptions,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): void {
+    this.coreSelectionService.startSelection(options, mapIndex);
+  }
+
+  /**
+   * Stop selectie
+   */
+  stopSelect(mapIndex: string = DEFAULT_MAPINDEX): void {
+    this.coreSelectionService.stopSelection(mapIndex);
   }
 
   /**

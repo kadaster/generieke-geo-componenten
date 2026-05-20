@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -12,6 +12,10 @@ import {
   FeatureCollectionForCoordinate
 } from "./selection-state.model";
 import { SelectionModeTypes } from "./selection-type.enum";
+import { SelectOptions } from "../../model/select-options";
+import { GgcMapService } from "../../map/service/ggc-map.service";
+import { Select } from "ol/interaction";
+import { never, singleClick } from "ol/events/condition";
 
 @Injectable({
   providedIn: "root"
@@ -26,11 +30,20 @@ export class CoreSelectionService {
     "Er is iets mis gegaan in de CoreSelectionService: het coordinaat van de kaartlaag komt" +
     " niet overeen met het verwachte coordinaat van het klik-event in de kaart.";
 
-  private selectionModeMap: Map<string, SelectionModeTypes> = new Map();
-  private allSelections: Map<string, CurrentAndPreviousSelection> = new Map();
+  private readonly selectionModeMap: Map<string, SelectionModeTypes> =
+    new Map();
+  private readonly allSelections: Map<string, CurrentAndPreviousSelection> =
+    new Map();
   // subject for emitting events and observable for subscribing to events. An observable cannot emit events.
-  private subjectMap: Map<string, Subject<MapComponentEvent>> = new Map();
-  private observableMap: Map<string, Observable<MapComponentEvent>> = new Map();
+  private readonly subjectMap: Map<string, Subject<MapComponentEvent>> =
+    new Map();
+  private readonly observableMap: Map<string, Observable<MapComponentEvent>> =
+    new Map();
+
+  private readonly activeMapClickEventsKeys: Map<string, any> = new Map();
+  private readonly activeSelectEventsKeys: Map<string, any> = new Map();
+
+  private readonly ggcMapService = inject(GgcMapService);
 
   destroySelectionForMap(mapIndex: string): void {
     if (this.subjectMap.has(mapIndex)) {
@@ -61,6 +74,121 @@ export class CoreSelectionService {
   getObservableForMap(mapIndex: string): Observable<MapComponentEvent> {
     this.createIfNotExistsSubjectAndObservableForMap(mapIndex);
     return this.observableMap.get(mapIndex) as Observable<MapComponentEvent>;
+  }
+
+  /**
+   * Start select interaction
+   */
+  startSelection(options: SelectOptions, mapIndex: string) {
+    this.stopSelection(mapIndex);
+
+    const map = this.ggcMapService.getMap(mapIndex);
+
+    let condition;
+    let toggleCondition;
+
+    switch (options.selectMode) {
+      case "single":
+        condition = options.condition ?? singleClick;
+        toggleCondition = never;
+        break;
+      case "multi":
+        condition = never;
+        toggleCondition = condition ?? singleClick;
+        break;
+      case "openlayersDefault":
+      default:
+        break;
+    }
+
+    const select = new Select({
+      condition,
+      toggleCondition,
+      layers: options.layers,
+      style: options.style,
+      filter: options.filter
+    });
+
+    map.addInteraction(select);
+
+    const clickEvent = () => {
+      this.emitEvent(
+        mapIndex,
+        new MapComponentEvent(
+          MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED,
+          mapIndex,
+          CoreSelectionService.messageMapClicked
+        )
+      );
+    };
+    map.on("singleclick", clickEvent);
+    this.activeMapClickEventsKeys.set(mapIndex, clickEvent);
+
+    const selectionUpdatedEvent = () => {
+      this.emitEvent(
+        mapIndex,
+        new MapComponentEvent(
+          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
+          mapIndex,
+          CoreSelectionService.messageSelectionUpdated
+        )
+      );
+    };
+    select.on("select", selectionUpdatedEvent);
+    this.activeSelectEventsKeys.set(mapIndex, selectionUpdatedEvent);
+  }
+
+  /**
+   * Stop selectie
+   */
+  stopSelection(mapIndex: string) {
+    const map = this.ggcMapService.getMap(mapIndex);
+    const selectEvent = this.activeSelectEventsKeys.get(mapIndex);
+    if (!map) {
+      return;
+    }
+    const selects = this.getActiveSelectInteractions(mapIndex);
+    for (const select of selects) {
+      map.removeInteraction(select);
+      if (selectEvent) {
+        select.un("select", selectEvent);
+      }
+    }
+
+    const mapClickEvent = this.activeMapClickEventsKeys.get(mapIndex);
+    if (mapClickEvent) {
+      map.un("singleclick", mapClickEvent);
+    }
+  }
+
+  clearSelection(mapIndex: string): void {
+    const selects = this.getActiveSelectInteractions(mapIndex);
+    for (const select of selects) {
+      select.clearSelection();
+    }
+
+    this.emitEvent(
+      mapIndex,
+      new MapComponentEvent(
+        MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION,
+        mapIndex,
+        CoreSelectionService.messageClearSelection
+      )
+    );
+  }
+
+  private getActiveSelectInteractions(mapIndex: string): Select[] {
+    const map = this.ggcMapService.getMap(mapIndex);
+    if (!map) {
+      return [];
+    }
+
+    return map
+      .getInteractions()
+      .getArray()
+      .filter((interaction) => {
+        return interaction instanceof Select;
+      });
   }
 
   clearSelectionForMap(mapIndex: string) {
@@ -164,7 +292,7 @@ export class CoreSelectionService {
   ): void {
     const currentAndPreviousSelection = this.getAllSelectionsForMap(mapIndex);
     const currentSelection = currentAndPreviousSelection.current;
-    if (currentSelection && currentSelection.coordinate === coordinate) {
+    if (currentSelection?.coordinate === coordinate) {
       if (this.isMultiSelectMode(mapIndex)) {
         // multiselect
         let layerInPreviousSelection;

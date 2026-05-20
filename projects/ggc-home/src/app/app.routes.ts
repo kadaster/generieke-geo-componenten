@@ -40,6 +40,7 @@ import { IntroductionComponent } from "./introduction/introduction.component";
 import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
+import { ExampleMapSelectComponent } from "./examples/example-map/example-map-select/example-map-select.component";
 
 export const routes: Routes = [
   {
@@ -285,5 +286,11 @@ export const routes: Routes = [
     title: "Kaart eigenschappen tonen | GGC-Home",
     component: ExampleMapZoomScalePositionComponent,
     data: { label: "example-map-zoom-scale-position" }
+  },
+  {
+    path: "example-map-select",
+    title: "Selecteren op de kaart | GGC-Home",
+    component: ExampleMapSelectComponent,
+    data: { label: "example-map-select" }
   }
 ];

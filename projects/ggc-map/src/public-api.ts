@@ -11,6 +11,7 @@ export * from "./lib/model/draw-options";
 export * from "./lib/model/map-component-event.model";
 export * from "./lib/model/draw-interaction-event.model";
 export * from "./lib/model/modify-interaction-event.model";
+export * from "./lib/model/select-options";
 export * from "./lib/model/snap-options";
 export * from "./lib/service/select/selection-type.enum";
 export * from "./lib/core/constants";
