@@ -268,10 +268,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
             mapEvent
           )
         );
-        this.coreSelectionService.handleSingleclickEventForMap(
-          (mapEvent as MapBrowserEvent).coordinate,
-          this.mapIndex
-        );
         this.mapEventsService.emitSingleclickEventForMap(
           mapEvent as MapBrowserEvent,
           this.mapIndex
@@ -317,7 +313,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     if (this.coreDrawService) {
       this.coreDrawService.deleteLayers(this.mapIndex);
     }
-    this.coreSelectionService.destroySelectionForMap(this.mapIndex);
     // destroying the events
     this.mapEventsService.destroyEventsForMap(this.mapIndex);
     // destroying the map

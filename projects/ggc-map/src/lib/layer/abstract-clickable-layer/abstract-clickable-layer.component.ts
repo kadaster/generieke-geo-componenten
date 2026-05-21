@@ -37,13 +37,6 @@ export class AbstractClickableLayerComponent<T>
     if (this.singleclick !== undefined) {
       this.singleclick.unsubscribe();
     }
-
-    if (this.options?.getFeatureInfoOnSingleclick === true && this.layerName) {
-      this.coreSelectionService.clearFeatureInfoForLayer(
-        this.mapIndex,
-        this.layerName
-      );
-    }
   }
 
   protected getFeatureInfo(_event: MapBrowserEvent): void {

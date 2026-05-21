@@ -22,87 +22,114 @@ export class GgcSelectionService {
   private readonly coreSelectionService = inject(CoreSelectionService);
 
   /**
-   * Deprecated
-   * Zet de selectiemodus voor de kaart op single select.
-   * Hierbij kan telkens slechts één object geselecteerd zijn.
+   * @deprecated
+   * Zet de selectiemodus van de kaart op **single select**.
+   * Hierbij kan steeds slechts één object tegelijk geselecteerd worden.
    *
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
-   * de selectiemodus wordt ingesteld
+   * de selectiemodus wordt ingesteld.
    */
   setSingleselectMode(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.startSelection(
-      { selectMode: "single" },
-      mapIndex
-    );
+    this.startSelect({ selectMode: "single" }, mapIndex);
   }
 
   /**
-   * Deprecated
-   * Zet de selectiemodus voor de kaart op multi select.
+   * @deprecated
+   * Zet de selectiemodus van de kaart op **multi select**.
    * Hierbij kunnen meerdere objecten tegelijk geselecteerd worden.
    *
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
-   * de selectiemodus wordt ingesteld
+   * de selectiemodus wordt ingesteld.
    */
   setMultiselectMode(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.startSelection({ selectMode: "multi" }, mapIndex);
+    this.startSelect({ selectMode: "multi" }, mapIndex);
   }
 
   /**
-   * Start selectie
+   * Start een selectie‑interactie op de kaart.
+   *
+   * @param options Configuratie voor de selectie, zoals selectiemodus
+   * en aanvullende selectie‑opties.
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
+   * de selectie wordt gestart.
    */
   startSelect(
     options: SelectOptions,
     mapIndex: string = DEFAULT_MAPINDEX
   ): void {
-    this.coreSelectionService.startSelection(options, mapIndex);
+    this.coreSelectionService.startSelect(options, mapIndex);
   }
 
   /**
-   * Stop selectie
+   * Stopt de actieve selectie‑interactie op de kaart.
+   *
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
+   * de selectie wordt gestopt.
    */
   stopSelect(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.stopSelection(mapIndex);
+    this.coreSelectionService.stopSelect(mapIndex);
   }
 
   /**
    * Verwijdert alle huidige selecties van de opgegeven kaart.
    *
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
-   * de selectie wordt gewist
+   * de selectie wordt gewist.
    */
   clearSelection(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.clearSelectionForMap(mapIndex);
+    this.coreSelectionService.clearSelection(mapIndex);
   }
 
   /**
+   * @deprecated
    * Zet een selectie voor een specifieke kaartlaag.
    * Bestaande selecties voor deze laag worden overschreven.
    *
-   * @param features Array van OpenLayers features die geselecteerd moeten worden
-   * @param layerName Naam van de laag waarop de selectie betrekking heeft
+   * @param features Array van OpenLayers features die geselecteerd moeten worden.
+   * @param layerName Naam van de kaartlaag waarop de selectie betrekking heeft.
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
-   * de selectie wordt toegepast
+   * de selectie wordt toegepast.
    */
   setSelectionForLayer(
     features: Feature<Geometry>[],
     layerName: string,
     mapIndex: string = DEFAULT_MAPINDEX
   ): void {
-    this.coreSelectionService.setSelectionForLayer(
-      features,
-      layerName,
-      mapIndex
-    );
+    this.setSelection(features, mapIndex);
   }
 
   /**
-   * Geeft een observable die selectie-gerelateerde events emit
+   * Overschrijft de bestaande selectie met de meegegeven features.
+   *
+   * @param features De nieuwe OpenLayers features die geselecteerd worden.
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
+   * de selectie wordt overschreven.
+   */
+  setSelection(
+    features: Feature<Geometry>[],
+    mapIndex: string = DEFAULT_MAPINDEX
+  ) {
+    this.coreSelectionService.setSelection(features, mapIndex);
+  }
+
+  /**
+   * Geeft de actieve selectie van de opgegeven kaart.
+   *
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * de huidige selectie wordt opgehaald.
+   * @returns De huidige selectie voor de opgegeven kaart.
+   */
+  getCurrentSelection(mapIndex: string = DEFAULT_MAPINDEX) {
+    return this.coreSelectionService.getCurrentSelection(mapIndex);
+  }
+
+  /**
+   * Geeft een observable die selectie‑gerelateerde events emit
    * voor de opgegeven kaart.
    *
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
-   * selectie-events worden gevolgd
-   * @returns Observable met {@link MapComponentEvent} selectie-events
+   * selectie‑events worden gevolgd.
+   * @returns Observable met {@link MapComponentEvent} selectie‑events.
    */
   getObservable(
     mapIndex: string = DEFAULT_MAPINDEX

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import {
   GgcMapComponent,
   GgcSelectionService,
@@ -9,11 +9,14 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { FormsModule } from "@angular/forms";
+import { pointerMove } from "ol/events/condition";
 
 @Component({
   selector: "app-example-map-select",
-  imports: [GgcMapComponent, ExampleFormatComponent],
-  templateUrl: "./example-map-select.component.html"
+  imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
+  templateUrl: "./example-map-select.component.html",
+  styleUrl: "./example-map-select.component.scss"
 })
 export class ExampleMapSelectComponent
   extends ExampleFormatComponent
@@ -38,8 +41,9 @@ export class ExampleMapSelectComponent
   protected mapConfig: Webservice[];
   protected mapIndex = "example-select";
 
-  protected selectMode: "default" | "singleselect" | "multiselect" =
+  protected selectMode: "default" | "singleselect" | "multiselect" | "hover" =
     "singleselect";
+  protected geselecteerdeProvincies = signal<string>("geen");
 
   private readonly selectService = inject(GgcSelectionService);
 
@@ -49,8 +53,43 @@ export class ExampleMapSelectComponent
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
+    this.selectService.getObservable(this.mapIndex).subscribe((mapEvent) => {
+      if (
+        mapEvent.mapIndex == this.mapIndex &&
+        mapEvent.type === "selectionServiceSelectionUpdated"
+      ) {
+        const provincies: string[] = (mapEvent.value ?? []).map(
+          (feature: any) => feature?.values_?.statnaam
+        );
+        this.geselecteerdeProvincies.set(
+          provincies.length == 0 ? "geen" : provincies.join(", ")
+        );
+      }
+    });
     this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
   }
 
-  onSelectModeChange(mode: "default" | "singleselect" | "multiselect") {}
+  onSelectModeChange(
+    mode: "default" | "singleselect" | "multiselect" | "hover"
+  ) {
+    switch (mode) {
+      case "singleselect":
+        this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+        break;
+      case "multiselect":
+        this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);
+        break;
+      case "default":
+        this.selectService.startSelect(
+          { selectMode: "openlayersDefault" },
+          this.mapIndex
+        );
+        break;
+      case "hover":
+        this.selectService.startSelect(
+          { selectMode: "single", condition: pointerMove },
+          this.mapIndex
+        );
+    }
+  }
 }

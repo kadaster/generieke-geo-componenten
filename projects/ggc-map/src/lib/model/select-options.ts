@@ -7,14 +7,16 @@ import { StyleLike } from "ol/style/Style";
  */
 export interface SelectOptions {
   /**
-   * OL condition (bijv. click, pointerMove, etc.)
+   * OL condition waarop de selectie wordt gemaakt (bijv. singleclick, pointerMove, etc.)
+   * Als leeggelaten, dan wordt de standaard condition gebruikt van de verschillende select modes.
    */
   condition?: Condition;
 
   /**
-   * Filter op lagen
+   * Een filter voor de selectielagen. Dit is een lijst van layerIds waarop de selecties worden toegepast.
+   * Als deze leeg is, dan worden alle layers gebruikt voor selecties waar dit kan.
    */
-  layers?: Layer[] | ((layer: Layer) => boolean);
+  layerIds?: string[];
 
   /**
    * Style voor geselecteerde features
@@ -27,7 +29,10 @@ export interface SelectOptions {
   filter?: (feature: any, layer: Layer) => boolean;
 
   /**
-   * GGC select mode (extra feature bovenop OL)
+   * De select mode van de selectie.
+   * Single (default) - 1 feature wordt geselecteerd met een single click
+   * Multi - meerdere feature worden geselecteerd met een single click
+   * OpenlayersDefault - met singleclick is er een single select, met shift-click is er een multi select
    */
   selectMode?: "single" | "multi" | "openlayersDefault";
 }
