@@ -1,4 +1,4 @@
-import type { QueryList } from "@angular/core";
+import type { OnInit, QueryList } from "@angular/core";
 import {
   AfterContentInit,
   Component,
@@ -26,6 +26,7 @@ import {
 } from "../model/feature-info-component-event";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-info-display.component";
+import GgcFeatureInfoMapConnectService from "../service/feature-info-map-connect.service";
 
 /**
  * Het `FeatureInfoComponent` toont feature-informatie afkomstig uit kaartlagen
@@ -48,7 +49,9 @@ import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-inf
   styleUrls: ["./ggc-feature-info.component.css"],
   imports: [FeatureInfoDisplayComponent]
 })
-export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
+export class GgcFeatureInfoComponent
+  implements OnChanges, AfterContentInit, OnInit
+{
   /**
    * Verzameling van features en metadata die weergegeven moeten worden.
    * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
@@ -113,12 +116,19 @@ export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
   protected currentFeatureIndex = 0;
   protected currentFeature: object | null;
   protected emptyInfo = "Geen informatie beschikbaar";
+  private readonly featureInfoMapConnectService = inject(
+    GgcFeatureInfoMapConnectService
+  );
 
   @ContentChildren(ValueTemplateDirective)
   private readonly templates: QueryList<ValueTemplateDirective>;
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
+
+  ngOnInit() {
+    console.log("autoconnect to selectionservice events");
+  }
 
   /**
    * Verwerkt de meegegeven templates na initialisatie van de content.
