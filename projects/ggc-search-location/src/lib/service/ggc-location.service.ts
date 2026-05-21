@@ -1,5 +1,4 @@
 import { inject, Injectable } from "@angular/core";
-import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
@@ -20,6 +19,8 @@ import {
 } from "@kadaster/ggc-models";
 
 const proj4 = (proj4x as any).default;
+
+export type Coordinate = Array<number>;
 
 /**
  * Service verantwoordelijk voor het ophalen en beheren van de geografische locatie van de gebruiker.
