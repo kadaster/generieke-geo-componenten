@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+    "@angular/core": "^21.0.0",
+    "@angular/cdk": "^21.0.0"
   },
   "dependencies": {
     "@kadaster/ggc-models": "^1.0.0",
