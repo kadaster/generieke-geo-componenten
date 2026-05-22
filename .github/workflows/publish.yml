@@ -60,7 +60,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Bump versions
         env:
           VERSION_BUMP: ${{ github.event.inputs.version_bump }}
