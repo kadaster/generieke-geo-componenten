@@ -136,7 +136,6 @@
     "typedoc": "^0.28.7",
     "typescript": "~5.9.3",
     "url": "^0.11.3",
-    "vitest": "^4.0.8",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"
   },

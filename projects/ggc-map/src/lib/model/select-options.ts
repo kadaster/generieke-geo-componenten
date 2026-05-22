@@ -8,7 +8,7 @@ import { StyleLike } from "ol/style/Style";
 export interface SelectOptions {
   /**
    * OL condition waarop de selectie wordt gemaakt (bijv. singleclick, pointerMove, etc.)
-   * Als leeggelaten, dan wordt de standaard condition gebruikt van de verschillende select modes.
+   * Als deze waarde wordt leeggelaten, dan wordt de standaard condition gebruikt van de verschillende select modes.
    */
   condition?: Condition;
 
@@ -19,14 +19,20 @@ export interface SelectOptions {
   layerIds?: string[];
 
   /**
-   * Style voor geselecteerde features
+   * Style voor geselecteerde features.
+   * Bij de waarde null zal geen andere style worden toegepast op de selectie.
    */
-  style?: StyleLike;
+  style?: StyleLike | null;
 
   /**
    * Filter functie voor features
    */
   filter?: (feature: any, layer: Layer) => boolean;
+
+  /**
+   * De pixel tolerantie voor het selecteren van een feature. Default is 0.
+   */
+  hitTolerance?: number;
 
   /**
    * De select mode van de selectie.

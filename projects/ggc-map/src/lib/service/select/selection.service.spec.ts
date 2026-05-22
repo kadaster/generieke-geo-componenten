@@ -49,7 +49,8 @@ describe("GgcSelectionService", () => {
 
       expect(coreSelectionServiceSpy.startSelect).toHaveBeenCalledWith(
         { selectMode: "single" },
-        DEFAULT_MAPINDEX
+        DEFAULT_MAPINDEX,
+        undefined
       );
     });
   });
@@ -60,7 +61,8 @@ describe("GgcSelectionService", () => {
 
       expect(coreSelectionServiceSpy.startSelect).toHaveBeenCalledWith(
         { selectMode: "multi" },
-        DEFAULT_MAPINDEX
+        DEFAULT_MAPINDEX,
+        undefined
       );
     });
   });
@@ -69,11 +71,12 @@ describe("GgcSelectionService", () => {
     it("should delegate startSelect to CoreSelectionService", () => {
       const options: SelectOptions = { selectMode: "single" };
 
-      service.startSelect(options, "map-0");
+      service.startSelect(options, "map-0", "select-0");
 
       expect(coreSelectionServiceSpy.startSelect).toHaveBeenCalledWith(
         options,
-        "map-0"
+        "map-0",
+        "select-0"
       );
     });
   });

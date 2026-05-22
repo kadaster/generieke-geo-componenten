@@ -13,6 +13,22 @@ import { never, singleClick } from "ol/events/condition";
 import { Coordinate } from "ol/coordinate";
 import Layer from "ol/layer/Layer";
 
+/**
+ * Interne representatie van een actieve select‑interactie.
+ * Bevat zowel de kaartindex als de bijbehorende OpenLayers Select‑interaction.
+ */
+interface ActiveSelectInteraction {
+  /**
+   * De kaartindex waarvoor deze select‑interactie actief is.
+   */
+  readonly mapIndex: string;
+
+  /**
+   * De OpenLayers Select‑interaction.
+   */
+  readonly select: Select;
+}
+
 @Injectable({
   providedIn: "root"
 })
@@ -31,6 +47,10 @@ export class CoreSelectionService {
   private readonly observableMap: Map<string, Observable<MapComponentEvent>> =
     new Map();
 
+  private readonly activeSelectInteraction: Map<
+    string,
+    ActiveSelectInteraction
+  > = new Map();
   private readonly activeMapClickEventsKeys: Map<string, any> = new Map();
   private readonly activeSelectEventsKeys: Map<string, any> = new Map();
 
@@ -41,8 +61,13 @@ export class CoreSelectionService {
     return this.observableMap.get(mapIndex) as Observable<MapComponentEvent>;
   }
 
-  startSelect(options: SelectOptions, mapIndex: string) {
-    this.stopSelect(mapIndex);
+  startSelect(
+    options: SelectOptions,
+    mapIndex: string,
+    selectIndex: string | undefined
+  ) {
+    selectIndex = selectIndex ?? mapIndex;
+    this.stopSelect(selectIndex);
 
     const map = this.ggcMapService.getMap(mapIndex);
 
@@ -80,14 +105,16 @@ export class CoreSelectionService {
       layers: layerFilters,
       style: options.style,
       filter: options.filter,
+      hitTolerance: options.hitTolerance,
       multi: options.selectMode != "single"
     });
 
     map.addInteraction(select);
+    this.activeSelectInteraction.set(selectIndex, { mapIndex, select });
 
     const clickEvent = () => {
       this.emitEvent(
-        mapIndex,
+        selectIndex,
         new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED,
           mapIndex,
@@ -96,19 +123,19 @@ export class CoreSelectionService {
       );
     };
     map.on("singleclick", clickEvent);
-    this.activeMapClickEventsKeys.set(mapIndex, clickEvent);
+    this.activeMapClickEventsKeys.set(selectIndex, clickEvent);
 
     const selectionUpdatedEvent = () => {
       let selectedFeatures: Feature[] = [];
-      const select = this.getActiveSelectInteraction(mapIndex);
+      const select = this.getActiveSelectInteraction(selectIndex)?.select;
       if (select) {
         selectedFeatures = select.getFeatures().getArray();
       }
       this.emitEvent(
-        mapIndex,
+        selectIndex,
         new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
-          mapIndex,
+          selectIndex,
           CoreSelectionService.messageSelectionUpdated,
           undefined,
           selectedFeatures
@@ -116,49 +143,57 @@ export class CoreSelectionService {
       );
     };
     select.on("select", selectionUpdatedEvent);
-    this.activeSelectEventsKeys.set(mapIndex, selectionUpdatedEvent);
+    this.activeSelectEventsKeys.set(selectIndex, selectionUpdatedEvent);
   }
 
-  stopSelect(mapIndex: string) {
-    const map = this.ggcMapService.getMap(mapIndex);
-    const selectEvent = this.activeSelectEventsKeys.get(mapIndex);
+  stopSelect(selectIndex: string) {
+    const activeSelectInteraction =
+      this.getActiveSelectInteraction(selectIndex);
+    if (!activeSelectInteraction) {
+      return;
+    }
+
+    const map = this.ggcMapService.getMap(activeSelectInteraction.mapIndex);
     if (!map) {
       return;
     }
-    const select = this.getActiveSelectInteraction(mapIndex);
-    if (select) {
-      // trigger selection updated
-      select.clearSelection();
-      map.removeInteraction(select);
-      if (selectEvent) {
-        select.un("select", selectEvent);
-      }
-    }
 
-    const mapClickEvent = this.activeMapClickEventsKeys.get(mapIndex);
+    const select = activeSelectInteraction.select;
+    // trigger selection updated
+    select.clearSelection();
+    map.removeInteraction(select);
+    this.activeSelectInteraction.delete(selectIndex);
+    const selectEvent = this.activeSelectEventsKeys.get(selectIndex);
+    if (selectEvent) {
+      select.un("select", selectEvent);
+    }
+    this.activeSelectEventsKeys.delete(selectIndex);
+
+    const mapClickEvent = this.activeMapClickEventsKeys.get(selectIndex);
     if (mapClickEvent) {
       map.un("singleclick", mapClickEvent);
     }
+    this.activeMapClickEventsKeys.delete(selectIndex);
   }
 
-  clearSelection(mapIndex: string): void {
-    const select = this.getActiveSelectInteraction(mapIndex);
+  clearSelection(selectIndex: string): void {
+    const select = this.getActiveSelectInteraction(selectIndex)?.select;
     if (select) {
       select.clearSelection();
     }
 
     this.emitEvent(
-      mapIndex,
+      selectIndex,
       new MapComponentEvent(
         MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION,
-        mapIndex,
+        selectIndex,
         CoreSelectionService.messageClearSelection
       )
     );
   }
 
-  setSelection(features: Feature<Geometry>[], mapIndex: string) {
-    const select = this.getActiveSelectInteraction(mapIndex);
+  setSelection(features: Feature<Geometry>[], selectIndex: string) {
+    const select = this.getActiveSelectInteraction(selectIndex)?.select;
     if (select) {
       select.clearSelection();
       for (const feature of features) {
@@ -167,43 +202,39 @@ export class CoreSelectionService {
     }
   }
 
-  getCurrentSelection(mapIndex: string): Feature[] {
-    const select = this.getActiveSelectInteraction(mapIndex);
+  getCurrentSelection(selectIndex: string): Feature[] {
+    const select = this.getActiveSelectInteraction(selectIndex)?.select;
     if (select) {
       return select.getFeatures().getArray();
     }
     return [];
   }
 
-  private getActiveSelectInteraction(mapIndex: string): Select | undefined {
-    const map = this.ggcMapService.getMap(mapIndex);
-    if (!map) {
-      return undefined;
-    }
-
-    return map
-      .getInteractions()
-      .getArray()
-      .find((interaction) => {
-        return interaction instanceof Select;
-      });
+  private getActiveSelectInteraction(
+    selectIndex: string
+  ): ActiveSelectInteraction | undefined {
+    return this.activeSelectInteraction.get(selectIndex);
   }
 
-  private createIfNotExistsSubjectAndObservableForMap(mapIndex: string): void {
-    if (!this.subjectMap.has(mapIndex)) {
-      this.subjectMap.set(mapIndex, new Subject<MapComponentEvent>());
+  private createIfNotExistsSubjectAndObservableForMap(
+    selectIndex: string
+  ): void {
+    if (!this.subjectMap.has(selectIndex)) {
+      this.subjectMap.set(selectIndex, new Subject<MapComponentEvent>());
       this.observableMap.set(
-        mapIndex,
+        selectIndex,
         (
-          this.subjectMap.get(mapIndex) as Subject<MapComponentEvent>
+          this.subjectMap.get(selectIndex) as Subject<MapComponentEvent>
         ).asObservable()
       );
     }
   }
 
-  private emitEvent(mapIndex: string, event: MapComponentEvent): void {
-    this.createIfNotExistsSubjectAndObservableForMap(mapIndex);
-    (this.subjectMap.get(mapIndex) as Subject<MapComponentEvent>).next(event);
+  private emitEvent(selectIndex: string, event: MapComponentEvent): void {
+    this.createIfNotExistsSubjectAndObservableForMap(selectIndex);
+    (this.subjectMap.get(selectIndex) as Subject<MapComponentEvent>).next(
+      event
+    );
   }
 
   handleFeatureInfoForLayer(

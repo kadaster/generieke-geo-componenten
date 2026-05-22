@@ -52,32 +52,36 @@ export class GgcSelectionService {
    * en aanvullende selectie‑opties.
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
    * de selectie wordt gestart.
+   * @param selectIndex Optionele selectIndex (default: undefined) waarmee een
+   * select interaction wordt geïdentificeerd. Als undefined, dan wordt de mapIndex gebruikt voor de selectIndex.
+   * Met selectIndex kunnen meerdere select interactions actief zijn op 1 kaart.
    */
   startSelect(
     options: SelectOptions,
-    mapIndex: string = DEFAULT_MAPINDEX
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex: string | undefined = undefined
   ): void {
-    this.coreSelectionService.startSelect(options, mapIndex);
+    this.coreSelectionService.startSelect(options, mapIndex, selectIndex);
   }
 
   /**
    * Stopt de actieve selectie‑interactie op de kaart.
    *
-   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
+   * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarop
    * de selectie wordt gestopt.
    */
-  stopSelect(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.stopSelect(mapIndex);
+  stopSelect(selectIndex: string = DEFAULT_MAPINDEX): void {
+    this.coreSelectionService.stopSelect(selectIndex);
   }
 
   /**
    * Verwijdert alle huidige selecties van de opgegeven kaart.
    *
-   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarvoor
    * de selectie wordt gewist.
    */
-  clearSelection(mapIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.clearSelection(mapIndex);
+  clearSelection(selectIndex: string = DEFAULT_MAPINDEX): void {
+    this.coreSelectionService.clearSelection(selectIndex);
   }
 
   /**
@@ -87,7 +91,7 @@ export class GgcSelectionService {
    *
    * @param features Array van OpenLayers features die geselecteerd moeten worden.
    * @param layerName Naam van de kaartlaag waarop de selectie betrekking heeft.
-   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
+   * @param mapIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarop
    * de selectie wordt toegepast.
    */
   setSelectionForLayer(
@@ -102,32 +106,32 @@ export class GgcSelectionService {
    * Overschrijft de bestaande selectie met de meegegeven features.
    *
    * @param features De nieuwe OpenLayers features die geselecteerd worden.
-   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarop
+   * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarop
    * de selectie wordt overschreven.
    */
   setSelection(
     features: Feature<Geometry>[],
-    mapIndex: string = DEFAULT_MAPINDEX
+    selectIndex: string = DEFAULT_MAPINDEX
   ) {
-    this.coreSelectionService.setSelection(features, mapIndex);
+    this.coreSelectionService.setSelection(features, selectIndex);
   }
 
   /**
    * Geeft de actieve selectie van de opgegeven kaart.
    *
-   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarvoor
    * de huidige selectie wordt opgehaald.
    * @returns De huidige selectie voor de opgegeven kaart.
    */
-  getCurrentSelection(mapIndex: string = DEFAULT_MAPINDEX) {
-    return this.coreSelectionService.getCurrentSelection(mapIndex);
+  getCurrentSelection(selectIndex: string = DEFAULT_MAPINDEX) {
+    return this.coreSelectionService.getCurrentSelection(selectIndex);
   }
 
   /**
    * Geeft een observable die selectie‑gerelateerde events emit
-   * voor de opgegeven kaart.
+   * voor de opgegeven kaart. De mapIndex in het event refereert naar de selectIndex als die is opgegeven, anders de mapIndex.
    *
-   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * @param mapIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarvoor
    * selectie‑events worden gevolgd.
    * @returns Observable met {@link MapComponentEvent} selectie‑events.
    */

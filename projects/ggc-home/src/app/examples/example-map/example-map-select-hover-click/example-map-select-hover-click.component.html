@@ -1,0 +1,44 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Hieronder wordt de gemeentenaam weergegeven op basis van de hover en
+      daarnaast kan met een klik ook een gemeente worden geselecteerd. Dit zijn
+      2 active select interactions op de kaart die worden onderscheiden met een
+      selectIndex. Ook is er een custom style toegevoegd aan de selectie met het
+      klikken.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="functionality-layout">
+      <!-- DOCS:START functionality -->
+      <div class="map-controls">
+        <p class="mt-2">Gehoverde gemeente: {{ currentHoverGemeente() }}</p>
+        <p class="mt-2">
+          Geselecteerde gemeente: {{ geselecteerdeGemeente() }}
+        </p>
+      </div>
+      <div class="map-container">
+        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

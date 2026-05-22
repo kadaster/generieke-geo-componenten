@@ -41,6 +41,7 @@ import { ExampleDrawTracingComponent } from "./examples/example-draw/example-dra
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
 import { ExampleMapSelectComponent } from "./examples/example-map/example-map-select/example-map-select.component";
+import { ExampleMapSelectHoverClickComponent } from "./examples/example-map/example-map-select-hover-click/example-map-select-hover-click.component";
 
 export const routes: Routes = [
   {
@@ -292,5 +293,11 @@ export const routes: Routes = [
     title: "Selecteren op de kaart | GGC-Home",
     component: ExampleMapSelectComponent,
     data: { label: "example-map-select" }
+  },
+  {
+    path: "example-map-select-hover-click",
+    title: "Selecteren met hover en klik | GGC-Home",
+    component: ExampleMapSelectHoverClickComponent,
+    data: { label: "example-map-select-hover-click" }
   }
 ];

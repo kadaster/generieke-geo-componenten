@@ -26,13 +26,12 @@ export class ExampleMapSelectComponent
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select",
     title: "Selecteren op de kaart",
-    introduction:
-      "Voeg een GeoJSON laag toe aan de kaart met OGC API - Features.",
+    introduction: "Selecteer en highlight features op de kaart",
     components: [Components.GGC_MAP],
-    theme: [Themes.KAARTLAGEN],
-    tags: [Tags.LAYER, Tags.OGC_API],
+    theme: [Themes.INFORMATIE_OP_KAART],
+    tags: [Tags.SELECT],
     imageLocation:
-      "code/examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.png"
+      "code/examples/example-map/example-map-select/example-select.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-map/example-map-select/example-map-select.component.ts";
