@@ -133,7 +133,7 @@ describe("SharedLayerService", () => {
     } as LayerConfig;
 
     service["layerConfigurations"].push({
-      url: "http://x",
+      url: "https:////x",
       type: Webservice3DType.TILES3D,
       layers: [layer]
     });
@@ -154,7 +154,7 @@ describe("SharedLayerService", () => {
     const layer: LayerConfig = { layerId: "id1" } as LayerConfig;
 
     service["layerConfigurations"].push({
-      url: "http://x",
+      url: "https:////x",
       type: Webservice3DType.GEOJSON,
       layers: [layer]
     });
@@ -172,11 +172,11 @@ describe("SharedLayerService", () => {
     const layer: LayerConfig = {
       layerId: "id1",
       layerName: "x",
-      url: "http://x"
+      url: "https:////x"
     };
 
     service["layerConfigurations"].push({
-      url: "http://x",
+      url: "https:////x",
       type: Webservice3DType.GEOJSON,
       layers: [layer]
     });
@@ -187,7 +187,7 @@ describe("SharedLayerService", () => {
 
   it("should return the layer title", () => {
     service["layerConfigurations"].push({
-      url: "http://x",
+      url: "https:////x",
       type: Webservice3DType.WMTS,
       layers: [{ layerId: "id1", title: "MyLayer" } as LayerConfig]
     });
@@ -197,7 +197,7 @@ describe("SharedLayerService", () => {
   it("should return enabled of a layer", () => {
     wmtsServiceSpy.getEnabled.and.returnValue(true);
     service["layerConfigurations"].push({
-      url: "http://x",
+      url: "https:////x",
       type: Webservice3DType.WMTS,
       layers: [{ layerId: "id1" } as LayerConfig]
     });
