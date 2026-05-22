@@ -24,7 +24,7 @@ export class GgcSearchRdService {
   search(input: string): Observable<AdditionalSuggestion[]> {
     const cleaned = (input ?? "").replace(/^RD-coördinaten:\s*/i, "").trim();
     const match = cleaned.match(
-      /^\s*(\d{1,6}(?:[.,]\d{1,3})?)\s*(?:[;,]|\s)\s*(\d{1,6}(?:[.,]\d{1,3})?)\s*$/
+      /^\s*([0-9]{1,6}(?:[.,][0-9]{1,3})?)\s*(?:[;,]\s*|\s+)([0-9]{1,6}(?:[.,][0-9]{1,3})?)\s*$/
     );
 
     if (!match) return of([]);
