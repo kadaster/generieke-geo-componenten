@@ -226,6 +226,46 @@ describe("ViewerComponent", () => {
       }
     });
 
+    describe("CCS show/hide logo", () => {
+      it("default is block", () => {
+        fixture.detectChanges();
+
+        const host: HTMLElement = fixture.nativeElement;
+
+        expect(host.style.getPropertyValue("--displayLogo")).toBe("block");
+      });
+
+      it("zet displayLogo op none als hideLogo true is", () => {
+        component.hideLogo = true;
+        fixture.detectChanges();
+
+        const host: HTMLElement = fixture.nativeElement;
+
+        expect(host.style.getPropertyValue("--displayLogo")).toBe("none");
+      });
+
+      it("zet displayLogo op block als hideLogo false is", () => {
+        component.hideLogo = false;
+        fixture.detectChanges();
+
+        const host: HTMLElement = fixture.nativeElement;
+
+        expect(host.style.getPropertyValue("--displayLogo")).toBe("block");
+      });
+
+      it("update CSS variabele wanneer hideLogo verandert", () => {
+        component.hideLogo = false;
+        fixture.detectChanges();
+
+        component.hideLogo = true;
+        fixture.detectChanges();
+
+        const host: HTMLElement = fixture.nativeElement;
+
+        expect(host.style.getPropertyValue("--displayLogo")).toBe("none");
+      });
+    });
+
     function getJson(): string {
       return `{
         "type": "Polygon",
