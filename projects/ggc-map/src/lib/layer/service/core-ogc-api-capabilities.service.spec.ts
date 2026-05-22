@@ -36,15 +36,15 @@ describe("CoreOgcApiCapabilitiesService", () => {
         href: "conformanceUrl"
       },
       {
-        rel: "http://www.opengis.net/def/rel/ogc/1.0/data",
+        rel: "https://www.opengis.net/def/rel/ogc/1.0/data",
         href: "https://example.test/collections?f=json"
       },
       {
-        rel: "http://www.opengis.net/def/rel/ogc/1.0/tilesets-vector",
+        rel: "https://www.opengis.net/def/rel/ogc/1.0/tilesets-vector",
         href: "https://example.test/tilesets?f=json"
       },
       {
-        rel: "http://www.opengis.net/def/rel/ogc/1.0/styles",
+        rel: "https://www.opengis.net/def/rel/ogc/1.0/styles",
         href: "https://example.test/styles?f=json"
       }
     ],
@@ -72,7 +72,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
   describe("getLandingPageInfo", () => {
     it("gebruikt de cache van de landingPage", () => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({ title: "test", links: {} });
       (service as any).landingPagesMap.set(baseUrl, mockObservable);
 
@@ -148,7 +148,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
   describe("getTiles", () => {
     it("zou een error terug moeten geven als href undefined is", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { tilesetsVector: { href: undefined, rel: "rel" } }
@@ -169,7 +169,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
     });
 
     it("zou gecached resultaat terug moeten geven", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { tilesetsVector: { href: "tilesUrl", rel: "rel" } }
@@ -191,7 +191,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
     });
 
     it("zou tiles resultaat moeten parsen en teruggeven", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { tilesetsVector: { href: "tilesUrl", rel: "rel" } }
@@ -218,7 +218,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
     });
 
     it("zou foutmelding moeten geven bij een foutief resultaat", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { tilesetsVector: { href: "tilesUrl", rel: "rel" } }
@@ -246,7 +246,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
   describe("getStyles", () => {
     it("zou een error terug moeten geven als href undefined is", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { styles: { href: undefined, rel: "rel" } }
@@ -267,7 +267,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
     });
 
     it("zou gecached resultaat terug moeten geven", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { styles: { href: "stylesUrl", rel: "rel" } }
@@ -290,7 +290,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
     });
 
     it("zou styles resultaat moeten parsen en teruggeven", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { styles: { href: "stylesUrl", rel: "rel" } }
@@ -327,7 +327,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
     });
 
     it("zou foutmelding moeten geven bij een foutief resultaat", (done) => {
-      const baseUrl = "http://baseUrl";
+      const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
         links: { styles: { href: "stylesUrl", rel: "rel" } }

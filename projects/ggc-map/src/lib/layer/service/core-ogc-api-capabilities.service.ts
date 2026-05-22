@@ -61,12 +61,12 @@ export class CoreOgcApiCapabilitiesService {
               apiDoc: getLink("service-doc"),
               conformance: getLink("conformance"),
               collections: getLink(
-                "http://www.opengis.net/def/rel/ogc/1.0/data"
+                "https://www.opengis.net/def/rel/ogc/1.0/data"
               ),
               tilesetsVector: getLink(
-                "http://www.opengis.net/def/rel/ogc/1.0/tilesets-vector"
+                "https://www.opengis.net/def/rel/ogc/1.0/tilesets-vector"
               ),
-              styles: getLink("http://www.opengis.net/def/rel/ogc/1.0/styles")
+              styles: getLink("https://www.opengis.net/def/rel/ogc/1.0/styles")
             }
           } as OGCAPILandingPageInfo;
         })
