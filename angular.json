@@ -204,7 +204,12 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ggc-home/src/test.ts",
+            "tsConfig": "projects/ggc-home/tsconfig.spec.json",
+            "karmaConfig": "projects/ggc-home/karma.conf.js"
+          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
