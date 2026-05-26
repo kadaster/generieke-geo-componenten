@@ -3,7 +3,6 @@ import { inject, Injectable, Injector, Type } from "@angular/core";
 type GgcMapModule = {
   GgcMapService: Type<unknown>;
   GgcDrawService: Type<unknown>;
-  MapComponentDrawTypes: unknown;
 };
 
 /**
