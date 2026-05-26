@@ -646,7 +646,9 @@ export class GgcSearchLocationComponent implements OnInit {
 
   private async loadFormatType() {
     if (!this.formatTypeCache) {
-      const module = await import("@kadaster/ggc-map");
+      const module = await import(
+        /* webpackMode: "eager" */ "@kadaster/ggc-map"
+      );
       this.formatTypeCache = module.FormatType;
     }
 

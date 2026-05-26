@@ -165,10 +165,15 @@ export class GgcSearchLocationService {
   }
 
   private async loadOpenLayers() {
-    const Fill = (await import("ol/style/Fill")).default;
-    const Stroke = (await import("ol/style/Stroke")).default;
-    const Style = (await import("ol/style/Style")).default;
-    const CircleStyle = (await import("ol/style/Circle")).default;
+    const Fill = (await import(/* webpackMode: "eager" */ "ol/style/Fill"))
+      .default;
+    const Stroke = (await import(/* webpackMode: "eager" */ "ol/style/Stroke"))
+      .default;
+    const Style = (await import(/* webpackMode: "eager" */ "ol/style/Style"))
+      .default;
+    const CircleStyle = (
+      await import(/* webpackMode: "eager" */ "ol/style/Circle")
+    ).default;
 
     return { Fill, Stroke, Style, CircleStyle };
   }
@@ -183,7 +188,6 @@ export class GgcSearchLocationService {
     mapService: any,
     mapIndex: string
   ): Promise<void> {
-    debugger;
     const { Fill, Stroke, Style, CircleStyle } = await this.loadOpenLayers();
     const geoLocationStyle = new Style({
       fill: new Fill({
