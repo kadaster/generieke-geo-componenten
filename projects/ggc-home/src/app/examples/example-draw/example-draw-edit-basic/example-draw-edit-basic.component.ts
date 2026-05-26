@@ -4,7 +4,6 @@ import {
   GgcDrawService,
   GgcMapComponent,
   MapComponentDrawTypes,
-  MapComponentEventTypes,
   Webservice
 } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
@@ -15,6 +14,7 @@ import { altKeyOnly, always, singleClick } from "ol/events/condition";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import MapBrowserEvent from "ol/MapBrowserEvent";
+import { MapComponentEventTypes } from "@kadaster/ggc-models";
 
 export enum EditType {
   MOVE = "move",

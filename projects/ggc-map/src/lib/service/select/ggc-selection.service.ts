@@ -2,10 +2,9 @@ import { inject, Injectable } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Observable } from "rxjs";
-import { MapComponentEvent } from "../../model/map-component-event.model";
 import { CoreSelectionService } from "./core-selection.service";
 import { SelectionModeTypes } from "./selection-type.enum";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
 
 @Injectable({
   providedIn: "root"

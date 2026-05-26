@@ -8,7 +8,6 @@ import VectorLayer from "ol/layer/Vector";
 import OlMap from "ol/Map";
 import VectorSource from "ol/source/Vector";
 import { StyleLike } from "ol/style/Style";
-import { MapComponentEvent } from "../../model/map-component-event.model";
 import { CoreMapService } from "./core-map.service";
 import { SearchResultDoc } from "./SearchResultDoc.model";
 import { Extent } from "ol/extent";
@@ -16,7 +15,11 @@ import { ZoomOptions } from "./ZoomOptions.model";
 import { GeoJSON } from "ol/format";
 import { FormatType } from "../../enum/format-type";
 import { Observable } from "rxjs";
-import { DEFAULT_MAPINDEX, LayerChangedEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  LayerChangedEvent,
+  MapComponentEvent
+} from "@kadaster/ggc-models";
 
 /**
  * Service die kaartfunctionaliteit aanbiedt voor:

@@ -5,7 +5,7 @@ type GgcMapModule = {
 };
 
 @Injectable({ providedIn: "root" })
-export class GgcFeatureInfoMapConnectService {
+export class GgcFeatureInfoConnectService {
   private mapSelectionService?: unknown;
   private readonly injector = inject(Injector);
   private mapModulePromise?: Promise<GgcMapModule>;
@@ -37,10 +37,7 @@ export class GgcFeatureInfoMapConnectService {
         e
       );
       throw e;
-      return undefined;
     });
     return this.mapModulePromise;
   }
 }
-
-export default GgcFeatureInfoMapConnectService;

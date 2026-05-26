@@ -1,13 +1,24 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
+
 import { Observable, of } from "rxjs";
+import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+import { GgcFeatureInfoConnectService } from "./connect.service";
 
 @Injectable({
   providedIn: "root"
 })
-class FeatureInfoMapConnectService {
+export class FeatureInfoMapConnectService {
+  private readonly connectService: GgcFeatureInfoConnectService = inject(
+    GgcFeatureInfoConnectService
+  );
 
-/*  getMapSelectionObservable(): Observable<MapComponentEvent> {
-        return of();
-    );
-  }*/
+  async getObservableForMapSelection(
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Promise<Observable<MapComponentEvent>> {
+    const mapObservable: Observable<MapComponentEvent> =
+      (
+        (await this.connectService.getMapSelectionService()) as any
+      )?.getObservable(mapIndex) ?? of();
+    return mapObservable;
+  }
 }

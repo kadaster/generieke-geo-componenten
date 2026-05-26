@@ -25,17 +25,16 @@ import {
 } from "../../core/constants";
 import { CrsConfig } from "../../core/model/crs-config.model";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+
 import { CoreLoadingService } from "./core-loading.service";
 import { Observable, Subject } from "rxjs";
 import {
   DEFAULT_MAPINDEX,
   LayerChangedEvent,
-  LayerChangedEventTrigger
+  LayerChangedEventTrigger,
+  MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import { MapComponentEvent } from "@kadaster/ggc-models";
 
 @Injectable({
   providedIn: "root"

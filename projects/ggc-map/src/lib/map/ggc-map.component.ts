@@ -23,18 +23,19 @@ import { ViewObjectEventTypes } from "ol/View";
 import { Subscription } from "rxjs";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
 import { CoreDrawService } from "../drawing/service/core-draw.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes,
-  MapViewState
-} from "../model/map-component-event.model";
+
 import { CoreSelectionService } from "../service/select/core-selection.service";
 import { CoreLoadingService } from "./service/core-loading.service";
 import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
 import { Webservice } from "../layer/model/webservice.model";
 import { GgcLayerService } from "../service/select/ggc-layer.service";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentEventTypes,
+  MapViewState
+} from "@kadaster/ggc-models";
 
 /**
  * `<ggc-map></ggc-map>` toont een 2D kaart waar verschillende lagen aan toegevoegd

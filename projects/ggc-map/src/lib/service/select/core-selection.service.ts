@@ -3,15 +3,16 @@ import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Observable, Subject } from "rxjs";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+
 import {
   CurrentAndPreviousSelection,
   FeatureCollectionForCoordinate
 } from "./selection-state.model";
 import { SelectionModeTypes } from "./selection-type.enum";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 @Injectable({
   providedIn: "root"

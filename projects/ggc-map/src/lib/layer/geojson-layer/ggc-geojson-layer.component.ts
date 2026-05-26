@@ -16,13 +16,13 @@ import VectorLayer from "ol/layer/Vector";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import Cluster from "ol/source/Cluster";
 import VectorSource from "ol/source/Vector";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
 import { GeojsonLayerOptions } from "../model/geojson-layer.model";
 import { CoreOgcApiFeaturesService } from "../service/core-ogc-api-features.service";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 /**
  * Door `<ggc-geojson-layer></ggc-geojson-layer>` op te nemen in de HTML kunnen

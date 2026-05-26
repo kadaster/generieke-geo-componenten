@@ -6,9 +6,7 @@ import {
   EventEmitter,
   inject,
   Input,
-  OnChanges,
   Output,
-  SimpleChanges,
   TemplateRef
 } from "@angular/core";
 import Feature from "ol/Feature";
@@ -26,7 +24,23 @@ import {
 } from "../model/feature-info-component-event";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-info-display.component";
-import GgcFeatureInfoMapConnectService from "../service/feature-info-map-connect.service";
+import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
+import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+
+/**
+ * Interne representatie van een feature-collectie per kaartlaag,
+ * zoals deze wordt aangeleverd via {{@link MapComponentEvent}}.
+ *
+ * Dit type is lokaal gedefinieerd om de FeatureInfo-component
+ * los te koppelen van concrete model-implementaties uit map.
+ */
+type FeatureCollectionForLayer = {
+  /** Naam van de kaartlaag */
+  readonly layerName: string;
+
+  /** Geselecteerde features binnen deze laag */
+  readonly features: Feature<Geometry>[] | object[];
+};
 
 /**
  * Het `FeatureInfoComponent` toont feature-informatie afkomstig uit kaartlagen
@@ -49,14 +63,9 @@ import GgcFeatureInfoMapConnectService from "../service/feature-info-map-connect
   styleUrls: ["./ggc-feature-info.component.css"],
   imports: [FeatureInfoDisplayComponent]
 })
-export class GgcFeatureInfoComponent
-  implements OnChanges, AfterContentInit, OnInit
-{
-  /**
-   * Verzameling van features en metadata die weergegeven moeten worden.
-   * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
-   */
-  @Input() featureInfoCollection: FeatureInfoCollection | undefined;
+export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
+  /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
+  @Input() mapIndex: string = DEFAULT_MAPINDEX;
 
   /**
    * Geeft aan of een message moet worden getoond ("Geen informatie beschikbaar") wanneer er geen data is.
@@ -116,8 +125,9 @@ export class GgcFeatureInfoComponent
   protected currentFeatureIndex = 0;
   protected currentFeature: object | null;
   protected emptyInfo = "Geen informatie beschikbaar";
+  private _featureInfoCollection: FeatureInfoCollection | undefined;
   private readonly featureInfoMapConnectService = inject(
-    GgcFeatureInfoMapConnectService
+    FeatureInfoMapConnectService
   );
 
   @ContentChildren(ValueTemplateDirective)
@@ -126,8 +136,22 @@ export class GgcFeatureInfoComponent
     GgcFeatureInfoConfigService
   );
 
+  /**
+   * Verzameling van features en metadata die weergegeven moeten worden.
+   * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
+   */
+  @Input()
+  set featureInfoCollection(value: FeatureInfoCollection | undefined) {
+    this._featureInfoCollection = value;
+    this.handleFeatureInfoCollectionChange();
+  }
+
+  get featureInfoCollection(): FeatureInfoCollection | undefined {
+    return this._featureInfoCollection;
+  }
+
   ngOnInit() {
-    console.log("autoconnect to selectionservice events");
+    void this.subscribeToMapSelection(this.mapIndex);
   }
 
   /**
@@ -161,56 +185,6 @@ export class GgcFeatureInfoComponent
         }
       });
     });
-  }
-
-  /**
-   * Reageert op wijzigingen in de input-properties.
-   * Filtert en sorteert attributen via `FeatureInfoConfigService`.
-   * Stuurt een event bij selectie van een object.
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes.featureInfoCollection ||
-      changes.customAttributeNamesAndValues
-    ) {
-      if (!this.featureInfoCollection) {
-        this.displayFeaturesProperties = undefined;
-      } else {
-        if (this.customAttributeNamesAndValues) {
-          this.featureInfoConfigService.setCustomFeatureInfo(
-            this.customAttributeNamesAndValues
-          );
-        }
-        const featuresProperties = this.getPropertiesFromFeatures(
-          this.featureInfoCollection.features
-        );
-        this.displayFeaturesProperties =
-          this.featureInfoConfigService.filterAndSortAttributes(
-            this.featureInfoCollection.layerName,
-            featuresProperties
-          );
-      }
-
-      if (
-        this.displayFeaturesProperties &&
-        this.displayFeaturesProperties.length > 0
-      ) {
-        this.currentFeatureIndex = 0;
-        this.setCurrentFeature();
-      } else {
-        this.currentFeatureIndex = -1;
-        this.currentFeature = null;
-        this.events.next(
-          new FeatureInfoComponentEvent(
-            FeatureInfoComponentEventType.SELECTEDOBJECT,
-            "Het huidige weergegeven object.",
-            undefined
-          )
-        );
-      }
-
-      this.pagerIsHidden = this.hidePager();
-    }
   }
 
   /** Navigeer naar de vorige feature. */
@@ -299,5 +273,84 @@ export class GgcFeatureInfoComponent
       this.displayFeaturesProperties !== undefined &&
       this.displayFeaturesProperties.length === 1
     );
+  }
+
+  /**
+   * Verwerkt wijzigingen in de featureInfoCollection,
+   * ongeacht of deze via een @Input of interne logica komen.
+   */
+  private handleFeatureInfoCollectionChange(): void {
+    if (!this.featureInfoCollection) {
+      this.displayFeaturesProperties = undefined;
+    } else {
+      if (this.customAttributeNamesAndValues) {
+        this.featureInfoConfigService.setCustomFeatureInfo(
+          this.customAttributeNamesAndValues
+        );
+      }
+
+      const featuresProperties = this.getPropertiesFromFeatures(
+        this.featureInfoCollection.features
+      );
+
+      this.displayFeaturesProperties =
+        this.featureInfoConfigService.filterAndSortAttributes(
+          this.featureInfoCollection.layerName,
+          featuresProperties
+        );
+    }
+
+    if (
+      this.displayFeaturesProperties &&
+      this.displayFeaturesProperties.length > 0
+    ) {
+      this.currentFeatureIndex = 0;
+      this.setCurrentFeature();
+    } else {
+      this.currentFeatureIndex = -1;
+      this.currentFeature = null;
+      this.events.next(
+        new FeatureInfoComponentEvent(
+          FeatureInfoComponentEventType.SELECTEDOBJECT,
+          "Het huidige weergegeven object.",
+          undefined
+        )
+      );
+    }
+
+    this.pagerIsHidden = this.hidePager();
+  }
+
+  private async subscribeToMapSelection(mapIndex: string) {
+    const mapSelectionEvent =
+      await this.featureInfoMapConnectService.getObservableForMapSelection(
+        mapIndex
+      );
+
+    mapSelectionEvent.subscribe((event: MapComponentEvent) => {
+      const collections: FeatureCollectionForLayer[] =
+        event.value.featureCollectionForLayers;
+
+      if (!collections || collections.length === 0) {
+        this.featureInfoCollection = undefined;
+        return;
+      }
+
+      const allFeatures: object[] = [];
+      const layerNames: string[] = [];
+
+      collections.forEach((collection: FeatureCollectionForLayer) => {
+        layerNames.push(collection.layerName);
+
+        collection.features.forEach((feature) => {
+          allFeatures.push(feature);
+        });
+      });
+
+      this.featureInfoCollection = new FeatureInfoCollection(
+        layerNames.join(", "),
+        allFeatures
+      );
+    });
   }
 }
