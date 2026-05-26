@@ -2,8 +2,8 @@ import { Feature, FeatureCollection } from "geojson";
 import OlFeature from "ol/Feature";
 import { GeoJSON } from "ol/format";
 import Geometry, { Type } from "ol/geom/Geometry";
-import { MapComponentDrawTypes } from "../model/draw-interaction-event.model";
 import { epsg28992 } from "./epsg28992";
+import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 /**
  * Converteert een OpenLayers feature naar een GeoJSON feature.

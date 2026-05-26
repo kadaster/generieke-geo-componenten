@@ -1,5 +1,11 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import {
+  ComponentFixture,
+  fakeAsync,
+  flushMicrotasks,
+  TestBed,
+  waitForAsync
+} from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import {
   ToolbarItemMeasureComponentEvent,
@@ -34,9 +40,6 @@ describe("ToolbarItemMeasureComponent", () => {
     ]);
 
     connectServiceSpy.getDrawService.and.resolveTo(drawServiceSpy);
-    connectServiceSpy.getMapComponentDrawTypes.and.resolveTo(
-      MapComponentDrawTypes
-    );
 
     TestBed.configureTestingModule({
       imports: [GgcToolbarItemMeasureComponent],
@@ -92,32 +95,32 @@ describe("ToolbarItemMeasureComponent", () => {
       );
     });
 
-    it("should emit STOP when stopMeasure is called", () => {
+    it("should emit STOP when stopMeasure is called", fakeAsync(() => {
       component.stopMeasure();
-
+      flushMicrotasks();
       expect(drawServiceSpy.stopDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.STOP);
-    });
+    }));
 
-    it("should emit LINE when measureLine is called", () => {
+    it("should emit LINE when measureLine is called", fakeAsync(() => {
       component.measureLine();
-
+      flushMicrotasks();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.LINE);
-    });
+    }));
 
-    it("should emit POLYGON when measurePolygon is called", () => {
+    it("should emit POLYGON when measurePolygon is called", fakeAsync(() => {
       component.measurePolygon();
-
+      flushMicrotasks();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.POLYGON);
-    });
+    }));
 
-    it("should emit CLEAR when eraseMeasureLayer is called", () => {
+    it("should emit CLEAR when eraseMeasureLayer is called", fakeAsync(() => {
       component.eraseMeasureLayer();
-
+      flushMicrotasks();
       expect(drawServiceSpy.clearLayer).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.CLEAR);
-    });
+    }));
   });
 });

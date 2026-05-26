@@ -7,10 +7,10 @@ import {
   LayerChangedEvent,
   ViewerType,
   Webservice2DType,
-  Webservice3DType
+  Webservice3DType,
+  DEFAULT_MAPINDEX
 } from "@kadaster/ggc-models";
 import { filter } from "rxjs/operators";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 /**
  * De dataset-tree gebruikt deze service om met de kaarten te communiceren en de benodigde
@@ -27,14 +27,13 @@ export class DatasetTreeMapConnectService {
    * Interne event-bus voor custom triggers.
    */
   private readonly triggerSubject = new Subject<string>();
-  private ggcOLLayerServicePromise?: Promise<any>;
+  private layerServicePromise?: Promise<any>;
 
   private getGgcOLLayerService(): Promise<any> {
-    if (!this.ggcOLLayerServicePromise) {
-      this.ggcOLLayerServicePromise =
-        this.connectService.getGgcOLLayerService();
+    if (!this.layerServicePromise) {
+      this.layerServicePromise = this.connectService.getGgcOLLayerService();
     }
-    return this.ggcOLLayerServicePromise;
+    return this.layerServicePromise;
   }
 
   /**
