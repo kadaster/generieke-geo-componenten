@@ -23,7 +23,6 @@ export class GgcToolbarConnectService {
 
   private mapService?: unknown;
   private drawService?: unknown;
-  private mapComponentDrawTypes?: unknown;
 
   /**
    * Zorgt dat de module slechts één keer geladen wordt.
@@ -62,19 +61,6 @@ export class GgcToolbarConnectService {
       return this.drawService;
     } catch (e) {
       console.debug("getDrawService mislukt:", e);
-      return undefined;
-    }
-  }
-
-  async getMapComponentDrawTypes(): Promise<unknown> {
-    try {
-      if (!this.mapComponentDrawTypes) {
-        const module = await this.loadMapModule();
-        this.mapComponentDrawTypes = module.MapComponentDrawTypes;
-      }
-      return this.mapComponentDrawTypes;
-    } catch (e) {
-      console.debug("getMapComponentDrawTypes mislukt:", e);
       return undefined;
     }
   }

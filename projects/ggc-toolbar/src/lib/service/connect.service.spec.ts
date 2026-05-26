@@ -107,37 +107,4 @@ describe("GgcToolbarConnectService", () => {
       expect(injectorSpy.get).toHaveBeenCalledTimes(1);
     });
   });
-
-  describe("getMapComponentDrawTypes", () => {
-    it("laadt en retourneert MapComponentDrawTypes", async () => {
-      const module = mockModule({
-        MapComponentDrawTypes: { point: "point" }
-      });
-
-      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
-
-      const result = await service.getMapComponentDrawTypes();
-
-      expect(result).toEqual({ point: "point" });
-    });
-
-    it("cachet MapComponentDrawTypes", async () => {
-      const module = mockModule();
-
-      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
-
-      const first = await service.getMapComponentDrawTypes();
-      const second = await service.getMapComponentDrawTypes();
-
-      expect(first).toBe(second);
-    });
-
-    it("vangt fouten af bij laden", async () => {
-      spyOn<any>(service, "loadMapModule").and.rejectWith("load error");
-
-      const result = await service.getMapComponentDrawTypes();
-
-      expect(result).toBeUndefined();
-    });
-  });
 });
