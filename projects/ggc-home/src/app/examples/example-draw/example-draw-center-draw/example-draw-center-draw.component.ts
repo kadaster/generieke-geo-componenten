@@ -4,13 +4,12 @@ import {
   GgcDrawService,
   GgcMapComponent,
   GgcMapService,
-  MapComponentDrawTypes,
   Webservice
 } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, MapComponentDrawTypes } from "@kadaster/ggc-models";
 import { StyleLikeMap } from "../../../../../../ggc-map/src/lib/model/draw-interaction-event.model";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
