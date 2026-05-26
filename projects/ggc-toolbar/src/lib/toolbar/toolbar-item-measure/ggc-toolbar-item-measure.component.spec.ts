@@ -17,7 +17,6 @@ import SpyObj = jasmine.SpyObj;
 import { provideZoneChangeDetection } from "@angular/core";
 import { GgcDrawService } from "@kadaster/ggc-map/src/lib/drawing/service/ggc-draw.service";
 import { GgcToolbarConnectService } from "../../service/connect.service";
-import { MapComponentDrawTypes } from "@kadaster/ggc-map";
 
 describe("ToolbarItemMeasureComponent", () => {
   let component: GgcToolbarItemMeasureComponent;

@@ -21,7 +21,6 @@ import { CoreMapService } from "../../map/service/core-map.service";
 import { calculateAreaOrLength } from "../measure-styles";
 import {
   DrawInteractionEvent,
-  DrawInteractionEventTypes,
   StyleLikeMap
 } from "../../model/draw-interaction-event.model";
 import { MapComponentEvent } from "../../model/map-component-event.model";
@@ -49,6 +48,7 @@ import {
   CenterModifyOptions
 } from "../center-interaction/center-modify";
 import { StyleLike } from "ol/style/Style";
+import { DrawInteractionEventTypes } from "@kadaster/ggc-map";
 
 @Injectable({
   providedIn: "root"
