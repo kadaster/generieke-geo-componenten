@@ -1,16 +1,6 @@
 import { inject, Injectable } from "@angular/core";
-import Feature from "ol/Feature";
-import { Geometry } from "ol/geom";
-import VectorLayer from "ol/layer/Vector";
-import { register } from "ol/proj/proj4";
-import VectorSource from "ol/source/Vector";
-import CircleStyle from "ol/style/Circle";
-import Fill from "ol/style/Fill";
-import Stroke from "ol/style/Stroke";
-import Style from "ol/style/Style";
 import * as proj4x from "proj4";
 import { Observable, Subject, Subscription } from "rxjs";
-import { fromLonLat } from "ol/proj";
 import { GgcSearchLocationConnectService } from "./connect.service";
 import {
   DEFAULT_MAPINDEX,
@@ -53,7 +43,17 @@ export class GgcSearchLocationService {
 
   constructor() {
     proj4.defs("EPSG:28992", defs);
-    register(proj4);
+    this.tryRegisterProj4();
+  }
+
+  private tryRegisterProj4() {
+    import("ol/proj/proj4")
+      .then((olProj4) => {
+        olProj4.register(proj4);
+      })
+      .catch(() => {
+        console.debug("proj4 van OpenLayers niet beschikbaar");
+      });
   }
 
   /**
@@ -86,7 +86,7 @@ export class GgcSearchLocationService {
     if (mapService) {
       const map = mapService.getMap(mapIndex);
       if (map) {
-        this.setGeolocationLayerStyle(mapService, mapIndex);
+        await this.setGeolocationLayerStyle(mapService, mapIndex);
         if (track) {
           if (!this.geolocations.has(mapIndex)) {
             this.geolocations.set(
@@ -156,12 +156,21 @@ export class GgcSearchLocationService {
     mapIndex: string,
     position: GeolocationPosition
   ) {
-    const coordinates = fromLonLat(
-      [position.coords.longitude, position.coords.latitude],
-      "EPSG:28992"
-    );
+    const coordinates = proj4("EPSG:28992", [
+      position.coords.longitude,
+      position.coords.latitude
+    ]);
     this.locationEventsMap.getOrCreateSubject(mapIndex).next(coordinates);
     this.currentLocation.next(coordinates);
+  }
+
+  private async loadOpenLayers() {
+    const Fill = (await import("ol/style/Fill")).default;
+    const Stroke = (await import("ol/style/Stroke")).default;
+    const Style = (await import("ol/style/Style")).default;
+    const CircleStyle = (await import("ol/style/Circle")).default;
+
+    return { Fill, Stroke, Style, CircleStyle };
   }
 
   /**
@@ -170,7 +179,12 @@ export class GgcSearchLocationService {
    * @param mapService - De MapService instantie.
    * @param mapIndex - De index van de kaart waarop de stijl moet worden toegepast.
    */
-  private setGeolocationLayerStyle(mapService: any, mapIndex: string): void {
+  private async setGeolocationLayerStyle(
+    mapService: any,
+    mapIndex: string
+  ): Promise<void> {
+    debugger;
+    const { Fill, Stroke, Style, CircleStyle } = await this.loadOpenLayers();
     const geoLocationStyle = new Style({
       fill: new Fill({
         color: "rgba(0, 115, 149, 0.5)"
@@ -190,11 +204,8 @@ export class GgcSearchLocationService {
         })
       })
     });
-    (
-      mapService.getExtraLayer(
-        this.GEOLOCATION_LAYER_ID,
-        mapIndex
-      ) as VectorLayer<VectorSource<Feature<Geometry>>>
-    )?.setStyle(geoLocationStyle);
+    mapService
+      .getExtraLayer(this.GEOLOCATION_LAYER_ID, mapIndex)
+      ?.setStyle(geoLocationStyle);
   }
 }
