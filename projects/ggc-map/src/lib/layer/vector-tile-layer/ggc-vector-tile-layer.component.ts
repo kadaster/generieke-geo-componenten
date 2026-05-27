@@ -303,14 +303,11 @@ export class GgcVectorTileLayerComponent
       }
     );
     const foundFeaturesCopy = this.foundFeatures.slice();
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        event.coordinate,
-        foundFeaturesCopy,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      foundFeaturesCopy,
+      this.getLayerId()
+    );
     const mapComponentEvent = new MapComponentEvent(
       MapComponentEventTypes.VECTORFEATUREINFO,
       this.mapIndex,

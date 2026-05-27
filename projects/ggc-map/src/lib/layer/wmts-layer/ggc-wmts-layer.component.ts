@@ -185,14 +185,11 @@ export class GgcWmtsLayerComponent
     features: Feature<Geometry>[],
     coordinate: Coordinate
   ): void {
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        coordinate,
-        features,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      features,
+      this.getLayerId()
+    );
     this.events.emit(
       new MapComponentEvent(
         MapComponentEventTypes.WMTSFEATUREINFO,

@@ -1,5 +1,4 @@
 import { Condition } from "ol/events/condition";
-import { Layer } from "ol/layer";
 import { StyleLike } from "ol/style/Style";
 
 /**
@@ -23,11 +22,6 @@ export interface SelectOptions {
    * Bij de waarde null zal geen andere style worden toegepast op de selectie.
    */
   style?: StyleLike | null;
-
-  /**
-   * Filter functie voor features
-   */
-  filter?: (feature: any, layer: Layer) => boolean;
 
   /**
    * De pixel tolerantie voor het selecteren van een feature. Default is 0.

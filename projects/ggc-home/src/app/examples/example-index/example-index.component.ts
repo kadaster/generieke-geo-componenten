@@ -38,6 +38,7 @@ import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
 import { ExampleMapSelectComponent } from "../example-map/example-map-select/example-map-select.component";
 import { ExampleMapSelectHoverClickComponent } from "../example-map/example-map-select-hover-click/example-map-select-hover-click.component";
+import { ExampleMapSelectWmsComponent } from "../example-map/example-map-select-wms/example-map-select-wms.component";
 
 interface GroupedCards {
   theme: string;
@@ -98,7 +99,8 @@ export class ExampleIndexComponent {
     new ExampleMeasureOwnStyleLabel().componentInfo,
     new ExampleMapZoomScalePositionComponent().componentInfo,
     new ExampleMapSelectComponent().componentInfo,
-    new ExampleMapSelectHoverClickComponent().componentInfo
+    new ExampleMapSelectHoverClickComponent().componentInfo,
+    new ExampleMapSelectWmsComponent().componentInfo
   ];
 
   private readonly selectedComponentsKey = "selectedComponents";

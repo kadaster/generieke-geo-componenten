@@ -279,6 +279,45 @@ export class GgcMapService {
   }
 
   /**
+   * Verwijdert één of meerdere features uit de selectionlaag.
+   *
+   * Alleen de meegegeven features worden verwijderd; overige geselecteerde
+   * features blijven behouden.
+   *
+   * @param features Array van OpenLayers features die verwijderd moeten worden
+   * @param mapIndex Index van de kaart waarvoor de features uit de selectionlaag
+   * worden verwijderd (default: DEFAULT_MAPINDEX)
+   * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
+   */
+  removeFeaturesFromSelectionLayer(
+    features: Feature<Geometry>[],
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): MapComponentEvent {
+    return this.coreMapService.removeFeaturesFromSelectionLayer(
+      features,
+      mapIndex
+    );
+  }
+
+  /**
+   * Controleert of een feature aanwezig is in de selectionlaag.
+   *
+   * Een feature wordt als aanwezig beschouwd wanneer:
+   * - dezelfde feature‑referentie voorkomt in de selectionlaag, of
+   * - een feature met hetzelfde id voorkomt in de selectionlaag
+   *
+   * @param feature OpenLayers feature die gecontroleerd wordt
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @returns `true` indien de feature in de selectionlaag zit, anders `false`
+   */
+  isFeatureInSelectionLayer(
+    feature: Feature<Geometry>,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): boolean {
+    return this.coreMapService.isFeatureInSelectionLayer(feature, mapIndex);
+  }
+
+  /**
    * Verwijdert alle features uit de selectionlaag.
    *
    * @param mapIndex Index van de kaart waarvoor de selectionlaag wordt
@@ -345,24 +384,6 @@ export class GgcMapService {
       pdokDoc = evt.value.docs[0];
     }
     return pdokDoc;
-  }
-
-  /**
-   * Bepaalt de geometrie- of centroïdecoördinaten uit een PDOK-event.
-   *
-   * @param evt Event met PDOK zoekresultaten
-   * @returns WKT-representatie van coördinaten of `undefined`
-   */
-  private getCoordinatesFromEvent(evt: SearchResultDoc): string | undefined {
-    let coordinates: string | undefined;
-    const pdokDoc = this.getSearchResultDocFromEvent(evt);
-    if (pdokDoc) {
-      const geometrieOrCentroide = this.getGeometrieOrCentroide(pdokDoc);
-      if (geometrieOrCentroide) {
-        coordinates = geometrieOrCentroide;
-      }
-    }
-    return coordinates;
   }
 
   /**

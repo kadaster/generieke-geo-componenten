@@ -42,6 +42,7 @@ import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/exa
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
 import { ExampleMapSelectComponent } from "./examples/example-map/example-map-select/example-map-select.component";
 import { ExampleMapSelectHoverClickComponent } from "./examples/example-map/example-map-select-hover-click/example-map-select-hover-click.component";
+import { ExampleMapSelectWmsComponent } from "./examples/example-map/example-map-select-wms/example-map-select-wms.component";
 
 export const routes: Routes = [
   {
@@ -299,5 +300,11 @@ export const routes: Routes = [
     title: "Selecteren met hover en klik | GGC-Home",
     component: ExampleMapSelectHoverClickComponent,
     data: { label: "example-map-select-hover-click" }
+  },
+  {
+    path: "example-map-select-wms",
+    title: "Selecteren op WMS of WMTS kaarten | GGC-Home",
+    component: ExampleMapSelectWmsComponent,
+    data: { label: "example-map-select-wms" }
   }
 ];

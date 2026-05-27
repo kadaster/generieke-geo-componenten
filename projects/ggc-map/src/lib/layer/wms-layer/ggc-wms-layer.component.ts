@@ -262,14 +262,11 @@ export class GgcWmsLayerComponent
     coordinate: Coordinate,
     message = "WMS getFeatureInfo resultaten: "
   ): void {
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        coordinate,
-        features,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      features,
+      this.getLayerId()
+    );
     this.events.emit(
       new MapComponentEvent(
         MapComponentEventTypes.WMSFEATUREINFO,

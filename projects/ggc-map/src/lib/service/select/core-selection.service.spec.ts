@@ -81,13 +81,19 @@ describe("CoreSelectionService", () => {
   let map: MockMap;
 
   const MAP_INDEX = "map-1";
+  const SELECT_INDEX = "select-1";
+  const LAYER_ID = "layer-a";
 
   beforeEach(() => {
     map = new MockMap();
 
     const mapServiceSpy = jasmine.createSpyObj<GgcMapService>("GgcMapService", [
       "getMap",
-      "getLayer"
+      "getLayer",
+      "clearSelectionLayer",
+      "addFeaturesToSelectionLayer",
+      "removeFeaturesFromSelectionLayer",
+      "isFeatureInSelectionLayer"
     ]);
 
     mapServiceSpy.getMap.and.returnValue(map as unknown as Map);
@@ -146,7 +152,7 @@ describe("CoreSelectionService", () => {
       SELECT_INDEX
     );
 
-    const activeInteraction = (service as any)["activeSelectInteraction"].get(
+    const activeInteraction = (service as any)["activeSelectInteractions"].get(
       SELECT_INDEX
     );
 
@@ -249,5 +255,157 @@ describe("CoreSelectionService", () => {
     expect(selectionUpdatedEvents.length).toBe(1);
     expect(selectionUpdatedEvents[0].value).toEqual([]);
     done();
+  });
+
+  function createSelectMock(
+    selectMode: "single" | "multi",
+    layerFilter?: Record<string, boolean>
+  ) {
+    const features = new Collection<Feature<Geometry>>();
+
+    return {
+      get: (key: string) => {
+        if (key === (service as any).GGC_SELECT_MODE) {
+          return selectMode;
+        }
+        if (key === (service as any).GGC_LAYER_IDS) {
+          return layerFilter;
+        }
+        return undefined;
+      },
+      getFeatures: () => features
+    } as unknown as Select;
+  }
+
+  describe("layerIds filter with WMS/WMTS layers", () => {
+    it("should forward features when no layer filter is configured", () => {
+      const feature = new Feature();
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select: createSelectMock("single")
+      });
+
+      spyOn(service as any, "handleNewFeaturesForSelection");
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect(
+        (service as any).handleNewFeaturesForSelection
+      ).toHaveBeenCalledWith([feature], SELECT_INDEX);
+    });
+
+    it("should forward features only when layerId is in filter", () => {
+      const feature = new Feature();
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select: createSelectMock("single", {
+          [LAYER_ID]: true
+        })
+      });
+
+      spyOn(service as any, "handleNewFeaturesForSelection");
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect((service as any).handleNewFeaturesForSelection).toHaveBeenCalled();
+    });
+
+    it("should NOT forward features when layerId is not in filter", () => {
+      const feature = new Feature();
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select: createSelectMock("single", {
+          "other-layer": true
+        })
+      });
+
+      spyOn(service as any, "handleNewFeaturesForSelection");
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect(
+        (service as any).handleNewFeaturesForSelection
+      ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("selection layer interaction", () => {
+    it("should clear and add features to selection layer in single select mode", () => {
+      const feature = new Feature();
+
+      const select = createSelectMock("single");
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select
+      });
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      const mapService = TestBed.inject(
+        GgcMapService
+      ) as jasmine.SpyObj<GgcMapService>;
+
+      expect(mapService.clearSelectionLayer).toHaveBeenCalledWith(MAP_INDEX);
+      expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
+        [feature],
+        MAP_INDEX
+      );
+    });
+
+    it("should add feature to selection layer when toggling ON in multi select mode", () => {
+      const feature = new Feature();
+
+      const select = createSelectMock("multi");
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select
+      });
+
+      const mapService = TestBed.inject(
+        GgcMapService
+      ) as jasmine.SpyObj<GgcMapService>;
+
+      mapService.isFeatureInSelectionLayer.and.returnValue(false);
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
+        [feature],
+        MAP_INDEX
+      );
+      expect(
+        mapService.removeFeaturesFromSelectionLayer
+      ).not.toHaveBeenCalled();
+    });
+
+    it("should remove feature from selection layer when toggling OFF in multi select mode", () => {
+      const feature = new Feature();
+
+      const select = createSelectMock("multi");
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select
+      });
+
+      const mapService = TestBed.inject(
+        GgcMapService
+      ) as jasmine.SpyObj<GgcMapService>;
+
+      mapService.isFeatureInSelectionLayer.and.returnValue(true);
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect(mapService.removeFeaturesFromSelectionLayer).toHaveBeenCalledWith(
+        [feature],
+        MAP_INDEX
+      );
+      expect(mapService.addFeaturesToSelectionLayer).not.toHaveBeenCalled();
+    });
   });
 });
