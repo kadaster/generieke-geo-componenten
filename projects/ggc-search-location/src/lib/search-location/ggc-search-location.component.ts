@@ -38,7 +38,6 @@ import {
 import { PdokLocationApiService } from "../service/pdok-location-api.service";
 import { SearchLocationOptions } from "../model/search-location-options.model";
 import { GgcSearchLocationConnectService } from "../service/connect.service";
-import { FormatType } from "@kadaster/ggc-map";
 
 const BTN_SUFFIX = "btn-form-icon";
 
@@ -95,6 +94,7 @@ export class GgcSearchLocationComponent implements OnInit {
   private hasInitialSearchterm = false;
   private result?: PdokLocationApiSearchFeature | SearchComponentEventTypes;
   private readonly searchTerm$ = new BehaviorSubject<string>("");
+  private formatTypeCache: any;
 
   /** De CSS-klasse voor de 'verwijder' knop in het zoekveld. */
   get classClearButton(): string {
@@ -464,6 +464,7 @@ export class GgcSearchLocationComponent implements OnInit {
     if (this.searchLocationOptions?.zoomToResult) {
       const mapService = (await this.connectService.getMapService()) as any;
       if (mapService) {
+        const formatType = await this.loadFormatType();
         if (Array.isArray(feature)) {
           mapService.zoomToGeometryWithZoomOptions(
             JSON.stringify({ type: "Point", coordinates: feature }),
@@ -471,7 +472,7 @@ export class GgcSearchLocationComponent implements OnInit {
               mapIndex: this.searchLocationOptions?.mapIndex,
               fitOptions: { padding: [50, 50, 50, 50] }
             },
-            FormatType.GEOJSON
+            formatType.GEOJSON
           );
         } else if (feature.bbox) {
           mapService.zoomToExtent(feature.bbox, {
@@ -485,7 +486,7 @@ export class GgcSearchLocationComponent implements OnInit {
               mapIndex: this.searchLocationOptions?.mapIndex,
               fitOptions: { padding: [50, 50, 50, 50] }
             },
-            FormatType.GEOJSON
+            formatType.GEOJSON
           );
         }
       }
@@ -502,11 +503,12 @@ export class GgcSearchLocationComponent implements OnInit {
     if (this.searchLocationOptions?.markResult) {
       const mapService = (await this.connectService.getMapService()) as any;
       if (mapService) {
+        const formatType = await this.loadFormatType();
         if (Array.isArray(feature)) {
           mapService.markFeature(
             JSON.stringify({ type: "Point", coordinates: feature }),
             this.searchLocationOptions?.mapIndex,
-            FormatType.GEOJSON
+            formatType.GEOJSON
           );
         } else if (feature?.properties?.href) {
           this.pdokLocationApiService
@@ -517,7 +519,7 @@ export class GgcSearchLocationComponent implements OnInit {
                 mapService.markFeature(
                   JSON.stringify(item.geometry),
                   this.searchLocationOptions?.mapIndex,
-                  FormatType.GEOJSON
+                  formatType.GEOJSON
                 );
               }
             });
@@ -640,5 +642,16 @@ export class GgcSearchLocationComponent implements OnInit {
 
     this.loadCurrentLocation = true;
     this.searchLocationService.getLocation(false);
+  }
+
+  private async loadFormatType() {
+    if (!this.formatTypeCache) {
+      const module = await import(
+        /* webpackMode: "eager" */ "@kadaster/ggc-map"
+      );
+      this.formatTypeCache = module.FormatType;
+    }
+
+    return this.formatTypeCache;
   }
 }

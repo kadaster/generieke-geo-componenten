@@ -2,7 +2,6 @@ import { fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { GgcSearchLocationService } from "./ggc-location.service";
 import { GgcSearchLocationConnectService } from "./connect.service";
 import { take } from "rxjs/operators";
-import { Coordinate } from "ol/coordinate";
 
 describe("GgcSearchLocationService", () => {
   let service: GgcSearchLocationService;
@@ -71,7 +70,7 @@ describe("GgcSearchLocationService", () => {
       mapServiceMock.getMap.and.returnValue(mapMock);
       mapServiceMock.getExtraLayer.and.returnValue(layerMock);
 
-      let result: Coordinate | undefined;
+      let result: Array<number> | undefined;
       service
         .getLocationEventsObservable()
         .pipe(take(1))

@@ -3,7 +3,19 @@
   "version": "1.0.0",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+    "@angular/core": "^21.0.0",
+    "@angular/cdk": "^21.0.0",
+    "@kadaster/ggc-map": "^1.0.0",
+    "ol": "^10.7.0",
+    "proj4": "^2.8.0"
+  },
+  "peerDependenciesMeta": {
+    "@kadaster/ggc-map": {
+      "optional": true
+    },
+    "ol": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@kadaster/ggc-models": "^1.0.0",
