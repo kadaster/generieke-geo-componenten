@@ -7,7 +7,6 @@ import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
   GgcSnapService,
-  MapComponentDrawTypes,
   SnapOptions
 } from "@kadaster/ggc-map";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -18,6 +17,7 @@ import { Segment } from "ol/interaction/Snap";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
+import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-snapping-adv",

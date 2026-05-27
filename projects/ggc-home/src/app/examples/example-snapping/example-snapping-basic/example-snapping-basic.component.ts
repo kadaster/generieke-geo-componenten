@@ -6,7 +6,6 @@ import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
   GgcSnapService,
-  MapComponentDrawTypes,
   SnapOptions
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
@@ -16,6 +15,7 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-snapping-basic",
