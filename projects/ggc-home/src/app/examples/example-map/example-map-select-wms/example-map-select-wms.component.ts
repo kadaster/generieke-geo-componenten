@@ -40,7 +40,7 @@ export class ExampleMapSelectWmsComponent
   protected mapIndex = "example-select";
 
   protected selectMode: "singleselect" | "multiselect" = "singleselect";
-  protected geselecteerdeGemeentes = signal<string>("geen");
+  protected geselecteerdeGemeentes = signal<string>("");
 
   private readonly selectService = inject(GgcSelectionService);
 
@@ -59,7 +59,7 @@ export class ExampleMapSelectWmsComponent
           (feature: any) => feature?.values_?.naam
         );
         this.geselecteerdeGemeentes.set(
-          gemeentes.length == 0 ? "geen" : gemeentes.join(", ")
+          gemeentes.length == 0 ? "" : gemeentes.join(", ")
         );
       }
     });

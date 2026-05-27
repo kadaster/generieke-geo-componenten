@@ -273,74 +273,78 @@ export class CoreSelectionService {
 
     const select = activeSelectInteraction.select;
     const mapIndex = activeSelectInteraction.mapIndex;
-
     const featureCollection = select.getFeatures();
+    let manualActionPerformed = false;
 
     switch (select.get(this.GGC_SELECT_MODE)) {
       case "multi": {
-        this.toggleFeatures(features, featureCollection, mapIndex, selectIndex);
+        manualActionPerformed =
+          manualActionPerformed ||
+          this.toggleFeatures(features, featureCollection, mapIndex);
         break;
       }
-      case "single":
-        featureCollection.clear();
-        for (const feature of features) {
-          featureCollection.push(feature);
-        }
-        this.ggcMapService.clearSelectionLayer(mapIndex);
-        this.ggcMapService.addFeaturesToSelectionLayer(features, mapIndex);
-        // Emit event manually, because push doesn't trigger select events
-        this.emitEvent(
-          selectIndex,
-          new MapComponentEvent(
-            MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
-            selectIndex,
-            CoreSelectionService.messageSelectionUpdated,
-            undefined,
-            featureCollection.getArray()
-          )
-        );
+      case "single": {
+        manualActionPerformed =
+          manualActionPerformed ||
+          this.replaceFeatures(features, featureCollection);
         break;
+      }
       default:
         return;
+    }
+    this.ggcMapService.clearSelectionLayer(mapIndex);
+    this.ggcMapService.addFeaturesToSelectionLayer(
+      featureCollection.getArray(),
+      mapIndex
+    );
+    if (manualActionPerformed) {
+      // Emit event manually, because manual action do not trigger select events automatically
+      this.emitEvent(
+        selectIndex,
+        new MapComponentEvent(
+          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
+          selectIndex,
+          CoreSelectionService.messageSelectionUpdated,
+          undefined,
+          featureCollection.getArray()
+        )
+      );
     }
   }
 
   private toggleFeatures(
     featuresToToggle: Feature<Geometry>[],
     featureCollection: Collection<Feature<Geometry>>,
-    mapIndex: string,
-    selectIndex: string
+    mapIndex: string
   ) {
+    let manualActionPerformed = false;
     for (const featureToggle of featuresToToggle) {
       if (
-        this.ggcMapService.isFeatureInSelectionLayer(featureToggle, mapIndex)
+        !this.ggcMapService.isFeatureInSelectionLayer(featureToggle, mapIndex)
       ) {
-        // The feature is in the active selection layer, so also a feature inside the selection interaction.
-        // Therefore, only the selection highlight has to be removed, as the selection interaction handles the click and the events
-        this.ggcMapService.removeFeaturesFromSelectionLayer(
-          [featureToggle],
-          mapIndex
-        );
-      } else {
-        // Set the select highlighting and push the feature to the collection manually, because initially WMS/WMTS layers do not have features
-        // An event should manually be sent, as we manually push the new feature
-        this.ggcMapService.addFeaturesToSelectionLayer(
-          [featureToggle],
-          mapIndex
-        );
+        /**
+         * If a feature is inside the selection layer, it means that it is already selected.
+         * The select interaction toggles the feature in this case automatically.
+         * If a feature is not inside the selection layer, it should be manually added to the feature collection first.
+         */
         featureCollection.push(featureToggle);
-        this.emitEvent(
-          selectIndex,
-          new MapComponentEvent(
-            MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
-            selectIndex,
-            CoreSelectionService.messageSelectionUpdated,
-            undefined,
-            featureCollection.getArray()
-          )
-        );
+        manualActionPerformed = true;
       }
     }
+    return manualActionPerformed;
+  }
+
+  private replaceFeatures(
+    newFeatures: Feature<Geometry>[],
+    featureCollection: Collection<Feature<Geometry>>
+  ) {
+    let manualActionPerformed = false;
+    featureCollection.clear();
+    for (const feature of newFeatures) {
+      featureCollection.push(feature);
+      manualActionPerformed = true;
+    }
+    return manualActionPerformed;
   }
 
   private getAllActiveSelectIndicesOnMapIndex(mapIndex: string): string[] {
