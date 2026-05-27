@@ -1,4 +1,9 @@
-import type { OnInit, QueryList } from "@angular/core";
+import type {
+  OnChanges,
+  OnInit,
+  QueryList,
+  SimpleChanges
+} from "@angular/core";
 import {
   AfterContentInit,
   Component,
@@ -25,7 +30,11 @@ import {
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-info-display.component";
 import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
-import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 /**
  * Interne representatie van een feature-collectie per kaartlaag,
@@ -63,7 +72,9 @@ type FeatureCollectionForLayer = {
   styleUrls: ["./ggc-feature-info.component.css"],
   imports: [FeatureInfoDisplayComponent]
 })
-export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
+export class GgcFeatureInfoComponent
+  implements AfterContentInit, OnInit, OnChanges
+{
   /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
 
@@ -125,16 +136,19 @@ export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
   protected currentFeatureIndex = 0;
   protected currentFeature: object | null;
   protected emptyInfo = "Geen informatie beschikbaar";
-  private _featureInfoCollection: FeatureInfoCollection | undefined;
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
-
   @ContentChildren(ValueTemplateDirective)
   private readonly templates: QueryList<ValueTemplateDirective>;
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
+  private _featureInfoCollection: FeatureInfoCollection | undefined;
+
+  get featureInfoCollection(): FeatureInfoCollection | undefined {
+    return this._featureInfoCollection;
+  }
 
   /**
    * Verzameling van features en metadata die weergegeven moeten worden.
@@ -144,10 +158,6 @@ export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
   set featureInfoCollection(value: FeatureInfoCollection | undefined) {
     this._featureInfoCollection = value;
     this.handleFeatureInfoCollectionChange();
-  }
-
-  get featureInfoCollection(): FeatureInfoCollection | undefined {
-    return this._featureInfoCollection;
   }
 
   ngOnInit() {
@@ -185,6 +195,20 @@ export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
         }
       });
     });
+  }
+
+  /**
+   * Reageert op wijzigingen in de input-properties.
+   * Filtert en sorteert attributen via `FeatureInfoConfigService`.
+   * Stuurt een event bij selectie van een object.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes.featureInfoCollection ||
+      changes.customAttributeNamesAndValues
+    ) {
+      this.handleFeatureInfoCollectionChange();
+    }
   }
 
   /** Navigeer naar de vorige feature. */
@@ -226,25 +250,6 @@ export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
   }
 
   /**
-   * Zet de huidige feature en verstuur een event.
-   * Wordt aangeroepen bij navigatie of initiële selectie.
-   */
-  private setCurrentFeature(): void {
-    this.currentFeature = this.displayFeaturesProperties
-      ? this.displayFeaturesProperties[this.currentFeatureIndex]
-      : null;
-    const featureForEvent = this.featureInfoCollection
-      ? this.featureInfoCollection.features[this.currentFeatureIndex]
-      : undefined;
-    const featureInfoComponentEvent = new FeatureInfoComponentEvent(
-      FeatureInfoComponentEventType.SELECTEDOBJECT,
-      "Het huidige weergegeven object.",
-      featureForEvent
-    );
-    this.events.next(featureInfoComponentEvent);
-  }
-
-  /**
    * Haal de properties uit een lijst van features.
    * @param features Een lijst van OpenLayers features of objecten.
    * @returns Een lijst van objecten met properties.
@@ -273,6 +278,25 @@ export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
       this.displayFeaturesProperties !== undefined &&
       this.displayFeaturesProperties.length === 1
     );
+  }
+
+  /**
+   * Zet de huidige feature en verstuur een event.
+   * Wordt aangeroepen bij navigatie of initiële selectie.
+   */
+  private setCurrentFeature(): void {
+    this.currentFeature = this.displayFeaturesProperties
+      ? this.displayFeaturesProperties[this.currentFeatureIndex]
+      : null;
+    const featureForEvent = this.featureInfoCollection
+      ? this.featureInfoCollection.features[this.currentFeatureIndex]
+      : undefined;
+    const featureInfoComponentEvent = new FeatureInfoComponentEvent(
+      FeatureInfoComponentEventType.SELECTEDOBJECT,
+      "Het huidige weergegeven object.",
+      featureForEvent
+    );
+    this.events.next(featureInfoComponentEvent);
   }
 
   /**
@@ -328,29 +352,34 @@ export class GgcFeatureInfoComponent implements AfterContentInit, OnInit {
       );
 
     mapSelectionEvent.subscribe((event: MapComponentEvent) => {
-      const collections: FeatureCollectionForLayer[] =
-        event.value.featureCollectionForLayers;
+      console.log(event);
+      if (
+        event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+      ) {
+        const collections: FeatureCollectionForLayer[] =
+          event.value.featureCollectionForLayers;
 
-      if (!collections || collections.length === 0) {
-        this.featureInfoCollection = undefined;
-        return;
-      }
+        if (!collections || collections.length === 0) {
+          this.featureInfoCollection = undefined;
+          return;
+        }
 
-      const allFeatures: object[] = [];
-      const layerNames: string[] = [];
+        const allFeatures: object[] = [];
+        const layerNames: string[] = [];
 
-      collections.forEach((collection: FeatureCollectionForLayer) => {
-        layerNames.push(collection.layerName);
+        collections.forEach((collection: FeatureCollectionForLayer) => {
+          layerNames.push(collection.layerName);
 
-        collection.features.forEach((feature) => {
-          allFeatures.push(feature);
+          collection.features.forEach((feature) => {
+            allFeatures.push(feature);
+          });
         });
-      });
 
-      this.featureInfoCollection = new FeatureInfoCollection(
-        layerNames.join(", "),
-        allFeatures
-      );
+        this.featureInfoCollection = new FeatureInfoCollection(
+          layerNames.join(", "),
+          allFeatures
+        );
+      }
     });
   }
 }
