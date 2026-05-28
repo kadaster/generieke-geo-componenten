@@ -1,0 +1,68 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathKaartConfig]="kaartConfig"
+  ]
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld word en 3D-kaart getoond met behulp van het
+      GGC-cesium-viewer component.
+    </p>
+    <p>Met de GGC-cesium-controls kun je de 3D-kaart bedienen.</p>
+    <p>
+      Daarnaast is het mogelijk om het Cesium logo te verbergen.
+      <i>(Deze staat default aan.)</i>
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row" style="height: 100vh">
+      <div class="col-3 col-lg-2">
+        <div class="cesium-controls">
+          <span>Cesium controls</span>
+          <br />
+          <ggc-cesium-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-cesium-controls>
+        </div>
+        <button (click)="toggleHideLogo()">
+          {{ hideLogo ? "Toon logo" : "Verberg logo" }}
+        </button>
+      </div>
+      <div class="col-9 col-lg-10 p-0">
+        <div class="map-container">
+          <ggc-cesium-viewer
+            [viewerOptions]="viewerOptions"
+            [cameraOptions]="cameraOptions"
+            [hideLogo]="hideLogo"
+            (ready)="onCesiumReady()"
+            [webServices]="webService"
+          ></ggc-cesium-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DOCS:END functionality -->
+</app-example-format>

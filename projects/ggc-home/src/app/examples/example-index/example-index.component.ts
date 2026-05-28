@@ -36,6 +36,7 @@ import { Tags } from "../tags.enum";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
+import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
 
 interface GroupedCards {
   theme: string;
@@ -94,13 +95,14 @@ export class ExampleIndexComponent {
     new ExampleDrawCenterDrawComponent().componentInfo,
     new ExampleMeasure().componentInfo,
     new ExampleMeasureOwnStyleLabel().componentInfo,
-    new ExampleMapZoomScalePositionComponent().componentInfo
+    new ExampleMapZoomScalePositionComponent().componentInfo,
+    new Example3dBasicComponent().componentInfo
   ];
 
-  private selectedComponentsKey = "selectedComponents";
-  private selectedTagsKey = "selectedTags";
-  private selectedThemesKey = "selectedThemes";
-  private searchTermKey = "searchTerm";
+  private readonly selectedComponentsKey = "selectedComponents";
+  private readonly selectedTagsKey = "selectedTags";
+  private readonly selectedThemesKey = "selectedThemes";
+  private readonly searchTermKey = "searchTerm";
 
   constructor() {
     const storedSelectedThemes = sessionStorage.getItem(this.selectedThemesKey);

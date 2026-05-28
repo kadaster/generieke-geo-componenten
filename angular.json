@@ -143,6 +143,21 @@
                 "glob": "**/*",
                 "input": "projects/ggc-home/src/app",
                 "output": "/code/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@cesium/engine/Source/Assets",
+                "output": "/assets/cesium/Assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@cesium/engine/Build/Workers",
+                "output": "/assets/cesium/Workers"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@cesium/engine/Source/Widget",
+                "output": "/assets/cesium/Widget"
               }
             ],
             "sourceMap": {

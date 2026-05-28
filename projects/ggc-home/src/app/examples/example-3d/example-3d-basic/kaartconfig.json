@@ -1,0 +1,40 @@
+[
+  {
+    "type": "3Dtiles",
+    "url": "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/gebouwen/3dtiles",
+    "layers": [
+      {
+        "title": "3D gebouwen",
+        "layerId": "3d-buildings",
+        "legendUrl": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "type": "3Dtiles",
+    "url": "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/terreinen/3dtiles",
+    "layers": [
+      {
+        "title": "3D terrein",
+        "layerId": "3d-terrain",
+        "legendUrl": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "type": "wmts",
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "layers": [
+      {
+        "title": "Achtergrondkaart Grijs",
+        "layerId": "wmts-brt-grijs",
+        "layerName": "grijs",
+        "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/legend.png"
+      }
+    ]
+  }
+]
+
+
