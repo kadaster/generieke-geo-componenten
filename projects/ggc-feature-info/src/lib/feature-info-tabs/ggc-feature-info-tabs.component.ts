@@ -19,6 +19,13 @@ import {
 } from "../model/feature-info-component-event";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
+import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
+import { FeatureInfoEventService } from "../service/feature-info-event.service";
 
 @Component({
   selector: "ggc-feature-info-tabs",
@@ -29,6 +36,8 @@ import { NgClass, NgTemplateOutlet } from "@angular/common";
 export class GgcFeatureInfoTabsComponent
   implements OnInit, OnChanges, AfterContentInit
 {
+  /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
+  @Input() mapIndex: string = DEFAULT_MAPINDEX;
   @Input() featureInfoCollectionArray: FeatureInfoCollection[];
   @Input() showEmptyTabs = false; // default = false, lege tabbladen worden default niet getoond
   @Input() ariaLabelledBy?: string; // if not provided, uses ariaLabel
@@ -39,12 +48,15 @@ export class GgcFeatureInfoTabsComponent
 
   protected featureInfoCollectionArrayInternal: FeatureInfoCollection[];
   protected selectedTab: string;
-
+  private readonly featureInfoMapConnectService = inject(
+    FeatureInfoMapConnectService
+  );
   @ContentChild(ValueTemplateDirective, { descendants: false })
   private tabTemplate: ValueTemplateDirective;
   private selectedTabFeatureInfo: FeatureInfoCollection | undefined;
   private lastSelectedTabOnClick: string;
   private featureInfoConfigService = inject(GgcFeatureInfoConfigService);
+  private eventService = inject(FeatureInfoEventService);
 
   ngAfterContentInit(): void {
     if (this.tabTemplate) {
@@ -53,7 +65,8 @@ export class GgcFeatureInfoTabsComponent
   }
 
   ngOnInit() {
-    this.onDataUpdate();
+    void this.subscribeToMapSelection(this.mapIndex);
+    //this.onDataUpdate();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -68,20 +81,22 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private onDataUpdate(): void {
+    console.log("UPDATE", this.featureInfoCollectionArray);
     // create copy of featureInfoCollectionArray and check empty tabs
     this.featureInfoCollectionArrayInternal = !this.featureInfoCollectionArray
       ? []
       : [...this.featureInfoCollectionArray];
     this.checkShowEmptyTabs();
-
+    console.log(this.featureInfoCollectionArrayInternal);
     if (this.featureInfoCollectionArrayInternal.length === 0) {
-      this.events.emit(
-        new FeatureInfoComponentEvent(
-          FeatureInfoComponentEventType.SELECTEDTAB,
-          "Het huidige weergegeven tabblad.",
-          undefined
-        )
+      const event = new FeatureInfoComponentEvent(
+        FeatureInfoComponentEventType.SELECTEDTAB,
+        "Het huidige weergegeven tabblad.",
+        undefined
       );
+
+      this.eventService.emit(event);
+      this.events.emit(event);
     } else {
       // this.featureInfoCollectionArrayInternal.length > 0
       this.featureInfoConfigService.sortTabs(
@@ -92,6 +107,7 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private setActiveTab(layerName: string): void {
+    console.log("setActiveTab", layerName);
     let idx = this.featureInfoCollectionArrayInternal.findIndex(
       (tabFeatureInfo) => tabFeatureInfo.layerName === layerName
     );
@@ -100,13 +116,13 @@ export class GgcFeatureInfoTabsComponent
     }
     this.selectedTabFeatureInfo = this.featureInfoCollectionArrayInternal[idx];
     this.selectedTab = this.selectedTabFeatureInfo.layerName;
-    this.events.emit(
-      new FeatureInfoComponentEvent(
-        FeatureInfoComponentEventType.SELECTEDTAB,
-        "Het huidige weergegeven tabblad.",
-        this.selectedTabFeatureInfo
-      )
+    const event = new FeatureInfoComponentEvent(
+      FeatureInfoComponentEventType.SELECTEDTAB,
+      "Het huidige weergegeven tabblad.",
+      this.selectedTabFeatureInfo
     );
+    this.eventService.emit(event);
+    this.events.emit(event);
   }
 
   private checkShowEmptyTabs(): void {
@@ -118,5 +134,23 @@ export class GgcFeatureInfoTabsComponent
           }
         );
     }
+  }
+
+  private async subscribeToMapSelection(mapIndex: string) {
+    const mapSelectionEvent =
+      await this.featureInfoMapConnectService.getObservableForMapSelection(
+        mapIndex
+      );
+    console.log("SUBSCRIBE");
+    mapSelectionEvent.subscribe((event: MapComponentEvent) => {
+      if (
+        event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+      ) {
+        this.featureInfoCollectionArray =
+          event.value.featureCollectionForLayers;
+        this.onDataUpdate();
+        console.log(event);
+      }
+    });
   }
 }

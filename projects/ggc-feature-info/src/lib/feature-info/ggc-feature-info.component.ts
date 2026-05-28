@@ -1,9 +1,4 @@
-import type {
-  OnChanges,
-  OnInit,
-  QueryList,
-  SimpleChanges
-} from "@angular/core";
+import { ElementRef, OnInit, QueryList } from "@angular/core";
 import {
   AfterContentInit,
   Component,
@@ -12,7 +7,8 @@ import {
   inject,
   Input,
   Output,
-  TemplateRef
+  TemplateRef,
+  AfterViewInit
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -35,6 +31,8 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import { Subscription } from "rxjs";
+import { FeatureInfoEventService } from "../service/feature-info-event.service";
 
 /**
  * Interne representatie van een feature-collectie per kaartlaag,
@@ -73,7 +71,7 @@ type FeatureCollectionForLayer = {
   imports: [FeatureInfoDisplayComponent]
 })
 export class GgcFeatureInfoComponent
-  implements AfterContentInit, OnInit, OnChanges
+  implements AfterContentInit, OnInit, AfterViewInit
 {
   /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
@@ -120,13 +118,11 @@ export class GgcFeatureInfoComponent
    * Default: `false`.
    */
   @Input() hideEmptyFields = false;
-
   /**
    * EventEmitter voor het versturen van component-gerelateerde events.
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
    */
   @Output() events = new EventEmitter<FeatureInfoComponentEvent>();
-
   protected customHeaderValueTemplates: Map<string, TemplateRef<any> | null> =
     new Map();
   protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
@@ -139,11 +135,20 @@ export class GgcFeatureInfoComponent
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
+  private hasTabs = false;
+  private readonly subscription = new Subscription();
+  private eventService = inject(FeatureInfoEventService);
   @ContentChildren(ValueTemplateDirective)
   private readonly templates: QueryList<ValueTemplateDirective>;
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
+  /**
+   * Referentie naar het host element van dit component.
+   * Wordt gebruikt om in de DOM te zoeken naar GGC webcomponents.
+   */
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   private _featureInfoCollection: FeatureInfoCollection | undefined;
 
   get featureInfoCollection(): FeatureInfoCollection | undefined {
@@ -160,8 +165,42 @@ export class GgcFeatureInfoComponent
     this.handleFeatureInfoCollectionChange();
   }
 
+  /**
+   * FeatureInfoEvent afkomstig van ggc-feature-info-tabs.
+   */
+  @Input()
+  set featureInfoEvent(event: FeatureInfoComponentEvent | undefined) {
+    if (!event) {
+      return;
+    }
+
+    this.handleFeatureInfoEvent(event);
+  }
+
   ngOnInit() {
     void this.subscribeToMapSelection(this.mapIndex);
+
+    this.subscription.add(
+      this.eventService.events$.subscribe((event) =>
+        this.handleFeatureInfoEvent(event)
+      )
+    );
+  }
+
+  ngAfterViewInit(): void {
+    console.log("afterviewinit");
+
+    const featureInfoTabs = this.elementRef.nativeElement.closest(
+      "ggc-feature-info-tabs"
+    );
+    if (featureInfoTabs) {
+      console.log(featureInfoTabs);
+      this.hasTabs = true;
+      console.log("ggc-feature-info-tabs is aanwezig in de DOM");
+    } else {
+      this.hasTabs = false;
+      console.log("ggc-feature-info-tabs is NIET aanwezig in de DOM");
+    }
   }
 
   /**
@@ -197,11 +236,13 @@ export class GgcFeatureInfoComponent
     });
   }
 
-  /**
+  /*
+ niet meer nodig wordt afgehandeld vanuit de set??
+ /!**
    * Reageert op wijzigingen in de input-properties.
    * Filtert en sorteert attributen via `FeatureInfoConfigService`.
    * Stuurt een event bij selectie van een object.
-   */
+   *!/
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes.featureInfoCollection ||
@@ -209,7 +250,7 @@ export class GgcFeatureInfoComponent
     ) {
       this.handleFeatureInfoCollectionChange();
     }
-  }
+  }*/
 
   /** Navigeer naar de vorige feature. */
   goToPreviousFeature(): void {
@@ -278,6 +319,20 @@ export class GgcFeatureInfoComponent
       this.displayFeaturesProperties !== undefined &&
       this.displayFeaturesProperties.length === 1
     );
+  }
+
+  /**
+   * Verwerkt het FeatureInfoEvent.
+   *
+   * @param event Het ontvangen FeatureInfoEvent
+   */
+  protected handleFeatureInfoEvent(event: FeatureInfoComponentEvent): void {
+    // bijv. tab gewijzigd, data vernieuwen, etc.
+    if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
+      this.featureInfoCollection = event.value;
+    } else if (event.type === FeatureInfoComponentEventType.SELECTEDOBJECT) {
+      // TODO toon selectie
+    }
   }
 
   /**
@@ -350,35 +405,39 @@ export class GgcFeatureInfoComponent
       await this.featureInfoMapConnectService.getObservableForMapSelection(
         mapIndex
       );
-
     mapSelectionEvent.subscribe((event: MapComponentEvent) => {
       console.log(event);
       if (
         event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
       ) {
-        const collections: FeatureCollectionForLayer[] =
-          event.value.featureCollectionForLayers;
+        console.log(this.hasTabs);
+        // Wanneer FeatureInfoTabs aanwezig is dan wordt de
+        // featureInfoCollection gezet via de tabs
+        if (!this.hasTabs) {
+          const collections: FeatureCollectionForLayer[] =
+            event.value.featureCollectionForLayers;
 
-        if (!collections || collections.length === 0) {
-          this.featureInfoCollection = undefined;
-          return;
-        }
+          if (!collections || collections.length === 0) {
+            this.featureInfoCollection = undefined;
+            return;
+          }
 
-        const allFeatures: object[] = [];
-        const layerNames: string[] = [];
+          const allFeatures: object[] = [];
+          const layerNames: string[] = [];
 
-        collections.forEach((collection: FeatureCollectionForLayer) => {
-          layerNames.push(collection.layerName);
+          collections.forEach((collection: FeatureCollectionForLayer) => {
+            layerNames.push(collection.layerName);
 
-          collection.features.forEach((feature) => {
-            allFeatures.push(feature);
+            collection.features.forEach((feature) => {
+              allFeatures.push(feature);
+            });
           });
-        });
 
-        this.featureInfoCollection = new FeatureInfoCollection(
-          layerNames.join(", "),
-          allFeatures
-        );
+          this.featureInfoCollection = new FeatureInfoCollection(
+            layerNames.join(", "),
+            allFeatures
+          );
+        }
       }
     });
   }

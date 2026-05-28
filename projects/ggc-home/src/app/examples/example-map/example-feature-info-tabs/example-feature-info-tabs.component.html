@@ -1,0 +1,85 @@
+<app-example-format
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>Introductie</p>
+  </div>
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-md-5 col-sm-5">
+        <div class="feature-info-container">
+          <b>Feature Info</b>
+          <ggc-feature-info-tabs [showEmptyTabs]="true">
+            <ggc-feature-info
+              [featureInfoDisplayType]="featureInfoDisplayType"
+              [hidePagerWithOneFeature]="hidePagerWithOneFeature"
+              [showEmptyMessage]="showEmptyMessage"
+            >
+            </ggc-feature-info
+          ></ggc-feature-info-tabs>
+        </div>
+      </div>
+      <div class="col-xl-6 col-md-4 col-sm4">
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+      <div class="col-xl-3 col-md-3 col-sm-3">
+        <div class="row options-toggle">
+          <h6 id="extraOptionsLabel">Extra opties</h6>
+          <label class="switch">
+            <input
+              (change)="goToPage('/feature-info-basic')"
+              aria-labelledby="extraOptionsLabel"
+              checked
+              type="checkbox"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <br />
+        <div>
+          <label>
+            <input [(ngModel)]="showEmptyMessage" type="checkbox" />
+            Toon melding waneer geen feature-info is gevonden
+          </label>
+        </div>
+        <br />
+        <div>
+          <label>
+            <input [(ngModel)]="hidePagerWithOneFeature" type="checkbox" />
+            Verberg paginering
+          </label>
+        </div>
+        <br />
+        <div>
+          <label class="switch">
+            <input
+              (change)="toggleFeatureInfoDisplayType()"
+              checked
+              type="checkbox"
+            />
+            <span class="slider round"></span>
+          </label>
+          Wissel tussen Lijst en Tabel weergave
+        </div>
+      </div>
+    </div>
+  </div>
+</app-example-format>

@@ -41,6 +41,7 @@ import { ExampleDrawTracingComponent } from "./examples/example-draw/example-dra
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
 import { ExampleFeatureInfoBasicComponent } from "./examples/example-map/example-feature-info-basic/example-feature-info-basic.component";
+import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-feature-info-tabs/example-feature-info-tabs.component";
 
 export const routes: Routes = [
   {
@@ -292,5 +293,11 @@ export const routes: Routes = [
     title: "Feature Info tonen | GGC-Home",
     component: ExampleFeatureInfoBasicComponent,
     data: { label: "example-feature-info-basic" }
+  },
+  {
+    path: "feature-info-tabs",
+    title: "Feature Info tonen in Tabs | GGC-Home",
+    component: ExampleFeatureInfoTabsComponent,
+    data: { label: "example-feature-info-tabs" }
   }
 ];

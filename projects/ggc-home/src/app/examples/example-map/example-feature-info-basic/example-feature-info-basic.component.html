@@ -1,6 +1,6 @@
 <app-example-format
-  [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
   [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
@@ -21,24 +21,24 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-xl-4 col-md-5 col-sm-6">
+      <div class="col-xl-3 col-md-4 col-sm-5">
         <div class="feature-info-container">
           <b>Feature Info</b>
           <ggc-feature-info></ggc-feature-info>
         </div>
       </div>
-      <div class="col-xl-8 col-md-7 col-sm-6">
+      <div class="col-xl-7 col-md-6 col-sm-5">
         <div class="map-container">
           <ggc-map [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->
-      <div class="col-xl-2 col-md-2 col-sm-12">
+      <div class="col-xl-2 col-md-2 col-sm-2">
         <div class="row options-toggle">
           <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
             <input
-              (change)="goToPage('/legend-advanced')"
+              (change)="goToPage('/feature-info-tabs')"
               aria-labelledby="extraOptionsLabel"
               type="checkbox"
             />
