@@ -6,12 +6,12 @@ import {
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
-import { DEFAULT_MAPINDEX } from "../../../../../../ggc-models/src/lib/constants/constants";
+import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import { Webservice } from "../../../../../../ggc-cesium/src/lib/model/interfaces";
+import { Webservice } from "@kadaster/ggc-cesium";
 
 @Component({
   selector: "app-example-search-location",
