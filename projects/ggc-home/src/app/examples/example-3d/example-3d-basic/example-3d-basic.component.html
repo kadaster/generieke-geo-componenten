@@ -21,21 +21,26 @@
     </p>
     <p>
       In dit voorbeeld word en 3D-kaart getoond met behulp van het
-      GGC-cesium-viewer component.
+      GGC-cesium-viewer component. Deze maakt gebruik van de
+      <a href="https://cesium.com">Cesium Library</a>.
     </p>
     <p>Met de GGC-cesium-controls kun je de 3D-kaart bedienen.</p>
     <p>
-      Daarnaast is het mogelijk om het Cesium logo te verbergen.
-      <i>(Deze staat default aan.)</i>
+      Daarnaast is het mogelijk om met <code>[hideLogo]="true"</code> het Cesium
+      logo te verbergen.
+      <i
+        >(<code>[hideLogo]</code> is optioneel. Default is het logo
+        zichtbaar.)</i
+      >
     </p>
   </div>
 
   <div page-functionality>
     <!-- DOCS:START functionality -->
-    <div class="row" style="height: 100vh">
-      <div class="col-3 col-lg-2">
+    <div class="row">
+      <div class="col-xl-3 col-md-3 col-sm-12">
         <div class="cesium-controls">
-          <span>Cesium controls</span>
+          <span><b>Cesium controls</b></span>
           <br />
           <ggc-cesium-controls
             [downIcon]="'fas fa-chevron-down'"
@@ -47,11 +52,11 @@
             [defaultCameraPosition]="'far fa-eye'"
           ></ggc-cesium-controls>
         </div>
-        <button (click)="toggleHideLogo()">
+        <button class="hide-logo-button" (click)="toggleHideLogo()">
           {{ hideLogo ? "Toon logo" : "Verberg logo" }}
         </button>
       </div>
-      <div class="col-9 col-lg-10 p-0">
+      <div class="col-xl-7 col-md-6 col-sm-12">
         <div class="map-container">
           <ggc-cesium-viewer
             [viewerOptions]="viewerOptions"

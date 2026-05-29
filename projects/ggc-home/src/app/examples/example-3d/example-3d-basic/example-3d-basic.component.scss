@@ -1,4 +1,5 @@
 ggc-cesium-controls::ng-deep {
+  padding-right: 100px !important;
   .gc-controls {
     .gc-controls-nav {
       .cesium-control {
@@ -22,3 +23,11 @@ ggc-cesium-controls::ng-deep {
   }
 }
 
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.hide-logo-button {
+  margin-top: 20px;
+}
