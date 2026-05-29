@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import {
-  GgcLayerService,
   GgcMapComponent,
   GgcMapEventsService,
   GgcMapService,
@@ -55,23 +54,17 @@ export class ExampleDatasetTreeLayerEnabledCallback
   mapIndex = "datasetTreeExample";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
-  gemeentesEnabled = false;
+  gemeentesEnabled = true;
   protected resolution: number | undefined;
   protected dataset: any;
   private readonly connectService = inject(DatasetTreeMapConnectService);
-
-  private readonly layerService = inject(GgcLayerService);
   private readonly mapEventsService = inject(GgcMapEventsService);
   private readonly mapService = inject(GgcMapService);
 
   layerEnabledCallback: LayerEnabledCallback = ({ layer, isEnabled }) => {
+    // Disable de checkbox voor de gemeentlaag.
     if (layer.layerId === "gemeenten") {
-      if (
-        this.layerService.isVisible("gemeenten", this.mapIndex) &&
-        !this.gemeentesEnabled
-      ) {
-        this.layerService.removeLayer(this.mapIndex, "gemeenten");
-      }
+      /* Eventuele extra business logica wanneer een checkbox voor deze laag gedisabled meoet worden.*/
       return this.gemeentesEnabled;
     }
     return isEnabled;
