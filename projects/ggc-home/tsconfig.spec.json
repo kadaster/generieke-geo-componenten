@@ -1,10 +1,10 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
-    "types": ["vitest/globals"]
+    "types": ["jasmine", "node"],
+    "lib": ["dom", "es2018", "esNext"]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
+  "files": ["src/test.ts"],
+  "include": ["**/*.spec.ts", "**/*.d.ts"]
 }

@@ -12,20 +12,12 @@ import { AdditionalSuggestion } from "../model/additional-suggestion.model";
   providedIn: "root"
 })
 export class GgcSearchRdService {
-  /**
-   * Analyseert een zoekterm om te bepalen of het een geldig RD-coördinatenpaar is.
-   *
-   * De methode voert opschoning uit op de input (zoals het verwijderen van prefixen en het
-   * normaliseren van scheidingstekens) voordat de validatie plaatsvindt.
-   *
-   * @param input - De tekst die gecontroleerd moet worden op coördinaten.
-   * @returns Een Observable met een {@link AdditionalSuggestion} als een geldig paar is gevonden, anders een lege array.
-   */
   search(input: string): Observable<AdditionalSuggestion[]> {
     const cleaned = (input ?? "").replace(/^RD-coördinaten:\s*/i, "").trim();
-    const match = cleaned.match(
-      /^\s*(\d{1,6}(?:[.,]\d{1,3})?)\s*(?:[;,]|\s)\s*(\d{1,6}(?:[.,]\d{1,3})?)\s*$/
-    );
+    const match =
+      /^\s*(\d{1,6}(?:[.,]\d{1,3})?)\D+(\d{1,6}(?:[.,]\d{1,3})?)\s*$/.exec(
+        cleaned
+      );
 
     if (!match) return of([]);
 

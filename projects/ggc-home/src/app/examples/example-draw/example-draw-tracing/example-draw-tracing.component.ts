@@ -8,12 +8,11 @@ import {
   GeojsonLayerOptions,
   GgcDrawService,
   GgcMapComponent,
-  MapComponentDrawTypes,
   Webservice
 } from "@kadaster/ggc-map";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import { Webservice2DType } from "@kadaster/ggc-models";
+import { MapComponentDrawTypes, Webservice2DType } from "@kadaster/ggc-models";
 import Fill from "ol/style/Fill";
 
 @Component({

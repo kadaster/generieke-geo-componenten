@@ -7,10 +7,10 @@ import {
   LayerChangedEvent,
   ViewerType,
   Webservice2DType,
-  Webservice3DType
+  Webservice3DType,
+  DEFAULT_MAPINDEX
 } from "@kadaster/ggc-models";
 import { filter } from "rxjs/operators";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 /**
  * De dataset-tree gebruikt deze service om met de kaarten te communiceren en de benodigde
@@ -27,16 +27,13 @@ export class DatasetTreeMapConnectService {
    * Interne event-bus voor custom triggers.
    */
   private readonly triggerSubject = new Subject<string>();
+  private layerServicePromise?: Promise<any>;
 
-  private ggcOLLayerService?: any;
-
-  constructor() {
-    this.loadServices();
-  }
-
-  private async loadServices() {
-    this.ggcOLLayerService =
-      (await this.connectService.getGgcOLLayerService()) as any;
+  private getGgcOLLayerService(): Promise<any> {
+    if (!this.layerServicePromise) {
+      this.layerServicePromise = this.connectService.getGgcOLLayerService();
+    }
+    return this.layerServicePromise;
   }
 
   /**
@@ -84,7 +81,7 @@ export class DatasetTreeMapConnectService {
           )
         );
     }
-    return this.ggcOLLayerService?.getLayerChangedObservable();
+    return (await this.getGgcOLLayerService()).getLayerChangedObservable();
   }
 
   /**
@@ -121,7 +118,7 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).getTitle(layerId);
     }
-    return this.ggcOLLayerService?.getTitle(layerId, mapIndex);
+    return (await this.getGgcOLLayerService()).getTitle(layerId, mapIndex);
   }
 
   /**
@@ -140,7 +137,7 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).isVisible(layerId);
     }
-    return this.ggcOLLayerService?.isVisible(layerId, mapIndex);
+    return (await this.getGgcOLLayerService()).isVisible(layerId, mapIndex);
   }
 
   /**
@@ -160,7 +157,10 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).toggleVisibility(layerId);
     }
-    return this.ggcOLLayerService?.toggleVisibility(layerId, mapIndex);
+    return (await this.getGgcOLLayerService()).toggleVisibility(
+      layerId,
+      mapIndex
+    );
   }
 
   /**
@@ -175,7 +175,9 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).getEnabled(layerId);
     }
-    return this.ggcOLLayerService?.getEnabled(layerId, mapIndex) ?? false;
+    return (
+      (await this.getGgcOLLayerService()).getEnabled(layerId, mapIndex) ?? false
+    );
   }
 
   /**
@@ -194,6 +196,9 @@ export class DatasetTreeMapConnectService {
         (await this.connectService.getGgcCesiumSharedLayerService()) as any
       ).getTypeOfLayer(layerId);
     }
-    return this.ggcOLLayerService?.getTypeOfLayer(layerId, mapIndex);
+    return (await this.getGgcOLLayerService()).getTypeOfLayer(
+      layerId,
+      mapIndex
+    );
   }
 }

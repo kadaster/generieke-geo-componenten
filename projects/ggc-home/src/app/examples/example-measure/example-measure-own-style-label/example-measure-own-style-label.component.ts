@@ -1,17 +1,13 @@
 import { Component, inject, model, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import {
-  GgcDrawService,
-  GgcMapComponent,
-  MapComponentDrawTypes,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Fill, Style, Text } from "ol/style";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-measure-own-style-label",

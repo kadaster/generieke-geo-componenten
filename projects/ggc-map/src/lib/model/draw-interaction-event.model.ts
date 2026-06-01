@@ -1,5 +1,6 @@
 import { DrawEvent } from "ol/interaction/Draw";
 import Style, { StyleFunction, StyleLike } from "ol/style/Style";
+import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 /**
  * Event types voor tekeninteracties.
@@ -11,22 +12,6 @@ export enum DrawInteractionEventTypes {
    * toegepast, worden validators gecontroleerd en wordt de berekende
    * meting als property op de feature gezet. */
   DRAWSTART = "drawstart"
-}
-
-/**
- * Ondersteunde tekentypen voor de kaartcomponent.
- */
-export enum MapComponentDrawTypes {
-  /** Rechthoek. */
-  RECTANGLE = "rectangle",
-  /** Polygoon. */
-  POLYGON = "polygon",
-  /** Lijn. */
-  LINESTRING = "linestring",
-  /** Punt. */
-  POINT = "point",
-  /** Cirkel. */
-  CIRCLE = "circle"
 }
 
 /**

@@ -1,5 +1,11 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import {
+  ComponentFixture,
+  fakeAsync,
+  flushMicrotasks,
+  TestBed,
+  waitForAsync
+} from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcToolbarItemDrawComponent } from "./ggc-toolbar-item-draw.component";
 import SpyObj = jasmine.SpyObj;
@@ -10,7 +16,6 @@ import {
   ToolbarItemDrawType
 } from "../../event/toolbar-item-draw-event";
 import { GgcToolbarConnectService } from "../../service/connect.service";
-import { MapComponentDrawTypes } from "@kadaster/ggc-map";
 
 describe("ToolbarItemDrawComponent", () => {
   let component: GgcToolbarItemDrawComponent;
@@ -33,9 +38,6 @@ describe("ToolbarItemDrawComponent", () => {
     ]);
 
     connectServiceSpy.getDrawService.and.resolveTo(drawServiceSpy);
-    connectServiceSpy.getMapComponentDrawTypes.and.resolveTo(
-      MapComponentDrawTypes
-    );
 
     TestBed.configureTestingModule({
       imports: [GgcToolbarItemDrawComponent],
@@ -94,46 +96,46 @@ describe("ToolbarItemDrawComponent", () => {
       );
     });
 
-    it("should emit STOP when stopDrawing is called", () => {
+    it("should emit STOP when stopDrawing is called", fakeAsync(() => {
       component.stopDrawing();
-
+      flushMicrotasks();
       expect(drawServiceSpy.stopDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.STOP);
-    });
+    }));
 
-    it("should emit POINT when draw('Point') is called", () => {
+    it("should emit POINT when draw('Point') is called", fakeAsync(() => {
       component.draw("Point");
-
+      flushMicrotasks();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.POINT);
-    });
+    }));
 
-    it("should emit LINE when draw('Line') is called", () => {
+    it("should emit LINE when draw('Line') is called", fakeAsync(() => {
       component.draw("Line");
-
+      flushMicrotasks();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.LINE);
-    });
+    }));
 
-    it("should emit RECTANGLE when draw('Rectangle') is called", () => {
+    it("should emit RECTANGLE when draw('Rectangle') is called", fakeAsync(() => {
       component.draw("Rectangle");
-
+      flushMicrotasks();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.RECTANGLE);
-    });
+    }));
 
-    it("should emit POLYGON when draw('Polygon') is called", () => {
+    it("should emit POLYGON when draw('Polygon') is called", fakeAsync(() => {
       component.draw("Polygon");
-
+      flushMicrotasks();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.POLYGON);
-    });
+    }));
 
-    it("should emit CLEAR when eraseDrawLayer is called", () => {
+    it("should emit CLEAR when eraseDrawLayer is called", fakeAsync(() => {
       component.eraseDrawLayer();
-
+      flushMicrotasks();
       expect(drawServiceSpy.clearLayer).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.CLEAR);
-    });
+    }));
   });
 });

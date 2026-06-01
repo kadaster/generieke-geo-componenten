@@ -4,8 +4,9 @@ import {
   ToolbarItemMeasureType
 } from "../../event/toolbar-item-measure-event";
 import { NgClass } from "@angular/common";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, MapComponentDrawTypes } from "@kadaster/ggc-models";
 import { GgcToolbarConnectService } from "../../service/connect.service";
+import { from } from "rxjs";
 
 /**
  * Component voor meetfunctionaliteit binnen een `ggc-toolbar-item`.
@@ -78,108 +79,119 @@ export class GgcToolbarItemMeasureComponent {
 
   private readonly connectService = inject(GgcToolbarConnectService);
 
-  private drawService: any;
-  private mapComponentDrawTypes: any;
+  private drawServicePromise?: Promise<any>;
 
   constructor() {
     this.resetActive();
-    this.initDrawService();
   }
 
-  private async initDrawService(): Promise<void> {
-    this.drawService = await this.connectService.getDrawService();
-    this.mapComponentDrawTypes =
-      await this.connectService.getMapComponentDrawTypes();
+  private getDrawService(): Promise<any> {
+    if (!this.drawServicePromise) {
+      this.drawServicePromise = this.connectService.getDrawService();
+    }
+    return this.drawServicePromise;
   }
 
   /**
    * Start een lijnmeting.
    */
   measureLine() {
-    if (this.drawService) {
-      this.resetActive();
-      this.activeMeasure = "line";
-      this.drawService.startDraw(
-        this.layer,
-        this.mapComponentDrawTypes?.LINESTRING,
-        { showTotalLength: true },
-        this.mapIndex
-      );
-      this.measureItemClicked.emit({
-        toolbarItemName: ToolbarItemMeasureType.LINE
-      });
-    }
+    from(this.getDrawService()).subscribe((drawService) => {
+      if (drawService) {
+        this.resetActive();
+        this.activeMeasure = "line";
+        drawService.startDraw(
+          this.layer,
+          MapComponentDrawTypes.LINESTRING,
+          { showTotalLength: true },
+          this.mapIndex
+        );
+        this.measureItemClicked.emit({
+          toolbarItemName: ToolbarItemMeasureType.LINE
+        });
+      }
+    });
   }
 
   /**
    * Start een polygonmeting.
    */
   measurePolygon() {
-    if (this.drawService) {
-      this.resetActive();
-      this.activeMeasure = "polygon";
-      this.drawService.startDraw(
-        this.layer,
-        this.mapComponentDrawTypes?.POLYGON,
-        { showArea: true },
-        this.mapIndex
-      );
-      this.measureItemClicked.emit({
-        toolbarItemName: ToolbarItemMeasureType.POLYGON
-      });
-    }
+    from(this.getDrawService()).subscribe((drawService) => {
+      if (drawService) {
+        this.resetActive();
+        this.activeMeasure = "polygon";
+        drawService.startDraw(
+          this.layer,
+          MapComponentDrawTypes.POLYGON,
+          { showArea: true },
+          this.mapIndex
+        );
+        this.measureItemClicked.emit({
+          toolbarItemName: ToolbarItemMeasureType.POLYGON
+        });
+      }
+    });
   }
 
   /**
    * Stopt de actieve meetactie.
    */
   stopMeasure() {
-    if (this.drawService) {
-      this.resetActive();
-      this.drawService.stopDraw(this.mapIndex);
-      this.measureItemClicked.emit({
-        toolbarItemName: ToolbarItemMeasureType.STOP
-      });
-    }
+    from(this.getDrawService()).subscribe((drawService) => {
+      if (drawService) {
+        this.resetActive();
+        drawService.stopDraw(this.mapIndex);
+        this.measureItemClicked.emit({
+          toolbarItemName: ToolbarItemMeasureType.STOP
+        });
+      }
+    });
   }
 
   /**
    * Start de verplaatsactie voor metingen.
    */
   move(): void {
-    if (this.drawService) {
-      this.activeMeasure = "move";
-      this.drawService.startMove(this.layer, this.mapIndex);
-      this.measureItemClicked.emit({
-        toolbarItemName: ToolbarItemMeasureType.MOVE
-      });
-    }
+    from(this.getDrawService()).subscribe((drawService) => {
+      if (drawService) {
+        this.activeMeasure = "move";
+        drawService.startMove(this.layer, this.mapIndex);
+        this.measureItemClicked.emit({
+          toolbarItemName: ToolbarItemMeasureType.MOVE
+        });
+      }
+    });
   }
 
   /**
    * Start de bewerkactie voor metingen.
    */
   edit(): void {
-    if (this.drawService) {
-      this.activeMeasure = "edit";
-      this.drawService.startModify(this.layer, this.mapIndex);
-      this.measureItemClicked.emit({
-        toolbarItemName: ToolbarItemMeasureType.EDIT
-      });
-    }
+    from(this.getDrawService()).subscribe((drawService) => {
+      if (drawService) {
+        this.activeMeasure = "edit";
+        drawService.startModify(this.layer, this.mapIndex);
+        this.measureItemClicked.emit({
+          toolbarItemName: ToolbarItemMeasureType.EDIT
+        });
+      }
+    });
   }
 
   /**
    * Verwijdert alle metingen uit de laag.
    */
   eraseMeasureLayer() {
-    if (this.drawService) {
-      this.resetActive();
-      this.drawService.clearLayer(this.layer, this.mapIndex);
-      this.measureItemClicked.emit({
-        toolbarItemName: ToolbarItemMeasureType.CLEAR
-      });
-    }
+    from(this.getDrawService()).subscribe((drawService) => {
+      if (drawService) {
+        this.resetActive();
+        drawService.clearLayer(this.layer, this.mapIndex);
+        this.measureItemClicked.emit({
+          toolbarItemName: ToolbarItemMeasureType.CLEAR
+        });
+      }
+    });
   }
 
   /**

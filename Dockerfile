@@ -30,7 +30,7 @@ RUN mkdir -p /var/log/nginx && \
 RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ /tmp && \
     chmod +x /var/appdata/run/start-application.sh
 
-RUN chmod -R a+rwX /etc/nginx/html/ /tmp
+RUN chmod -R u+rwX,g+rX /etc/nginx/html/ /tmp
 
 USER ggc-home
 

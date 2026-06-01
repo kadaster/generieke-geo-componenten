@@ -40,6 +40,7 @@ import { IntroductionComponent } from "./introduction/introduction.component";
 import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
+import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
 
 export const routes: Routes = [
   {
@@ -285,5 +286,11 @@ export const routes: Routes = [
     title: "Kaart eigenschappen tonen | GGC-Home",
     component: ExampleMapZoomScalePositionComponent,
     data: { label: "example-map-zoom-scale-position" }
+  },
+  {
+    path: "example-3d-basic",
+    title: "3D kaart tonen | GGC-Home",
+    component: Example3dBasicComponent,
+    data: { label: "example-3d-basic" }
   }
 ];

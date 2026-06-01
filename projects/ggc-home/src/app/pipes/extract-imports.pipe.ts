@@ -10,6 +10,8 @@ export class ExtractImportsPipe implements PipeTransform {
   }
 
   private getKadasterImports(sourceCode: string): string[] {
+    // NOSONAR: Regex used on trusted source code only (no user input).
+    // Input size is limited; ReDoS not feasible in this context.
     const regex = /import\s+[^'"]*['"](@kadaster\/[^'"]+)['"]/g;
     const result = new Set<string>();
 

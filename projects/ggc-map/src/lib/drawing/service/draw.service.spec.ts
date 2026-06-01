@@ -3,11 +3,11 @@ import { Feature } from "ol";
 import { Geometry } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import { MapComponentDrawTypes } from "../../model/draw-interaction-event.model";
 
 import { GgcDrawService } from "./ggc-draw.service";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
 import { CoreDrawService } from "./core-draw.service";
+import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 describe("DrawService", () => {
   let service: GgcDrawService;
