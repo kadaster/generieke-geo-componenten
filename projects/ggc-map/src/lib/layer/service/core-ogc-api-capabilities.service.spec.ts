@@ -36,15 +36,15 @@ describe("CoreOgcApiCapabilitiesService", () => {
         href: "conformanceUrl"
       },
       {
-        rel: "https://www.opengis.net/def/rel/ogc/1.0/data",
+        rel: "http://www.opengis.net/def/rel/ogc/1.0/data",
         href: "https://example.test/collections?f=json"
       },
       {
-        rel: "https://www.opengis.net/def/rel/ogc/1.0/tilesets-vector",
+        rel: "http://www.opengis.net/def/rel/ogc/1.0/tilesets-vector",
         href: "https://example.test/tilesets?f=json"
       },
       {
-        rel: "https://www.opengis.net/def/rel/ogc/1.0/styles",
+        rel: "http://www.opengis.net/def/rel/ogc/1.0/styles",
         href: "https://example.test/styles?f=json"
       }
     ],

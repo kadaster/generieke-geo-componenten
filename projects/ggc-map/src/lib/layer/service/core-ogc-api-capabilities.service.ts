@@ -60,13 +60,16 @@ export class CoreOgcApiCapabilitiesService {
               apiDef: getLink("service-desc"),
               apiDoc: getLink("service-doc"),
               conformance: getLink("conformance"),
+              // NOSONAR: this is an URI, not a link
               collections: getLink(
-                "https://www.opengis.net/def/rel/ogc/1.0/data"
+                "http://www.opengis.net/def/rel/ogc/1.0/data"
               ),
+              // NOSONAR: this is a URI, not a link
               tilesetsVector: getLink(
-                "https://www.opengis.net/def/rel/ogc/1.0/tilesets-vector"
+                "http://www.opengis.net/def/rel/ogc/1.0/tilesets-vector"
               ),
-              styles: getLink("https://www.opengis.net/def/rel/ogc/1.0/styles")
+              // NOSONAR: this is an URI, not a link
+              styles: getLink("http://www.opengis.net/def/rel/ogc/1.0/styles")
             }
           } as OGCAPILandingPageInfo;
         })
