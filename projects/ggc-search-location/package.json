@@ -5,7 +5,7 @@
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/cdk": "^21.0.0",
-    "@kadaster/ggc-map": "^1.0.0",
+    "@kadaster/ggc-map": "^2.0.0",
     "ol": "^10.7.0",
     "proj4": "^2.8.0"
   },
@@ -18,7 +18,7 @@
     }
   },
   "dependencies": {
-    "@kadaster/ggc-models": "^1.0.0",
+    "@kadaster/ggc-models": "^2.0.0",
     "tslib": "^2.3.0"
   },
   "publishConfig": {
