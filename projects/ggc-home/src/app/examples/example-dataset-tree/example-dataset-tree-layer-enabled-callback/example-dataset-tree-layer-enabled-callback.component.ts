@@ -64,7 +64,7 @@ export class ExampleDatasetTreeLayerEnabledCallback
   layerEnabledCallback: LayerEnabledCallback = ({ layer, isEnabled }) => {
     // Disable de checkbox voor de gemeentlaag.
     if (layer.layerId === "gemeenten") {
-      /* Eventuele extra business logica wanneer een checkbox voor deze laag gedisabled moet worden.
+      /* Eventuele extra business logica wanneer een checkbox voor deze laag uitgeschakeld moet worden.
        * In dit geval een toggle, maar dat zou bv. ook een check op een openstaande modal kunnen zijn.
        */
       return this.gemeentesEnabled;
