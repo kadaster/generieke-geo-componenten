@@ -20,9 +20,14 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Dit kan per kaartlaag ingesteld worden met een custom callback. In dit
-      voorbeeld is de kaartlag met Gemeenten instelbaar. Deze kaartlaag wordt
-      automatisch uitgezet als de kaartlaag op inactief wordt gezet.
+      Hiervoor kun je met <code>[layerEnabledCallback]</code> een custom
+      callbackfunctie meegeven met eigen logica.
+    </p>
+    <p>
+      In dit voorbeeld kan de checkbox voor Gemeenten worden uitgeschakeld met
+      de toggle. De kaartlaag kan niet meer aan of uit worden gezet via de
+      dataset-tree. Je zet hiermee (onderdelen van) het kaartbeeld vast voor de
+      gebruiker.
     </p>
   </div>
   <div page-functionality>
@@ -48,7 +53,8 @@
           />
           <span class="slider round"></span>
           <span class="text-nowrap"
-            >Gemeenten {{ gemeentesEnabled ? "Actief" : "Inactief" }}</span
+            >Gemeenten
+            {{ gemeentesEnabled ? "instelbaar" : "niet instelbaar" }}</span
           >
         </label>
       </div>
