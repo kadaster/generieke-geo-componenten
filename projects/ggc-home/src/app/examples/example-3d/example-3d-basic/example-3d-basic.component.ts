@@ -12,12 +12,7 @@ import {
   Webservice
 } from "@kadaster/ggc-cesium";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import * as proj4x from "proj4";
 import { HttpClient } from "@angular/common/http";
-import { register } from "ol/proj/proj4";
-import { defs } from "@kadaster/ggc-models";
-
-const proj4 = (proj4x as any).default;
 
 @Component({
   selector: "app-example-3d-basic",
@@ -62,9 +57,6 @@ export class Example3dBasicComponent {
   private readonly httpClient = inject(HttpClient);
 
   constructor() {
-    proj4.defs("EPSG:28992", defs);
-    register(proj4);
-
     this.httpClient.get(this.kaartConfig).subscribe((data) => {
       this.webService = data as Webservice[];
     });
