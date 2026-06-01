@@ -72,7 +72,7 @@ export class GgcGeojsonLayerComponent
 
   private vectorSource: VectorSource<Feature<Geometry>>;
   private clusterSource: Cluster<Feature>;
-  private foundFeatures: Array<Feature<Geometry>> = [];
+  private readonly foundFeatures: Array<Feature<Geometry>> = [];
   private geoJsonFormat: GeoJSON;
   private readonly ggcOgcApiFeaturesService: CoreOgcApiFeaturesService = inject(
     CoreOgcApiFeaturesService
@@ -238,9 +238,6 @@ export class GgcGeojsonLayerComponent
    */
   getFeatureInfo(event: MapBrowserEvent) {
     const pixel = event.pixel;
-
-    console.log("hier", this.layerName);
-
     this.map.forEachFeatureAtPixel(
       pixel,
       (feature) => this.limitFeatures(feature),

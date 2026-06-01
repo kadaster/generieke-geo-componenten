@@ -91,16 +91,7 @@ export class CoreSelectionService {
         break;
     }
 
-    let layerFilters;
-    if (options.layerIds) {
-      layerFilters = [];
-      for (const layerId of options.layerIds) {
-        const layer = this.ggcMapService.getLayer(layerId, mapIndex);
-        if (layer) {
-          layerFilters.push(layer as Layer);
-        }
-      }
-    }
+    const layerFilters = this.createLayerFilters(options.layerIds, mapIndex);
 
     const select = new Select({
       condition,
@@ -108,7 +99,7 @@ export class CoreSelectionService {
       layers: layerFilters,
       style: options.style,
       hitTolerance: options.hitTolerance,
-      multi: options.selectMode != "single"
+      multi: true
     });
     select.set(this.GGC_LAYER_IDS, options.layerIds);
     select.set(this.GGC_SELECT_MODE, options.selectMode);
@@ -116,38 +107,7 @@ export class CoreSelectionService {
     map.addInteraction(select);
     this.activeSelectInteractions.set(selectIndex, { mapIndex, select });
 
-    const clickEvent = () => {
-      this.emitEvent(
-        selectIndex,
-        new MapComponentEvent(
-          MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED,
-          mapIndex,
-          CoreSelectionService.messageMapClicked
-        )
-      );
-    };
-    map.on("singleclick", clickEvent);
-    this.activeMapClickEventsKeys.set(selectIndex, clickEvent);
-
-    const selectionUpdatedEvent = () => {
-      let selectedFeatures: Feature[] = [];
-      const select = this.getActiveSelectInteraction(selectIndex)?.select;
-      if (select) {
-        selectedFeatures = select.getFeatures().getArray();
-      }
-      this.emitEvent(
-        selectIndex,
-        new MapComponentEvent(
-          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
-          selectIndex,
-          CoreSelectionService.messageSelectionUpdated,
-          undefined,
-          selectedFeatures
-        )
-      );
-    };
-    select.on("select", selectionUpdatedEvent);
-    this.activeSelectEventsKeys.set(selectIndex, selectionUpdatedEvent);
+    this.connectSelectEvents(select, selectIndex, mapIndex);
   }
 
   stopSelect(selectIndex: string) {
@@ -235,6 +195,73 @@ export class CoreSelectionService {
     }
   }
 
+  private createLayerFilters(layerIds: string[] | undefined, mapIndex: string) {
+    if (!layerIds) {
+      return undefined;
+    }
+
+    const layerFilters = [];
+    for (const layerId of layerIds) {
+      const layer = this.ggcMapService.getLayer(layerId, mapIndex);
+      if (layer) {
+        layerFilters.push(layer as Layer);
+      }
+    }
+    return layerFilters;
+  }
+
+  private connectSelectEvents(
+    select: Select,
+    selectIndex: string,
+    mapIndex: string
+  ) {
+    const map = this.ggcMapService.getMap(mapIndex);
+
+    if (!map) {
+      return;
+    }
+
+    const clickEvent = () => {
+      this.emitEvent(
+        selectIndex,
+        new MapComponentEvent(
+          MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED,
+          mapIndex,
+          CoreSelectionService.messageMapClicked
+        )
+      );
+    };
+    map.on("singleclick", clickEvent);
+    this.activeMapClickEventsKeys.set(selectIndex, clickEvent);
+
+    const selectionUpdatedEvent = () => {
+      let selectedFeatures: Feature[] = [];
+      const select = this.getActiveSelectInteraction(selectIndex)?.select;
+      if (select) {
+        selectedFeatures = select.getFeatures().getArray();
+      }
+
+      const map = this.ggcMapService.getMap(mapIndex);
+      const layers = map.getLayers();
+      for (const layer of layers.getArray()) {
+        layer.changed();
+      }
+
+      this.emitEvent(
+        selectIndex,
+        new MapComponentEvent(
+          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
+          selectIndex,
+          CoreSelectionService.messageSelectionUpdated,
+          undefined,
+          selectedFeatures
+        )
+      );
+    };
+    select.on("select", selectionUpdatedEvent);
+    this.activeSelectEventsKeys.set(selectIndex, selectionUpdatedEvent);
+  }
+
   private emitEvent(selectIndex: string, event: MapComponentEvent): void {
     this.createIfNotExistsSubjectAndObservableForMap(selectIndex);
     (this.subjectMap.get(selectIndex) as Subject<MapComponentEvent>).next(
@@ -274,18 +301,18 @@ export class CoreSelectionService {
     const select = activeSelectInteraction.select;
     const mapIndex = activeSelectInteraction.mapIndex;
     const featureCollection = select.getFeatures();
-    let manualActionPerformed = false;
+    let isManualActionPerformed = false;
 
     switch (select.get(this.GGC_SELECT_MODE)) {
       case "multi": {
-        manualActionPerformed =
-          manualActionPerformed ||
+        isManualActionPerformed =
+          isManualActionPerformed ||
           this.toggleFeatures(features, featureCollection, mapIndex);
         break;
       }
       case "single": {
-        manualActionPerformed =
-          manualActionPerformed ||
+        isManualActionPerformed =
+          isManualActionPerformed ||
           this.replaceFeatures(features, featureCollection);
         break;
       }
@@ -297,7 +324,7 @@ export class CoreSelectionService {
       featureCollection.getArray(),
       mapIndex
     );
-    if (manualActionPerformed) {
+    if (isManualActionPerformed) {
       // Emit event manually, because manual action do not trigger select events automatically
       this.emitEvent(
         selectIndex,
@@ -317,7 +344,7 @@ export class CoreSelectionService {
     featureCollection: Collection<Feature<Geometry>>,
     mapIndex: string
   ) {
-    let manualActionPerformed = false;
+    let isManualActionPerformed = false;
     for (const featureToggle of featuresToToggle) {
       if (
         !this.ggcMapService.isFeatureInSelectionLayer(featureToggle, mapIndex)
@@ -328,10 +355,10 @@ export class CoreSelectionService {
          * If a feature is not inside the selection layer, it should be manually added to the feature collection first.
          */
         featureCollection.push(featureToggle);
-        manualActionPerformed = true;
+        isManualActionPerformed = true;
       }
     }
-    return manualActionPerformed;
+    return isManualActionPerformed;
   }
 
   private replaceFeatures(

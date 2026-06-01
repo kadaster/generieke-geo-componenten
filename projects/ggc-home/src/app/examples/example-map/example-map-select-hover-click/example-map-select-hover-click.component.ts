@@ -30,7 +30,7 @@ export class ExampleMapSelectHoverClickComponent
     route: "/example-map-select-hover-click",
     title: "Selecteren met hover en klik",
     introduction:
-      "Selecteer en highlight features met zowel een hover en een klik op dezelfde kaart",
+      "Selecteer en highlight features met zowel een hover en een klik op de kaart",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.SELECT],

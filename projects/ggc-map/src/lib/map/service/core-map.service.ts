@@ -273,7 +273,7 @@ export class CoreMapService {
       features.forEach((feature) => {
         const featureId = feature.getId();
 
-        if (featureId === undefined || featureId === null) {
+        if (featureId == null) {
           return;
         }
         const existingFeature = selectionSource
