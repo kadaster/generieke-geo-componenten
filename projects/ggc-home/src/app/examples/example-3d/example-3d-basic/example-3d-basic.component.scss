@@ -1,28 +1,3 @@
-ggc-cesium-controls::ng-deep {
-  padding-right: 100px !important;
-  .gc-controls {
-    .gc-controls-nav {
-      .cesium-control {
-        .cesium-control-top,
-        .cesium-control-left,
-        .cesium-control-default-position,
-        .cesium-control-right,
-        .cesium-control-bottom {
-          margin: 2px;
-          background-color: #ededed !important;
-        }
-      }
-    }
-    .gc-controls-zoom {
-      .cesium-control-top,
-      .cesium-control-bottom {
-        margin: 2px 2px 2px;
-        background-color: #ededed !important;
-      }
-    }
-  }
-}
-
 .row {
   display: flex;
   gap: 20px;
