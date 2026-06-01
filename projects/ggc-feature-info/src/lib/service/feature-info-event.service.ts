@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { FeatureInfoComponentEvent } from "@kadaster/ggc-feature-info";
+import { FeatureInfoComponentEvent } from "../model/feature-info-component-event";
 
 @Injectable({
   providedIn: "root"
