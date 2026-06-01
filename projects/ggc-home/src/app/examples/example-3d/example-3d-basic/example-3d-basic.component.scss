@@ -1,3 +1,9 @@
+ggc-cesium-controls {
+  .gc-controls button:focus {
+    border: 2px blue solid;
+  }
+}
+
 .row {
   display: flex;
   gap: 20px;
