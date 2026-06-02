@@ -8,6 +8,7 @@ export * from "./lib/map/service/ZoomOptions.model";
 export * from "./lib/drawing/service/ggc-draw.service";
 export * from "./lib/drawing/service/ggc-snap.service";
 export * from "./lib/model/draw-options";
+export * from "./lib/model/map-component-event.model";
 export * from "./lib/model/draw-interaction-event.model";
 export * from "./lib/model/modify-interaction-event.model";
 export * from "./lib/model/snap-options";
