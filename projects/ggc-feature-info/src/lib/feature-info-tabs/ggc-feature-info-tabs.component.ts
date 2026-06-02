@@ -9,7 +9,8 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  TemplateRef
+  TemplateRef,
+  OnDestroy
 } from "@angular/core";
 import { ValueTemplateDirective } from "../directive/value-template.directive";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
@@ -26,6 +27,7 @@ import {
 } from "@kadaster/ggc-models";
 import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "ggc-feature-info-tabs",
@@ -34,7 +36,7 @@ import { FeatureInfoEventService } from "../service/feature-info-event.service";
   imports: [NgClass, NgTemplateOutlet]
 })
 export class GgcFeatureInfoTabsComponent
-  implements OnInit, OnChanges, AfterContentInit
+  implements OnInit, OnChanges, AfterContentInit, OnDestroy
 {
   /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
@@ -57,6 +59,7 @@ export class GgcFeatureInfoTabsComponent
   private lastSelectedTabOnClick: string;
   private featureInfoConfigService = inject(GgcFeatureInfoConfigService);
   private eventService = inject(FeatureInfoEventService);
+  private subscriptionSelection: Subscription;
 
   ngAfterContentInit(): void {
     if (this.tabTemplate) {
@@ -72,6 +75,12 @@ export class GgcFeatureInfoTabsComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes.featureInfoCollectionArray) {
       this.onDataUpdate();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptionSelection) {
+      this.subscriptionSelection.unsubscribe();
     }
   }
 
@@ -142,15 +151,18 @@ export class GgcFeatureInfoTabsComponent
         mapIndex
       );
     console.log("SUBSCRIBE");
-    mapSelectionEvent.subscribe((event: MapComponentEvent) => {
-      if (
-        event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-      ) {
-        this.featureInfoCollectionArray =
-          event.value.featureCollectionForLayers;
-        this.onDataUpdate();
-        console.log(event);
+    this.subscriptionSelection = mapSelectionEvent.subscribe(
+      (event: MapComponentEvent) => {
+        if (
+          event.type ===
+          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+        ) {
+          this.featureInfoCollectionArray =
+            event.value.featureCollectionForLayers;
+          this.onDataUpdate();
+          console.log(event);
+        }
       }
-    });
+    );
   }
 }

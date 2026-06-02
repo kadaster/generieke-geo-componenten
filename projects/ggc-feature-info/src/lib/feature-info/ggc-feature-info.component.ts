@@ -8,7 +8,8 @@ import {
   Input,
   Output,
   TemplateRef,
-  AfterViewInit
+  AfterViewInit,
+  OnDestroy
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -71,7 +72,7 @@ type FeatureCollectionForLayer = {
   imports: [FeatureInfoDisplayComponent]
 })
 export class GgcFeatureInfoComponent
-  implements AfterContentInit, OnInit, AfterViewInit
+  implements AfterContentInit, OnInit, AfterViewInit, OnDestroy
 {
   /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
@@ -136,7 +137,8 @@ export class GgcFeatureInfoComponent
     FeatureInfoMapConnectService
   );
   private hasTabs = false;
-  private readonly subscription = new Subscription();
+  private subscription: Subscription;
+  private subscriptionSelection: Subscription;
   private eventService = inject(FeatureInfoEventService);
   @ContentChildren(ValueTemplateDirective)
   private readonly templates: QueryList<ValueTemplateDirective>;
@@ -178,12 +180,11 @@ export class GgcFeatureInfoComponent
   }
 
   ngOnInit() {
+    console.log("wordt gebouwd");
     void this.subscribeToMapSelection(this.mapIndex);
 
-    this.subscription.add(
-      this.eventService.events$.subscribe((event) =>
-        this.handleFeatureInfoEvent(event)
-      )
+    this.subscription = this.eventService.events$.subscribe((event) =>
+      this.handleFeatureInfoEvent(event)
     );
   }
 
@@ -234,6 +235,15 @@ export class GgcFeatureInfoComponent
         }
       });
     });
+  }
+  ngOnDestroy() {
+    console.log("ngOnDestroy");
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    if (this.subscriptionSelection) {
+      this.subscriptionSelection.unsubscribe();
+    }
   }
 
   /*
@@ -405,40 +415,43 @@ export class GgcFeatureInfoComponent
       await this.featureInfoMapConnectService.getObservableForMapSelection(
         mapIndex
       );
-    mapSelectionEvent.subscribe((event: MapComponentEvent) => {
-      console.log(event);
-      if (
-        event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-      ) {
-        console.log(this.hasTabs);
-        // Wanneer FeatureInfoTabs aanwezig is dan wordt de
-        // featureInfoCollection gezet via de tabs
-        if (!this.hasTabs) {
-          const collections: FeatureCollectionForLayer[] =
-            event.value.featureCollectionForLayers;
+    // Wanneer FeatureInfoTabs aanwezig is dan wordt de
+    // featureInfoCollection gezet via de tabs
+    if (!this.hasTabs) {
+      console.log("make sub");
+      this.subscriptionSelection = mapSelectionEvent.subscribe(
+        (event: MapComponentEvent) => {
+          if (
+            event.type ===
+            MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+          ) {
+            const collections: FeatureCollectionForLayer[] =
+              event.value.featureCollectionForLayers;
 
-          if (!collections || collections.length === 0) {
-            this.featureInfoCollection = undefined;
-            return;
-          }
+            if (!collections || collections.length === 0) {
+              this.featureInfoCollection = undefined;
+              return;
+            }
 
-          const allFeatures: object[] = [];
-          const layerNames: string[] = [];
+            const allFeatures: object[] = [];
+            const layerNames: string[] = [];
 
-          collections.forEach((collection: FeatureCollectionForLayer) => {
-            layerNames.push(collection.layerName);
+            collections.forEach((collection: FeatureCollectionForLayer) => {
+              layerNames.push(collection.layerName);
 
-            collection.features.forEach((feature) => {
-              allFeatures.push(feature);
+              collection.features.forEach((feature) => {
+                allFeatures.push(feature);
+              });
             });
-          });
 
-          this.featureInfoCollection = new FeatureInfoCollection(
-            layerNames.join(", "),
-            allFeatures
-          );
+            this.featureInfoCollection = new FeatureInfoCollection(
+              layerNames.join(", "),
+              allFeatures
+            );
+          }
         }
-      }
-    });
+      );
+      console.log(this.subscriptionSelection);
+    }
   }
 }

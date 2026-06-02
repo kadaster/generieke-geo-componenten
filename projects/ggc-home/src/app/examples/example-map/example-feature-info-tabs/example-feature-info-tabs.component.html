@@ -24,10 +24,11 @@
       <div class="col-xl-3 col-md-5 col-sm-5">
         <div class="feature-info-container">
           <b>Feature Info</b>
-          <ggc-feature-info-tabs [showEmptyTabs]="true">
+          <ggc-feature-info-tabs [mapIndex]="mapIndex" [showEmptyTabs]="true">
             <ggc-feature-info
               [featureInfoDisplayType]="featureInfoDisplayType"
               [hidePagerWithOneFeature]="hidePagerWithOneFeature"
+              [mapIndex]="mapIndex"
               [showEmptyMessage]="showEmptyMessage"
             >
             </ggc-feature-info
@@ -36,7 +37,7 @@
       </div>
       <div class="col-xl-6 col-md-4 col-sm4">
         <div class="map-container">
-          <ggc-map [webServices]="mapConfig"></ggc-map>
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->

@@ -43,7 +43,7 @@ export class ExampleFeatureInfoTabsComponent
     "example-map/example-feature-info-tabs/example-feature-info-tabs.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/feature-info_public-api.GgcFeatureInfo.html`;
   // DOCS-SKIP:END
-  mapIndex = "featureInfoExample";
+  mapIndex = "featureInfoTabs";
   mapConfig: Webservice[];
   protected featureInfoDisplayType: FeatureInfoDisplayType =
     FeatureInfoDisplayType.LIST;

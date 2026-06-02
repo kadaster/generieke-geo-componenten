@@ -32,7 +32,7 @@ export class ExampleFeatureInfoBasicComponent
     "example-map/example-feature-info-basic/example-feature-info-basic.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/feature-info_public-api.GgcFeatureInfo.html`;
   // DOCS-SKIP:END
-  mapIndex = "featureInfoExample";
+  mapIndex = "featureInfoBasic";
   mapConfig: Webservice[];
 
   ngOnInit() {

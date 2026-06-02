@@ -24,12 +24,12 @@
       <div class="col-xl-3 col-md-4 col-sm-5">
         <div class="feature-info-container">
           <b>Feature Info</b>
-          <ggc-feature-info></ggc-feature-info>
+          <ggc-feature-info [mapIndex]="mapIndex"></ggc-feature-info>
         </div>
       </div>
       <div class="col-xl-7 col-md-6 col-sm-5">
         <div class="map-container">
-          <ggc-map [webServices]="mapConfig"></ggc-map>
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->

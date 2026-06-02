@@ -17,8 +17,8 @@ export class GgcFeatureInfoConnectService {
         this.mapSelectionService = this.injector.get(
           module.GgcSelectionService
         );
-        return this.mapSelectionService;
       }
+      return this.mapSelectionService;
     } catch (e) {
       console.debug(`Autoconnect ggc-feature-info met ggc-map: ${e}`, e);
       return undefined;
@@ -33,7 +33,7 @@ export class GgcFeatureInfoConnectService {
       /* @vite-ignore */ "@kadaster/ggc-map"
     ).catch((e) => {
       console.debug(
-        `Autoconnect ggc-legend met ggc-map is niet gelukt: ${e}`,
+        `Autoconnect ggc-feature-info met ggc-map is niet gelukt: ${e}`,
         e
       );
       throw e;
