@@ -90,13 +90,11 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private onDataUpdate(): void {
-    console.log("UPDATE", this.featureInfoCollectionArray);
     // create copy of featureInfoCollectionArray and check empty tabs
     this.featureInfoCollectionArrayInternal = !this.featureInfoCollectionArray
       ? []
       : [...this.featureInfoCollectionArray];
     this.checkShowEmptyTabs();
-    console.log(this.featureInfoCollectionArrayInternal);
     if (this.featureInfoCollectionArrayInternal.length === 0) {
       const event = new FeatureInfoComponentEvent(
         FeatureInfoComponentEventType.SELECTEDTAB,
@@ -116,7 +114,6 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private setActiveTab(layerName: string): void {
-    console.log("setActiveTab", layerName);
     let idx = this.featureInfoCollectionArrayInternal.findIndex(
       (tabFeatureInfo) => tabFeatureInfo.layerName === layerName
     );
@@ -150,7 +147,6 @@ export class GgcFeatureInfoTabsComponent
       await this.featureInfoMapConnectService.getObservableForMapSelection(
         mapIndex
       );
-    console.log("SUBSCRIBE");
     this.subscriptionSelection = mapSelectionEvent.subscribe(
       (event: MapComponentEvent) => {
         if (
@@ -160,7 +156,6 @@ export class GgcFeatureInfoTabsComponent
           this.featureInfoCollectionArray =
             event.value.featureCollectionForLayers;
           this.onDataUpdate();
-          console.log(event);
         }
       }
     );

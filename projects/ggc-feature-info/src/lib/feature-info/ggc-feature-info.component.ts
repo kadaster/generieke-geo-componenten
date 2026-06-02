@@ -180,7 +180,6 @@ export class GgcFeatureInfoComponent
   }
 
   ngOnInit() {
-    console.log("wordt gebouwd");
     void this.subscribeToMapSelection(this.mapIndex);
 
     this.subscription = this.eventService.events$.subscribe((event) =>
@@ -189,19 +188,10 @@ export class GgcFeatureInfoComponent
   }
 
   ngAfterViewInit(): void {
-    console.log("afterviewinit");
-
     const featureInfoTabs = this.elementRef.nativeElement.closest(
       "ggc-feature-info-tabs"
     );
-    if (featureInfoTabs) {
-      console.log(featureInfoTabs);
-      this.hasTabs = true;
-      console.log("ggc-feature-info-tabs is aanwezig in de DOM");
-    } else {
-      this.hasTabs = false;
-      console.log("ggc-feature-info-tabs is NIET aanwezig in de DOM");
-    }
+    this.hasTabs = !!featureInfoTabs;
   }
 
   /**
@@ -237,7 +227,6 @@ export class GgcFeatureInfoComponent
     });
   }
   ngOnDestroy() {
-    console.log("ngOnDestroy");
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -245,22 +234,6 @@ export class GgcFeatureInfoComponent
       this.subscriptionSelection.unsubscribe();
     }
   }
-
-  /*
- niet meer nodig wordt afgehandeld vanuit de set??
- /!**
-   * Reageert op wijzigingen in de input-properties.
-   * Filtert en sorteert attributen via `FeatureInfoConfigService`.
-   * Stuurt een event bij selectie van een object.
-   *!/
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes.featureInfoCollection ||
-      changes.customAttributeNamesAndValues
-    ) {
-      this.handleFeatureInfoCollectionChange();
-    }
-  }*/
 
   /** Navigeer naar de vorige feature. */
   goToPreviousFeature(): void {
@@ -418,7 +391,6 @@ export class GgcFeatureInfoComponent
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
     // featureInfoCollection gezet via de tabs
     if (!this.hasTabs) {
-      console.log("make sub");
       this.subscriptionSelection = mapSelectionEvent.subscribe(
         (event: MapComponentEvent) => {
           if (
@@ -451,7 +423,6 @@ export class GgcFeatureInfoComponent
           }
         }
       );
-      console.log(this.subscriptionSelection);
     }
   }
 }

@@ -129,25 +129,6 @@ export class GgcLayerService {
   }
 
   /**
-   * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
-   */
-  private loadWebservice(service: Webservice, mapIndex: string) {
-    service.layers = service.layers.map((layerOptions) => {
-      const updatedLayer = {
-        ...layerOptions,
-        url: service.url,
-        mapIndex: mapIndex,
-        visible: layerOptions.visible ?? true
-      } as AbstractConfigurableLayerOptions;
-      if (updatedLayer.visible) {
-        this.addLayer(updatedLayer, service.type);
-      }
-
-      return updatedLayer;
-    });
-  }
-
-  /**
    * Voegt een BRT achtergrondkaart toe aan de kaart.
    */
   addBrtAchtergrondkaartLayer(
@@ -432,6 +413,25 @@ export class GgcLayerService {
       .get(mapIndex)
       ?.flatMap((service) => service.layers)
       .find((layer) => layer.layerId === layerId);
+  }
+
+  /**
+   * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
+   */
+  private loadWebservice(service: Webservice, mapIndex: string) {
+    service.layers = service.layers.map((layerOptions) => {
+      const updatedLayer = {
+        ...layerOptions,
+        url: service.url,
+        mapIndex: mapIndex,
+        visible: layerOptions.visible ?? true
+      } as AbstractConfigurableLayerOptions;
+      if (updatedLayer.visible) {
+        this.addLayer(updatedLayer, service.type);
+      }
+
+      return updatedLayer;
+    });
   }
 
   /**
