@@ -1,17 +1,20 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Injector } from "@angular/core";
 import { GgcDatasetTreeConnectService } from "./connect.service";
 
 describe("GgcDatasetTreeConnectService", () => {
   let service: GgcDatasetTreeConnectService;
-  let injectorSpy: jasmine.SpyObj<Injector>;
+  let injectorSpy: MockedObject<Injector>;
 
   let cesiumInstance: any;
   let mapLayerInstance: any;
   let mapEventsInstance: any;
 
   beforeEach(() => {
-    injectorSpy = jasmine.createSpyObj("Injector", ["get"]);
+    injectorSpy = {
+      get: vi.fn().mockName("Injector.get")
+    };
 
     cesiumInstance = { name: "cesium" };
     mapLayerInstance = { name: "mapLayer" };
@@ -28,8 +31,12 @@ describe("GgcDatasetTreeConnectService", () => {
   });
 
   function mockImport(module: any) {
-    spyOn<any>(service as any, "loadCesiumModule").and.resolveTo(module.cesium);
-    spyOn<any>(service as any, "loadMapModule").and.resolveTo(module.map);
+    vi.spyOn<any>(service as any, "loadCesiumModule").mockResolvedValue(
+      module.cesium
+    );
+    vi.spyOn<any>(service as any, "loadMapModule").mockResolvedValue(
+      module.map
+    );
   }
 
   describe("Cesium service", () => {
@@ -40,7 +47,7 @@ describe("GgcDatasetTreeConnectService", () => {
         }
       });
 
-      injectorSpy.get.and.returnValue(cesiumInstance);
+      injectorSpy.get.mockReturnValue(cesiumInstance);
 
       const result = await service.getGgcCesiumSharedLayerService();
 
@@ -55,7 +62,7 @@ describe("GgcDatasetTreeConnectService", () => {
         }
       });
 
-      injectorSpy.get.and.returnValue(cesiumInstance);
+      injectorSpy.get.mockReturnValue(cesiumInstance);
 
       const first = await service.getGgcCesiumSharedLayerService();
       const second = await service.getGgcCesiumSharedLayerService();
@@ -65,7 +72,9 @@ describe("GgcDatasetTreeConnectService", () => {
     });
 
     it("moet undefined retourneren bij fout", async () => {
-      spyOn<any>(service as any, "loadCesiumModule").and.rejectWith("fail");
+      vi.spyOn<any>(service as any, "loadCesiumModule").mockRejectedValue(
+        "fail"
+      );
 
       const result = await service.getGgcCesiumSharedLayerService();
 
@@ -82,7 +91,7 @@ describe("GgcDatasetTreeConnectService", () => {
         }
       });
 
-      injectorSpy.get.and.returnValue(mapLayerInstance);
+      injectorSpy.get.mockReturnValue(mapLayerInstance);
 
       const result = await service.getGgcOLLayerService();
 
@@ -98,7 +107,7 @@ describe("GgcDatasetTreeConnectService", () => {
         }
       });
 
-      injectorSpy.get.and.returnValue(mapLayerInstance);
+      injectorSpy.get.mockReturnValue(mapLayerInstance);
 
       const first = await service.getGgcOLLayerService();
       const second = await service.getGgcOLLayerService();
@@ -108,7 +117,7 @@ describe("GgcDatasetTreeConnectService", () => {
     });
 
     it("moet undefined retourneren bij fout", async () => {
-      spyOn<any>(service as any, "loadMapModule").and.rejectWith("fail");
+      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue("fail");
 
       const result = await service.getGgcOLLayerService();
 
@@ -125,7 +134,7 @@ describe("GgcDatasetTreeConnectService", () => {
         }
       });
 
-      injectorSpy.get.and.returnValue(mapEventsInstance);
+      injectorSpy.get.mockReturnValue(mapEventsInstance);
 
       const result = await service.getGgcOLMapEventsService();
 
@@ -141,7 +150,7 @@ describe("GgcDatasetTreeConnectService", () => {
         }
       });
 
-      injectorSpy.get.and.returnValue(mapEventsInstance);
+      injectorSpy.get.mockReturnValue(mapEventsInstance);
 
       const first = await service.getGgcOLMapEventsService();
       const second = await service.getGgcOLMapEventsService();
@@ -151,7 +160,7 @@ describe("GgcDatasetTreeConnectService", () => {
     });
 
     it("moet undefined retourneren bij fout", async () => {
-      spyOn<any>(service as any, "loadMapModule").and.rejectWith("fail");
+      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue("fail");
 
       const result = await service.getGgcOLMapEventsService();
 

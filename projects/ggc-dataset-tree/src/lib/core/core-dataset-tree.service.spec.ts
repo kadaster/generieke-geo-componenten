@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import {
   DatasetTreeEvent,
@@ -17,16 +18,14 @@ import { ViewerType } from "@kadaster/ggc-models";
 
 describe("DatasetTreeService", () => {
   let service: CoreDatasetTreeService;
-  let datasetTreeMapConnectServiceSpy: jasmine.SpyObj<DatasetTreeMapConnectService>;
+  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [CoreDatasetTreeService, GgcDatasetTreeModelCreateService]
     });
-    datasetTreeMapConnectServiceSpy =
-      jasmine.createSpyObj<DatasetTreeMapConnectService>(
-        "DatasetTreeMapConnectService",
-        ["isVisible"]
-      );
+    datasetTreeMapConnectServiceSpy = {
+      isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible")
+    };
 
     TestBed.configureTestingModule({
       providers: [
@@ -57,14 +56,13 @@ describe("DatasetTreeService", () => {
         expectedType: DatasetTreeEventType.LAYER_DEACTIVATED
       }
     ].forEach(({ updatedVisibility, expectedType }) => {
-      it("with layer added", (done) => {
+      it("with layer added", async () => {
         service
           .getEventsObservable()
           .subscribe((datasetTreeEvent: DatasetTreeEvent) => {
             expect(datasetTreeEvent.type).toBe(expectedType);
             expect(datasetTreeEvent.layerId).toBe("testId");
             expect(datasetTreeEvent.mapIndex).toBe("mapIndex");
-            done();
           });
         service.emitDatasetTreeEvent("testId", "mapIndex", updatedVisibility);
       });
@@ -90,12 +88,14 @@ describe("DatasetTreeService", () => {
     const theme = new Theme("themeName", [dataset, datasetInactive]);
 
     it("should count all active layers of a dataset", async () => {
-      datasetTreeMapConnectServiceSpy.isVisible.and.callFake((layerId) => {
-        if (layerId == "id1") return Promise.resolve(true);
-        if (layerId == "id2") return Promise.resolve(false);
-        if (layerId == "id3") return Promise.resolve(true);
-        return Promise.resolve(false);
-      });
+      datasetTreeMapConnectServiceSpy.isVisible.mockImplementation(
+        (layerId) => {
+          if (layerId == "id1") return Promise.resolve(true);
+          if (layerId == "id2") return Promise.resolve(false);
+          if (layerId == "id3") return Promise.resolve(true);
+          return Promise.resolve(false);
+        }
+      );
       expect(
         await service.countActiveLayersOfDataset(
           dataset,
@@ -107,13 +107,15 @@ describe("DatasetTreeService", () => {
     });
 
     it("should count all active layers of a dataset", async () => {
-      datasetTreeMapConnectServiceSpy.isVisible.and.callFake((layerId) => {
-        if (layerId == "id1") return Promise.resolve(true);
-        if (layerId == "id2") return Promise.resolve(false);
-        if (layerId == "id3") return Promise.resolve(true);
-        if (layerId == "id4") return Promise.resolve(false);
-        return Promise.resolve(false);
-      });
+      datasetTreeMapConnectServiceSpy.isVisible.mockImplementation(
+        (layerId) => {
+          if (layerId == "id1") return Promise.resolve(true);
+          if (layerId == "id2") return Promise.resolve(false);
+          if (layerId == "id3") return Promise.resolve(true);
+          if (layerId == "id4") return Promise.resolve(false);
+          return Promise.resolve(false);
+        }
+      );
       expect(
         await service.countActiveDatasetsOfTheme(
           theme,

@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcViewerComponent } from "./ggc-viewer.component";
 import { createCesiumMock } from "./viewer-mock.spec";
@@ -22,24 +23,31 @@ import { GgcViewerService } from "../service/ggc-viewer.service";
 import { CoreSelectionService } from "../service/core-selection.service";
 import { Observable } from "rxjs";
 import { provideZoneChangeDetection } from "@angular/core";
-
+import { vi } from "vitest";
+import { vi } from "vitest";
 describe("ViewerComponent", () => {
   let component: GgcViewerComponent;
   let fixture: ComponentFixture<GgcViewerComponent>;
   let cesiumMock: Partial<Viewer>;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let viewerService: GgcViewerService;
 
   beforeEach(async () => {
-    coreSelectionServiceSpy = jasmine.createSpyObj("CoreSelectionService", [
-      "setOptions",
-      "initializeSelections",
-      "destroyAllSelections",
-      "getClickEventsObservable"
-    ]);
-    const cameraSpy = jasmine.createSpyObj("CoreCameraService", [
-      "setCameraValues"
-    ]);
+    coreSelectionServiceSpy = {
+      setOptions: vi.fn().mockName("CoreSelectionService.setOptions"),
+      initializeSelections: vi
+        .fn()
+        .mockName("CoreSelectionService.initializeSelections"),
+      destroyAllSelections: vi
+        .fn()
+        .mockName("CoreSelectionService.destroyAllSelections"),
+      getClickEventsObservable: vi
+        .fn()
+        .mockName("CoreSelectionService.getClickEventsObservable")
+    };
+    const cameraSpy = {
+      setCameraValues: vi.fn().mockName("CoreCameraService.setCameraValues")
+    };
 
     await TestBed.configureTestingModule({
       imports: [GgcViewerComponent],
@@ -53,12 +61,12 @@ describe("ViewerComponent", () => {
 
     fixture = TestBed.createComponent(GgcViewerComponent);
     component = fixture.componentInstance;
-    coreSelectionServiceSpy.getClickEventsObservable.and.returnValue(
+    coreSelectionServiceSpy.getClickEventsObservable.mockReturnValue(
       new Observable<SelectionEvent>()
     );
     cesiumMock = createCesiumMock();
     viewerService = TestBed.inject(GgcViewerService);
-    spyOn<any>(component, "createViewer").and.returnValue(
+    vi.spyOn<any>(component, "createViewer").mockReturnValue(
       new Promise((resolve) => {
         resolve(cesiumMock);
       })
@@ -135,10 +143,10 @@ describe("ViewerComponent", () => {
       const json = getJson();
       const cameraOptions = { geojson: json } as LookAtObject;
 
-      spyOn<any>(viewerService, "getExtent").and.callThrough();
-      spyOn<any>(viewerService, "getCenter").and.callThrough();
-      spyOn<any>(viewerService, "calculateDistance").and.callThrough();
-      spyOn<any>(viewerService, "getExtentRecursive").and.callThrough();
+      vi.spyOn<any>(viewerService, "getExtent");
+      vi.spyOn<any>(viewerService, "getCenter");
+      vi.spyOn<any>(viewerService, "calculateDistance");
+      vi.spyOn<any>(viewerService, "getExtentRecursive");
 
       const extent = viewerService["getExtent"](json);
       const center = viewerService["getCenter"](extent);
@@ -163,7 +171,7 @@ describe("ViewerComponent", () => {
     });
 
     it("flyTo should use camera.lookat when cameraOptions is LookatPosition", async () => {
-      spyOn<any>(cameraUtils, "getTerrainHeight").and.returnValue(
+      vi.spyOn<any>(cameraUtils, "getTerrainHeight").mockReturnValue(
         new Promise((resolve) => {
           resolve(100);
         })
@@ -202,10 +210,10 @@ describe("ViewerComponent", () => {
 
     describe("onKeyDown", () => {
       class MockCamera {
-        lookUp = jasmine.createSpy("lookUp");
-        lookDown = jasmine.createSpy("lookDown");
-        lookLeft = jasmine.createSpy("lookLeft");
-        lookRight = jasmine.createSpy("lookRight");
+        lookUp = vi.fn();
+        lookDown = vi.fn();
+        lookLeft = vi.fn();
+        lookRight = vi.fn();
       }
 
       beforeEach(() => {

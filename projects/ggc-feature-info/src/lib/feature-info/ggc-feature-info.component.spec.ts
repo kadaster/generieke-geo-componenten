@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { Component, SimpleChange, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { Feature } from "ol";
@@ -48,7 +49,8 @@ import { GgcFeatureInfoComponent } from "./ggc-feature-info.component";
   imports: [GgcFeatureInfoComponent, ValueTemplateDirective]
 })
 class WrapperComponent {
-  @ViewChild(GgcFeatureInfoComponent) featureInfoChild: GgcFeatureInfoComponent;
+  @ViewChild(GgcFeatureInfoComponent)
+  featureInfoChild: GgcFeatureInfoComponent;
   protected readonly ValueTemplateDirectiveType = ValueTemplateDirectiveType;
 }
 
@@ -56,11 +58,15 @@ describe("FeatureInfoComponent", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<GgcFeatureInfoComponent>;
   let nativeElement: HTMLElement;
-  const featureInfoConfigServiceSpy: jasmine.SpyObj<GgcFeatureInfoConfigService> =
-    jasmine.createSpyObj("FeatureInfoConfigService", [
-      "filterAndSortAttributes",
-      "checkForCustomValues"
-    ]);
+  const featureInfoConfigServiceSpy: MockedObject<GgcFeatureInfoConfigService> =
+    {
+      filterAndSortAttributes: vi
+        .fn()
+        .mockName("FeatureInfoConfigService.filterAndSortAttributes"),
+      checkForCustomValues: vi
+        .fn()
+        .mockName("FeatureInfoConfigService.checkForCustomValues")
+    };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -78,7 +84,7 @@ describe("FeatureInfoComponent", () => {
     fixture = TestBed.createComponent(GgcFeatureInfoComponent);
     component = fixture.componentInstance;
     nativeElement = fixture.nativeElement;
-    featureInfoConfigServiceSpy.checkForCustomValues.and.returnValue([
+    featureInfoConfigServiceSpy.checkForCustomValues.mockReturnValue([
       { test: "123" }
     ]);
   });
@@ -114,7 +120,7 @@ describe("FeatureInfoComponent", () => {
       layerName: "laag",
       features: [feature1]
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([{}]);
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([{}]);
 
     component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
     fixture.detectChanges();
@@ -133,7 +139,7 @@ describe("FeatureInfoComponent", () => {
       layerName: "laag",
       features: [feature]
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" }
     ]);
 
@@ -158,7 +164,7 @@ describe("FeatureInfoComponent", () => {
       layerName: "laag",
       features: [feature]
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" }
     ]);
 
@@ -184,7 +190,7 @@ describe("FeatureInfoComponent", () => {
       layerName: "laag",
       features: [feature, secondFeature]
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" },
       { test: "456" }
     ]);
@@ -211,7 +217,7 @@ describe("FeatureInfoComponent", () => {
       layerName: "laag",
       features: [feature, secondFeature]
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" },
       { test: "456" }
     ]);

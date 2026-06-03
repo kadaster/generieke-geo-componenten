@@ -1,13 +1,16 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Injector } from "@angular/core";
 import { GgcToolbarConnectService } from "./connect.service";
 
 describe("GgcToolbarConnectService", () => {
   let service: GgcToolbarConnectService;
-  let injectorSpy: jasmine.SpyObj<Injector>;
+  let injectorSpy: MockedObject<Injector>;
 
   beforeEach(() => {
-    injectorSpy = jasmine.createSpyObj("Injector", ["get"]);
+    injectorSpy = {
+      get: vi.fn().mockName("Injector.get")
+    };
 
     TestBed.configureTestingModule({
       providers: [
@@ -37,8 +40,8 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "MapService" };
 
-      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
-      injectorSpy.get.and.returnValue(mockInstance);
+      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      injectorSpy.get.mockReturnValue(mockInstance);
 
       const result = await service.getMapService();
 
@@ -50,8 +53,8 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "MapService" };
 
-      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
-      injectorSpy.get.and.returnValue(mockInstance);
+      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      injectorSpy.get.mockReturnValue(mockInstance);
 
       const first = await service.getMapService();
       const second = await service.getMapService();
@@ -63,8 +66,8 @@ describe("GgcToolbarConnectService", () => {
     it("geeft undefined/null terug als injector niets levert", async () => {
       const module = mockModule();
 
-      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
-      injectorSpy.get.and.returnValue(null);
+      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      injectorSpy.get.mockReturnValue(null);
 
       const result = await service.getMapService();
 
@@ -72,7 +75,7 @@ describe("GgcToolbarConnectService", () => {
     });
 
     it("vangt fouten bij laden van module", async () => {
-      spyOn<any>(service, "loadMapModule").and.rejectWith("load error");
+      vi.spyOn<any>(service, "loadMapModule").mockRejectedValue("load error");
 
       const result = await service.getMapService();
 
@@ -85,8 +88,8 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "DrawService" };
 
-      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
-      injectorSpy.get.and.returnValue(mockInstance);
+      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      injectorSpy.get.mockReturnValue(mockInstance);
 
       const result = await service.getDrawService();
 
@@ -98,8 +101,8 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "DrawService" };
 
-      spyOn<any>(service, "loadMapModule").and.resolveTo(module);
-      injectorSpy.get.and.returnValue(mockInstance);
+      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      injectorSpy.get.mockReturnValue(mockInstance);
 
       await service.getDrawService();
       await service.getDrawService();

@@ -13,7 +13,9 @@ describe("PiwikScriptLoaderService", () => {
 
     piwikScriptLoaderService = TestBed.inject(PiwikScriptLoaderService);
 
-    spyOn(document, "getElementById").and.returnValue(mockPiwikScriptElement);
+    vi.spyOn(document, "getElementById").mockReturnValue(
+      mockPiwikScriptElement
+    );
   });
 
   it("should be created", () => {

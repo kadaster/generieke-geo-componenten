@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { LayerToggleComponent } from "./layer-toggle.component";
@@ -14,8 +15,8 @@ import {
 describe("LayerToggleComponent", () => {
   let component: LayerToggleComponent;
   let fixture: ComponentFixture<LayerToggleComponent>;
-  let datasetTreeMapConnectServiceSpy: jasmine.SpyObj<DatasetTreeMapConnectService>;
-  let coreDatasetTreeServiceSpy: jasmine.SpyObj<CoreDatasetTreeService>;
+  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
+  let coreDatasetTreeServiceSpy: MockedObject<CoreDatasetTreeService>;
 
   let layerChanged$: Subject<LayerChangedEvent>;
   let zoomend$: Subject<MapEvent>;
@@ -24,29 +25,35 @@ describe("LayerToggleComponent", () => {
     layerChanged$ = new Subject<any>();
     zoomend$ = new Subject<any>();
 
-    datasetTreeMapConnectServiceSpy =
-      jasmine.createSpyObj<DatasetTreeMapConnectService>(
-        "DatasetTreeMapConnectService",
-        [
-          "isVisible",
-          "getTitle",
-          "getEnabled",
-          "toggleVisibility",
-          "getZoomendObservableForMap",
-          "getLayerChangedObservable",
-          "getTriggerObservable"
-        ]
-      );
-    coreDatasetTreeServiceSpy = jasmine.createSpyObj("CoreDatasettreeService", [
-      "emitDatasetTreeEvent"
-    ]);
-    datasetTreeMapConnectServiceSpy.getZoomendObservableForMap.and.returnValue(
+    datasetTreeMapConnectServiceSpy = {
+      isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
+      getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
+      getEnabled: vi.fn().mockName("DatasetTreeMapConnectService.getEnabled"),
+      toggleVisibility: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.toggleVisibility"),
+      getZoomendObservableForMap: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getZoomendObservableForMap"),
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable"),
+      getTriggerObservable: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getTriggerObservable")
+    };
+    coreDatasetTreeServiceSpy = {
+      emitDatasetTreeEvent: vi
+        .fn()
+        .mockName("CoreDatasettreeService.emitDatasetTreeEvent")
+    };
+    datasetTreeMapConnectServiceSpy.getZoomendObservableForMap.mockReturnValue(
       Promise.resolve(zoomend$.asObservable())
     );
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
       Promise.resolve(layerChanged$.asObservable())
     );
-    datasetTreeMapConnectServiceSpy.getTriggerObservable.and.returnValue(EMPTY);
+    datasetTreeMapConnectServiceSpy.getTriggerObservable.mockReturnValue(EMPTY);
 
     await TestBed.configureTestingModule({
       providers: [
@@ -75,10 +82,10 @@ describe("LayerToggleComponent", () => {
   });
 
   it("should update its values on layerchanged event", async () => {
-    datasetTreeMapConnectServiceSpy.getTitle.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getTitle.mockReturnValue(
       Promise.resolve("titleNew")
     );
-    datasetTreeMapConnectServiceSpy.isVisible.and.returnValue(
+    datasetTreeMapConnectServiceSpy.isVisible.mockReturnValue(
       Promise.resolve(true)
     );
 
@@ -95,10 +102,10 @@ describe("LayerToggleComponent", () => {
   });
 
   it("should not update its values on layerchanged event if this is not the layer", () => {
-    datasetTreeMapConnectServiceSpy.getTitle.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getTitle.mockReturnValue(
       Promise.resolve("titleNew")
     );
-    datasetTreeMapConnectServiceSpy.isVisible.and.returnValue(
+    datasetTreeMapConnectServiceSpy.isVisible.mockReturnValue(
       Promise.resolve(true)
     );
 
@@ -113,7 +120,7 @@ describe("LayerToggleComponent", () => {
   });
 
   it("should update its values on zoomend event", () => {
-    datasetTreeMapConnectServiceSpy.getEnabled.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getEnabled.mockReturnValue(
       Promise.resolve(true)
     );
 
@@ -123,7 +130,7 @@ describe("LayerToggleComponent", () => {
   });
 
   it("should send an event on click", async () => {
-    datasetTreeMapConnectServiceSpy.toggleVisibility.and.returnValue(
+    datasetTreeMapConnectServiceSpy.toggleVisibility.mockReturnValue(
       Promise.resolve(true)
     );
 
@@ -137,7 +144,7 @@ describe("LayerToggleComponent", () => {
   });
 
   it("updateEnabled: should default to enabled=true when getEnabled returns null/undefined", async () => {
-    datasetTreeMapConnectServiceSpy.getEnabled.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getEnabled.mockReturnValue(
       Promise.resolve(undefined as any)
     );
 
@@ -149,7 +156,7 @@ describe("LayerToggleComponent", () => {
   });
 
   it("updateEnabled: should set enabled to computedEnabled when no callback is provided", async () => {
-    datasetTreeMapConnectServiceSpy.getEnabled.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getEnabled.mockReturnValue(
       Promise.resolve(false)
     );
     component.layerEnabledCallback = undefined as any;
@@ -162,11 +169,11 @@ describe("LayerToggleComponent", () => {
   });
 
   it("updateEnabled: should override computedEnabled when callback returns boolean", async () => {
-    datasetTreeMapConnectServiceSpy.getEnabled.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getEnabled.mockReturnValue(
       Promise.resolve(true)
     );
 
-    const cb = jasmine.createSpy("layerEnabledCallback").and.resolveTo(false);
+    const cb = vi.fn().mockResolvedValue(false);
 
     component.layerEnabledCallback = cb as any;
 
@@ -182,7 +189,7 @@ describe("LayerToggleComponent", () => {
   });
 
   it("updateEnabled: should not override computedEnabled when callback does not return a boolean", async () => {
-    datasetTreeMapConnectServiceSpy.getEnabled.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getEnabled.mockReturnValue(
       Promise.resolve(false)
     );
 

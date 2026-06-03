@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { LayerSelectorComponent } from "../layer-selector/layer-selector.component";
 
@@ -9,15 +10,15 @@ describe("ThemeSelectorComponent", () => {
   let component: ThemeSelectorComponent;
   let fixture: ComponentFixture<ThemeSelectorComponent>;
 
-  let datasetTreeMapConnectServiceSpy: jasmine.SpyObj<DatasetTreeMapConnectService>;
+  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
 
   beforeEach(waitForAsync(() => {
-    datasetTreeMapConnectServiceSpy =
-      jasmine.createSpyObj<DatasetTreeMapConnectService>(
-        "DatasetTreeMapConnectService",
-        ["getLayerChangedObservable"]
-      );
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.and.returnValue(
+    datasetTreeMapConnectServiceSpy = {
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+    };
+    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
       Promise.resolve(Promise.resolve(of()))
     );
     TestBed.configureTestingModule({

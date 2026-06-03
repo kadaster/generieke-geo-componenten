@@ -73,45 +73,47 @@ describe("MeasureStylingService", () => {
         featurePolygon,
         1
       ) as Style[];
-      expect(drawingPolygon.length)
-        .withContext("Drawing polygon should have 2 styles")
-        .toBe(2);
+      expect(
+        drawingPolygon.length,
+        "Drawing polygon should have 2 styles"
+      ).toBe(2);
       const drawingLineString = (styleLike.drawingDrawStyle as StyleFunction)(
         featureLineString,
         1
       ) as Style[];
-      expect(drawingLineString.length)
-        .withContext("Drawing linestring should have 2 styles")
-        .toBe(2);
+      expect(
+        drawingLineString.length,
+        "Drawing linestring should have 2 styles"
+      ).toBe(2);
       const drawingPoint = (styleLike.drawingDrawStyle as StyleFunction)(
         featurePoint,
         1
       ) as Style[];
-      expect(drawingPoint.length)
-        .withContext("Drawing point should have 1 style")
-        .toBe(1);
+      expect(drawingPoint.length, "Drawing point should have 1 style").toBe(1);
 
       const finishedPolygon = (styleLike.finishDrawStyle as StyleFunction)(
         featurePolygon,
         1
       ) as Style[];
-      expect(finishedPolygon.length)
-        .withContext("Finished polygon should have 2 styles")
-        .toBe(2);
+      expect(
+        finishedPolygon.length,
+        "Finished polygon should have 2 styles"
+      ).toBe(2);
       const finishedLineString = (styleLike.finishDrawStyle as StyleFunction)(
         featureLineString,
         1
       ) as Style[];
-      expect(finishedLineString.length)
-        .withContext("Finished linestring should have 2 styles")
-        .toBe(2);
+      expect(
+        finishedLineString.length,
+        "Finished linestring should have 2 styles"
+      ).toBe(2);
       const finishedPoint = (styleLike.finishDrawStyle as StyleFunction)(
         featurePoint,
         1
       ) as Style[];
-      expect(finishedPoint.length)
-        .withContext("Finished point should have 1 style")
-        .toBe(1);
+      expect(finishedPoint.length, "Finished point should have 1 style").toBe(
+        1
+      );
     });
 
     it("should add the styling for the segment length", () => {
@@ -123,45 +125,47 @@ describe("MeasureStylingService", () => {
         featurePolygon,
         1
       ) as Style[];
-      expect(drawingPolygon.length)
-        .withContext("Drawing polygon should have 4 styles")
-        .toBe(4);
+      expect(
+        drawingPolygon.length,
+        "Drawing polygon should have 4 styles"
+      ).toBe(4);
       const drawingLineString = (styleLike.drawingDrawStyle as StyleFunction)(
         featureLineString,
         1
       ) as Style[];
-      expect(drawingLineString.length)
-        .withContext("Drawing linestring should have 2 styles")
-        .toBe(2);
+      expect(
+        drawingLineString.length,
+        "Drawing linestring should have 2 styles"
+      ).toBe(2);
       const drawingPoint = (styleLike.drawingDrawStyle as StyleFunction)(
         featurePoint,
         1
       ) as Style[];
-      expect(drawingPoint.length)
-        .withContext("Drawing point should have 1 style")
-        .toBe(1);
+      expect(drawingPoint.length, "Drawing point should have 1 style").toBe(1);
 
       const finishedPolygon = (styleLike.finishDrawStyle as StyleFunction)(
         featurePolygon,
         1
       ) as Style[];
-      expect(finishedPolygon.length)
-        .withContext("Finished polygon should have 4 styles")
-        .toBe(4);
+      expect(
+        finishedPolygon.length,
+        "Finished polygon should have 4 styles"
+      ).toBe(4);
       const finishedLineString = (styleLike.finishDrawStyle as StyleFunction)(
         featureLineString,
         1
       ) as Style[];
-      expect(finishedLineString.length)
-        .withContext("Finished linestring should have 3 styles")
-        .toBe(3);
+      expect(
+        finishedLineString.length,
+        "Finished linestring should have 3 styles"
+      ).toBe(3);
       const finishedPoint = (styleLike.finishDrawStyle as StyleFunction)(
         featurePoint,
         1
       ) as Style[];
-      expect(finishedPoint.length)
-        .withContext("Finished point should have 1 style")
-        .toBe(1);
+      expect(finishedPoint.length, "Finished point should have 1 style").toBe(
+        1
+      );
     });
 
     it("should add the styling for the area", () => {
@@ -173,45 +177,47 @@ describe("MeasureStylingService", () => {
         featurePolygon,
         1
       ) as Style[];
-      expect(drawingPolygon.length)
-        .withContext("Drawing polygon should have 2 styles")
-        .toBe(2);
+      expect(
+        drawingPolygon.length,
+        "Drawing polygon should have 2 styles"
+      ).toBe(2);
       const drawingLineString = (styleLike.drawingDrawStyle as StyleFunction)(
         featureLineString,
         1
       ) as Style[];
-      expect(drawingLineString.length)
-        .withContext("Drawing linestring should have 2 styles")
-        .toBe(2);
+      expect(
+        drawingLineString.length,
+        "Drawing linestring should have 2 styles"
+      ).toBe(2);
       const drawingPoint = (styleLike.drawingDrawStyle as StyleFunction)(
         featurePoint,
         1
       ) as Style[];
-      expect(drawingPoint.length)
-        .withContext("Drawing point should have 1 style")
-        .toBe(1);
+      expect(drawingPoint.length, "Drawing point should have 1 style").toBe(1);
 
       const finishedPolygon = (styleLike.finishDrawStyle as StyleFunction)(
         featurePolygon,
         1
       ) as Style[];
-      expect(finishedPolygon.length)
-        .withContext("Finished polygon should have 2 styles")
-        .toBe(2);
+      expect(
+        finishedPolygon.length,
+        "Finished polygon should have 2 styles"
+      ).toBe(2);
       const finishedLineString = (styleLike.finishDrawStyle as StyleFunction)(
         featureLineString,
         1
       ) as Style[];
-      expect(finishedLineString.length)
-        .withContext("Finished linestring should have 1 styles")
-        .toBe(1);
+      expect(
+        finishedLineString.length,
+        "Finished linestring should have 1 styles"
+      ).toBe(1);
       const finishedPoint = (styleLike.finishDrawStyle as StyleFunction)(
         featurePoint,
         1
       ) as Style[];
-      expect(finishedPoint.length)
-        .withContext("Finished point should have 1 style")
-        .toBe(1);
+      expect(finishedPoint.length, "Finished point should have 1 style").toBe(
+        1
+      );
     });
   });
 });

@@ -49,9 +49,13 @@ describe("ZoomLevelComponent", () => {
   it("when onInit() is called, subscribe should be executed, ", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const coreMapServiceSpy = spyOn(coreMapService, "getMap").and.stub();
+    const coreMapServiceSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockImplementation(() => {});
 
-    spyOn(mapEventsService, "getZoomendObservableForMap").and.returnValue(of());
+    vi.spyOn(mapEventsService, "getZoomendObservableForMap").mockReturnValue(
+      of()
+    );
 
     component.ngOnInit();
 
@@ -65,7 +69,7 @@ describe("ZoomLevelComponent", () => {
       }
     } as View;
 
-    spyOn(component["map"], "getView").and.returnValue(viewMock);
+    vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
 
     component["getZoomLevel"]();
     fixture.detectChanges();
@@ -85,7 +89,7 @@ describe("ZoomLevelComponent", () => {
       }
     } as View;
 
-    spyOn(component["map"], "getView").and.returnValue(viewMock);
+    vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
 
     component["getZoomLevel"]();
     fixture.detectChanges();
@@ -101,10 +105,9 @@ describe("ZoomLevelComponent", () => {
   it("when ngDestroy is called, unsubscribe should be executed, ", () => {
     component["zoomendSubscription"] = new Subscription();
 
-    const subscriptionSpy = spyOn(
-      component["zoomendSubscription"],
-      "unsubscribe"
-    ).and.stub();
+    const subscriptionSpy = vi
+      .spyOn(component["zoomendSubscription"], "unsubscribe")
+      .mockImplementation(() => {});
 
     component.ngOnDestroy();
 

@@ -1,5 +1,5 @@
+import type { Mock, MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { GgcControlsComponent } from "./ggc-controls.component";
 import { CoreViewerService } from "../service/core-viewer.service";
 import { Subject } from "rxjs";
@@ -9,8 +9,9 @@ import { createCesiumMock } from "../viewer/viewer-mock.spec";
 import { By } from "@angular/platform-browser";
 import { cameraUtils, DEFAULT_POSITIONSHIFT } from "../utils/camera-utils";
 import { LookAtPosition } from "../model/interfaces";
-import SpyObj = jasmine.SpyObj;
-import Spy = jasmine.Spy;
+import { vi } from "vitest";
+import SpyObj = MockedObject;
+import Spy = Mock;
 
 describe("ControlsComponent", () => {
   let component: GgcControlsComponent;
@@ -20,10 +21,12 @@ describe("ControlsComponent", () => {
   const viewerSubject: Subject<Viewer> = new Subject<Viewer>();
 
   beforeEach(async () => {
-    coreViewerServiceSpy = jasmine.createSpyObj("CoreViewerService", [
-      "getViewerObservable",
-      "getViewer"
-    ]);
+    coreViewerServiceSpy = {
+      getViewerObservable: vi
+        .fn()
+        .mockName("CoreViewerService.getViewerObservable"),
+      getViewer: vi.fn().mockName("CoreViewerService.getViewer")
+    };
     await TestBed.configureTestingModule({
       imports: [GgcControlsComponent],
       providers: [
@@ -32,7 +35,7 @@ describe("ControlsComponent", () => {
     }).compileComponents();
 
     cesiumMock = createCesiumMock();
-    coreViewerServiceSpy.getViewerObservable.and.returnValue(
+    coreViewerServiceSpy.getViewerObservable.mockReturnValue(
       viewerSubject.asObservable()
     );
 
@@ -72,10 +75,10 @@ describe("ControlsComponent", () => {
       By.css(".gc-controls-nav .cesium-control-default-camera-position")
     );
 
-    const setCameraPositionToDefaultSpy = spyOn(
+    const setCameraPositionToDefaultSpy = vi.spyOn(
       component,
       "setCameraPositionToDefault"
-    ).and.callThrough();
+    );
 
     defaultCameraPositionButton.nativeElement.click();
 
@@ -83,7 +86,7 @@ describe("ControlsComponent", () => {
   });
 
   it("should call flyToLookAtPosition when setCameraPositionToDefault() is called", () => {
-    const methodSpy = spyOn<any>(cameraUtils, "flyToLookAtPosition");
+    const methodSpy = vi.spyOn<any>(cameraUtils, "flyToLookAtPosition");
     component.setCameraPositionToDefault();
 
     const currentLookAtPosition: LookAtPosition = {
@@ -100,12 +103,11 @@ describe("ControlsComponent", () => {
   });
 
   it("should call lookAtTransform and rotateLeft when intersectionPoint can be calculated in setCameraFixed", () => {
-    (cesiumMock.camera?.getPickRay as Spy).and.returnValue({} as Ray);
-    (cesiumMock.scene?.globe.pick as Spy).and.returnValue({} as Cartesian3);
-    const spyTransform = spyOn(
-      Transforms,
-      "eastNorthUpToFixedFrame"
-    ).and.returnValue({} as Matrix4);
+    (cesiumMock.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
+    (cesiumMock.scene?.globe.pick as Spy).mockReturnValue({} as Cartesian3);
+    const spyTransform = vi
+      .spyOn(Transforms, "eastNorthUpToFixedFrame")
+      .mockReturnValue({} as Matrix4);
 
     component.rotateLeft();
 
@@ -117,8 +119,8 @@ describe("ControlsComponent", () => {
   });
 
   it("should not call lookAtTransform and rotateLeft when intersectionPoint can be calculated in setCameraFixed", () => {
-    (cesiumMock.camera?.getPickRay as Spy).and.returnValue({} as Ray);
-    (cesiumMock.scene?.globe.pick as Spy).and.returnValue(undefined);
+    (cesiumMock.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
+    (cesiumMock.scene?.globe.pick as Spy).mockReturnValue(undefined);
 
     component.rotateLeft();
 
@@ -132,9 +134,9 @@ describe("ControlsComponent", () => {
     let cameraFixedSpy: Spy;
 
     beforeEach(() => {
-      cameraFixedSpy = spyOn<any>(component, "setCameraFixed").and.returnValue(
-        true
-      );
+      cameraFixedSpy = vi
+        .spyOn<any>(component, "setCameraFixed")
+        .mockReturnValue(true);
     });
 
     it("should call camera.rotateUp on rotateUp", () => {

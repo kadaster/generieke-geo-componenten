@@ -19,6 +19,7 @@ export class Map {
     /* noop */
   }
   once(..._args: unknown[]): void {
+    n;
     /* noop */
   }
   un(..._args: unknown[]): void {

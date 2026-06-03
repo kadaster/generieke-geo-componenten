@@ -72,7 +72,7 @@ describe("AbstractBaseLayerComponent", () => {
     });
 
     it("should not call generateLayerId when layerId is sel", () => {
-      spyOn(component as any, "generateLayerId");
+      vi.spyOn(component as any, "generateLayerId");
       component["options"] = { mapIndex: "map", layerId: "test" };
       component.ngOnInit();
 
@@ -95,9 +95,9 @@ describe("AbstractBaseLayerComponent", () => {
         }
       } as OlMap;
 
-      const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-        removeLayerMock
-      );
+      const getMapSpy = vi
+        .spyOn(coreMapService, "getMap")
+        .mockReturnValue(removeLayerMock);
       component.setTestLayer(new Layer({ extent: [1, 2, 3, 4] }));
       component.ngOnDestroy();
 

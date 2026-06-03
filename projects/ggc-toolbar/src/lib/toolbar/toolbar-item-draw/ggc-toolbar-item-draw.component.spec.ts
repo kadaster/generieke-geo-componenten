@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
 import {
   ComponentFixture,
@@ -8,7 +9,7 @@ import {
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcToolbarItemDrawComponent } from "./ggc-toolbar-item-draw.component";
-import SpyObj = jasmine.SpyObj;
+import SpyObj = MockedObject;
 import { provideZoneChangeDetection } from "@angular/core";
 import { GgcDrawService } from "@kadaster/ggc-map/src/lib/drawing/service/ggc-draw.service";
 import {
@@ -26,18 +27,22 @@ describe("ToolbarItemDrawComponent", () => {
   let connectServiceSpy: SpyObj<GgcToolbarConnectService>;
 
   beforeEach(waitForAsync(() => {
-    drawServiceSpy = jasmine.createSpyObj("GgcDrawService", [
-      "startDraw",
-      "stopDraw",
-      "clearLayer"
-    ]);
+    drawServiceSpy = {
+      startDraw: vi.fn().mockName("GgcDrawService.startDraw"),
+      stopDraw: vi.fn().mockName("GgcDrawService.stopDraw"),
+      clearLayer: vi.fn().mockName("GgcDrawService.clearLayer")
+    };
 
-    connectServiceSpy = jasmine.createSpyObj("GgcToolbarConnectService", [
-      "getDrawService",
-      "getMapComponentDrawTypes"
-    ]);
+    connectServiceSpy = {
+      getDrawService: vi
+        .fn()
+        .mockName("GgcToolbarConnectService.getDrawService"),
+      getMapComponentDrawTypes: vi
+        .fn()
+        .mockName("GgcToolbarConnectService.getMapComponentDrawTypes")
+    };
 
-    connectServiceSpy.getDrawService.and.resolveTo(drawServiceSpy);
+    connectServiceSpy.getDrawService.mockResolvedValue(drawServiceSpy);
 
     TestBed.configureTestingModule({
       imports: [GgcToolbarItemDrawComponent],

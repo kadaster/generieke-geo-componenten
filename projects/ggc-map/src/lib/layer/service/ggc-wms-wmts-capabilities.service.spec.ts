@@ -132,7 +132,7 @@ const WMTS_CAPABILITIES_WITHOUT_STYLES = {
 };
 
 class CoreCapabilitiesServiceMock {
-  getCapabilitiesForUrl = jasmine.createSpy("getCapabilitiesForUrl");
+  getCapabilitiesForUrl = vi.fn();
 }
 
 describe("GgcWmsWmtsCapabilitiesService", () => {
@@ -157,12 +157,12 @@ describe("GgcWmsWmtsCapabilitiesService", () => {
   });
 
   describe("getCapabilities", () => {
-    it("should call the core service with the correct args", (done) => {
+    it("should call the core service with the correct args", async () => {
       const baseUrl = "https://example.com/path";
       const type = "WMS" as const;
       const expected = { ok: true };
 
-      coreMock.getCapabilitiesForUrl.and.returnValue(of(expected));
+      coreMock.getCapabilitiesForUrl.mockReturnValue(of(expected));
 
       service.getCapabilities(baseUrl, type).subscribe((res) => {
         expect(coreMock.getCapabilitiesForUrl).toHaveBeenCalledWith(
@@ -170,34 +170,31 @@ describe("GgcWmsWmtsCapabilitiesService", () => {
           type
         );
         expect(res).toEqual(expected);
-        done();
       });
     });
 
-    it("will propagate errors of CoreWmsWmtsCapabilitiesService", (done) => {
+    it("will propagate errors of CoreWmsWmtsCapabilitiesService", async () => {
       const error = new Error("network error");
-      coreMock.getCapabilitiesForUrl.and.returnValue(throwError(() => error));
+      coreMock.getCapabilitiesForUrl.mockReturnValue(throwError(() => error));
 
       service.getCapabilities("u", "WMTS").subscribe({
         next: () => fail("Expected error"),
         error: (e) => {
           expect(e).toBe(error);
-          done();
         }
       });
     });
   });
 
   describe("getCapabilitiesServiceWMS", () => {
-    it("will return a service (happy path)", (done) => {
-      coreMock.getCapabilitiesForUrl.and.returnValue(of(WMS_CAPABILITIES));
+    it("will return a service (happy path)", async () => {
+      coreMock.getCapabilitiesForUrl.mockReturnValue(of(WMS_CAPABILITIES));
 
       service
         .getServiceCapabilitiesWMS("https://example.com/wms")
         .subscribe((svc: ServiceCapabilities | undefined) => {
           if (!svc) {
-            fail("Expected service to be definend");
-            done();
+            throw new Error("Expected service to be definend");
             return;
           }
           expect(svc.type).toBe("WMS");
@@ -223,8 +220,6 @@ describe("GgcWmsWmtsCapabilitiesService", () => {
           const l2 = svc.layers[1];
           expect(l2.title).toBe("laag_2");
           expect(l2.styles.length).toBe(1);
-
-          done();
         });
     });
 
@@ -240,15 +235,14 @@ describe("GgcWmsWmtsCapabilitiesService", () => {
   });
 
   describe("getCapabilitiesServiceWMTS", () => {
-    it("should convert capabilities to a Styles object (happy path)", (done) => {
-      coreMock.getCapabilitiesForUrl.and.returnValue(of(WMTS_CAPABILITIES));
+    it("should convert capabilities to a Styles object (happy path)", async () => {
+      coreMock.getCapabilitiesForUrl.mockReturnValue(of(WMTS_CAPABILITIES));
 
       service
         .getServiceCapabilitiesWMTS("https://example.com/wmts")
         .subscribe((svc: ServiceCapabilities | undefined) => {
           if (!svc) {
-            fail("Expected service to be definend");
-            done();
+            throw new Error("Expected service to be definend");
             return;
           }
           expect(svc.type).toBe("WMTS");
@@ -267,7 +261,6 @@ describe("GgcWmsWmtsCapabilitiesService", () => {
           const l2 = svc.layers[1];
           expect(l2.name).toBe("wmts_layer_2");
           expect(l2.styles.length).toBe(2);
-          done();
         });
     });
 

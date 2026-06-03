@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
 import {
   ComponentFixture,
@@ -40,14 +41,18 @@ describe("VectorTileLayerComponent", () => {
   let fixture: ComponentFixture<GgcVectorTileLayerComponent>;
   let debugElement: DebugElement;
   let resultLayer: VectorTileLayer;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let httpTestingController: HttpTestingController;
 
   beforeEach(waitForAsync(() => {
-    coreSelectionServiceSpy = jasmine.createSpyObj("CoreSelectionServiceSpy", [
-      "handleFeatureInfoForLayer",
-      "clearFeatureInfoForLayer"
-    ]);
+    coreSelectionServiceSpy = {
+      handleFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer"),
+      clearFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionServiceSpy.clearFeatureInfoForLayer")
+    };
     TestBed.configureTestingModule({
       imports: [GgcVectorTileLayerComponent],
       providers: [
@@ -80,12 +85,12 @@ describe("VectorTileLayerComponent", () => {
 
   const createMapSpy = () => {
     // create ol.Map mock
-    const mapSpy: jasmine.SpyObj<OlMap> = jasmine.createSpyObj("ol.Map", [
-      "forEachFeatureAtPixel",
-      "removeLayer"
-    ]);
-    mapSpy.forEachFeatureAtPixel.and.callThrough();
-    mapSpy.removeLayer.and.stub();
+    const mapSpy: MockedObject<OlMap> = {
+      forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
+      removeLayer: vi.fn().mockName("ol.Map.removeLayer")
+    };
+    mapSpy.forEachFeatureAtPixel;
+    mapSpy.removeLayer.mockImplementation(() => {});
     return mapSpy;
   };
 
@@ -93,10 +98,9 @@ describe("VectorTileLayerComponent", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(olMapMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(olMapMock);
 
     component.options = {
       sourceOptions: {
@@ -121,10 +125,9 @@ describe("VectorTileLayerComponent", () => {
   it("when an url is provided, it should be applied to the source", fakeAsync(() => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(olMapMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(olMapMock);
 
     component.options = {
       sourceOptions: {
@@ -142,10 +145,9 @@ describe("VectorTileLayerComponent", () => {
   it("when min- an maxResolution is provided, it should be applied to the layer", fakeAsync(() => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(olMapMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(olMapMock);
 
     component.options = { minResolution: 10, maxResolution: 20 };
 
@@ -160,10 +162,9 @@ describe("VectorTileLayerComponent", () => {
   it("when an Openlayers style object is provided, it should be applied to the layer", fakeAsync(() => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(olMapMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(olMapMock);
 
     component.options = {
       layerOptions: {
@@ -189,10 +190,9 @@ describe("VectorTileLayerComponent", () => {
   it("when an Openlayers StyleFunction is provided and called, it should be applied to the layer", fakeAsync(() => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(olMapMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(olMapMock);
 
     component.options = {
       layerOptions: {
@@ -224,16 +224,15 @@ describe("VectorTileLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const mapEventsService: CoreMapEventsService =
       debugElement.injector.get(CoreMapEventsService);
-    const mapEventsServicespy = spyOn<CoreMapEventsService, any>(
+    const mapEventsServicespy = vi.spyOn<CoreMapEventsService, any>(
       mapEventsService,
       "getSingleclickObservableForMap"
-    ).and.callThrough();
+    );
     component.options = { getFeatureInfoOnSingleclick: true };
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(olMapMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(olMapMock);
     component.ngOnInit();
     tick();
     expect(getMapSpy).toHaveBeenCalled();
@@ -273,7 +272,7 @@ describe("VectorTileLayerComponent", () => {
     expect(component["foundFeatures"].length).toBe(14);
   });
 
-  it("should emit an event if getFeatureInfoOnSingleclick is true and the forEachFeaturePixelAt function returns features", (done) => {
+  it("should emit an event if getFeatureInfoOnSingleclick is true and the forEachFeaturePixelAt function returns features", async () => {
     component.options = {
       mapIndex: "test-map",
       layerName: "test-layer",
@@ -283,7 +282,7 @@ describe("VectorTileLayerComponent", () => {
     const mapSpy = createMapSpy();
     component["map"] = mapSpy;
 
-    const eventSpy = spyOn(component.events, "emit").and.callThrough();
+    const eventSpy = vi.spyOn(component.events, "emit");
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
 
@@ -301,10 +300,9 @@ describe("VectorTileLayerComponent", () => {
       expect(
         coreSelectionServiceSpy.handleFeatureInfoForLayer
       ).toHaveBeenCalled();
-      done();
     });
 
-    mapSpy.forEachFeatureAtPixel.and.callThrough();
+    mapSpy.forEachFeatureAtPixel;
     component.getFeatureInfo(evt);
   });
 
@@ -320,14 +318,14 @@ describe("VectorTileLayerComponent", () => {
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
 
-    mapSpy.forEachFeatureAtPixel.and.callThrough();
+    mapSpy.forEachFeatureAtPixel;
     component.getFeatureInfo(evt);
 
     expect(component["map"].forEachFeatureAtPixel).toHaveBeenCalled();
     expect(component["map"].forEachFeatureAtPixel).toHaveBeenCalledWith(
       pixel,
-      jasmine.any(Function),
-      { layerFilter: jasmine.any(Function), hitTolerance: 5 }
+      expect.any(Function),
+      { layerFilter: expect.any(Function), hitTolerance: 5 }
     );
   });
 
@@ -337,7 +335,9 @@ describe("VectorTileLayerComponent", () => {
         mapIndex: "test-map",
         enableOverzoom: true
       };
-      spyOn<any>(component, "getMaxZoom").and.returnValue(Promise.resolve(12));
+      vi.spyOn<any>(component, "getMaxZoom").mockReturnValue(
+        Promise.resolve(12)
+      );
 
       component.ngOnInit();
       tick();
@@ -362,7 +362,7 @@ describe("VectorTileLayerComponent", () => {
   describe("get maxZoom from sources", () => {
     beforeEach(() => {
       // To prevent that the getJsonFromUrl is called from the setStyle, which leads to complications in the httpTestcontroller
-      spyOn<any>(component, "setStyle").and.returnValue(
+      vi.spyOn<any>(component, "setStyle").mockReturnValue(
         Promise.resolve(undefined)
       );
     });
@@ -421,24 +421,26 @@ describe("VectorTileLayerComponent", () => {
 
     it("calculate the maxZoom fro the styleurls if not provided in the source or url if missing", async () => {
       // The different asynchronous calls made it diffult to use the httpTestController, so a spy is used
-      spyOn<any>(component, "getJsonFromUrl").and.callFake((url: string) => {
-        if (url === "styleUrl") {
-          return {
-            sources: {
-              source1: {
-                tiles: ["urlMaxzoom8/{z}/{y}/{x}"]
-              },
-              source2: {
-                tiles: ["urlMaxzoom9/{z}/{y}/{x}"]
+      vi.spyOn<any>(component, "getJsonFromUrl").mockImplementation(
+        (url: string) => {
+          if (url === "styleUrl") {
+            return {
+              sources: {
+                source1: {
+                  tiles: ["urlMaxzoom8/{z}/{y}/{x}"]
+                },
+                source2: {
+                  tiles: ["urlMaxzoom9/{z}/{y}/{x}"]
+                }
               }
-            }
-          };
-        } else if (url === "urlMaxzoom8?f=tilejson") {
-          return { maxzoom: 8 };
-        } else if (url === "urlMaxzoom9?f=tilejson") {
-          return { maxzoom: 9 };
+            };
+          } else if (url === "urlMaxzoom8?f=tilejson") {
+            return { maxzoom: 8 };
+          } else if (url === "urlMaxzoom9?f=tilejson") {
+            return { maxzoom: 9 };
+          }
         }
-      });
+      );
       component.options = {
         mapIndex: "test-map",
         enableOverzoom: true,

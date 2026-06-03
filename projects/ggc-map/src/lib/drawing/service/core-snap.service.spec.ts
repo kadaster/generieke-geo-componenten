@@ -27,10 +27,9 @@ describe("CoreSnapService", () => {
   });
 
   it("should activate snapInteractions when called", () => {
-    const getVectorSourceFromLayerSpy = spyOn<any>(
-      mapService,
-      "createLayerAndAddToMap"
-    ).and.callFake(createVectorLayer);
+    const getVectorSourceFromLayerSpy = vi
+      .spyOn<any>(mapService, "createLayerAndAddToMap")
+      .mockImplementation(createVectorLayer);
 
     const getMapMock = {
       addInteraction: (_: Snap) => {},
@@ -38,10 +37,10 @@ describe("CoreSnapService", () => {
     };
 
     const layerName = "drawLayer";
-    const getMapSpy = spyOn(mapService, "getMap").and.returnValue(
-      getMapMock as unknown as OlMap
-    );
-    const addInteractionSpy = spyOn(getMapMock, "addInteraction");
+    const getMapSpy = vi
+      .spyOn(mapService, "getMap")
+      .mockReturnValue(getMapMock as unknown as OlMap);
+    const addInteractionSpy = vi.spyOn(getMapMock, "addInteraction");
 
     service.startSnap(layerName, mapIndex, { pixelTolerance: 30 });
 
@@ -55,14 +54,14 @@ describe("CoreSnapService", () => {
     const snapOptions = {};
     const drawLayer = "layer3";
 
-    spyOn(service, "initializeSnap");
-    spyOn(service, "addToSnapFeatures");
+    vi.spyOn(service, "initializeSnap");
+    vi.spyOn(service, "addToSnapFeatures");
     service.startSnap(drawLayer, mapIndex, snapOptions);
     expect(service.initializeSnap).toHaveBeenCalledTimes(1);
     expect(service.initializeSnap).toHaveBeenCalledWith("layer3", mapIndex);
     expect(service.addToSnapFeatures).toHaveBeenCalledTimes(1);
     expect(service.addToSnapFeatures).toHaveBeenCalledWith(
-      jasmine.any(VectorLayer)
+      expect.any(VectorLayer)
     );
     expect(
       service.snapInteractions.get(`${mapIndex}-${drawLayer}`)
@@ -72,23 +71,23 @@ describe("CoreSnapService", () => {
   it("should call initialize snap on start Snap for snapDrawLayers", () => {
     const snapOptions = { snapDrawLayers: ["layer1", "layer2"] };
 
-    spyOn(service, "initializeSnap");
-    spyOn(service, "addToSnapFeatures");
+    vi.spyOn(service, "initializeSnap");
+    vi.spyOn(service, "addToSnapFeatures");
     service.startSnap("layer3", mapIndex, snapOptions);
     expect(service.initializeSnap).toHaveBeenCalledTimes(2);
     expect(service.initializeSnap).toHaveBeenCalledWith("layer1", mapIndex);
     expect(service.initializeSnap).toHaveBeenCalledWith("layer2", mapIndex);
     expect(service.addToSnapFeatures).toHaveBeenCalledTimes(2);
     expect(service.addToSnapFeatures).toHaveBeenCalledWith(
-      jasmine.any(VectorLayer)
+      expect.any(VectorLayer)
     );
   });
 
   it("should call addToSnapFeatures and not initializeSnap on start Snap for snapLayers", () => {
     const snapOptions = { snapLayers: ["slayer1", "slayer2"] };
 
-    spyOn(service, "addToSnapFeatures");
-    spyOn(service, "initializeSnap");
+    vi.spyOn(service, "addToSnapFeatures");
+    vi.spyOn(service, "initializeSnap");
     service.startSnap("layer3", mapIndex, snapOptions);
     expect(service.initializeSnap).not.toHaveBeenCalled();
     expect(service.addToSnapFeatures).toHaveBeenCalledTimes(2);
@@ -98,7 +97,7 @@ describe("CoreSnapService", () => {
     const snap = createSnapInteraction();
     const drawLayer = "layer";
     const fakeMap = createSpyObj("olMap", ["removeInteraction"]);
-    spyOn(mapService, "getMap").and.returnValue(fakeMap);
+    vi.spyOn(mapService, "getMap").mockReturnValue(fakeMap);
     service.snapInteractions = new Map();
     service.snapInteractions.set(`${mapIndex}-${drawLayer}`, snap);
     service.stopSnap(mapIndex);
@@ -112,11 +111,10 @@ describe("CoreSnapService", () => {
 
   it("startSnapInteractionAgainIfExists, should NOT call startSnapInteraction when interaction for mapIndex does not exist", () => {
     const layerName = "TestLayer";
-    const snapInteractionsMapSpy = spyOn(
-      service["snapInteractions"],
-      "get"
-    ).and.returnValue(undefined);
-    const startSnapInteractionSpy = spyOn(service, "startSnap");
+    const snapInteractionsMapSpy = vi
+      .spyOn(service["snapInteractions"], "get")
+      .mockReturnValue(undefined);
+    const startSnapInteractionSpy = vi.spyOn(service, "startSnap");
 
     service["startSnapAgainIfExists"](layerName, mapIndex);
 
@@ -127,16 +125,17 @@ describe("CoreSnapService", () => {
   it("startSnapInteractionAgainIfExists, should call startSnapInteraction when interaction for mapIndex does exist", () => {
     const snap = {} as Snap;
     const layerName = "TestLayer";
-    const snapInteractionsMapSpy = spyOn(
-      service["snapInteractions"],
-      "get"
-    ).and.returnValue(snap);
+    const snapInteractionsMapSpy = vi
+      .spyOn(service["snapInteractions"], "get")
+      .mockReturnValue(snap);
 
     const getMapMock = {
-      addInteraction: jasmine.createSpy("addInteraction")
+      addInteraction: vi.fn()
     };
 
-    spyOn(mapService, "getMap").and.returnValue(getMapMock as unknown as OlMap);
+    vi.spyOn(mapService, "getMap").mockReturnValue(
+      getMapMock as unknown as OlMap
+    );
 
     service["startSnapAgainIfExists"](layerName, mapIndex);
 

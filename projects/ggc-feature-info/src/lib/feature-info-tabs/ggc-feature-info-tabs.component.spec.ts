@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { Feature } from "ol";
@@ -12,7 +13,7 @@ import { GgcFeatureInfoTabsComponent } from "./ggc-feature-info-tabs.component";
 describe("FeatureInfoTabsComponent", () => {
   let component: GgcFeatureInfoTabsComponent;
   let fixture: ComponentFixture<GgcFeatureInfoTabsComponent>;
-  let sortFilterServiceSpy: jasmine.Spy;
+  let sortFilterServiceSpy: Mock;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -27,7 +28,7 @@ describe("FeatureInfoTabsComponent", () => {
     const featureInfoConfigService = TestBed.inject(
       GgcFeatureInfoConfigService
     );
-    sortFilterServiceSpy = spyOn(featureInfoConfigService, "sortTabs");
+    sortFilterServiceSpy = vi.spyOn(featureInfoConfigService, "sortTabs");
   });
 
   it("should create", () => {

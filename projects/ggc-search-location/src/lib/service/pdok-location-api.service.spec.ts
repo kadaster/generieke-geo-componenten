@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import {
@@ -15,7 +16,7 @@ import { GgcAdditionalSuggestionSourceService } from "./ggc-additional-suggestio
 describe("PdokLocationApiService", () => {
   let service: PdokLocationApiService;
   let httpMock: HttpTestingController;
-  let additionalSourceSpy: jasmine.SpyObj<GgcAdditionalSuggestionSourceService>;
+  let additionalSourceSpy: MockedObject<GgcAdditionalSuggestionSourceService>;
 
   const mockPdokLocationApiResult = {
     collections: [
@@ -39,10 +40,10 @@ describe("PdokLocationApiService", () => {
   };
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj("GgcAdditionalSuggestionSourceService", [
-      "search"
-    ]);
-    spy.search.and.returnValue(of([]));
+    const spy = {
+      search: vi.fn().mockName("GgcAdditionalSuggestionSourceService.search")
+    };
+    spy.search.mockReturnValue(of([]));
 
     TestBed.configureTestingModule({
       providers: [
@@ -56,7 +57,7 @@ describe("PdokLocationApiService", () => {
     httpMock = TestBed.inject(HttpTestingController);
     additionalSourceSpy = TestBed.inject(
       GgcAdditionalSuggestionSourceService
-    ) as jasmine.SpyObj<GgcAdditionalSuggestionSourceService>;
+    ) as MockedObject<GgcAdditionalSuggestionSourceService>;
     service = TestBed.inject(PdokLocationApiService);
 
     const req = httpMock.expectOne((r) => r.url.endsWith("collections?f=json"));
@@ -112,10 +113,10 @@ describe("PdokLocationApiService", () => {
           .error(new ProgressEvent("error"));
       }
 
-      expect(errorOccurred).toBeTrue();
+      expect(errorOccurred).toBe(true);
     }));
 
-    it("moet extra suggesties van de GgcAdditionalSuggestionSourceService toevoegen", (done) => {
+    it("moet extra suggesties van de GgcAdditionalSuggestionSourceService toevoegen", async () => {
       const term = "test";
       const mockAltSuggestions = [
         {
@@ -125,7 +126,7 @@ describe("PdokLocationApiService", () => {
           collection: "custom"
         }
       ];
-      additionalSourceSpy.search.and.returnValue(of(mockAltSuggestions as any));
+      additionalSourceSpy.search.mockReturnValue(of(mockAltSuggestions as any));
 
       service.search(term).subscribe((response) => {
         expect(response.features.length).toBe(1);
@@ -133,23 +134,21 @@ describe("PdokLocationApiService", () => {
           "Extra Locatie"
         );
         expect(response.numberReturned).toBe(1);
-        done();
       });
 
       const req = httpMock.expectOne((r) => r.url.includes("search?q=test"));
       req.flush({ features: [], numberReturned: 0 });
     });
 
-    it("moet extra suggesties vooraan plaatsen als alternativeSuggestionsFirst true is", (done) => {
+    it("moet extra suggesties vooraan plaatsen als alternativeSuggestionsFirst true is", async () => {
       const term = "test";
-      additionalSourceSpy.search.and.returnValue(
+      additionalSourceSpy.search.mockReturnValue(
         of([{ id: "alt", display_name: "Alt" }] as any)
       );
 
       service.search(term, true).subscribe((response) => {
         expect(response.features[0].id).toBe("alt");
         expect(response.features[1].id).toBe("pdok-1");
-        done();
       });
 
       const req = httpMock.expectOne((r) => r.url.includes("search?q=test"));

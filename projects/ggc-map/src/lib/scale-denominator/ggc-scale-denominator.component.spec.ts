@@ -47,9 +47,9 @@ describe("ScaleDenominatorComponent", () => {
     const mapMock = getMapMock(
       crsConfigService.getRdNewCrsConfig().resolutions[3]
     );
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-      mapMock as OlMap
-    );
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(mapMock as OlMap);
 
     component.ngOnInit();
     component["calculateScaleDenominator"]();
@@ -66,9 +66,9 @@ describe("ScaleDenominatorComponent", () => {
     const mapMock = getMapMock(
       crsConfigService.getRdNewCrsConfig().resolutions[13]
     );
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-      mapMock as OlMap
-    );
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(mapMock as OlMap);
 
     component.ngOnInit();
     component["calculateScaleDenominator"]();
@@ -100,10 +100,9 @@ describe("ScaleDenominatorComponent", () => {
   it("should unsubscribe when ngDestroy is called, ", () => {
     component["zoomendSubscription"] = new Subscription();
 
-    const subscriptionSpy = spyOn(
-      component["zoomendSubscription"],
-      "unsubscribe"
-    ).and.stub();
+    const subscriptionSpy = vi
+      .spyOn(component["zoomendSubscription"], "unsubscribe")
+      .mockImplementation(() => {});
 
     component.ngOnDestroy();
 

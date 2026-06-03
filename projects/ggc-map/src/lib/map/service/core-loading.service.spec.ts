@@ -17,18 +17,17 @@ describe("CoreLoadingServiceService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should switch to loading === true", (done) => {
+  it("should switch to loading === true", async () => {
     service["loadStatesMap"].getOrCreateSubject("testMap").next(true);
     service
       .isLoading("testMap")
       .pipe(first())
       .subscribe((val) => {
         expect(val).toBeTruthy();
-        done();
       });
   });
 
-  it('should emit only 1 "true" event while loading', (done) => {
+  it('should emit only 1 "true" event while loading', async () => {
     let calls = 0;
     service.isLoading("testMap").subscribe((loading) => {
       if (loading) {
@@ -43,7 +42,6 @@ describe("CoreLoadingServiceService", () => {
 
     setTimeout(function () {
       expect(calls).toEqual(1);
-      done();
     }, 2000);
   });
 

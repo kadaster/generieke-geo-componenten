@@ -1,3 +1,4 @@
+import type { Mock, MockedObject } from "vitest";
 import { SimpleChange } from "@angular/core";
 import {
   ComponentFixture,
@@ -24,23 +25,27 @@ describe("GgcDatasetSwitcherComponent", () => {
   let fixture: ComponentFixture<GgcDatasetSwitcherComponent>;
 
   let olLayerServiceMock: {
-    setVisibilityLayers: jasmine.Spy;
-    isVisible: jasmine.Spy;
+    setVisibilityLayers: Mock;
+    isVisible: Mock;
   };
 
-  let connectServiceMock: jasmine.SpyObj<GgcDatasetTreeConnectService>;
+  let connectServiceMock: MockedObject<GgcDatasetTreeConnectService>;
 
   beforeEach(waitForAsync(() => {
     olLayerServiceMock = {
-      setVisibilityLayers: jasmine.createSpy("setVisibilityLayers"),
-      isVisible: jasmine.createSpy("isVisible")
+      setVisibilityLayers: vi.fn(),
+      isVisible: vi.fn()
     };
 
-    connectServiceMock = jasmine.createSpyObj("GgcDatasetTreeConnectService", [
-      "getGgcOLLayerService"
-    ]);
+    connectServiceMock = {
+      getGgcOLLayerService: vi
+        .fn()
+        .mockName("GgcDatasetTreeConnectService.getGgcOLLayerService")
+    };
 
-    connectServiceMock.getGgcOLLayerService.and.resolveTo(olLayerServiceMock);
+    connectServiceMock.getGgcOLLayerService.mockResolvedValue(
+      olLayerServiceMock
+    );
 
     TestBed.configureTestingModule({
       imports: [GgcDatasetSwitcherComponent],
@@ -68,7 +73,7 @@ describe("GgcDatasetSwitcherComponent", () => {
 
   describe("ngOnChanges", () => {
     it("should do nothing when themes change is missing", () => {
-      const spy = spyOn(component as any, "setInitialActiveTheme");
+      const spy = vi.spyOn(component as any, "setInitialActiveTheme");
 
       component.ngOnChanges({});
 
@@ -76,7 +81,7 @@ describe("GgcDatasetSwitcherComponent", () => {
     });
 
     it("should NOT schedule initial activation when themes do not become available", fakeAsync(() => {
-      const spy = spyOn(component as any, "setInitialActiveTheme");
+      const spy = vi.spyOn(component as any, "setInitialActiveTheme");
 
       const themes = createThemes(["Theme A", "Theme B"]);
       component.themes = themes;
@@ -91,10 +96,9 @@ describe("GgcDatasetSwitcherComponent", () => {
     }));
 
     it("should schedule initial activation when themes become available", fakeAsync(() => {
-      const spy = spyOn(
-        component as any,
-        "setInitialActiveTheme"
-      ).and.resolveTo();
+      const spy = vi
+        .spyOn(component as any, "setInitialActiveTheme")
+        .mockResolvedValue();
 
       const themes = createThemes(["Theme A", "Theme B"]);
       component.themes = themes;
@@ -112,7 +116,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       const themes = createThemesWithLayers();
       component.themes = themes;
 
-      olLayerServiceMock.isVisible.and.callFake(
+      olLayerServiceMock.isVisible.mockImplementation(
         (layerId: string) => layerId === "b-1"
       );
 
@@ -137,7 +141,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       const themes = createThemesWithLayers();
       component.themes = themes;
 
-      olLayerServiceMock.isVisible.and.returnValue(false);
+      olLayerServiceMock.isVisible.mockReturnValue(false);
 
       const emitted: DatasetSwitcherEvent[] = [];
       component.events.subscribe((e) => emitted.push(e));
@@ -162,7 +166,7 @@ describe("GgcDatasetSwitcherComponent", () => {
 
   describe("handleChangeEvent", () => {
     it("should ignore invalid events", () => {
-      const emitSpy = spyOn(component.events, "emit");
+      const emitSpy = vi.spyOn(component.events, "emit");
 
       component.handleChangeEvent({ target: {} } as any);
 
@@ -171,7 +175,7 @@ describe("GgcDatasetSwitcherComponent", () => {
     });
 
     it("should ignore unknown theme", () => {
-      const emitSpy = spyOn(component.events, "emit");
+      const emitSpy = vi.spyOn(component.events, "emit");
       component.themes = createThemes(["Theme A"]);
 
       component.handleChangeEvent({ target: { id: "X" } } as any);
@@ -184,7 +188,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       component.themes = themes;
       component["activeTheme"] = themes[0];
 
-      const emitSpy = spyOn(component.events, "emit").and.callThrough();
+      const emitSpy = vi.spyOn(component.events, "emit");
 
       component.handleChangeEvent({ target: { id: "Theme B" } } as any);
 

@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import {
   Cartesian2,
   Cartesian3,
@@ -18,8 +19,8 @@ import {
 import { Viewer } from "@cesium/widgets";
 import { createCesiumMock } from "../viewer/viewer-mock.spec";
 import { LookAtPosition, Position } from "../model/interfaces";
-import Spy = jasmine.Spy;
-
+import Spy = Mock;
+import { vi } from "vitest";
 describe("getCameraValues", () => {
   it("should return cameraPosition", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
@@ -93,8 +94,8 @@ describe("createFlyToOptions", () => {
 describe("getLookAtPositionAndRange", () => {
   it("it should return a position and range when looking at a position", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    (viewer.camera?.getPickRay as Spy).and.returnValue({} as Ray);
-    (viewer.scene?.globe.pick as Spy).and.returnValue(
+    (viewer.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
+    (viewer.scene?.globe.pick as Spy).mockReturnValue(
       Cartesian3.fromDegrees(4.6, 52.5, 10)
     );
     const value = getLookAtPositionAndRange(viewer.camera!, viewer as Viewer);
@@ -105,8 +106,8 @@ describe("getLookAtPositionAndRange", () => {
   });
   it("it should return undefined when not looking at a position", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    (viewer.camera?.getPickRay as Spy).and.returnValue({} as Ray);
-    (viewer.scene?.globe.pick as Spy).and.returnValue(undefined);
+    (viewer.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
+    (viewer.scene?.globe.pick as Spy).mockReturnValue(undefined);
     const value = getLookAtPositionAndRange(viewer.camera!, viewer as Viewer);
     expect(value).toBe(undefined);
   });
@@ -115,10 +116,10 @@ describe("getLookAtPositionAndRange", () => {
 describe("getLookAtCartesian", () => {
   it("should get the camera towards a cartesian", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    const cameraSpy = (viewer.camera?.getPickRay as Spy).and.returnValue(
+    const cameraSpy = (viewer.camera?.getPickRay as Spy).mockReturnValue(
       new Ray()
     );
-    const resultSpy = (viewer.scene?.globe.pick as Spy).and.returnValue(
+    const resultSpy = (viewer.scene?.globe.pick as Spy).mockReturnValue(
       new Cartesian3()
     );
 
@@ -136,10 +137,10 @@ describe("flyToLookAtPosition", () => {
 
   beforeEach(() => {
     viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    cameraLookAtSpy = (viewer.camera?.lookAt as Spy).and.returnValue({});
+    cameraLookAtSpy = (viewer.camera?.lookAt as Spy).mockReturnValue({});
     cameraLookAtTransformSpy = (
       viewer.camera?.lookAtTransform as Spy
-    ).and.returnValue({});
+    ).mockReturnValue({});
   });
 
   it("should fly to look at the position with given orientation and range", async () => {
@@ -199,10 +200,9 @@ describe("getTerrainHeight", () => {
         computeHeight: 50
       }
     } as unknown as TerrainProvider;
-    const sampleTerrainMostDetailedUtilsSpy = spyOn(
-      cameraUtils as any,
-      "sampleTerrainMostDetailedUtils"
-    ).and.returnValue(Promise.resolve([{ height: 100 } as Cartographic]));
+    const sampleTerrainMostDetailedUtilsSpy = vi
+      .spyOn(cameraUtils as any, "sampleTerrainMostDetailedUtils")
+      .mockReturnValue(Promise.resolve([{ height: 100 } as Cartographic]));
 
     const result = await (cameraUtils as any).getTerrainHeight(
       position,

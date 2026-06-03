@@ -9,7 +9,7 @@ export class Geometry implements IGeometry {
   protected _coords: unknown = null;
 
   getType(): string {
-    return 'Geometry';
+    return "Geometry";
   }
 
   getExtent(): [number, number, number, number] {

@@ -11,7 +11,7 @@ describe("ClusterUtils", () => {
 
     const result = featureCollectionForLayerHasCluster(featureinfoCollection);
 
-    expect(result).toBeFalse();
+    expect(result).toBe(false);
   });
 
   it("should return false if featureinfoCollection.features only contains features without property 'features'", () => {
@@ -22,7 +22,7 @@ describe("ClusterUtils", () => {
 
     const result = featureCollectionForLayerHasCluster(featureinfoCollection);
 
-    expect(result).toBeFalse();
+    expect(result).toBe(false);
   });
 
   it("should return false if featureinfoCollection.features contains a feature with property 'features' containing 1 feature", () => {
@@ -34,7 +34,7 @@ describe("ClusterUtils", () => {
 
     const result = featureCollectionForLayerHasCluster(featureinfoCollection);
 
-    expect(result).toBeFalse();
+    expect(result).toBe(false);
   });
 
   it("should return true if featureinfoCollection.features contains a feature with property 'features' containing 2 features", () => {
@@ -48,7 +48,7 @@ describe("ClusterUtils", () => {
 
     const result = featureCollectionForLayerHasCluster(featureinfoCollection);
 
-    expect(result).toBeTrue();
+    expect(result).toBe(true);
   });
 
   it("should return array of features when called with features", () => {

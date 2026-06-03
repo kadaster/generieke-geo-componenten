@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { CoreSelectionService } from "./core-selection.service";
 import { SelectionModeTypes } from "./selection-type.enum";
@@ -6,14 +7,20 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 describe("SelectService", () => {
   let selectionService: GgcSelectionService;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
 
   beforeEach(() => {
-    const selectionSpyObj = jasmine.createSpyObj("CoreSelectionService", [
-      "setSelectionModeFormapIndex",
-      "clearSelectionForMap",
-      "getObservableForMap"
-    ]);
+    const selectionSpyObj = {
+      setSelectionModeFormapIndex: vi
+        .fn()
+        .mockName("CoreSelectionService.setSelectionModeFormapIndex"),
+      clearSelectionForMap: vi
+        .fn()
+        .mockName("CoreSelectionService.clearSelectionForMap"),
+      getObservableForMap: vi
+        .fn()
+        .mockName("CoreSelectionService.getObservableForMap")
+    };
     TestBed.configureTestingModule({
       providers: [
         GgcSelectionService,
@@ -23,7 +30,7 @@ describe("SelectService", () => {
     selectionService = TestBed.inject(GgcSelectionService);
     coreSelectionServiceSpy = TestBed.inject(
       CoreSelectionService
-    ) as jasmine.SpyObj<CoreSelectionService>;
+    ) as MockedObject<CoreSelectionService>;
   });
 
   it("should be created", () => {

@@ -57,12 +57,12 @@ describe("DatasetTreeModelCreateService", () => {
       expect(serviceFromFactory).toBeDefined();
       expect(serviceFromFactory.layers.length).toBe(2);
       expect(serviceFromFactory.layers[0]).toEqual(
-        jasmine.objectContaining({
+        expect.objectContaining({
           layerId: "id1"
         })
       );
       expect(serviceFromFactory.layers[1]).toEqual(
-        jasmine.objectContaining({
+        expect.objectContaining({
           layerId: "id2"
         })
       );
@@ -151,7 +151,7 @@ describe("DatasetTreeModelCreateService", () => {
       expect(layerFromFactory).toEqual(originalLayer);
       // or test equality with jasmine.objectContaining
       expect(layerFromFactory).toEqual(
-        jasmine.objectContaining({
+        expect.objectContaining({
           layerId: "testId"
         })
       );

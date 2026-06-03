@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 
 import { GgcViewerService } from "./ggc-viewer.service";
@@ -9,14 +10,14 @@ import { createCesiumMock } from "../viewer/viewer-mock.spec";
 
 describe("GgcViewerService", () => {
   let service: GgcViewerService;
-  let coreViewerService: jasmine.SpyObj<CoreViewerService>;
+  let coreViewerService: MockedObject<CoreViewerService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(GgcViewerService);
     coreViewerService = TestBed.inject(
       CoreViewerService
-    ) as jasmine.SpyObj<CoreViewerService>;
+    ) as MockedObject<CoreViewerService>;
   });
 
   it("should be created", () => {

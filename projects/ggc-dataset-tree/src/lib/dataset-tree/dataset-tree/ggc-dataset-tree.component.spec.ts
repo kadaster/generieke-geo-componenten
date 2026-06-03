@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { GgcDatasetTreeModelCreateService } from "../../core/ggc-dataset-tree-model-create.service";
 import { Dataset } from "../../model/theme/dataset.model";
@@ -20,7 +21,7 @@ describe("DatasetTreeComponent", () => {
 
   let testRecursionTree = [];
 
-  let datasetTreeMapConnectServiceSpy: jasmine.SpyObj<DatasetTreeMapConnectService>;
+  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
 
   function createTreeForTest(niveau: number, open = false): Theme[] {
     let i;
@@ -45,22 +46,24 @@ describe("DatasetTreeComponent", () => {
   }
 
   beforeEach(waitForAsync(() => {
-    datasetTreeMapConnectServiceSpy =
-      jasmine.createSpyObj<DatasetTreeMapConnectService>(
-        "DatasetTreeMapConnectService",
-        ["isVisible", "getTitle", "getLayerChangedObservable"]
-      );
-    datasetTreeMapConnectServiceSpy.isVisible.and.callFake((layerId) => {
+    datasetTreeMapConnectServiceSpy = {
+      isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
+      getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+    };
+    datasetTreeMapConnectServiceSpy.isVisible.mockImplementation((layerId) => {
       if (layerId == "testLayer") return Promise.resolve(true);
       if (layerId == "testLayer2") return Promise.resolve(false);
       return Promise.resolve(false);
     });
-    datasetTreeMapConnectServiceSpy.getTitle.and.callFake((layerId) => {
+    datasetTreeMapConnectServiceSpy.getTitle.mockImplementation((layerId) => {
       if (layerId == "testLayer") return Promise.resolve("testLayer");
       if (layerId == "testLayer2") return Promise.resolve("testLayer2");
       return Promise.resolve("");
     });
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.and.returnValue(
+    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
       Promise.resolve(of())
     );
     TestBed.configureTestingModule({
@@ -228,24 +231,21 @@ describe("DatasetTreeComponent", () => {
     classes: string[]
   ) {
     const element = nativeElement.querySelector(querySelector);
-    expect(element)
-      .withContext(`Expected ${querySelector} to be present in DOM tree`)
-      .not.toBeNull();
+    expect(
+      element,
+      `Expected ${querySelector} to be present in DOM tree`
+    ).not.toBeNull();
     if (element) {
       classes.forEach((cssClass) => {
-        expect(element.classList.contains(cssClass))
-          .withContext(
-            `Expecting ${querySelector} to contain class ${cssClass}`
-          )
-          .toBeTrue();
+        expect(
+          element.classList.contains(cssClass),
+          `Expecting ${querySelector} to contain class ${cssClass}`
+        ).toBe(true);
       });
-      expect(element.classList.length)
-        .withContext(
-          `Expecting ${querySelector}'s classlist to match '${classes.join(
-            " "
-          )}'`
-        )
-        .toEqual(classes.length);
+      expect(
+        element.classList.length,
+        `Expecting ${querySelector}'s classlist to match '${classes.join(" ")}'`
+      ).toEqual(classes.length);
     }
   }
 });

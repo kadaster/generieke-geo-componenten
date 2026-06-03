@@ -1,3 +1,4 @@
+import type { Mock, MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { GgcLayerService } from "./ggc-layer.service";
 import { GgcMapService } from "../../map/service/ggc-map.service";
@@ -7,7 +8,7 @@ import {
   withInterceptorsFromDi
 } from "@angular/common/http";
 import { CoreWmsWmtsCapabilitiesService } from "../../layer/service/core-wms-wmts-capabilities.service";
-import SpyObj = jasmine.SpyObj;
+import SpyObj = MockedObject;
 import { of } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
@@ -16,36 +17,44 @@ import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
-  let mapServiceSpy: jasmine.SpyObj<GgcMapService>;
-  let mockCreateComponent: jasmine.Spy;
+  let mapServiceSpy: MockedObject<GgcMapService>;
+  let mockCreateComponent: Mock;
   let capSpy: SpyObj<CoreWmsWmtsCapabilitiesService>;
   let coreMapServiceSpy: SpyObj<CoreMapService>;
   beforeEach(() => {
-    const mapServiceMock = jasmine.createSpyObj("MapService", [
-      "getLayer",
-      "getMap",
-      "getLayerChangedObservable"
-    ]);
+    const mapServiceMock = {
+      getLayer: vi.fn().mockName("MapService.getLayer"),
+      getMap: vi.fn().mockName("MapService.getMap"),
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("MapService.getLayerChangedObservable")
+    };
 
-    mapServiceMock.getLayer.and.returnValue(null);
-    mapServiceMock.getMap.and.returnValue({
-      removeLayer: jasmine.createSpy("removeLayer")
+    mapServiceMock.getLayer.mockReturnValue(null);
+    mapServiceMock.getMap.mockReturnValue({
+      removeLayer: vi.fn()
     });
-    mapServiceMock.getLayerChangedObservable.and.returnValue(of());
+    mapServiceMock.getLayerChangedObservable.mockReturnValue(of());
 
-    mockCreateComponent = jasmine.createSpy("createComponent");
-    coreMapServiceSpy = jasmine.createSpyObj("coreMapService", [
-      "getLayerChangedObservable",
-      "getMap"
-    ]);
-    capSpy = jasmine.createSpyObj("CapabilitiesService", [
-      "getCapabilitiesForUrl",
-      "optionsFromCapabilities"
-    ]);
-    capSpy.getCapabilitiesForUrl.and.returnValue(of({}));
+    mockCreateComponent = vi.fn();
+    coreMapServiceSpy = {
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("coreMapService.getLayerChangedObservable"),
+      getMap: vi.fn().mockName("coreMapService.getMap")
+    };
+    capSpy = {
+      getCapabilitiesForUrl: vi
+        .fn()
+        .mockName("CapabilitiesService.getCapabilitiesForUrl"),
+      optionsFromCapabilities: vi
+        .fn()
+        .mockName("CapabilitiesService.optionsFromCapabilities")
+    };
+    capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
 
-    coreMapServiceSpy.getLayerChangedObservable.and.returnValue(of());
-    coreMapServiceSpy.getMap.and.returnValue(new OlMap());
+    coreMapServiceSpy.getLayerChangedObservable.mockReturnValue(of());
+    coreMapServiceSpy.getMap.mockReturnValue(new OlMap());
 
     TestBed.configureTestingModule({
       providers: [
@@ -60,7 +69,7 @@ describe("LayerService", () => {
     service = TestBed.inject(GgcLayerService);
     mapServiceSpy = TestBed.inject(
       GgcMapService
-    ) as jasmine.SpyObj<GgcMapService>;
+    ) as MockedObject<GgcMapService>;
     (globalThis as any).createComponent = mockCreateComponent;
   });
 
@@ -74,11 +83,11 @@ describe("LayerService", () => {
       url: "wmsTestUrl"
     };
 
-    spyOn(service, "addWmsLayer").and.callThrough();
+    vi.spyOn(service, "addWmsLayer");
     const layerId = service.addWmsLayer(layerOptions);
     service.addWmsLayer(layerOptions);
 
-    expect(isUUID(layerId!)).toBeTrue();
+    expect(isUUID(layerId!)).toBe(true);
     expect(service.addWmsLayer).toHaveBeenCalled();
     expect(capSpy.getCapabilitiesForUrl).toHaveBeenCalledWith(
       "wmsTestUrl",
@@ -99,7 +108,7 @@ describe("LayerService", () => {
       getFeatureInfoOnSingleclick: false
     };
 
-    spyOn(service, "addWmtsLayer").and.callThrough();
+    vi.spyOn(service, "addWmtsLayer");
 
     const layerId = service.addWmtsLayer(layerOptions);
 
@@ -122,10 +131,10 @@ describe("LayerService", () => {
       getFeatureInfoOnSingleclick: false
     };
 
-    spyOn(service, "addWmtsLayer").and.callThrough();
+    vi.spyOn(service, "addWmtsLayer");
     const layerId = service.addWmtsLayer(layerOptions);
 
-    expect(isUUID(layerId!)).toBeTrue();
+    expect(isUUID(layerId!)).toBe(true);
     expect(service.addWmtsLayer).toHaveBeenCalled();
     expect(capSpy.getCapabilitiesForUrl).toHaveBeenCalled();
   });
@@ -133,11 +142,11 @@ describe("LayerService", () => {
   it("should remove a layer", () => {
     const mockLayer = {};
     const mockMap = {
-      removeLayer: jasmine.createSpy()
+      removeLayer: vi.fn()
     };
 
-    mapServiceSpy.getLayer.and.returnValue(mockLayer as any);
-    mapServiceSpy.getMap.and.returnValue(mockMap as any);
+    mapServiceSpy.getLayer.mockReturnValue(mockLayer as any);
+    mapServiceSpy.getMap.mockReturnValue(mockMap as any);
 
     service.removeLayer("testMap", "testLayer");
 
@@ -146,7 +155,7 @@ describe("LayerService", () => {
   });
 
   it("should not remove a layer if it does not exist", () => {
-    mapServiceSpy.getLayer.and.returnValue(undefined);
+    mapServiceSpy.getLayer.mockReturnValue(undefined);
 
     service.removeLayer("testMap", "nonexistentLayer");
 
@@ -176,12 +185,12 @@ describe("LayerService", () => {
         ]
       }
     ]);
-    spyOn(service, "isVisible").and.callFake((id) => {
+    vi.spyOn(service, "isVisible").mockImplementation((id) => {
       if (id == "id1") return true;
       if (id == "id2") return false;
       return false;
     });
-    spyOn(service, "getEnabled").and.callFake(() => {
+    vi.spyOn(service, "getEnabled").mockImplementation(() => {
       return true;
     });
     expect(service.getCurrentActiveLegends(DEFAULT_MAPINDEX)).toEqual([

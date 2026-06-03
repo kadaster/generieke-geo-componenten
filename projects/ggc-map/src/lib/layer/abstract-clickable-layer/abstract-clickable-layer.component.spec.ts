@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
@@ -9,15 +10,19 @@ class TestLayerComponent extends AbstractClickableLayerComponent<any> {}
 
 describe("AbstractClickableLayerComponent", () => {
   let component: TestLayerComponent;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let fixture: ComponentFixture<TestLayerComponent>;
   let mapEventsService: CoreMapEventsService;
 
   beforeEach(async () => {
-    coreSelectionServiceSpy = jasmine.createSpyObj("CoreSelectionServiceSpy", [
-      "handleFeatureInfoForLayer",
-      "clearFeatureInfoForLayer"
-    ]);
+    coreSelectionServiceSpy = {
+      handleFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer"),
+      clearFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionServiceSpy.clearFeatureInfoForLayer")
+    };
     await TestBed.configureTestingModule({
       imports: [TestLayerComponent],
       providers: [
@@ -38,10 +43,10 @@ describe("AbstractClickableLayerComponent", () => {
   });
 
   it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-    const mapEventsServicespy = spyOn(
+    const mapEventsServicespy = vi.spyOn(
       mapEventsService,
       "getSingleclickObservableForMap"
-    ).and.callThrough();
+    );
 
     component["options"] = { getFeatureInfoOnSingleclick: true };
     component.ngOnInit();
@@ -51,10 +56,10 @@ describe("AbstractClickableLayerComponent", () => {
   });
 
   it("when options.getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-    const mapEventsServicespy = spyOn(
+    const mapEventsServicespy = vi.spyOn(
       mapEventsService,
       "getSingleclickObservableForMap"
-    ).and.callThrough();
+    );
 
     component["options"] = { getFeatureInfoOnSingleclick: true };
     component.ngOnInit();

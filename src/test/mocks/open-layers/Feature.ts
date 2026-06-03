@@ -1,11 +1,11 @@
-import type { IGeometry } from './geom/Geometry';
+import type { IGeometry } from "./geom/Geometry";
 
 export interface FeatureProperties {
   [key: string]: unknown;
 }
 
 function isGeometry(obj: unknown): obj is IGeometry {
-  return !!obj && typeof (obj as { getType?: unknown }).getType === 'function';
+  return !!obj && typeof (obj as { getType?: unknown }).getType === "function";
 }
 
 export default class Feature<TGeom extends IGeometry = IGeometry> {
@@ -33,7 +33,7 @@ export default class Feature<TGeom extends IGeometry = IGeometry> {
       };
       if (opts.geometry) this.geometry = opts.geometry;
       if (opts.properties) this.properties = { ...opts.properties };
-      if (typeof opts.id !== 'undefined') this.id = opts.id;
+      if (typeof opts.id !== "undefined") this.id = opts.id;
     }
   }
 

@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { GeoJsonLayerService } from "./geojson-layer.service";
 import { fakeAsync, flush, TestBed } from "@angular/core/testing";
 import {
@@ -11,7 +12,8 @@ import {
   Resource
 } from "@cesium/engine";
 import { GeoJsonConfig, GeoJsonLayerConfig } from "../model/interfaces";
-import Spy = jasmine.Spy;
+import { vi } from "vitest";
+import Spy = Mock;
 
 describe("GeoJsonLayerService", () => {
   let service: GeoJsonLayerService;
@@ -36,8 +38,8 @@ describe("GeoJsonLayerService", () => {
     const layerId = "test-layer";
 
     beforeEach(() => {
-      dataSourceSpy = spyOn(GeoJsonDataSource, "load");
-      dataSourceSpy.and.resolveTo(Promise.resolve(dataSourceMock));
+      dataSourceSpy = vi.spyOn(GeoJsonDataSource, "load");
+      dataSourceSpy.mockResolvedValue(Promise.resolve(dataSourceMock));
     });
 
     it("should use the resource from the config if it's present for the layer that is being added", () => {
@@ -47,7 +49,7 @@ describe("GeoJsonLayerService", () => {
       service["addLayer"]("layer.url", {
         layerId: layerId
       } as GeoJsonLayerConfig);
-      expect(dataSourceSpy).toHaveBeenCalledWith(resource, jasmine.anything());
+      expect(dataSourceSpy).toHaveBeenCalledWith(resource, expect.anything());
     });
 
     it("should use the features from the config if it's present for the layer that is being added", () => {
@@ -57,7 +59,7 @@ describe("GeoJsonLayerService", () => {
       service["addLayer"]("layer.url", {
         layerId: layerId
       } as GeoJsonLayerConfig);
-      expect(dataSourceSpy).toHaveBeenCalledWith(features, jasmine.anything());
+      expect(dataSourceSpy).toHaveBeenCalledWith(features, expect.anything());
     });
 
     it("should use url if the config doesn't contain a resource object or features", () => {
@@ -68,7 +70,7 @@ describe("GeoJsonLayerService", () => {
       } as GeoJsonLayerConfig);
       expect(dataSourceSpy).toHaveBeenCalledWith(
         "layer.url",
-        jasmine.anything()
+        expect.anything()
       );
     });
 
@@ -80,7 +82,7 @@ describe("GeoJsonLayerService", () => {
       } as GeoJsonLayerConfig);
       expect(dataSourceSpy).toHaveBeenCalledWith(
         "layer.url",
-        jasmine.objectContaining({
+        expect.objectContaining({
           markerColor: Color.PINK,
           clampToGround: false
         })
@@ -95,7 +97,7 @@ describe("GeoJsonLayerService", () => {
       } as GeoJsonLayerConfig);
       expect(dataSourceSpy).toHaveBeenCalledWith(
         "layer.url",
-        jasmine.objectContaining({
+        expect.objectContaining({
           clampToGround: true
         })
       );
@@ -109,7 +111,7 @@ describe("GeoJsonLayerService", () => {
       } as GeoJsonLayerConfig);
       expect(dataSourceSpy).toHaveBeenCalledWith(
         "layer.url",
-        jasmine.anything()
+        expect.anything()
       );
     });
 
@@ -128,14 +130,14 @@ describe("GeoJsonLayerService", () => {
           }
         }
       };
-      const spy = spyOn(config, "entitiesFunction");
+      const spy = vi.spyOn(config, "entitiesFunction");
       service.setConfigs([config]);
       service["addLayer"]("layer.url", {
         layerId: layerId
       } as GeoJsonLayerConfig);
       expect(dataSourceSpy).toHaveBeenCalledWith(
         "layer.url",
-        jasmine.anything()
+        expect.anything()
       );
       flush();
       expect(spy).toHaveBeenCalled();
@@ -190,9 +192,9 @@ describe("GeoJsonLayerService", () => {
     const mock = { show: true } as DataSource;
     service["layerIdToCesiumLayer"].set(layerId, mock);
 
-    expect(service.getEnabled(layerId)).toBeTrue();
+    expect(service.getEnabled(layerId)).toBe(true);
 
     mock.show = false;
-    expect(service.getEnabled(layerId)).toBeFalse();
+    expect(service.getEnabled(layerId)).toBe(false);
   });
 });

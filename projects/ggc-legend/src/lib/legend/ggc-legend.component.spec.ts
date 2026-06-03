@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Legend } from "../model/legend.model";
@@ -16,7 +17,7 @@ describe("DatasetLegendComponent", () => {
   let component: GgcLegendComponent;
   let fixture: ComponentFixture<GgcLegendComponent>;
   let legendService: CoreLegendService;
-  let mapboxStyleServiceSpy: jasmine.SpyObj<MapboxStyleService>;
+  let mapboxStyleServiceSpy: MockedObject<MapboxStyleService>;
 
   const collapsableDatasetLegend: Legend[] = [
     {
@@ -92,12 +93,14 @@ describe("DatasetLegendComponent", () => {
   }));
 
   beforeEach(async () => {
-    mapboxStyleServiceSpy = jasmine.createSpyObj("MapboxStyleService", [
-      "getMapboxStyle",
-      "removeRasterLayers",
-      "getItems",
-      "getLayersids"
-    ]);
+    mapboxStyleServiceSpy = {
+      getMapboxStyle: vi.fn().mockName("MapboxStyleService.getMapboxStyle"),
+      removeRasterLayers: vi
+        .fn()
+        .mockName("MapboxStyleService.removeRasterLayers"),
+      getItems: vi.fn().mockName("MapboxStyleService.getItems"),
+      getLayersids: vi.fn().mockName("MapboxStyleService.getLayersids")
+    };
 
     await TestBed.configureTestingModule({
       providers: [
@@ -204,14 +207,14 @@ describe("DatasetLegendComponent", () => {
       "the html should contain a ggc-legend-mapbox component with a legendItem with title = (zee)water",
     async () => {
       component.legends = [legendMapbox];
-      mapboxStyleServiceSpy.getMapboxStyle.and.returnValue(
+      mapboxStyleServiceSpy.getMapboxStyle.mockReturnValue(
         // @ts-ignore
         of(testStyle as MapboxStyle)
       );
-      mapboxStyleServiceSpy.getItems.and.returnValue(
+      mapboxStyleServiceSpy.getItems.mockReturnValue(
         mapboxLegendItems as LegendItem[]
       );
-      mapboxStyleServiceSpy.getLayersids.and.returnValue([
+      mapboxStyleServiceSpy.getLayersids.mockReturnValue([
         "Onderlegger Nederland"
       ]);
 
@@ -240,18 +243,18 @@ describe("DatasetLegendComponent", () => {
     await fixture.whenStable();
     expect(component.legends[0].expanded).toEqual(true);
     const element = fixture.debugElement.query(By.css("button"));
-    expect(element.children[0].classes["fa-angle-right"]).toBeTrue();
-    expect(element.children[1].classes["fa-angle-down"]).toBeTrue();
-    expect(
-      element.children[0].classes["ggc-dl-dataset-toggle-collapsed"]
-    ).toBeTrue();
-    expect(
-      element.children[1].classes["ggc-dl-dataset-toggle-expanded"]
-    ).toBeTrue();
+    expect(element.children[0].classes["fa-angle-right"]).toBe(true);
+    expect(element.children[1].classes["fa-angle-down"]).toBe(true);
+    expect(element.children[0].classes["ggc-dl-dataset-toggle-collapsed"]).toBe(
+      true
+    );
+    expect(element.children[1].classes["ggc-dl-dataset-toggle-expanded"]).toBe(
+      true
+    );
   });
 
   it("when legend has no property collapsable=true toggleLegend gives a console warning", async () => {
-    console.warn = jasmine.createSpy("warn");
+    console.warn = vi.fn();
     component.collapsable = false;
     component.legends = [JSON.parse(JSON.stringify(legendIcon))];
     component.toggleLegend(component.legends[0]);

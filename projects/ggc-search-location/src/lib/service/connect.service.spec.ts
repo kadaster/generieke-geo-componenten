@@ -1,15 +1,18 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Injector } from "@angular/core";
 import { GgcSearchLocationConnectService } from "./connect.service";
 
 describe("GgcSearchLocationConnectService", () => {
   let service: GgcSearchLocationConnectService;
-  let injectorSpy: jasmine.SpyObj<Injector>;
+  let injectorSpy: MockedObject<Injector>;
 
   let mapServiceInstance: any;
 
   beforeEach(() => {
-    injectorSpy = jasmine.createSpyObj("Injector", ["get"]);
+    injectorSpy = {
+      get: vi.fn().mockName("Injector.get")
+    };
 
     mapServiceInstance = { name: "MapService" };
 
@@ -27,7 +30,7 @@ describe("GgcSearchLocationConnectService", () => {
    * Mock dynamic import
    */
   function mockModule() {
-    spyOn<any>(service as any, "loadMapModule").and.resolveTo({
+    vi.spyOn<any>(service as any, "loadMapModule").mockResolvedValue({
       GgcMapService: class {}
     });
   }
@@ -35,7 +38,7 @@ describe("GgcSearchLocationConnectService", () => {
   describe("getMapService", () => {
     it("should load MapService via injector", async () => {
       mockModule();
-      injectorSpy.get.and.returnValue(mapServiceInstance);
+      injectorSpy.get.mockReturnValue(mapServiceInstance);
 
       const result = await service.getMapService();
 
@@ -45,7 +48,7 @@ describe("GgcSearchLocationConnectService", () => {
 
     it("should cache MapService (only 1 injector call)", async () => {
       mockModule();
-      injectorSpy.get.and.returnValue(mapServiceInstance);
+      injectorSpy.get.mockReturnValue(mapServiceInstance);
 
       const first = await service.getMapService();
       const second = await service.getMapService();
@@ -55,7 +58,7 @@ describe("GgcSearchLocationConnectService", () => {
     });
 
     it("should return undefined when module load fails", async () => {
-      spyOn<any>(service as any, "loadMapModule").and.rejectWith(
+      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue(
         new Error("fail")
       );
 
@@ -66,7 +69,9 @@ describe("GgcSearchLocationConnectService", () => {
 
     it("should return undefined when injector throws error", async () => {
       mockModule();
-      injectorSpy.get.and.throwError("injector error");
+      injectorSpy.get.mockImplementation(() => {
+        throw new Error("injector error");
+      });
 
       const result = await service.getMapService();
 

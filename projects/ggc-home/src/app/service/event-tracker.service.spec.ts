@@ -9,10 +9,10 @@ describe("EventTrackerService", () => {
 
   beforeEach(() => {
     eventTrackerService = TestBed.inject(EventTrackerService);
-    piwikTrackerServiceSpy = spyOn(
+    piwikTrackerServiceSpy = vi.spyOn(
       eventTrackerService["customEventsServicePiwik"],
       "trackEvent"
-    ).and.callThrough();
+    );
   });
 
   it("should be created", () => {

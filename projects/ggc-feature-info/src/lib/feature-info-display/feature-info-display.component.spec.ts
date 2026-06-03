@@ -1,10 +1,11 @@
+import type { MockedObject } from "vitest";
 import { SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { FeatureKeysPipe } from "../pipe/keys.pipe";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoDisplayComponent } from "./feature-info-display.component";
 import { FeatureInfoDisplayType } from "./feature-info-display-type";
-import SpyObj = jasmine.SpyObj;
+import SpyObj = MockedObject;
 import { provideZoneChangeDetection } from "@angular/core";
 
 describe("FeatureInfoDisplayComponent", () => {
@@ -14,11 +15,15 @@ describe("FeatureInfoDisplayComponent", () => {
   let nativeElement: HTMLElement;
 
   beforeEach(waitForAsync(() => {
-    featureInfoConfigServiceSpy = jasmine.createSpyObj(
-      "FeatureInfoConfigService",
-      ["checkForCustomValues", "filterAndSortAttributes"]
-    );
-    featureInfoConfigServiceSpy.checkForCustomValues.and.returnValue({});
+    featureInfoConfigServiceSpy = {
+      checkForCustomValues: vi
+        .fn()
+        .mockName("FeatureInfoConfigService.checkForCustomValues"),
+      filterAndSortAttributes: vi
+        .fn()
+        .mockName("FeatureInfoConfigService.filterAndSortAttributes")
+    };
+    featureInfoConfigServiceSpy.checkForCustomValues.mockReturnValue({});
     TestBed.configureTestingModule({
       imports: [FeatureInfoDisplayComponent, FeatureKeysPipe],
       providers: [
@@ -60,7 +65,7 @@ describe("FeatureInfoDisplayComponent", () => {
   });
 
   it("when a SimpleChange has occured, prepareForDisplay() should be called", () => {
-    const prepareForDisplaySpy = spyOn(component, "prepareForDisplay");
+    const prepareForDisplaySpy = vi.spyOn(component, "prepareForDisplay");
 
     const currentFeature = { bronhoudernaam: "Bergen" };
     component.currentFeature = currentFeature;
@@ -91,7 +96,7 @@ describe("FeatureInfoDisplayComponent", () => {
 
   it("when featureInfoDisplayType is featureInfoDisplayType.LIST, it should show a list item", () => {
     component.type = FeatureInfoDisplayType.LIST;
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" }
     ]);
 
@@ -105,7 +110,7 @@ describe("FeatureInfoDisplayComponent", () => {
   });
 
   it("when featureInfoDisplayType is not set, it should show a table item", () => {
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" }
     ]);
 

@@ -1,3 +1,4 @@
+import type { Mock, MockedObject } from "vitest";
 import { DebugElement, SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import Feature, { FeatureLike } from "ol/Feature";
@@ -35,13 +36,17 @@ describe("GeojsonLayerComponent", () => {
   let fixture: ComponentFixture<GgcGeojsonLayerComponent>;
   let debugElement: DebugElement;
   let resultLayer: VectorLayer<VectorSource<Feature<Geometry>>>;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
 
   beforeEach(waitForAsync(() => {
-    coreSelectionServiceSpy = jasmine.createSpyObj("CoreSelectionServiceSpy", [
-      "handleFeatureInfoForLayer",
-      "clearFeatureInfoForLayer"
-    ]);
+    coreSelectionServiceSpy = {
+      handleFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer"),
+      clearFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionServiceSpy.clearFeatureInfoForLayer")
+    };
     TestBed.configureTestingModule({
       imports: [GgcGeojsonLayerComponent],
       providers: [
@@ -72,12 +77,12 @@ describe("GeojsonLayerComponent", () => {
 
   const createMapSpy = () => {
     // create ol.Map mock
-    const mapSpy: jasmine.SpyObj<OlMap> = jasmine.createSpyObj("ol.Map", [
-      "forEachFeatureAtPixel",
-      "removeLayer"
-    ]);
-    mapSpy.forEachFeatureAtPixel.and.callThrough();
-    mapSpy.removeLayer.and.stub();
+    const mapSpy: MockedObject<OlMap> = {
+      forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
+      removeLayer: vi.fn().mockName("ol.Map.removeLayer")
+    };
+    mapSpy.forEachFeatureAtPixel;
+    mapSpy.removeLayer.mockImplementation(() => {});
     return mapSpy;
   };
 
@@ -89,10 +94,9 @@ describe("GeojsonLayerComponent", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
 
     component.options = {
       sourceOptions: {
@@ -117,10 +121,9 @@ describe("GeojsonLayerComponent", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
 
     component.options = {
       sourceOptions: {},
@@ -149,10 +152,9 @@ describe("GeojsonLayerComponent", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
 
     component.options = {
       sourceOptions: {
@@ -169,10 +171,9 @@ describe("GeojsonLayerComponent", () => {
   it("when an url is provided, it should be applied to the source", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
 
     component.options = {
       sourceOptions: {
@@ -189,10 +190,9 @@ describe("GeojsonLayerComponent", () => {
   it("when an Openlayers style object is provided, it should be applied to the layer", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
 
     component.options = {
       layerOptions: {
@@ -217,10 +217,9 @@ describe("GeojsonLayerComponent", () => {
   it("when an Openlayers StyleFunction is provided and called, it should be applied to the layer", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
 
     component.options = {
       layerOptions: {
@@ -255,10 +254,9 @@ describe("GeojsonLayerComponent", () => {
       }
     };
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.getMinResolution()).toBe(100);
@@ -273,10 +271,9 @@ describe("GeojsonLayerComponent", () => {
       }
     };
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.getMaxResolution()).toBe(861);
@@ -291,10 +288,9 @@ describe("GeojsonLayerComponent", () => {
       }
     };
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.getZIndex()).toBe(123);
@@ -309,10 +305,9 @@ describe("GeojsonLayerComponent", () => {
       }
     };
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     // NOTE: jasmine 3.5.0 introduces toBeInstanceOf()
@@ -329,10 +324,9 @@ describe("GeojsonLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     component.options = { layerId: "testLayer" };
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.get("ggc-layer-id")).toBe("testLayer");
@@ -343,10 +337,10 @@ describe("GeojsonLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const mapEventsService: CoreMapEventsService =
       debugElement.injector.get(CoreMapEventsService);
-    const mapEventsServicespy = spyOn<CoreMapEventsService, any>(
+    const mapEventsServicespy = vi.spyOn<CoreMapEventsService, any>(
       mapEventsService,
       "getSingleclickObservableForMap"
-    ).and.callThrough();
+    );
     component.options = { getFeatureInfoOnSingleclick: true };
     const onMock = {
       addLayer(_layer) {
@@ -357,10 +351,9 @@ describe("GeojsonLayerComponent", () => {
       }
     } as OlMap;
 
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(onMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(onMock);
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(mapEventsServicespy).toHaveBeenCalled();
@@ -436,7 +429,7 @@ describe("GeojsonLayerComponent", () => {
     expect(decidedLayer).toBe(false);
   });
 
-  it("should emit an event if getFeatureInfoOnSingleclick is true and the forEachFeaturePixelAt function returns features", (done) => {
+  it("should emit an event if getFeatureInfoOnSingleclick is true and the forEachFeaturePixelAt function returns features", async () => {
     component.options = {
       mapIndex: "test-map",
       layerName: "test-layer",
@@ -446,7 +439,7 @@ describe("GeojsonLayerComponent", () => {
     const mapSpy = createMapSpy();
     component["map"] = mapSpy;
 
-    const eventSpy = spyOn(component.events, "emit").and.callThrough();
+    const eventSpy = vi.spyOn(component.events, "emit");
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
 
@@ -462,10 +455,9 @@ describe("GeojsonLayerComponent", () => {
       expect(
         coreSelectionServiceSpy.handleFeatureInfoForLayer
       ).toHaveBeenCalled();
-      done();
     });
 
-    mapSpy.forEachFeatureAtPixel.and.callThrough();
+    mapSpy.forEachFeatureAtPixel;
     component.getFeatureInfo(evt);
   });
 
@@ -482,32 +474,32 @@ describe("GeojsonLayerComponent", () => {
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
 
-    mapSpy.forEachFeatureAtPixel.and.callThrough();
+    mapSpy.forEachFeatureAtPixel;
     component.getFeatureInfo(evt);
 
     expect(component["map"].forEachFeatureAtPixel).toHaveBeenCalled();
     expect(component["map"].forEachFeatureAtPixel).toHaveBeenCalledWith(
       pixel,
-      jasmine.any(Function),
-      { layerFilter: jasmine.any(Function), hitTolerance: 5 }
+      expect.any(Function),
+      { layerFilter: expect.any(Function), hitTolerance: 5 }
     );
   });
 
   describe("Dynamic url change", () => {
     let vectorSource: VectorSource<Feature<Geometry>>;
-    let getSourceSpy: jasmine.Spy;
-    let vectorSourceUrlSpy: jasmine.Spy;
-    let vectorSourceRefreshSpy: jasmine.Spy;
+    let getSourceSpy: Mock;
+    let vectorSourceUrlSpy: Mock;
+    let vectorSourceRefreshSpy: Mock;
 
     beforeEach(() => {
       vectorSource = createTestVectorSource();
-      getSourceSpy = spyOn(component["olLayer"], "getSource");
-      vectorSourceUrlSpy = spyOn(vectorSource, "setUrl");
-      vectorSourceRefreshSpy = spyOn(vectorSource, "refresh");
+      getSourceSpy = vi.spyOn(component["olLayer"], "getSource");
+      vectorSourceUrlSpy = vi.spyOn(vectorSource, "setUrl");
+      vectorSourceRefreshSpy = vi.spyOn(vectorSource, "refresh");
     });
 
     it("should change the url and refresh the VectorSource when the url is changed via a SimpleChange", () => {
-      getSourceSpy.and.returnValue(vectorSource);
+      getSourceSpy.mockReturnValue(vectorSource);
 
       component.options = { sourceOptions: { url: "currentUrl" } };
       component.ngOnChanges({
@@ -524,7 +516,7 @@ describe("GeojsonLayerComponent", () => {
     });
 
     it("should NOT change the url and when the url is a firstChange", () => {
-      getSourceSpy.and.returnValue(vectorSource);
+      getSourceSpy.mockReturnValue(vectorSource);
 
       component.ngOnChanges({
         options: new SimpleChange(
@@ -543,10 +535,10 @@ describe("GeojsonLayerComponent", () => {
   describe("Add features dynamically", () => {
     it("should add the features to the source", () => {
       const vectorSource = createTestVectorSource();
-      const getSourceSpy = spyOn(component["olLayer"], "getSource");
-      getSourceSpy.and.returnValue(vectorSource);
-      spyOn(vectorSource, "clear").and.callThrough();
-      spyOn(vectorSource, "addFeatures").and.stub();
+      const getSourceSpy = vi.spyOn(component["olLayer"], "getSource");
+      getSourceSpy.mockReturnValue(vectorSource);
+      vi.spyOn(vectorSource, "clear");
+      vi.spyOn(vectorSource, "addFeatures").mockImplementation(() => {});
 
       const features = [new Feature(new Point([194190, 465880]))];
       component.options = { features };
@@ -567,13 +559,13 @@ describe("GeojsonLayerComponent", () => {
       const clusterSource = new Cluster({
         source: vectorSource
       });
-      const getClusterSourceSpy = spyOn(component["olLayer"], "getSource");
-      getClusterSourceSpy.and.returnValue(clusterSource);
-      const getSourceSpy = spyOn(clusterSource, "getSource");
-      getSourceSpy.and.returnValue(vectorSource);
+      const getClusterSourceSpy = vi.spyOn(component["olLayer"], "getSource");
+      getClusterSourceSpy.mockReturnValue(clusterSource);
+      const getSourceSpy = vi.spyOn(clusterSource, "getSource");
+      getSourceSpy.mockReturnValue(vectorSource);
 
-      spyOn(vectorSource, "clear").and.callThrough();
-      spyOn(vectorSource, "addFeatures").and.stub();
+      vi.spyOn(vectorSource, "clear");
+      vi.spyOn(vectorSource, "addFeatures").mockImplementation(() => {});
 
       const features = [new Feature(new Point([194190, 465880]))];
       component.options = { features };

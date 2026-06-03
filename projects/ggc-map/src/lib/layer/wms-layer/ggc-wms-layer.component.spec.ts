@@ -1,3 +1,4 @@
+import type { Mock, MockedObject } from "vitest";
 import {
   provideHttpClient,
   withInterceptorsFromDi
@@ -28,8 +29,8 @@ import { CoreSelectionService } from "../../service/select/core-selection.servic
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 
 import { GgcWmsLayerComponent } from "./ggc-wms-layer.component";
-import Spy = jasmine.Spy;
-import SpyObj = jasmine.SpyObj;
+import Spy = Mock;
+import SpyObj = MockedObject;
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 describe("WmsLayerComponent", () => {
@@ -46,13 +47,21 @@ describe("WmsLayerComponent", () => {
   const coordinate: Coordinate = [45000, 55000];
 
   beforeEach(waitForAsync(() => {
-    const capSpy = jasmine.createSpyObj("CapabilitiesService", [
-      "getCapabilitiesForUrl",
-      "hasFeatureInfoUrl",
-      "optionsFromCapabilities",
-      "createGetFeatureInfoUrlObservable"
-    ]);
-    capSpy.getCapabilitiesForUrl.and.returnValue(of({}));
+    const capSpy = {
+      getCapabilitiesForUrl: vi
+        .fn()
+        .mockName("CapabilitiesService.getCapabilitiesForUrl"),
+      hasFeatureInfoUrl: vi
+        .fn()
+        .mockName("CapabilitiesService.hasFeatureInfoUrl"),
+      optionsFromCapabilities: vi
+        .fn()
+        .mockName("CapabilitiesService.optionsFromCapabilities"),
+      createGetFeatureInfoUrlObservable: vi
+        .fn()
+        .mockName("CapabilitiesService.createGetFeatureInfoUrlObservable")
+    };
+    capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
     TestBed.configureTestingModule({
       imports: [GgcWmsLayerComponent],
       providers: [
@@ -77,7 +86,7 @@ describe("WmsLayerComponent", () => {
     httpTestingController = TestBed.inject(HttpTestingController);
     capabilitiesService = TestBed.inject(
       CoreWmsWmtsCapabilitiesService
-    ) as jasmine.SpyObj<CoreWmsWmtsCapabilitiesService>;
+    ) as MockedObject<CoreWmsWmtsCapabilitiesService>;
     resolution = 1.54;
   });
 
@@ -106,9 +115,9 @@ describe("WmsLayerComponent", () => {
   });
 
   it("when a layer is supplied, it should be used as a parameter", () => {
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-      addLayerMock
-    );
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
 
     component.options = {
       sourceOptions: {
@@ -170,11 +179,10 @@ describe("WmsLayerComponent", () => {
     expect(capabilitiesService.getCapabilitiesForUrl).not.toHaveBeenCalled();
   });
 
-  it("when tiled is set to true, it should create a tileLayer", (done) => {
-    spyOn(component["map"], "addLayer").and.callFake(
+  it("when tiled is set to true, it should create a tileLayer", async () => {
+    vi.spyOn(component["map"], "addLayer").mockImplementation(
       (layer: ImageLayer<ImageSource> | TileLayer<TileSource>) => {
         expect(layer instanceof TileLayer).toEqual(true);
-        done();
       }
     );
     component.options = {
@@ -183,12 +191,11 @@ describe("WmsLayerComponent", () => {
     component.ngOnInit();
   });
 
-  it("when tiled is set to true, and gutter is supplied, it should be set as parameter", (done) => {
-    spyOn(component["map"], "addLayer").and.callFake(
+  it("when tiled is set to true, and gutter is supplied, it should be set as parameter", async () => {
+    vi.spyOn(component["map"], "addLayer").mockImplementation(
       (layer: ImageLayer<ImageSource> | TileLayer<TileSource>) => {
         expect(layer instanceof TileLayer).toEqual(true);
         expect((layer.getSource() as Record<string, any>).gutter_).toEqual(42);
-        done();
       }
     );
     component.options = {
@@ -200,18 +207,15 @@ describe("WmsLayerComponent", () => {
     component.ngOnInit();
   });
 
-  it("should return a feature, when getFeatureInfo is called and the URL is produced", (done) => {
+  it("should return a feature, when getFeatureInfo is called and the URL is produced", async () => {
     const event = { coordinate } as MapBrowserEvent;
-    spyOn(coreMapService, "getMap").and.returnValue(addLayerMock);
-    spyOn(coreSelectionService, "handleFeatureInfoForLayer");
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addLayerMock);
+    vi.spyOn(coreSelectionService, "handleFeatureInfoForLayer");
     setWMSKaartlaagVariables("wmsLayerName");
 
     component.options!.maxFeaturesOnSingleclick = 17;
     component.ngOnInit();
-    const wmsSpy: Spy = spyOn(
-      component["wmsSource"],
-      "getFeatureInfoUrl"
-    ).and.callThrough();
+    const wmsSpy: Spy = vi.spyOn(component["wmsSource"], "getFeatureInfoUrl");
 
     component.events.subscribe((result: MapComponentEvent) => {
       expect(result.type).toEqual(MapComponentEventTypes.WMSFEATUREINFO);
@@ -223,7 +227,6 @@ describe("WmsLayerComponent", () => {
       ]);
       expect(result.value[0].getProperties().tekst).toBe("2");
       expect(coreSelectionService.handleFeatureInfoForLayer).toHaveBeenCalled();
-      done();
     });
 
     component.getFeatureInfo(event);
@@ -243,32 +246,30 @@ describe("WmsLayerComponent", () => {
       }
     });
     httpTestingController.verify();
-    expect(wmsSpy.calls.count())
-      .withContext("getFeatureInforUrl not called")
-      .toBe(1);
-    expect(wmsSpy.calls.mostRecent().args[0]).toBe(coordinate);
-    expect(wmsSpy.calls.mostRecent().args[1]).toBe(1.54);
-    expect(wmsSpy.calls.mostRecent().args[2]).toBe("EPSG:28992");
-    expect(wmsSpy.calls.mostRecent().args[3].INFO_FORMAT).toBe(
+    expect(
+      vi.mocked(wmsSpy).mock.calls.length,
+      "getFeatureInforUrl not called"
+    ).toBe(1);
+    expect(vi.mocked(wmsSpy).mock.lastCall[0]).toBe(coordinate);
+    expect(vi.mocked(wmsSpy).mock.lastCall[1]).toBe(1.54);
+    expect(vi.mocked(wmsSpy).mock.lastCall[2]).toBe("EPSG:28992");
+    expect(vi.mocked(wmsSpy).mock.lastCall[3].INFO_FORMAT).toBe(
       "application/json"
     );
-    expect(wmsSpy.calls.mostRecent().args[3].QUERY_LAYERS).toEqual([
+    expect(vi.mocked(wmsSpy).mock.lastCall[3].QUERY_LAYERS).toEqual([
       "testQueryLayer"
     ]);
-    expect(wmsSpy.calls.mostRecent().args[3].FEATURE_COUNT).toBe(17);
+    expect(vi.mocked(wmsSpy).mock.lastCall[3].FEATURE_COUNT).toBe(17);
   });
 
-  it("should not return features when the featureInfoUrl returns an error", (done) => {
+  it("should not return features when the featureInfoUrl returns an error", async () => {
     const event = { coordinate } as MapBrowserEvent;
-    spyOn(coreMapService, "getMap").and.returnValue(addLayerMock);
-    spyOn(coreSelectionService, "handleFeatureInfoForLayer");
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addLayerMock);
+    vi.spyOn(coreSelectionService, "handleFeatureInfoForLayer");
     setWMSKaartlaagVariables("wmsLayerName");
 
     component.ngOnInit();
-    const wmsSpy: Spy = spyOn(
-      component["wmsSource"],
-      "getFeatureInfoUrl"
-    ).and.callThrough();
+    const wmsSpy: Spy = vi.spyOn(component["wmsSource"], "getFeatureInfoUrl");
 
     component.events.subscribe((result: MapComponentEvent) => {
       expect(result.type).toEqual(MapComponentEventTypes.WMSFEATUREINFO);
@@ -278,7 +279,6 @@ describe("WmsLayerComponent", () => {
         "Kon geen features ophalen van featureInfoUrl vanwege server geeft 503 terug"
       );
       expect(coreSelectionService.handleFeatureInfoForLayer).toHaveBeenCalled();
-      done();
     });
     component.getFeatureInfo(event);
 
@@ -289,23 +289,23 @@ describe("WmsLayerComponent", () => {
       statusText: "server geeft 503 terug"
     });
     httpTestingController.verify();
-    expect(wmsSpy.calls.count())
-      .withContext("getFeatureInforUrl not called")
-      .toBe(1);
-    expect(wmsSpy.calls.mostRecent().args[0]).toBe(coordinate);
+    expect(
+      vi.mocked(wmsSpy).mock.calls.length,
+      "getFeatureInforUrl not called"
+    ).toBe(1);
+    expect(vi.mocked(wmsSpy).mock.lastCall[0]).toBe(coordinate);
   });
 
-  it("should not return features when the featureInfoUrl is not found", (done) => {
+  it("should not return features when the featureInfoUrl is not found", async () => {
     const event = { coordinate } as MapBrowserEvent;
-    spyOn(coreMapService, "getMap").and.returnValue(addLayerMock);
-    spyOn(coreSelectionService, "handleFeatureInfoForLayer");
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addLayerMock);
+    vi.spyOn(coreSelectionService, "handleFeatureInfoForLayer");
     setWMSKaartlaagVariables("wmsLayerName");
 
     component.ngOnInit();
-    const wmsSpy: Spy = spyOn(
-      component["wmsSource"],
-      "getFeatureInfoUrl"
-    ).and.returnValue(undefined);
+    const wmsSpy: Spy = vi
+      .spyOn(component["wmsSource"], "getFeatureInfoUrl")
+      .mockReturnValue(undefined);
 
     component.events.subscribe((result: MapComponentEvent) => {
       expect(result.type).toEqual(MapComponentEventTypes.WMSFEATUREINFO);
@@ -313,23 +313,23 @@ describe("WmsLayerComponent", () => {
       expect(result.layerName).toBe("wmsLayerName");
       expect(result.message).toBe("Geen featureInfoUrl gevonden");
       expect(coreSelectionService.handleFeatureInfoForLayer).toHaveBeenCalled();
-      done();
     });
     component.getFeatureInfo(event);
 
     httpTestingController.expectNone("test.url");
 
     httpTestingController.verify();
-    expect(wmsSpy.calls.count())
-      .withContext("getFeatureInforUrl not called")
-      .toBe(1);
-    expect(wmsSpy.calls.mostRecent().args[0]).toBe(coordinate);
+    expect(
+      vi.mocked(wmsSpy).mock.calls.length,
+      "getFeatureInforUrl not called"
+    ).toBe(1);
+    expect(vi.mocked(wmsSpy).mock.lastCall[0]).toBe(coordinate);
   });
 
-  it("should not return features when the viewResolution is not in layerResolutionRange", (done) => {
+  it("should not return features when the viewResolution is not in layerResolutionRange", async () => {
     const event = { coordinate } as MapBrowserEvent;
-    spyOn(coreMapService, "getMap").and.returnValue(addLayerMock);
-    spyOn(coreSelectionService, "handleFeatureInfoForLayer");
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addLayerMock);
+    vi.spyOn(coreSelectionService, "handleFeatureInfoForLayer");
     setWMSKaartlaagVariables("wmsLayerName");
     addLayerMock.getView().setResolution(undefined);
 
@@ -343,7 +343,6 @@ describe("WmsLayerComponent", () => {
         "Binnen deze resolutie zijn er geen features gevonden."
       );
       expect(coreSelectionService.handleFeatureInfoForLayer).toHaveBeenCalled();
-      done();
     });
     component.getFeatureInfo(event);
 
@@ -351,10 +350,7 @@ describe("WmsLayerComponent", () => {
   });
 
   it("should update the styles within the WMS Source and local source options within setStyles", () => {
-    const wmsSpy: Spy = spyOn(
-      component["wmsSource"],
-      "updateParams"
-    ).and.callThrough();
+    const wmsSpy: Spy = vi.spyOn(component["wmsSource"], "updateParams");
 
     component.setStyles(["styleNew1", "styleNew2"]);
 
@@ -362,8 +358,10 @@ describe("WmsLayerComponent", () => {
       "styleNew1",
       "styleNew2"
     ]);
-    expect(wmsSpy.calls.count()).withContext("updateParams not called").toBe(1);
-    expect(wmsSpy.calls.mostRecent().args[0]).toEqual({
+    expect(vi.mocked(wmsSpy).mock.calls.length, "updateParams not called").toBe(
+      1
+    );
+    expect(vi.mocked(wmsSpy).mock.lastCall[0]).toEqual({
       STYLES: ["styleNew1", "styleNew2"]
     });
   });
@@ -373,67 +371,75 @@ describe("WmsLayerComponent", () => {
     let localSourceUpdateSpy: Spy;
 
     beforeEach(() => {
-      wmsSpy = spyOn(component["wmsSource"], "updateParams").and.callThrough();
-      localSourceUpdateSpy = spyOn<any>(
+      wmsSpy = vi.spyOn(component["wmsSource"], "updateParams");
+      localSourceUpdateSpy = vi.spyOn<any>(
         component,
         "updateLocalSourceOptionsFromWmsSource"
-      ).and.callThrough();
+      );
     });
 
     it("should update the style for the correct layer and update the local source with multiple layers", () => {
-      spyOn(component["wmsSource"], "getParams").and.returnValue({
+      vi.spyOn(component["wmsSource"], "getParams").mockReturnValue({
         layers: ["layer1", "layer2"],
         STYLES: ["style1", "style2"]
       });
 
       component.setStyle("styleNew2", "layer2");
 
-      expect(wmsSpy).toHaveBeenCalledOnceWith({
+      expect(wmsSpy).toHaveBeenCalledTimes(1);
+
+      expect(wmsSpy).toHaveBeenCalledWith({
         STYLES: ["style1", "styleNew2"]
       });
       expect(localSourceUpdateSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should update the style for the correct layer and update the local source with multiple layers with no initial styles", () => {
-      spyOn(component["wmsSource"], "getParams").and.returnValue({
+      vi.spyOn(component["wmsSource"], "getParams").mockReturnValue({
         layers: ["layer1", "layer2"]
       });
       component.setStyle("styleNew2", "layer2");
 
-      expect(wmsSpy).toHaveBeenCalledOnceWith({
+      expect(wmsSpy).toHaveBeenCalledTimes(1);
+
+      expect(wmsSpy).toHaveBeenCalledWith({
         STYLES: ["", "styleNew2"]
       });
       expect(localSourceUpdateSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should update the style for a single layer with an initial style and update the local source", () => {
-      spyOn(component["wmsSource"], "getParams").and.returnValue({
+      vi.spyOn(component["wmsSource"], "getParams").mockReturnValue({
         layers: "layer1",
         STYLES: "style1"
       });
       component.setStyle("style1New", "layer1");
 
-      expect(wmsSpy).toHaveBeenCalledOnceWith({
+      expect(wmsSpy).toHaveBeenCalledTimes(1);
+
+      expect(wmsSpy).toHaveBeenCalledWith({
         STYLES: "style1New"
       });
       expect(localSourceUpdateSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should update the style for a single layer without an initial style and update the local source", () => {
-      spyOn(component["wmsSource"], "getParams").and.returnValue({
+      vi.spyOn(component["wmsSource"], "getParams").mockReturnValue({
         layers: "layer1"
       });
 
       component.setStyle("style1New", "layer1");
 
-      expect(wmsSpy).toHaveBeenCalledOnceWith({
+      expect(wmsSpy).toHaveBeenCalledTimes(1);
+
+      expect(wmsSpy).toHaveBeenCalledWith({
         STYLES: "style1New"
       });
       expect(localSourceUpdateSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should do nothing if the provided layerName in setStyle does not exist", () => {
-      spyOn(component["wmsSource"], "getParams").and.returnValue({
+      vi.spyOn(component["wmsSource"], "getParams").mockReturnValue({
         layers: ["layer1", "layer2"],
         STYLES: ["style1", "style2"]
       });
@@ -445,7 +451,9 @@ describe("WmsLayerComponent", () => {
   });
 
   it("should set the DPI options for all types of servers if devicePixelRatio > 1", () => {
-    const params: { [x: string]: any } = {};
+    const params: {
+      [x: string]: any;
+    } = {};
 
     component["addDpiToParams"](params, 3);
 
@@ -453,7 +461,9 @@ describe("WmsLayerComponent", () => {
   });
 
   it("should not set the DPI options if devicePixelRatio == 1", () => {
-    const params: { [x: string]: any } = {};
+    const params: {
+      [x: string]: any;
+    } = {};
 
     component["addDpiToParams"](params, 1);
 

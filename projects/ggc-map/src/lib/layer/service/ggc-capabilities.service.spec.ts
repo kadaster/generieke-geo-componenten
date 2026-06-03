@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
 import {
@@ -11,21 +12,26 @@ import { provideZoneChangeDetection } from "@angular/core";
 describe("GgcCapabilitiesService", () => {
   let service: GgcCapabilitiesService;
 
-  let wmsWmtsSvcSpy: jasmine.SpyObj<GgcWmsWmtsCapabilitiesService>;
-  let ogcApiSvcSpy: jasmine.SpyObj<GgcOgcApiCapabilitiesService>;
+  let wmsWmtsSvcSpy: MockedObject<GgcWmsWmtsCapabilitiesService>;
+  let ogcApiSvcSpy: MockedObject<GgcOgcApiCapabilitiesService>;
 
   const baseUrl = "https://example.test/service";
 
   beforeEach(() => {
-    wmsWmtsSvcSpy = jasmine.createSpyObj<GgcWmsWmtsCapabilitiesService>(
-      "GgcWmsWmtsCapabilitiesService",
-      ["getServiceCapabilitiesWMS", "getServiceCapabilitiesWMTS"]
-    );
+    wmsWmtsSvcSpy = {
+      getServiceCapabilitiesWMS: vi
+        .fn()
+        .mockName("GgcWmsWmtsCapabilitiesService.getServiceCapabilitiesWMS"),
+      getServiceCapabilitiesWMTS: vi
+        .fn()
+        .mockName("GgcWmsWmtsCapabilitiesService.getServiceCapabilitiesWMTS")
+    };
 
-    ogcApiSvcSpy = jasmine.createSpyObj<GgcOgcApiCapabilitiesService>(
-      "GgcOgcApiCapabilitiesService",
-      ["getServiceCapabilitiesOgcApi"]
-    );
+    ogcApiSvcSpy = {
+      getServiceCapabilitiesOgcApi: vi
+        .fn()
+        .mockName("GgcOgcApiCapabilitiesService.getServiceCapabilitiesOgcApi")
+    };
 
     TestBed.configureTestingModule({
       providers: [
@@ -44,7 +50,7 @@ describe("GgcCapabilitiesService", () => {
   });
 
   describe("getServiceFromCapabilities", () => {
-    it("serviceType WMS roept WMS-capabilities aan en geeft resultaat door", (done) => {
+    it("serviceType WMS roept WMS-capabilities aan en geeft resultaat door", async () => {
       const wmsMock: ServiceCapabilities = {
         url: baseUrl,
         type: "WMS",
@@ -58,20 +64,24 @@ describe("GgcCapabilitiesService", () => {
           }
         ]
       };
-      wmsWmtsSvcSpy.getServiceCapabilitiesWMS.and.returnValue(of(wmsMock));
+      wmsWmtsSvcSpy.getServiceCapabilitiesWMS.mockReturnValue(of(wmsMock));
 
       service.getServiceFromCapabilities(baseUrl, "WMS").subscribe((result) => {
         expect(result).toEqual(wmsMock);
 
         // controleer aanroepen
-        expect(
-          wmsWmtsSvcSpy.getServiceCapabilitiesWMS
-        ).toHaveBeenCalledOnceWith(baseUrl);
-        done();
+        expect(wmsWmtsSvcSpy.getServiceCapabilitiesWMS).toHaveBeenCalledTimes(
+          1
+        );
+
+        // controleer aanroepen
+        expect(wmsWmtsSvcSpy.getServiceCapabilitiesWMS).toHaveBeenCalledWith(
+          baseUrl
+        );
       });
     });
 
-    it("serviceType WMTS roept WMTS-capabilities aan en geeft resultaat door", (done) => {
+    it("serviceType WMTS roept WMTS-capabilities aan en geeft resultaat door", async () => {
       const wmtsMock: ServiceCapabilities = {
         url: baseUrl,
         type: "WMTS",
@@ -85,7 +95,7 @@ describe("GgcCapabilitiesService", () => {
           }
         ]
       };
-      wmsWmtsSvcSpy.getServiceCapabilitiesWMTS.and.returnValue(of(wmtsMock));
+      wmsWmtsSvcSpy.getServiceCapabilitiesWMTS.mockReturnValue(of(wmtsMock));
 
       service
         .getServiceFromCapabilities(baseUrl, "WMTS")
@@ -94,12 +104,15 @@ describe("GgcCapabilitiesService", () => {
 
           expect(
             wmsWmtsSvcSpy.getServiceCapabilitiesWMTS
-          ).toHaveBeenCalledOnceWith(baseUrl);
-          done();
+          ).toHaveBeenCalledTimes(1);
+
+          expect(wmsWmtsSvcSpy.getServiceCapabilitiesWMTS).toHaveBeenCalledWith(
+            baseUrl
+          );
         });
     });
 
-    it("serviceType OGCAPI roept OGC API-capabilities aan en geeft resultaat door", (done) => {
+    it("serviceType OGCAPI roept OGC API-capabilities aan en geeft resultaat door", async () => {
       const ogcApiMock: ServiceCapabilities = {
         url: baseUrl,
         type: "OGCAPI",
@@ -113,7 +126,7 @@ describe("GgcCapabilitiesService", () => {
           }
         ]
       };
-      ogcApiSvcSpy.getServiceCapabilitiesOgcApi.and.returnValue(of(ogcApiMock));
+      ogcApiSvcSpy.getServiceCapabilitiesOgcApi.mockReturnValue(of(ogcApiMock));
 
       service
         .getServiceFromCapabilities(baseUrl, "OGCAPI")
@@ -122,14 +135,17 @@ describe("GgcCapabilitiesService", () => {
 
           expect(
             ogcApiSvcSpy.getServiceCapabilitiesOgcApi
-          ).toHaveBeenCalledOnceWith(baseUrl);
-          done();
+          ).toHaveBeenCalledTimes(1);
+
+          expect(
+            ogcApiSvcSpy.getServiceCapabilitiesOgcApi
+          ).toHaveBeenCalledWith(baseUrl);
         });
     });
   });
 
   describe("getServiceLayerStyles", () => {
-    it("zou WMS styles terug moeten geven wanneer gezocht wordt op de juiste layer naam", (done) => {
+    it("zou WMS styles terug moeten geven wanneer gezocht wordt op de juiste layer naam", async () => {
       const baseUrl = "baseUrl";
       const wmsMock: ServiceCapabilities = {
         url: baseUrl,
@@ -144,17 +160,16 @@ describe("GgcCapabilitiesService", () => {
           }
         ]
       };
-      wmsWmtsSvcSpy.getServiceCapabilitiesWMS.and.returnValue(of(wmsMock));
+      wmsWmtsSvcSpy.getServiceCapabilitiesWMS.mockReturnValue(of(wmsMock));
 
       service
         .getServiceLayerStyles(baseUrl, "WMS", "wms:layer")
         .subscribe((result) => {
           expect(result).toBe(wmsMock.layers[0].styles);
-          done();
         });
     });
 
-    it("zou WMTS styles terug moeten geven wanneer gezocht wordt op de juiste layer naam", (done) => {
+    it("zou WMTS styles terug moeten geven wanneer gezocht wordt op de juiste layer naam", async () => {
       const baseUrl = "baseUrl";
       const wmtsMock: ServiceCapabilities = {
         url: baseUrl,
@@ -169,17 +184,16 @@ describe("GgcCapabilitiesService", () => {
           }
         ]
       };
-      wmsWmtsSvcSpy.getServiceCapabilitiesWMTS.and.returnValue(of(wmtsMock));
+      wmsWmtsSvcSpy.getServiceCapabilitiesWMTS.mockReturnValue(of(wmtsMock));
 
       service
         .getServiceLayerStyles(baseUrl, "WMTS", "wmts:layer")
         .subscribe((result) => {
           expect(result).toBe(wmtsMock.layers[0].styles);
-          done();
         });
     });
 
-    it("zou OGCAPI styles terug moeten geven wanneer gezocht wordt op de juiste layer naam", (done) => {
+    it("zou OGCAPI styles terug moeten geven wanneer gezocht wordt op de juiste layer naam", async () => {
       const baseUrl = "baseUrl";
       const ogcMock: ServiceCapabilities = {
         url: baseUrl,
@@ -194,13 +208,12 @@ describe("GgcCapabilitiesService", () => {
           }
         ]
       };
-      ogcApiSvcSpy.getServiceCapabilitiesOgcApi.and.returnValue(of(ogcMock));
+      ogcApiSvcSpy.getServiceCapabilitiesOgcApi.mockReturnValue(of(ogcMock));
 
       service
         .getServiceLayerStyles(baseUrl, "OGCAPI", "ogc:layer")
         .subscribe((result) => {
           expect(result).toBe(ogcMock.layers[0].styles);
-          done();
         });
     });
   });

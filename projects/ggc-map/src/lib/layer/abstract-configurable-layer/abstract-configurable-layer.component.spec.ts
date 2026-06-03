@@ -64,10 +64,9 @@ describe("AbstractConfigurableLayerComponent", () => {
   it("when attributions is provided via options.attributions, it should be contained in the source", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     const layer = new Layer({});
 
     layer.setSource(new ImageStatic({ url: "//" } as Options));
@@ -91,10 +90,9 @@ describe("AbstractConfigurableLayerComponent", () => {
   it("should set the layer id from options", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     const layer = new Layer({});
 
     layer.setSource(new ImageStatic({ url: "//" } as Options));

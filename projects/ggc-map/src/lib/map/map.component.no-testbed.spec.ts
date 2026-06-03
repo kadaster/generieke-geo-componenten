@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import OlMap from "ol/Map";
 import MapEvent from "ol/MapEvent";
 import { ObjectEvent } from "ol/Object";
@@ -23,11 +24,11 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 describe("MapComponent(no-testbed), processEvent", () => {
   let mapComponent: GgcMapComponent;
   let fixture: ComponentFixture<GgcMapComponent>;
-  let coreMapServiceSpy: jasmine.SpyObj<CoreMapService>;
-  let coreDrawServiceSpy: jasmine.SpyObj<CoreDrawService>;
-  let coreLoadingServiceSpy: jasmine.SpyObj<CoreLoadingService>;
-  let mapEventsServiceSpy: jasmine.SpyObj<CoreMapEventsService>;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreMapServiceSpy: MockedObject<CoreMapService>;
+  let coreDrawServiceSpy: MockedObject<CoreDrawService>;
+  let coreLoadingServiceSpy: MockedObject<CoreLoadingService>;
+  let mapEventsServiceSpy: MockedObject<CoreMapEventsService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
 
   const mapEventOne: ObjectEvent = {
     type: "change:resolution",
@@ -44,7 +45,7 @@ describe("MapComponent(no-testbed), processEvent", () => {
       "getMap",
       "getLayerChangedObservable"
     ]);
-    coreMapServiceSpy.getLayerChangedObservable.and.returnValue(of());
+    coreMapServiceSpy.getLayerChangedObservable.mockReturnValue(of());
     coreDrawServiceSpy = createSpyObj("CoreDrawService", ["addFeatureToLayer"]);
     coreLoadingServiceSpy = createSpyObj("CoreLoadingService", [
       "addMapLoaders",
@@ -90,7 +91,7 @@ describe("MapComponent(no-testbed), processEvent", () => {
   });
 
   it('should receive an event when "resolution:change" and "moveeend" event are processed', () => {
-    spyOn(mapComponent, "getLocationFromMapEvent").and.returnValue(
+    vi.spyOn(mapComponent, "getLocationFromMapEvent").mockReturnValue(
       {} as MapViewState
     );
     const events: MapComponentEvent[] = [];

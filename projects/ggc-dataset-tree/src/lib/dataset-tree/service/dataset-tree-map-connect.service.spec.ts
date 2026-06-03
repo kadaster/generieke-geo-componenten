@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { DatasetTreeMapConnectService } from "./dataset-tree-map-connect.service";
 import { TestBed } from "@angular/core/testing";
 import { of, EMPTY } from "rxjs";
@@ -11,46 +12,54 @@ describe("DatasetTreeMapConnectService", () => {
   let mockMapLayerService: any;
   let mockMapEventsService: any;
 
-  let mockConnectService: jasmine.SpyObj<GgcDatasetTreeConnectService>;
+  let mockConnectService: MockedObject<GgcDatasetTreeConnectService>;
 
   beforeEach(async () => {
     mockCesiumLayerService = {
-      getLayerChangedObservable: jasmine
-        .createSpy()
-        .and.returnValue(of({ layerId: "id-3d" })),
-      getTitle: jasmine.createSpy().and.returnValue("title-3d"),
-      isVisible: jasmine.createSpy().and.returnValue(true),
-      toggleVisibility: jasmine.createSpy().and.returnValue(false),
-      getEnabled: jasmine.createSpy().and.returnValue(true)
+      getLayerChangedObservable: vi
+        .fn()
+        .mockReturnValue(of({ layerId: "id-3d" })),
+      getTitle: vi.fn().mockReturnValue("title-3d"),
+      isVisible: vi.fn().mockReturnValue(true),
+      toggleVisibility: vi.fn().mockReturnValue(false),
+      getEnabled: vi.fn().mockReturnValue(true)
     };
 
     mockMapLayerService = {
-      getLayerChangedObservable: jasmine
-        .createSpy()
-        .and.returnValue(of({ layerId: "id-2d", mapIndex: "map" })),
-      getTitle: jasmine.createSpy().and.returnValue("title-2d"),
-      isVisible: jasmine.createSpy().and.returnValue(false),
-      toggleVisibility: jasmine.createSpy().and.returnValue(false),
-      getEnabled: jasmine.createSpy().and.returnValue(false)
+      getLayerChangedObservable: vi
+        .fn()
+        .mockReturnValue(of({ layerId: "id-2d", mapIndex: "map" })),
+      getTitle: vi.fn().mockReturnValue("title-2d"),
+      isVisible: vi.fn().mockReturnValue(false),
+      toggleVisibility: vi.fn().mockReturnValue(false),
+      getEnabled: vi.fn().mockReturnValue(false)
     };
 
     mockMapEventsService = {
-      getZoomendObservableForMap: jasmine
-        .createSpy()
-        .and.returnValue(of("zoom"))
+      getZoomendObservableForMap: vi.fn().mockReturnValue(of("zoom"))
     };
 
-    mockConnectService = jasmine.createSpyObj("GgcDatasetTreeConnectService", [
-      "getGgcCesiumSharedLayerService",
-      "getGgcOLLayerService",
-      "getGgcOLMapEventsService"
-    ]);
+    mockConnectService = {
+      getGgcCesiumSharedLayerService: vi
+        .fn()
+        .mockName(
+          "GgcDatasetTreeConnectService.getGgcCesiumSharedLayerService"
+        ),
+      getGgcOLLayerService: vi
+        .fn()
+        .mockName("GgcDatasetTreeConnectService.getGgcOLLayerService"),
+      getGgcOLMapEventsService: vi
+        .fn()
+        .mockName("GgcDatasetTreeConnectService.getGgcOLMapEventsService")
+    };
 
-    mockConnectService.getGgcCesiumSharedLayerService.and.resolveTo(
+    mockConnectService.getGgcCesiumSharedLayerService.mockResolvedValue(
       mockCesiumLayerService
     );
-    mockConnectService.getGgcOLLayerService.and.resolveTo(mockMapLayerService);
-    mockConnectService.getGgcOLMapEventsService.and.resolveTo(
+    mockConnectService.getGgcOLLayerService.mockResolvedValue(
+      mockMapLayerService
+    );
+    mockConnectService.getGgcOLMapEventsService.mockResolvedValue(
       mockMapEventsService
     );
 

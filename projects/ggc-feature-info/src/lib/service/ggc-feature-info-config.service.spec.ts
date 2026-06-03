@@ -157,10 +157,9 @@ describe("GgcFeatureInfoConfigService > ", () => {
       ];
       service.setConfig(config);
 
-      const result: { [key: string]: any } = service.filterAndSortAttributes(
-        "Kaartlaag",
-        testData
-      );
+      const result: {
+        [key: string]: any;
+      } = service.filterAndSortAttributes("Kaartlaag", testData);
 
       expect(result.length).toBe(2);
       expect(result[0].id).toBe(1);
@@ -474,7 +473,9 @@ describe("GgcFeatureInfoConfigService > ", () => {
       "when there are no CustomFeatureInfoModel objects and checkForCustomValue() is called," +
         " it should return the currentFeature it is called with",
       () => {
-        const currentFeature: { [key: string]: any } = {
+        const currentFeature: {
+          [key: string]: any;
+        } = {
           test: "waarde",
           locatie: [123, 456]
         };
@@ -505,7 +506,9 @@ describe("GgcFeatureInfoConfigService > ", () => {
 
         service.setCustomFeatureInfo(customFeatureInfoMap);
 
-        const currentFeature: { [key: string]: any } = {
+        const currentFeature: {
+          [key: string]: any;
+        } = {
           tijdstipregistratie: "2018-05-17T11:25:30.306",
           locatie: [123, 456]
         };
@@ -536,7 +539,9 @@ describe("GgcFeatureInfoConfigService > ", () => {
         customFeatureInfoMap.set("bronhoudercode", bronhoudercodeFeatureInfo);
         service.setCustomFeatureInfo(customFeatureInfoMap);
 
-        const currentFeature: { [key: string]: any } = {
+        const currentFeature: {
+          [key: string]: any;
+        } = {
           bronhoudernummer: 603,
           status: "Nieuw"
         };
@@ -559,14 +564,16 @@ describe("GgcFeatureInfoConfigService > ", () => {
         " and the old value will be displayed",
       () => {
         const replaceValueMethod = "replaceValue";
-        const consoleWarnSpy = spyOn(console, "warn");
+        const consoleWarnSpy = vi.spyOn(console, "warn");
 
         const date: string = new Date(2020, 1, 3, 12, 1, 10).toDateString();
         const currentFeature = {
           meldingsnummer: "123",
           tijdstipregistratie: date
         };
-        const displayFeature: { [key: string]: any } = {
+        const displayFeature: {
+          [key: string]: any;
+        } = {
           meldingsnummer: "123"
         };
 

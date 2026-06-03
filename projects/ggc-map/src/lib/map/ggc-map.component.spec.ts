@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { HttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
@@ -16,7 +17,7 @@ import { CoreMapService } from "./service/core-map.service";
 import OlMap from "ol/Map";
 import View from "ol/View";
 import createSpyObj = jasmine.createSpyObj;
-import SpyObj = jasmine.SpyObj;
+import SpyObj = MockedObject;
 import { provideZoneChangeDetection } from "@angular/core";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
@@ -25,10 +26,9 @@ describe("MapComponent, ngAfterViewInit", () => {
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapService: CoreMapService;
 
-  const httpClientSpy: jasmine.SpyObj<HttpClient> = jasmine.createSpyObj(
-    "HttpClient",
-    ["get"]
-  );
+  const httpClientSpy: MockedObject<HttpClient> = {
+    get: vi.fn().mockName("HttpClient.get")
+  };
   let mapSpy: SpyObj<OlMap>;
   let viewSpy: SpyObj<View>;
 
@@ -54,11 +54,11 @@ describe("MapComponent, ngAfterViewInit", () => {
     component = fixture.componentInstance;
     mapSpy = createSpyObj("Map", ["setTarget", "on", "getView"]);
     viewSpy = createSpyObj("View", ["on", "setZoom"]);
-    spyOn(coreMapService, "createAndGetMap").and.returnValue(mapSpy);
-    mapSpy.getView.and.returnValue(viewSpy);
+    vi.spyOn(coreMapService, "createAndGetMap").mockReturnValue(mapSpy);
+    mapSpy.getView.mockReturnValue(viewSpy);
   });
 
-  it("Events should be set", (done) => {
+  it("Events should be set", async () => {
     component.events
       .pipe(
         filter((event) => event.type === MapComponentEventTypes.MAPINITIALIZED)
@@ -67,22 +67,21 @@ describe("MapComponent, ngAfterViewInit", () => {
         expect(mapComponentInitEvent.type).toBe(
           MapComponentEventTypes.MAPINITIALIZED
         );
-        done();
       });
     fixture.detectChanges();
     expect(mapSpy.setTarget).toHaveBeenCalled();
     expect(mapSpy.on).toHaveBeenCalledTimes(4);
     expect(mapSpy.on.calls).toBeDefined();
-    expect(mapSpy.on.calls.argsFor(0)[0] as unknown as string).toEqual(
+    expect(vi.mocked(mapSpy.on).mock.calls[0][0] as unknown as string).toEqual(
       "precompose"
     );
-    expect(mapSpy.on.calls.argsFor(1)[0] as unknown as string).toEqual(
+    expect(vi.mocked(mapSpy.on).mock.calls[1][0] as unknown as string).toEqual(
       "rendercomplete"
     );
-    expect(mapSpy.on.calls.argsFor(2)[0] as unknown as string).toEqual(
+    expect(vi.mocked(mapSpy.on).mock.calls[2][0] as unknown as string).toEqual(
       "singleclick"
     );
-    expect(mapSpy.on.calls.argsFor(3)[0] as unknown as string).toEqual(
+    expect(vi.mocked(mapSpy.on).mock.calls[3][0] as unknown as string).toEqual(
       "moveend"
     );
     expect(mapSpy.getView).toHaveBeenCalled();
@@ -98,7 +97,7 @@ describe("MapComponent, ngAfterViewInit", () => {
 
     expect(component["eventsMap"].length).toEqual(0);
   });
-  it("minZoomlevel cannot be below 0 and maxZoomlevel cannot be below 1", (done) => {
+  it("minZoomlevel cannot be below 0 and maxZoomlevel cannot be below 1", async () => {
     component.events
       .pipe(
         filter((event) => event.type === MapComponentEventTypes.MAPINITIALIZED)
@@ -112,7 +111,6 @@ describe("MapComponent, ngAfterViewInit", () => {
         expect(mapComponentInitEvent.type).toBe(
           MapComponentEventTypes.MAPINITIALIZED
         );
-        done();
       });
 
     component.minZoomlevel = -1;
@@ -120,7 +118,7 @@ describe("MapComponent, ngAfterViewInit", () => {
     fixture.detectChanges();
   });
 
-  it("minZoomlevel and maxZoomlevel cannot above than 25", (done) => {
+  it("minZoomlevel and maxZoomlevel cannot above than 25", async () => {
     component.events
       .pipe(
         filter((event) => event.type === MapComponentEventTypes.MAPINITIALIZED)
@@ -134,7 +132,6 @@ describe("MapComponent, ngAfterViewInit", () => {
         expect(mapComponentInitEvent.type).toBe(
           MapComponentEventTypes.MAPINITIALIZED
         );
-        done();
       });
 
     component.minZoomlevel = 26;
@@ -174,7 +171,7 @@ describe("MapComponent, ngAfterViewInit", () => {
     expect(component.minZoomlevel).toBe(25);
   });
 
-  it("when minZoomLevel is greater than maxZoomLevel, an event should be thrown informing the user about this", (done) => {
+  it("when minZoomLevel is greater than maxZoomLevel, an event should be thrown informing the user about this", async () => {
     component.minZoomlevel = 5;
     component.maxZoomlevel = 2;
 
@@ -187,7 +184,6 @@ describe("MapComponent, ngAfterViewInit", () => {
           "Kaart kon niet worden geladen omdat de waarde van minZoomLevel (5)" +
             " hoger is dan die van maxZoomLevel (2)."
         );
-        done();
       }
     );
 

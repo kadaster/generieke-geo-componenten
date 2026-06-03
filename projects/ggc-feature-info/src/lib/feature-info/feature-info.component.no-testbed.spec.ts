@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import Geometry from "ol/geom/Geometry";
 import { GgcFeatureInfoComponent } from "./ggc-feature-info.component";
 import { SimpleChange, SimpleChanges } from "@angular/core";
@@ -16,13 +17,15 @@ describe("FeatureInfoComponent, no testbed", () => {
   const simpleChanges: SimpleChanges = {
     featureInfoCollection: {} as SimpleChange
   };
-  let featureInfoConfigSpy: jasmine.SpyObj<GgcFeatureInfoConfigService>;
+  let featureInfoConfigSpy: MockedObject<GgcFeatureInfoConfigService>;
   let event: FeatureInfoComponentEvent;
 
   beforeEach(() => {
-    featureInfoConfigSpy = jasmine.createSpyObj("FeatureInfoConfigService", [
-      "filterAndSortAttributes"
-    ]);
+    featureInfoConfigSpy = {
+      filterAndSortAttributes: vi
+        .fn()
+        .mockName("FeatureInfoConfigService.filterAndSortAttributes")
+    };
     TestBed.configureTestingModule({
       providers: [
         {
@@ -78,7 +81,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       const features = [feature1];
       component.featureInfoCollection = { layerName: "laag", features };
       component["currentFeatureIndex"] = 0;
-      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
+      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
       component.ngOnChanges(simpleChanges);
     });
 
@@ -131,7 +134,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       feature3 = { test: "789" };
       const features = [feature1, feature2, feature3];
       component.featureInfoCollection = { layerName: "laag", features };
-      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
+      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
       component.ngOnChanges(simpleChanges);
       component["currentFeatureIndex"] = 1;
     });
@@ -187,7 +190,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature3 = new Feature({ test: "789" });
       const features = [feature1, feature2, feature3];
       component.featureInfoCollection = { layerName: "laag", features };
-      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
+      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
       component.ngOnChanges(simpleChanges);
       component["currentFeatureIndex"] = 1;
 
@@ -271,7 +274,7 @@ describe("FeatureInfoComponent, no testbed", () => {
           layerName: "laag",
           features: arrayContaningFeatures
         };
-        featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
+        featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
         component.ngOnChanges(simpleChanges);
 
         expect(component.featureInfoCollection.features).toBe(

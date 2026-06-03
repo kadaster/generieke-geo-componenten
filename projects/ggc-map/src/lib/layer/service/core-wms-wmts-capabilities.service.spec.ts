@@ -102,7 +102,7 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
       request.flush(wmsCapabilities);
 
       expect(capabilitiesService["capabilitiesMap"].size).toBe(1);
-      expect(request.request.withCredentials).toBeFalse();
+      expect(request.request.withCredentials).toBe(false);
     });
 
     it("when called for a WMS service with withCredentials is false, it should set withCredentials to false", () => {
@@ -114,7 +114,7 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
       );
       request.flush(wmsCapabilities);
 
-      expect(request.request.withCredentials).toBeFalse();
+      expect(request.request.withCredentials).toBe(false);
     });
 
     it("when called for a WMS service with withCredentials is true, it should set withCredentials to true", () => {
@@ -126,17 +126,17 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
       );
       request.flush(wmsCapabilities);
 
-      expect(request.request.withCredentials).toBeTrue();
+      expect(request.request.withCredentials).toBe(true);
     });
 
     it(
       "when called with url that has been called before, " +
         "it should not call httpclient and return observable from capabilitiesMap",
       () => {
-        const capabilitiesMapSpy = spyOn(
+        const capabilitiesMapSpy = vi.spyOn(
           capabilitiesService["capabilitiesMap"],
           "get"
-        ).and.callThrough();
+        );
         const mock = of({});
         capabilitiesService["capabilitiesMap"].set(testUrl, mock);
 
@@ -152,10 +152,9 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
   });
 
   it("createGetFeatureInfoUrlObservable it should call constructGetFeatureInfoParams and return an observable", () => {
-    const capabilitiesMapSpy = spyOn(
-      capabilitiesService as any,
-      "constructGetFeatureInfoParams"
-    ).and.returnValue({});
+    const capabilitiesMapSpy = vi
+      .spyOn(capabilitiesService as any, "constructGetFeatureInfoParams")
+      .mockReturnValue({});
     const observable = capabilitiesService
       .createGetFeatureInfoUrlObservable("https://url.test/", {} as WMTS, [], 2)
       .subscribe(noop);

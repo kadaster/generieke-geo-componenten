@@ -31,10 +31,10 @@ describe("CoreMapService", () => {
     it("createAndGetMap, when called without parameters, should create a map with default values", inject(
       [CoreMapService],
       (coreMapService: CoreMapService) => {
-        const createLayersSpy = spyOn<any>(
+        const createLayersSpy = vi.spyOn<any>(
           coreMapService,
           "createExtraLayers"
-        ).and.callThrough();
+        );
         coreMapService.createAndGetMap();
 
         expect(coreMapService["olMaps"].get(DEFAULT_MAPINDEX)).toBeDefined();
@@ -207,7 +207,7 @@ describe("CoreMapService", () => {
     it("clearHighlightLayer, when map does not exist, a new MapComponentEvent of type UNSUCCESSFUL shoud be returned.", inject(
       [CoreMapService],
       (coreMapService: CoreMapService) => {
-        const checkMapIndexSpy = spyOn(coreMapService, "checkMapIndex");
+        const checkMapIndexSpy = vi.spyOn(coreMapService, "checkMapIndex");
 
         const mapComponentEvent =
           coreMapService.clearHighlightLayer("onbekend");
@@ -228,7 +228,7 @@ describe("CoreMapService", () => {
       "clearHighlightLayer called without mapIndex, when map does not exist, a new MapComponentEvent of " +
         "type UNSUCCESSFUL shoud be returned.",
       inject([CoreMapService], (coreMapService: CoreMapService) => {
-        const checkMapIndexSpy = spyOn(coreMapService, "checkMapIndex");
+        const checkMapIndexSpy = vi.spyOn(coreMapService, "checkMapIndex");
 
         const mapComponentEvent =
           coreMapService.clearHighlightLayer(DEFAULT_MAPINDEX);
@@ -334,7 +334,7 @@ describe("CoreMapService", () => {
     it("addFeaturesToSelectionLayer, when map does not exist, a new MapComponentEvent of type UNSUCCESSFUL shoud be returned.", inject(
       [CoreMapService],
       (coreMapService: CoreMapService) => {
-        const checkMapIndexSpy = spyOn(coreMapService, "checkMapIndex");
+        const checkMapIndexSpy = vi.spyOn(coreMapService, "checkMapIndex");
 
         const mapComponentEvent = coreMapService.addFeaturesToSelectionLayer(
           [],
@@ -377,7 +377,7 @@ describe("CoreMapService", () => {
     it("clearSelectionLayer, when map does not exist, a new MapComponentEvent of type UNSUCCESSFUL shoud be returned.", inject(
       [CoreMapService],
       (coreMapService: CoreMapService) => {
-        const checkMapIndexSpy = spyOn(coreMapService, "checkMapIndex");
+        const checkMapIndexSpy = vi.spyOn(coreMapService, "checkMapIndex");
 
         const mapComponentEvent =
           coreMapService.clearSelectionLayer("onbekend");
@@ -426,10 +426,10 @@ describe("CoreMapService", () => {
     it("should only create geolocation layer once and return the same layer when called again", inject(
       [CoreMapService],
       (coreMapService: CoreMapService) => {
-        const createLayerAndAddToMapSpy = spyOn(
+        const createLayerAndAddToMapSpy = vi.spyOn(
           coreMapService,
           "createLayerAndAddToMap"
-        ).and.callThrough();
+        );
 
         const layer = coreMapService.getExtraLayer("geolocation", "testMap");
         coreMapService.getExtraLayer("geolocation", "testMap");
