@@ -1,9 +1,8 @@
 import { TestBed } from "@angular/core/testing";
 import { BaseLayerService } from "./base-layer.service";
 import { LayerObject } from "../model/core-interfaces";
-import { take } from "rxjs/operators";
 import { LayerChangedEventTrigger } from "@kadaster/ggc-models";
-import {firstValueFrom} from "rxjs";
+import { firstValueFrom } from "rxjs";
 
 describe("BaseLayerService", () => {
   let service: BaseLayerService;

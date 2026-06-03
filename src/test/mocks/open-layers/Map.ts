@@ -9,7 +9,7 @@ export class Map {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_options?: unknown) {}
 
-  setTarget(target?: unknown): void {
+  setTarget(): void {
     /* noop */
   }
   updateSize(): void {
