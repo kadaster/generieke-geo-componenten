@@ -70,6 +70,19 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
         customAttributeName: "provincie code "
       })
     );
+    customFeatureInfoMap.set(
+      "naam",
+      new CustomFeatureInfo({
+        customAttributeValueFunction: this.changeGemeenteNaam
+      })
+    );
     this.customAttributeNamesAndValues = customFeatureInfoMap;
+  }
+
+  //changeProvincieNaam(ligtInProvincieNaam: string): string{
+  // return 'provincie ' + ligtInProvincieNaam
+  // }
+  changeGemeenteNaam(naam: string | number): string {
+    return "gemeente " + naam;
   }
 }
