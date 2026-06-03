@@ -29,16 +29,6 @@
         },
         "visible": true,
         "getFeatureInfoOnSingleclick": true
-      },
-      {
-        "layerId": "provincies",
-        "title": "Provincies",
-        "layerName": "provinciegebied",
-        "activeLegend": {
-          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Provinciegebied/Provinciegebied.png"
-        },
-        "visible": true,
-        "getFeatureInfoOnSingleclick": true
       }
     ]
   }

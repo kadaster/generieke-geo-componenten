@@ -23,9 +23,22 @@
       <!-- DOCS:START functionality -->
       <div class="col-xl-3 col-md-4 col-sm-5">
         <div class="feature-info-container">
+          <b>Niet Aangepaste Feature Info</b>
+          <br />
+          <ggc-feature-info
+            [hidePagerWithOneFeature]="true"
+            [mapIndex]="mapIndex"
+          ></ggc-feature-info>
+        </div>
+
+        <div class="feature-info-container">
           <b>Aangepaste Feature Info</b>
           <br />
-          <ggc-feature-info [mapIndex]="mapIndex"></ggc-feature-info>
+          <ggc-feature-info
+            [customAttributeNamesAndValues]="customAttributeNamesAndValues"
+            [hidePagerWithOneFeature]="true"
+            [mapIndex]="mapIndex"
+          ></ggc-feature-info>
         </div>
       </div>
       <div class="col-xl-7 col-md-6 col-sm-5">

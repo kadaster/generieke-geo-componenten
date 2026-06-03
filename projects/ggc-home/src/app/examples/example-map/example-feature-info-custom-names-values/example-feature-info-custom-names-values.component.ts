@@ -1,7 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
-import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
+import {
+  CustomFeatureInfo,
+  GgcFeatureInfoComponent
+} from "@kadaster/ggc-feature-info";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -34,6 +37,7 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
   // DOCS-SKIP:END
   mapIndex = "featureInfoCustomNamesValues";
   mapConfig: Webservice[];
+  customAttributeNamesAndValues: Map<string, CustomFeatureInfo>;
 
   ngOnInit() {
     this.httpClient
@@ -43,5 +47,29 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
+    this.setCustomFeatureInfoNames();
+  }
+
+  setCustomFeatureInfoNames() {
+    const customFeatureInfoMap = new Map<string, CustomFeatureInfo>();
+    customFeatureInfoMap.set(
+      "code",
+      new CustomFeatureInfo({
+        customAttributeName: "gemeente code"
+      })
+    );
+    customFeatureInfoMap.set(
+      "ligtInProvincieNaam",
+      new CustomFeatureInfo({
+        customAttributeName: "ligt in "
+      })
+    );
+    customFeatureInfoMap.set(
+      "ligtInProvincieCode",
+      new CustomFeatureInfo({
+        customAttributeName: "provincie code "
+      })
+    );
+    this.customAttributeNamesAndValues = customFeatureInfoMap;
   }
 }
