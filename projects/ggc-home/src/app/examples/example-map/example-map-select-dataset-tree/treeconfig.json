@@ -1,0 +1,43 @@
+[
+  {
+    "themeName": "Kaarten",
+    "datasets": [
+      {
+        "datasetName": "WMS kaartlagen",
+        "services": [
+          {
+            "layers": [
+              { "layerId": "gemeenten" }
+            ]
+          }
+        ]
+      },
+      {
+        "datasetName": "WMTS kaartlagen",
+        "services": [
+          {
+            "layers": [{ "layerId": "bgt-standaardvisualisatie" }]
+          }
+        ]
+      },
+      {
+        "datasetName": "Geojson kaartlagen",
+        "services": [
+          {
+            "layers": [{ "layerId": "provincies" }, { "layerId": "brkFeatures" }]
+          }
+        ]
+      },
+      {
+        "datasetName": "Vector kaartlagen",
+        "services": [
+          {
+            "layers": [
+              { "layerId": "bagVector" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

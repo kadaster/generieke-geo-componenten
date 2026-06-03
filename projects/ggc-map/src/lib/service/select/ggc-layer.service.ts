@@ -30,6 +30,9 @@ import {
   LegendRemovedEvent,
   Webservice2DType
 } from "@kadaster/ggc-models";
+import { AbstractBaseLayerComponent } from "../../layer/abstract-base-layer/abstract-base-layer.component";
+import Layer from "ol/layer/Layer";
+import { GgcSelectionService } from "./ggc-selection.service";
 
 @Injectable({
   providedIn: "root"
@@ -51,6 +54,7 @@ import {
  */
 export class GgcLayerService {
   private readonly mapService = inject(GgcMapService);
+  private readonly selectionService = inject(GgcSelectionService);
   private readonly appRef = inject(ApplicationRef);
 
   private readonly layerChangedSubject: Subject<LayerChangedEvent> =
@@ -60,6 +64,11 @@ export class GgcLayerService {
   private readonly legendRemovedSubject: Subject<LegendRemovedEvent> =
     new Subject();
   private readonly mapConfigurations: Map<string, Webservice[]> = new Map();
+
+  private readonly mapLayerComponents: Map<
+    string,
+    AbstractBaseLayerComponent<any>
+  > = new Map();
 
   /**
    * Initialiseert de service en luistert naar
@@ -249,6 +258,11 @@ export class GgcLayerService {
       });
       componentRef.instance.options = layerOptions;
       componentRef.instance.ngOnInit();
+      this.addLayerComponentToMapLayerComponents(
+        componentRef.instance,
+        layerOptions.mapIndex,
+        componentRef.instance.options.layerId
+      );
       return componentRef.instance.options.layerId;
     }
   }
@@ -274,6 +288,11 @@ export class GgcLayerService {
     const layer = this.mapService.getLayer(layerId, mapIndex);
     if (layer) {
       this.mapService.getMap(mapIndex).removeLayer(layer);
+      this.mapLayerComponents
+        .get(this.buildLayerComponentKey(mapIndex, layerId))
+        ?.cleanup();
+      // Clear all selections whenever a layer is removed for safety
+      this.selectionService.clearAllSelectionsForMapIndex(mapIndex);
       this.emitLayerChanged(
         layerId,
         mapIndex,
@@ -516,5 +535,24 @@ export class GgcLayerService {
     } else if (eventTrigger == LayerChangedEventTrigger.LAYER_REMOVED) {
       this.emitLegendRemovedEvent(layerId, mapIndex);
     }
+  }
+
+  private addLayerComponentToMapLayerComponents(
+    layerComponent: AbstractBaseLayerComponent<Layer>,
+    mapIndex: string,
+    layerId: string | undefined
+  ) {
+    this.mapLayerComponents.set(
+      this.buildLayerComponentKey(mapIndex, layerId ?? ""),
+      layerComponent
+    );
+  }
+
+  /**
+   * Bouwt een unieke key voor het opslaan van layer componenten
+   * op basis van mapIndex en layerId.
+   */
+  private buildLayerComponentKey(mapIndex: string, layerId: string): string {
+    return `${mapIndex}:${layerId}`;
   }
 }

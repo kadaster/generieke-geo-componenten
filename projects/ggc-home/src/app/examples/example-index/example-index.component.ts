@@ -39,6 +39,7 @@ import { SortPipe } from "../../pipes/sort.pipe";
 import { ExampleMapSelectComponent } from "../example-map/example-map-select/example-map-select.component";
 import { ExampleMapSelectHoverClickComponent } from "../example-map/example-map-select-hover-click/example-map-select-hover-click.component";
 import { ExampleMapSelectWmsComponent } from "../example-map/example-map-select-wms/example-map-select-wms.component";
+import { ExampleMapSelectDatasetTreeComponent } from "../example-map/example-map-select-dataset-tree/example-map-select-dataset-tree.component";
 
 interface GroupedCards {
   theme: string;
@@ -100,7 +101,8 @@ export class ExampleIndexComponent {
     new ExampleMapZoomScalePositionComponent().componentInfo,
     new ExampleMapSelectComponent().componentInfo,
     new ExampleMapSelectHoverClickComponent().componentInfo,
-    new ExampleMapSelectWmsComponent().componentInfo
+    new ExampleMapSelectWmsComponent().componentInfo,
+    new ExampleMapSelectDatasetTreeComponent().componentInfo
   ];
 
   private readonly selectedComponentsKey = "selectedComponents";

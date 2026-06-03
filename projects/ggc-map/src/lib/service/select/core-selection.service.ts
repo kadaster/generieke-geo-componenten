@@ -142,10 +142,15 @@ export class CoreSelectionService {
   }
 
   clearSelection(selectIndex: string): void {
-    const select = this.getActiveSelectInteraction(selectIndex)?.select;
-    if (select) {
-      select.clearSelection();
+    const activeSelectInteraction =
+      this.getActiveSelectInteraction(selectIndex);
+
+    if (!activeSelectInteraction) {
+      return;
     }
+
+    activeSelectInteraction.select.clearSelection();
+    this.ggcMapService.clearSelectionLayer(activeSelectInteraction.mapIndex);
 
     this.emitEvent(
       selectIndex,
@@ -155,6 +160,20 @@ export class CoreSelectionService {
         CoreSelectionService.messageClearSelection
       )
     );
+  }
+
+  /**
+   * Verwijdert alle selecties voor alle actieve select interactions
+   * die gekoppeld zijn aan de opgegeven mapIndex.
+   *
+   * @param mapIndex De kaartindex waarvoor alle selecties worden gewist.
+   */
+  clearAllSelectionsForMapIndex(mapIndex: string): void {
+    const selectIndices = this.getAllActiveSelectIndicesOnMapIndex(mapIndex);
+
+    for (const selectIndex of selectIndices) {
+      this.clearSelection(selectIndex);
+    }
   }
 
   setSelection(features: Feature<Geometry>[], selectIndex: string) {
@@ -366,7 +385,6 @@ export class CoreSelectionService {
     featureCollection: Collection<Feature<Geometry>>
   ) {
     let manualActionPerformed = false;
-    featureCollection.clear();
     for (const feature of newFeatures) {
       featureCollection.push(feature);
       manualActionPerformed = true;

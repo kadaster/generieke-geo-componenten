@@ -98,15 +98,8 @@ export class CoreMapService {
 
     if (!this.olMaps.has(mapIndex)) {
       // create a new map and drawlayer for this map
-      const newMap = this.createNewOlMap();
+      const newMap = this.createNewOlMap(mapIndex);
       this.olMaps.set(mapIndex, newMap);
-      newMap.getLayers().on("add", (event) => {
-        this.LayerChangedSubject.next({
-          layerId: event.element.get("ggc-layer-id"),
-          mapIndex,
-          eventTrigger: LayerChangedEventTrigger.LAYER_ADDED
-        });
-      });
     }
     const map = this.olMaps.get(mapIndex) as OlMap;
 
@@ -146,7 +139,7 @@ export class CoreMapService {
   getMap(mapIndex?: string): OlMap {
     mapIndex = mapIndex ?? DEFAULT_MAPINDEX;
     if (!this.olMaps.has(mapIndex)) {
-      this.olMaps.set(mapIndex, this.createNewOlMap());
+      this.olMaps.set(mapIndex, this.createNewOlMap(mapIndex));
     }
     return this.olMaps.get(mapIndex) as OlMap;
   }
@@ -356,8 +349,8 @@ export class CoreMapService {
     return layer;
   }
 
-  private createNewOlMap(): OlMap {
-    return new OlMap({
+  private createNewOlMap(mapIndex: string): OlMap {
+    const newMap = new OlMap({
       controls: this.getControls(),
       interactions: defaultInteractions({
         // Is always set to false because of the interaction with the tabindex if it's provided.
@@ -369,6 +362,14 @@ export class CoreMapService {
         projection: this.rdNewProjection
       })
     });
+    newMap.getLayers().on("add", (event) => {
+      this.LayerChangedSubject.next({
+        layerId: event.element.get("ggc-layer-id"),
+        mapIndex,
+        eventTrigger: LayerChangedEventTrigger.LAYER_ADDED
+      });
+    });
+    return newMap;
   }
 
   private getControls(): Collection<Control> {

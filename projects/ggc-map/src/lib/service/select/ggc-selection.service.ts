@@ -141,6 +141,16 @@ export class GgcSelectionService {
   }
 
   /**
+   * Cleart alle selecties voor de opgegeven kaartindex.
+   *
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * waarvoor alle selecties worden gewist.
+   */
+  clearAllSelectionsForMapIndex(mapIndex: string = DEFAULT_MAPINDEX): void {
+    this.coreSelectionService.clearAllSelectionsForMapIndex(mapIndex);
+  }
+
+  /**
    * @deprecated
    * Zet een selectie voor een specifieke kaartlaag.
    * Bestaande selecties voor deze laag worden overschreven.

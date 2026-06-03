@@ -43,6 +43,7 @@ import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/exa
 import { ExampleMapSelectComponent } from "./examples/example-map/example-map-select/example-map-select.component";
 import { ExampleMapSelectHoverClickComponent } from "./examples/example-map/example-map-select-hover-click/example-map-select-hover-click.component";
 import { ExampleMapSelectWmsComponent } from "./examples/example-map/example-map-select-wms/example-map-select-wms.component";
+import { ExampleMapSelectDatasetTreeComponent } from "./examples/example-map/example-map-select-dataset-tree/example-map-select-dataset-tree.component";
 
 export const routes: Routes = [
   {
@@ -306,5 +307,11 @@ export const routes: Routes = [
     title: "Selecteren op WMS of WMTS kaarten | GGC-Home",
     component: ExampleMapSelectWmsComponent,
     data: { label: "example-map-select-wms" }
+  },
+  {
+    path: "example-map-select-dataset-tree",
+    title: "Selecteren op de kaart met dataset tree | GGC-Home",
+    component: ExampleMapSelectDatasetTreeComponent,
+    data: { label: "example-map-select-dataset-tree" }
   }
 ];
