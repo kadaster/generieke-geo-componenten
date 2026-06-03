@@ -58,7 +58,7 @@
         <div>
           <label>
             <input [(ngModel)]="showEmptyMessage" type="checkbox" />
-            Toon melding waneer geen feature-info is gevonden
+            Toon melding "Geen informatie beschikbaar"
           </label>
         </div>
         <br />
@@ -79,6 +79,14 @@
             <span class="slider round"></span>
           </label>
           Wissel tussen Lijst en Tabel weergave
+        </div>
+        <br />
+        <div>
+          <label class="switch">
+            <input (change)="toggleHighlightStyle()" checked type="checkbox" />
+            <span class="slider round"></span>
+          </label>
+          Wissel highlight style
         </div>
       </div>
     </div>

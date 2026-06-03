@@ -67,10 +67,6 @@ export class CoreMapService {
   private readonly LayerChangedSubject: Subject<LayerChangedEvent> =
     new Subject();
 
-  getLayerChangedObservable(): Observable<LayerChangedEvent> {
-    return this.LayerChangedSubject.asObservable();
-  }
-
   constructor() {
     this.rdNewConfig = this.crsConfigService.getRdNewCrsConfig();
     this.rdNewProjection = new Projection({
@@ -84,6 +80,10 @@ export class CoreMapService {
       }
     });
     addProjection(this.rdNewProjection);
+  }
+
+  getLayerChangedObservable(): Observable<LayerChangedEvent> {
+    return this.LayerChangedSubject.asObservable();
   }
 
   createAndGetMap(

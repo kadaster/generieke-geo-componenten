@@ -12,13 +12,35 @@ export class FeatureInfoMapConnectService {
     GgcFeatureInfoConnectService
   );
 
+  async showHighlight(feature: object | undefined, mapIndex: string) {
+    await this.clearHighlightLayer(mapIndex);
+    await this.addFeaturesToHighlightLayer([feature], mapIndex);
+  }
+
   async getObservableForMapSelection(
     mapIndex: string = DEFAULT_MAPINDEX
   ): Promise<Observable<MapComponentEvent>> {
-    const mapObservable: Observable<MapComponentEvent> =
+    return (
       (
         (await this.connectService.getMapSelectionService()) as any
-      )?.getObservable(mapIndex) ?? of();
-    return mapObservable;
+      )?.getObservable(mapIndex) ?? of()
+    );
+  }
+
+  private async clearHighlightLayer(
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Promise<MapComponentEvent> {
+    return (
+      (await this.connectService.getMapService()) as any
+    )?.clearHighlightLayer(mapIndex);
+  }
+
+  private async addFeaturesToHighlightLayer(
+    features: [object | undefined],
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Promise<void> {
+    (
+      (await this.connectService.getMapService()) as any
+    )?.addFeaturesToHighlightLayer(features, mapIndex);
   }
 }

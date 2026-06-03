@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit, AfterViewInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import {
   FeatureInfoDisplayType,
   GgcFeatureInfoComponent,
@@ -11,6 +11,9 @@ import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
+import Style from "ol/style/Style";
+import Fill from "ol/style/Fill";
+import Stroke from "ol/style/Stroke";
 
 @Component({
   selector: "app-example-feature-info-tabs",
@@ -49,6 +52,27 @@ export class ExampleFeatureInfoTabsComponent
     FeatureInfoDisplayType.LIST;
   protected showEmptyMessage = true;
   protected hidePagerWithOneFeature = true;
+  private readonly mapService = inject(GgcMapService);
+
+  private defaultHighlightStyle: Style = new Style({
+    fill: new Fill({
+      color: "rgba(0, 115, 149, 0.5)"
+    }),
+    stroke: new Stroke({
+      color: "#007395",
+      width: 5
+    })
+  });
+  private alternativeHighlightStyle: Style = new Style({
+    fill: new Fill({
+      color: "rgba(0, 255, 0, 0.4)"
+    }),
+    stroke: new Stroke({
+      color: "#00ff00",
+      width: 3
+    })
+  });
+  private highlightStyle = this.defaultHighlightStyle;
 
   ngOnInit() {
     this.httpClient
@@ -58,6 +82,10 @@ export class ExampleFeatureInfoTabsComponent
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
+    this.mapService.changeHighlightLayerStyle(
+      this.highlightStyle,
+      this.mapIndex
+    );
   }
 
   public toggleFeatureInfoDisplayType(): void {
@@ -65,5 +93,16 @@ export class ExampleFeatureInfoTabsComponent
       this.featureInfoDisplayType === FeatureInfoDisplayType.LIST
         ? FeatureInfoDisplayType.TABLE
         : FeatureInfoDisplayType.LIST;
+  }
+
+  public toggleHighlightStyle(): void {
+    this.highlightStyle =
+      this.highlightStyle === this.defaultHighlightStyle
+        ? this.alternativeHighlightStyle
+        : this.defaultHighlightStyle;
+    this.mapService.changeHighlightLayerStyle(
+      this.highlightStyle,
+      this.mapIndex
+    );
   }
 }

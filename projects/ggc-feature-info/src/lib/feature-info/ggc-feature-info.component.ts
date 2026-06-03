@@ -313,8 +313,6 @@ export class GgcFeatureInfoComponent
     // bijv. tab gewijzigd, data vernieuwen, etc.
     if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
       this.featureInfoCollection = event.value;
-    } else if (event.type === FeatureInfoComponentEventType.SELECTEDOBJECT) {
-      // TODO toon selectie
     }
   }
 
@@ -334,7 +332,15 @@ export class GgcFeatureInfoComponent
       "Het huidige weergegeven object.",
       featureForEvent
     );
+    this.highlightFeature(featureForEvent);
     this.events.next(featureInfoComponentEvent);
+  }
+
+  private async highlightFeature(feature: object | undefined) {
+    await this.featureInfoMapConnectService.showHighlight(
+      feature,
+      this.mapIndex
+    );
   }
 
   /**
@@ -384,12 +390,13 @@ export class GgcFeatureInfoComponent
   }
 
   private async subscribeToMapSelection(mapIndex: string) {
+    // Wanneer FeatureInfoTabs aanwezig is dan wordt de
+    // featureInfoCollection gezet via de tabs
+
     const mapSelectionEvent =
       await this.featureInfoMapConnectService.getObservableForMapSelection(
         mapIndex
       );
-    // Wanneer FeatureInfoTabs aanwezig is dan wordt de
-    // featureInfoCollection gezet via de tabs
     if (!this.hasTabs) {
       this.subscriptionSelection = mapSelectionEvent.subscribe(
         (event: MapComponentEvent) => {

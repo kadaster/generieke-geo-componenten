@@ -42,6 +42,7 @@ import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/exa
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
 import { ExampleFeatureInfoBasicComponent } from "./examples/example-map/example-feature-info-basic/example-feature-info-basic.component";
 import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-feature-info-tabs/example-feature-info-tabs.component";
+import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 
 export const routes: Routes = [
   {
@@ -299,5 +300,11 @@ export const routes: Routes = [
     title: "Feature Info tonen in Tabs | GGC-Home",
     component: ExampleFeatureInfoTabsComponent,
     data: { label: "example-feature-info-tabs" }
+  },
+  {
+    path: "feature-info-custom-names-values",
+    title: "Feature Info tonen in Tabs | GGC-Home",
+    component: ExampleFeatureInfoCustomNamesValuesComponent,
+    data: { label: "feature-info-custom-names-values" }
   }
 ];

@@ -38,6 +38,7 @@ import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
 import { ExampleFeatureInfoBasicComponent } from "../example-map/example-feature-info-basic/example-feature-info-basic.component";
 import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-info-tabs/example-feature-info-tabs.component";
+import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 
 interface GroupedCards {
   theme: string;
@@ -98,7 +99,8 @@ export class ExampleIndexComponent {
     new ExampleMeasureOwnStyleLabel().componentInfo,
     new ExampleMapZoomScalePositionComponent().componentInfo,
     new ExampleFeatureInfoBasicComponent().componentInfo,
-    new ExampleFeatureInfoTabsComponent().componentInfo
+    new ExampleFeatureInfoTabsComponent().componentInfo,
+    new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo
   ];
 
   private selectedComponentsKey = "selectedComponents";
