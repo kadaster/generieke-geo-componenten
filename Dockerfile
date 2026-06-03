@@ -1,3 +1,4 @@
+
 ARG REGISTRY
 
 FROM ${REGISTRY}nginxinc/nginx-unprivileged:1.29-alpine
@@ -26,18 +27,17 @@ RUN mkdir -p /var/log/nginx && \
 
 # Permissions adjustments
 RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ /tmp && \
-    chmod +x /var/appdata/run/start-application.sh
-
-# html read-only, tmp blijft schrijfbaar
-RUN chmod -R a=rX /etc/nginx/html/ && \
-    chmod -R u+rwX,g+rX /tmp
+    chmod +x /var/appdata/run/start-application.sh && \
+    chmod -R u+rwX,g+rX /tmp && \
+    chmod -R u+rwX,g+rX /var/cache/nginx
 
 USER ggc-home
 
 EXPOSE 8080
-ENTRYPOINT ["/var/appdata/run/start-application.sh"]
 
 COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
 
-# zorg dat ook de gekopieerde files read-only zijn
+# static content read-only maken
 RUN chmod -R a=rX /etc/nginx/html/
+
+ENTRYPOINT ["/var/appdata/run/start-application.sh"]
