@@ -6,7 +6,6 @@ WORKDIR /etc/nginx/html
 
 USER root
 RUN adduser --home /etc/ggc-home --disabled-password --gecos "" ggc-home
-RUN chmod -R a-w /etc/nginx/htm
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY startup/start-application.sh /var/appdata/run/start-application.sh
@@ -29,9 +28,16 @@ RUN mkdir -p /var/log/nginx && \
 RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ /tmp && \
     chmod +x /var/appdata/run/start-application.sh
 
-RUN chmod -R u+rwX,g+rX /etc/nginx/html/ /tmp
+# html read-only, tmp blijft schrijfbaar
+RUN chmod -R a=rX /etc/nginx/html/ && \
+    chmod -R u+rwX,g+rX /tmp
 
 USER ggc-home
 
 EXPOSE 8080
 ENTRYPOINT ["/var/appdata/run/start-application.sh"]
+
+COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
+
+# zorg dat ook de gekopieerde files read-only zijn
+RUN chmod -R a=rX /etc/nginx/html/
