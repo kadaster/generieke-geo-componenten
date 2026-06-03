@@ -1,5 +1,7 @@
 import { defineConfig } from "vitest/config";
 import path from "node:path";
+import { resolve } from "path";
+
 const resolveOLMock = (p: string) =>
   path.resolve(__dirname, `src/test/mocks/open-layers/${p}`);
 
@@ -41,6 +43,38 @@ export default defineConfig({
       {
         find: "@kadaster/ggc-cesium",
         replacement: path.resolve(__dirname, "src/test/mocks/cesium/Cesium.ts")
+      },
+      {
+        find: "@kadaster/ggc-map",
+        replacement: path.resolve(__dirname, "dist/ggc-map")
+      },
+      {
+        find: "@kadaster/ggc-dataset-tree",
+        replacement: path.resolve(__dirname, "dist/ggc-dataset-tree")
+      },
+      {
+        find: "@kadaster/ggc-feature-info",
+        replacement: path.resolve(__dirname, "dist/ggc-feature-info")
+      },
+      {
+        find: "@kadaster/ggc-legend",
+        replacement: path.resolve(__dirname, "dist/ggc-legend")
+      },
+      {
+        find: "@kadaster/ggc-map",
+        replacement: path.resolve(__dirname, "dist/ggc-map")
+      },
+      {
+        find: "@kadaster/ggc-models",
+        replacement: path.resolve(__dirname, "dist/ggc-map")
+      },
+      {
+        find: "@kadaster/ggc-search-location",
+        replacement: path.resolve(__dirname, "dist/ggc-search-location")
+      },
+      {
+        find: "@kadaster/ggc-toolbar",
+        replacement: path.resolve(__dirname, "dist/ggc-toolbar")
       }
     ]
   },
