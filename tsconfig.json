@@ -30,6 +30,7 @@
     },
     "useDefineForClassFields": false
   },
+  "files": ["src/test.ts"],
   "references": [
     {
       "path": "./projects/ggc-home/tsconfig.app.json"
