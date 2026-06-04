@@ -8,6 +8,7 @@ export interface SelectOptions {
   /**
    * OL condition waarop de selectie wordt gemaakt (bijv. singleclick, pointerMove, etc.)
    * Als deze waarde wordt leeggelaten, dan wordt de standaard condition gebruikt van de verschillende select modes.
+   * WMS/WMTS kaartlagen werken alleen met een enkele klik en deze optie doet in dat geval niets.
    */
   condition?: Condition;
 
@@ -25,6 +26,7 @@ export interface SelectOptions {
 
   /**
    * De pixel tolerantie voor het selecteren van een feature. Default is 0.
+   * Werkt niet met WMS/WMTS kaartlagen.
    */
   hitTolerance?: number;
 
