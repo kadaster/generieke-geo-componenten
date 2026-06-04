@@ -7,10 +7,6 @@ import { CoreSelectionService } from "./core-selection.service";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 import { SelectOptions } from "../../model/select-options";
 
-@Injectable({
-  providedIn: "root"
-})
-
 /**
  * Service voor het selecteren en highlighten van features op de kaart.
  *
@@ -74,6 +70,10 @@ import { SelectOptions } from "../../model/select-options";
  *
  * @see {@link SelectOptions}
  */
+
+@Injectable({
+  providedIn: "root"
+})
 export class GgcSelectionService {
   private readonly coreSelectionService = inject(CoreSelectionService);
 
