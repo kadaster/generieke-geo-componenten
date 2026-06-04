@@ -31,7 +31,7 @@ describe("GgcDatasetSwitcherComponent", () => {
 
   let connectServiceMock: MockedObject<GgcDatasetTreeConnectService>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     olLayerServiceMock = {
       setVisibilityLayers: vi.fn(),
       isVisible: vi.fn()
@@ -46,7 +46,10 @@ describe("GgcDatasetSwitcherComponent", () => {
     TestBed.configureTestingModule({
       imports: [GgcDatasetSwitcherComponent],
       providers: [
-        { provide: GgcDatasetTreeConnectService, useValue: connectServiceMockPartial }
+        {
+          provide: GgcDatasetTreeConnectService,
+          useValue: connectServiceMockPartial
+        }
       ]
     }).compileComponents();
     connectServiceMock = TestBed.inject(
@@ -56,9 +59,7 @@ describe("GgcDatasetSwitcherComponent", () => {
     connectServiceMock.getGgcOLLayerService.mockResolvedValue(
       olLayerServiceMock
     );
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
     component = fixture.componentInstance;
 
@@ -68,6 +69,10 @@ describe("GgcDatasetSwitcherComponent", () => {
     ];
 
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it("should create", () => {
@@ -83,7 +88,8 @@ describe("GgcDatasetSwitcherComponent", () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it("should NOT schedule initial activation when themes do not become available", fakeAsync(() => {
+    it("should NOT schedule initial activation when themes do not become available", async () => {
+      vi.useFakeTimers();
       const spy = vi.spyOn(component as any, "setInitialActiveTheme");
 
       const themes = createThemes(["Theme A", "Theme B"]);
@@ -93,12 +99,16 @@ describe("GgcDatasetSwitcherComponent", () => {
         themes: new SimpleChange(themes, themes, false)
       });
 
-      tick(200);
+      vi.advanceTimersByTime(200);
+
+      await vi.runAllTimersAsync();
 
       expect(spy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it("should schedule initial activation when themes become available", fakeAsync(() => {
+    it("should schedule initial activation when themes become available", async () => {
+      vi.useFakeTimers();
+
       const spy = vi
         .spyOn(component as any, "setInitialActiveTheme")
         .mockResolvedValue(undefined);
@@ -108,14 +118,17 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
 
-      tick(100);
+      vi.advanceTimersByTime(100);
+
+      await vi.runAllTimersAsync();
 
       expect(spy).toHaveBeenCalledWith(themes);
-    }));
+    });
   });
 
   describe("initial active theme selection", () => {
-    it("should pick the visible theme and emit event", fakeAsync(() => {
+    it("should pick the visible theme and emit event", async () => {
+      vi.useFakeTimers();
       const themes = createThemesWithLayers();
       component.themes = themes;
 
@@ -128,8 +141,8 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
 
-      tick(100);
-      flushMicrotasks();
+      vi.advanceTimersByTime(100);
+      await vi.runAllTimersAsync();
 
       expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
 
@@ -138,9 +151,10 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme B");
-    }));
+    });
 
-    it("should fall back to first theme when none visible", fakeAsync(() => {
+    it("should fall back to first theme when none visible", async () => {
+      vi.useFakeTimers();
       const themes = createThemesWithLayers();
       component.themes = themes;
 
@@ -151,8 +165,8 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
 
-      tick(100);
-      flushMicrotasks();
+      vi.advanceTimersByTime(100);
+      await vi.runAllTimersAsync();
 
       expect(component["activeTheme"]?.themeName).toBe("Theme A");
 
@@ -164,7 +178,7 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme A");
-    }));
+    });
   });
 
   describe("handleChangeEvent", () => {
@@ -186,7 +200,9 @@ describe("GgcDatasetSwitcherComponent", () => {
       expect(emitSpy).not.toHaveBeenCalled();
     });
 
-    it("should switch theme and update visibility", fakeAsync(() => {
+    it("should switch theme and update visibility", async () => {
+      vi.useFakeTimers();
+
       const themes = createThemesWithLayers();
       component.themes = themes;
       component["activeTheme"] = themes[0];
@@ -195,7 +211,7 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       component.handleChangeEvent({ target: { id: "Theme B" } } as any);
 
-      flushMicrotasks();
+      await vi.runAllTimersAsync();
 
       expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
 
@@ -212,11 +228,13 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       expect(emitSpy).toHaveBeenCalled();
       expect(component["activeTheme"]?.themeName).toBe("Theme B");
-    }));
+    });
   });
 
   describe("template basics", () => {
-    it("should render radio buttons", fakeAsync(() => {
+    it("should render radio buttons", async () => {
+      vi.useFakeTimers();
+
       const localFixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
       const localComponent = localFixture.componentInstance;
 
@@ -229,7 +247,8 @@ describe("GgcDatasetSwitcherComponent", () => {
       localComponent["activeTheme"] = localComponent.themes[0];
 
       localFixture.detectChanges();
-      tick();
+      vi.advanceTimersByTime(100);
+      await vi.runAllTimersAsync();
       localFixture.detectChanges();
 
       const radios = localFixture.debugElement.queryAll(
@@ -239,7 +258,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       expect(radios.length).toBe(2);
       expect(radios[0].properties.checked).toBe(true);
       expect(radios[1].properties.checked).toBe(false);
-    }));
+    });
   });
 });
 

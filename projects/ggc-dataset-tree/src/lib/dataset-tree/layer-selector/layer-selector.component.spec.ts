@@ -15,10 +15,9 @@ describe("LayerSelectorComponent", () => {
   let fixture: ComponentFixture<LayerSelectorComponent>;
   let component: LayerSelectorComponent;
   const service: DatasetTreeWebservice = new DatasetTreeWebservice([]);
-  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
 
-  beforeEach(waitForAsync(() => {
-    const datasetTreeMapConnectServiceSpyPartial = {
+  beforeEach(() => {
+    const datasetTreeMapConnectServiceSpy = {
       getLayerChangedObservable: vi
         .fn()
         .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
@@ -31,19 +30,15 @@ describe("LayerSelectorComponent", () => {
         provideZoneChangeDetection(),
         {
           provide: DatasetTreeMapConnectService,
-          useValue: datasetTreeMapConnectServiceSpyPartial
+          useValue: datasetTreeMapConnectServiceSpy
         }
       ]
     }).compileComponents();
-    datasetTreeMapConnectServiceSpy = TestBed.inject(
-      DatasetTreeMapConnectService
-    ) as unknown as MockedObject<DatasetTreeMapConnectService>;
+
     datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
       Promise.resolve(Promise.resolve(of()))
     );
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LayerSelectorComponent);
     component = fixture.componentInstance;
 
@@ -72,8 +67,7 @@ describe("LayerSelectorComponent", () => {
       component.datasets = [new Dataset("myDataset", [service], "")];
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
-      expect(element).toBeFalsy();
-      expect(element).toMatch("");
+      expect(element).toBeNull();
       expect(element).toBeDefined();
     });
 
@@ -83,7 +77,6 @@ describe("LayerSelectorComponent", () => {
       ];
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
-      expect(element).toBeFalsy();
       expect(element).toBeNull();
       expect(element).toBeDefined();
     });

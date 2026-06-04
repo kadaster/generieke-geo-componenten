@@ -83,9 +83,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["src/test/setup-tests.ts"],
     server: {
-      // deps: {
-      //   inline: [/^ol/, /^@kadaster\/generieke-geo-componenten-/]
-      // }
+      deps: {
+        inline: [/^ol/, /^@kadaster\/generieke-geo-componenten-/]
+      }
     },
     coverage: {
       provider: "istanbul",

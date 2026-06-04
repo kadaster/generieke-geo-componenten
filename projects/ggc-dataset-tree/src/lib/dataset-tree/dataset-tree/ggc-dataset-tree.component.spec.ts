@@ -1,5 +1,5 @@
 import { type MockedObject } from "vitest";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcDatasetTreeModelCreateService } from "../../core/ggc-dataset-tree-model-create.service";
 import { Dataset } from "../../model/theme/dataset.model";
 import { Theme } from "../../model/theme/theme.model";
@@ -13,14 +13,13 @@ import {
 } from "../../model/theme/dataset-tree-webservice.model";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
 import { of } from "rxjs";
+
 describe("DatasetTreeComponent", () => {
   let component: GgcDatasetTreeComponent;
   let fixture: ComponentFixture<GgcDatasetTreeComponent>;
   let nativeElement: HTMLElement;
 
   let testRecursionTree = [];
-
-  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
 
   function createTreeForTest(niveau: number, open = false): Theme[] {
     let i;
@@ -45,14 +44,7 @@ describe("DatasetTreeComponent", () => {
   }
 
   beforeEach(() => {
-    // datasetTreeMapConnectServiceSpy = {
-    //   isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
-    //   getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
-    //   getLayerChangedObservable: vi
-    //     .fn()
-    //     .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
-    // };
-    const spyDatasetTreeMapConnectService = {
+    const datasetTreeMapConnectServiceSpy = {
       isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
       getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
       getLayerChangedObservable: vi
@@ -70,17 +62,11 @@ describe("DatasetTreeComponent", () => {
           provide: DatasetTreeMapConnectService,
           useValue: datasetTreeMapConnectServiceSpy
         },
-        {
-          provide: DatasetTreeMapConnectService,
-          useValue: spyDatasetTreeMapConnectService
-        },
         GgcDatasetTreeModelCreateService,
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-    datasetTreeMapConnectServiceSpy = TestBed.inject(
-      DatasetTreeMapConnectService
-    ) as unknown as MockedObject<DatasetTreeMapConnectService>;
+
     datasetTreeMapConnectServiceSpy.isVisible.mockImplementation((layerId) => {
       if (layerId == "testLayer") return Promise.resolve(true);
       if (layerId == "testLayer2") return Promise.resolve(false);

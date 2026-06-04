@@ -5,12 +5,12 @@ import { LayerToggleComponent } from "./layer-toggle.component";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
 import { EMPTY, Subject } from "rxjs";
 import MapEvent from "ol/MapEvent";
-import OlMap from "ol/Map";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import {
   LayerChangedEvent,
   LayerChangedEventTrigger
 } from "@kadaster/ggc-models";
+import { createFakeMapEvent } from "../../../../../../src/test/mocks/ggc/mock-ggc-map.service";
 
 describe("LayerToggleComponent", () => {
   let component: LayerToggleComponent;
@@ -130,7 +130,7 @@ describe("LayerToggleComponent", () => {
       Promise.resolve(true)
     );
 
-    zoomend$.next(new MapEvent("type", new OlMap()));
+    zoomend$.next(createFakeMapEvent("zoomend"));
 
     expect(component["enabled"]()).toBe(true);
   });

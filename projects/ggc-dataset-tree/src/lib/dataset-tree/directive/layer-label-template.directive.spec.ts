@@ -17,13 +17,11 @@ describe("ValueTemplateDirective", () => {
   let fixture: ComponentFixture<WrapperComponent>;
   let wrapperComponent: any;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [WrapperComponent]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(WrapperComponent);
     wrapperComponent = fixture.debugElement.componentInstance;
   });

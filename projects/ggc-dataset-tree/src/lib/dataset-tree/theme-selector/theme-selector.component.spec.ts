@@ -10,10 +10,8 @@ describe("ThemeSelectorComponent", () => {
   let component: ThemeSelectorComponent;
   let fixture: ComponentFixture<ThemeSelectorComponent>;
 
-  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
-
-  beforeEach(waitForAsync(() => {
-    const datasetTreeMapConnectServiceSpyPartial = {
+  beforeEach(() => {
+    const datasetTreeMapConnectServiceSpy = {
       getLayerChangedObservable: vi
         .fn()
         .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
@@ -23,19 +21,14 @@ describe("ThemeSelectorComponent", () => {
       providers: [
         {
           provide: DatasetTreeMapConnectService,
-          useValue: datasetTreeMapConnectServiceSpyPartial
+          useValue: datasetTreeMapConnectServiceSpy
         }
       ]
     }).compileComponents();
-    datasetTreeMapConnectServiceSpy = TestBed.inject(
-      DatasetTreeMapConnectService
-    ) as unknown as MockedObject<DatasetTreeMapConnectService>;
+
     datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
       Promise.resolve(Promise.resolve(of()))
     );
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(ThemeSelectorComponent);
     component = fixture.componentInstance;
     component.themes = [];
