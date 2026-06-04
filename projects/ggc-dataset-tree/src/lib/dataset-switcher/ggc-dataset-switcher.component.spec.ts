@@ -37,22 +37,25 @@ describe("GgcDatasetSwitcherComponent", () => {
       isVisible: vi.fn()
     };
 
-    connectServiceMock = {
+    const connectServiceMockPartial = {
       getGgcOLLayerService: vi
         .fn()
         .mockName("GgcDatasetTreeConnectService.getGgcOLLayerService")
     };
 
-    connectServiceMock.getGgcOLLayerService.mockResolvedValue(
-      olLayerServiceMock
-    );
-
     TestBed.configureTestingModule({
       imports: [GgcDatasetSwitcherComponent],
       providers: [
-        { provide: GgcDatasetTreeConnectService, useValue: connectServiceMock }
+        { provide: GgcDatasetTreeConnectService, useValue: connectServiceMockPartial }
       ]
     }).compileComponents();
+    connectServiceMock = TestBed.inject(
+      GgcDatasetTreeConnectService
+    ) as unknown as MockedObject<GgcDatasetTreeConnectService>;
+
+    connectServiceMock.getGgcOLLayerService.mockResolvedValue(
+      olLayerServiceMock
+    );
   }));
 
   beforeEach(() => {
@@ -98,7 +101,7 @@ describe("GgcDatasetSwitcherComponent", () => {
     it("should schedule initial activation when themes become available", fakeAsync(() => {
       const spy = vi
         .spyOn(component as any, "setInitialActiveTheme")
-        .mockResolvedValue();
+        .mockResolvedValue(undefined);
 
       const themes = createThemes(["Theme A", "Theme B"]);
       component.themes = themes;

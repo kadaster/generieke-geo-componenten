@@ -25,7 +25,7 @@ describe("LayerToggleComponent", () => {
     layerChanged$ = new Subject<any>();
     zoomend$ = new Subject<any>();
 
-    datasetTreeMapConnectServiceSpy = {
+    const datasetTreeMapConnectServiceSpyPartial = {
       isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
       getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
       getEnabled: vi.fn().mockName("DatasetTreeMapConnectService.getEnabled"),
@@ -42,11 +42,31 @@ describe("LayerToggleComponent", () => {
         .fn()
         .mockName("DatasetTreeMapConnectService.getTriggerObservable")
     };
-    coreDatasetTreeServiceSpy = {
+    const coreDatasetTreeServiceSpyPartial = {
       emitDatasetTreeEvent: vi
         .fn()
         .mockName("CoreDatasettreeService.emitDatasetTreeEvent")
     };
+
+    await TestBed.configureTestingModule({
+      providers: [
+        LayerToggleComponent,
+        {
+          provide: DatasetTreeMapConnectService,
+          useValue: datasetTreeMapConnectServiceSpyPartial
+        },
+        {
+          provide: CoreDatasetTreeService,
+          useValue: coreDatasetTreeServiceSpyPartial
+        }
+      ]
+    }).compileComponents();
+    datasetTreeMapConnectServiceSpy = TestBed.inject(
+      DatasetTreeMapConnectService
+    ) as unknown as MockedObject<DatasetTreeMapConnectService>;
+    coreDatasetTreeServiceSpy = TestBed.inject(
+      CoreDatasetTreeService
+    ) as unknown as MockedObject<CoreDatasetTreeService>;
     datasetTreeMapConnectServiceSpy.getZoomendObservableForMap.mockReturnValue(
       Promise.resolve(zoomend$.asObservable())
     );
@@ -54,20 +74,6 @@ describe("LayerToggleComponent", () => {
       Promise.resolve(layerChanged$.asObservable())
     );
     datasetTreeMapConnectServiceSpy.getTriggerObservable.mockReturnValue(EMPTY);
-
-    await TestBed.configureTestingModule({
-      providers: [
-        LayerToggleComponent,
-        {
-          provide: DatasetTreeMapConnectService,
-          useValue: datasetTreeMapConnectServiceSpy
-        },
-        {
-          provide: CoreDatasetTreeService,
-          useValue: coreDatasetTreeServiceSpy
-        }
-      ]
-    }).compileComponents();
 
     fixture = TestBed.createComponent(LayerToggleComponent);
     component = fixture.componentInstance;

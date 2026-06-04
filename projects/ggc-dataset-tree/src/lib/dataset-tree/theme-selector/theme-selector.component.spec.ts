@@ -13,23 +13,26 @@ describe("ThemeSelectorComponent", () => {
   let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
 
   beforeEach(waitForAsync(() => {
-    datasetTreeMapConnectServiceSpy = {
+    const datasetTreeMapConnectServiceSpyPartial = {
       getLayerChangedObservable: vi
         .fn()
         .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
     };
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
-      Promise.resolve(Promise.resolve(of()))
-    );
     TestBed.configureTestingModule({
       imports: [ThemeSelectorComponent, LayerSelectorComponent],
       providers: [
         {
           provide: DatasetTreeMapConnectService,
-          useValue: datasetTreeMapConnectServiceSpy
+          useValue: datasetTreeMapConnectServiceSpyPartial
         }
       ]
     }).compileComponents();
+    datasetTreeMapConnectServiceSpy = TestBed.inject(
+      DatasetTreeMapConnectService
+    ) as unknown as MockedObject<DatasetTreeMapConnectService>;
+    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
+      Promise.resolve(Promise.resolve(of()))
+    );
   }));
 
   beforeEach(() => {

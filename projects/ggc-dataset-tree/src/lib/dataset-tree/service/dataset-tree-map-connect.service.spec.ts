@@ -39,7 +39,7 @@ describe("DatasetTreeMapConnectService", () => {
       getZoomendObservableForMap: vi.fn().mockReturnValue(of("zoom"))
     };
 
-    mockConnectService = {
+    const mockConnectServicePartial = {
       getGgcCesiumSharedLayerService: vi
         .fn()
         .mockName(
@@ -53,6 +53,18 @@ describe("DatasetTreeMapConnectService", () => {
         .mockName("GgcDatasetTreeConnectService.getGgcOLMapEventsService")
     };
 
+    await TestBed.configureTestingModule({
+      providers: [
+        DatasetTreeMapConnectService,
+        {
+          provide: GgcDatasetTreeConnectService,
+          useValue: mockConnectServicePartial
+        }
+      ]
+    }).compileComponents();
+    mockConnectService = TestBed.inject(
+      GgcDatasetTreeConnectService
+    ) as unknown as MockedObject<GgcDatasetTreeConnectService>;
     mockConnectService.getGgcCesiumSharedLayerService.mockResolvedValue(
       mockCesiumLayerService
     );
@@ -62,16 +74,6 @@ describe("DatasetTreeMapConnectService", () => {
     mockConnectService.getGgcOLMapEventsService.mockResolvedValue(
       mockMapEventsService
     );
-
-    await TestBed.configureTestingModule({
-      providers: [
-        DatasetTreeMapConnectService,
-        {
-          provide: GgcDatasetTreeConnectService,
-          useValue: mockConnectService
-        }
-      ]
-    }).compileComponents();
 
     service = TestBed.inject(DatasetTreeMapConnectService);
   });

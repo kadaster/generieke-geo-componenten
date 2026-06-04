@@ -73,7 +73,7 @@
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
             "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "tsConfig": "projects/ggc-dataset-tree/tsconfig.spec.json"
           }
         },
         "lint": {

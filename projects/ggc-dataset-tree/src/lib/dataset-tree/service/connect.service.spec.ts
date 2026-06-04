@@ -31,12 +31,10 @@ describe("GgcDatasetTreeConnectService", () => {
   });
 
   function mockImport(module: any) {
-    vi.spyOn<any>(service as any, "loadCesiumModule").mockResolvedValue(
+    vi.spyOn(service as any, "loadCesiumModule").mockResolvedValue(
       module.cesium
     );
-    vi.spyOn<any>(service as any, "loadMapModule").mockResolvedValue(
-      module.map
-    );
+    vi.spyOn(service as any, "loadMapModule").mockResolvedValue(module.map);
   }
 
   describe("Cesium service", () => {
@@ -72,9 +70,7 @@ describe("GgcDatasetTreeConnectService", () => {
     });
 
     it("moet undefined retourneren bij fout", async () => {
-      vi.spyOn<any>(service as any, "loadCesiumModule").mockRejectedValue(
-        "fail"
-      );
+      vi.spyOn(service as any, "loadCesiumModule").mockRejectedValue("fail");
 
       const result = await service.getGgcCesiumSharedLayerService();
 
@@ -117,7 +113,7 @@ describe("GgcDatasetTreeConnectService", () => {
     });
 
     it("moet undefined retourneren bij fout", async () => {
-      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue("fail");
+      vi.spyOn(service as any, "loadMapModule").mockRejectedValue("fail");
 
       const result = await service.getGgcOLLayerService();
 
@@ -160,7 +156,7 @@ describe("GgcDatasetTreeConnectService", () => {
     });
 
     it("moet undefined retourneren bij fout", async () => {
-      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue("fail");
+      vi.spyOn(service as any, "loadMapModule").mockRejectedValue("fail");
 
       const result = await service.getGgcOLMapEventsService();
 
