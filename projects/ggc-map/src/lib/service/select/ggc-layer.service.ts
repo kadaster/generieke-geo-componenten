@@ -34,10 +34,6 @@ import { AbstractBaseLayerComponent } from "../../layer/abstract-base-layer/abst
 import Layer from "ol/layer/Layer";
 import { GgcSelectionService } from "./ggc-selection.service";
 
-@Injectable({
-  providedIn: "root"
-})
-
 /**
  * Centrale service voor het beheren van kaartlagen binnen GGC.
  *
@@ -52,6 +48,9 @@ import { GgcSelectionService } from "./ggc-selection.service";
  * - OpenLayers Map
  * - UI‑componenten (legenda, toggles)
  */
+@Injectable({
+  providedIn: "root"
+})
 export class GgcLayerService {
   private readonly mapService = inject(GgcMapService);
   private readonly selectionService = inject(GgcSelectionService);

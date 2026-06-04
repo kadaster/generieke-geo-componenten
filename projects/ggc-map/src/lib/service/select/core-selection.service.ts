@@ -102,7 +102,7 @@ export class CoreSelectionService {
       multi: true
     });
     select.set(this.GGC_LAYER_IDS, options.layerIds);
-    select.set(this.GGC_SELECT_MODE, options.selectMode);
+    select.set(this.GGC_SELECT_MODE, options.selectMode ?? "single");
 
     map.addInteraction(select);
     this.activeSelectInteractions.set(selectIndex, { mapIndex, select });
