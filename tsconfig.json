@@ -29,7 +29,7 @@
     },
     "useDefineForClassFields": false
   },
-  "files": ["src/test.ts"],
+  "files": ["src/test/setup-tests.ts"],
   "references": [
     {
       "path": "./projects/ggc-home/tsconfig.app.json"

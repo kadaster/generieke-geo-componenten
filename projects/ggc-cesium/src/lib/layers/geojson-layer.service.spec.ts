@@ -12,8 +12,6 @@ import {
   Resource
 } from "@cesium/engine";
 import { GeoJsonConfig, GeoJsonLayerConfig } from "../model/interfaces";
-import { vi } from "vitest";
-import Spy = Mock;
 
 describe("GeoJsonLayerService", () => {
   let service: GeoJsonLayerService;
@@ -28,7 +26,7 @@ describe("GeoJsonLayerService", () => {
   });
 
   describe("addLayer", () => {
-    let dataSourceSpy: Spy;
+    let dataSourceSpy: Mock;
     const dataSourceMock: Partial<GeoJsonDataSource> = {
       entities: {
         values: [{} as Entity]

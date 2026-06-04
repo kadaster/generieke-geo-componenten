@@ -1,6 +1,5 @@
 import { defineConfig } from "vitest/config";
 import path from "node:path";
-import { resolve } from "path";
 
 const resolveOLMock = (p: string) =>
   path.resolve(__dirname, `src/test/mocks/open-layers/${p}`);
@@ -45,10 +44,6 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "src/test/mocks/cesium/Cesium.ts")
       },
       {
-        find: "@kadaster/ggc-map",
-        replacement: path.resolve(__dirname, "dist/ggc-map")
-      },
-      {
         find: "@kadaster/ggc-dataset-tree",
         replacement: path.resolve(__dirname, "dist/ggc-dataset-tree")
       },
@@ -61,12 +56,19 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "dist/ggc-legend")
       },
       {
-        find: "@kadaster/ggc-map",
-        replacement: path.resolve(__dirname, "dist/ggc-map")
+        find: /(@kadaster\/ggc-map|ggc-map)/,
+        replacement: path.resolve(__dirname, "src/test/mocks/ggc/ggc-map.ts")
+      },
+      {
+        find: /projects\/ggc-map/,
+        replacement: path.resolve(
+          __dirname,
+          "src/test/mocks/ggc/ggc-map.ts"
+        )
       },
       {
         find: "@kadaster/ggc-models",
-        replacement: path.resolve(__dirname, "dist/ggc-map")
+        replacement: path.resolve(__dirname, "dist/ggc-models")
       },
       {
         find: "@kadaster/ggc-search-location",
@@ -75,6 +77,13 @@ export default defineConfig({
       {
         find: "@kadaster/ggc-toolbar",
         replacement: path.resolve(__dirname, "dist/ggc-toolbar")
+      },
+      {
+        find: /^geotiff$/,
+        replacement: path.resolve(
+          __dirname,
+          "src/test/mocks/third-party-deps/geotiff.ts"
+        )
       }
     ]
   },
@@ -83,9 +92,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["src/test/setup-tests.ts"],
     server: {
-      deps: {
-        inline: [/^ol/, /^@kadaster\/generieke-geo-componenten-/]
-      }
+      // deps: {
+      //   inline: [/^ol/, /^@kadaster\/generieke-geo-componenten-/]
+      // }
     },
     coverage: {
       provider: "istanbul",
