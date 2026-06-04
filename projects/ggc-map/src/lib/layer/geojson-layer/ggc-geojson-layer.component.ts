@@ -238,7 +238,6 @@ export class GgcGeojsonLayerComponent
    */
   getFeatureInfo(event: MapBrowserEvent) {
     const pixel = event.pixel;
-
     this.map.forEachFeatureAtPixel(
       pixel,
       (feature) => this.limitFeatures(feature),
@@ -250,14 +249,12 @@ export class GgcGeojsonLayerComponent
     /* Kopie van de foundFeatures meegeven, omdat dit anders later fout gaat met
      de objectreferentie bij het zetten van foundFeatures.length op 0. */
     const foundFeaturesCopy = this.foundFeatures.slice();
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        event.coordinate,
-        foundFeaturesCopy,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      foundFeaturesCopy,
+      this.getLayerId()
+    );
+
     const mapComponentEvent = new MapComponentEvent(
       MapComponentEventTypes.GEOJSONFEATUREINFO,
       this.mapIndex,

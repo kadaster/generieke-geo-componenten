@@ -1,512 +1,391 @@
 import { TestBed } from "@angular/core/testing";
-import { Feature } from "ol";
+import { CoreSelectionService } from "./core-selection.service";
+import { GgcMapService } from "../../map/service/ggc-map.service";
+import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
+import { Select } from "ol/interaction";
+import Collection from "ol/Collection";
+import Map from "ol/Map";
 import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "../../model/map-component-event.model";
 
-import { CoreSelectionService } from "./core-selection.service";
-import {
-  CurrentAndPreviousSelection,
-  FeatureCollectionForCoordinate
-} from "./selection-state.model";
-import { SelectionModeTypes } from "./selection-type.enum";
+/**
+ * Mock Select interaction zodat we OpenLayers niet volledig hoeven te initialiseren
+ */
+class MockSelect {
+  private readonly features = new Collection<Feature<Geometry>>();
+  private selectHandler?: () => void;
+
+  getFeatures() {
+    return this.features;
+  }
+
+  clearSelection() {
+    this.features.clear();
+  }
+
+  selectFeature(feature: Feature<Geometry>) {
+    this.features.push(feature);
+  }
+
+  on(eventType: string, handler: () => void) {
+    if (eventType === "select") {
+      this.selectHandler = handler;
+    }
+  }
+
+  un(eventType: string) {
+    if (eventType === "select") {
+      this.selectHandler = undefined;
+    }
+  }
+
+  triggerSelectEvent() {
+    if (this.selectHandler) {
+      this.selectHandler();
+    }
+  }
+}
+
+/**
+ * Mock Map object met minimale OpenLayers API
+ */
+class MockMap {
+  private readonly interactions = new Collection<any>();
+
+  addInteraction(interaction: any) {
+    this.interactions.push(interaction);
+  }
+
+  removeInteraction(interaction: any) {
+    this.interactions.remove(interaction);
+  }
+
+  getInteractions() {
+    return this.interactions;
+  }
+
+  getLayers() {
+    return new Collection();
+  }
+
+  on() {
+    /* noop */
+  }
+
+  un() {
+    /* noop */
+  }
+}
 
 describe("CoreSelectionService", () => {
-  let coreSelectionService: CoreSelectionService;
-  const multimap = "multimap";
-  const layer1 = "layer1";
-  const layer2 = "layer2";
-  const coordinatePrevious = [12, 34];
-  const coordinateCurrent = [56, 78];
+  let service: CoreSelectionService;
+  let map: MockMap;
+
+  const MAP_INDEX = "map-1";
+  const SELECT_INDEX = "select-1";
+  const LAYER_ID = "layer-a";
 
   beforeEach(() => {
+    map = new MockMap();
+
+    const mapServiceSpy = jasmine.createSpyObj<GgcMapService>("GgcMapService", [
+      "getMap",
+      "getLayer",
+      "clearSelectionLayer",
+      "addFeaturesToSelectionLayer",
+      "isFeatureInSelectionLayer"
+    ]);
+
+    mapServiceSpy.getMap.and.returnValue(map as unknown as Map);
+    mapServiceSpy.getLayer.and.returnValue(undefined);
+
     TestBed.configureTestingModule({
-      providers: [CoreSelectionService]
+      providers: [
+        CoreSelectionService,
+        { provide: GgcMapService, useValue: mapServiceSpy }
+      ]
     });
-    coreSelectionService = TestBed.inject(CoreSelectionService);
+
+    service = TestBed.inject(CoreSelectionService);
   });
 
   it("should be created", () => {
-    expect(coreSelectionService).toBeTruthy();
+    expect(service).toBeTruthy();
   });
 
-  it("getSelectionMode should return default value false when selectionMode is not set for mapIndex", () => {
-    expect(
-      coreSelectionService.isMultiSelectMode("Deze mapindex bestaat niet")
-    ).toBe(false);
+  it("should create an observable for a mapIndex", (done) => {
+    const mockSelect = new MockSelect();
+    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+      select: mockSelect as unknown as Select
+    });
+
+    service.getObservableForMap(MAP_INDEX).subscribe((event) => {
+      expect(event.type).toBe(
+        MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION
+      );
+      done();
+    });
+
+    service.clearSelection(MAP_INDEX);
   });
 
-  it("getSelectionMode should return false when multiselect is set for mapIndex", () => {
-    coreSelectionService.setSelectionModeFormapIndex(
-      SelectionModeTypes.MULTI_SELECT,
-      multimap
+  it("startSelect should add a Select interaction to the map", () => {
+    service.startSelect(
+      {
+        selectMode: "single"
+      },
+      MAP_INDEX,
+      undefined
     );
 
-    expect(coreSelectionService.isMultiSelectMode("multimap")).toBe(true);
-  });
-
-  it("getSelectionMode should return true when singleselect is set for mapIndex", () => {
-    coreSelectionService.setSelectionModeFormapIndex(
-      SelectionModeTypes.MULTI_SELECT,
-      multimap
+    const interactions = map.getInteractions().getArray();
+    const hasSelect = interactions.some(
+      (interaction) => interaction instanceof Select
     );
 
-    expect(coreSelectionService.isMultiSelectMode(multimap)).toBe(true);
+    expect(hasSelect).toBeTrue();
   });
 
-  it("getObservableForMap should return an observable", () => {
-    expect(coreSelectionService.getObservableForMap(multimap)).toBeDefined();
+  it("should store select interaction under provided selectIndex", () => {
+    const SELECT_INDEX = "custom-select";
+
+    service.startSelect(
+      {
+        selectMode: "single"
+      },
+      MAP_INDEX,
+      SELECT_INDEX
+    );
+
+    const activeInteraction = (service as any)["activeSelectInteractions"].get(
+      SELECT_INDEX
+    );
+
+    expect(activeInteraction).toBeTruthy();
+    expect(activeInteraction.mapIndex).toBe(MAP_INDEX);
+    expect(activeInteraction.select instanceof Select).toBeTrue();
   });
 
-  it("clearSelectionForMap should clear selection and emit an avent", (done) => {
-    coreSelectionService
-      .getObservableForMap(multimap)
-      .subscribe((eventReceived) => {
-        expect(eventReceived.type).toBe(
-          MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION
-        );
-        expect(eventReceived.mapIndex).toBe(multimap);
-        expect(eventReceived.message).toBe("Selectie is gewist");
+  it("stopSelect should remove the Select interaction from the map", () => {
+    service.startSelect(
+      {
+        selectMode: "single"
+      },
+      MAP_INDEX,
+      undefined
+    );
+
+    service.stopSelect(MAP_INDEX);
+    const interactions = map.getInteractions().getArray();
+    const hasSelect = interactions.some(
+      (interaction) => interaction instanceof Select
+    );
+    expect(hasSelect).toBeFalse();
+    expect(service["activeMapClickEventsKeys"].size).toBe(0);
+    expect(service["activeSelectEventsKeys"].size).toBe(0);
+  });
+
+  it("clearSelection should clear selection and emit event", (done) => {
+    const mockSelect = new MockSelect();
+    const feature = new Feature();
+    mockSelect.selectFeature(feature);
+    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+      select: mockSelect as unknown as Select
+    });
+
+    service.getObservableForMap(MAP_INDEX).subscribe((event) => {
+      if (
+        event.type === MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION
+      ) {
+        expect(service.getCurrentSelection(MAP_INDEX)).toEqual([]);
         done();
+      }
+    });
+
+    service.clearSelection(MAP_INDEX);
+  });
+
+  it("setSelection should select provided features", () => {
+    const mockSelect = new MockSelect();
+    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+      select: mockSelect as unknown as Select
+    });
+
+    const feature1 = new Feature();
+    const feature2 = new Feature();
+
+    service.setSelection([feature1, feature2], MAP_INDEX);
+
+    const selection = service.getCurrentSelection(MAP_INDEX);
+    expect(selection.length).toBe(2);
+    expect(selection).toContain(feature1);
+    expect(selection).toContain(feature2);
+  });
+
+  it("getCurrentSelection should return empty array when no Select is active", () => {
+    const mockSelect = new MockSelect();
+    const feature = new Feature();
+    mockSelect.selectFeature(feature);
+    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+      select: mockSelect as unknown as Select
+    });
+
+    expect(service.getCurrentSelection(MAP_INDEX)).toEqual([feature]);
+  });
+
+  it("should emit SELECTIONSERVICE_SELECTIONUPDATED when OpenLayers select event occurs", (done) => {
+    const receivedEvents: MapComponentEvent[] = [];
+    service
+      .getObservableForMap(MAP_INDEX)
+      .subscribe((event) => receivedEvents.push(event));
+
+    service.startSelect(
+      {
+        selectMode: "single"
+      },
+      MAP_INDEX,
+      undefined
+    );
+
+    // Haal de event handler op die reageert op een Select "select" event en run deze functie
+    const selectHandler = (service as any)["activeSelectEventsKeys"].get(
+      MAP_INDEX
+    );
+    selectHandler();
+
+    const selectionUpdatedEvents = receivedEvents.filter(
+      (event) =>
+        event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+    );
+    expect(selectionUpdatedEvents.length).toBe(1);
+    expect(selectionUpdatedEvents[0].value).toEqual([]);
+    done();
+  });
+
+  function createSelectMock(
+    selectMode: "single" | "multi",
+    layerFilter?: Record<string, boolean>
+  ) {
+    const features = new Collection<Feature<Geometry>>();
+
+    return {
+      get: (key: string) => {
+        if (key === (service as any).GGC_SELECT_MODE) {
+          return selectMode;
+        }
+        if (key === (service as any).GGC_LAYER_IDS) {
+          return layerFilter;
+        }
+        return undefined;
+      },
+      getFeatures: () => features
+    } as unknown as Select;
+  }
+
+  describe("layerIds filter with WMS/WMTS layers", () => {
+    it("should forward features when no layer filter is configured", () => {
+      const feature = new Feature();
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select: createSelectMock("single")
       });
 
-    coreSelectionService.clearSelectionForMap(multimap);
-  });
+      spyOn(service as any, "handleNewFeaturesForSelection");
 
-  it("singleclickEventForMap in singleselect mode should create a new current selection with coordinate and emit an event", (done) => {
-    const coordinate = [123, 456];
-    coreSelectionService
-      .getObservableForMap(multimap)
-      .subscribe((eventReceived) => {
-        const currentAndPreviousSelection = coreSelectionService[
-          "allSelections"
-        ].get(multimap) as CurrentAndPreviousSelection;
-        expect(currentAndPreviousSelection.current).toBeDefined();
-        expect(
-          (
-            currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-          ).coordinate
-        ).toBe(coordinate);
-        expect(
-          (
-            currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-          ).featureCollectionForLayers.length
-        ).toBe(0);
-        expect(currentAndPreviousSelection.previous).toBeUndefined();
-        expect(eventReceived.type).toBe(
-          MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED
-        );
-        expect(eventReceived.mapIndex).toBe(multimap);
-        expect(eventReceived.message).toBe(
-          "Er is geklikt in de kaart en de feature info wordt opgehaald."
-        );
-        done();
-      });
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
 
-    coreSelectionService.handleSingleclickEventForMap(coordinate, multimap);
-  });
-
-  it(
-    "singleclickEventForMap in multiselect mode should create a new current selection with coordinate and previous selection is set" +
-      " and emit an event",
-    (done) => {
-      coreSelectionService
-        .getObservableForMap(multimap)
-        .subscribe((eventReceived) => {
-          expect(eventReceived.type).toBe(
-            MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED
-          );
-          expect(eventReceived.mapIndex).toBe(multimap);
-          expect(eventReceived.message).toBe(
-            "Er is geklikt in de kaart en de feature info wordt opgehaald."
-          );
-          done();
-        });
-      coreSelectionService.setSelectionModeFormapIndex(
-        SelectionModeTypes.MULTI_SELECT,
-        multimap
-      );
-      const currentAndPreviousSelection = createCurrentAndPreviousSelection();
-      coreSelectionService["allSelections"].set(
-        multimap,
-        currentAndPreviousSelection
-      );
-
-      coreSelectionService.handleSingleclickEventForMap(
-        coordinateCurrent,
-        multimap
-      );
-
-      expect(currentAndPreviousSelection.current).toBeDefined();
       expect(
-        (currentAndPreviousSelection.current as FeatureCollectionForCoordinate)
-          .coordinate
-      ).toBe(coordinateCurrent);
-      expect(
-        (currentAndPreviousSelection.current as FeatureCollectionForCoordinate)
-          .featureCollectionForLayers.length
-      ).toBe(0);
-      expect(currentAndPreviousSelection.previous).toBeDefined();
-    }
-  );
+        (service as any).handleNewFeaturesForSelection
+      ).toHaveBeenCalledWith([feature], SELECT_INDEX);
+    });
 
-  it("handleFeatureInfoForLayer, if coordinate is not equal an event should be emitted", (done) => {
-    // prepare by calling handleSingleclickEventForMap
-    coreSelectionService.handleSingleclickEventForMap(
-      coordinateCurrent,
-      multimap
-    );
-    coreSelectionService
-      .getObservableForMap(multimap)
-      .subscribe((eventReceived) => {
-        const currentAndPreviousSelection = coreSelectionService[
-          "allSelections"
-        ].get(multimap) as CurrentAndPreviousSelection;
-        expect(
-          (
-            currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-          ).featureCollectionForLayers.length
-        ).toBe(0);
-        expect(eventReceived.type).toBe(MapComponentEventTypes.UNSUCCESSFUL);
-        expect(eventReceived.mapIndex).toBe(multimap);
-        expect(eventReceived.message).toBe(
-          "Er is iets mis gegaan in de CoreSelectionService: het coordinaat van de kaartlaag komt niet" +
-            " overeen met het verwachte coordinaat van het klik-event in de kaart."
-        );
-        expect(eventReceived.value).toBeUndefined();
-        done();
+    it("should forward features only when layerId is in filter", () => {
+      const feature = new Feature();
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select: createSelectMock("single", {
+          [LAYER_ID]: true
+        })
       });
-    coreSelectionService.handleFeatureInfoForLayer(
-      multimap,
-      [111, 222],
-      [],
-      layer1
-    );
+
+      spyOn(service as any, "handleNewFeaturesForSelection");
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect((service as any).handleNewFeaturesForSelection).toHaveBeenCalled();
+    });
+
+    it("should NOT forward features when layerId is not in filter", () => {
+      const feature = new Feature();
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select: createSelectMock("single", {
+          "other-layer": true
+        })
+      });
+
+      spyOn(service as any, "handleNewFeaturesForSelection");
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect(
+        (service as any).handleNewFeaturesForSelection
+      ).not.toHaveBeenCalled();
+    });
   });
 
-  it(
-    "handleFeatureInfoForLayer in singleselect mode should add new features" +
-      " and emit an event",
-    (done) => {
-      // prepare by calling handleSingleclickEventForMap
-      coreSelectionService.handleSingleclickEventForMap(
-        coordinateCurrent,
-        multimap
-      );
-      coreSelectionService
-        .getObservableForMap(multimap)
-        .subscribe((eventReceived) => {
-          const currentAndPreviousSelection = coreSelectionService[
-            "allSelections"
-          ].get(multimap) as CurrentAndPreviousSelection;
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers.length
-          ).toBe(1);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].layerName
-          ).toBe(layer2);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].features.length
-          ).toBe(1);
-          expect(currentAndPreviousSelection.previous).toBeUndefined();
-          expect(eventReceived.value).toEqual(
-            currentAndPreviousSelection.current
-          );
-          verifyEventFeatureInfo(eventReceived);
-          done();
-        });
+  describe("selection layer interaction", () => {
+    it("should clear and add features to selection layer in single select mode", () => {
+      const feature = new Feature();
 
-      coreSelectionService.handleFeatureInfoForLayer(
-        multimap,
-        coordinateCurrent,
-        createFeatureArray(),
-        layer2
-      );
-    }
-  );
+      const select = createSelectMock("single");
 
-  it(
-    "handleFeatureInfoForLayer in multiselect mode, when layer is not present in previous selection should add all features to selection" +
-      " and emit an event",
-    (done) => {
-      coreSelectionService.setSelectionModeFormapIndex(
-        SelectionModeTypes.MULTI_SELECT,
-        multimap
-      );
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select
+      });
 
-      const previousSelection =
-        createCurrentAndPreviousSelectionWithOneLayer(layer1);
-      coreSelectionService["allSelections"].set(multimap, previousSelection);
-      // prepare by calling handleSingleclickEventForMap
-      coreSelectionService.handleSingleclickEventForMap(
-        coordinateCurrent,
-        multimap
-      );
-      coreSelectionService
-        .getObservableForMap(multimap)
-        .subscribe((eventReceived) => {
-          const currentAndPreviousSelection = coreSelectionService[
-            "allSelections"
-          ].get(multimap) as CurrentAndPreviousSelection;
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers.length
-          ).toBe(1);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].layerName
-          ).toBe(layer2);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].features.length
-          ).toBe(1);
-          expect(eventReceived.value).toEqual(
-            currentAndPreviousSelection.current
-          );
-          verifyEventFeatureInfo(eventReceived);
-          done();
-        });
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
 
-      coreSelectionService.handleFeatureInfoForLayer(
-        multimap,
-        coordinateCurrent,
-        createFeatureArray(),
-        layer2
-      );
-    }
-  );
+      const mapService = TestBed.inject(
+        GgcMapService
+      ) as jasmine.SpyObj<GgcMapService>;
 
-  it(
-    "handleFeatureInfoForLayer in multiselect mode, when layer is present in previous selection and the same feature is clicked," +
-      " new selection should have 0 features and emit an event",
-    (done) => {
-      coreSelectionService.setSelectionModeFormapIndex(
-        SelectionModeTypes.MULTI_SELECT,
-        multimap
+      expect(mapService.clearSelectionLayer).toHaveBeenCalledWith(MAP_INDEX);
+      expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
+        [feature],
+        MAP_INDEX
       );
-
-      const previousSelection =
-        createCurrentAndPreviousSelectionWithOneLayer(layer2);
-      coreSelectionService["allSelections"].set(multimap, previousSelection);
-      // prepare by calling handleSingleclickEventForMap
-      coreSelectionService.handleSingleclickEventForMap(
-        coordinateCurrent,
-        multimap
-      );
-      coreSelectionService
-        .getObservableForMap(multimap)
-        .subscribe((eventReceived) => {
-          const currentAndPreviousSelection = coreSelectionService[
-            "allSelections"
-          ].get(multimap) as CurrentAndPreviousSelection;
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers.length
-          ).toBe(1);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].layerName
-          ).toBe(layer2);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].features.length
-          ).toBe(0);
-          expect(eventReceived.value).toEqual(
-            currentAndPreviousSelection.current
-          );
-          verifyEventFeatureInfo(eventReceived);
-          done();
-        });
-
-      coreSelectionService.handleFeatureInfoForLayer(
-        multimap,
-        coordinateCurrent,
-        createFeatureArray(),
-        layer2
-      );
-    }
-  );
-
-  it(
-    "handleFeatureInfoForLayer in multiselect mode, when layer is present in previous selection and a different feature is clicked," +
-      " new selection should have 2 features and emit an event",
-    (done) => {
-      coreSelectionService.setSelectionModeFormapIndex(
-        SelectionModeTypes.MULTI_SELECT,
-        multimap
-      );
-
-      const previousSelection =
-        createCurrentAndPreviousSelectionWithOneLayer(layer2);
-      coreSelectionService["allSelections"].set(multimap, previousSelection);
-      // prepare by calling handleSingleclickEventForMap
-      coreSelectionService.handleSingleclickEventForMap(
-        coordinateCurrent,
-        multimap
-      );
-      coreSelectionService
-        .getObservableForMap(multimap)
-        .subscribe((eventReceived) => {
-          const currentAndPreviousSelection = coreSelectionService[
-            "allSelections"
-          ].get(multimap) as CurrentAndPreviousSelection;
-
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers.length
-          ).toBe(1);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].layerName
-          ).toBe(layer2);
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers[0].features.length
-          ).toBe(2);
-          expect(eventReceived.value).toEqual(
-            currentAndPreviousSelection.current
-          );
-          verifyEventFeatureInfo(eventReceived);
-          done();
-        });
-      coreSelectionService.handleFeatureInfoForLayer(
-        multimap,
-        coordinateCurrent,
-        createFeatureArray("b"),
-        layer2
-      );
-    }
-  );
-
-  it(
-    "clearFeatureInfoForLayer in should remove layer from featureCollectionForLayers" +
-      " and emit an event",
-    (done) => {
-      // prepare by calling handleSingleclickEventForMap
-      coreSelectionService.handleSingleclickEventForMap(
-        coordinateCurrent,
-        multimap
-      );
-      coreSelectionService
-        .getObservableForMap(multimap)
-        .subscribe((eventReceived) => {
-          const currentAndPreviousSelection = coreSelectionService[
-            "allSelections"
-          ].get(multimap) as CurrentAndPreviousSelection;
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers.length
-          ).toBe(0);
-          expect(eventReceived.value).toEqual(
-            currentAndPreviousSelection.current
-          );
-          verifyEventFeatureInfo(eventReceived);
-          done();
-        });
-      coreSelectionService.clearFeatureInfoForLayer(multimap, layer2);
-    }
-  );
-
-  it("should set the selection to the specified features and layer and emit an event", (done) => {
-    const features = createFeatureArray("selectedFeature");
-    coreSelectionService.getObservableForMap(multimap).subscribe((e) => {
-      expect(e.type).toEqual(
-        MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-      );
-      expect(e.value.featureCollectionForLayers[0].layerName).toEqual(layer1);
-      expect(e.value.featureCollectionForLayers[0].features).toEqual(features);
-      done();
     });
-    coreSelectionService.setSelectionForLayer(features, layer1, multimap);
+
+    it("should add feature to selection layer when toggling ON in multi select mode", () => {
+      const feature = new Feature();
+
+      const select = createSelectMock("multi");
+
+      service["activeSelectInteractions"].set(SELECT_INDEX, {
+        mapIndex: MAP_INDEX,
+        select
+      });
+
+      const mapService = TestBed.inject(
+        GgcMapService
+      ) as jasmine.SpyObj<GgcMapService>;
+
+      mapService.isFeatureInSelectionLayer.and.returnValue(false);
+
+      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
+
+      expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
+        [feature],
+        MAP_INDEX
+      );
+    });
   });
-
-  it("should override the selection to the specified features and emit an event", (done) => {
-    const features = createFeatureArray("selectedFeature");
-    const features2 = createFeatureArray("newFeature");
-    coreSelectionService.setSelectionForLayer(features, layer1, multimap);
-    coreSelectionService.getObservableForMap(multimap).subscribe((e) => {
-      expect(e.type).toEqual(
-        MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-      );
-      expect(e.value.featureCollectionForLayers[0].layerName).toEqual(layer1);
-      expect(e.value.featureCollectionForLayers[0].features).toEqual(features2);
-      done();
-    });
-    coreSelectionService.setSelectionForLayer(features2, layer1, multimap);
-  });
-
-  it("should not modify selected features in another layer", (done) => {
-    const features1 = createFeatureArray("selectedFeatureLayer1");
-    const features2 = createFeatureArray("selectedFeatureLayer2");
-    coreSelectionService.setSelectionForLayer(features1, layer1, multimap);
-    coreSelectionService.getObservableForMap(multimap).subscribe((e) => {
-      expect(e.type).toEqual(
-        MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-      );
-      expect(e.value.featureCollectionForLayers[0].layerName).toEqual(layer1);
-      expect(e.value.featureCollectionForLayers[1].layerName).toEqual(layer2);
-      expect(e.value.featureCollectionForLayers[0].features).toEqual(features1);
-      expect(e.value.featureCollectionForLayers[1].features).toEqual(features2);
-      done();
-    });
-    coreSelectionService.setSelectionForLayer(features2, layer2, multimap);
-  });
-
-  function verifyEventFeatureInfo(eventReceived: MapComponentEvent) {
-    expect(eventReceived.type).toBe(
-      MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-    );
-    expect(eventReceived.mapIndex).toBe(multimap);
-    expect(eventReceived.layerName).toBe(layer2);
-    expect(eventReceived.message).toBe(
-      "Nieuwe feature info van een kaartlaag toegevoegd aan de selectie."
-    );
-  }
-
-  function createCurrentAndPreviousSelection(): CurrentAndPreviousSelection {
-    const currentAndPreviousSelection = new CurrentAndPreviousSelection();
-    currentAndPreviousSelection.current = new FeatureCollectionForCoordinate(
-      coordinatePrevious
-    );
-    return currentAndPreviousSelection;
-  }
-
-  function createCurrentAndPreviousSelectionWithOneLayer(
-    layerName: string
-  ): CurrentAndPreviousSelection {
-    const currentAndPreviousSelection = createCurrentAndPreviousSelection();
-    currentAndPreviousSelection.current = new FeatureCollectionForCoordinate(
-      coordinatePrevious
-    );
-    (
-      currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-    ).featureCollectionForLayers.push({
-      layerName,
-      features: createFeatureArray()
-    });
-    return currentAndPreviousSelection;
-  }
-
-  function createFeatureArray(id = "a"): Feature<Geometry>[] {
-    const feature = { getId: () => id } as Feature<Geometry>;
-    return [feature];
-  }
 });

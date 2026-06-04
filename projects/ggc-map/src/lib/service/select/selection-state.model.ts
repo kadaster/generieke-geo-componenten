@@ -41,10 +41,3 @@ export class FeatureCollectionForCoordinate {
     this.featureCollectionForLayers = [];
   }
 }
-
-// CurrentAndPreviousSelection niet exporteren in public api, want dit is een intern model.
-// Wordt niet doorgegeven aan de afnemers van het component.
-export class CurrentAndPreviousSelection {
-  current: FeatureCollectionForCoordinate | undefined;
-  previous: FeatureCollectionForCoordinate | undefined;
-}

@@ -69,42 +69,4 @@ describe("AbstractClickableLayerComponent", () => {
 
     expect(component["maxFeaturesOnSingleclick"]).toBe(15);
   });
-
-  describe("when the component is destroyed,", () => {
-    it("clearFeatureInfoForLayer should be called on coreSelectionService if the layer is clickable", () => {
-      component["options"] = {
-        getFeatureInfoOnSingleclick: true,
-        layerName: "testlayer"
-      };
-      component.ngOnInit();
-      component.ngOnDestroy();
-
-      expect(
-        coreSelectionServiceSpy.clearFeatureInfoForLayer
-      ).toHaveBeenCalled();
-    });
-
-    it("clearFeatureInfoForLayer should not be called on coreSelectionService if the layer is not clickable", () => {
-      component["options"] = {
-        getFeatureInfoOnSingleclick: false,
-        layerName: "testlayer"
-      };
-      component.ngOnInit();
-      component.ngOnDestroy();
-
-      expect(
-        coreSelectionServiceSpy.clearFeatureInfoForLayer
-      ).not.toHaveBeenCalled();
-    });
-
-    it("clearFeatureInfoForLayer should not be called on coreSelectionService if the layer has no layername", () => {
-      component["options"] = { getFeatureInfoOnSingleclick: true };
-      component.ngOnInit();
-      component.ngOnDestroy();
-
-      expect(
-        coreSelectionServiceSpy.clearFeatureInfoForLayer
-      ).not.toHaveBeenCalled();
-    });
-  });
 });
