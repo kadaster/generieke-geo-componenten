@@ -23,7 +23,7 @@ describe("DatasetTreeService", () => {
     TestBed.configureTestingModule({
       providers: [CoreDatasetTreeService, GgcDatasetTreeModelCreateService]
     });
-    datasetTreeMapConnectServiceSpy = {
+    const spy = {
       isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible")
     };
 
@@ -33,11 +33,13 @@ describe("DatasetTreeService", () => {
         GgcDatasetTreeModelCreateService,
         {
           provide: DatasetTreeMapConnectService,
-          useValue: datasetTreeMapConnectServiceSpy
+          useValue: spy
         }
       ]
     });
-
+    datasetTreeMapConnectServiceSpy = TestBed.inject(
+      DatasetTreeMapConnectService
+    ) as unknown as MockedObject<DatasetTreeMapConnectService>;
     service = TestBed.inject(CoreDatasetTreeService);
   });
 

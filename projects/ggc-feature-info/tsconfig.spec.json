@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "experimentalDecorators": true,
-    "types": ["jasmine", "node"]
+    "types": ["vitest/globals", "node"]
   },
   "include": ["**/*.spec.ts", "**/*.d.ts"]
 }

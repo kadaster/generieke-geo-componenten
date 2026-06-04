@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "experimentalDecorators": true,
-    "types": ["jasmine", "node"],
+    "types": ["vitest/globals", "node"],
     "lib": ["dom", "es2018", "esNext"]
   },
   "include": ["**/*.spec.ts", "**/*.d.ts"]

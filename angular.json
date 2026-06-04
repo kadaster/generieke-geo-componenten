@@ -60,6 +60,9 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ggc-dataset-tree/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-dataset-tree/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -99,6 +102,9 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ggc-feature-info/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-feature-info/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -259,6 +265,9 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ggc-legend/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-legend/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -298,6 +307,9 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ggc-map/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-map/tsconfig.lib.json"
             }
           }
         },
@@ -365,6 +377,9 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ggc-search-location/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-search-location/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -404,6 +419,9 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ggc-toolbar/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-toolbar/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"

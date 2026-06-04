@@ -81,7 +81,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: ["src/test.ts", "src/test/setup-tests.ts"],
+    setupFiles: ["src/test/setup-tests.ts"],
     server: {
       // deps: {
       //   inline: [/^ol/, /^@kadaster\/generieke-geo-componenten-/]

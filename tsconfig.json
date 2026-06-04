@@ -16,7 +16,6 @@
     "target": "ES2022",
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "typeRoots": ["node_modules/@types"],
     "lib": ["es2019", "esnext", "dom"],
     "paths": {
       "@kadaster/ggc-cesium": ["dist/ggc-cesium"],
