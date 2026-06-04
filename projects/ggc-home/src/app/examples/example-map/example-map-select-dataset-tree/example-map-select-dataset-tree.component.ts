@@ -32,12 +32,12 @@ export class ExampleMapSelectDatasetTreeComponent
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select-dataset-tree",
     title: "Selecteren op de kaart met dataset tree",
-    introduction: "Selecteer en highlight features op de WMS/WMTS kaarten",
-    components: [Components.GGC_MAP],
+    introduction: "Selecteer en highlight features op diverse kaartlagen",
+    components: [Components.GGC_MAP, Components.GGC_DATASET_TREE],
     theme: [Themes.INFORMATIE_OP_KAART],
-    tags: [Tags.SELECT],
+    tags: [Tags.SELECT, Tags.DATASET],
     imageLocation:
-      "code/examples/example-map/example-map-select-wms/example-select.png"
+      "code/examples/example-map/example-map-select-dataset-tree/example-select.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-map/example-map-select-dataset-tree/example-map-select-dataset-tree.component.ts";

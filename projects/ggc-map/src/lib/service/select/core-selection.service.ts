@@ -12,6 +12,7 @@ import { Select } from "ol/interaction";
 import { never, singleClick } from "ol/events/condition";
 import Layer from "ol/layer/Layer";
 import { Collection } from "ol";
+import { filter } from "rxjs/operators";
 
 /**
  * Interne representatie van een actieve select‑interactie.
@@ -42,10 +43,8 @@ export class CoreSelectionService {
     "Er is iets mis gegaan in de CoreSelectionService: het coordinaat van de kaartlaag komt" +
     " niet overeen met het verwachte coordinaat van het klik-event in de kaart.";
 
-  private readonly subjectMap: Map<string, Subject<MapComponentEvent>> =
-    new Map();
-  private readonly observableMap: Map<string, Observable<MapComponentEvent>> =
-    new Map();
+  private readonly subjectSelectEvents: Subject<MapComponentEvent> =
+    new Subject();
 
   private readonly activeSelectInteractions: Map<
     string,
@@ -60,8 +59,9 @@ export class CoreSelectionService {
   private readonly ggcMapService = inject(GgcMapService);
 
   getObservableForMap(mapIndex: string): Observable<MapComponentEvent> {
-    this.createIfNotExistsSubjectAndObservableForMap(mapIndex);
-    return this.observableMap.get(mapIndex) as Observable<MapComponentEvent>;
+    return this.subjectSelectEvents
+      .asObservable()
+      .pipe(filter((event) => event.mapIndex === mapIndex));
   }
 
   startSelect(
@@ -153,7 +153,6 @@ export class CoreSelectionService {
     this.ggcMapService.clearSelectionLayer(activeSelectInteraction.mapIndex);
 
     this.emitEvent(
-      selectIndex,
       new MapComponentEvent(
         MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION,
         selectIndex,
@@ -200,20 +199,6 @@ export class CoreSelectionService {
     return this.activeSelectInteractions.get(selectIndex);
   }
 
-  private createIfNotExistsSubjectAndObservableForMap(
-    selectIndex: string
-  ): void {
-    if (!this.subjectMap.has(selectIndex)) {
-      this.subjectMap.set(selectIndex, new Subject<MapComponentEvent>());
-      this.observableMap.set(
-        selectIndex,
-        (
-          this.subjectMap.get(selectIndex) as Subject<MapComponentEvent>
-        ).asObservable()
-      );
-    }
-  }
-
   private createLayerFilters(layerIds: string[] | undefined, mapIndex: string) {
     if (!layerIds) {
       return undefined;
@@ -242,7 +227,6 @@ export class CoreSelectionService {
 
     const clickEvent = () => {
       this.emitEvent(
-        selectIndex,
         new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED,
           mapIndex,
@@ -267,7 +251,6 @@ export class CoreSelectionService {
       }
 
       this.emitEvent(
-        selectIndex,
         new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
           selectIndex,
@@ -281,11 +264,8 @@ export class CoreSelectionService {
     this.activeSelectEventsKeys.set(selectIndex, selectionUpdatedEvent);
   }
 
-  private emitEvent(selectIndex: string, event: MapComponentEvent): void {
-    this.createIfNotExistsSubjectAndObservableForMap(selectIndex);
-    (this.subjectMap.get(selectIndex) as Subject<MapComponentEvent>).next(
-      event
-    );
+  private emitEvent(event: MapComponentEvent): void {
+    this.subjectSelectEvents.next(event);
   }
 
   handleFeatureInfoForLayer(
@@ -346,7 +326,6 @@ export class CoreSelectionService {
     if (isManualActionPerformed) {
       // Emit event manually, because manual action do not trigger select events automatically
       this.emitEvent(
-        selectIndex,
         new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
           selectIndex,

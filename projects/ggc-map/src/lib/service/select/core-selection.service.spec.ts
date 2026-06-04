@@ -67,6 +67,10 @@ class MockMap {
     return this.interactions;
   }
 
+  getLayers() {
+    return new Collection();
+  }
+
   on() {
     /* noop */
   }
@@ -92,7 +96,6 @@ describe("CoreSelectionService", () => {
       "getLayer",
       "clearSelectionLayer",
       "addFeaturesToSelectionLayer",
-      "removeFeaturesFromSelectionLayer",
       "isFeatureInSelectionLayer"
     ]);
 
@@ -114,6 +117,11 @@ describe("CoreSelectionService", () => {
   });
 
   it("should create an observable for a mapIndex", (done) => {
+    const mockSelect = new MockSelect();
+    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+      select: mockSelect as unknown as Select
+    });
+
     service.getObservableForMap(MAP_INDEX).subscribe((event) => {
       expect(event.type).toBe(
         MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION
@@ -184,9 +192,9 @@ describe("CoreSelectionService", () => {
     const mockSelect = new MockSelect();
     const feature = new Feature();
     mockSelect.selectFeature(feature);
-    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue(
-      mockSelect as unknown as Select
-    );
+    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+      select: mockSelect as unknown as Select
+    });
 
     service.getObservableForMap(MAP_INDEX).subscribe((event) => {
       if (
@@ -378,34 +386,6 @@ describe("CoreSelectionService", () => {
         [feature],
         MAP_INDEX
       );
-      expect(
-        mapService.removeFeaturesFromSelectionLayer
-      ).not.toHaveBeenCalled();
-    });
-
-    it("should remove feature from selection layer when toggling OFF in multi select mode", () => {
-      const feature = new Feature();
-
-      const select = createSelectMock("multi");
-
-      service["activeSelectInteractions"].set(SELECT_INDEX, {
-        mapIndex: MAP_INDEX,
-        select
-      });
-
-      const mapService = TestBed.inject(
-        GgcMapService
-      ) as jasmine.SpyObj<GgcMapService>;
-
-      mapService.isFeatureInSelectionLayer.and.returnValue(true);
-
-      service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
-
-      expect(mapService.removeFeaturesFromSelectionLayer).toHaveBeenCalledWith(
-        [feature],
-        MAP_INDEX
-      );
-      expect(mapService.addFeaturesToSelectionLayer).not.toHaveBeenCalled();
     });
   });
 });

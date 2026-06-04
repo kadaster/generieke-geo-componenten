@@ -45,7 +45,7 @@
       {
         "layerId": "provincies",
         "title": "Provincies (WFS)",
-        "visible": false
+        "visible": true
       }
     ]
   },
@@ -58,7 +58,7 @@
         "title": "Buurten Apeldoorn (OGC Features)",
         "visible": false,
         "limit": 1000,
-        "maxFeatures": 10000
+        "maxFeatures": 5000
       }
     ]
   },

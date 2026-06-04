@@ -95,7 +95,7 @@ export class GgcMapService {
     for (const layer of this.getMap(mapIndex).getAllLayers()) {
       if (layer.getVisible()) {
         const zIndex = layer.getZIndex() ?? 0;
-        if (zIndex! > maxZIndex) {
+        if (zIndex > maxZIndex) {
           maxZIndex = zIndex!;
         }
       }
@@ -279,27 +279,6 @@ export class GgcMapService {
   }
 
   /**
-   * Verwijdert één of meerdere features uit de selectionlaag.
-   *
-   * Alleen de meegegeven features worden verwijderd; overige geselecteerde
-   * features blijven behouden.
-   *
-   * @param features Array van OpenLayers features die verwijderd moeten worden
-   * @param mapIndex Index van de kaart waarvoor de features uit de selectionlaag
-   * worden verwijderd (default: DEFAULT_MAPINDEX)
-   * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
-   */
-  removeFeaturesFromSelectionLayer(
-    features: Feature<Geometry>[],
-    mapIndex: string = DEFAULT_MAPINDEX
-  ): MapComponentEvent {
-    return this.coreMapService.removeFeaturesFromSelectionLayer(
-      features,
-      mapIndex
-    );
-  }
-
-  /**
    * Controleert of een feature aanwezig is in de selectionlaag.
    *
    * Een feature wordt als aanwezig beschouwd wanneer:
@@ -380,7 +359,7 @@ export class GgcMapService {
    */
   private getSearchResultDocFromEvent(evt: any): SearchResultDoc | undefined {
     let pdokDoc: SearchResultDoc | undefined;
-    if (evt.value && evt.value.docs && evt.value.docs.length > 0) {
+    if (evt.value?.docs && evt.value.docs.length > 0) {
       pdokDoc = evt.value.docs[0];
     }
     return pdokDoc;

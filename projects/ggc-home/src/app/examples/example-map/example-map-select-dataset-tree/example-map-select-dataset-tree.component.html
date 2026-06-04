@@ -2,6 +2,8 @@
   [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
   [urlTSDocs]="tsDocsUrl"
+  [pathExtraConfig]="'example-map/example-map-select-dataset-tree/treeconfig.json'"
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
@@ -20,33 +22,14 @@
     <p>
       Wij raden aan om bij selecties WFS of OGC kaartlagen te gebruiken in
       plaats van WMS/WMTS kaartlagen, gezien dit meer mogelijkheden biedt en
-      makkelijker werkt. Zie hiervoor het andere selectie voorbeeld.
+      makkelijker werkt. Zie het select (WMS/WMTS) voorbeeld voor details over
+      het gebruik van selecties in WMS/WMTS kaartlagen en zie het andere select
+      voorbeeld voor extra mogelijkheden voor WFS of OGC kaartlagen.
     </p>
     <p>
-      Een selectie op een WMS of WMTS kaartlaag wordt wel ondersteunt, maar
-      werkt anders dan een geojson of een vector kaartlaag, omdat de features
-      niet in de front-end zijn opgeslagen. Er is wel ondersteuning voor WMS en
-      WMTS kaartlagen, maar deze moeten wel goed geconfigureerd worden:
-    </p>
-    <ul>
-      <li>
-        De property getFeatureInfoOnSingleclick moet op true worden gezet voor
-        WMS of WMTS kaartlagen die geselecteerd moeten kunnen worden.
-      </li>
-      <li>
-        Selecties op WMS of WTMS kaartlagen werken alleen met singleclick op een
-        single en multi select modus.
-      </li>
-      <li>
-        De feature info van de WMS/WMTS moet ook een geometry teruggeven, anders
-        kan de feature niet worden weergegeven.
-      </li>
-    </ul>
-    <p>
-      Verder werken WMS en WMTS kaartlagen hetzelfde en kunnen op dezelfde
-      manier (en ook tegelijkertijd) gebruikt worden in de SelectionService met
-      andere kaartlagen. Ook de optie LayerIds voor het starten van een selectie
-      werkt met de WMS/WMTS kaartlagen.
+      Bij het uitzetten van een kaartlaag wordt de huidige selectie automatisch
+      leeggehaald. Voor de BGT standaardvisualisatie en BAG (vector tiles) moet
+      eerst worden ingezoomd naar het juiste zoomniveau.
     </p>
   </div>
 

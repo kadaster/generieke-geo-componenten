@@ -179,6 +179,11 @@ export class GgcLayerService {
         "ggc-layer-id",
         layerOptions.layerId
       );
+      this.addLayerComponentToMapLayerComponents(
+        componentRef.instance,
+        layerOptions.mapIndex,
+        layerOptions.layerId
+      );
       return layerOptions.layerId;
     }
   }
@@ -216,6 +221,11 @@ export class GgcLayerService {
       });
       componentRef.instance.options = layerOptions;
       componentRef.instance.ngOnInit();
+      this.addLayerComponentToMapLayerComponents(
+        componentRef.instance,
+        layerOptions.mapIndex,
+        componentRef.instance.options.layerId
+      );
       return componentRef.instance.options.layerId;
     }
   }
@@ -230,6 +240,11 @@ export class GgcLayerService {
       });
       componentRef.instance.options = layerOptions;
       componentRef.instance.ngOnInit();
+      this.addLayerComponentToMapLayerComponents(
+        componentRef.instance,
+        layerOptions.mapIndex,
+        componentRef.instance.options.layerId
+      );
       return componentRef.instance.options.layerId;
     }
   }
@@ -244,6 +259,11 @@ export class GgcLayerService {
       });
       componentRef.instance.options = layerOptions;
       componentRef.instance.ngOnInit();
+      this.addLayerComponentToMapLayerComponents(
+        componentRef.instance,
+        layerOptions.mapIndex,
+        componentRef.instance.options.layerId
+      );
       return componentRef.instance.options.layerId;
     }
   }
@@ -277,6 +297,11 @@ export class GgcLayerService {
       });
       componentRef.instance.options = layerOptions;
       componentRef.instance.ngOnInit();
+      this.addLayerComponentToMapLayerComponents(
+        componentRef.instance,
+        layerOptions.mapIndex,
+        componentRef.instance.options.layerId
+      );
       return componentRef.instance.options.layerId;
     }
   }

@@ -244,46 +244,6 @@ export class CoreMapService {
   }
 
   /**
-   * Verwijdert één of meerdere features uit de selectionlaag.
-   *
-   * Alleen de opgegeven features worden verwijderd. Features die niet
-   * aanwezig zijn in de selectionlaag worden genegeerd.
-   *
-   * @param features Array van OpenLayers features die verwijderd moeten worden
-   * @param mapIndex Index van de kaart waarvoor de features uit de selectionlaag
-   * worden verwijderd
-   * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
-   */
-  removeFeaturesFromSelectionLayer(
-    features: Feature<Geometry>[],
-    mapIndex: string
-  ): MapComponentEvent {
-    if (this.checkMapIndex(mapIndex)) {
-      const selectionSource = this.getSelectionLayerSource(
-        mapIndex
-      ) as VectorSource<Feature<Geometry>>;
-
-      features.forEach((feature) => {
-        const featureId = feature.getId();
-
-        if (featureId == null) {
-          return;
-        }
-        const existingFeature = selectionSource
-          .getFeatures()
-          .find((sourceFeature) => sourceFeature.getId() === featureId);
-
-        if (existingFeature) {
-          selectionSource.removeFeature(existingFeature);
-        }
-      });
-
-      return this.decideMapComponentEventType(true, mapIndex);
-    }
-    return this.decideMapComponentEventType(false, mapIndex);
-  }
-
-  /**
    * Controleert of een feature aanwezig is in de selectionlaag.
    *
    * Een feature wordt als aanwezig beschouwd wanneer:
@@ -312,7 +272,21 @@ export class CoreMapService {
       if (selectionFeature === feature) {
         return true;
       }
-      return featureId !== undefined && selectionFeature.getId() === featureId;
+
+      if (featureId !== undefined) {
+        return selectionFeature.getId() === featureId;
+      }
+
+      if (
+        (feature as any).values_?.id &&
+        (selectionFeature as any).values_?.id
+      ) {
+        return (
+          (feature as any).values_?.id == (selectionFeature as any).values_?.id
+        );
+      }
+
+      return false;
     });
   }
 
