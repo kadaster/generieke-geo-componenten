@@ -32,7 +32,6 @@ import {
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayerComponent } from "../../layer/abstract-base-layer/abstract-base-layer.component";
 import Layer from "ol/layer/Layer";
-import { GgcSelectionService } from "./ggc-selection.service";
 
 /**
  * Centrale service voor het beheren van kaartlagen binnen GGC.
@@ -53,7 +52,6 @@ import { GgcSelectionService } from "./ggc-selection.service";
 })
 export class GgcLayerService {
   private readonly mapService = inject(GgcMapService);
-  private readonly selectionService = inject(GgcSelectionService);
   private readonly appRef = inject(ApplicationRef);
 
   private readonly layerChangedSubject: Subject<LayerChangedEvent> =
@@ -307,6 +305,7 @@ export class GgcLayerService {
 
   /**
    * Verwijdert een laag van de kaart en triggert een layer removed event.
+   * Als er een selectie actief is in de SelectionService, wordt deze ook leeggehaald.
    */
   removeLayer(mapIndex: string, layerId: string) {
     const layer = this.mapService.getLayer(layerId, mapIndex);
@@ -315,8 +314,6 @@ export class GgcLayerService {
       this.mapLayerComponents
         .get(this.buildLayerComponentKey(mapIndex, layerId))
         ?.cleanup();
-      // Clear all selections whenever a layer is removed for safety
-      this.selectionService.clearAllSelectionsForMapIndex(mapIndex);
       this.emitLayerChanged(
         layerId,
         mapIndex,
