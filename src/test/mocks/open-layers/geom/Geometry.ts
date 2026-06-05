@@ -32,3 +32,10 @@ export class MultiPoint extends Geometry {}
 export class MultiLineString extends Geometry {}
 export class MultiPolygon extends Geometry {}
 export class LinearRing extends Geometry {}
+
+export class Polygon extends Geometry {
+  getType(): string {
+    return "Polygon";
+  }
+}
+

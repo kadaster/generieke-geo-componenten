@@ -1,4 +1,3 @@
-import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
 import { GgcLegendMapConnectService } from "./legend-map-connect.service";
@@ -11,7 +10,7 @@ describe("GgcLegendMapConnectService", () => {
   let mapLayerService: any;
   let mapEventsService: any;
 
-  let legendConnectSpy: MockedObject<GgcLegendConnectService>;
+  let legendConnectSpy: GgcLegendConnectService;
 
   beforeEach(async () => {
     cesiumLayerService = {
@@ -39,22 +38,10 @@ describe("GgcLegendMapConnectService", () => {
     legendConnectSpy = {
       getGgcCesiumSharedLayerService: vi
         .fn()
-        .mockName("GgcLegendConnectService.getGgcCesiumSharedLayerService"),
-      getGgcOLLayerService: vi
-        .fn()
-        .mockName("GgcLegendConnectService.getGgcOLLayerService"),
-      getGgcOLMapEventsService: vi
-        .fn()
-        .mockName("GgcLegendConnectService.getGgcOLMapEventsService")
-    };
-
-    legendConnectSpy.getGgcCesiumSharedLayerService.mockResolvedValue(
-      cesiumLayerService
-    );
-    legendConnectSpy.getGgcOLLayerService.mockResolvedValue(mapLayerService);
-    legendConnectSpy.getGgcOLMapEventsService.mockResolvedValue(
-      mapEventsService
-    );
+        .mockResolvedValue(cesiumLayerService),
+      getGgcOLLayerService: vi.fn().mockResolvedValue(mapLayerService),
+      getGgcOLMapEventsService: vi.fn().mockResolvedValue(mapEventsService)
+    } as unknown as GgcLegendConnectService;
 
     await TestBed.configureTestingModule({
       providers: [

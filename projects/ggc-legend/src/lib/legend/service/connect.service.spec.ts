@@ -4,7 +4,7 @@ import { Injector } from "@angular/core";
 import { GgcLegendConnectService } from "./connect.service";
 
 describe("GgcLegendConnectService", () => {
-  let service: GgcLegendConnectService;
+  let legendConnectService: GgcLegendConnectService;
   let injectorSpy: MockedObject<Injector>;
 
   let cesiumService: any;
@@ -27,15 +27,17 @@ describe("GgcLegendConnectService", () => {
       ]
     });
 
-    service = TestBed.inject(GgcLegendConnectService);
+    legendConnectService = TestBed.inject(GgcLegendConnectService);
   });
 
   function mockImports() {
-    vi.spyOn<any>(service as any, "loadCesiumModule").mockResolvedValue({
-      GgcSharedLayerService: class {}
-    });
+    vi.spyOn(legendConnectService as any, "loadCesiumModule").mockResolvedValue(
+      {
+        GgcSharedLayerService: class {}
+      }
+    );
 
-    vi.spyOn<any>(service as any, "loadMapModule").mockResolvedValue({
+    vi.spyOn(legendConnectService as any, "loadMapModule").mockResolvedValue({
       GgcLayerService: class {},
       GgcMapEventsService: class {}
     });
@@ -46,7 +48,8 @@ describe("GgcLegendConnectService", () => {
       mockImports();
       injectorSpy.get.mockReturnValue(cesiumService);
 
-      const result = await service.getGgcCesiumSharedLayerService();
+      const result =
+        await legendConnectService.getGgcCesiumSharedLayerService();
 
       expect(injectorSpy.get).toHaveBeenCalled();
       expect(result).toBe(cesiumService);
@@ -56,19 +59,22 @@ describe("GgcLegendConnectService", () => {
       mockImports();
       injectorSpy.get.mockReturnValue(cesiumService);
 
-      const first = await service.getGgcCesiumSharedLayerService();
-      const second = await service.getGgcCesiumSharedLayerService();
+      const first = await legendConnectService.getGgcCesiumSharedLayerService();
+      const second =
+        await legendConnectService.getGgcCesiumSharedLayerService();
 
       expect(injectorSpy.get).toHaveBeenCalledTimes(1);
       expect(first).toBe(second);
     });
 
     it("moet undefined retourneren bij error", async () => {
-      vi.spyOn<any>(service as any, "loadCesiumModule").mockRejectedValue(
-        new Error("fail")
-      );
+      vi.spyOn(
+        legendConnectService as any,
+        "loadCesiumModule"
+      ).mockRejectedValue(new Error("fail"));
 
-      const result = await service.getGgcCesiumSharedLayerService();
+      const result =
+        await legendConnectService.getGgcCesiumSharedLayerService();
 
       expect(result).toBeUndefined();
     });
@@ -79,7 +85,7 @@ describe("GgcLegendConnectService", () => {
       mockImports();
       injectorSpy.get.mockReturnValue(mapLayerService);
 
-      const result = await service.getGgcOLLayerService();
+      const result = await legendConnectService.getGgcOLLayerService();
 
       expect(injectorSpy.get).toHaveBeenCalled();
       expect(result).toBe(mapLayerService);
@@ -89,19 +95,19 @@ describe("GgcLegendConnectService", () => {
       mockImports();
       injectorSpy.get.mockReturnValue(mapLayerService);
 
-      const first = await service.getGgcOLLayerService();
-      const second = await service.getGgcOLLayerService();
+      const first = await legendConnectService.getGgcOLLayerService();
+      const second = await legendConnectService.getGgcOLLayerService();
 
       expect(injectorSpy.get).toHaveBeenCalledTimes(1);
       expect(first).toBe(second);
     });
 
     it("moet undefined retourneren bij error", async () => {
-      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue(
+      vi.spyOn(legendConnectService as any, "loadMapModule").mockRejectedValue(
         new Error("fail")
       );
 
-      const result = await service.getGgcOLLayerService();
+      const result = await legendConnectService.getGgcOLLayerService();
 
       expect(result).toBeUndefined();
     });
@@ -112,7 +118,7 @@ describe("GgcLegendConnectService", () => {
       mockImports();
       injectorSpy.get.mockReturnValue(mapEventsService);
 
-      const result = await service.getGgcOLMapEventsService();
+      const result = await legendConnectService.getGgcOLMapEventsService();
 
       expect(injectorSpy.get).toHaveBeenCalled();
       expect(result).toBe(mapEventsService);
@@ -122,19 +128,19 @@ describe("GgcLegendConnectService", () => {
       mockImports();
       injectorSpy.get.mockReturnValue(mapEventsService);
 
-      const first = await service.getGgcOLMapEventsService();
-      const second = await service.getGgcOLMapEventsService();
+      const first = await legendConnectService.getGgcOLMapEventsService();
+      const second = await legendConnectService.getGgcOLMapEventsService();
 
       expect(injectorSpy.get).toHaveBeenCalledTimes(1);
       expect(first).toBe(second);
     });
 
     it("moet undefined retourneren bij error", async () => {
-      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue(
+      vi.spyOn(legendConnectService as any, "loadMapModule").mockRejectedValue(
         new Error("fail")
       );
 
-      const result = await service.getGgcOLMapEventsService();
+      const result = await legendConnectService.getGgcOLMapEventsService();
 
       expect(result).toBeUndefined();
     });
