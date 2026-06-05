@@ -234,8 +234,6 @@ export class CoreSelectionService {
     layerIds: string[] | undefined
   ): (feature: Feature<Geometry>, layer?: Layer) => boolean {
     return (feature: Feature<Geometry>, layer?: Layer): boolean => {
-      console.log("filter", feature, layer);
-
       if (!layer) {
         // When an active WMS/WMTS feature is clicked, layer is undefined
         // To trigger this feature, true should be returned
@@ -361,8 +359,6 @@ export class CoreSelectionService {
     const mapIndex = activeSelectInteraction.mapIndex;
     const featureCollection = select.getFeatures();
     let isManualActionPerformed = false;
-
-    console.log("intern", featureCollection);
 
     switch (select.get(this.GGC_SELECT_MODE)) {
       case "multi": {
