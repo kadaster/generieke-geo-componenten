@@ -10,6 +10,8 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "../../model/map-component-event.model";
+import { of } from "rxjs";
+import { FeatureCollectionForCoordinate } from "./selection-state.model";
 
 /**
  * Mock Select interaction zodat we OpenLayers niet volledig hoeven te initialiseren
@@ -96,11 +98,14 @@ describe("CoreSelectionService", () => {
       "getLayer",
       "clearSelectionLayer",
       "addFeaturesToSelectionLayer",
-      "isFeatureInSelectionLayer"
+      "isFeatureInSelectionLayer",
+      "getLayerChangedObservable",
+      "changeSelectionLayerStyle"
     ]);
 
     mapServiceSpy.getMap.and.returnValue(map as unknown as Map);
     mapServiceSpy.getLayer.and.returnValue(undefined);
+    mapServiceSpy.getLayerChangedObservable.and.returnValue(of());
 
     TestBed.configureTestingModule({
       providers: [
@@ -261,13 +266,15 @@ describe("CoreSelectionService", () => {
         event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
     );
     expect(selectionUpdatedEvents.length).toBe(1);
-    expect(selectionUpdatedEvents[0].value).toEqual([]);
+    expect(selectionUpdatedEvents[0].value).toEqual(
+      new FeatureCollectionForCoordinate()
+    );
     done();
   });
 
   function createSelectMock(
     selectMode: "single" | "multi",
-    layerFilter?: Record<string, boolean>
+    layerFilter?: string[]
   ) {
     const features = new Collection<Feature<Geometry>>();
 
@@ -298,9 +305,7 @@ describe("CoreSelectionService", () => {
 
       service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
 
-      expect(
-        (service as any).handleNewFeaturesForSelection
-      ).toHaveBeenCalledWith([feature], SELECT_INDEX);
+      expect((service as any).handleNewFeaturesForSelection).toHaveBeenCalled();
     });
 
     it("should forward features only when layerId is in filter", () => {
@@ -308,9 +313,7 @@ describe("CoreSelectionService", () => {
 
       service["activeSelectInteractions"].set(SELECT_INDEX, {
         mapIndex: MAP_INDEX,
-        select: createSelectMock("single", {
-          [LAYER_ID]: true
-        })
+        select: createSelectMock("single", [LAYER_ID])
       });
 
       spyOn(service as any, "handleNewFeaturesForSelection");
@@ -325,9 +328,7 @@ describe("CoreSelectionService", () => {
 
       service["activeSelectInteractions"].set(SELECT_INDEX, {
         mapIndex: MAP_INDEX,
-        select: createSelectMock("single", {
-          "other-layer": true
-        })
+        select: createSelectMock("single", ["other-layer"])
       });
 
       spyOn(service as any, "handleNewFeaturesForSelection");

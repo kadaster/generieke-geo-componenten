@@ -39,14 +39,14 @@ export class AbstractBaseLayerComponent<T extends Layer>
   }
 
   ngOnDestroy(): void {
-    this.cleanup();
-  }
-
-  cleanup() {
     // remove the layer if the tag is destroyed.
     if (this.map !== undefined && this.olLayer !== undefined) {
       this.map.removeLayer(this.olLayer);
     }
+  }
+
+  cleanup() {
+    this.ngOnDestroy();
   }
 
   public getLayerId(): string {

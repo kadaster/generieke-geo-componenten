@@ -319,7 +319,7 @@ export class GgcMapService {
    * aangepast (default: DEFAULT_MAPINDEX)
    */
   changeSelectionLayerStyle(
-    styleLike: StyleLike,
+    styleLike: StyleLike | null,
     mapIndex: string = DEFAULT_MAPINDEX
   ) {
     this.coreMapService.changeSelectionLayerStyle(styleLike, mapIndex);

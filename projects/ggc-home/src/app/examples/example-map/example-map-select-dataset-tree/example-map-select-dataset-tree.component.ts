@@ -12,6 +12,7 @@ import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
 import { Theme } from "@kadaster/ggc-dataset-tree";
 import { GgcDatasetTreeComponent } from "../../../../../../ggc-dataset-tree/src/lib/dataset-tree/dataset-tree/ggc-dataset-tree.component";
+import { MapComponentEventTypes } from "../../../../../../ggc-map/src/lib/model/map-component-event.model";
 
 @Component({
   selector: "app-example-map-select",
@@ -67,13 +68,24 @@ export class ExampleMapSelectDatasetTreeComponent
         this.datasetTreeConfig = data as Theme[];
       });
 
+    this.selectService.getObservable(this.mapIndex).subscribe((data) => {
+      if (
+        data.type == MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+      ) {
+        console.log("features", data.value);
+      }
+    });
+
     this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
   }
 
   onSelectModeChange(mode: "singleselect" | "multiselect") {
     switch (mode) {
       case "singleselect":
-        this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "single" },
+          this.mapIndex
+        );
         break;
       case "multiselect":
         this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);

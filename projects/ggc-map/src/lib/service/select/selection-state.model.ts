@@ -7,9 +7,18 @@ import { Geometry } from "ol/geom";
  */
 export class FeatureCollectionForLayer {
   /**
+   * @deprecated
    * Naam van de laag waartoe de features behoren.
    */
   layerName: string;
+  /**
+   * LayerId van de laag waartoe de features behoren.
+   */
+  layerId: string;
+  /**
+   * Title van de laag waartoe de features behoren, indien opgegeven.
+   */
+  layerTitle?: string;
   /**
    * Lijst van OpenLayers features met geometrie.
    */

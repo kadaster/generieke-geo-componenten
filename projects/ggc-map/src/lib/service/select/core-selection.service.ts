@@ -13,6 +13,12 @@ import { never, singleClick } from "ol/events/condition";
 import Layer from "ol/layer/Layer";
 import { Collection } from "ol";
 import { filter } from "rxjs/operators";
+import { GgcLayerService } from "./ggc-layer.service";
+import {
+  FeatureCollectionForCoordinate,
+  FeatureCollectionForLayer
+} from "./selection-state.model";
+import { LayerChangedEventTrigger } from "@kadaster/ggc-models";
 
 /**
  * Interne representatie van een actieve select‑interactie.
@@ -53,10 +59,20 @@ export class CoreSelectionService {
   private readonly activeMapClickEventsKeys: Map<string, any> = new Map();
   private readonly activeSelectEventsKeys: Map<string, any> = new Map();
 
+  private readonly GGC_FEATURE_LAYERID = "ggc-feature-layerId";
   private readonly GGC_LAYER_IDS = "ggc-layerIds";
   private readonly GGC_SELECT_MODE = "ggc-select-mode";
 
   private readonly ggcMapService = inject(GgcMapService);
+  private readonly ggcLayerService = inject(GgcLayerService);
+
+  constructor() {
+    this.ggcLayerService.getLayerChangedObservable().subscribe((event) => {
+      if (event.eventTrigger === LayerChangedEventTrigger.LAYER_REMOVED) {
+        this.clearAllSelectionsForMapIndex(event.mapIndex);
+      }
+    });
+  }
 
   getObservableForMap(mapIndex: string): Observable<MapComponentEvent> {
     return this.subjectSelectEvents
@@ -91,12 +107,12 @@ export class CoreSelectionService {
         break;
     }
 
-    const layerFilters = this.createLayerFilters(options.layerIds, mapIndex);
+    const filterFunction = this.createSelectionFilterFunction(options.layerIds);
 
     const select = new Select({
       condition,
       toggleCondition,
-      layers: layerFilters,
+      filter: filterFunction,
       style: options.style,
       hitTolerance: options.hitTolerance,
       multi: true
@@ -108,6 +124,8 @@ export class CoreSelectionService {
     this.activeSelectInteractions.set(selectIndex, { mapIndex, select });
 
     this.connectSelectEvents(select, selectIndex, mapIndex);
+    // Make style of the selection layer invisible
+    this.ggcMapService.changeSelectionLayerStyle(null, mapIndex);
   }
 
   stopSelect(selectIndex: string) {
@@ -218,19 +236,41 @@ export class CoreSelectionService {
     return this.activeSelectInteractions.get(selectIndex);
   }
 
-  private createLayerFilters(layerIds: string[] | undefined, mapIndex: string) {
-    if (!layerIds) {
-      return undefined;
-    }
-
-    const layerFilters = [];
-    for (const layerId of layerIds) {
-      const layer = this.ggcMapService.getLayer(layerId, mapIndex);
-      if (layer) {
-        layerFilters.push(layer as Layer);
+  /**
+   * Maakt een filterfunctie voor de OpenLayers Select‑interaction.
+   *
+   * De filter:
+   * - controleert of de feature afkomstig is van een geldige layer
+   * - accepteert alle layers indien `layerIds` undefined is
+   * - voegt altijd de property `layer_id` toe aan de feature
+   *
+   * De `layer_id` wordt gelezen uit de layer property `ggc-layer-id`.
+   *
+   * @param layerIds Optionele lijst met toegestane layer‑IDs
+   * @returns Filterfunctie voor Select‑interaction
+   */
+  private createSelectionFilterFunction(
+    layerIds: string[] | undefined
+  ): (feature: Feature<Geometry>, layer?: Layer) => boolean {
+    return (feature: Feature<Geometry>, layer?: Layer): boolean => {
+      if (!layer) {
+        // When an active WMS/WMTS feature is clicked, layer is undefined
+        // To trigger this feature, true should be returned
+        return true;
       }
-    }
-    return layerFilters;
+
+      const layerId = layer.get("ggc-layer-id");
+
+      if (layerId !== undefined) {
+        feature.set(this.GGC_FEATURE_LAYERID, layerId);
+      }
+
+      if (!layerIds || layerIds.length === 0) {
+        return true;
+      }
+
+      return layerIds.includes(layerId);
+    };
   }
 
   private connectSelectEvents(
@@ -257,10 +297,11 @@ export class CoreSelectionService {
     this.activeMapClickEventsKeys.set(selectIndex, clickEvent);
 
     const selectionUpdatedEvent = () => {
-      let selectedFeatures = new Collection();
-      const select = this.getActiveSelectInteraction(selectIndex)?.select;
-      if (select) {
-        selectedFeatures = select.getFeatures();
+      const features =
+        this.getActiveSelectInteraction(selectIndex)?.select.getFeatures();
+
+      if (!features) {
+        return;
       }
 
       const map = this.ggcMapService.getMap(mapIndex);
@@ -269,16 +310,9 @@ export class CoreSelectionService {
         layer.changed();
       }
 
-      this.emitEvent(
-        new MapComponentEvent(
-          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
-          selectIndex,
-          CoreSelectionService.messageSelectionUpdated,
-          undefined,
-          selectedFeatures
-        )
-      );
+      this.emitSelectionUpdatedEvent(selectIndex, features);
     };
+
     select.on("select", selectionUpdatedEvent);
     this.activeSelectEventsKeys.set(selectIndex, selectionUpdatedEvent);
   }
@@ -287,9 +321,52 @@ export class CoreSelectionService {
     this.subjectSelectEvents.next(event);
   }
 
+  private emitSelectionUpdatedEvent(
+    selectIndex: string,
+    features: Collection<Feature>
+  ) {
+    const mapIndex = this.getMapIndexFromSelectIndex(selectIndex);
+
+    if (!mapIndex) {
+      return;
+    }
+
+    this.emitEvent(
+      new MapComponentEvent(
+        MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
+        selectIndex,
+        CoreSelectionService.messageSelectionUpdated,
+        undefined,
+        this.buildFeatureCollectionForCoordinateFromFeatures(features, mapIndex)
+      )
+    );
+  }
+
+  handleFeatureInfoForLayer(
+    mapIndex: string,
+    features: Feature<Geometry>[],
+    layerId: string
+  ): void {
+    const relevantSelectIndices =
+      this.getAllActiveSelectIndicesOnMapIndex(mapIndex);
+    for (const selectIndex of relevantSelectIndices) {
+      const select = this.getActiveSelectInteraction(selectIndex)?.select;
+      if (select) {
+        const filterLayerIds = select.get(this.GGC_LAYER_IDS) as
+          | string[]
+          | undefined;
+        // Only add features that are within the filtered layerIds of the select interaction
+        if (!filterLayerIds || filterLayerIds.includes(layerId)) {
+          this.handleNewFeaturesForSelection(features, selectIndex, layerId);
+        }
+      }
+    }
+  }
+
   private handleNewFeaturesForSelection(
     features: Feature<Geometry>[],
-    selectIndex: string
+    selectIndex: string,
+    layerId: string
   ) {
     const activeSelectInteraction =
       this.getActiveSelectInteraction(selectIndex);
@@ -306,13 +383,13 @@ export class CoreSelectionService {
       case "multi": {
         isManualActionPerformed =
           isManualActionPerformed ||
-          this.toggleFeatures(features, featureCollection, mapIndex);
+          this.toggleFeatures(features, featureCollection, mapIndex, layerId);
         break;
       }
       case "single": {
         isManualActionPerformed =
           isManualActionPerformed ||
-          this.replaceFeatures(features, featureCollection);
+          this.replaceFeatures(features, featureCollection, layerId);
         break;
       }
       default:
@@ -325,22 +402,15 @@ export class CoreSelectionService {
     );
     if (isManualActionPerformed) {
       // Emit event manually, because manual action do not trigger select events automatically
-      this.emitEvent(
-        new MapComponentEvent(
-          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
-          selectIndex,
-          CoreSelectionService.messageSelectionUpdated,
-          undefined,
-          featureCollection
-        )
-      );
+      this.emitSelectionUpdatedEvent(selectIndex, featureCollection);
     }
   }
 
   private toggleFeatures(
     featuresToToggle: Feature<Geometry>[],
     featureCollection: Collection<Feature<Geometry>>,
-    mapIndex: string
+    mapIndex: string,
+    layerId: string
   ) {
     let isManualActionPerformed = false;
     for (const featureToggle of featuresToToggle) {
@@ -352,6 +422,7 @@ export class CoreSelectionService {
          * The select interaction toggles the feature in this case automatically.
          * If a feature is not inside the selection layer, it should be manually added to the feature collection first.
          */
+        featureToggle.set(this.GGC_FEATURE_LAYERID, layerId);
         featureCollection.push(featureToggle);
         isManualActionPerformed = true;
       }
@@ -359,16 +430,69 @@ export class CoreSelectionService {
     return isManualActionPerformed;
   }
 
+  private buildFeatureCollectionForCoordinateFromFeatures(
+    features: Collection<Feature>,
+    mapIndex: string
+  ) {
+    const layerFeatureMap = this.buildLayerFeatureMap(features);
+    const result = new FeatureCollectionForCoordinate();
+
+    layerFeatureMap.forEach((features, layerId) => {
+      const layerCollection: FeatureCollectionForLayer = {
+        layerId,
+        layerName: "",
+        layerTitle: this.ggcLayerService.getTitle(layerId, mapIndex),
+        features
+      };
+
+      result.featureCollectionForLayers.push(layerCollection);
+    });
+
+    return result;
+  }
+
+  /**
+   * Build a layerId to features mapping
+   * @param features
+   * @private
+   */
+  private buildLayerFeatureMap(
+    features: Collection<Feature>
+  ): Map<string, Feature<Geometry>[]> {
+    const layerFeatureMap = new Map<string, Feature<Geometry>[]>();
+    for (const feature of features.getArray()) {
+      const layerId = feature.get(this.GGC_FEATURE_LAYERID);
+
+      if (!layerId) {
+        continue;
+      }
+
+      let layerFeatures = layerFeatureMap.get(layerId);
+      if (!layerFeatures) {
+        layerFeatures = [];
+        layerFeatureMap.set(layerId, layerFeatures);
+      }
+      layerFeatures.push(feature);
+    }
+    return layerFeatureMap;
+  }
+
   private replaceFeatures(
     newFeatures: Feature<Geometry>[],
-    featureCollection: Collection<Feature<Geometry>>
+    featureCollection: Collection<Feature<Geometry>>,
+    layerId: string
   ) {
     let manualActionPerformed = false;
     for (const feature of newFeatures) {
+      feature.set(this.GGC_FEATURE_LAYERID, layerId);
       featureCollection.push(feature);
       manualActionPerformed = true;
     }
     return manualActionPerformed;
+  }
+
+  private getMapIndexFromSelectIndex(selectindex: string): string | undefined {
+    return this.activeSelectInteractions.get(selectindex)?.mapIndex;
   }
 
   private getAllActiveSelectIndicesOnMapIndex(mapIndex: string): string[] {

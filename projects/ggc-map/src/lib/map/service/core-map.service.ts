@@ -300,11 +300,15 @@ export class CoreMapService {
     return this.decideMapComponentEventType(false, mapIndex);
   }
 
-  changeSelectionLayerStyle(styleLike: StyleLike, mapIndex: string) {
+  changeSelectionLayerStyle(styleLike: StyleLike | null, mapIndex: string) {
     this.changeLayerStyle(styleLike, mapIndex, "selection");
   }
 
-  changeLayerStyle(styleLike: StyleLike, mapIndex: string, layername: string) {
+  changeLayerStyle(
+    styleLike: StyleLike | null,
+    mapIndex: string,
+    layername: string
+  ) {
     const layer = this.extraLayersMap.get(`${mapIndex}-${layername}`);
     layer?.setStyle(styleLike);
   }
