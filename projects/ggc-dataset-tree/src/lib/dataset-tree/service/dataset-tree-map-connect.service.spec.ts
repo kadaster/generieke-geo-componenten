@@ -12,7 +12,12 @@ describe("DatasetTreeMapConnectService", () => {
   let mockMapLayerService: any;
   let mockMapEventsService: any;
 
-  let mockConnectService: MockedObject<GgcDatasetTreeConnectService>;
+  let mockConnectService: Pick<
+    MockedObject<GgcDatasetTreeConnectService>,
+    | "getGgcCesiumSharedLayerService"
+    | "getGgcOLLayerService"
+    | "getGgcOLMapEventsService"
+  >;
 
   beforeEach(async () => {
     mockCesiumLayerService = {
@@ -39,7 +44,7 @@ describe("DatasetTreeMapConnectService", () => {
       getZoomendObservableForMap: vi.fn().mockReturnValue(of("zoom"))
     };
 
-    const mockConnectServicePartial = {
+    mockConnectService = {
       getGgcCesiumSharedLayerService: vi
         .fn()
         .mockName(
@@ -58,13 +63,10 @@ describe("DatasetTreeMapConnectService", () => {
         DatasetTreeMapConnectService,
         {
           provide: GgcDatasetTreeConnectService,
-          useValue: mockConnectServicePartial
+          useValue: mockConnectService
         }
       ]
     }).compileComponents();
-    mockConnectService = TestBed.inject(
-      GgcDatasetTreeConnectService
-    ) as unknown as MockedObject<GgcDatasetTreeConnectService>;
     mockConnectService.getGgcCesiumSharedLayerService.mockResolvedValue(
       mockCesiumLayerService
     );

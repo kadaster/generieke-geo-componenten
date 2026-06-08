@@ -15,8 +15,20 @@ import { createFakeMapEvent } from "../../../../../../src/test/mocks/ggc/mock-gg
 describe("LayerToggleComponent", () => {
   let component: LayerToggleComponent;
   let fixture: ComponentFixture<LayerToggleComponent>;
-  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
-  let coreDatasetTreeServiceSpy: MockedObject<CoreDatasetTreeService>;
+  let datasetTreeMapConnectServiceSpy: Pick<
+    MockedObject<DatasetTreeMapConnectService>,
+    | "isVisible"
+    | "getTitle"
+    | "getEnabled"
+    | "toggleVisibility"
+    | "getZoomendObservableForMap"
+    | "getLayerChangedObservable"
+    | "getTriggerObservable"
+  >;
+  let coreDatasetTreeServiceSpy: Pick<
+    MockedObject<CoreDatasetTreeService>,
+    "emitDatasetTreeEvent"
+  >;
 
   let layerChanged$: Subject<LayerChangedEvent>;
   let zoomend$: Subject<MapEvent>;
@@ -25,7 +37,7 @@ describe("LayerToggleComponent", () => {
     layerChanged$ = new Subject<any>();
     zoomend$ = new Subject<any>();
 
-    const datasetTreeMapConnectServiceSpyPartial = {
+    datasetTreeMapConnectServiceSpy = {
       isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
       getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
       getEnabled: vi.fn().mockName("DatasetTreeMapConnectService.getEnabled"),
@@ -42,7 +54,7 @@ describe("LayerToggleComponent", () => {
         .fn()
         .mockName("DatasetTreeMapConnectService.getTriggerObservable")
     };
-    const coreDatasetTreeServiceSpyPartial = {
+    coreDatasetTreeServiceSpy = {
       emitDatasetTreeEvent: vi
         .fn()
         .mockName("CoreDatasettreeService.emitDatasetTreeEvent")
@@ -53,20 +65,14 @@ describe("LayerToggleComponent", () => {
         LayerToggleComponent,
         {
           provide: DatasetTreeMapConnectService,
-          useValue: datasetTreeMapConnectServiceSpyPartial
+          useValue: datasetTreeMapConnectServiceSpy
         },
         {
           provide: CoreDatasetTreeService,
-          useValue: coreDatasetTreeServiceSpyPartial
+          useValue: coreDatasetTreeServiceSpy
         }
       ]
     }).compileComponents();
-    datasetTreeMapConnectServiceSpy = TestBed.inject(
-      DatasetTreeMapConnectService
-    ) as unknown as MockedObject<DatasetTreeMapConnectService>;
-    coreDatasetTreeServiceSpy = TestBed.inject(
-      CoreDatasetTreeService
-    ) as unknown as MockedObject<CoreDatasetTreeService>;
     datasetTreeMapConnectServiceSpy.getZoomendObservableForMap.mockReturnValue(
       Promise.resolve(zoomend$.asObservable())
     );

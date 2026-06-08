@@ -29,7 +29,10 @@ describe("GgcDatasetSwitcherComponent", () => {
     isVisible: Mock;
   };
 
-  let connectServiceMock: MockedObject<GgcDatasetTreeConnectService>;
+  let connectServiceMock: Pick<
+    MockedObject<GgcDatasetTreeConnectService>,
+    "getGgcOLLayerService"
+  >;
 
   beforeEach(() => {
     olLayerServiceMock = {
@@ -37,7 +40,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       isVisible: vi.fn()
     };
 
-    const connectServiceMockPartial = {
+    connectServiceMock = {
       getGgcOLLayerService: vi
         .fn()
         .mockName("GgcDatasetTreeConnectService.getGgcOLLayerService")
@@ -48,13 +51,10 @@ describe("GgcDatasetSwitcherComponent", () => {
       providers: [
         {
           provide: GgcDatasetTreeConnectService,
-          useValue: connectServiceMockPartial
+          useValue: connectServiceMock
         }
       ]
     }).compileComponents();
-    connectServiceMock = TestBed.inject(
-      GgcDatasetTreeConnectService
-    ) as unknown as MockedObject<GgcDatasetTreeConnectService>;
 
     connectServiceMock.getGgcOLLayerService.mockResolvedValue(
       olLayerServiceMock
