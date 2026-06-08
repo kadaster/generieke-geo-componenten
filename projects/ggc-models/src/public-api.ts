@@ -9,3 +9,4 @@ export * from "./lib/models/legend.model";
 export * from "./lib/models/viewer-type.model";
 export * from "./lib/models/webservice-type.model";
 export * from "./lib/utils/ObservableMapWrapper";
+export * from "./lib/models/selection-state.model";

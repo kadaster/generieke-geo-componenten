@@ -1,7 +1,7 @@
 import { Coordinate } from "ol/coordinate";
 
 /**
- * @deprecated
+ * @deprecated verhuisd naar models
  * Mogelijke types voor kaartevents.
  *
  * Deze enum wordt gebruikt in {@link MapComponentEvent} om het type
@@ -44,6 +44,7 @@ export enum MapComponentEventTypes {
 }
 
 /**
+ * @deprecated verhuisd naar models
  * Standaard event-object voor communicatie vanuit kaartcomponenten
  * en kaartservices.
  *
@@ -52,7 +53,7 @@ export enum MapComponentEventTypes {
  */
 export class MapComponentEvent {
   /**
-   * @deprecated
+   *
    * Maakt een nieuw MapComponentEvent aan.
    *
    * @param type Type van het event (zie MapComponentEventTypes)

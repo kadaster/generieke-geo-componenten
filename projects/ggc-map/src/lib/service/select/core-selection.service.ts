@@ -2,10 +2,6 @@ import { inject, Injectable } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Observable, Subject } from "rxjs";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { SelectOptions } from "../../model/select-options";
 import { GgcMapService } from "../../map/service/ggc-map.service";
 import { Select } from "ol/interaction";
@@ -16,9 +12,11 @@ import { filter } from "rxjs/operators";
 import { GgcLayerService } from "./ggc-layer.service";
 import {
   FeatureCollectionForCoordinate,
-  FeatureCollectionForLayer
-} from "./selection-state.model";
-import { LayerChangedEventTrigger } from "@kadaster/ggc-models";
+  FeatureCollectionForLayer,
+  LayerChangedEventTrigger,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 /**
  * Interne representatie van een actieve select‑interactie.

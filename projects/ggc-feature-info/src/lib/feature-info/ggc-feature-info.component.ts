@@ -29,26 +29,12 @@ import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-inf
 import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import {
   DEFAULT_MAPINDEX,
+  FeatureCollectionForLayer,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
 import { Subscription } from "rxjs";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
-
-/**
- * Interne representatie van een feature-collectie per kaartlaag,
- * zoals deze wordt aangeleverd via {{@link MapComponentEvent}}.
- *
- * Dit type is lokaal gedefinieerd om de FeatureInfo-component
- * los te koppelen van concrete model-implementaties uit map.
- */
-type FeatureCollectionForLayer = {
-  /** Naam van de kaartlaag */
-  readonly layerName: string;
-
-  /** Geselecteerde features binnen deze laag */
-  readonly features: Feature<Geometry>[] | object[];
-};
 
 /**
  * Het `FeatureInfoComponent` toont feature-informatie afkomstig uit kaartlagen

@@ -3,7 +3,6 @@ import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 
 /**
- * @deprecated verhuisd naar ggc-models
  * Verzameling van features die behoren tot één specifieke kaartlaag.
  */
 export class FeatureCollectionForLayer {
@@ -27,7 +26,6 @@ export class FeatureCollectionForLayer {
 }
 
 /**
- * @deprecated verhuisd naar ggc-models
  * Verzameling van features gegroepeerd per laag voor een specifieke
  * kaartcoördinaat.
  *
