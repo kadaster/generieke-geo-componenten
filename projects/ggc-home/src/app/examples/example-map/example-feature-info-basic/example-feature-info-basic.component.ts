@@ -1,6 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
+import {
+  GgcMapComponent,
+  GgcSelectionService,
+  Webservice
+} from "@kadaster/ggc-map";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -29,11 +33,12 @@ export class ExampleFeatureInfoBasicComponent
       "code/examples/example-map/example-feature-info-basic/example-feature-info-basic.png"
   } as ComponentInfo;
   urlComponentModule =
-    "example-map/example-feature-info-basic/example-feature-info-custom-names-values.component.ts";
+    "example-map/example-feature-info-basic/example-feature-info-basic.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/feature-info_public-api.GgcFeatureInfo.html`;
   // DOCS-SKIP:END
-  mapIndex = "featureInfoBasic";
-  mapConfig: Webservice[];
+  protected mapIndex = "featureInfoBasic";
+  protected mapConfig: Webservice[];
+  private readonly selectionService = inject(GgcSelectionService);
 
   ngOnInit() {
     this.httpClient
@@ -43,5 +48,6 @@ export class ExampleFeatureInfoBasicComponent
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
+    this.selectionService.startSelect({}, this.mapIndex);
   }
 }

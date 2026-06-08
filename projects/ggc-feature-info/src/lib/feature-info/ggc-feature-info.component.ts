@@ -119,6 +119,16 @@ export class GgcFeatureInfoComponent
    * Default: `false`.
    */
   @Input() hideEmptyFields = false;
+
+  /**
+   * Maak gebruik van auto-connect functionaliteit,
+   * auto-connect zorgt ervoor dat er automatische op
+   * het selection updated event wordt gereageerd en dat
+   * het actieve feature wordt gehighlighted.
+   * Default: `true`.
+   */
+  @Input() autoconnect = true;
+
   /**
    * EventEmitter voor het versturen van component-gerelateerde events.
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
@@ -409,6 +419,7 @@ export class GgcFeatureInfoComponent
 
             if (!collections || collections.length === 0) {
               this.featureInfoCollection = undefined;
+              console.log("eruit");
               return;
             }
 

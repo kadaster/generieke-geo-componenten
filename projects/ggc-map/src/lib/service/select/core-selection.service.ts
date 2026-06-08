@@ -193,6 +193,25 @@ export class CoreSelectionService {
     return [];
   }
 
+  handleFeatureInfoForLayer(
+    mapIndex: string,
+    features: Feature<Geometry>[],
+    layerId: string
+  ): void {
+    const relevantSelectIndices =
+      this.getAllActiveSelectIndicesOnMapIndex(mapIndex);
+    for (const selectIndex of relevantSelectIndices) {
+      const select = this.getActiveSelectInteraction(selectIndex)?.select;
+      if (select) {
+        const filterLayerIds = select.get(this.GGC_LAYER_IDS);
+        // Only add features that are within the filtered layerIds of the select interaction
+        if (!filterLayerIds || layerId in filterLayerIds) {
+          this.handleNewFeaturesForSelection(features, selectIndex);
+        }
+      }
+    }
+  }
+
   private getActiveSelectInteraction(
     selectIndex: string
   ): ActiveSelectInteraction | undefined {
@@ -238,10 +257,10 @@ export class CoreSelectionService {
     this.activeMapClickEventsKeys.set(selectIndex, clickEvent);
 
     const selectionUpdatedEvent = () => {
-      let selectedFeatures: Feature[] = [];
+      let selectedFeatures = new Collection();
       const select = this.getActiveSelectInteraction(selectIndex)?.select;
       if (select) {
-        selectedFeatures = select.getFeatures().getArray();
+        selectedFeatures = select.getFeatures();
       }
 
       const map = this.ggcMapService.getMap(mapIndex);
@@ -266,25 +285,6 @@ export class CoreSelectionService {
 
   private emitEvent(event: MapComponentEvent): void {
     this.subjectSelectEvents.next(event);
-  }
-
-  handleFeatureInfoForLayer(
-    mapIndex: string,
-    features: Feature<Geometry>[],
-    layerId: string
-  ): void {
-    const relevantSelectIndices =
-      this.getAllActiveSelectIndicesOnMapIndex(mapIndex);
-    for (const selectIndex of relevantSelectIndices) {
-      const select = this.getActiveSelectInteraction(selectIndex)?.select;
-      if (select) {
-        const filterLayerIds = select.get(this.GGC_LAYER_IDS);
-        // Only add features that are within the filtered layerIds of the select interaction
-        if (!filterLayerIds || layerId in filterLayerIds) {
-          this.handleNewFeaturesForSelection(features, selectIndex);
-        }
-      }
-    }
   }
 
   private handleNewFeaturesForSelection(
@@ -331,7 +331,7 @@ export class CoreSelectionService {
           selectIndex,
           CoreSelectionService.messageSelectionUpdated,
           undefined,
-          featureCollection.getArray()
+          featureCollection
         )
       );
     }

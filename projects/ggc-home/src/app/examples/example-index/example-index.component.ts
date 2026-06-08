@@ -44,7 +44,6 @@ import { ExampleFeatureInfoBasicComponent } from "../example-map/example-feature
 import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-info-tabs/example-feature-info-tabs.component";
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 
-
 interface GroupedCards {
   theme: string;
   cards: ComponentInfo[];
@@ -106,7 +105,7 @@ export class ExampleIndexComponent {
     new ExampleMapSelectComponent().componentInfo,
     new ExampleMapSelectHoverClickComponent().componentInfo,
     new ExampleMapSelectWmsComponent().componentInfo,
-    new ExampleMapSelectDatasetTreeComponent().componentInfo
+    new ExampleMapSelectDatasetTreeComponent().componentInfo,
     new ExampleMapZoomScalePositionComponent().componentInfo,
     new ExampleFeatureInfoBasicComponent().componentInfo,
     new ExampleFeatureInfoTabsComponent().componentInfo,
@@ -142,11 +141,6 @@ export class ExampleIndexComponent {
     }
   }
 
-  protected storeSearchTerm(value: string) {
-    this.searchTerm = value;
-    sessionStorage.setItem("searchTerm", value);
-  }
-
   protected get availableThemes(): string[] {
     const set = new Set<string>();
     for (const card of this.cards) {
@@ -180,6 +174,22 @@ export class ExampleIndexComponent {
 
     const fixedOrder = [Tags.DATASET, Tags.LAYER, Tags.LEGEND, Tags.SEARCH];
     return this.sortArrayWithFixedOrder(Array.from(set), fixedOrder);
+  }
+
+  protected get groupedCards(): GroupedCards[] {
+    return Object.entries(
+      Object.groupBy(this.filteredCards(), (card) => card.theme.toString())
+    )
+      .filter(([, value]) => value)
+      .sort(
+        ([a], [b]) =>
+          this.themeOrder.indexOf(a as Themes) -
+          this.themeOrder.indexOf(b as Themes)
+      )
+      .map(([key, value]) => ({
+        theme: key,
+        cards: value!.slice().sort((c1, c2) => c1.title.localeCompare(c2.title))
+      }));
   }
 
   protected storeSearchTerm(value: string) {
@@ -265,22 +275,6 @@ export class ExampleIndexComponent {
         exclude === "tag";
       return matchesText && matchesThemes && matchesComponents && matchesTags;
     });
-  }
-
-  protected get groupedCards(): GroupedCards[] {
-    return Object.entries(
-      Object.groupBy(this.filteredCards(), (card) => card.theme.toString())
-    )
-      .filter(([, value]) => value)
-      .sort(
-        ([a], [b]) =>
-          this.themeOrder.indexOf(a as Themes) -
-          this.themeOrder.indexOf(b as Themes)
-      )
-      .map(([key, value]) => ({
-        theme: key,
-        cards: value!.slice().sort((c1, c2) => c1.title.localeCompare(c2.title))
-      }));
   }
 
   protected countThemes(theme: Themes) {
