@@ -132,7 +132,7 @@ export class GgcFeatureInfoComponent
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
-  private hasTabs = false;
+  private hasTabs = true;
   private subscription: Subscription;
   private subscriptionSelection: Subscription;
   private eventService = inject(FeatureInfoEventService);
@@ -404,7 +404,6 @@ export class GgcFeatureInfoComponent
               event.value.featureCollectionForLayers;
             if (!collections || collections.length === 0) {
               this.featureInfoCollection = undefined;
-              console.log("eruit");
               return;
             }
             this.featureInfoCollection = {
@@ -417,6 +416,7 @@ export class GgcFeatureInfoComponent
                 .filter((value) => value && value.trim().length > 0)
                 .join(", ")
             };
+            console.log(this.featureInfoCollection);
           }
         }
       );

@@ -37,7 +37,11 @@
       </div>
       <div class="col-xl-6 col-md-4 col-sm4">
         <div class="map-container">
-          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
+          <ggc-map
+            (events)="onMapEvent($event)"
+            [mapIndex]="mapIndex"
+            [webServices]="mapConfig"
+          ></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->
@@ -87,6 +91,14 @@
             <span class="slider round"></span>
           </label>
           Wissel highlight style
+        </div>
+        <br />
+        <div>
+          <label class="switch">
+            <input (change)="toggleTabOrder()" checked type="checkbox" />
+            <span class="slider round"></span>
+          </label>
+          Wissel volgorde van tabs
         </div>
       </div>
     </div>

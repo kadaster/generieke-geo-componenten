@@ -48,6 +48,6 @@ export class ExampleFeatureInfoBasicComponent
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
-    this.selectionService.startSelect({}, this.mapIndex);
+    this.selectionService.startSelect({ style: null }, this.mapIndex);
   }
 }

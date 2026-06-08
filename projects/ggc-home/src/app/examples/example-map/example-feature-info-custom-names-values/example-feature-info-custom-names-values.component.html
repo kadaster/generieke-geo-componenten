@@ -21,18 +21,17 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-xl-3 col-md-4 col-sm-5">
+      <div class="col-xl-4 col-md-5 col-sm-6">
         <div class="feature-info-container">
-          <b>Niet Aangepaste Feature Info</b>
+          <i>Aangepaste veld namen:</i>
           <br />
-          <ggc-feature-info
-            [hidePagerWithOneFeature]="true"
-            [mapIndex]="mapIndex"
-          ></ggc-feature-info>
-        </div>
-
-        <div class="feature-info-container">
-          <b>Aangepaste Feature Info</b>
+          <div>code => <b>gemeente code</b></div>
+          <div>ligtInProvincieNaam => <b>ligt in</b></div>
+          <br />
+          <i>Aangepaste waardes:</i>
+          <br />
+          <div>code => <b>GM</b> + code</div>
+          <div>naam => <b>gemeente</b> + naam</div>
           <br />
           <ggc-feature-info
             [customAttributeNamesAndValues]="customAttributeNamesAndValues"
@@ -41,7 +40,7 @@
           ></ggc-feature-info>
         </div>
       </div>
-      <div class="col-xl-7 col-md-6 col-sm-5">
+      <div class="col-xl-8 col-md-7 col-sm-6">
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>

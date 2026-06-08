@@ -1,9 +1,14 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
+import {
+  GgcMapComponent,
+  GgcSelectionService,
+  Webservice
+} from "@kadaster/ggc-map";
 import {
   CustomFeatureInfo,
-  GgcFeatureInfoComponent
+  GgcFeatureInfoComponent,
+  GgcFeatureInfoConfigService
 } from "@kadaster/ggc-feature-info";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -38,6 +43,10 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
   mapIndex = "featureInfoCustomNamesValues";
   mapConfig: Webservice[];
   customAttributeNamesAndValues: Map<string, CustomFeatureInfo>;
+  private readonly selectionService = inject(GgcSelectionService);
+  private readonly featureInfoConfigService = inject(
+    GgcFeatureInfoConfigService
+  );
 
   ngOnInit() {
     this.httpClient
@@ -48,14 +57,34 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
         this.mapConfig = data as Webservice[];
       });
     this.setCustomFeatureInfoNames();
+    this.selectionService.startSelect({}, this.mapIndex);
+    this.featureInfoConfigService.setConfig([
+      {
+        layerName: "Gemeenten",
+        attributeOrder: ["naam", "code", "ligtInProvincieNaam"],
+        hideUnorderedAttributes: true
+      }
+    ]);
   }
 
   setCustomFeatureInfoNames() {
     const customFeatureInfoMap = new Map<string, CustomFeatureInfo>();
     customFeatureInfoMap.set(
+      "naam",
+      new CustomFeatureInfo({
+        customAttributeValueFunction: this.changeGemeenteNaam
+      })
+    );
+    customFeatureInfoMap.set(
       "code",
       new CustomFeatureInfo({
         customAttributeName: "gemeente code"
+      })
+    );
+    customFeatureInfoMap.set(
+      "code",
+      new CustomFeatureInfo({
+        customAttributeValueFunction: this.changeGemeenteCode
       })
     );
     customFeatureInfoMap.set(
@@ -64,24 +93,13 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
         customAttributeName: "ligt in "
       })
     );
-    customFeatureInfoMap.set(
-      "ligtInProvincieCode",
-      new CustomFeatureInfo({
-        customAttributeName: "provincie code "
-      })
-    );
-    customFeatureInfoMap.set(
-      "naam",
-      new CustomFeatureInfo({
-        customAttributeValueFunction: this.changeGemeenteNaam
-      })
-    );
+
     this.customAttributeNamesAndValues = customFeatureInfoMap;
   }
 
-  //changeProvincieNaam(ligtInProvincieNaam: string): string{
-  // return 'provincie ' + ligtInProvincieNaam
-  // }
+  changeGemeenteCode(code: string | number): string {
+    return "GM" + code;
+  }
   changeGemeenteNaam(naam: string | number): string {
     return "gemeente " + naam;
   }

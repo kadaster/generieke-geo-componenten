@@ -1,10 +1,17 @@
 import { Component, inject, OnInit, AfterViewInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
+import {
+  GgcMapComponent,
+  GgcMapService,
+  GgcSelectionService,
+  Webservice
+} from "@kadaster/ggc-map";
 import {
   FeatureInfoDisplayType,
   GgcFeatureInfoComponent,
-  GgcFeatureInfoTabsComponent
+  GgcFeatureInfoConfigService,
+  GgcFeatureInfoTabsComponent,
+  SortFilterConfig
 } from "@kadaster/ggc-feature-info";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -14,6 +21,7 @@ import { FormsModule } from "@angular/forms";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
+import { MapComponentEventTypes } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-feature-info-tabs",
@@ -53,6 +61,9 @@ export class ExampleFeatureInfoTabsComponent
   protected showEmptyMessage = true;
   protected hidePagerWithOneFeature = true;
   private readonly mapService = inject(GgcMapService);
+  private readonly featureInfoConfigService = inject(
+    GgcFeatureInfoConfigService
+  );
 
   private defaultHighlightStyle: Style = new Style({
     fill: new Fill({
@@ -73,6 +84,17 @@ export class ExampleFeatureInfoTabsComponent
     })
   });
   private highlightStyle = this.defaultHighlightStyle;
+  private defaultTabOrder = [
+    { layerName: "Gemeenten", tabIndex: 1 },
+    { layerName: "Provincies", tabIndex: 2 }
+  ] as SortFilterConfig[];
+  private alternativeTabOrder = [
+    { layerName: "Provincies", tabIndex: 1 },
+    { layerName: "Gemeenten", tabIndex: 2 }
+  ] as SortFilterConfig[];
+  private tabOrder = this.defaultTabOrder;
+
+  private readonly selectionService = inject(GgcSelectionService);
 
   ngOnInit() {
     this.httpClient
@@ -86,8 +108,14 @@ export class ExampleFeatureInfoTabsComponent
       this.highlightStyle,
       this.mapIndex
     );
+    this.featureInfoConfigService.setConfig(this.tabOrder);
   }
 
+  onMapEvent(event: Event) {
+    if (event.type === MapComponentEventTypes.MAPINITIALIZED) {
+      this.selectionService.startSelect({ style: null }, this.mapIndex);
+    }
+  }
   public toggleFeatureInfoDisplayType(): void {
     this.featureInfoDisplayType =
       this.featureInfoDisplayType === FeatureInfoDisplayType.LIST
@@ -104,5 +132,13 @@ export class ExampleFeatureInfoTabsComponent
       this.highlightStyle,
       this.mapIndex
     );
+  }
+
+  public toggleTabOrder(): void {
+    this.tabOrder =
+      this.tabOrder === this.defaultTabOrder
+        ? this.alternativeTabOrder
+        : this.defaultTabOrder;
+    this.featureInfoConfigService.setConfig(this.tabOrder);
   }
 }
