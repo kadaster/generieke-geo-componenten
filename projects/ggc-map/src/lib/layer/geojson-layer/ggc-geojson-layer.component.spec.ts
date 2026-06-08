@@ -1,4 +1,4 @@
-import type { Mock, MockedObject } from "vitest";
+import type { Mock, MockedObject, MockInstance } from "vitest";
 import { DebugElement, SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import Feature, { FeatureLike } from "ol/Feature";
@@ -36,7 +36,10 @@ describe("GeojsonLayerComponent", () => {
   let fixture: ComponentFixture<GgcGeojsonLayerComponent>;
   let debugElement: DebugElement;
   let resultLayer: VectorLayer<VectorSource<Feature<Geometry>>>;
-  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
+  let coreSelectionServiceSpy: Pick<
+    MockedObject<CoreSelectionService>,
+    "handleFeatureInfoForLayer" | "clearFeatureInfoForLayer"
+  >;
 
   beforeEach(waitForAsync(() => {
     coreSelectionServiceSpy = {
@@ -77,12 +80,14 @@ describe("GeojsonLayerComponent", () => {
 
   const createMapSpy = () => {
     // create ol.Map mock
-    const mapSpy: MockedObject<OlMap> = {
+    const mapSpy = {
       forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
       removeLayer: vi.fn().mockName("ol.Map.removeLayer")
-    };
+    } as Pick<MockedObject<OlMap>, "forEachFeatureAtPixel" | "removeLayer">;
     mapSpy.forEachFeatureAtPixel;
-    mapSpy.removeLayer.mockImplementation(() => {});
+    mapSpy.removeLayer.mockImplementation((() => {
+      /* empty */
+    }) as any);
     return mapSpy;
   };
 
@@ -437,7 +442,7 @@ describe("GeojsonLayerComponent", () => {
     };
     component.ngOnInit();
     const mapSpy = createMapSpy();
-    component["map"] = mapSpy;
+    component["map"] = mapSpy as unknown as OlMap;
 
     const eventSpy = vi.spyOn(component.events, "emit");
     const pixel: Pixel = [123, 456];
@@ -469,7 +474,7 @@ describe("GeojsonLayerComponent", () => {
     };
     component.ngOnInit();
     const mapSpy = createMapSpy();
-    component["map"] = mapSpy;
+    component["map"] = mapSpy as unknown as OlMap;
 
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
@@ -487,7 +492,7 @@ describe("GeojsonLayerComponent", () => {
 
   describe("Dynamic url change", () => {
     let vectorSource: VectorSource<Feature<Geometry>>;
-    let getSourceSpy: Mock;
+    let getSourceSpy: MockInstance;
     let vectorSourceUrlSpy: Mock;
     let vectorSourceRefreshSpy: Mock;
 
@@ -538,7 +543,9 @@ describe("GeojsonLayerComponent", () => {
       const getSourceSpy = vi.spyOn(component["olLayer"], "getSource");
       getSourceSpy.mockReturnValue(vectorSource);
       vi.spyOn(vectorSource, "clear");
-      vi.spyOn(vectorSource, "addFeatures").mockImplementation(() => {});
+      vi.spyOn(vectorSource, "addFeatures").mockImplementation(() => {
+        /* empty */
+      });
 
       const features = [new Feature(new Point([194190, 465880]))];
       component.options = { features };
@@ -565,7 +572,9 @@ describe("GeojsonLayerComponent", () => {
       getSourceSpy.mockReturnValue(vectorSource);
 
       vi.spyOn(vectorSource, "clear");
-      vi.spyOn(vectorSource, "addFeatures").mockImplementation(() => {});
+      vi.spyOn(vectorSource, "addFeatures").mockImplementation(() => {
+        /* empty */
+      });
 
       const features = [new Feature(new Point([194190, 465880]))];
       component.options = { features };

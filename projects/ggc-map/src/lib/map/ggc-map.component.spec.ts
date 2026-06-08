@@ -16,8 +16,6 @@ import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
 import OlMap from "ol/Map";
 import View from "ol/View";
-import createSpyObj = jasmine.createSpyObj;
-import SpyObj = MockedObject;
 import { provideZoneChangeDetection } from "@angular/core";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
@@ -26,11 +24,11 @@ describe("MapComponent, ngAfterViewInit", () => {
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapService: CoreMapService;
 
-  const httpClientSpy: MockedObject<HttpClient> = {
+  const httpClientSpy = {
     get: vi.fn().mockName("HttpClient.get")
   };
-  let mapSpy: SpyObj<OlMap>;
-  let viewSpy: SpyObj<View>;
+  let mapSpy: Pick<MockedObject<OlMap>, "setTarget" | "on" | "getView">;
+  let viewSpy: Pick<MockedObject<View>, "on" | "setZoom">;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -52,10 +50,18 @@ describe("MapComponent, ngAfterViewInit", () => {
     fixture = TestBed.createComponent(GgcMapComponent);
     coreMapService = TestBed.inject(CoreMapService);
     component = fixture.componentInstance;
-    mapSpy = createSpyObj("Map", ["setTarget", "on", "getView"]);
-    viewSpy = createSpyObj("View", ["on", "setZoom"]);
-    vi.spyOn(coreMapService, "createAndGetMap").mockReturnValue(mapSpy);
-    mapSpy.getView.mockReturnValue(viewSpy);
+    // mapSpy = createSpyObj("Map", ["setTarget", "on", "getView"]);
+    // viewSpy = createSpyObj("View", ["on", "setZoom"]);
+    mapSpy = {
+      setTarget: vi.fn(),
+      on: vi.fn() as unknown as MockedObject<OlMap>["on"],
+      getView: vi.fn().mockReturnValue(viewSpy)
+    };
+    viewSpy = {
+      on: vi.fn() as unknown as MockedObject<View>["on"],
+      setZoom: vi.fn()
+    };
+    vi.spyOn(coreMapService as any, "createAndGetMap").mockReturnValue(mapSpy);
   });
 
   it("Events should be set", async () => {
@@ -71,7 +77,6 @@ describe("MapComponent, ngAfterViewInit", () => {
     fixture.detectChanges();
     expect(mapSpy.setTarget).toHaveBeenCalled();
     expect(mapSpy.on).toHaveBeenCalledTimes(4);
-    expect(mapSpy.on.calls).toBeDefined();
     expect(vi.mocked(mapSpy.on).mock.calls[0][0] as unknown as string).toEqual(
       "precompose"
     );

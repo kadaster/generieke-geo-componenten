@@ -51,7 +51,9 @@ describe("MeasureStylingService", () => {
 
       it("when called with measureStyleMap with finishDrawStyle only", () => {
         const measureStyleMap: StyleLikeMap = {
-          finishDrawStyle: () => {}
+          finishDrawStyle: () => {
+            /* empty */
+          }
         };
         const styleLikeMap = measureDrawStyleService.getMeasureStyle(
           "Polygon",

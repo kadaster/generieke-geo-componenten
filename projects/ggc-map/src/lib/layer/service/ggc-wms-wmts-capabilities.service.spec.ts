@@ -178,7 +178,9 @@ describe("GgcWmsWmtsCapabilitiesService", () => {
       coreMock.getCapabilitiesForUrl.mockReturnValue(throwError(() => error));
 
       service.getCapabilities("u", "WMTS").subscribe({
-        next: () => fail("Expected error"),
+        next: () => {
+          throw new Error("Expected error");
+        },
         error: (e) => {
           expect(e).toBe(error);
         }

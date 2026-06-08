@@ -2,7 +2,6 @@ import { MapboxStyleService } from "../../../../projects/ggc-legend/src/lib/lege
 
 import { vi } from "vitest";
 
-
 export function createMapboxStyleServiceMock(): MapboxStyleService {
   return {
     getMapboxStyle: vi.fn(),

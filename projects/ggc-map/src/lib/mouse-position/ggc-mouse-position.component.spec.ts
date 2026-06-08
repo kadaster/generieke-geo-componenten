@@ -52,15 +52,15 @@ describe("ControlMousePositionComponent", () => {
   });
 
   it("ngOninit should call setCoordinateFormatOnMousePositionControl(), setMousePositionControlOnMap() and createMousePositionOptions()", () => {
-    const setCoordinateFormatOnMousePositionControlSpy = vi.spyOn<any>(
-      component,
+    const setCoordinateFormatOnMousePositionControlSpy = vi.spyOn(
+      component as any,
       "setCoordinateFormatOnMousePositionControl"
     );
-    const setMousePositionControlOnMapSpy = vi.spyOn<any>(
-      component,
+    const setMousePositionControlOnMapSpy = vi.spyOn(
+      component as any,
       "setMousePositionControlOnMap"
     );
-    const getMousePositionOptionsSpy = vi.spyOn<any>(
+    const getMousePositionOptionsSpy = vi.spyOn(
       component,
       "createMousePositionOptions"
     );

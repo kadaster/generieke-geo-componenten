@@ -56,16 +56,16 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "dist/ggc-legend")
       },
       {
-        find: /(@kadaster\/ggc-map|ggc-map)/,
+        find: /^@kadaster\/ggc-map$|^ggc-map$/,
         replacement: path.resolve(__dirname, "src/test/mocks/ggc/ggc-map.ts")
       },
-      {
-        find: /projects\/ggc-map/,
-        replacement: path.resolve(
-          __dirname,
-          "src/test/mocks/ggc/ggc-map.ts"
-        )
-      },
+      // {
+      //   find: /projects\/ggc-map/,
+      //   replacement: path.resolve(
+      //     __dirname,
+      //     "src/test/mocks/ggc/ggc-map.ts"
+      //   )
+      // },
       {
         find: "@kadaster/ggc-models",
         replacement: path.resolve(__dirname, "dist/ggc-models")

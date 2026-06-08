@@ -13,7 +13,10 @@ import { provideZoneChangeDetection } from "@angular/core";
 
 describe("GgcOgcApiCapabilitiesService", () => {
   let service: GgcOgcApiCapabilitiesService;
-  let coreMock: MockedObject<CoreOgcApiCapabilitiesService>;
+  let coreMock: Pick<
+    MockedObject<CoreOgcApiCapabilitiesService>,
+    "getLandingPageInfo" | "getStyles" | "getTiles"
+  >;
 
   const BASE_URL = "https://example.org/ogcapi";
 

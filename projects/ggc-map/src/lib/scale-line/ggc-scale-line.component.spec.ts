@@ -51,7 +51,7 @@ describe("ScaleLineComponent", () => {
     const getMapSpy = vi
       .spyOn(coreMapService, "getMap")
       .mockReturnValue(mapMock);
-    const getScaleLineOptionsSpy = vi.spyOn<any>(
+    const getScaleLineOptionsSpy = vi.spyOn(
       component,
       "createScaleLineOptions"
     );

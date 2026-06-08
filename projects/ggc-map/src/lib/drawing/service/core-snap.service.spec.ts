@@ -7,8 +7,6 @@ import { CoreMapService } from "../../map/service/core-map.service";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Geometry } from "ol/geom";
-import createSpyObj = jasmine.createSpyObj;
-import any = jasmine.any;
 
 describe("CoreSnapService", () => {
   let service: CoreSnapService;
@@ -28,12 +26,16 @@ describe("CoreSnapService", () => {
 
   it("should activate snapInteractions when called", () => {
     const getVectorSourceFromLayerSpy = vi
-      .spyOn<any>(mapService, "createLayerAndAddToMap")
+      .spyOn(mapService, "createLayerAndAddToMap")
       .mockImplementation(createVectorLayer);
 
     const getMapMock = {
-      addInteraction: (_: Snap) => {},
-      on: (_: any) => {}
+      addInteraction: (_: Snap) => {
+        /* empty */
+      },
+      on: (_: any) => {
+        /* empty */
+      }
     };
 
     const layerName = "drawLayer";
@@ -47,7 +49,7 @@ describe("CoreSnapService", () => {
     expect(service["snapInteractions"].size).toBe(1);
     expect(getVectorSourceFromLayerSpy).toHaveBeenCalled();
     expect(getMapSpy).toHaveBeenCalled();
-    expect(addInteractionSpy).toHaveBeenCalledWith(any(Snap));
+    expect(addInteractionSpy).toHaveBeenCalledWith(expect.any(Snap));
   });
 
   it("should call initialize snap and addToSnapFeatures on start Snap only for drawLayer", () => {
@@ -96,8 +98,10 @@ describe("CoreSnapService", () => {
   it("should remove snapInteraction from this.snapInteractions on stopSnap", () => {
     const snap = createSnapInteraction();
     const drawLayer = "layer";
-    const fakeMap = createSpyObj("olMap", ["removeInteraction"]);
-    vi.spyOn(mapService, "getMap").mockReturnValue(fakeMap);
+    const fakeMap = {
+      removeInteraction: vi.fn().mockName("olMap.removeInteraction")
+    };
+    vi.spyOn(mapService, "getMap").mockReturnValue(fakeMap as unknown as OlMap);
     service.snapInteractions = new Map();
     service.snapInteractions.set(`${mapIndex}-${drawLayer}`, snap);
     service.stopSnap(mapIndex);

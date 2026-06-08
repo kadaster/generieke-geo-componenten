@@ -19,7 +19,6 @@ import { CoreSelectionService } from "../../service/select/core-selection.servic
 import { Capabilities } from "../model/capabilities.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { GgcWmtsLayerComponent } from "./ggc-wmts-layer.component";
-import SpyObj = MockedObject;
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 describe("WmtsLayerComponent", () => {
@@ -27,8 +26,8 @@ describe("WmtsLayerComponent", () => {
   let fixture: ComponentFixture<GgcWmtsLayerComponent>;
   let debugElement: DebugElement;
   let resultTileLayer: Tile<TileSource>;
-  let capabilitiesService: SpyObj<CoreWmsWmtsCapabilitiesService>;
-  let coreSelectionServiceSpy: SpyObj<CoreSelectionService>;
+  let capabilitiesService: MockedObject<CoreWmsWmtsCapabilitiesService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
 
   beforeEach(waitForAsync(() => {
     const capSpy = {

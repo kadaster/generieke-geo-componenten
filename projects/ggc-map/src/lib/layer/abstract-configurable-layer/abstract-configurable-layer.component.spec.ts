@@ -10,7 +10,7 @@ import { CoreMapService } from "../../map/service/core-map.service";
 import { AbstractConfigurableLayerComponent } from "./abstract-configurable-layer.component";
 import { ViewStateLayerStateExtent } from "ol/View";
 import { Options } from "ol/source/ImageStatic";
-import objectContaining = jasmine.objectContaining;
+import { expect } from "vitest";
 
 @Component({ template: "" })
 class TestLayerComponent extends AbstractConfigurableLayerComponent<
@@ -123,7 +123,7 @@ describe("AbstractConfigurableLayerComponent", () => {
     component.ngOnInit();
 
     expect(component["layerOptions"]).not.toEqual(
-      objectContaining({
+      expect.objectContaining({
         zIndex: undefined,
         url: "",
         imageExtent: []

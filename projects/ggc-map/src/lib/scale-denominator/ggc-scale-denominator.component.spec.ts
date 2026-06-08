@@ -102,7 +102,9 @@ describe("ScaleDenominatorComponent", () => {
 
     const subscriptionSpy = vi
       .spyOn(component["zoomendSubscription"], "unsubscribe")
-      .mockImplementation(() => {});
+      .mockImplementation(() => {
+        /* empty */
+      });
 
     component.ngOnDestroy();
 

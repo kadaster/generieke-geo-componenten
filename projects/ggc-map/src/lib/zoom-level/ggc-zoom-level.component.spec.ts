@@ -7,6 +7,7 @@ import { CoreMapEventsService } from "../map/service/core-map-events.service";
 import { CoreMapService } from "../map/service/core-map.service";
 import { GgcZoomLevelComponent } from "./ggc-zoom-level.component";
 import { provideZoneChangeDetection } from "@angular/core";
+import OlMap from "ol/Map";
 
 describe("ZoomLevelComponent", () => {
   let component: GgcZoomLevelComponent;
@@ -51,7 +52,7 @@ describe("ZoomLevelComponent", () => {
       debugElement.injector.get(CoreMapService);
     const coreMapServiceSpy = vi
       .spyOn(coreMapService, "getMap")
-      .mockImplementation(() => {});
+      .mockReturnValue({} as unknown as OlMap);
 
     vi.spyOn(mapEventsService, "getZoomendObservableForMap").mockReturnValue(
       of()
@@ -107,7 +108,9 @@ describe("ZoomLevelComponent", () => {
 
     const subscriptionSpy = vi
       .spyOn(component["zoomendSubscription"], "unsubscribe")
-      .mockImplementation(() => {});
+      .mockImplementation(() => {
+        /* empty */
+      });
 
     component.ngOnDestroy();
 

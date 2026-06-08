@@ -10,7 +10,10 @@ class TestLayerComponent extends AbstractClickableLayerComponent<any> {}
 
 describe("AbstractClickableLayerComponent", () => {
   let component: TestLayerComponent;
-  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
+  let coreSelectionServiceSpy: Pick<
+    MockedObject<CoreSelectionService>,
+    "handleFeatureInfoForLayer" | "clearFeatureInfoForLayer"
+  >;
   let fixture: ComponentFixture<TestLayerComponent>;
   let mapEventsService: CoreMapEventsService;
 

@@ -1,6 +1,6 @@
-import { vi } from 'vitest';
-import OlMap from 'ol/Map';
-import View from 'ol/View';
+import { vi } from "vitest";
+import OlMap from "ol/Map";
+import View from "ol/View";
 import MapEvent from "ol/MapEvent";
 
 export class MockGgcMapService {

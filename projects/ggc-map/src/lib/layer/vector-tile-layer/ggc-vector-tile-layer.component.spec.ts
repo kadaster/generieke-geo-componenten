@@ -41,7 +41,10 @@ describe("VectorTileLayerComponent", () => {
   let fixture: ComponentFixture<GgcVectorTileLayerComponent>;
   let debugElement: DebugElement;
   let resultLayer: VectorTileLayer;
-  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
+  let coreSelectionServiceSpy: Pick<
+    MockedObject<CoreSelectionService>,
+    "handleFeatureInfoForLayer" | "clearFeatureInfoForLayer"
+  >;
   let httpTestingController: HttpTestingController;
 
   beforeEach(waitForAsync(() => {
@@ -85,12 +88,14 @@ describe("VectorTileLayerComponent", () => {
 
   const createMapSpy = () => {
     // create ol.Map mock
-    const mapSpy: MockedObject<OlMap> = {
+    const mapSpy = {
       forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
       removeLayer: vi.fn().mockName("ol.Map.removeLayer")
-    };
+    } as Pick<MockedObject<OlMap>, "forEachFeatureAtPixel" | "removeLayer">;
     mapSpy.forEachFeatureAtPixel;
-    mapSpy.removeLayer.mockImplementation(() => {});
+    mapSpy.removeLayer.mockImplementation((() => {
+      /* empty */
+    }) as any);
     return mapSpy;
   };
 
@@ -280,7 +285,7 @@ describe("VectorTileLayerComponent", () => {
     };
     component.ngOnInit();
     const mapSpy = createMapSpy();
-    component["map"] = mapSpy;
+    component["map"] = mapSpy as unknown as OlMap;
 
     const eventSpy = vi.spyOn(component.events, "emit");
     const pixel: Pixel = [123, 456];
@@ -313,7 +318,7 @@ describe("VectorTileLayerComponent", () => {
       hitTolerance: 5
     };
     const mapSpy = createMapSpy();
-    component["map"] = mapSpy;
+    component["map"] = mapSpy as unknown as OlMap;
 
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
@@ -335,7 +340,7 @@ describe("VectorTileLayerComponent", () => {
         mapIndex: "test-map",
         enableOverzoom: true
       };
-      vi.spyOn<any>(component, "getMaxZoom").mockReturnValue(
+      vi.spyOn(component as any, "getMaxZoom").mockReturnValue(
         Promise.resolve(12)
       );
 
@@ -362,7 +367,7 @@ describe("VectorTileLayerComponent", () => {
   describe("get maxZoom from sources", () => {
     beforeEach(() => {
       // To prevent that the getJsonFromUrl is called from the setStyle, which leads to complications in the httpTestcontroller
-      vi.spyOn<any>(component, "setStyle").mockReturnValue(
+      vi.spyOn(component as any, "setStyle").mockReturnValue(
         Promise.resolve(undefined)
       );
     });
@@ -421,26 +426,26 @@ describe("VectorTileLayerComponent", () => {
 
     it("calculate the maxZoom fro the styleurls if not provided in the source or url if missing", async () => {
       // The different asynchronous calls made it diffult to use the httpTestController, so a spy is used
-      vi.spyOn<any>(component, "getJsonFromUrl").mockImplementation(
-        (url: string) => {
-          if (url === "styleUrl") {
-            return {
-              sources: {
-                source1: {
-                  tiles: ["urlMaxzoom8/{z}/{y}/{x}"]
-                },
-                source2: {
-                  tiles: ["urlMaxzoom9/{z}/{y}/{x}"]
-                }
+      vi.spyOn(component as any, "getJsonFromUrl").mockImplementation(((
+        url: string
+      ) => {
+        if (url === "styleUrl") {
+          return {
+            sources: {
+              source1: {
+                tiles: ["urlMaxzoom8/{z}/{y}/{x}"]
+              },
+              source2: {
+                tiles: ["urlMaxzoom9/{z}/{y}/{x}"]
               }
-            };
-          } else if (url === "urlMaxzoom8?f=tilejson") {
-            return { maxzoom: 8 };
-          } else if (url === "urlMaxzoom9?f=tilejson") {
-            return { maxzoom: 9 };
-          }
+            }
+          };
+        } else if (url === "urlMaxzoom8?f=tilejson") {
+          return { maxzoom: 8 };
+        } else if (url === "urlMaxzoom9?f=tilejson") {
+          return { maxzoom: 9 };
         }
-      );
+      }) as any);
       component.options = {
         mapIndex: "test-map",
         enableOverzoom: true,

@@ -1,4 +1,4 @@
-import type { Mock } from "vitest";
+import type { MockInstance } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
 import { EventsKey } from "ol/events";
@@ -22,12 +22,12 @@ import { CoreDrawLayerService } from "./core-draw-layer.service";
 import { CoreSnapService } from "./core-snap.service";
 import { CenterDraw } from "../center-interaction/center-draw";
 import { Coordinate } from "ol/coordinate";
-import createSpyObj = jasmine.createSpyObj;
-import Spy = Mock;
 import View from "ol/View";
 import { CenterModify } from "../center-interaction/center-modify";
 import { customDrawStyle, customFinishDrawStyle } from "./draw-styles";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
+import { CenterBase } from "../center-interaction/center-base";
+import BaseLayer from "ol/layer/Base";
 
 describe("CoreDrawService", () => {
   const mapIndex = "TEST_MAP";
@@ -53,15 +53,15 @@ describe("CoreDrawService", () => {
     it("should add the feature and return successful if the mapIndex does exist", () => {
       const vectorLayer = createVectorLayer();
       const myFeature = new Feature<Geometry>();
-      const addStylingSpy = vi.spyOn<any>(service, "addStylingToFeature");
+      const addStylingSpy = vi.spyOn(service as any, "addStylingToFeature");
       vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
       vi.spyOn(coreDrawLayerService, "getDrawLayer").mockReturnValue(
         vectorLayer
       );
-      vi.spyOn(
-        vectorLayer.getSource(),
-        "addFeature" as never
-      ).mockImplementation(() => {});
+      const source = vectorLayer.getSource()!;
+      vi.spyOn(source, "addFeature").mockImplementation(() => {
+        /* empty */
+      });
       const result = service.addFeatureToLayer(layerName, mapIndex, myFeature);
       expect(result.type).toEqual(MapComponentEventTypes.SUCCESSFUL);
       expect(vectorLayer.getSource()!.addFeature).toHaveBeenCalledWith(
@@ -87,7 +87,7 @@ describe("CoreDrawService", () => {
       const vectorLayer = createVectorLayer();
       const myFeature = new Feature<Geometry>();
       myFeature.setStyle(new Style());
-      const addStylingSpy = vi.spyOn<any>(service, "addStylingToFeature");
+      const addStylingSpy = vi.spyOn(service as any, "addStylingToFeature");
       vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
       vi.spyOn(coreDrawLayerService, "getDrawLayer").mockReturnValue(
         vectorLayer
@@ -104,9 +104,9 @@ describe("CoreDrawService", () => {
       const drawInteraction = createDrawInteraction();
       service["drawInteractions"].set(mapIndex, drawInteraction);
       vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
-      vi.spyOn(drawInteraction, "appendCoordinates").mockImplementation(
-        () => {}
-      );
+      vi.spyOn(drawInteraction, "appendCoordinates").mockImplementation(() => {
+        /* empty */
+      });
       service.appendCoordinates(coordinates1, mapIndex);
       service.appendCoordinates(coordinates2, mapIndex);
       expect(drawInteraction.appendCoordinates).toHaveBeenCalledTimes(2);
@@ -114,9 +114,9 @@ describe("CoreDrawService", () => {
     it("should NOT call appendcoordinates if the mapIndex does not exist", () => {
       const drawInteraction = createDrawInteraction();
       service["drawInteractions"].set(mapIndex, drawInteraction);
-      vi.spyOn(drawInteraction, "appendCoordinates").mockImplementation(
-        () => {}
-      );
+      vi.spyOn(drawInteraction, "appendCoordinates").mockImplementation(() => {
+        /* empty */
+      });
       service.appendCoordinates(coordinates1, mapIndex);
       expect(drawInteraction.appendCoordinates).not.toHaveBeenCalled();
     });
@@ -129,7 +129,9 @@ describe("CoreDrawService", () => {
       });
       service["drawInteractions"].set(mapIndex, centerDraw);
       vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
-      vi.spyOn(centerDraw, "removeLastPoint").mockImplementation(() => {});
+      vi.spyOn(centerDraw, "removeLastPoint").mockImplementation(() => {
+        /* empty */
+      });
       service.removeLastPoint(mapIndex);
 
       expect(centerDraw.removeLastPoint).toHaveBeenCalledTimes(1);
@@ -140,7 +142,9 @@ describe("CoreDrawService", () => {
       });
       service["drawInteractions"].set(mapIndex, draw);
       vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
-      vi.spyOn(draw, "removeLastPoint").mockImplementation(() => {});
+      vi.spyOn(draw, "removeLastPoint").mockImplementation(() => {
+        /* empty */
+      });
       service.removeLastPoint(mapIndex);
 
       expect(draw.removeLastPoint).toHaveBeenCalledTimes(1);
@@ -151,7 +155,9 @@ describe("CoreDrawService", () => {
       });
       service["drawInteractions"].set(mapIndex, drawInteraction);
       vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(false);
-      vi.spyOn(drawInteraction, "removeLastPoint").mockImplementation(() => {});
+      vi.spyOn(drawInteraction, "removeLastPoint").mockImplementation(() => {
+        /* empty */
+      });
       service.removeLastPoint(mapIndex);
 
       expect(drawInteraction.removeLastPoint).not.toHaveBeenCalled();
@@ -164,7 +170,9 @@ describe("CoreDrawService", () => {
     });
     service["drawInteractions"].set(mapIndex, centerDraw);
     vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
-    vi.spyOn(centerDraw, "getSketchCoordinates").mockImplementation(() => {});
+    vi.spyOn(centerDraw, "getSketchCoordinates").mockImplementation((() => {
+      /* empty */
+    }) as any);
     service.getSketchCoordinates(mapIndex);
 
     expect(centerDraw.getSketchCoordinates).toHaveBeenCalledTimes(1);
@@ -177,9 +185,10 @@ describe("CoreDrawService", () => {
       vi.spyOn(coreDrawLayerService, "getDrawLayer").mockReturnValue(
         vectorLayer
       );
-      vi.spyOn(vectorLayer.getSource(), "clear" as never).mockImplementation(
-        () => {}
-      );
+      const source = vectorLayer.getSource()!;
+      vi.spyOn(source, "clear").mockImplementation(() => {
+        /* empty */
+      });
       const result = service.clearLayer(layerName, mapIndex);
       expect(result.type).toEqual(MapComponentEventTypes.SUCCESSFUL);
       expect(vectorLayer.getSource()!.clear).toHaveBeenCalled();
@@ -188,9 +197,13 @@ describe("CoreDrawService", () => {
 
   describe("deleteDrawInteraction", () => {
     it("should delete the draw interaction", () => {
-      const fakeMap = createSpyObj("olMap", ["removeInteraction"]);
+      const fakeMap = {
+        removeInteraction: vi.fn().mockName("olMap.removeInteraction")
+      };
       service["drawInteractions"].set(mapIndex, new Draw({ type: "Polygon" }));
-      vi.spyOn(coreMapService, "getMap").mockReturnValue(fakeMap);
+      vi.spyOn(coreMapService, "getMap").mockReturnValue(
+        fakeMap as unknown as OlMap
+      );
       vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
 
       service.deleteDrawInteraction(mapIndex);
@@ -205,7 +218,9 @@ describe("CoreDrawService", () => {
       vi.spyOn(coreMapService, "createLayerAndAddToMap").mockReturnValue(
         vectorLayer
       );
-      vi.spyOn(vectorLayer, "setMap").mockImplementation(() => {});
+      vi.spyOn(vectorLayer, "setMap").mockImplementation(() => {
+        /* empty */
+      });
 
       coreDrawLayerService.getDrawLayer(layerName, mapIndex);
       expect(
@@ -238,13 +253,17 @@ describe("CoreDrawService", () => {
   describe("startDrawInteraction", () => {
     it("should create DRAW layer, interaction and subject and a number of methods to prepare for drawing is called", () => {
       const stopDrawSpy = vi
-        .spyOn<any>(service, "stopDraw")
-        .mockImplementation(() => {});
+        .spyOn(service, "stopDraw")
+        .mockImplementation(() => {
+          /* empty */
+        });
       const setLayerVisibilitySpy = vi
-        .spyOn<any>(service, "setLayerVisibility")
-        .mockImplementation(() => {});
+        .spyOn(service, "setLayerVisibility")
+        .mockImplementation(() => {
+          /* empty */
+        });
       const decideAndGetStylesSpy = vi
-        .spyOn<any>(service, "decideAndGetStyles")
+        .spyOn(service as any, "decideAndGetStyles")
         .mockReturnValue(undefined);
       const startSnapAgainIfExistsSpy = vi.spyOn(
         coreSnapService,
@@ -299,10 +318,12 @@ describe("CoreDrawService", () => {
         getSource: vi.fn().mockName("VectorLayer.getSource")
       };
       vLayer.getSource.mockReturnValue(new VectorSource());
-      vi.spyOn(coreMapService, "getLayer").mockReturnValue(vLayer);
+      vi.spyOn(coreMapService, "getLayer").mockReturnValue(
+        vLayer as unknown as BaseLayer
+      );
 
-      const addSnappingForTracingSpy = vi.spyOn<any>(
-        service,
+      const addSnappingForTracingSpy = vi.spyOn(
+        service as any,
         "addSnappingForTracing"
       );
 
@@ -318,10 +339,12 @@ describe("CoreDrawService", () => {
         getSource: vi.fn().mockName("VectorLayer.getSource")
       };
       vLayer.getSource.mockReturnValue(new VectorSource());
-      vi.spyOn(coreMapService, "getLayer").mockReturnValue(vLayer);
+      vi.spyOn(coreMapService, "getLayer").mockReturnValue(
+        vLayer as unknown as BaseLayer
+      );
 
-      const addSnappingForTracingSpy = vi.spyOn<any>(
-        service,
+      const addSnappingForTracingSpy = vi.spyOn(
+        service as any,
         "addSnappingForTracing"
       );
 
@@ -451,7 +474,9 @@ describe("CoreDrawService", () => {
       );
 
       const getMapMock = {
-        addInteraction: () => {}
+        addInteraction: () => {
+          /* empty */
+        }
       };
 
       service["modifyEventsMap"].getOrCreateSubject(mapIndex);
@@ -479,10 +504,7 @@ describe("CoreDrawService", () => {
     it("should create listener and interaction for DEFAULT mapIndex and call startSnapAgainIfExists", () => {
       const stopModifySpy = vi.spyOn(service, "stopModify");
       expect(service["modifyInteractions"].size).toBe(0);
-      const setLayerVisibilitySpy = vi.spyOn<any>(
-        service,
-        "setLayerVisibility"
-      );
+      const setLayerVisibilitySpy = vi.spyOn(service, "setLayerVisibility");
       const startSnapAgainIfExistsSpy = vi.spyOn(
         coreSnapService,
         // @ts-ignore
@@ -543,7 +565,7 @@ describe("CoreDrawService", () => {
     const events = new Map<string, () => object>();
     const div = document.createElement("div");
     let getMapMock: Record<string, any>;
-    let getMapSpy: Spy;
+    let getMapSpy: MockInstance<() => OlMap>;
 
     beforeEach(() => {
       events.clear();
@@ -603,7 +625,9 @@ describe("CoreDrawService", () => {
       const moveListener = events.get("pointermove");
       const forEachFeatureAtPixelSpy = vi
         .spyOn(getMapMock, "forEachFeatureAtPixel")
-        .mockImplementation(() => {});
+        .mockImplementation(() => {
+          /* empty */
+        });
       expect(moveListener).not.toBeUndefined();
       if (moveListener) {
         moveListener();
@@ -666,7 +690,7 @@ describe("CoreDrawService", () => {
     it("toggleLayer(), should hide en show interaction layer", () => {
       const layer = createVectorLayer();
       const getDrawOrLayerSpy = vi
-        .spyOn<any>(coreDrawLayerService, "getDrawLayer")
+        .spyOn(coreDrawLayerService, "getDrawLayer")
         .mockReturnValue(layer);
       const setVisibilitySpy = vi.spyOn(layer, "setVisible");
       const map = new OlMap({});
@@ -692,7 +716,7 @@ describe("CoreDrawService", () => {
       const getDrawOrMeasureLayerSpy = vi
         .spyOn(coreMapService, "createLayerAndAddToMap")
         .mockImplementation(createVectorLayer);
-      const setDrawInteractionSpy = vi.spyOn<any>(
+      const setDrawInteractionSpy = vi.spyOn(
         service["drawInteractions"],
         "set"
       );
@@ -734,7 +758,9 @@ describe("CoreDrawService", () => {
       expect(service["drawInteractions"].size).toBe(1);
 
       const getMapMock = {
-        removeInteraction: () => {}
+        removeInteraction: () => {
+          /* empty */
+        }
       };
       const getMapSpy = vi
         .spyOn(coreMapService, "getMap")
@@ -1016,7 +1042,7 @@ describe("CoreDrawService", () => {
       const interaction = {
         cleanup: vi.fn().mockName("CenterBase.cleanup")
       };
-      service["activeCenterInteraction"] = interaction;
+      service["activeCenterInteraction"] = interaction as unknown as CenterBase;
 
       service.removeActiveCenterInteraction("map-1");
 

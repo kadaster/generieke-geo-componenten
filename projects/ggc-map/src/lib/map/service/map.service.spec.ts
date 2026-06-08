@@ -82,7 +82,9 @@ describe("MapService", () => {
 
     it("should not zoom if the map does not exist", () => {
       const getViewMock = {
-        getView(_crds: Extent) {}
+        getView(_crds: Extent) {
+          /* empty */
+        }
       };
       const checkMapIndexSpy = vi
         .spyOn(coreMapService, "checkMapIndex")
@@ -263,7 +265,7 @@ describe("MapService", () => {
     });
 
     it("when changeHighlightLayerStyle() is called it should call the coreMapService with the mapIndex and the given style", () => {
-      const changeHighlightStyleLayerSpy = vi.spyOn<any>(
+      const changeHighlightStyleLayerSpy = vi.spyOn(
         coreMapService,
         "changeHighlightLayerStyle"
       );
@@ -330,7 +332,7 @@ describe("MapService", () => {
     });
 
     it("when changeSelectionLayerStyle() is called it should call the coreMapService with the mapIndex and the given style", () => {
-      const changeSelectionStyleLayerSpy = vi.spyOn<any>(
+      const changeSelectionStyleLayerSpy = vi.spyOn(
         coreMapService,
         "changeSelectionLayerStyle"
       );

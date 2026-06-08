@@ -1,9 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output
-} from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import OlMap from "ol/Map";
 import { vi } from "vitest";
 import View from "ol/View";
@@ -30,7 +25,6 @@ export class GgcLayerBrtAchtergrondkaartComponentMock {
   @Input() mapIndex!: string;
 }
 
-
 export class GgcMapServiceMock {
   clearHighlightLayer = vi.fn();
   clearSelectionLayer = vi.fn();
@@ -43,7 +37,6 @@ export class GgcMapServiceMock {
   zoomToCoordinate = vi.fn();
   getLayerChangedObservable = vi.fn();
 }
-
 
 export class GgcLayerServiceMock {
   // alleen wat nodig is

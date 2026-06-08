@@ -314,7 +314,8 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"]
+            "setupFiles": ["src/test/setup-tests.ts"],
+            "tsConfig": "projects/ggc-map/tsconfig.spec.json"
           }
         },
         "lint": {

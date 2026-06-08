@@ -8,7 +8,6 @@ import {
   withInterceptorsFromDi
 } from "@angular/common/http";
 import { CoreWmsWmtsCapabilitiesService } from "../../layer/service/core-wms-wmts-capabilities.service";
-import SpyObj = MockedObject;
 import { of } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
@@ -19,8 +18,14 @@ describe("LayerService", () => {
   let service: GgcLayerService;
   let mapServiceSpy: MockedObject<GgcMapService>;
   let mockCreateComponent: Mock;
-  let capSpy: SpyObj<CoreWmsWmtsCapabilitiesService>;
-  let coreMapServiceSpy: SpyObj<CoreMapService>;
+  let capSpy: Pick<
+    MockedObject<CoreWmsWmtsCapabilitiesService>,
+    "getCapabilitiesForUrl" | "optionsFromCapabilities"
+  >;
+  let coreMapServiceSpy: Pick<
+    MockedObject<CoreMapService>,
+    "getLayerChangedObservable" | "getMap"
+  >;
   beforeEach(() => {
     const mapServiceMock = {
       getLayer: vi.fn().mockName("MapService.getLayer"),
@@ -54,7 +59,10 @@ describe("LayerService", () => {
     capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
 
     coreMapServiceSpy.getLayerChangedObservable.mockReturnValue(of());
-    coreMapServiceSpy.getMap.mockReturnValue(new OlMap());
+    coreMapServiceSpy.getMap.mockReturnValue({
+      addLayer: vi.fn(),
+      removeLayer: vi.fn()
+    } as unknown as OlMap);
 
     TestBed.configureTestingModule({
       providers: [

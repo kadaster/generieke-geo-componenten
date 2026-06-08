@@ -31,8 +31,8 @@ describe("CoreMapService", () => {
     it("createAndGetMap, when called without parameters, should create a map with default values", inject(
       [CoreMapService],
       (coreMapService: CoreMapService) => {
-        const createLayersSpy = vi.spyOn<any>(
-          coreMapService,
+        const createLayersSpy = vi.spyOn(
+          coreMapService as any,
           "createExtraLayers"
         );
         coreMapService.createAndGetMap();

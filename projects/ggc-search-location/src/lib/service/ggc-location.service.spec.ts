@@ -68,9 +68,9 @@ describe("GgcSearchLocationService", () => {
         }
       );
 
-      vi.spyOn(navigator.geolocation, "clearWatch").mockImplementation(
-        () => {}
-      );
+      vi.spyOn(navigator.geolocation, "clearWatch").mockImplementation(() => {
+        /* empty */
+      });
     });
 
     it("moet de huidige locatie ophalen (track: false)", fakeAsync(() => {
