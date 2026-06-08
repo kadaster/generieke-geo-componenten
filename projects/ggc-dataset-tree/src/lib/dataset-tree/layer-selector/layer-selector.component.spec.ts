@@ -21,6 +21,7 @@ describe("LayerSelectorComponent", () => {
       getLayerChangedObservable: vi
         .fn()
         .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+        .mockReturnValue(Promise.resolve(Promise.resolve(of())))
     };
     TestBed.configureTestingModule({
       imports: [LayerSelectorComponent],
@@ -34,10 +35,6 @@ describe("LayerSelectorComponent", () => {
         }
       ]
     }).compileComponents();
-
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
-      Promise.resolve(Promise.resolve(of()))
-    );
 
     fixture = TestBed.createComponent(LayerSelectorComponent);
     component = fixture.componentInstance;

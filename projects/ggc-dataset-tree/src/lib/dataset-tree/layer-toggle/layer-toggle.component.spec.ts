@@ -46,13 +46,16 @@ describe("LayerToggleComponent", () => {
         .mockName("DatasetTreeMapConnectService.toggleVisibility"),
       getZoomendObservableForMap: vi
         .fn()
-        .mockName("DatasetTreeMapConnectService.getZoomendObservableForMap"),
+        .mockName("DatasetTreeMapConnectService.getZoomendObservableForMap")
+        .mockReturnValue(Promise.resolve(zoomend$.asObservable())),
       getLayerChangedObservable: vi
         .fn()
-        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable"),
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+        .mockReturnValue(Promise.resolve(layerChanged$.asObservable())),
       getTriggerObservable: vi
         .fn()
         .mockName("DatasetTreeMapConnectService.getTriggerObservable")
+        .mockReturnValue(EMPTY)
     };
     coreDatasetTreeServiceSpy = {
       emitDatasetTreeEvent: vi
@@ -73,13 +76,6 @@ describe("LayerToggleComponent", () => {
         }
       ]
     }).compileComponents();
-    datasetTreeMapConnectServiceSpy.getZoomendObservableForMap.mockReturnValue(
-      Promise.resolve(zoomend$.asObservable())
-    );
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
-      Promise.resolve(layerChanged$.asObservable())
-    );
-    datasetTreeMapConnectServiceSpy.getTriggerObservable.mockReturnValue(EMPTY);
 
     fixture = TestBed.createComponent(LayerToggleComponent);
     component = fixture.componentInstance;

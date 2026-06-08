@@ -44,6 +44,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       getGgcOLLayerService: vi
         .fn()
         .mockName("GgcDatasetTreeConnectService.getGgcOLLayerService")
+        .mockResolvedValue(olLayerServiceMock)
     };
 
     TestBed.configureTestingModule({
@@ -55,10 +56,6 @@ describe("GgcDatasetSwitcherComponent", () => {
         }
       ]
     }).compileComponents();
-
-    connectServiceMock.getGgcOLLayerService.mockResolvedValue(
-      olLayerServiceMock
-    );
 
     fixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
     component = fixture.componentInstance;
