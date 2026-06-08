@@ -22,6 +22,7 @@ import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import {
   DEFAULT_MAPINDEX,
+  FeatureCollectionForLayer,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -154,7 +155,17 @@ export class GgcFeatureInfoTabsComponent
           MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
         ) {
           this.featureInfoCollectionArray =
-            event.value.featureCollectionForLayers;
+            event.value.featureCollectionForLayers.map(
+              (featureCollection: FeatureCollectionForLayer) => ({
+                ...featureCollection,
+                layerName:
+                  featureCollection.layerTitle ||
+                  featureCollection.layerName ||
+                  featureCollection.layerId
+              })
+            );
+
+          console.log(this.featureInfoCollectionArray);
           this.onDataUpdate();
         }
       }
