@@ -402,28 +402,21 @@ export class GgcFeatureInfoComponent
           ) {
             const collections: FeatureCollectionForLayer[] =
               event.value.featureCollectionForLayers;
-
             if (!collections || collections.length === 0) {
               this.featureInfoCollection = undefined;
               console.log("eruit");
               return;
             }
-
-            const allFeatures: object[] = [];
-            const layerNames: string[] = [];
-
-            collections.forEach((collection: FeatureCollectionForLayer) => {
-              layerNames.push(collection.layerName);
-
-              collection.features.forEach((feature) => {
-                allFeatures.push(feature);
-              });
-            });
-
-            this.featureInfoCollection = new FeatureInfoCollection(
-              layerNames.join(", "),
-              allFeatures
-            );
+            this.featureInfoCollection = {
+              features: collections.flatMap((layer) => layer.features ?? []),
+              layerName: collections
+                .map(
+                  (layer) =>
+                    layer.layerTitle || layer.layerName || layer.layerId
+                )
+                .filter((value) => value && value.trim().length > 0)
+                .join(", ")
+            };
           }
         }
       );
