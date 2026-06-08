@@ -1,12 +1,24 @@
-import type { Mock, MockedObject } from "vitest";
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { Mock, MockedObject, vi } from "vitest";
+import { TestBed, tick } from "@angular/core/testing";
 import { GgcSearchLocationService } from "./ggc-location.service";
 import { GgcSearchLocationConnectService } from "./connect.service";
 import { take } from "rxjs/operators";
 
 describe("GgcSearchLocationService", () => {
+  Object.defineProperty(globalThis.navigator, "geolocation", {
+    value: {
+      getCurrentPosition: vi.fn(),
+      clearWatch: vi.fn(),
+      watchPosition: vi.fn()
+    },
+    configurable: true
+  });
+
   let service: GgcSearchLocationService;
-  let connectServiceSpy: MockedObject<GgcSearchLocationConnectService>;
+  let connectServiceSpy: Pick<
+    MockedObject<GgcSearchLocationConnectService>,
+    "getMapService"
+  >;
   let mapServiceMock: any;
 
   const mockCoords = {
@@ -20,9 +32,6 @@ describe("GgcSearchLocationService", () => {
       getExtraLayer: vi.fn().mockName("GgcMapService.getExtraLayer")
     };
     connectServiceSpy = {
-      loadMapService: vi
-        .fn()
-        .mockName("GgcSearchLocationConnectService.loadMapService"),
       getMapService: vi
         .fn()
         .mockName("GgcSearchLocationConnectService.getMapService")
@@ -73,7 +82,7 @@ describe("GgcSearchLocationService", () => {
       });
     });
 
-    it("moet de huidige locatie ophalen (track: false)", fakeAsync(() => {
+    it("moet de huidige locatie ophalen (track: false)", async () => {
       const mapMock = {};
       const layerMock = {
         setStyle: vi.fn().mockName("VectorLayer.setStyle")
@@ -87,27 +96,25 @@ describe("GgcSearchLocationService", () => {
         .pipe(take(1))
         .subscribe((c) => (result = c));
 
-      service.getLocation(false);
-      tick();
+      await service.getLocation(false);
 
       expect(navigator.geolocation.getCurrentPosition).toHaveBeenCalled();
       expect(result).toBeDefined();
       // Controleer of RD coördinaten kloppen na transformatie van Utrecht LonLat
       expect(result![0]).toBeGreaterThan(100000);
-    }));
+    });
 
-    it("moet tracking starten (track: true)", fakeAsync(() => {
+    it("moet tracking starten (track: true)", async () => {
       const mapMock = {};
       mapServiceMock.getMap.mockReturnValue(mapMock);
 
-      service.getLocation(true, "default");
-      tick();
+      await service.getLocation(true, "default");
 
       expect(navigator.geolocation.watchPosition).toHaveBeenCalled();
       expect(service["geolocations"].has("default")).toBe(true);
-    }));
+    });
 
-    it("moet een foutmelding sturen via de Subject bij een geolocatie fout", fakeAsync(() => {
+    it("moet een foutmelding sturen via de Subject bij een geolocatie fout", async () => {
       const errorMock = { code: 1, message: "User denied Geolocation" };
       (navigator.geolocation.getCurrentPosition as Mock).mockImplementation(
         (success, error) => {
@@ -123,11 +130,10 @@ describe("GgcSearchLocationService", () => {
         .pipe(take(1))
         .subscribe((e) => (errorResult = e));
 
-      service.getLocation(false);
-      tick();
+      await service.getLocation(false);
 
       expect(errorResult).toEqual(errorMock);
-    }));
+    });
   });
 
   describe("stopTrackLocation", () => {

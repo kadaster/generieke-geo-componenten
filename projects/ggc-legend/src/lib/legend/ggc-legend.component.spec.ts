@@ -11,8 +11,8 @@ import {
   MapboxStyle
 } from "../legend-mapbox/model/legend-mapbox.model";
 import { provideZoneChangeDetection } from "@angular/core";
-import { createMapboxStyleServiceMock } from "../../../../../src/test/mocks/ggc/MapboxStryleServiceMock";
 import { Polygon } from "ol/geom";
+import { vi } from "vitest";
 
 describe("DatasetLegendComponent", () => {
   vi.mock("ol/geom/Polygon", () => ({
@@ -100,7 +100,12 @@ describe("DatasetLegendComponent", () => {
   };
 
   beforeEach(() => {
-    mapboxStyleServiceMock = createMapboxStyleServiceMock();
+    mapboxStyleServiceMock = {
+      getMapboxStyle: vi.fn(),
+      removeRasterLayers: vi.fn(),
+      getItems: vi.fn(),
+      getLayersids: vi.fn()
+    } as unknown as MapboxStyleService;
 
     TestBed.configureTestingModule({
       providers: [
