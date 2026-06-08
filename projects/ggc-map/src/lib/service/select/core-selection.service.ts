@@ -209,27 +209,6 @@ export class CoreSelectionService {
     return [];
   }
 
-  handleFeatureInfoForLayer(
-    mapIndex: string,
-    features: Feature<Geometry>[],
-    layerId: string
-  ): void {
-    const relevantSelectIndices =
-      this.getAllActiveSelectIndicesOnMapIndex(mapIndex);
-    for (const selectIndex of relevantSelectIndices) {
-      const select = this.getActiveSelectInteraction(selectIndex)?.select;
-      if (select) {
-        const filterLayerIds = select.get(this.GGC_LAYER_IDS) as
-          | string[]
-          | undefined;
-        // Only add features that are within the filtered layerIds of the select interaction
-        if (!filterLayerIds || filterLayerIds.includes(layerId)) {
-          this.handleNewFeaturesForSelection(features, selectIndex, layerId);
-        }
-      }
-    }
-  }
-
   private getActiveSelectInteraction(
     selectIndex: string
   ): ActiveSelectInteraction | undefined {
@@ -254,9 +233,10 @@ export class CoreSelectionService {
   ): (feature: Feature<Geometry>, layer?: Layer) => boolean {
     return (feature: Feature<Geometry>, layer?: Layer): boolean => {
       if (!layer) {
-        // When an active WMS/WMTS feature is clicked, layer is undefined
-        // To trigger this feature, true should be returned
-        return true;
+        // !layer means that either
+        // a feature of a WMS or WMTS layer is clicked, which we are handling manually
+        // or a feature from the selection layer is clicked, which we can also ignore, as this layer is only for visualization
+        return false;
       }
 
       const layerId = layer.get("ggc-layer-id");
@@ -307,9 +287,11 @@ export class CoreSelectionService {
       const map = this.ggcMapService.getMap(mapIndex);
       const layers = map.getLayers();
       for (const layer of layers.getArray()) {
+        // update the selection visualization on the vector layers
         layer.changed();
       }
 
+      this.updateSelectionLayer(features, mapIndex);
       this.emitSelectionUpdatedEvent(selectIndex, features);
     };
 
@@ -342,6 +324,38 @@ export class CoreSelectionService {
     );
   }
 
+  private updateSelectionLayer(
+    featureCollection: Collection<Feature>,
+    mapIndex: string
+  ) {
+    this.ggcMapService.clearSelectionLayer(mapIndex);
+    this.ggcMapService.addFeaturesToSelectionLayer(
+      featureCollection.getArray(),
+      mapIndex
+    );
+  }
+
+  handleFeatureInfoForLayer(
+    mapIndex: string,
+    features: Feature<Geometry>[],
+    layerId: string
+  ): void {
+    const relevantSelectIndices =
+      this.getAllActiveSelectIndicesOnMapIndex(mapIndex);
+    for (const selectIndex of relevantSelectIndices) {
+      const select = this.getActiveSelectInteraction(selectIndex)?.select;
+      if (select) {
+        const filterLayerIds = select.get(this.GGC_LAYER_IDS) as
+          | string[]
+          | undefined;
+        // Only add features that are within the filtered layerIds of the select interaction
+        if (!filterLayerIds || filterLayerIds.includes(layerId)) {
+          this.handleNewFeaturesForSelection(features, selectIndex, layerId);
+        }
+      }
+    }
+  }
+
   private handleNewFeaturesForSelection(
     features: Feature<Geometry>[],
     selectIndex: string,
@@ -356,33 +370,23 @@ export class CoreSelectionService {
     const select = activeSelectInteraction.select;
     const mapIndex = activeSelectInteraction.mapIndex;
     const featureCollection = select.getFeatures();
-    let isManualActionPerformed = false;
 
     switch (select.get(this.GGC_SELECT_MODE)) {
       case "multi": {
-        isManualActionPerformed =
-          isManualActionPerformed ||
-          this.toggleFeatures(features, featureCollection, mapIndex, layerId);
+        this.toggleFeatures(features, featureCollection, mapIndex, layerId);
         break;
       }
       case "single": {
-        isManualActionPerformed =
-          isManualActionPerformed ||
-          this.replaceFeatures(features, featureCollection, layerId);
+        // Previous features are automatically deselected/removed in the selection interaction, so pushing new features is enough
+        this.addFeaturesToCollection(features, featureCollection, layerId);
         break;
       }
       default:
         return;
     }
-    this.ggcMapService.clearSelectionLayer(mapIndex);
-    this.ggcMapService.addFeaturesToSelectionLayer(
-      featureCollection.getArray(),
-      mapIndex
-    );
-    if (isManualActionPerformed) {
-      // Emit event manually, because manual action do not trigger select events automatically
-      this.emitSelectionUpdatedEvent(selectIndex, featureCollection);
-    }
+    this.updateSelectionLayer(featureCollection, mapIndex);
+    // Emit event manually, because manual action do not trigger select events automatically
+    this.emitSelectionUpdatedEvent(selectIndex, featureCollection);
   }
 
   private toggleFeatures(
@@ -391,22 +395,28 @@ export class CoreSelectionService {
     mapIndex: string,
     layerId: string
   ) {
-    let isManualActionPerformed = false;
     for (const featureToggle of featuresToToggle) {
       if (
-        !this.ggcMapService.isFeatureInSelectionLayer(featureToggle, mapIndex)
+        this.ggcMapService.isFeatureInSelectionLayer(featureToggle, mapIndex)
       ) {
         /**
-         * If a feature is inside the selection layer, it means that it is already selected.
-         * The select interaction toggles the feature in this case automatically.
-         * If a feature is not inside the selection layer, it should be manually added to the feature collection first.
+         * Manually remove the feature from the collection as it is already in the selection layer yet
+         */
+        const featureToBeRemoved = this.getEqualFeatureFromCollection(
+          featureCollection,
+          featureToggle
+        );
+        if (featureToBeRemoved) {
+          featureCollection.remove(featureToBeRemoved);
+        }
+      } else {
+        /**
+         * Manually add the feature to the collection as it is not in the selection layer yet
          */
         featureToggle.set(this.GGC_FEATURE_LAYERID, layerId);
         featureCollection.push(featureToggle);
-        isManualActionPerformed = true;
       }
     }
-    return isManualActionPerformed;
   }
 
   private buildFeatureCollectionForCoordinateFromFeatures(
@@ -440,11 +450,7 @@ export class CoreSelectionService {
   ): Map<string, Feature<Geometry>[]> {
     const layerFeatureMap = new Map<string, Feature<Geometry>[]>();
     for (const feature of features.getArray()) {
-      const layerId = feature.get(this.GGC_FEATURE_LAYERID);
-
-      if (!layerId) {
-        continue;
-      }
+      const layerId = feature.get(this.GGC_FEATURE_LAYERID) ?? "";
 
       let layerFeatures = layerFeatureMap.get(layerId);
       if (!layerFeatures) {
@@ -456,18 +462,15 @@ export class CoreSelectionService {
     return layerFeatureMap;
   }
 
-  private replaceFeatures(
+  private addFeaturesToCollection(
     newFeatures: Feature<Geometry>[],
     featureCollection: Collection<Feature<Geometry>>,
     layerId: string
   ) {
-    let manualActionPerformed = false;
     for (const feature of newFeatures) {
       feature.set(this.GGC_FEATURE_LAYERID, layerId);
       featureCollection.push(feature);
-      manualActionPerformed = true;
     }
-    return manualActionPerformed;
   }
 
   private getMapIndexFromSelectIndex(selectindex: string): string | undefined {
@@ -482,5 +485,43 @@ export class CoreSelectionService {
       }
     });
     return result;
+  }
+
+  private getEqualFeatureFromCollection(
+    featureCollection: Collection<Feature>,
+    feature: Feature
+  ) {
+    if (!featureCollection || !feature) {
+      return false;
+    }
+
+    return featureCollection
+      .getArray()
+      .find((collectionFeature: Feature) =>
+        this.areFeaturesEqual(collectionFeature, feature)
+      );
+  }
+
+  private areFeaturesEqual(feature1: Feature, feature2: Feature) {
+    if (feature1 == feature2) {
+      return true;
+    }
+
+    if (feature1.getId()) {
+      return feature1.getId() === feature2.getId();
+    }
+
+    if ((feature1 as any).values_.id) {
+      return (feature1 as any).values_.id === (feature2 as any).values_.id;
+    }
+
+    if ((feature1 as any).values_.external_fid) {
+      return (
+        (feature1 as any).values_.external_fid ===
+        (feature2 as any).values_.external_fid
+      );
+    }
+
+    return false;
   }
 }
