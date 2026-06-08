@@ -221,10 +221,12 @@ export class CoreSelectionService {
     for (const selectIndex of relevantSelectIndices) {
       const select = this.getActiveSelectInteraction(selectIndex)?.select;
       if (select) {
-        const filterLayerIds = select.get(this.GGC_LAYER_IDS);
+        const filterLayerIds = select.get(this.GGC_LAYER_IDS) as
+          | string[]
+          | undefined;
         // Only add features that are within the filtered layerIds of the select interaction
-        if (!filterLayerIds || layerId in filterLayerIds) {
-          this.handleNewFeaturesForSelection(features, selectIndex);
+        if (!filterLayerIds || filterLayerIds.includes(layerId)) {
+          this.handleNewFeaturesForSelection(features, selectIndex, layerId);
         }
       }
     }
@@ -340,27 +342,6 @@ export class CoreSelectionService {
         this.buildFeatureCollectionForCoordinateFromFeatures(features, mapIndex)
       )
     );
-  }
-
-  handleFeatureInfoForLayer(
-    mapIndex: string,
-    features: Feature<Geometry>[],
-    layerId: string
-  ): void {
-    const relevantSelectIndices =
-      this.getAllActiveSelectIndicesOnMapIndex(mapIndex);
-    for (const selectIndex of relevantSelectIndices) {
-      const select = this.getActiveSelectInteraction(selectIndex)?.select;
-      if (select) {
-        const filterLayerIds = select.get(this.GGC_LAYER_IDS) as
-          | string[]
-          | undefined;
-        // Only add features that are within the filtered layerIds of the select interaction
-        if (!filterLayerIds || filterLayerIds.includes(layerId)) {
-          this.handleNewFeaturesForSelection(features, selectIndex, layerId);
-        }
-      }
-    }
   }
 
   private handleNewFeaturesForSelection(
