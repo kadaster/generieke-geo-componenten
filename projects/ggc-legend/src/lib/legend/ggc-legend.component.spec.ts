@@ -1,5 +1,4 @@
-import type { MockedObject } from "vitest";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Legend } from "../model/legend.model";
 import { GgcLegendComponent } from "./ggc-legend.component";
@@ -12,12 +11,26 @@ import {
   MapboxStyle
 } from "../legend-mapbox/model/legend-mapbox.model";
 import { provideZoneChangeDetection } from "@angular/core";
+import { createMapboxStyleServiceMock } from "../../../../../src/test/mocks/ggc/MapboxStryleServiceMock";
+import { Polygon } from "ol/geom";
 
 describe("DatasetLegendComponent", () => {
+  vi.mock("ol/geom/Polygon", () => ({
+    fromExtent: () =>
+      new Polygon([
+        [
+          [0, 0],
+          [1, 0],
+          [1, 1],
+          [0, 0]
+        ]
+      ])
+  }));
+
   let component: GgcLegendComponent;
   let fixture: ComponentFixture<GgcLegendComponent>;
   let legendService: CoreLegendService;
-  let mapboxStyleServiceSpy: MockedObject<MapboxStyleService>;
+  let mapboxStyleServiceMock: MapboxStyleService;
 
   const collapsableDatasetLegend: Legend[] = [
     {
@@ -86,25 +99,13 @@ describe("DatasetLegendComponent", () => {
     ]
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
+    mapboxStyleServiceMock = createMapboxStyleServiceMock();
+
     TestBed.configureTestingModule({
-      providers: [CoreLegendService]
-    }).compileComponents();
-  }));
-
-  beforeEach(async () => {
-    mapboxStyleServiceSpy = {
-      getMapboxStyle: vi.fn().mockName("MapboxStyleService.getMapboxStyle"),
-      removeRasterLayers: vi
-        .fn()
-        .mockName("MapboxStyleService.removeRasterLayers"),
-      getItems: vi.fn().mockName("MapboxStyleService.getItems"),
-      getLayersids: vi.fn().mockName("MapboxStyleService.getLayersids")
-    };
-
-    await TestBed.configureTestingModule({
       providers: [
-        { provide: MapboxStyleService, useValue: mapboxStyleServiceSpy },
+        CoreLegendService,
+        { provide: MapboxStyleService, useValue: mapboxStyleServiceMock },
         provideZoneChangeDetection()
       ]
       // eventueel je componenten of andere providers
@@ -207,14 +208,13 @@ describe("DatasetLegendComponent", () => {
       "the html should contain a ggc-legend-mapbox component with a legendItem with title = (zee)water",
     async () => {
       component.legends = [legendMapbox];
-      mapboxStyleServiceSpy.getMapboxStyle.mockReturnValue(
-        // @ts-ignore
-        of(testStyle as MapboxStyle)
+      vi.mocked(mapboxStyleServiceMock.getMapboxStyle).mockReturnValue(
+        of(testStyle)
       );
-      mapboxStyleServiceSpy.getItems.mockReturnValue(
+      vi.mocked(mapboxStyleServiceMock.getItems).mockReturnValue(
         mapboxLegendItems as LegendItem[]
       );
-      mapboxStyleServiceSpy.getLayersids.mockReturnValue([
+      vi.mocked(mapboxStyleServiceMock.getLayersids).mockReturnValue([
         "Onderlegger Nederland"
       ]);
 
@@ -414,7 +414,7 @@ describe("DatasetLegendComponent", () => {
     component.removeLegend("id");
     expect(component["_legends"]()).toEqual([]);
   });
-  const testStyle = {
+  const testStyle: MapboxStyle = {
     version: 8,
     metadata: {
       "ol:webfonts":
@@ -424,8 +424,6 @@ describe("DatasetLegendComponent", () => {
     name: "",
     sprite: "",
     id: "achtergrondkaart_standaard",
-    pitch: 0,
-    center: [5.3878, 52.1561],
     glyphs:
       "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/resources/fonts/{fontstack}/{range}.pbf",
     layers: [
@@ -433,16 +431,12 @@ describe("DatasetLegendComponent", () => {
         id: "Onderlegger Nederland",
         type: LayerType.Fill,
         paint: {
-          "fill-color": [
-            "match",
-            ["get", "vistext"],
-            "(zee)water",
-            "#80BDE3",
-            "transparent"
-          ]
+          "fill-color": ["match", "(zee)water", "#80BDE3", "transparent"]
         },
         source: "brt",
-        "source-layer": "nederland"
+        "source-layer": "nederland",
+        filterCopy: [],
+        filter: []
       }
     ],
     sources: {

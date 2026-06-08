@@ -1,4 +1,3 @@
-import { type MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcDatasetTreeModelCreateService } from "../../core/ggc-dataset-tree-model-create.service";
 import { Dataset } from "../../model/theme/dataset.model";

@@ -1,5 +1,4 @@
-import type { MockedObject } from "vitest";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LayerSelectorComponent } from "../layer-selector/layer-selector.component";
 
 import { ThemeSelectorComponent } from "./theme-selector.component";

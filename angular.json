@@ -30,8 +30,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -114,8 +113,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -235,8 +233,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -277,8 +274,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -318,8 +314,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -389,8 +384,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -431,8 +425,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"],
-            "providersFile": "src/test.ts"
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {

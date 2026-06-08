@@ -1,21 +1,21 @@
 import { PiwikScriptLoaderService } from "./piwik-script-loader.service";
-import { TestBed, waitForAsync } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
+import { vi } from "vitest";
 
 describe("PiwikScriptLoaderService", () => {
   let piwikScriptLoaderService: PiwikScriptLoaderService;
   let mockPiwikScriptElement: HTMLScriptElement;
 
-  beforeEach(waitForAsync(() => TestBed.configureTestingModule({})));
-
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [PiwikScriptLoaderService]
+    });
     mockPiwikScriptElement = document.createElement("script");
     mockPiwikScriptElement.id = "piwik-script";
-
-    piwikScriptLoaderService = TestBed.inject(PiwikScriptLoaderService);
-
     vi.spyOn(document, "getElementById").mockReturnValue(
       mockPiwikScriptElement
     );
+    piwikScriptLoaderService = TestBed.inject(PiwikScriptLoaderService);
   });
 
   it("should be created", () => {
