@@ -1,11 +1,6 @@
-import { Component, inject, OnInit, AfterViewInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import {
-  GgcMapComponent,
-  GgcMapService,
-  GgcSelectionService,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import {
   FeatureInfoDisplayType,
   GgcFeatureInfoComponent,
@@ -21,7 +16,6 @@ import { FormsModule } from "@angular/forms";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
-import { MapComponentEventTypes } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-feature-info-tabs",
@@ -43,7 +37,8 @@ export class ExampleFeatureInfoTabsComponent
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-tabs",
     title: "Feature Info weergeven in tabs",
-    introduction: "Toon feature info voor één of meer kaartlagen.",
+    introduction:
+      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS- en GeoJSON-kaart(en) getoond worden in een dialoog met tabbladen.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.FEATURE_INFO],
@@ -93,8 +88,6 @@ export class ExampleFeatureInfoTabsComponent
     { layerName: "Gemeenten", tabIndex: 2 }
   ] as SortFilterConfig[];
   private tabOrder = this.defaultTabOrder;
-
-  private readonly selectionService = inject(GgcSelectionService);
 
   ngOnInit() {
     this.httpClient

@@ -12,7 +12,11 @@ import { ModifyInteractionEvent } from "../../model/modify-interaction-event.mod
 import { CoreDrawService } from "./core-draw.service";
 import { Coordinate } from "ol/coordinate";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
-import { DEFAULT_MAPINDEX, MapComponentEvent, MapComponentDrawTypes } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentDrawTypes
+} from "@kadaster/ggc-models";
 import { StyleLike } from "ol/style/Style";
 import { CenterModifyOptions } from "../center-interaction/center-modify";
 

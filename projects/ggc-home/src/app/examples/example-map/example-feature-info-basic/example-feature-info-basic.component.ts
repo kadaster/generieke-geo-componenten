@@ -1,10 +1,6 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import {
-  GgcMapComponent,
-  GgcSelectionService,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -25,7 +21,8 @@ export class ExampleFeatureInfoBasicComponent
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-basic",
     title: "Feature Info weergeven",
-    introduction: "Toon feature info voor één of meer kaartlagen.",
+    introduction:
+      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS- en GeoJSON-kaart(en) getoond worden in een dialoog met tabbladen.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.FEATURE_INFO],
@@ -38,7 +35,6 @@ export class ExampleFeatureInfoBasicComponent
   // DOCS-SKIP:END
   protected mapIndex = "featureInfoBasic";
   protected mapConfig: Webservice[];
-  private readonly selectionService = inject(GgcSelectionService);
 
   ngOnInit() {
     this.httpClient
