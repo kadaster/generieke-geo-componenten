@@ -11,6 +11,13 @@ export default defineConfig({
       { find: /^ol\/Map$/, replacement: resolveOLMock("Map.ts") },
       { find: /^ol\/Feature$/, replacement: resolveOLMock("Feature.ts") },
       {
+        find: /^ol\/layer\/Vector(\.js)?$/,
+        replacement: path.resolve(
+          __dirname,
+          "src/test/mocks/open-layers/layer/Vector.ts"
+        )
+      },
+      {
         find: /^ol\/style\/Text$/,
         replacement: resolveOLMock("style/Text.ts")
       },
