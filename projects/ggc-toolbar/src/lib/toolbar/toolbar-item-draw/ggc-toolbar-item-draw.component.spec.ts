@@ -1,15 +1,8 @@
 import type { MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
-import {
-  ComponentFixture,
-  fakeAsync,
-  flushMicrotasks,
-  TestBed,
-  waitForAsync
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcToolbarItemDrawComponent } from "./ggc-toolbar-item-draw.component";
-import SpyObj = MockedObject;
 import { provideZoneChangeDetection } from "@angular/core";
 import { GgcDrawService } from "@kadaster/ggc-map/src/lib/drawing/service/ggc-draw.service";
 import {
@@ -23,10 +16,16 @@ describe("ToolbarItemDrawComponent", () => {
   let fixture: ComponentFixture<GgcToolbarItemDrawComponent>;
   let debugElement: DebugElement;
 
-  let drawServiceSpy: SpyObj<GgcDrawService>;
-  let connectServiceSpy: SpyObj<GgcToolbarConnectService>;
+  let drawServiceSpy: Pick<
+    MockedObject<GgcDrawService>,
+    "startDraw" | "stopDraw" | "clearLayer"
+  >;
+  let connectServiceSpy: Pick<
+    MockedObject<GgcToolbarConnectService>,
+    "getDrawService"
+  >;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     drawServiceSpy = {
       startDraw: vi.fn().mockName("GgcDrawService.startDraw"),
       stopDraw: vi.fn().mockName("GgcDrawService.stopDraw"),
@@ -36,10 +35,7 @@ describe("ToolbarItemDrawComponent", () => {
     connectServiceSpy = {
       getDrawService: vi
         .fn()
-        .mockName("GgcToolbarConnectService.getDrawService"),
-      getMapComponentDrawTypes: vi
-        .fn()
-        .mockName("GgcToolbarConnectService.getMapComponentDrawTypes")
+        .mockName("GgcToolbarConnectService.getDrawService")
     };
 
     connectServiceSpy.getDrawService.mockResolvedValue(drawServiceSpy);
@@ -54,9 +50,7 @@ describe("ToolbarItemDrawComponent", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(async () => {
     fixture = TestBed.createComponent(GgcToolbarItemDrawComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
@@ -101,46 +95,46 @@ describe("ToolbarItemDrawComponent", () => {
       );
     });
 
-    it("should emit STOP when stopDrawing is called", fakeAsync(() => {
+    it("should emit STOP when stopDrawing is called", async () => {
       component.stopDrawing();
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.stopDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.STOP);
-    }));
+    });
 
-    it("should emit POINT when draw('Point') is called", fakeAsync(() => {
+    it("should emit POINT when draw('Point') is called", async () => {
       component.draw("Point");
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.POINT);
-    }));
+    });
 
-    it("should emit LINE when draw('Line') is called", fakeAsync(() => {
+    it("should emit LINE when draw('Line') is called", async () => {
       component.draw("Line");
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.LINE);
-    }));
+    });
 
-    it("should emit RECTANGLE when draw('Rectangle') is called", fakeAsync(() => {
+    it("should emit RECTANGLE when draw('Rectangle') is called", async () => {
       component.draw("Rectangle");
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.RECTANGLE);
-    }));
+    });
 
-    it("should emit POLYGON when draw('Polygon') is called", fakeAsync(() => {
+    it("should emit POLYGON when draw('Polygon') is called", async () => {
       component.draw("Polygon");
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.POLYGON);
-    }));
+    });
 
-    it("should emit CLEAR when eraseDrawLayer is called", fakeAsync(() => {
+    it("should emit CLEAR when eraseDrawLayer is called", async () => {
       component.eraseDrawLayer();
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.clearLayer).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemDrawType.CLEAR);
-    }));
+    });
   });
 });

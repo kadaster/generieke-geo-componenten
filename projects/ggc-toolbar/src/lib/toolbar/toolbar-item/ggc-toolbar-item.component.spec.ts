@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { GgcToolbarItemComponent } from "./ggc-toolbar-item.component";
 
@@ -6,11 +6,11 @@ describe("ToolbarButtonComponent", () => {
   let component: GgcToolbarItemComponent;
   let fixture: ComponentFixture<GgcToolbarItemComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcToolbarItemComponent]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcToolbarItemComponent);

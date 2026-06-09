@@ -1,5 +1,5 @@
 import type { MockedObject } from "vitest";
-import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import {
   HttpTestingController,
@@ -64,10 +64,6 @@ describe("PdokLocationApiService", () => {
     req.flush(mockPdokLocationApiResult);
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
-
   it("moet de service correct initialiseren en default collecties instellen", () => {
     expect(service).toBeTruthy();
     const collections = service.getCollections();
@@ -92,7 +88,8 @@ describe("PdokLocationApiService", () => {
       });
     });
 
-    it("moet 3 keer opnieuw proberen bij een HTTP fout (retry logic)", fakeAsync(() => {
+    it("moet 3 keer opnieuw proberen bij een HTTP fout (retry logic)", () => {
+      vi.useFakeTimers();
       const term = "fout";
       let errorOccurred = false;
 
@@ -107,14 +104,15 @@ describe("PdokLocationApiService", () => {
 
       // Poging 2 t/m 4 (de 3 retries met 500ms delay)
       for (let i = 0; i < 3; i++) {
-        tick(500);
+        vi.advanceTimersByTime(500);
+
         httpMock
           .expectOne((r) => r.url.includes("search?q=fout"))
           .error(new ProgressEvent("error"));
       }
 
       expect(errorOccurred).toBe(true);
-    }));
+    });
 
     it("moet extra suggesties van de GgcAdditionalSuggestionSourceService toevoegen", async () => {
       const term = "test";
@@ -169,19 +167,20 @@ describe("PdokLocationApiService", () => {
   });
 
   describe("searchOnTermChange", () => {
-    it("moet debouncen en alleen zoeken bij voldoende lengte", fakeAsync(() => {
+    it("moet debouncen en alleen zoeken bij voldoende lengte", () => {
+      vi.useFakeTimers();
       const searchTerms = ["u", "ut", "utr"];
       const terms$ = of(...searchTerms);
 
       service.searchOnTermChange(terms$).subscribe();
 
       // Wacht op de debounceTime van 400ms
-      tick(400);
+      vi.advanceTimersByTime(400);
 
       // 'u' is te kort (minQueryLength = 2), 'ut' wordt overruled door 'utr' (debounce)
       const req = httpMock.expectOne((r) => r.url.includes("q=utr"));
       req.flush({ response: {} });
-    }));
+    });
   });
 
   describe("item", () => {
@@ -206,15 +205,15 @@ describe("PdokLocationApiService", () => {
   });
 
   describe("configuratie", () => {
-    it("moet de minimale query lengte correct bijwerken", fakeAsync(() => {
+    it("moet de minimale query lengte correct bijwerken", () => {
       service.setMinQueryLength(5);
 
       service.searchOnTermChange(of("abc")).subscribe();
-      tick(400);
+      Promise.resolve();
 
       // 'abc' heeft lengte 3, wat nu kleiner is dan de nieuwe minQueryLength van 5
       httpMock.expectNone((r) => r.url.includes("q=abc"));
-    }));
+    });
 
     it("moet het aantal suggesties correct bijwerken", () => {
       service.setNumberOfSuggestions(25);

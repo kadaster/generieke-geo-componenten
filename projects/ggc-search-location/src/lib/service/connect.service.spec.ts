@@ -30,7 +30,7 @@ describe("GgcSearchLocationConnectService", () => {
    * Mock dynamic import
    */
   function mockModule() {
-    vi.spyOn<any>(service as any, "loadMapModule").mockResolvedValue({
+    vi.spyOn(service as any, "loadMapModule").mockResolvedValue({
       GgcMapService: class {}
     });
   }
@@ -58,7 +58,7 @@ describe("GgcSearchLocationConnectService", () => {
     });
 
     it("should return undefined when module load fails", async () => {
-      vi.spyOn<any>(service as any, "loadMapModule").mockRejectedValue(
+      vi.spyOn(service as any, "loadMapModule").mockRejectedValue(
         new Error("fail")
       );
 

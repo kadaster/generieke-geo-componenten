@@ -7,8 +7,15 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-global.ResizeObserver = class {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+globalThis.ResizeObserver = class {
+  observe() {
+    // mock
+  }
+  unobserve() {
+    // mock
+  }
+  disconnect() {
+    // mock
+  }
 } as any;
+
