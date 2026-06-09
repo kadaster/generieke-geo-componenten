@@ -45,6 +45,7 @@ export class GgcFeatureInfoTabsComponent
   @Input() showEmptyTabs = false; // default = false, lege tabbladen worden default niet getoond
   @Input() ariaLabelledBy?: string; // if not provided, uses ariaLabel
   @Input() ariaLabel = "feature-info"; // if both ariaLabelled and ariaLabel not provided, use default "feature-info"
+  @Input() autoConnect = true;
   @Output() events: EventEmitter<FeatureInfoComponentEvent> =
     new EventEmitter<FeatureInfoComponentEvent>();
   protected tabComponent?: TemplateRef<any>;
@@ -69,8 +70,11 @@ export class GgcFeatureInfoTabsComponent
   }
 
   ngOnInit() {
-    void this.subscribeToMapSelection(this.mapIndex);
-    //this.onDataUpdate();
+    if (this.autoConnect) {
+      this.subscribeToMapSelection(this.mapIndex);
+    } else {
+      this.onDataUpdate();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -80,9 +84,7 @@ export class GgcFeatureInfoTabsComponent
   }
 
   ngOnDestroy() {
-    if (this.subscriptionSelection) {
-      this.subscriptionSelection.unsubscribe();
-    }
+    this.subscriptionSelection?.unsubscribe();
   }
 
   onTabClicked(tab: string): void {

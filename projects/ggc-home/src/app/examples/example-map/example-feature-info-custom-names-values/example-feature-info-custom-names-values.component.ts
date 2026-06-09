@@ -57,7 +57,6 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
         this.mapConfig = data as Webservice[];
       });
     this.setCustomFeatureInfoNames();
-    this.selectionService.startSelect({}, this.mapIndex);
     this.featureInfoConfigService.setConfig([
       {
         layerName: "Gemeenten",

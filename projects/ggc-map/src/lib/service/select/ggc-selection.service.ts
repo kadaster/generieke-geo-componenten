@@ -116,6 +116,7 @@ export class GgcSelectionService {
     mapIndex: string = DEFAULT_MAPINDEX,
     selectIndex: string | undefined = undefined
   ): void {
+    console.log("startSelect");
     this.coreSelectionService.startSelect(options, mapIndex, selectIndex);
   }
 

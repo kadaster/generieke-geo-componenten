@@ -113,8 +113,11 @@ export class GgcFeatureInfoComponent
    * het actieve feature wordt gehighlighted.
    * Default: `true`.
    */
-  @Input() autoconnect = true;
+  @Input() autoConnect = true;
 
+  @Input() autoStartSelect = true;
+
+  @Input() selectionOptions: object | undefined;
   /**
    * EventEmitter voor het versturen van component-gerelateerde events.
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
@@ -176,11 +179,12 @@ export class GgcFeatureInfoComponent
   }
 
   ngOnInit() {
-    void this.subscribeToMapSelection(this.mapIndex);
-
-    this.subscription = this.eventService.events$.subscribe((event) =>
-      this.handleFeatureInfoEvent(event)
-    );
+    if (this.autoConnect) {
+      this.subscribeToMapSelection(this.mapIndex);
+      this.subscription = this.eventService.events$.subscribe((event) =>
+        this.handleFeatureInfoEvent(event)
+      );
+    }
   }
 
   ngAfterViewInit(): void {
@@ -188,6 +192,12 @@ export class GgcFeatureInfoComponent
       "ggc-feature-info-tabs"
     );
     this.hasTabs = !!featureInfoTabs;
+    if (this.autoConnect && this.autoStartSelect) {
+      this.featureInfoMapConnectService.startSelect(
+        { style: null } as any,
+        this.mapIndex
+      );
+    }
   }
 
   /**

@@ -111,11 +111,6 @@ export class ExampleFeatureInfoTabsComponent
     this.featureInfoConfigService.setConfig(this.tabOrder);
   }
 
-  onMapEvent(event: Event) {
-    if (event.type === MapComponentEventTypes.MAPINITIALIZED) {
-      this.selectionService.startSelect({ style: null }, this.mapIndex);
-    }
-  }
   public toggleFeatureInfoDisplayType(): void {
     this.featureInfoDisplayType =
       this.featureInfoDisplayType === FeatureInfoDisplayType.LIST

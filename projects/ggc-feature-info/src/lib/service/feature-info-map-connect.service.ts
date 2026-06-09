@@ -27,6 +27,13 @@ export class FeatureInfoMapConnectService {
     );
   }
 
+  async startSelect(object: any, mapIndex: string) {
+    ((await this.connectService.getMapSelectionService()) as any)?.startSelect(
+      object,
+      mapIndex
+    );
+  }
+
   private async clearHighlightLayer(
     mapIndex: string = DEFAULT_MAPINDEX
   ): Promise<MapComponentEvent> {
