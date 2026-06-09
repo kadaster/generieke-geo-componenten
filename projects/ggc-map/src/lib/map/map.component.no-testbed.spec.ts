@@ -25,7 +25,7 @@ describe("MapComponent(no-testbed), processEvent", () => {
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapServiceSpy: jasmine.SpyObj<CoreMapService>;
   let coreDrawServiceSpy: jasmine.SpyObj<CoreDrawService>;
-  let coreLoadingServiceService: jasmine.SpyObj<CoreLoadingService>;
+  let coreLoadingServiceSpy: jasmine.SpyObj<CoreLoadingService>;
   let mapEventsServiceSpy: jasmine.SpyObj<CoreMapEventsService>;
   let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
 
@@ -46,8 +46,9 @@ describe("MapComponent(no-testbed), processEvent", () => {
     ]);
     coreMapServiceSpy.getLayerChangedObservable.and.returnValue(of());
     coreDrawServiceSpy = createSpyObj("CoreDrawService", ["addFeatureToLayer"]);
-    coreLoadingServiceService = createSpyObj("CoreLoadingService", [
-      "addMapLoaders"
+    coreLoadingServiceSpy = createSpyObj("CoreLoadingService", [
+      "addMapLoaders",
+      "destroyLoadersForMap"
     ]);
     mapEventsServiceSpy = createSpyObj("MapEventsService", [
       "emitSingleclickEventForMap",
@@ -60,7 +61,7 @@ describe("MapComponent(no-testbed), processEvent", () => {
       providers: [
         { provide: CoreMapService, useValue: coreMapServiceSpy },
         { provide: CoreDrawService, useValue: coreDrawServiceSpy },
-        { provide: CoreLoadingService, useValue: coreLoadingServiceService },
+        { provide: CoreLoadingService, useValue: coreLoadingServiceSpy },
         { provide: CoreMapEventsService, useValue: mapEventsServiceSpy },
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
         provideZoneChangeDetection()

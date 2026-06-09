@@ -5,7 +5,6 @@ import { Geometry } from "ol/geom";
 import { Observable } from "rxjs";
 import {
   DrawInteractionEvent,
-  MapComponentDrawTypes,
   StyleLikeMap
 } from "../../model/draw-interaction-event.model";
 import { DrawOptions } from "../../model/draw-options";
@@ -13,7 +12,7 @@ import { ModifyInteractionEvent } from "../../model/modify-interaction-event.mod
 import { CoreDrawService } from "./core-draw.service";
 import { Coordinate } from "ol/coordinate";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
-import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, MapComponentEvent, MapComponentDrawTypes } from "@kadaster/ggc-models";
 import { StyleLike } from "ol/style/Style";
 import { CenterModifyOptions } from "../center-interaction/center-modify";
 

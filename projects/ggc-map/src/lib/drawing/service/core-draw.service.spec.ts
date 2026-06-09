@@ -10,7 +10,6 @@ import VectorSource from "ol/source/Vector";
 import { CoreMapService } from "../../map/service/core-map.service";
 import {
   DrawInteractionEventTypes,
-  MapComponentDrawTypes,
   StyleLikeMap
 } from "../../model/draw-interaction-event.model";
 import { MapComponentEventTypes } from "../../model/map-component-event.model";
@@ -27,6 +26,7 @@ import Spy = jasmine.Spy;
 import View from "ol/View";
 import { CenterModify } from "../center-interaction/center-modify";
 import { customDrawStyle, customFinishDrawStyle } from "./draw-styles";
+import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 describe("CoreDrawService", () => {
   const mapIndex = "TEST_MAP";

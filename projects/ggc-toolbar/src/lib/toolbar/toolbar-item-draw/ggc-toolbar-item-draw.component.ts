@@ -4,8 +4,9 @@ import {
   ToolbarItemDrawType
 } from "../../event/toolbar-item-draw-event";
 import { NgClass } from "@angular/common";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, MapComponentDrawTypes } from "@kadaster/ggc-models";
 import { GgcToolbarConnectService } from "../../service/connect.service";
+import { from } from "rxjs";
 
 /**
  * Component voor tekenen op de kaart binnen een `ggc-toolbar-item`.
@@ -88,17 +89,13 @@ export class GgcToolbarItemDrawComponent {
   protected activeDraw: DrawType | "move" | "edit" | undefined;
   private readonly connectService = inject(GgcToolbarConnectService);
 
-  private drawService: any;
-  private mapComponentDrawTypes: any;
+  private drawServicePromise?: Promise<any>;
 
-  constructor() {
-    this.initDrawService();
-  }
-
-  private async initDrawService(): Promise<void> {
-    this.drawService = await this.connectService.getDrawService();
-    this.mapComponentDrawTypes =
-      await this.connectService.getMapComponentDrawTypes();
+  private getDrawService(): Promise<any> {
+    if (!this.drawServicePromise) {
+      this.drawServicePromise = this.connectService.getDrawService();
+    }
+    return this.drawServicePromise;
   }
 
   /**
@@ -106,9 +103,9 @@ export class GgcToolbarItemDrawComponent {
    * @param type Het type tekenactie (Point, Line, Circle, Rectangle, Polygon).
    */
   draw(type: DrawType): void {
-    if (this.drawService) {
+    from(this.getDrawService()).subscribe((service) => {
       this.activeDraw = type;
-      this.drawService.startDraw(
+      service.startDraw(
         this.layer,
         this.getMapComponentDrawType(type),
         {},
@@ -117,69 +114,81 @@ export class GgcToolbarItemDrawComponent {
       this.drawItemClicked.emit({
         toolbarItemName: this.getToolbarItemDrawType(type)
       });
-    }
+    });
   }
 
   /**
    * Start de verplaatsactie voor tekeningen.
    */
   move(): void {
-    if (this.drawService) {
-      this.activeDraw = "move";
-      this.drawService.startMove(this.layer, this.mapIndex);
-      this.drawItemClicked.emit({ toolbarItemName: ToolbarItemDrawType.MOVE });
-    }
+    from(this.getDrawService()).subscribe((service) => {
+      if (service) {
+        this.activeDraw = "move";
+        service.startMove(this.layer, this.mapIndex);
+        this.drawItemClicked.emit({
+          toolbarItemName: ToolbarItemDrawType.MOVE
+        });
+      }
+    });
   }
 
   /**
    * Start de bewerkactie voor tekeningen.
    */
   edit(): void {
-    if (this.drawService) {
-      this.activeDraw = "edit";
-      this.drawService.startModify(this.layer, this.mapIndex);
-      this.drawItemClicked.emit({ toolbarItemName: ToolbarItemDrawType.EDIT });
-    }
+    from(this.getDrawService()).subscribe((service) => {
+      if (service) {
+        this.activeDraw = "edit";
+        service.startModify(this.layer, this.mapIndex);
+        this.drawItemClicked.emit({
+          toolbarItemName: ToolbarItemDrawType.EDIT
+        });
+      }
+    });
   }
 
   /**
    * Stopt de actieve tekenactie.
    */
   stopDrawing() {
-    if (this.drawService) {
-      this.activeDraw = undefined;
-      this.drawService.stopDraw(this.mapIndex);
-      this.drawItemClicked.emit({ toolbarItemName: ToolbarItemDrawType.STOP });
-    }
+    from(this.getDrawService()).subscribe((service) => {
+      if (service) {
+        this.activeDraw = undefined;
+        service.stopDraw(this.mapIndex);
+        this.drawItemClicked.emit({
+          toolbarItemName: ToolbarItemDrawType.STOP
+        });
+      }
+    });
   }
 
   /**
    * Verwijdert alle tekeningen uit de laag.
    */
   eraseDrawLayer() {
-    if (this.drawService) {
-      this.activeDraw = undefined;
-      this.drawService.clearLayer(this.layer, this.mapIndex);
-      this.drawItemClicked.emit({ toolbarItemName: ToolbarItemDrawType.CLEAR });
-    }
+    from(this.getDrawService()).subscribe((service) => {
+      if (service) {
+        this.activeDraw = undefined;
+        service.clearLayer(this.layer, this.mapIndex);
+        this.drawItemClicked.emit({
+          toolbarItemName: ToolbarItemDrawType.CLEAR
+        });
+      }
+    });
   }
 
   private getMapComponentDrawType(type: DrawType) {
-    if (this.mapComponentDrawTypes) {
-      switch (type) {
-        case "Circle":
-          return this.mapComponentDrawTypes.CIRCLE;
-        case "Line":
-          return this.mapComponentDrawTypes.LINESTRING;
-        case "Point":
-          return this.mapComponentDrawTypes.POINT;
-        case "Rectangle":
-          return this.mapComponentDrawTypes.RECTANGLE;
-        default:
-          return this.mapComponentDrawTypes.POLYGON;
-      }
-    } else {
-      return type;
+    switch (type) {
+      case "Circle":
+        return MapComponentDrawTypes.CIRCLE;
+      case "Line":
+        return MapComponentDrawTypes.LINESTRING;
+      case "Point":
+        return MapComponentDrawTypes.POINT;
+      case "Rectangle":
+        return MapComponentDrawTypes.RECTANGLE;
+      default:
+        return MapComponentDrawTypes.POLYGON;
     }
   }
 

@@ -2,8 +2,8 @@
   [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
   [extraConfigLabel]="`DatasetTree Configuration (json)`"
-  pathKaartConfig="example-dataset-tree/kaartconfig.json"
-  pathExtraConfig="example-dataset-tree/treeconfig.json"
+  pathKaartConfig="example-dataset-tree/example-dataset-tree-templates/kaartconfig.json"
+  pathExtraConfig="example-dataset-tree/example-dataset-tree-templates/treeconfig.json"
   [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
@@ -37,6 +37,13 @@
       klikbaar element in het dataset-structuurcomponent. Het toevoegen van
       interactieve elementen aan dit custom template kan invloed hebben op de
       toegankelijkheid van de dataset-tree.
+    </p>
+    <p>
+      Voor de kaartlagen Landsgrens en Provincies is een
+      <code>minResolution</code> en <code>maxResolution</code> ingesteld in de
+      kaartconfiguratie. In de dataset-tree worden deze lagen uitgeschakeld als
+      je buiten dit zoomniveau gaat. Als de laag aan stond en je komt weer
+      binnen het zoomniveau zal deze weer geactiveerd worden.
     </p>
   </div>
   <div page-functionality>

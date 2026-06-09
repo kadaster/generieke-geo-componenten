@@ -88,6 +88,7 @@ export class ExampleFormatComponent {
       .subscribe({
         next: (response) => {
           const contentType = response.headers.get("Content-Type") ?? "";
+          // When deployed, the 404 is replaced with the index.html. To catch this case, this if statement is needed
           if (!contentType.includes("text/html")) {
             this._pathCodeScss = "code/examples/" + pathScss;
             this.urlCodeScss = this.baseUrlCode + pathScss;
@@ -105,18 +106,27 @@ export class ExampleFormatComponent {
     if (!this._pathKaartConfig) {
       const pathKaartconfig =
         pathModule.split("/").slice(0, -1).join("/") + "/kaartconfig.json";
-      this.httpClient.get("code/examples/" + pathKaartconfig).subscribe({
-        next: () => {
-          this._pathKaartConfig = "code/examples/" + pathKaartconfig;
-          this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
-        },
-        error: (err) => {
-          if (err.status !== 404) {
-            this._pathKaartConfig = "code/examples/" + pathKaartconfig;
-            this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
+      this.httpClient
+        .get("code/examples/" + pathKaartconfig, {
+          responseType: "text",
+          observe: "response"
+        })
+        .subscribe({
+          next: (response) => {
+            const contentType = response.headers.get("Content-Type") ?? "";
+            // When deployed, the 404 is replaced with the index.html. To catch this case, this if statement is needed
+            if (!contentType.includes("text/html")) {
+              this._pathKaartConfig = "code/examples/" + pathKaartconfig;
+              this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
+            }
+          },
+          error: (err) => {
+            if (err.status !== 404) {
+              this._pathKaartConfig = "code/examples/" + pathKaartconfig;
+              this.urlKaartConfig = this.baseUrlCode + pathKaartconfig;
+            }
           }
-        }
-      });
+        });
     }
   }
 }

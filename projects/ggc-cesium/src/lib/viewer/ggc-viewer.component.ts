@@ -36,14 +36,12 @@ import {
   CameraValues,
   GeoJsonConfig,
   LookAtObject,
-  SelectionConfig,
   TilesetConfig,
   ViewerOptions,
   Webservice
 } from "../model/interfaces";
 import { CameraOptionsType } from "../model/enums";
 import { CoreViewerService } from "../service/core-viewer.service";
-import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { CoreCameraService } from "../service/core-camera.service";
 import { GeoJsonLayerService } from "../layers/geojson-layer.service";
 import { GgcViewerService } from "../service/ggc-viewer.service";
@@ -59,16 +57,7 @@ window.CESIUM_BASE_URL = "/assets/cesium/";
   styleUrls: ["./ggc-viewer.component.scss"]
 })
 export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @HostBinding("style") style: SafeStyle;
-
   @ViewChild("cesiumViewer") cesiumViewer!: ElementRef;
-
-  private refreshLogoContainer() {
-    const newStyle = this.pHideLogo
-      ? "--displayLogo: none;"
-      : "--displayLogo: block;";
-    this.style = this.sanitizer.bypassSecurityTrustStyle(newStyle);
-  }
 
   @Output() ready: EventEmitter<null> = new EventEmitter<null>();
   @Output() cameraEvent: EventEmitter<CameraValues> =
@@ -85,7 +74,6 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly coreViewerService = inject(CoreViewerService);
   private readonly viewerService = inject(GgcViewerService);
   private readonly coreSelectionService = inject(CoreSelectionService);
-  private readonly sanitizer = inject(DomSanitizer);
   private readonly coreCameraService = inject(CoreCameraService);
   private readonly geoJsonLayerService = inject(GeoJsonLayerService);
   private readonly ggcSharedLayerService = inject(GgcSharedLayerService);
@@ -100,6 +88,11 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private _webServices: Webservice[];
   private isInitialized = false;
 
+  @HostBinding("style.--displayLogo")
+  get displayLogo(): string {
+    return this.pHideLogo ? "none" : "block";
+  }
+
   @Input()
   set webServices(webservices: Webservice[]) {
     this._webServices = webservices;
@@ -108,9 +101,9 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  @Input() set hideLogo(hideLogo: boolean) {
+  @Input()
+  set hideLogo(hideLogo: boolean) {
     this.pHideLogo = hideLogo;
-    this.refreshLogoContainer();
   }
 
   @Input()
@@ -211,7 +204,6 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private init() {
-    this.refreshLogoContainer();
     this.initLight();
     this.tiles3DService.setLayers(this.viewer.scene.primitives);
     this.wmtsService.setLayers(this.viewer.scene.imageryLayers);
@@ -256,15 +248,6 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       navigationHelpButton: false,
       navigationInstructionsInitiallyVisible: false
     } as Viewer.ConstructorOptions);
-  }
-
-  private initSelections(selections: SelectionConfig[]) {
-    if (!this.viewer) {
-      return;
-    }
-    if (selections !== undefined) {
-      this.coreSelectionService.initializeSelections(selections);
-    }
   }
 
   private initLight() {

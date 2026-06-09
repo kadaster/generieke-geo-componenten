@@ -90,7 +90,7 @@ describe("LayerToggleComponent", () => {
       eventTrigger: LayerChangedEventTrigger.LAYER_ADDED
     });
 
-    expect(component["title"]).toBe("titleNew");
+    expect(component["title"]()).toBe("titleNew");
     expect(component["visible"]()).toBe(true);
   });
 

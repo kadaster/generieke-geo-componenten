@@ -1,12 +1,22 @@
 {
   "name": "@kadaster/ggc-legend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+    "@angular/core": "^21.0.0",
+    "@kadaster/ggc-cesium": "*",
+    "@kadaster/ggc-map": "^2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@kadaster/ggc-cesium": {
+      "optional": true
+    },
+    "@kadaster/ggc-map": {
+      "optional": true
+    }
   },
   "dependencies": {
-    "@kadaster/ggc-models": ">=0",
+    "@kadaster/ggc-models": "^2.0.0",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

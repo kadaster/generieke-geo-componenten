@@ -9,7 +9,7 @@ import {
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models/src/lib/constants";
+import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";

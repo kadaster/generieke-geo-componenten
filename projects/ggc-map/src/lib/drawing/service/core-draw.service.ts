@@ -13,13 +13,13 @@ import Draw, {
 } from "ol/interaction/Draw";
 import { unByKey } from "ol/Observable";
 import { Observable, Subject } from "rxjs";
-import { MapComponentEvent, ObservableMapWrapper } from "@kadaster/ggc-models";
+import { MapComponentEvent, ObservableMapWrapper,
+  MapComponentDrawTypes } from "@kadaster/ggc-models";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { calculateAreaOrLength } from "../measure-styles";
 import {
   DrawInteractionEvent,
   DrawInteractionEventTypes,
-  MapComponentDrawTypes,
   StyleLikeMap
 } from "../../model/draw-interaction-event.model";
 import { DrawOptions } from "../../model/draw-options";

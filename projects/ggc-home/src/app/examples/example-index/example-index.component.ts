@@ -43,6 +43,8 @@ import { ExampleMapSelectDatasetTreeComponent } from "../example-map/example-map
 import { ExampleFeatureInfoBasicComponent } from "../example-map/example-feature-info-basic/example-feature-info-basic.component";
 import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-info-tabs/example-feature-info-tabs.component";
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
+import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
+
 
 interface GroupedCards {
   theme: string;
@@ -109,7 +111,8 @@ export class ExampleIndexComponent {
     new ExampleMapZoomScalePositionComponent().componentInfo,
     new ExampleFeatureInfoBasicComponent().componentInfo,
     new ExampleFeatureInfoTabsComponent().componentInfo,
-    new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo
+    new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
+    new Example3dBasicComponent().componentInfo
   ];
 
   private readonly selectedComponentsKey = "selectedComponents";
