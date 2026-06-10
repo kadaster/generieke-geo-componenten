@@ -1,4 +1,4 @@
-import type { Mock, MockedObject } from "vitest";
+import type { Mock, MockedObject, MockInstance } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcControlsComponent } from "./ggc-controls.component";
 import { CoreViewerService } from "../service/core-viewer.service";
@@ -10,13 +10,14 @@ import { By } from "@angular/platform-browser";
 import { cameraUtils, DEFAULT_POSITIONSHIFT } from "../utils/camera-utils";
 import { LookAtPosition } from "../model/interfaces";
 import { vi } from "vitest";
-import SpyObj = MockedObject;
-import Spy = Mock;
 
 describe("ControlsComponent", () => {
   let component: GgcControlsComponent;
   let fixture: ComponentFixture<GgcControlsComponent>;
-  let coreViewerServiceSpy: SpyObj<CoreViewerService>;
+  let coreViewerServiceSpy: Pick<
+    MockedObject<CoreViewerService>,
+    "getViewerObservable" | "getViewer"
+  >;
   let cesiumMock: Partial<Viewer>;
   const viewerSubject: Subject<Viewer> = new Subject<Viewer>();
 
@@ -86,7 +87,7 @@ describe("ControlsComponent", () => {
   });
 
   it("should call flyToLookAtPosition when setCameraPositionToDefault() is called", () => {
-    const methodSpy = vi.spyOn<any>(cameraUtils, "flyToLookAtPosition");
+    const methodSpy = vi.spyOn(cameraUtils, "flyToLookAtPosition");
     component.setCameraPositionToDefault();
 
     const currentLookAtPosition: LookAtPosition = {
@@ -103,8 +104,8 @@ describe("ControlsComponent", () => {
   });
 
   it("should call lookAtTransform and rotateLeft when intersectionPoint can be calculated in setCameraFixed", () => {
-    (cesiumMock.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
-    (cesiumMock.scene?.globe.pick as Spy).mockReturnValue({} as Cartesian3);
+    (cesiumMock.camera?.getPickRay as Mock).mockReturnValue({} as Ray);
+    (cesiumMock.scene?.globe.pick as Mock).mockReturnValue({} as Cartesian3);
     const spyTransform = vi
       .spyOn(Transforms, "eastNorthUpToFixedFrame")
       .mockReturnValue({} as Matrix4);
@@ -119,8 +120,8 @@ describe("ControlsComponent", () => {
   });
 
   it("should not call lookAtTransform and rotateLeft when intersectionPoint can be calculated in setCameraFixed", () => {
-    (cesiumMock.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
-    (cesiumMock.scene?.globe.pick as Spy).mockReturnValue(undefined);
+    (cesiumMock.camera?.getPickRay as Mock).mockReturnValue({} as Ray);
+    (cesiumMock.scene?.globe.pick as Mock).mockReturnValue(undefined);
 
     component.rotateLeft();
 
@@ -131,11 +132,11 @@ describe("ControlsComponent", () => {
   });
 
   describe("rotate buttons", () => {
-    let cameraFixedSpy: Spy;
+    let cameraFixedSpy: MockInstance<any>;
 
     beforeEach(() => {
       cameraFixedSpy = vi
-        .spyOn<any>(component, "setCameraFixed")
+        .spyOn(component as any, "setCameraFixed")
         .mockReturnValue(true);
     });
 

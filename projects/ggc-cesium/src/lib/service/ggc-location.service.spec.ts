@@ -1,4 +1,4 @@
-import type { Mock, MockedObject } from "vitest";
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 
 import { GgcLocationService } from "./ggc-location.service";
@@ -10,22 +10,23 @@ import { cameraUtils } from "../utils/camera-utils";
 import { vi } from "vitest";
 describe("GgcLocationService", () => {
   let service: GgcLocationService;
-  let coreViewerServiceSpy: MockedObject<CoreViewerService>;
-  let locationServiceSpy: Mock;
+  let coreViewerServiceMock: Pick<MockedObject<CoreViewerService>, "getViewer">;
+  let locationServiceMock: any;
   let cesiumMock: Partial<Viewer>;
 
   beforeEach(() => {
-    coreViewerServiceSpy = {
+    coreViewerServiceMock = {
       getViewer: vi.fn().mockName("CoreViewerService.getViewer")
     };
+    cesiumMock = createCesiumMock();
+
     vi.spyOn(cameraUtils, "flyToLookAtPosition");
 
-    cesiumMock = createCesiumMock();
-    coreViewerServiceSpy.getViewer.mockReturnValue(cesiumMock as Viewer);
+    coreViewerServiceMock.getViewer.mockReturnValue(cesiumMock as Viewer);
     TestBed.configureTestingModule({
       providers: [
         GgcLocationService,
-        { provide: CoreViewerService, useValue: coreViewerServiceSpy }
+        { provide: CoreViewerService, useValue: coreViewerServiceMock }
       ]
     });
 
@@ -36,7 +37,7 @@ describe("GgcLocationService", () => {
         args[0](position);
       }
     );
-    locationServiceSpy = vi.spyOn<any>(service, "getLocation");
+    locationServiceMock = vi.spyOn(service as any, "getLocation");
   });
 
   it("should be created", () => {
@@ -45,7 +46,7 @@ describe("GgcLocationService", () => {
 
   it("should zoom to current location", async () => {
     service.zoomToCurrentLocation();
-    expect(locationServiceSpy).toHaveBeenCalled();
+    expect(locationServiceMock).toHaveBeenCalled();
     setTimeout(() => {
       expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
     });
@@ -53,7 +54,7 @@ describe("GgcLocationService", () => {
 
   it("should zoom to current location and mark", async () => {
     service.zoomToCurrentLocationAndMark();
-    expect(locationServiceSpy).toHaveBeenCalled();
+    expect(locationServiceMock).toHaveBeenCalled();
     setTimeout(() => {
       expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
       expect(cesiumMock.entities?.add).toHaveBeenCalled();
@@ -64,7 +65,7 @@ describe("GgcLocationService", () => {
   it("should zoom to current location and renew mark", async () => {
     service["marked"] = new Entity();
     service.zoomToCurrentLocationAndMark();
-    expect(locationServiceSpy).toHaveBeenCalled();
+    expect(locationServiceMock).toHaveBeenCalled();
     setTimeout(() => {
       expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
       expect(cesiumMock.entities?.add).toHaveBeenCalled();
@@ -75,7 +76,7 @@ describe("GgcLocationService", () => {
   it("should remove mark", async () => {
     service["marked"] = new Entity();
     service.removeLocationMark();
-    expect(locationServiceSpy).not.toHaveBeenCalled();
+    expect(locationServiceMock).not.toHaveBeenCalled();
     setTimeout(() => {
       expect(cesiumMock.camera?.flyTo).not.toHaveBeenCalled();
       expect(cesiumMock.entities?.add).not.toHaveBeenCalled();

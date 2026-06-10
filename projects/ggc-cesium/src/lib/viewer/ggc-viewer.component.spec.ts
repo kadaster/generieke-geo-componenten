@@ -24,17 +24,18 @@ import { CoreSelectionService } from "../service/core-selection.service";
 import { Observable } from "rxjs";
 import { provideZoneChangeDetection } from "@angular/core";
 import { vi } from "vitest";
-import { vi } from "vitest";
 describe("ViewerComponent", () => {
   let component: GgcViewerComponent;
   let fixture: ComponentFixture<GgcViewerComponent>;
   let cesiumMock: Partial<Viewer>;
-  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
+  let coreSelectionServiceSpy: Pick<
+    MockedObject<CoreSelectionService>,
+    "initializeSelections" | "destroyAllSelections" | "getClickEventsObservable"
+  >;
   let viewerService: GgcViewerService;
 
   beforeEach(async () => {
     coreSelectionServiceSpy = {
-      setOptions: vi.fn().mockName("CoreSelectionService.setOptions"),
       initializeSelections: vi
         .fn()
         .mockName("CoreSelectionService.initializeSelections"),
@@ -66,7 +67,7 @@ describe("ViewerComponent", () => {
     );
     cesiumMock = createCesiumMock();
     viewerService = TestBed.inject(GgcViewerService);
-    vi.spyOn<any>(component, "createViewer").mockReturnValue(
+    vi.spyOn(component as any, "createViewer").mockReturnValue(
       new Promise((resolve) => {
         resolve(cesiumMock);
       })
@@ -143,10 +144,10 @@ describe("ViewerComponent", () => {
       const json = getJson();
       const cameraOptions = { geojson: json } as LookAtObject;
 
-      vi.spyOn<any>(viewerService, "getExtent");
-      vi.spyOn<any>(viewerService, "getCenter");
-      vi.spyOn<any>(viewerService, "calculateDistance");
-      vi.spyOn<any>(viewerService, "getExtentRecursive");
+      vi.spyOn(viewerService, "getExtent");
+      vi.spyOn(viewerService, "getCenter");
+      vi.spyOn(viewerService, "calculateDistance");
+      vi.spyOn(viewerService as any, "getExtentRecursive");
 
       const extent = viewerService["getExtent"](json);
       const center = viewerService["getCenter"](extent);
@@ -171,7 +172,7 @@ describe("ViewerComponent", () => {
     });
 
     it("flyTo should use camera.lookat when cameraOptions is LookatPosition", async () => {
-      vi.spyOn<any>(cameraUtils, "getTerrainHeight").mockReturnValue(
+      vi.spyOn(cameraUtils, "getTerrainHeight").mockReturnValue(
         new Promise((resolve) => {
           resolve(100);
         })

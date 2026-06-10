@@ -52,11 +52,11 @@ describe("Tiles3dLayerService", () => {
   });
 
   describe("on addLayer", () => {
-    let createTilesetSpy: Mock;
+    let createTilesetSpy: Mock<any>;
     let layer: LayerConfig;
     const layerId = "testName";
     beforeEach(() => {
-      createTilesetSpy = vi.spyOn<any>(service, "createTileset");
+      createTilesetSpy = vi.spyOn(service as any, "createTileset");
       createTilesetSpy.mockResolvedValue({} as Cesium3DTileset);
 
       layer = {

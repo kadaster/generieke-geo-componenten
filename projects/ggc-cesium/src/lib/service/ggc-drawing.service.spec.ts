@@ -1,4 +1,4 @@
-import type { Mock, MockedObject } from "vitest";
+import { expect, Mock, MockedObject } from "vitest";
 import { CoreViewerService } from "./core-viewer.service";
 import { Subject } from "rxjs";
 import { Viewer } from "@cesium/widgets";
@@ -17,13 +17,18 @@ import { createCesiumMock } from "../viewer/viewer-mock.spec";
 import { GgcDrawingService } from "./ggc-drawing.service";
 import { DrawingType } from "../model/enums";
 import { CoreSelectionService } from "./core-selection.service";
-import Spy = Mock;
-import objectContaining = jasmine.objectContaining;
 import { vi } from "vitest";
+
 describe("GgcDrawingService", () => {
   let service: GgcDrawingService;
-  let coreViewerServiceSpy: MockedObject<CoreViewerService>;
-  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
+  let coreViewerServiceSpy: Pick<
+    MockedObject<CoreViewerService>,
+    "setViewer" | "getViewerObservable"
+  >;
+  let coreSelectionServiceSpy: Pick<
+    MockedObject<CoreSelectionService>,
+    "destroySelection" | "getSelection" | "addSelection"
+  >;
   let subject: Subject<Viewer | undefined>;
   let cesiumMock: Viewer;
 
@@ -70,8 +75,8 @@ describe("GgcDrawingService", () => {
   ));
 
   it("should call initializeDrawingService() when a new Viewer is received", () => {
-    const initializeCoreSelectionServiceSpy = vi.spyOn<any>(
-      service,
+    const initializeCoreSelectionServiceSpy = vi.spyOn(
+      service as any,
       "initializeDrawingService"
     );
 
@@ -81,8 +86,8 @@ describe("GgcDrawingService", () => {
   });
 
   it("should call clearDrawingService() when undefined is received", () => {
-    const clearCoreSelectionServiceSpy = vi.spyOn<any>(
-      service,
+    const clearCoreSelectionServiceSpy = vi.spyOn(
+      service as any,
       "clearDrawingService"
     );
     const mousehandlerSpy = vi.spyOn(
@@ -127,12 +132,12 @@ describe("GgcDrawingService", () => {
       });
       const entity = { id: "3" } as unknown as Entity;
 
-      (cesiumMock.entities.add as Spy).mockReturnValue(entity);
+      (cesiumMock.entities.add as Mock).mockReturnValue(entity);
 
       service["addDrawing"](DrawingType.Point, earthPosition);
 
       expect(cesiumMock.entities.add).toHaveBeenCalledWith(
-        objectContaining({
+        expect.objectContaining({
           position: earthPosition,
           point: service["defaultPointStyle"]
         })
@@ -150,7 +155,7 @@ describe("GgcDrawingService", () => {
 
       const entity = { id: "8" } as unknown as Entity;
 
-      (cesiumMock.entities.add as Spy).mockReturnValue(entity);
+      (cesiumMock.entities.add as Mock).mockReturnValue(entity);
 
       const styleMap = new Map<DrawingType, PointGraphics | string>();
       styleMap.set(DrawingType.Svg, createCustomSvg());
@@ -160,7 +165,7 @@ describe("GgcDrawingService", () => {
       service["addDrawing"](DrawingType.Svg, earthPosition);
 
       expect(cesiumMock.entities.add).toHaveBeenCalledWith(
-        objectContaining({
+        expect.objectContaining({
           position: earthPosition,
           billboard: {
             image: createCustomSvg(),

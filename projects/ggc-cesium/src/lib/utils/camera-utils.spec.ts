@@ -19,7 +19,6 @@ import {
 import { Viewer } from "@cesium/widgets";
 import { createCesiumMock } from "../viewer/viewer-mock.spec";
 import { LookAtPosition, Position } from "../model/interfaces";
-import Spy = Mock;
 import { vi } from "vitest";
 describe("getCameraValues", () => {
   it("should return cameraPosition", () => {
@@ -94,8 +93,8 @@ describe("createFlyToOptions", () => {
 describe("getLookAtPositionAndRange", () => {
   it("it should return a position and range when looking at a position", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    (viewer.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
-    (viewer.scene?.globe.pick as Spy).mockReturnValue(
+    (viewer.camera?.getPickRay as Mock).mockReturnValue({} as Ray);
+    (viewer.scene?.globe.pick as Mock).mockReturnValue(
       Cartesian3.fromDegrees(4.6, 52.5, 10)
     );
     const value = getLookAtPositionAndRange(viewer.camera!, viewer as Viewer);
@@ -106,8 +105,8 @@ describe("getLookAtPositionAndRange", () => {
   });
   it("it should return undefined when not looking at a position", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    (viewer.camera?.getPickRay as Spy).mockReturnValue({} as Ray);
-    (viewer.scene?.globe.pick as Spy).mockReturnValue(undefined);
+    (viewer.camera?.getPickRay as Mock).mockReturnValue({} as Ray);
+    (viewer.scene?.globe.pick as Mock).mockReturnValue(undefined);
     const value = getLookAtPositionAndRange(viewer.camera!, viewer as Viewer);
     expect(value).toBe(undefined);
   });
@@ -116,30 +115,30 @@ describe("getLookAtPositionAndRange", () => {
 describe("getLookAtCartesian", () => {
   it("should get the camera towards a cartesian", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    const cameraSpy = (viewer.camera?.getPickRay as Spy).mockReturnValue(
+    const cameraMock = (viewer.camera?.getPickRay as Mock).mockReturnValue(
       new Ray()
     );
-    const resultSpy = (viewer.scene?.globe.pick as Spy).mockReturnValue(
+    const resultMock = (viewer.scene?.globe.pick as Mock).mockReturnValue(
       new Cartesian3()
     );
 
     getLookAtCartesian(viewer.camera!, viewer as Viewer);
 
-    expect(cameraSpy).toHaveBeenCalledWith(new Cartesian2(100, 50));
-    expect(resultSpy).toHaveBeenCalledWith(new Ray(), viewer.scene!);
+    expect(cameraMock).toHaveBeenCalledWith(new Cartesian2(100, 50));
+    expect(resultMock).toHaveBeenCalledWith(new Ray(), viewer.scene!);
   });
 });
 
 describe("flyToLookAtPosition", () => {
   let viewer: Partial<Viewer>;
-  let cameraLookAtSpy: Spy<jasmine.Func>;
-  let cameraLookAtTransformSpy: Spy<jasmine.Func>;
+  let cameraLookAtMock: any;
+  let cameraLookAtTransformMock: any;
 
   beforeEach(() => {
     viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    cameraLookAtSpy = (viewer.camera?.lookAt as Spy).mockReturnValue({});
-    cameraLookAtTransformSpy = (
-      viewer.camera?.lookAtTransform as Spy
+    cameraLookAtMock = (viewer.camera?.lookAt as Mock).mockReturnValue({});
+    cameraLookAtTransformMock = (
+      viewer.camera?.lookAtTransform as Mock
     ).mockReturnValue({});
   });
 
@@ -162,11 +161,11 @@ describe("flyToLookAtPosition", () => {
       2.0943951023931953,
       75
     );
-    expect(cameraLookAtSpy).toHaveBeenCalledWith(
+    expect(cameraLookAtMock).toHaveBeenCalledWith(
       lookAtPositionResult,
       headingPitchRangeResult
     );
-    expect(cameraLookAtTransformSpy).toHaveBeenCalledWith(Matrix4.IDENTITY);
+    expect(cameraLookAtTransformMock).toHaveBeenCalledWith(Matrix4.IDENTITY);
   });
 
   it("should fly to look at the position without given orientation and range", async () => {
@@ -183,11 +182,11 @@ describe("flyToLookAtPosition", () => {
     );
     const headingPitchRangeResult = new HeadingPitchRange(0, -Math.PI / 8, 500);
 
-    expect(cameraLookAtSpy).toHaveBeenCalledWith(
+    expect(cameraLookAtMock).toHaveBeenCalledWith(
       lookAtPositionResult,
       headingPitchRangeResult
     );
-    expect(cameraLookAtTransformSpy).toHaveBeenCalledWith(Matrix4.IDENTITY);
+    expect(cameraLookAtTransformMock).toHaveBeenCalledWith(Matrix4.IDENTITY);
   });
 });
 

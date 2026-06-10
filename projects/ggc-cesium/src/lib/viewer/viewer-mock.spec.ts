@@ -1,9 +1,8 @@
 import { Viewer } from "@cesium/widgets";
 import { Cartesian3 } from "@cesium/engine";
-import { vi } from "vitest";
-export const createCesiumMock = (options?: {
-  cameraPitch?: number;
-}): Partial<Viewer> => {
+import { Mocked, vi } from "vitest";
+
+export const createCesiumMock = (options?: { cameraPitch?: number }) => {
   const camera = {
     flyTo: vi.fn().mockName("Camera.flyTo"),
     getPickRay: vi.fn().mockName("Camera.getPickRay"),
@@ -58,5 +57,5 @@ export const createCesiumMock = (options?: {
       }
     },
     canvas: { width: 200, height: 100 } as HTMLCanvasElement
-  };
+  } as any as Mocked<Viewer>;
 };

@@ -21,13 +21,21 @@ import { SelectionEvent, SelectionEventType } from "../model/interfaces";
 import { Tiles3dLayerService } from "../layers/tiles3d-layer.service";
 import { GeoJsonLayerService } from "../layers/geojson-layer.service";
 import { vi } from "vitest";
-import Spy = Mock;
 
 describe("CoreSelectionService", () => {
   let service: CoreSelectionService;
-  let coreViewerServiceSpy: MockedObject<CoreViewerService>;
-  let tiles3dLayerServiceSpy: MockedObject<Tiles3dLayerService>;
-  let geoJsonLayerServiceSpy: MockedObject<GeoJsonLayerService>;
+  let coreViewerServiceSpy: Pick<
+    MockedObject<CoreViewerService>,
+    "setViewer" | "getViewerObservable"
+  >;
+  let tiles3dLayerServiceSpy: Pick<
+    MockedObject<Tiles3dLayerService>,
+    "getLayerName"
+  >;
+  let geoJsonLayerServiceSpy: Pick<
+    MockedObject<GeoJsonLayerService>,
+    "getLayerName" | "getEntitiesFunction" | "getEntitiesHighlightFunction"
+  >;
   let subject: Subject<Viewer | undefined>;
 
   beforeEach(async () => {
@@ -79,8 +87,8 @@ describe("CoreSelectionService", () => {
   ));
 
   it("should call initializeCoreSelectionService() when a new Viewer is received", () => {
-    const initializeCoreSelectionServiceSpy = vi.spyOn<any>(
-      service,
+    const initializeCoreSelectionServiceSpy = vi.spyOn(
+      service as any,
       "initializeCoreSelectionService"
     );
 
@@ -91,8 +99,8 @@ describe("CoreSelectionService", () => {
   });
 
   it("should call clearCoreSelectionService() when undefined is received", () => {
-    const clearCoreSelectionServiceSpy = vi.spyOn<any>(
-      service,
+    const clearCoreSelectionServiceSpy = vi.spyOn(
+      service as any,
       "clearCoreSelectionService"
     );
     const mousehandlerSpy = vi.spyOn(service["mouseHandler"], "destroy");
@@ -143,7 +151,10 @@ describe("CoreSelectionService", () => {
       service["selections"] = createSelections(2);
       vi.spyOn(service["mouseHandler"], "setInputAction");
 
-      const addToHighlightMapSpy = vi.spyOn<any>(service, "addToHighlightMap");
+      const addToHighlightMapSpy = vi.spyOn(
+        service as any,
+        "addToHighlightMap"
+      );
       service["reAddSelections"]();
       expect(addToHighlightMapSpy).toHaveBeenCalledTimes(2);
     });
@@ -165,7 +176,7 @@ describe("CoreSelectionService", () => {
     it("should call setHighlightOnFeature() and emit event when the type of feature is Cesium3DTileFeature", async () => {
       const pickedFeature = new Cesium3DTileFeature();
       service["viewer"] = cesiumMock;
-      (cesiumMock.scene.pick as Spy).mockReturnValue(pickedFeature);
+      (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const selection = createSelection(
         ScreenSpaceEventType.RIGHT_CLICK,
         Color.BLACK
@@ -177,7 +188,7 @@ describe("CoreSelectionService", () => {
       const getFeatureSpy = vi.spyOn(service, "getFeature");
       //@ts-ignore
       const setHighlightOnFeatureSpy = vi.spyOn(
-        service,
+        service as any,
         "setHighlightOnFeature"
       );
       tiles3dLayerServiceSpy.getLayerName.mockReturnValue("layer1");
@@ -200,7 +211,7 @@ describe("CoreSelectionService", () => {
     it("should call updateLastClickedEntity() and emit event when the type of feature is Entity", async () => {
       service["viewer"] = cesiumMock;
       const feature = { id: new Entity() };
-      (cesiumMock.scene.pick as Spy).mockReturnValue(feature);
+      (cesiumMock.scene.pick as Mock).mockReturnValue(feature);
       const selection = createSelection(
         ScreenSpaceEventType.RIGHT_CLICK,
         Color.BLACK
@@ -460,7 +471,7 @@ describe("CoreSelectionService", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
       const pickedFeature = new Cesium3DTileFeature();
-      (cesiumMock.scene.pick as Spy).mockReturnValue(pickedFeature);
+      (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const endPosition = new Cartesian2();
 
       const undefinedFeature = service["getFeature"](
@@ -476,7 +487,7 @@ describe("CoreSelectionService", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
       const pickedFeature = new Cesium3DTileFeature();
-      (cesiumMock.scene.pick as Spy).mockReturnValue(pickedFeature);
+      (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const position = new Cartesian2();
 
       const feature = service["getFeature"](ScreenSpaceEventType.LEFT_CLICK, {
@@ -492,7 +503,7 @@ describe("CoreSelectionService", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
       const pickedEntity = new Entity();
-      (cesiumMock.scene.pick as Spy).mockReturnValue({
+      (cesiumMock.scene.pick as Mock).mockReturnValue({
         id: pickedEntity
       });
       const position = new Cartesian2();
@@ -509,7 +520,7 @@ describe("CoreSelectionService", () => {
     it("should return undefined if ScreenSpaceEventType is LEFT_CLICK and no Entity found", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
-      (cesiumMock.scene.pick as Spy).mockReturnValue({
+      (cesiumMock.scene.pick as Mock).mockReturnValue({
         id: undefined
       });
       const position = new Cartesian2();
@@ -525,10 +536,10 @@ describe("CoreSelectionService", () => {
   });
 
   describe("getPositionString", () => {
-    let getCoordsSpy: Spy;
+    let getCoordsSpy: Mock<any>;
     beforeEach(() => {
       // spyOn type any to be able to spy on a private method.
-      getCoordsSpy = vi.spyOn<any>(service, "getCoords");
+      getCoordsSpy = vi.spyOn(service as any, "getCoords");
     });
 
     it("should return empty array if ScreenSpaceEventType is WHEEL", () => {

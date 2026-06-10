@@ -4,12 +4,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcLocationComponent } from "./ggc-location.component";
 import { By } from "@angular/platform-browser";
 import { GgcLocationService } from "../service/ggc-location.service";
-import SpyObj = MockedObject;
 import { vi } from "vitest";
 describe("LocationComponent", () => {
   let component: GgcLocationComponent;
   let fixture: ComponentFixture<GgcLocationComponent>;
-  let locationServiceSpy: SpyObj<GgcLocationService>;
+  let locationServiceSpy: Pick<
+    MockedObject<GgcLocationService>,
+    "zoomToCurrentLocation"
+  >;
 
   beforeEach(async () => {
     locationServiceSpy = {

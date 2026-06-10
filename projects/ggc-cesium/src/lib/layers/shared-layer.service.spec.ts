@@ -15,9 +15,30 @@ import { vi } from "vitest";
 describe("SharedLayerService", () => {
   let service: GgcSharedLayerService;
 
-  let geoJsonServiceSpy: MockedObject<GeoJsonLayerService>;
-  let tiles3dServiceSpy: MockedObject<Tiles3dLayerService>;
-  let wmtsServiceSpy: MockedObject<WmtsLayerService>;
+  let geoJsonServiceSpy: Pick<
+    MockedObject<GeoJsonLayerService>,
+    | "addLayer"
+    | "removeLayer"
+    | "isVisible"
+    | "getEnabled"
+    | "getLayerChangedObservable"
+  >;
+  let tiles3dServiceSpy: Pick<
+    MockedObject<Tiles3dLayerService>,
+    | "addLayer"
+    | "removeLayer"
+    | "isVisible"
+    | "getEnabled"
+    | "getLayerChangedObservable"
+  >;
+  let wmtsServiceSpy: Pick<
+    MockedObject<WmtsLayerService>,
+    | "addLayer"
+    | "removeLayer"
+    | "isVisible"
+    | "getEnabled"
+    | "getLayerChangedObservable"
+  >;
 
   beforeEach(() => {
     geoJsonServiceSpy = {
