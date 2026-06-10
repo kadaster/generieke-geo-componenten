@@ -5,7 +5,7 @@ import { CoreViewerService } from "../service/core-viewer.service";
 import { Subject } from "rxjs";
 import { Cartesian3, Matrix4, Ray, Transforms } from "@cesium/engine";
 import { Viewer } from "@cesium/widgets";
-import { createCesiumMock } from "../viewer/viewer-mock.spec";
+import { createCesiumMock } from "../viewer/viewer-mock";
 import { By } from "@angular/platform-browser";
 import { cameraUtils, DEFAULT_POSITIONSHIFT } from "../utils/camera-utils";
 import { LookAtPosition } from "../model/interfaces";

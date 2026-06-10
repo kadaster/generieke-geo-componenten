@@ -1,7 +1,7 @@
 import type { MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcViewerComponent } from "./ggc-viewer.component";
-import { createCesiumMock } from "./viewer-mock.spec";
+import { createCesiumMock } from "./viewer-mock";
 import {
   Camera,
   Cartesian3,
@@ -55,7 +55,6 @@ describe("ViewerComponent", () => {
       providers: [
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
         { provide: CoreCameraService, useValue: cameraSpy },
-        { provide: CoreCameraService, useValue: cameraSpy },
         provideZoneChangeDetection()
       ]
     }).compileComponents();
@@ -83,6 +82,7 @@ describe("ViewerComponent", () => {
     expect(component).toBeTruthy();
 
     fixture.detectChanges();
+    await Promise.resolve();
     await fixture.whenStable();
     expect(ready).toBe(true);
     expect(cesiumMock.camera!.flyTo).not.toHaveBeenCalled();
@@ -106,6 +106,7 @@ describe("ViewerComponent", () => {
         }
       };
       fixture.detectChanges();
+      await Promise.resolve();
       await fixture.whenStable();
 
       expect(component["viewer"].scene!.light).toBeInstanceOf(DirectionalLight);
@@ -123,6 +124,7 @@ describe("ViewerComponent", () => {
       };
 
       fixture.detectChanges();
+      await Promise.resolve();
       await fixture.whenStable();
 
       expect(component["viewer"].scene!.light).toBeInstanceOf(DirectionalLight);

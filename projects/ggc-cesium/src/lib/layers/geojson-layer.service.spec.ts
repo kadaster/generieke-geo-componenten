@@ -113,7 +113,7 @@ describe("GeoJsonLayerService", () => {
       );
     });
 
-    it("should use entitiesFunction if defined", fakeAsync(() => {
+    it("should use entitiesFunction if defined", async () => {
       const config = {
         layerId: layerId,
         entitiesFunction: (entity: Entity) => {
@@ -137,9 +137,9 @@ describe("GeoJsonLayerService", () => {
         "layer.url",
         expect.anything()
       );
-      flush();
+      await Promise.resolve();
       expect(spy).toHaveBeenCalled();
-    }));
+    });
 
     it("should clean up configs on destroy", () => {
       service.setConfigs([{ layerId: layerId }]);

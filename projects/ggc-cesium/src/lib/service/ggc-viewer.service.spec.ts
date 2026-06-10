@@ -6,7 +6,7 @@ import { CoreViewerService } from "./core-viewer.service";
 import { Viewer } from "@cesium/widgets";
 import { Cartesian3, Rectangle } from "@cesium/engine";
 import { MAX_VIEWDISTANCE, MIN_VIEWDISTANCE } from "../utils/camera-utils";
-import { createCesiumMock } from "../viewer/viewer-mock.spec";
+import { createCesiumMock } from "../viewer/viewer-mock";
 
 describe("GgcViewerService", () => {
   let service: GgcViewerService;

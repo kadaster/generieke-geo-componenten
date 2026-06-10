@@ -17,7 +17,7 @@ import {
   getLookAtPositionAndRange
 } from "./camera-utils";
 import { Viewer } from "@cesium/widgets";
-import { createCesiumMock } from "../viewer/viewer-mock.spec";
+import { createCesiumMock } from "../viewer/viewer-mock";
 import { LookAtPosition, Position } from "../model/interfaces";
 import { vi } from "vitest";
 describe("getCameraValues", () => {

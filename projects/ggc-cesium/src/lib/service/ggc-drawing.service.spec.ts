@@ -13,7 +13,7 @@ import {
   ScreenSpaceEventType,
   VerticalOrigin
 } from "@cesium/engine";
-import { createCesiumMock } from "../viewer/viewer-mock.spec";
+import { createCesiumMock } from "../viewer/viewer-mock";
 import { GgcDrawingService } from "./ggc-drawing.service";
 import { DrawingType } from "../model/enums";
 import { CoreSelectionService } from "./core-selection.service";
