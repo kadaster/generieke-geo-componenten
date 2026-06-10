@@ -108,11 +108,9 @@ export class GgcFeatureInfoTabsComponent
         "Het huidige weergegeven tabblad.",
         undefined
       );
-
       this.eventService.emit(event);
       this.events.emit(event);
     } else {
-      // this.featureInfoCollectionArrayInternal.length > 0
       this.featureInfoConfigService.sortTabs(
         this.featureInfoCollectionArrayInternal
       );
@@ -149,32 +147,28 @@ export class GgcFeatureInfoTabsComponent
     }
   }
 
-  private async subscribeToMapSelection(mapIndex: string) {
-    const mapSelectionEvent =
-      await this.featureInfoMapConnectService.getObservableForMapSelection(
-        mapIndex
+  private subscribeToMapSelection(mapIndex: string) {
+    this.featureInfoMapConnectService
+      .getObservableForMapSelection(mapIndex)
+      .then((s) =>
+        s.subscribe((event: MapComponentEvent) => {
+          if (
+            event.type ===
+            MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+          ) {
+            this.featureInfoCollectionArray =
+              event.value.featureCollectionForLayers.map(
+                (featureCollection: FeatureCollectionForLayer) => ({
+                  ...featureCollection,
+                  layerName:
+                    featureCollection.layerTitle ||
+                    featureCollection.layerName ||
+                    featureCollection.layerId
+                })
+              );
+            this.onDataUpdate();
+          }
+        })
       );
-    this.subscriptionSelection = mapSelectionEvent.subscribe(
-      (event: MapComponentEvent) => {
-        if (
-          event.type ===
-          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-        ) {
-          this.featureInfoCollectionArray =
-            event.value.featureCollectionForLayers.map(
-              (featureCollection: FeatureCollectionForLayer) => ({
-                ...featureCollection,
-                layerName:
-                  featureCollection.layerTitle ||
-                  featureCollection.layerName ||
-                  featureCollection.layerId
-              })
-            );
-
-          console.log(this.featureInfoCollectionArray);
-          this.onDataUpdate();
-        }
-      }
-    );
   }
 }

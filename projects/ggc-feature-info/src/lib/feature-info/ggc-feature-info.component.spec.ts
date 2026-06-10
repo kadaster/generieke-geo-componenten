@@ -172,6 +172,7 @@ describe("FeatureInfoComponent", () => {
   it("when hidePagerWithOneFeature is set to true, but there is more than 1 feature, it should show the pager", () => {
     const feature = new Feature({ test: "123" });
     const secondFeature = new Feature({ test: "456" });
+    component.hidePagerWithOneFeature = true;
     featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
       { test: "123" },
       { test: "456" }
@@ -180,7 +181,8 @@ describe("FeatureInfoComponent", () => {
       layerName: "laag",
       features: [feature, secondFeature]
     };
-    component.hidePagerWithOneFeature = true;
+
+    fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
     const pagerPreviousElement = nativeElement.querySelector(
@@ -204,8 +206,6 @@ describe("FeatureInfoComponent", () => {
       { test: "123" },
       { test: "456" }
     ]);
-
-    //component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });*/
 
     component.pagerPrevious = "previous";
     component.pagerNext = "next";

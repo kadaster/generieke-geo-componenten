@@ -1,6 +1,5 @@
 import Geometry from "ol/geom/Geometry";
 import { GgcFeatureInfoComponent } from "./ggc-feature-info.component";
-import { SimpleChange, SimpleChanges } from "@angular/core";
 import {
   FeatureInfoComponentEvent,
   FeatureInfoComponentEventType
@@ -13,6 +12,7 @@ import { provideZoneChangeDetection } from "@angular/core";
 describe("FeatureInfoComponent, no testbed", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<GgcFeatureInfoComponent>;
+
   let featureInfoConfigSpy: jasmine.SpyObj<GgcFeatureInfoConfigService>;
   let event: FeatureInfoComponentEvent;
 
@@ -40,7 +40,8 @@ describe("FeatureInfoComponent, no testbed", () => {
 
   describe("when array is not present", () => {
     beforeEach(() => {
-      //component.ngOnChanges(simpleChanges);
+      console.log("BEFORE");
+      component.featureInfoCollection = undefined;
     });
 
     it("goToPreviousFeature should decrease currentFeatureIndex by one", () => {
@@ -73,10 +74,8 @@ describe("FeatureInfoComponent, no testbed", () => {
     beforeEach(() => {
       feature1 = { test: "123" };
       const features = [feature1];
-      component.featureInfoCollection = { layerName: "laag", features };
-      component["currentFeatureIndex"] = 0;
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-      //component.ngOnChanges(simpleChanges);
+      component.featureInfoCollection = { layerName: "laag", features };
     });
 
     it("goToPreviousFeature should not change currentFeature and currentFeatureIndex", () => {
@@ -127,9 +126,8 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature2 = { test: "456" };
       feature3 = { test: "789" };
       const features = [feature1, feature2, feature3];
-      component.featureInfoCollection = { layerName: "laag", features };
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-      //component.ngOnChanges(simpleChanges);
+      component.featureInfoCollection = { layerName: "laag", features };
       component["currentFeatureIndex"] = 1;
     });
 
