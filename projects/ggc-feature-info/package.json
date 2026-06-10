@@ -6,9 +6,16 @@
     "@angular/core": "^21.0.0",
     "bootstrap": ">=4.3.1 <6.0.0",
     "ol": "^10.7.0",
-    "popper.js": "^1.16.1"
+    "popper.js": "^1.16.1",
+    "@kadaster/ggc-map": "^2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@kadaster/ggc-map": {
+      "optional": true
+    }
   },
   "dependencies": {
+    "@kadaster/ggc-models": "^2.0.0",
     "tslib": "^2.3.1"
   },
   "publishConfig": {
@@ -20,4 +27,3 @@
   },
   "license": "EUPL-1.2"
 }
-
