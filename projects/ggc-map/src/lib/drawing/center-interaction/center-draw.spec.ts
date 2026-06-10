@@ -350,7 +350,7 @@ describe("CenterDraw", () => {
     ]);
     // Controleer dat de functie `dispatchEvent` is aangeroepen
     vi.spyOn(centerDraw, "dispatchEvent");
-    expect(centerDraw.dispatchEvent).toHaveBeenCalled();
+    expect(centerDraw.dispatchEvent).toHaveBeenCalled;
   });
   it("finishDrawing() should remove a redundant point from Polygon add it to the target source and finish the drawing", () => {
     centerDraw["sketchFeature"] = new Feature(
@@ -375,7 +375,7 @@ describe("CenterDraw", () => {
     ]);
     // Controleer dat de functie `dispatchEvent` is aangeroepen
     vi.spyOn(centerDraw, "dispatchEvent");
-    expect(centerDraw.dispatchEvent).toHaveBeenCalled();
+    expect(centerDraw.dispatchEvent).toHaveBeenCalled;
   });
 
   it("finishDrawing() should add a Point  and finish the drawing", () => {

@@ -40,7 +40,7 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "MapService" };
 
-      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      vi.spyOn(service, "loadMapModule" as any).mockResolvedValue(module);
       injectorSpy.get.mockReturnValue(mockInstance);
 
       const result = await service.getMapService();
@@ -53,7 +53,7 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "MapService" };
 
-      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      vi.spyOn(service, "loadMapModule" as any).mockResolvedValue(module);
       injectorSpy.get.mockReturnValue(mockInstance);
 
       const first = await service.getMapService();
@@ -66,7 +66,7 @@ describe("GgcToolbarConnectService", () => {
     it("geeft undefined/null terug als injector niets levert", async () => {
       const module = mockModule();
 
-      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      vi.spyOn(service, "loadMapModule" as any).mockResolvedValue(module);
       injectorSpy.get.mockReturnValue(null);
 
       const result = await service.getMapService();
@@ -75,7 +75,7 @@ describe("GgcToolbarConnectService", () => {
     });
 
     it("vangt fouten bij laden van module", async () => {
-      vi.spyOn<any>(service, "loadMapModule").mockRejectedValue("load error");
+      vi.spyOn(service, "loadMapModule" as any).mockRejectedValue("load error");
 
       const result = await service.getMapService();
 
@@ -88,7 +88,7 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "DrawService" };
 
-      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      vi.spyOn(service, "loadMapModule" as any).mockResolvedValue(module);
       injectorSpy.get.mockReturnValue(mockInstance);
 
       const result = await service.getDrawService();
@@ -101,7 +101,7 @@ describe("GgcToolbarConnectService", () => {
       const module = mockModule();
       const mockInstance = { name: "DrawService" };
 
-      vi.spyOn<any>(service, "loadMapModule").mockResolvedValue(module);
+      vi.spyOn(service, "loadMapModule" as any).mockResolvedValue(module);
       injectorSpy.get.mockReturnValue(mockInstance);
 
       await service.getDrawService();
