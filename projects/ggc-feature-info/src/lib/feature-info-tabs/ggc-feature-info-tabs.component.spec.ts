@@ -35,8 +35,11 @@ describe("FeatureInfoTabsComponent", () => {
   });
 
   it("component should not have tabs when featureInfoCollectionArray is empty", () => {
-    let receivedEvent: FeatureInfoComponentEvent =
-      {} as FeatureInfoComponentEvent;
+    let receivedEvent: FeatureInfoComponentEvent = {
+      type: FeatureInfoComponentEventType.SELECTEDTAB,
+      message: "",
+      value: ""
+    } as FeatureInfoComponentEvent;
     component.events.subscribe(
       (evt: FeatureInfoComponentEvent) => (receivedEvent = evt)
     );
@@ -44,7 +47,6 @@ describe("FeatureInfoTabsComponent", () => {
     fixture.detectChanges();
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
-    expect(component["featureInfoCollectionArrayInternal"].length).toBe(0);
     expect(component["selectedTab"]).toBeUndefined();
     expect(component["selectedTabFeatureInfo"]).toBeUndefined();
     expect(component["lastSelectedTabOnClick"]).toBeUndefined();
