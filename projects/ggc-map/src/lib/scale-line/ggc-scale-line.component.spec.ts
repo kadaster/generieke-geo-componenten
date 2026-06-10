@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DebugElement } from "@angular/core";
 
 import OlMap from "ol/Map";
@@ -24,12 +24,12 @@ describe("ScaleLineComponent", () => {
     }
   } as OlMap;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcScaleLineComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcScaleLineComponent);

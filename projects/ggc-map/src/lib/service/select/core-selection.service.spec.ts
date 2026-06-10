@@ -12,6 +12,7 @@ import {
   FeatureCollectionForCoordinate
 } from "./selection-state.model";
 import { SelectionModeTypes } from "./selection-type.enum";
+import { firstValueFrom } from "rxjs";
 
 describe("CoreSelectionService", () => {
   let coreSelectionService: CoreSelectionService;
@@ -391,28 +392,35 @@ describe("CoreSelectionService", () => {
     "clearFeatureInfoForLayer in should remove layer from featureCollectionForLayers" +
       " and emit an event",
     async () => {
+      vi.useFakeTimers();
+
       // prepare by calling handleSingleclickEventForMap
       coreSelectionService.handleSingleclickEventForMap(
         coordinateCurrent,
         multimap
       );
-      coreSelectionService
-        .getObservableForMap(multimap)
-        .subscribe((eventReceived) => {
-          const currentAndPreviousSelection = coreSelectionService[
-            "allSelections"
-          ].get(multimap) as CurrentAndPreviousSelection;
-          expect(
-            (
-              currentAndPreviousSelection.current as FeatureCollectionForCoordinate
-            ).featureCollectionForLayers.length
-          ).toBe(0);
-          expect(eventReceived.value).toEqual(
-            currentAndPreviousSelection.current
-          );
-          verifyEventFeatureInfo(eventReceived);
-        });
+      vi.runAllTimers();
+
+      const resultPromise = firstValueFrom(
+        coreSelectionService.getObservableForMap(multimap)
+      );
+
       coreSelectionService.clearFeatureInfoForLayer(multimap, layer2);
+
+      vi.runAllTimers();
+
+      const eventReceived = await resultPromise;
+      const currentAndPreviousSelection = coreSelectionService[
+        "allSelections"
+      ].get(multimap) as CurrentAndPreviousSelection;
+
+      expect(
+        (currentAndPreviousSelection.current as FeatureCollectionForCoordinate)
+          .featureCollectionForLayers.length
+      ).toBe(0);
+      expect(eventReceived.value).toEqual(currentAndPreviousSelection.current);
+      verifyEventFeatureInfo(eventReceived);
+      vi.useRealTimers();
     }
   );
 

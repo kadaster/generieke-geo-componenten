@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import View from "ol/View";
 import { Observable, of, Subscription } from "rxjs";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
@@ -16,7 +16,7 @@ describe("ZoomLevelComponent", () => {
   let debugElement: DebugElement;
   let mapEventsService: CoreMapEventsService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     class MapEventsServiceMock {
       getZoomendObservableForMap() {
         return new Observable();
@@ -31,7 +31,7 @@ describe("ZoomLevelComponent", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcZoomLevelComponent);
@@ -80,7 +80,7 @@ describe("ZoomLevelComponent", () => {
     const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
 
     expect(zoomLevelElement).not.toBeNull();
-    expect((zoomLevelElement as HTMLElement).innerText).toEqual("9");
+    expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual("9");
   });
 
   it("when zoom level is a decimal number getZoomLlevel() should return it rounded to 2 decimals ", () => {
@@ -100,7 +100,9 @@ describe("ZoomLevelComponent", () => {
     const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
 
     expect(zoomLevelElement).not.toBeNull();
-    expect((zoomLevelElement as HTMLElement).innerText).toEqual("3.14");
+    expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual(
+      "3.14"
+    );
   });
 
   it("when ngDestroy is called, unsubscribe should be executed, ", () => {

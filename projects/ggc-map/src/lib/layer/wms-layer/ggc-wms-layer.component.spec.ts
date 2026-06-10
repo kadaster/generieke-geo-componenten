@@ -8,7 +8,7 @@ import {
   provideHttpClientTesting
 } from "@angular/common/http/testing";
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MapBrowserEvent } from "ol";
 import { Coordinate } from "ol/coordinate";
 import ImageLayer from "ol/layer/Image";
@@ -44,7 +44,7 @@ describe("WmsLayerComponent", () => {
 
   const coordinate: Coordinate = [45000, 55000];
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const capSpy = {
       getCapabilitiesForUrl: vi
         .fn()
@@ -72,7 +72,7 @@ describe("WmsLayerComponent", () => {
         provideHttpClientTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcWmsLayerComponent);

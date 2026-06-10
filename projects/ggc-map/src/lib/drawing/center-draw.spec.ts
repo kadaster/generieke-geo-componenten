@@ -176,7 +176,10 @@ describe("CenterDraw", () => {
   });
 
   it("appendCoordinates() should initialize a Point geometry and set its coordinates", () => {
-    const finishDrawing = vi.spyOn(centerDraw, "finishDrawing");
+    const finishDrawing = vi
+      .spyOn(centerDraw, "finishDrawing")
+      .mockReturnValue(undefined);
+
     centerDraw["type"] = "Point"; // Stel het type in op Point
     // Roep appendCoordinates aan
     centerDraw.appendCoordinates();
@@ -348,7 +351,7 @@ describe("CenterDraw", () => {
     ]);
     // Controleer dat de functie `dispatchEvent` is aangeroepen
     vi.spyOn(centerDraw, "dispatchEvent");
-    expect(centerDraw.dispatchEvent).toHaveBeenCalled;
+    expect(centerDraw.dispatchEvent).toHaveBeenCalled();
   });
   it("finishDrawing() should remove a redundant point from Polygon add it to the target source and finish the drawing", () => {
     centerDraw["sketchGeometry"] = new Polygon([
@@ -372,7 +375,7 @@ describe("CenterDraw", () => {
     ]);
     // Controleer dat de functie `dispatchEvent` is aangeroepen
     vi.spyOn(centerDraw, "dispatchEvent");
-    expect(centerDraw.dispatchEvent).toHaveBeenCalled;
+    expect(centerDraw.dispatchEvent).toHaveBeenCalled();
   });
 
   it("finishDrawing() should add a Point and finish the drawing", () => {

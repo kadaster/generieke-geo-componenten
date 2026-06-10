@@ -1,6 +1,6 @@
 import type { MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { View } from "ol";
 import { Coordinate } from "ol/coordinate";
 import Tile from "ol/layer/Tile";
@@ -29,7 +29,7 @@ describe("WmtsLayerComponent", () => {
   let capabilitiesService: MockedObject<CoreWmsWmtsCapabilitiesService>;
   let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const capSpy = {
       getCapabilitiesForUrl: vi
         .fn()
@@ -64,7 +64,7 @@ describe("WmtsLayerComponent", () => {
         { provide: CoreWmsWmtsCapabilitiesService, useValue: capSpy }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcWmtsLayerComponent);

@@ -1,11 +1,9 @@
-import type { MockedObject } from "vitest";
+import { afterEach, MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
 import {
   ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-  waitForAsync
+  TestBed
+  // tick();
 } from "@angular/core/testing";
 import { FeatureLike } from "ol/Feature";
 import VectorTileLayer from "ol/layer/VectorTile";
@@ -47,7 +45,7 @@ describe("VectorTileLayerComponent", () => {
   >;
   let httpTestingController: HttpTestingController;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     coreSelectionServiceSpy = {
       handleFeatureInfoForLayer: vi
         .fn()
@@ -67,14 +65,17 @@ describe("VectorTileLayerComponent", () => {
         provideHttpClientTesting()
       ]
     }).compileComponents();
-  }));
+  });
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcVectorTileLayerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     debugElement = fixture.debugElement;
     httpTestingController = TestBed.inject(HttpTestingController);
+    vi.useFakeTimers();
   });
+
+  afterEach(() => vi.useRealTimers());
 
   const olMapMock = {
     addLayer(layer) {
@@ -99,7 +100,7 @@ describe("VectorTileLayerComponent", () => {
     return mapSpy;
   };
 
-  it("when attributions is provided for a layer, it should be contained in the source", fakeAsync(() => {
+  it("when attributions is provided for a layer, it should be contained in the source", async () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
 
@@ -113,7 +114,7 @@ describe("VectorTileLayerComponent", () => {
       }
     };
     component.ngOnInit();
-    tick();
+    await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
     const source: VectorTileSource = resultLayer.getSource()!;
@@ -125,9 +126,9 @@ describe("VectorTileLayerComponent", () => {
         "Een attributie voor de VectorTile kaartlaag"
       ]);
     }
-  }));
+  });
 
-  it("when an url is provided, it should be applied to the source", fakeAsync(() => {
+  it("when an url is provided, it should be applied to the source", async () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
@@ -140,14 +141,15 @@ describe("VectorTileLayerComponent", () => {
       }
     };
     component.ngOnInit();
-    tick();
+    // tick();
+    await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
     const source: VectorTileSource = resultLayer.getSource()!;
     expect(source.getUrls()).toEqual(["test-url"]);
-  }));
+  });
 
-  it("when min- an maxResolution is provided, it should be applied to the layer", fakeAsync(() => {
+  it("when min- an maxResolution is provided, it should be applied to the layer", async () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
@@ -157,14 +159,15 @@ describe("VectorTileLayerComponent", () => {
     component.options = { minResolution: 10, maxResolution: 20 };
 
     component.ngOnInit();
-    tick();
+    // tick();
+    await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.getMinResolution()).toBe(10);
     expect(resultLayer.getMaxResolution()).toBe(20);
-  }));
+  });
 
-  it("when an Openlayers style object is provided, it should be applied to the layer", fakeAsync(() => {
+  it("when an Openlayers style object is provided, it should be applied to the layer", async () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
@@ -183,16 +186,17 @@ describe("VectorTileLayerComponent", () => {
     };
 
     component.ngOnInit();
-    tick();
+    // tick();
+    await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
     const styleObject: Style = resultLayer.getStyle() as Style;
     const strokeObject: Stroke | null = styleObject.getStroke();
     expect(strokeObject?.getColor()).toEqual([63, 195, 128, 1]);
     expect(strokeObject?.getWidth()).toBe(3);
-  }));
+  });
 
-  it("when an Openlayers StyleFunction is provided and called, it should be applied to the layer", fakeAsync(() => {
+  it("when an Openlayers StyleFunction is provided and called, it should be applied to the layer", async () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
@@ -213,7 +217,8 @@ describe("VectorTileLayerComponent", () => {
     };
 
     component.ngOnInit();
-    tick();
+    // tick();
+    await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
     const styleFunction: StyleFunction =
@@ -222,9 +227,9 @@ describe("VectorTileLayerComponent", () => {
     const strokeObject: Stroke | null = styleObject.getStroke();
     expect(strokeObject?.getColor()).toEqual([63, 195, 128, 1]);
     expect(strokeObject?.getWidth()).toBe(3);
-  }));
+  });
 
-  it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", fakeAsync(() => {
+  it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", async () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
     const mapEventsService: CoreMapEventsService =
@@ -239,10 +244,11 @@ describe("VectorTileLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(olMapMock);
     component.ngOnInit();
-    tick();
+    // tick();
+    await vi.runAllTimersAsync();
     expect(getMapSpy).toHaveBeenCalled();
     expect(mapEventsServicespy).toHaveBeenCalled();
-  }));
+  });
 
   it(
     "should return a feature to the foundFeatures-array if the maxFeaturesonSingleclick is not yet reached " +
@@ -335,7 +341,7 @@ describe("VectorTileLayerComponent", () => {
   });
 
   describe("should set the overzoom resolutions with createOverzoomResolutions", () => {
-    it("should correctly set overzoom resolutions if overzoom active", fakeAsync(() => {
+    it("should correctly set overzoom resolutions if overzoom active", async () => {
       component.options = {
         mapIndex: "test-map",
         enableOverzoom: true
@@ -345,23 +351,25 @@ describe("VectorTileLayerComponent", () => {
       );
 
       component.ngOnInit();
-      tick();
+      // tick();
+      await vi.runAllTimersAsync();
       expect(component["vectorTileSource"].getResolutions()).toEqual(
         resolutions.slice(0, 13)
       );
-    }));
+    });
 
-    it("should correctly set overzoom resolutions if overzoom is not active", fakeAsync(() => {
+    it("should correctly set overzoom resolutions if overzoom is not active", async () => {
       component.options = {
         mapIndex: "test-map",
         enableOverzoom: false
       };
       component.ngOnInit();
-      tick();
+      // tick();
+      vi.runAllTimers();
       expect(component["vectorTileSource"].getResolutions()).toEqual(
         resolutions
       );
-    }));
+    });
   });
 
   describe("get maxZoom from sources", () => {

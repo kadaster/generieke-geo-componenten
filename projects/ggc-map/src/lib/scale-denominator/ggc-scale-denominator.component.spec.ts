@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import OlMap from "ol/Map";
 import { Subscription } from "rxjs";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
@@ -15,7 +15,7 @@ describe("ScaleDenominatorComponent", () => {
   let nativeElement: HTMLElement;
   let debugElement: DebugElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcScaleDenominatorComponent],
       providers: [
@@ -25,7 +25,7 @@ describe("ScaleDenominatorComponent", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcScaleDenominatorComponent);
@@ -92,9 +92,9 @@ describe("ScaleDenominatorComponent", () => {
       ".ggc-scale-denominator"
     );
     expect(scaleDenominatorElement).not.toBeNull();
-    expect((scaleDenominatorElement as HTMLElement).innerText).toEqual(
-      "1:123456"
-    );
+    expect(
+      (scaleDenominatorElement as HTMLElement).textContent?.trim()
+    ).toEqual("1:123456");
   });
 
   it("should unsubscribe when ngDestroy is called, ", () => {

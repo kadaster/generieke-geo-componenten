@@ -9,7 +9,6 @@ export interface MapView {
 }
 
 export class Map {
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_options?: unknown) {}
 
@@ -83,4 +82,3 @@ export class Map {
 }
 
 export default Map;
-

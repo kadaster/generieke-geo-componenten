@@ -1,6 +1,6 @@
 import type { Mock, MockedObject, MockInstance } from "vitest";
 import { DebugElement, SimpleChange } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import Feature, { FeatureLike } from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
 import { Geometry, Point } from "ol/geom";
@@ -41,7 +41,7 @@ describe("GeojsonLayerComponent", () => {
     "handleFeatureInfoForLayer" | "clearFeatureInfoForLayer"
   >;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     coreSelectionServiceSpy = {
       handleFeatureInfoForLayer: vi
         .fn()
@@ -61,7 +61,7 @@ describe("GeojsonLayerComponent", () => {
         provideHttpClientTesting()
       ]
     }).compileComponents();
-  }));
+  });
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcGeojsonLayerComponent);
     component = fixture.componentInstance;

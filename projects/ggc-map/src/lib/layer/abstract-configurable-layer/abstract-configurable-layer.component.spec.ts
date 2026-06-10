@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Layer } from "ol/layer";
 import ImageLayer from "ol/layer/Image";
 import OlMap from "ol/Map";
@@ -35,12 +35,12 @@ describe("AbstractConfigurableLayerComponent", () => {
   let debugElement: DebugElement;
   let resultLayer: ImageLayer<ImageSource>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [AbstractConfigurableLayerComponent, TestLayerComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
   beforeEach(() => {
     fixture = TestBed.createComponent(TestLayerComponent);
     component = fixture.componentInstance;

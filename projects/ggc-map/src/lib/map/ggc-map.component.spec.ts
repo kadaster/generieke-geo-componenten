@@ -1,6 +1,6 @@
 import type { MockedObject } from "vitest";
 import { HttpClient } from "@angular/common/http";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { filter } from "rxjs/operators";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
@@ -30,7 +30,7 @@ describe("MapComponent, ngAfterViewInit", () => {
   let mapSpy: Pick<MockedObject<OlMap>, "setTarget" | "on" | "getView">;
   let viewSpy: Pick<MockedObject<View>, "on" | "setZoom">;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcMapComponent],
       providers: [
@@ -44,7 +44,7 @@ describe("MapComponent, ngAfterViewInit", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcMapComponent);
@@ -52,14 +52,14 @@ describe("MapComponent, ngAfterViewInit", () => {
     component = fixture.componentInstance;
     // mapSpy = createSpyObj("Map", ["setTarget", "on", "getView"]);
     // viewSpy = createSpyObj("View", ["on", "setZoom"]);
+    viewSpy = {
+      on: vi.fn() as unknown as MockedObject<View>["on"],
+      setZoom: vi.fn()
+    };
     mapSpy = {
       setTarget: vi.fn(),
       on: vi.fn() as unknown as MockedObject<OlMap>["on"],
       getView: vi.fn().mockReturnValue(viewSpy)
-    };
-    viewSpy = {
-      on: vi.fn() as unknown as MockedObject<View>["on"],
-      setZoom: vi.fn()
     };
     vi.spyOn(coreMapService as any, "createAndGetMap").mockReturnValue(mapSpy);
   });

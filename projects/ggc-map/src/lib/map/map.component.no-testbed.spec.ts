@@ -25,11 +25,11 @@ describe("MapComponent(no-testbed), processEvent", () => {
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapServiceSpy: Pick<
     MockedObject<CoreMapService>,
-    "getMap" | "getLayerChangedObservable"
+    "getMap" | "getLayerChangedObservable" | "destroyMap"
   >;
   let coreDrawServiceSpy: Pick<
     MockedObject<CoreDrawService>,
-    "addFeatureToLayer"
+    "addFeatureToLayer" | "deleteLayers"
   >;
   let coreLoadingServiceSpy: Pick<
     MockedObject<CoreLoadingService>,
@@ -37,11 +37,13 @@ describe("MapComponent(no-testbed), processEvent", () => {
   >;
   let mapEventsServiceSpy: Pick<
     MockedObject<CoreMapEventsService>,
-    "emitSingleclickEventForMap" | "emitZoomendEventForMap"
+    | "emitSingleclickEventForMap"
+    | "emitZoomendEventForMap"
+    | "destroyEventsForMap"
   >;
   let coreSelectionServiceSpy: Pick<
     MockedObject<CoreSelectionService>,
-    "handleSingleclickEventForMap"
+    "handleSingleclickEventForMap" | "destroySelectionForMap"
   >;
 
   const mapEventOne: ObjectEvent = {
@@ -57,10 +59,12 @@ describe("MapComponent(no-testbed), processEvent", () => {
   beforeEach(() => {
     coreMapServiceSpy = {
       getMap: vi.fn(),
-      getLayerChangedObservable: vi.fn().mockReturnValue(of())
+      getLayerChangedObservable: vi.fn().mockReturnValue(of()),
+      destroyMap: vi.fn()
     };
     coreDrawServiceSpy = {
-      addFeatureToLayer: vi.fn()
+      addFeatureToLayer: vi.fn(),
+      deleteLayers: vi.fn()
     };
     coreLoadingServiceSpy = {
       addMapLoaders: vi.fn(),
@@ -68,10 +72,12 @@ describe("MapComponent(no-testbed), processEvent", () => {
     };
     mapEventsServiceSpy = {
       emitSingleclickEventForMap: vi.fn(),
-      emitZoomendEventForMap: vi.fn()
+      emitZoomendEventForMap: vi.fn(),
+      destroyEventsForMap: vi.fn()
     };
     coreSelectionServiceSpy = {
-      handleSingleclickEventForMap: vi.fn()
+      handleSingleclickEventForMap: vi.fn(),
+      destroySelectionForMap: vi.fn()
     };
     TestBed.configureTestingModule({
       providers: [

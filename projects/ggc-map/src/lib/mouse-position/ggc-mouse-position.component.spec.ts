@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import Control from "ol/control/Control";
 import { toStringHDMS } from "ol/coordinate";
 
@@ -30,12 +30,12 @@ describe("ControlMousePositionComponent", () => {
     }
   } as OlMap;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CoordinateFormatPipe],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcMousePositionComponent);

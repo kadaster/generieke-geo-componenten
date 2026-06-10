@@ -38,3 +38,4 @@ export class Polygon extends Geometry {
     return "Polygon";
   }
 }
+export default Polygon;

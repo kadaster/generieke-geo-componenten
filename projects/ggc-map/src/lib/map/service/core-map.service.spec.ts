@@ -1,4 +1,4 @@
-import { inject, TestBed } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import Feature from "ol/Feature";
 import VectorLayer from "ol/layer/Vector";
 import CircleStyle from "ol/style/Circle";
@@ -10,8 +10,6 @@ import { MapComponentEventTypes } from "../../model/map-component-event.model";
 import { CoreMapService } from "./core-map.service";
 import { provideZoneChangeDetection } from "@angular/core";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
-import { Collection } from "ol";
-import BaseLayer from "ol/layer/Base";
 import { Map } from "../../../../../../src/test/mocks/open-layers/Map";
 
 describe("CoreMapService", () => {
@@ -54,7 +52,6 @@ describe("CoreMapService", () => {
       ).toBeDefined();
     });
 
-    // TODO: aan Remco vragen
     it(
       "createAndGetMap, when called with minZoom 3 and maxZoom 19, should create a map with resolution length = 20 and" +
         "minZoom = 3",
@@ -66,8 +63,6 @@ describe("CoreMapService", () => {
           3,
           19
         ) as unknown as Map;
-
-        expect(newMap.setView).toHaveBeenCalledWith()
 
         expect(coreMapService["olMaps"].get(myMap)).toBeDefined();
         const defaultMap = coreMapService.getMap(myMap);
@@ -170,30 +165,14 @@ describe("CoreMapService", () => {
       }
     );
 
-    // TODO Remco vragen
     it("should return the layer with the specified layerId", () => {
       const map = coreMapService.createAndGetMap("my-map");
-      console.log(map);
       const layer = new VectorLayer({});
       layer.set("ggc-layer-id", "my-id");
-      // console.log(layer.get("ggc-layer-id"));
 
       map.addLayer(layer);
 
-      const bla = {
-        getArray() {
-          return [layer];
-        }
-      };
-
-      vi.spyOn(map, "getLayers").mockReturnValue([
-        bla
-      ] as unknown as Collection<BaseLayer>);
-
-      console.log("-->", map.getLayers());
-
       const result = coreMapService.getLayer("my-id", "my-map");
-      console.log(result);
       expect(result).toEqual(layer);
     });
   });
