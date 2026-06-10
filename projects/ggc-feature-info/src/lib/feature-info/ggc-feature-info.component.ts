@@ -155,6 +155,7 @@ export class GgcFeatureInfoComponent
     this.handleFeatureInfoChanges();
   }
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
 
   get customAttributeNamesAndValues():
@@ -312,9 +313,6 @@ export class GgcFeatureInfoComponent
    * Wordt bepaald op basis van `hidePagerWithOneFeature` en aantal features.
    */
   hidePager(): boolean {
-    console.log("HIDE", this.hidePagerWithOneFeature);
-    console.log("HIDE", this.displayFeaturesProperties);
-    console.log("HIDE", this.displayFeaturesProperties?.length);
     return (
       this.hidePagerWithOneFeature &&
       this.displayFeaturesProperties !== undefined &&
@@ -354,11 +352,13 @@ export class GgcFeatureInfoComponent
     this.events.next(featureInfoComponentEvent);
   }
 
-  private async highlightFeature(feature: object | undefined) {
-    await this.featureInfoMapConnectService.showHighlight(
-      feature,
-      this.mapIndex
-    );
+  /**
+   * Highlight het opgegeven feature op de kaart.
+   *
+   * @param feature Feature dat gehighlight moet worden
+   */
+  private highlightFeature(feature: object | undefined): void {
+    this.featureInfoMapConnectService.showHighlight(feature, this.mapIndex);
   }
 
   /**
@@ -405,40 +405,45 @@ export class GgcFeatureInfoComponent
     this.pagerIsHidden = this.hidePager();
   }
 
-  private async subscribeToMapSelection(mapIndex: string) {
+  private subscribeToMapSelection(mapIndex: string): void {
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
-    // featureInfoCollection gezet via de tabs
+    // featureInfoCollection gezet via de tabs (hasTabs = true
+    this.featureInfoMapConnectService
+      .getObservableForMapSelection(mapIndex)
+      .then((mapSelectionEvent) => {
+        if (this.hasTabs) {
+          return;
+        }
 
-    const mapSelectionEvent =
-      await this.featureInfoMapConnectService.getObservableForMapSelection(
-        mapIndex
-      );
-    if (!this.hasTabs) {
-      this.subscriptionSelection = mapSelectionEvent.subscribe(
-        (event: MapComponentEvent) => {
-          if (
-            event.type ===
-            MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-          ) {
+        this.subscriptionSelection = mapSelectionEvent.subscribe(
+          (event: MapComponentEvent) => {
+            if (
+              event.type !==
+              MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+            ) {
+              return;
+            }
+
             const collections: FeatureCollectionForLayer[] =
               event.value.featureCollectionForLayers;
+
             if (!collections || collections.length === 0) {
               this.featureInfoCollection = undefined;
               return;
             }
-            this.featureInfoCollection = {
-              features: collections.flatMap((layer) => layer.features ?? []),
-              layerName: collections
+
+            this.featureInfoCollection = new FeatureInfoCollection(
+              collections
                 .map(
                   (layer) =>
                     layer.layerTitle || layer.layerName || layer.layerId
                 )
                 .filter((value) => value && value.trim().length > 0)
-                .join(", ")
-            };
+                .join(", "),
+              collections.flatMap((layer) => layer.features ?? [])
+            );
           }
-        }
-      );
-    }
+        );
+      });
   }
 }
