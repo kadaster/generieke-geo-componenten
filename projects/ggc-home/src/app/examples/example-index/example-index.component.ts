@@ -45,7 +45,6 @@ import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
 
-
 interface GroupedCards {
   theme: string;
   cards: ComponentInfo[];

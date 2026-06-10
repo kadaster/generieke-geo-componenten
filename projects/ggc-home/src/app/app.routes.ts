@@ -49,7 +49,6 @@ import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
 
-
 export const routes: Routes = [
   {
     path: "",

@@ -122,11 +122,15 @@ export class GgcLegendComponent implements OnInit {
   @Input()
   emptyLegendMessage = "Geen legenda beschikbaar";
   /** Service voor het beheren van legenda-acties. */
-  private readonly coreLegendService = inject(CoreLegendService);
-  private readonly legendMapConnectService = inject(GgcLegendMapConnectService);
 
   /** Interne opslag van de legenda's. */
   protected _legends = signal<Legend[]>([]);
+
+  private readonly coreLegendService = inject(CoreLegendService);
+  private readonly legendMapConnectService = inject(GgcLegendMapConnectService);
+
+  private _mapIndex = DEFAULT_MAPINDEX;
+  private _viewerType: ViewerType = ViewerType.TWEE_D;
 
   /**
    * Haalt de huidige lijst van legenda's op.
@@ -145,8 +149,6 @@ export class GgcLegendComponent implements OnInit {
     this._legends.set(value);
   }
 
-  private _mapIndex = DEFAULT_MAPINDEX;
-
   /**
    * De mapIndex die hoort bij deze legend. Deze legenda reageert automatisch op events van de maps met dezelfde mapIndex.
    */
@@ -160,8 +162,6 @@ export class GgcLegendComponent implements OnInit {
       this._mapIndex = mapIndex;
     }
   }
-
-  private _viewerType: ViewerType = ViewerType.TWEE_D;
 
   /**
    * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).

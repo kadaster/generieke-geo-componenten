@@ -82,10 +82,7 @@ export class ExampleMapSelectDatasetTreeComponent
   onSelectModeChange(mode: "singleselect" | "multiselect") {
     switch (mode) {
       case "singleselect":
-        this.selectService.startSelect(
-          { selectMode: "single" },
-          this.mapIndex
-        );
+        this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
         break;
       case "multiselect":
         this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);
