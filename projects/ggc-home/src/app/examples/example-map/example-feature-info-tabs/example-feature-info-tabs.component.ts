@@ -38,7 +38,7 @@ export class ExampleFeatureInfoTabsComponent
     route: "/feature-info-tabs",
     title: "Feature Info weergeven in tabs",
     introduction:
-      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS- en GeoJSON-kaart(en) getoond worden in een dialoog met tabbladen.",
+      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.FEATURE_INFO],

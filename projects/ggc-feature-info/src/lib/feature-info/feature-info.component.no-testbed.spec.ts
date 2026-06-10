@@ -13,9 +13,6 @@ import { provideZoneChangeDetection } from "@angular/core";
 describe("FeatureInfoComponent, no testbed", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<GgcFeatureInfoComponent>;
-  const simpleChanges: SimpleChanges = {
-    featureInfoCollection: {} as SimpleChange
-  };
   let featureInfoConfigSpy: jasmine.SpyObj<GgcFeatureInfoConfigService>;
   let event: FeatureInfoComponentEvent;
 
@@ -43,7 +40,7 @@ describe("FeatureInfoComponent, no testbed", () => {
 
   describe("when array is not present", () => {
     beforeEach(() => {
-      component.ngOnChanges(simpleChanges);
+      //component.ngOnChanges(simpleChanges);
     });
 
     it("goToPreviousFeature should decrease currentFeatureIndex by one", () => {
@@ -79,7 +76,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       component.featureInfoCollection = { layerName: "laag", features };
       component["currentFeatureIndex"] = 0;
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-      component.ngOnChanges(simpleChanges);
+      //component.ngOnChanges(simpleChanges);
     });
 
     it("goToPreviousFeature should not change currentFeature and currentFeatureIndex", () => {
@@ -132,7 +129,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       const features = [feature1, feature2, feature3];
       component.featureInfoCollection = { layerName: "laag", features };
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-      component.ngOnChanges(simpleChanges);
+      //component.ngOnChanges(simpleChanges);
       component["currentFeatureIndex"] = 1;
     });
 
@@ -188,11 +185,11 @@ describe("FeatureInfoComponent, no testbed", () => {
       const features = [feature1, feature2, feature3];
       component.featureInfoCollection = { layerName: "laag", features };
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-      component.ngOnChanges(simpleChanges);
+      //component.ngOnChanges(simpleChanges);
       component["currentFeatureIndex"] = 1;
 
       component.featureInfoCollection = undefined;
-      component.ngOnChanges(simpleChanges);
+      //component.ngOnChanges(simpleChanges);
     });
 
     it("displayFeatures length should be 0", () => {
@@ -272,7 +269,7 @@ describe("FeatureInfoComponent, no testbed", () => {
           features: arrayContaningFeatures
         };
         featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-        component.ngOnChanges(simpleChanges);
+        //component.ngOnChanges(simpleChanges);
 
         expect(component.featureInfoCollection.features).toBe(
           arrayContaningFeatures

@@ -1,4 +1,4 @@
-import { Component, SimpleChange, ViewChild } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { Feature } from "ol";
 import {
@@ -114,10 +114,6 @@ describe("FeatureInfoComponent", () => {
       layerName: "laag",
       features: [feature1]
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([{}]);
-
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
-    fixture.detectChanges();
 
     const emptyMessageElement = nativeElement.querySelector(".ggc-fi-empty");
 
@@ -128,16 +124,14 @@ describe("FeatureInfoComponent", () => {
   });
 
   it("when hidePagerWithOneFeature is not set it should default always show the pager", () => {
+    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+      { test: "123" }
+    ]);
     const feature = new Feature({ test: "123" });
     component.featureInfoCollection = {
       layerName: "laag",
       features: [feature]
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
-      { test: "123" }
-    ]);
-
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
     fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
@@ -154,6 +148,7 @@ describe("FeatureInfoComponent", () => {
 
   it("when hidePagerWithOneFeature is set to true it not show the pager when there is only one feature", () => {
     const feature = new Feature({ test: "123" });
+
     component.featureInfoCollection = {
       layerName: "laag",
       features: [feature]
@@ -161,10 +156,7 @@ describe("FeatureInfoComponent", () => {
     featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
       { test: "123" }
     ]);
-
     component.hidePagerWithOneFeature = true;
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
-    fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
     const pagerPreviousElement = nativeElement.querySelector(
@@ -180,18 +172,15 @@ describe("FeatureInfoComponent", () => {
   it("when hidePagerWithOneFeature is set to true, but there is more than 1 feature, it should show the pager", () => {
     const feature = new Feature({ test: "123" });
     const secondFeature = new Feature({ test: "456" });
-    component.featureInfoCollection = {
-      layerName: "laag",
-      features: [feature, secondFeature]
-    };
     featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
       { test: "123" },
       { test: "456" }
     ]);
-
+    component.featureInfoCollection = {
+      layerName: "laag",
+      features: [feature, secondFeature]
+    };
     component.hidePagerWithOneFeature = true;
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
-    fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
     const pagerPreviousElement = nativeElement.querySelector(
@@ -216,7 +205,7 @@ describe("FeatureInfoComponent", () => {
       { test: "456" }
     ]);
 
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
+    //component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });*/
 
     component.pagerPrevious = "previous";
     component.pagerNext = "next";

@@ -29,7 +29,8 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-custom-names-values",
     title: "Aangepaste Feature Info weergeven",
-    introduction: "Toon feature info voor één of meer kaartlagen.",
+    introduction:
+      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.FEATURE_INFO],
@@ -43,7 +44,6 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
   mapIndex = "featureInfoCustomNamesValues";
   mapConfig: Webservice[];
   customAttributeNamesAndValues: Map<string, CustomFeatureInfo>;
-  private readonly selectionService = inject(GgcSelectionService);
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );

@@ -93,19 +93,11 @@ export class GgcFeatureInfoComponent
    * Default: `">"`.
    */
   @Input() pagerNext = ">";
-
-  /**
-   * Map van veldnamen naar `CustomFeatureInfo` objecten.
-   * Hiermee kunnen veldnamen en/of veldwaarden aangepast worden.
-   */
-  @Input() customAttributeNamesAndValues: Map<string, CustomFeatureInfo>;
-
   /**
    * Verberg velden die leeg zijn (null of lege string).
    * Default: `false`.
    */
   @Input() hideEmptyFields = false;
-
   /**
    * Maak gebruik van auto-connect functionaliteit,
    * auto-connect zorgt ervoor dat er automatische op
@@ -114,10 +106,7 @@ export class GgcFeatureInfoComponent
    * Default: `true`.
    */
   @Input() autoConnect = true;
-
   @Input() autoStartSelect = true;
-
-  @Input() selectionOptions: object | undefined;
   /**
    * EventEmitter voor het versturen van component-gerelateerde events.
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
@@ -163,7 +152,28 @@ export class GgcFeatureInfoComponent
   @Input()
   set featureInfoCollection(value: FeatureInfoCollection | undefined) {
     this._featureInfoCollection = value;
-    this.handleFeatureInfoCollectionChange();
+    this.handleFeatureInfoChanges();
+  }
+
+  private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
+
+  get customAttributeNamesAndValues():
+    | Map<string, CustomFeatureInfo>
+    | undefined {
+    return this._customAttributeNamesAndValues;
+  }
+
+  /**
+   * Map van een koppeling van veldnamen naar `CustomFeatureInfo` objecten,
+   * in de vorm van een customAttributeName en/of customAttributeValueFunction.
+   * Hiermee kunnen veldnamen en/of veldwaarden aangepast worden.
+   */
+  @Input()
+  set customAttributeNamesAndValues(
+    value: Map<string, CustomFeatureInfo> | undefined
+  ) {
+    this._customAttributeNamesAndValues = value;
+    this.handleFeatureInfoChanges();
   }
 
   /**
@@ -174,7 +184,6 @@ export class GgcFeatureInfoComponent
     if (!event) {
       return;
     }
-
     this.handleFeatureInfoEvent(event);
   }
 
@@ -303,6 +312,9 @@ export class GgcFeatureInfoComponent
    * Wordt bepaald op basis van `hidePagerWithOneFeature` en aantal features.
    */
   hidePager(): boolean {
+    console.log("HIDE", this.hidePagerWithOneFeature);
+    console.log("HIDE", this.displayFeaturesProperties);
+    console.log("HIDE", this.displayFeaturesProperties?.length);
     return (
       this.hidePagerWithOneFeature &&
       this.displayFeaturesProperties !== undefined &&
@@ -353,7 +365,7 @@ export class GgcFeatureInfoComponent
    * Verwerkt wijzigingen in de featureInfoCollection,
    * ongeacht of deze via een @Input of interne logica komen.
    */
-  private handleFeatureInfoCollectionChange(): void {
+  private handleFeatureInfoChanges(): void {
     if (!this.featureInfoCollection) {
       this.displayFeaturesProperties = undefined;
     } else {
@@ -362,11 +374,9 @@ export class GgcFeatureInfoComponent
           this.customAttributeNamesAndValues
         );
       }
-
       const featuresProperties = this.getPropertiesFromFeatures(
         this.featureInfoCollection.features
       );
-
       this.displayFeaturesProperties =
         this.featureInfoConfigService.filterAndSortAttributes(
           this.featureInfoCollection.layerName,
@@ -426,7 +436,6 @@ export class GgcFeatureInfoComponent
                 .filter((value) => value && value.trim().length > 0)
                 .join(", ")
             };
-            console.log(this.featureInfoCollection);
           }
         }
       );
