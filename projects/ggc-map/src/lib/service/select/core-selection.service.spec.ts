@@ -11,7 +11,7 @@ import {
   MapComponentEventTypes
 } from "../../model/map-component-event.model";
 import { of } from "rxjs";
-import { FeatureCollectionForCoordinate } from "./selection-state.model";
+import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 
 /**
  * Mock Select interaction zodat we OpenLayers niet volledig hoeven te initialiseren
