@@ -314,10 +314,6 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een IconList[] is.
    */
   protected isIconListArray(legend: LegendType): legend is IconList[] {
-    console.log(
-      "Hallo is IconListArrayl",
-      Array.isArray(legend) && legend.length > 0 && "imageUrl" in legend[0]
-    );
     return (
       Array.isArray(legend) && legend.length > 0 && "imageUrl" in legend[0]
     );
@@ -329,13 +325,6 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een LegendUrl is.
    */
   protected isLegendUrl(legend: LegendType): legend is LegendUrl {
-    console.log(
-      "Hallo is LegendUrl",
-      typeof legend === "object" &&
-        legend !== null &&
-        "legendUrl" in legend &&
-        legend.legendUrl !== ""
-    );
     return (
       typeof legend === "object" &&
       legend !== null &&
@@ -350,14 +339,6 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een VectorTileStyle is.
    */
   protected isVectorTileStyle(legend: LegendType): legend is VectorTileStyle {
-    console.log(legend);
-    console.log(
-      "Hallo isVectorTileStyle",
-      typeof legend === "object" &&
-        legend !== null &&
-        "name" in legend &&
-        "url" in legend
-    );
     return (
       typeof legend === "object" &&
       legend !== null &&
