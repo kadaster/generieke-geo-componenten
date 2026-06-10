@@ -24,6 +24,7 @@ import {
 } from "./center-coordinate-utils";
 import {
   defaultHighlightStyle,
+  defaultPointModifyStyle,
   defaultSelectedPointStyle
 } from "./default-modify-style";
 
@@ -48,6 +49,7 @@ export class CenterModify extends CenterBase {
   private readonly pixelTolerance: number = 6;
   private highlightedFeature: Feature | undefined;
   private selectedFeatureCurrentCoordinateIndex: number | undefined;
+  private selectedPointStyle: StyleLike | undefined;
   private keyNextPoint = "BracketRight"; // ]
   private keyPrevPoint = "BracketLeft"; // [
 
@@ -61,6 +63,7 @@ export class CenterModify extends CenterBase {
       options.selectedPointStyle ?? defaultSelectedPointStyle,
       Infinity
     );
+    this.selectedPointStyle = options.selectedPointStyle;
     this.targetSource = options.targetSource;
     if (options.pixelTolerance) {
       this.pixelTolerance = options.pixelTolerance;
@@ -98,6 +101,11 @@ export class CenterModify extends CenterBase {
     if (coordinate) {
       this.modifiedIndex = this.coordinateOfFeatureToIndex(feature, coordinate);
     }
+
+    if (!this.selectedPointStyle) {
+      this.selectedPointOverlay?.setStyle(defaultPointModifyStyle);
+    }
+
     this.updateCenterPoint();
   }
 
@@ -108,6 +116,11 @@ export class CenterModify extends CenterBase {
     }
     this.dispatchEvent(new DrawEvent("modifyend", sketchFeature));
     this.targetSource?.addFeature(sketchFeature);
+
+    if (!this.selectedPointStyle) {
+      this.selectedPointOverlay?.setStyle(defaultSelectedPointStyle);
+    }
+
     this.updateCenterPoint();
   }
 
@@ -168,7 +181,9 @@ export class CenterModify extends CenterBase {
           }
 
           polygon.setCoordinates([filteredCoordinates]);
-        } else {
+        }
+
+        if (filteredCoordinates.length <= 3) {
           this.targetSource.removeFeature(feature);
           this.modifyOverlay.getSource()?.clear();
           this.highlightedFeature = undefined;
