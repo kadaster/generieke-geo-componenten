@@ -10,8 +10,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-feature-info-basic",
   imports: [ExampleFormatComponent, GgcFeatureInfoComponent, GgcMapComponent],
-  templateUrl: "./example-feature-info-basic.component.html",
-  styleUrl: "./example-feature-info-basic.component.scss"
+  templateUrl: "./example-feature-info-basic.component.html"
 })
 export class ExampleFeatureInfoBasicComponent
   extends ExampleFormatComponent
@@ -20,7 +19,7 @@ export class ExampleFeatureInfoBasicComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-basic",
-    title: "Feature Info weergeven",
+    title: "Toon informatie over geografische objecten op de kaart.",
     introduction:
       "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
     components: [Components.GGC_FEATURE_INFO],

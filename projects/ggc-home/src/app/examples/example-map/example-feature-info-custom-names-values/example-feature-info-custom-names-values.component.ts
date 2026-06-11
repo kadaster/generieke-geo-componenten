@@ -1,10 +1,6 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import {
-  GgcMapComponent,
-  GgcSelectionService,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import {
   CustomFeatureInfo,
   GgcFeatureInfoComponent,
@@ -18,8 +14,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-feature-info-custom-names-values",
   imports: [ExampleFormatComponent, GgcFeatureInfoComponent, GgcMapComponent],
-  templateUrl: "./example-feature-info-custom-names-values.component.html",
-  styleUrl: "./example-feature-info-custom-names-values.component.scss"
+  templateUrl: "./example-feature-info-custom-names-values.component.html"
 })
 export class ExampleFeatureInfoCustomNamesValuesComponent
   extends ExampleFormatComponent
@@ -28,7 +23,7 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-custom-names-values",
-    title: "Aangepaste Feature Info weergeven",
+    title: "Toon aangepaste informatie over geografische objecten op de kaart.",
     introduction:
       "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
     components: [Components.GGC_FEATURE_INFO],

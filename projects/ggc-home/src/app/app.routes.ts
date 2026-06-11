@@ -45,6 +45,7 @@ import { ExampleMapSelectHoverClickComponent } from "./examples/example-map/exam
 import { ExampleMapSelectWmsComponent } from "./examples/example-map/example-map-select-wms/example-map-select-wms.component";
 import { ExampleMapSelectDatasetTreeComponent } from "./examples/example-map/example-map-select-dataset-tree/example-map-select-dataset-tree.component";
 import { ExampleFeatureInfoBasicComponent } from "./examples/example-map/example-feature-info-basic/example-feature-info-basic.component";
+import { ExampleFeatureInfoAdvComponent } from "./examples/example-map/example-feature-info-adv/example-feature-info-adv.component";
 import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-feature-info-tabs/example-feature-info-tabs.component";
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
@@ -323,6 +324,12 @@ export const routes: Routes = [
     title: "Feature Info tonen | GGC-Home",
     component: ExampleFeatureInfoBasicComponent,
     data: { label: "example-feature-info-basic" }
+  },
+  {
+    path: "feature-info-adv",
+    title: "Feature Info tonen | GGC-Home",
+    component: ExampleFeatureInfoAdvComponent,
+    data: { label: "example-feature-info-adv" }
   },
   {
     path: "feature-info-tabs",

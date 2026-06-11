@@ -22,10 +22,8 @@
       Informatie wordt opgehaald door middel van een klik in de kaart voor lagen
       waarvoor dit is ingesteld (getFeatureInfoOnSingleClick). De titel van een
       kaartlaag wordt gebruikt als label op de tab bladen. Het actieve feature
-      wordt getoond in de kaart. In de rechter kolom kun je verschillende opties
-      instellen die invloed hebben op hoe de feature info wordt weergegeven. Let
-      wel de opties voor het tonen van paginering en het wisselen van
-      tabvolgorde werken pas na een nieuwe klik in de kaart.
+      wordt getoond in de kaart. De volgorde van de tabbladen kan worden
+      gewisseld, dit werkt echter pas na een nieuwe klik in de kaart.
     </p>
   </div>
   <div page-functionality>
@@ -43,70 +41,22 @@
             >
             </ggc-feature-info
           ></ggc-feature-info-tabs>
+          <br />
+          <div>
+            <label class="switch">
+              <input (change)="toggleTabOrder()" checked type="checkbox" />
+              <span class="slider round"></span>
+            </label>
+            Wissel volgorde van tabs
+          </div>
         </div>
       </div>
-      <div class="col-xl-6 col-md-4 col-sm4">
+      <div class="col-xl-9 col-md-7 col-sm7">
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->
-      <div class="col-xl-3 col-md-3 col-sm-3">
-        <div class="row options-toggle">
-          <h6 id="extraOptionsLabel">Extra opties</h6>
-          <label class="switch">
-            <input
-              (change)="goToPage('/feature-info-basic')"
-              aria-labelledby="extraOptionsLabel"
-              checked
-              type="checkbox"
-            />
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <br />
-        <div>
-          <label>
-            <input [(ngModel)]="showEmptyMessage" type="checkbox" />
-            Toon melding "Geen informatie beschikbaar"
-          </label>
-        </div>
-        <br />
-        <div>
-          <label>
-            <input [(ngModel)]="hidePagerWithOneFeature" type="checkbox" />
-            Verberg paginering bij 1 resultaat
-          </label>
-        </div>
-        <br />
-        <div>
-          <label class="switch">
-            <input
-              (change)="toggleFeatureInfoDisplayType()"
-              checked
-              type="checkbox"
-            />
-            <span class="slider round"></span>
-          </label>
-          Wissel tussen Lijst en Tabel weergave
-        </div>
-        <br />
-        <div>
-          <label class="switch">
-            <input (change)="toggleHighlightStyle()" checked type="checkbox" />
-            <span class="slider round"></span>
-          </label>
-          Wissel highlight style
-        </div>
-        <br />
-        <div>
-          <label class="switch">
-            <input (change)="toggleTabOrder()" checked type="checkbox" />
-            <span class="slider round"></span>
-          </label>
-          Wissel volgorde van tabs
-        </div>
-      </div>
     </div>
   </div>
 </app-example-format>
