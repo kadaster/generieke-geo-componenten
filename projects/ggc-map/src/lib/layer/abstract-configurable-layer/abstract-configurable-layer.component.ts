@@ -8,6 +8,7 @@ import {
 import { MapComponentEvent } from "../../model/map-component-event.model";
 import { AbstractBaseLayerComponent } from "../abstract-base-layer/abstract-base-layer.component";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
+import { zoomlevelToResolution } from "../../utils/epsg28992";
 
 @Component({
   selector: "ggc-abstract-configurable-layer",
@@ -40,6 +41,26 @@ export class AbstractConfigurableLayerComponent<T>
       ...(this.options?.zIndex && { zIndex: this.options?.zIndex }),
       ...(this.options?.opacity && { opacity: this.options?.opacity })
     };
+
+    if (
+      this.options?.minZoomLevel !== undefined &&
+      this.options.maxResolution == undefined
+    ) {
+      this.layerOptions = {
+        ...this.layerOptions,
+        maxResolution: zoomlevelToResolution(this.options.minZoomLevel)
+      };
+    }
+
+    if (
+      this.options?.maxZoomlevel !== undefined &&
+      this.options.minResolution == undefined
+    ) {
+      this.layerOptions = {
+        ...this.layerOptions,
+        minResolution: zoomlevelToResolution(this.options.maxZoomlevel)
+      };
+    }
   }
 
   ngOnDestroy(): void {

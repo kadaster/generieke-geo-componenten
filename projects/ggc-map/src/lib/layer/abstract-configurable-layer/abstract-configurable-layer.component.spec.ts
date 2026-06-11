@@ -11,6 +11,7 @@ import { AbstractConfigurableLayerComponent } from "./abstract-configurable-laye
 import { ViewStateLayerStateExtent } from "ol/View";
 import { Options } from "ol/source/ImageStatic";
 import objectContaining = jasmine.objectContaining;
+import { zoomlevelToResolution } from "../../utils/epsg28992";
 
 @Component({ template: "" })
 class TestLayerComponent extends AbstractConfigurableLayerComponent<
@@ -131,5 +132,51 @@ describe("AbstractConfigurableLayerComponent", () => {
         imageExtent: []
       } as Options)
     );
+  });
+
+  describe("min/maxZoomLevel", () => {
+    it("should set maxResolution based on minZoomLevel when maxResolution is not provided", () => {
+      const minZoomLevel = 5;
+      component["options"] = { minZoomLevel };
+
+      component.ngOnInit();
+
+      expect(component["layerOptions"].maxResolution).toBe(
+        zoomlevelToResolution(minZoomLevel)
+      );
+    });
+
+    it("should NOT override maxResolution when both minZoomLevel and maxResolution are provided", () => {
+      const minZoomLevel = 5;
+      const maxResolution = 1234;
+
+      component["options"] = { minZoomLevel, maxResolution };
+
+      component.ngOnInit();
+
+      expect(component["layerOptions"].maxResolution).toBe(maxResolution);
+    });
+
+    it("should set minResolution based on maxZoomlevel when minResolution is not provided", () => {
+      const maxZoomlevel = 10;
+      component["options"] = { maxZoomlevel };
+
+      component.ngOnInit();
+
+      expect(component["layerOptions"].minResolution).toBe(
+        zoomlevelToResolution(maxZoomlevel)
+      );
+    });
+
+    it("should NOT override minResolution when both maxZoomlevel and minResolution are provided", () => {
+      const maxZoomlevel = 10;
+      const minResolution = 4321;
+
+      component["options"] = { maxZoomlevel, minResolution };
+
+      component.ngOnInit();
+
+      expect(component["layerOptions"].minResolution).toBe(minResolution);
+    });
   });
 });
