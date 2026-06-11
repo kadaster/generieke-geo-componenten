@@ -24,6 +24,7 @@ import { CoreSelectionService } from "../service/core-selection.service";
 import { Observable } from "rxjs";
 import { provideZoneChangeDetection } from "@angular/core";
 import { vi } from "vitest";
+import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 describe("ViewerComponent", () => {
   let component: GgcViewerComponent;
   let fixture: ComponentFixture<GgcViewerComponent>;
@@ -55,6 +56,7 @@ describe("ViewerComponent", () => {
       providers: [
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
         { provide: CoreCameraService, useValue: cameraSpy },
+        { provide: GgcSharedLayerService, useValue: {} },
         provideZoneChangeDetection()
       ]
     }).compileComponents();
@@ -71,7 +73,6 @@ describe("ViewerComponent", () => {
         resolve(cesiumMock);
       })
     );
-    await fixture.whenStable();
   });
 
   it("should create", async () => {
@@ -83,7 +84,8 @@ describe("ViewerComponent", () => {
 
     fixture.detectChanges();
     await Promise.resolve();
-    await fixture.whenStable();
+    await Promise.resolve();
+
     expect(ready).toBe(true);
     expect(cesiumMock.camera!.flyTo).not.toHaveBeenCalled();
   });
@@ -107,7 +109,7 @@ describe("ViewerComponent", () => {
       };
       fixture.detectChanges();
       await Promise.resolve();
-      await fixture.whenStable();
+      await Promise.resolve();
 
       expect(component["viewer"].scene!.light).toBeInstanceOf(DirectionalLight);
       expect(component["viewer"].scene!.light.intensity).toBe(10);
@@ -125,7 +127,7 @@ describe("ViewerComponent", () => {
 
       fixture.detectChanges();
       await Promise.resolve();
-      await fixture.whenStable();
+      await Promise.resolve();
 
       expect(component["viewer"].scene!.light).toBeInstanceOf(DirectionalLight);
       const light = component["viewer"].scene!.light as DirectionalLight;
@@ -139,7 +141,6 @@ describe("ViewerComponent", () => {
   describe("cameraOptions", () => {
     beforeEach(async () => {
       fixture.detectChanges();
-      await fixture.whenStable();
     });
 
     it("flyTo should use camera.lookatTransform when cameraOptions is LookAtObject", async () => {
@@ -184,7 +185,7 @@ describe("ViewerComponent", () => {
         lookAtPosition: { lon: 10, lat: 10 }
       } as LookAtPosition;
 
-      await fixture.whenStable();
+      await Promise.resolve();
 
       expect(cesiumMock.camera?.lookAt).toHaveBeenCalled();
     });

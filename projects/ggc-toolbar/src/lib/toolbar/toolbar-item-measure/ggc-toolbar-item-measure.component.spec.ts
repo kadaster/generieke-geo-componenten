@@ -56,7 +56,6 @@ describe("ToolbarItemMeasureComponent", () => {
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 
-    fixture.whenStable();
     fixture.detectChanges();
   });
 

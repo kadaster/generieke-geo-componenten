@@ -131,7 +131,6 @@ describe("DatasetLegendComponent", () => {
     "when there is no dataset available, " +
       'it should display "Geen datasets geselecteerd!"',
     async () => {
-      await fixture.whenStable();
       const element = fixture.debugElement.query(By.css("span"));
       const firstChildData = element.nativeElement.firstChild.data;
       expect(firstChildData).toEqual("Geen datasets geselecteerd!");
@@ -145,7 +144,6 @@ describe("DatasetLegendComponent", () => {
       component.legends = [JSON.parse(JSON.stringify(legendEmpty))];
       component.showEmptyLegendMessage = true;
       fixture.detectChanges();
-      await fixture.whenStable();
       const element = fixture.debugElement.query(
         By.css(".ggc-dl-empty-legend-message")
       );
@@ -162,7 +160,6 @@ describe("DatasetLegendComponent", () => {
       component.emptyLegendMessage = "aanpasbare lege legenda bericht";
       component.showEmptyLegendMessage = true;
       fixture.detectChanges();
-      await fixture.whenStable();
       const element = fixture.debugElement.query(
         By.css(".ggc-dl-empty-legend-message")
       );
@@ -177,7 +174,6 @@ describe("DatasetLegendComponent", () => {
     async () => {
       component.legends = [JSON.parse(JSON.stringify(legendIcon))];
       fixture.detectChanges();
-      await fixture.whenStable();
       const element = fixture.debugElement.query(By.css("span"));
       const firstChildData = element.nativeElement.firstChild.data.trim();
       expect(firstChildData).toEqual("BAG Terugmeldingen");
@@ -191,7 +187,6 @@ describe("DatasetLegendComponent", () => {
       component.legends = [JSON.parse(JSON.stringify(legendIcon))];
       component.showLegendsName = false;
       fixture.detectChanges();
-      await fixture.whenStable();
       const imgElement = fixture.debugElement.query(
         By.css(".ggc-dl-iconlist-image")
       );
@@ -224,7 +219,6 @@ describe("DatasetLegendComponent", () => {
       ]);
 
       fixture.detectChanges();
-      await fixture.whenStable();
       const mapboxNode = fixture.debugElement.query(
         By.css("ggc-legend-mapbox")
       );
@@ -245,7 +239,6 @@ describe("DatasetLegendComponent", () => {
     component.legends = [JSON.parse(JSON.stringify(legendIcon))];
     component.toggleLegend(component.legends[0]);
     fixture.detectChanges();
-    await fixture.whenStable();
     expect(component.legends[0].expanded).toEqual(true);
     const element = fixture.debugElement.query(By.css("button"));
     expect(element.children[0].classes["fa-angle-right"]).toBe(true);
@@ -264,7 +257,6 @@ describe("DatasetLegendComponent", () => {
     component.legends = [JSON.parse(JSON.stringify(legendIcon))];
     component.toggleLegend(component.legends[0]);
     fixture.detectChanges();
-    await fixture.whenStable();
     expect(console.warn).toHaveBeenCalledWith(
       "Set DatasetLegendComponent.collapsable = true om legends in of uit te klappen."
     );
@@ -280,7 +272,6 @@ describe("DatasetLegendComponent", () => {
 
     // expand all
     legendService.expandAll$.next({ mapIndex: "Jan", expanded: true });
-    await fixture.whenStable();
 
     // verify
     expect(component.legends[0].expanded).toEqual(true);
@@ -288,7 +279,6 @@ describe("DatasetLegendComponent", () => {
 
     // collapse all
     legendService.expandAll$.next({ mapIndex: "Jan", expanded: false });
-    await fixture.whenStable();
 
     // verify
     expect(component.legends[0].expanded).toEqual(false);
@@ -306,7 +296,6 @@ describe("DatasetLegendComponent", () => {
 
     // expand all with another mapIndex
     legendService.expandAll$.next({ mapIndex: "NOT Kees", expanded: true });
-    await fixture.whenStable();
 
     // verify
     expect(component.legends[0].expanded).toEqual(false);

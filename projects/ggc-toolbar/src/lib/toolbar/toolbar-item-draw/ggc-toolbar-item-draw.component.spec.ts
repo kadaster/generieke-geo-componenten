@@ -55,7 +55,6 @@ describe("ToolbarItemDrawComponent", () => {
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 
-    await fixture.whenStable();
     fixture.detectChanges();
   });
 

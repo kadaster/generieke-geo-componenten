@@ -35,7 +35,9 @@ describe("DatasetTreeComponent", () => {
       "www.testurl.nl"
     );
     let testTheme: Theme = new Theme("LaatsteTheme", [testDataset], [], open);
+    console.log(niveau);
     for (i = niveau; i > 0; i--) {
+      console.log(niveau + " in loop");
       testTheme = new Theme("ThemeNiveau " + i, [], [testTheme], open);
     }
     themeArray.push(testTheme);
@@ -114,10 +116,10 @@ describe("DatasetTreeComponent", () => {
       async () => {
         component.themes = createTreeForTest(5, true);
 
-        fixture.detectChanges();
         // Making sure all child components are stable and all promises are handled
-        await fixture.whenStable();
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+        await Promise.resolve();
+        await new Promise(setImmediate);
         fixture.detectChanges();
 
         const themeTrWithCounter: NodeListOf<HTMLButtonElement> =
@@ -157,6 +159,7 @@ describe("DatasetTreeComponent", () => {
       "with multiple other themes inside an other theme, and showActiveCounters false" +
         "it should find the themeName and datasetName in deeper layers and should not show count of active dataset",
       async () => {
+        vi.useFakeTimers();
         testRecursionTree = createTreeForTest(5, true);
 
         component.showActiveCounters = false;
@@ -164,8 +167,7 @@ describe("DatasetTreeComponent", () => {
 
         fixture.detectChanges();
         // Making sure all child components are stable and all promises are handled
-        await fixture.whenStable();
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await vi.runAllTimersAsync();
         fixture.detectChanges();
 
         const buttons = nativeElement.querySelectorAll(
