@@ -1,4 +1,4 @@
-@if (isSvg() && svgContent().length > 0) {
+@if (isSvg() && svgContent()) {
   <div [innerHTML]="svgContent()"></div>
 } @else {
   <div class="ggc-dl-legend-img">
