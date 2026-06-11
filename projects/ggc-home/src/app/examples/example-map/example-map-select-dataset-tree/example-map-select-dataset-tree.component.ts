@@ -10,15 +10,20 @@ import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
-import { Theme } from "@kadaster/ggc-dataset-tree";
-import { GgcDatasetTreeComponent } from "../../../../../../ggc-dataset-tree/src/lib/dataset-tree/dataset-tree/ggc-dataset-tree.component";
-import { MapComponentEventTypes } from "../../../../../../ggc-map/src/lib/model/map-component-event.model";
+import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
+import { MapComponentEventTypes } from "@kadaster/ggc-models";
+import {
+  GgcFeatureInfoComponent,
+  GgcFeatureInfoTabsComponent
+} from "@kadaster/ggc-feature-info";
 
 @Component({
   selector: "app-example-map-select",
   imports: [
     GgcMapComponent,
     GgcDatasetTreeComponent,
+    GgcFeatureInfoComponent,
+    GgcFeatureInfoTabsComponent,
     ExampleFormatComponent,
     FormsModule
   ],
@@ -76,16 +81,22 @@ export class ExampleMapSelectDatasetTreeComponent
       }
     });
 
-    this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+    this.onSelectModeChange("singleselect");
   }
 
   onSelectModeChange(mode: "singleselect" | "multiselect") {
     switch (mode) {
       case "singleselect":
-        this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "single", style: null },
+          this.mapIndex
+        );
         break;
       case "multiselect":
-        this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "multi", style: null },
+          this.mapIndex
+        );
         break;
     }
   }

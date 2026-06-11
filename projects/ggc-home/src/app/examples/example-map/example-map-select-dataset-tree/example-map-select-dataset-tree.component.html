@@ -65,6 +65,11 @@
             [expandTreeOnInit]="true"
           ></ggc-dataset-tree>
         </div>
+        <div class="feature-info-container">
+          <ggc-feature-info-tabs [mapIndex]="mapIndex" [showEmptyTabs]="true">
+            <ggc-feature-info [mapIndex]="mapIndex"> </ggc-feature-info
+          ></ggc-feature-info-tabs>
+        </div>
       </div>
       <div class="map-container">
         <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>

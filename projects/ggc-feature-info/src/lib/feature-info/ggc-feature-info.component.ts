@@ -428,6 +428,7 @@ export class GgcFeatureInfoComponent
               event.value.featureCollectionForLayers;
 
             if (!collections || collections.length === 0) {
+              this.featureInfoMapConnectService.clearHighlightLayer(mapIndex);
               this.featureInfoCollection = undefined;
               return;
             }

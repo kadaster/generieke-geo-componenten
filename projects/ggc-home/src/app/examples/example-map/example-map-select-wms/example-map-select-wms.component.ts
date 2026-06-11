@@ -1,4 +1,10 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  AfterViewInit
+} from "@angular/core";
 import {
   GgcMapComponent,
   GgcSelectionService,
@@ -10,6 +16,7 @@ import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
+import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-map-select",
@@ -19,7 +26,7 @@ import { FormsModule } from "@angular/forms";
 })
 export class ExampleMapSelectWmsComponent
   extends ExampleFormatComponent
-  implements OnInit
+  implements OnInit, AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
@@ -55,7 +62,10 @@ export class ExampleMapSelectWmsComponent
         mapEvent.mapIndex == this.mapIndex &&
         mapEvent.type === "selectionServiceSelectionUpdated"
       ) {
-        const gemeentes: string[] = (mapEvent.value ?? []).map(
+        const features =
+          (mapEvent.value as FeatureCollectionForCoordinate)
+            .featureCollectionForLayers[0]?.features ?? [];
+        const gemeentes: string[] = features.map(
           (feature: any) => feature?.values_?.naam
         );
         this.geselecteerdeGemeentes.set(
@@ -63,6 +73,9 @@ export class ExampleMapSelectWmsComponent
         );
       }
     });
+  }
+
+  ngAfterViewInit() {
     this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
   }
 

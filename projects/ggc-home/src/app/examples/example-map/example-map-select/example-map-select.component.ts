@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal, AfterViewInit } from "@angular/core";
 import {
   GgcMapComponent,
   GgcSelectionService,
@@ -11,6 +11,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
 import { pointerMove } from "ol/events/condition";
+import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-map-select",
@@ -20,7 +21,7 @@ import { pointerMove } from "ol/events/condition";
 })
 export class ExampleMapSelectComponent
   extends ExampleFormatComponent
-  implements OnInit
+  implements OnInit, AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
@@ -57,7 +58,10 @@ export class ExampleMapSelectComponent
         mapEvent.mapIndex == this.mapIndex &&
         mapEvent.type === "selectionServiceSelectionUpdated"
       ) {
-        const provincies: string[] = (mapEvent.value ?? []).map(
+        const features =
+          (mapEvent.value as FeatureCollectionForCoordinate)
+            .featureCollectionForLayers[0]?.features ?? [];
+        const provincies: string[] = features.map(
           (feature: any) => feature?.values_?.statnaam
         );
         this.geselecteerdeProvincies.set(
@@ -65,6 +69,9 @@ export class ExampleMapSelectComponent
         );
       }
     });
+  }
+
+  ngAfterViewInit() {
     this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
   }
 

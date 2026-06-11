@@ -108,6 +108,7 @@ export class GgcFeatureInfoTabsComponent
         "Het huidige weergegeven tabblad.",
         undefined
       );
+      this.featureInfoMapConnectService.clearHighlightLayer(this.mapIndex);
       this.eventService.emit(event);
       this.events.emit(event);
     } else {

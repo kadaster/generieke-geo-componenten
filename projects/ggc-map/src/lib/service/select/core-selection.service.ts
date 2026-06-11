@@ -167,6 +167,7 @@ export class CoreSelectionService {
 
     activeSelectInteraction.select.clearSelection();
     this.ggcMapService.clearSelectionLayer(activeSelectInteraction.mapIndex);
+    this.ggcMapService.clearHighlightLayer(activeSelectInteraction.mapIndex);
 
     this.emitEvent(
       new MapComponentEvent(

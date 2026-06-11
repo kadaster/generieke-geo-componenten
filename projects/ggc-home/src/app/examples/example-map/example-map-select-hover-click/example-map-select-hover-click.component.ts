@@ -14,6 +14,7 @@ import { pointerMove } from "ol/events/condition";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
+import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-map-select",
@@ -74,7 +75,10 @@ export class ExampleMapSelectHoverClickComponent
       .getObservable(this.selectIndexClick)
       .subscribe((mapEvent) => {
         if (mapEvent.type === "selectionServiceSelectionUpdated") {
-          const gemeentes: string[] = (mapEvent.value ?? []).map(
+          const features =
+            (mapEvent.value as FeatureCollectionForCoordinate)
+              .featureCollectionForLayers[0]?.features ?? [];
+          const gemeentes: string[] = features.map(
             (feature: any) =>
               feature?.values_?.statnaam +
               " (" +
@@ -90,7 +94,10 @@ export class ExampleMapSelectHoverClickComponent
       .getObservable(this.selectIndexHover)
       .subscribe((mapEvent) => {
         if (mapEvent.type === "selectionServiceSelectionUpdated") {
-          const gemeentes: string[] = (mapEvent.value ?? []).map(
+          const features =
+            (mapEvent.value as FeatureCollectionForCoordinate)
+              .featureCollectionForLayers[0]?.features ?? [];
+          const gemeentes: string[] = features.map(
             (feature: any) => feature?.values_?.statnaam
           );
           this.currentHoverGemeente.set(

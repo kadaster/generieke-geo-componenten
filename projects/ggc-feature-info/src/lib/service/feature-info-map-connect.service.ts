@@ -64,7 +64,7 @@ export class FeatureInfoMapConnectService {
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
    * @returns Promise met een {@link MapComponentEvent}
    */
-  private clearHighlightLayer(
+  clearHighlightLayer(
     mapIndex: string = DEFAULT_MAPINDEX
   ): Promise<MapComponentEvent> {
     return this.connectService.getMapService().then((mapService: any) => {
