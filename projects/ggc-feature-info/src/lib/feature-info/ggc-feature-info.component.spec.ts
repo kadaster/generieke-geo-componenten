@@ -66,7 +66,7 @@ describe("FeatureInfoComponent", () => {
       checkForCustomValues: vi
         .fn()
         .mockName("FeatureInfoConfigService.checkForCustomValues")
-    };
+    } as unknown as MockedObject<GgcFeatureInfoConfigService>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

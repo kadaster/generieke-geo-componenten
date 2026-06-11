@@ -6,7 +6,6 @@ import { GgcToolbarComponent } from "./ggc-toolbar.component";
 import { provideZoneChangeDetection } from "@angular/core";
 
 @Component({
-  standalone: true,
   imports: [GgcToolbarComponent, GgcToolbarItemComponent],
   template: `
     <ggc-toolbar>

@@ -35,9 +35,7 @@ describe("DatasetTreeComponent", () => {
       "www.testurl.nl"
     );
     let testTheme: Theme = new Theme("LaatsteTheme", [testDataset], [], open);
-    console.log(niveau);
     for (i = niveau; i > 0; i--) {
-      console.log(niveau + " in loop");
       testTheme = new Theme("ThemeNiveau " + i, [], [testTheme], open);
     }
     themeArray.push(testTheme);
