@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
+import {
+  HttpTestingController,
+  provideHttpClientTesting
+} from "@angular/common/http/testing";
 import { GgcLegendUrlComponent } from "./ggc-legend-url.component";
 import { DomSanitizer } from "@angular/platform-browser";
 import { provideHttpClient } from "@angular/common/http";
