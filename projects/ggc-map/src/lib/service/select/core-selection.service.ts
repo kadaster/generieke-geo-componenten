@@ -17,6 +17,7 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import { CoreMapService } from "../../map/service/core-map.service";
 
 /**
  * Interne representatie van een actieve select‑interactie.
@@ -62,6 +63,7 @@ export class CoreSelectionService {
   private readonly GGC_SELECT_MODE = "ggc-select-mode";
 
   private readonly ggcMapService = inject(GgcMapService);
+  private readonly coreMapService = inject(CoreMapService);
   private readonly ggcLayerService = inject(GgcLayerService);
 
   constructor() {
@@ -72,10 +74,19 @@ export class CoreSelectionService {
     });
   }
 
-  getObservableForMap(mapIndex: string): Observable<MapComponentEvent> {
+  getObservableForMap(
+    mapIndex: string,
+    selectIndex?: string
+  ): Observable<MapComponentEvent> {
     return this.subjectSelectEvents
       .asObservable()
-      .pipe(filter((event) => event.mapIndex === mapIndex));
+      .pipe(
+        filter(
+          (event) =>
+            event.mapIndex === mapIndex &&
+            (!selectIndex || event.selectIndex === selectIndex)
+        )
+      );
   }
 
   startSelect(
@@ -111,7 +122,8 @@ export class CoreSelectionService {
       condition,
       toggleCondition,
       filter: filterFunction,
-      style: options.style,
+      // Visibility is handled in the selection layer, not the select interaction
+      style: null,
       hitTolerance: options.hitTolerance,
       multi: true
     });
@@ -121,9 +133,16 @@ export class CoreSelectionService {
     map.addInteraction(select);
     this.activeSelectInteractions.set(selectIndex, { mapIndex, select });
 
+    this.coreMapService.addSelectLayer(mapIndex, selectIndex);
     this.connectSelectEvents(select, selectIndex, mapIndex);
-    // Make style of the selection layer invisible
-    this.ggcMapService.changeSelectionLayerStyle(null, mapIndex);
+
+    if (options.style !== undefined) {
+      this.ggcMapService.changeSelectionLayerStyle(
+        options.style,
+        mapIndex,
+        selectIndex
+      );
+    }
   }
 
   stopSelect(selectIndex: string) {
@@ -154,26 +173,39 @@ export class CoreSelectionService {
       map.un("singleclick", mapClickEvent);
     }
     this.activeMapClickEventsKeys.delete(selectIndex);
-    this.ggcMapService.clearSelectionLayer(activeSelectInteraction.mapIndex);
+    this.ggcMapService.clearSelectionLayer(
+      activeSelectInteraction.mapIndex,
+      selectIndex
+    );
+    if (selectIndex) {
+      this.coreMapService.removeSelectLayer(
+        activeSelectInteraction.mapIndex,
+        selectIndex
+      );
+    }
   }
 
-  clearSelection(selectIndex: string): void {
-    const activeSelectInteraction =
-      this.getActiveSelectInteraction(selectIndex);
+  clearSelection(mapIndex: string, selectIndex?: string): void {
+    const activeSelectInteraction = this.getActiveSelectInteraction(
+      selectIndex ?? mapIndex
+    );
 
     if (!activeSelectInteraction) {
       return;
     }
 
     activeSelectInteraction.select.clearSelection();
-    this.ggcMapService.clearSelectionLayer(activeSelectInteraction.mapIndex);
+    this.ggcMapService.clearSelectionLayer(mapIndex, selectIndex);
     this.ggcMapService.clearHighlightLayer(activeSelectInteraction.mapIndex);
 
     this.emitEvent(
       new MapComponentEvent(
         MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION,
-        selectIndex,
-        CoreSelectionService.messageClearSelection
+        mapIndex,
+        CoreSelectionService.messageClearSelection,
+        undefined,
+        undefined,
+        selectIndex
       )
     );
   }
@@ -291,7 +323,10 @@ export class CoreSelectionService {
         new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED,
           mapIndex,
-          CoreSelectionService.messageMapClicked
+          CoreSelectionService.messageMapClicked,
+          undefined,
+          undefined,
+          selectIndex
         )
       );
     };
@@ -313,7 +348,7 @@ export class CoreSelectionService {
         layer.changed();
       }
 
-      this.updateSelectionLayer(features, mapIndex);
+      this.updateSelectionLayer(features, mapIndex, selectIndex);
       this.emitSelectionUpdatedEvent(selectIndex, features);
     };
 
@@ -338,22 +373,28 @@ export class CoreSelectionService {
     this.emitEvent(
       new MapComponentEvent(
         MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
-        selectIndex,
+        mapIndex,
         CoreSelectionService.messageSelectionUpdated,
         undefined,
-        this.buildFeatureCollectionForCoordinateFromFeatures(features, mapIndex)
+        this.buildFeatureCollectionForCoordinateFromFeatures(
+          features,
+          mapIndex
+        ),
+        selectIndex
       )
     );
   }
 
   private updateSelectionLayer(
     featureCollection: Collection<Feature>,
-    mapIndex: string
+    mapIndex: string,
+    selectIndex: string
   ) {
-    this.ggcMapService.clearSelectionLayer(mapIndex);
+    this.ggcMapService.clearSelectionLayer(mapIndex, selectIndex);
     this.ggcMapService.addFeaturesToSelectionLayer(
       featureCollection.getArray(),
-      mapIndex
+      mapIndex,
+      selectIndex
     );
   }
 
@@ -374,7 +415,13 @@ export class CoreSelectionService {
 
     switch (select.get(this.GGC_SELECT_MODE)) {
       case "multi": {
-        this.toggleFeatures(features, featureCollection, mapIndex, layerId);
+        this.toggleFeatures(
+          features,
+          featureCollection,
+          mapIndex,
+          layerId,
+          selectIndex
+        );
         break;
       }
       case "single": {
@@ -385,7 +432,7 @@ export class CoreSelectionService {
       default:
         return;
     }
-    this.updateSelectionLayer(featureCollection, mapIndex);
+    this.updateSelectionLayer(featureCollection, mapIndex, selectIndex);
     // Emit event manually, because manual action do not trigger select events automatically
     this.emitSelectionUpdatedEvent(selectIndex, featureCollection);
   }
@@ -394,11 +441,16 @@ export class CoreSelectionService {
     featuresToToggle: Feature<Geometry>[],
     featureCollection: Collection<Feature<Geometry>>,
     mapIndex: string,
-    layerId: string
+    layerId: string,
+    selectIndex?: string
   ) {
     for (const featureToggle of featuresToToggle) {
       if (
-        this.ggcMapService.isFeatureInSelectionLayer(featureToggle, mapIndex)
+        this.ggcMapService.isFeatureInSelectionLayer(
+          featureToggle,
+          mapIndex,
+          selectIndex
+        )
       ) {
         /**
          * Manually remove the feature from the collection as it is already in the selection layer yet

@@ -94,7 +94,8 @@ describe("GgcSelectionService", () => {
       service.clearSelection("map-2");
 
       expect(coreSelectionServiceSpy.clearSelection).toHaveBeenCalledWith(
-        "map-2"
+        "map-2",
+        undefined
       );
     });
   });
@@ -150,7 +151,8 @@ describe("GgcSelectionService", () => {
 
       expect(result).toBe(observable$);
       expect(coreSelectionServiceSpy.getObservableForMap).toHaveBeenCalledWith(
-        "map-6"
+        "map-6",
+        undefined
       );
     });
   });

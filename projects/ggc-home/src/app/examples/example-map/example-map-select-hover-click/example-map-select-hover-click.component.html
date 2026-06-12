@@ -20,8 +20,8 @@
     <p>
       Dit voorbeeld gebruikt een WFS kaartlaag. Bij hover wordt de gemeentenaam
       getoond. Met een klik kun je een gemeente selecteren. Er zijn 2 active
-      select-interacties, elk met een eigen selectIndex. De klikselectie heeft
-      ook een custom styling.
+      select-interacties, elk met een eigen selectIndex. De feature-info
+      reageert alleen op de selectie met de klik.
     </p>
   </div>
 
@@ -30,9 +30,14 @@
       <!-- DOCS:START functionality -->
       <div class="map-controls">
         <p class="mt-2">Gemeente onder cursor: {{ currentHoverGemeente() }}</p>
-        <p class="mt-2">
-          Geselecteerde gemeente: {{ geselecteerdeGemeente() }}
-        </p>
+        <div class="feature-info-container">
+          <ggc-feature-info
+            [mapIndex]="mapIndex"
+            [selectIndex]="selectIndexClick"
+            [autoStartSelect]="false"
+          >
+          </ggc-feature-info>
+        </div>
       </div>
       <div class="map-container">
         <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>

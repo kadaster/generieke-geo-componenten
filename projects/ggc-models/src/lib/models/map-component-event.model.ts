@@ -58,13 +58,15 @@ export class MapComponentEvent {
    * @param message Beschrijvende tekst van het event (het zoomen is beeindingd, ...)
    * @param layerName (optioneel) Naam van de laag die het event heeft veroorzaakt
    * @param value (optioneel) het oorspronkelijke event indien aanwezig
+   * @param selectIndex (optioneel) Index van de selectie waarop het event betrekking heeft
    */
   constructor(
     public type: MapComponentEventTypes,
     public mapIndex: string,
     public message: string,
     public layerName?: string,
-    public value?: any
+    public value?: any,
+    public selectIndex?: string
   ) {}
 }
 

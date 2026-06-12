@@ -100,7 +100,8 @@ describe("CoreSelectionService", () => {
       "addFeaturesToSelectionLayer",
       "isFeatureInSelectionLayer",
       "getLayerChangedObservable",
-      "changeSelectionLayerStyle"
+      "changeSelectionLayerStyle",
+      "clearHighlightLayer"
     ]);
 
     mapServiceSpy.getMap.and.returnValue(map as unknown as Map);
@@ -358,10 +359,14 @@ describe("CoreSelectionService", () => {
         GgcMapService
       ) as jasmine.SpyObj<GgcMapService>;
 
-      expect(mapService.clearSelectionLayer).toHaveBeenCalledWith(MAP_INDEX);
+      expect(mapService.clearSelectionLayer).toHaveBeenCalledWith(
+        MAP_INDEX,
+        "select-1"
+      );
       expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
         [feature],
-        MAP_INDEX
+        MAP_INDEX,
+        "select-1"
       );
     });
 
@@ -385,7 +390,8 @@ describe("CoreSelectionService", () => {
 
       expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
         [feature],
-        MAP_INDEX
+        MAP_INDEX,
+        "select-1"
       );
     });
   });

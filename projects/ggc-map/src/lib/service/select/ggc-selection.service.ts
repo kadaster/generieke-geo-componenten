@@ -132,11 +132,16 @@ export class GgcSelectionService {
   /**
    * Verwijdert alle huidige selecties van de opgegeven kaart.
    *
-   * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * de selectie wordt gewist.
+   * @param selectIndex Optionele selectIndex waarvoor
    * de selectie wordt gewist.
    */
-  clearSelection(selectIndex: string = DEFAULT_MAPINDEX): void {
-    this.coreSelectionService.clearSelection(selectIndex);
+  clearSelection(
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): void {
+    this.coreSelectionService.clearSelection(mapIndex, selectIndex);
   }
 
   /**
@@ -196,13 +201,16 @@ export class GgcSelectionService {
    * Geeft een observable die selectie‑gerelateerde events emit
    * voor de opgegeven kaart. De mapIndex in het event refereert naar de selectIndex als die is opgegeven, anders de mapIndex.
    *
-   * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
+   * selectie‑events worden gevolgd.
+   * @param selectIndex Optionele selectIndex waarvoor
    * selectie‑events worden gevolgd.
    * @returns Observable met {@link MapComponentEvent} selectie‑events.
    */
   getObservable(
-    selectIndex: string = DEFAULT_MAPINDEX
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
   ): Observable<MapComponentEvent> {
-    return this.coreSelectionService.getObservableForMap(selectIndex);
+    return this.coreSelectionService.getObservableForMap(mapIndex, selectIndex);
   }
 }
