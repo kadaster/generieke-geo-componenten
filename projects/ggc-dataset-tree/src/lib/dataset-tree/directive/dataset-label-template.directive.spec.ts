@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetLabelTemplateDirective } from "./dataset-label-template.directive";
 
 @Component({

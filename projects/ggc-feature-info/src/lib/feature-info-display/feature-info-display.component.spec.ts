@@ -1,20 +1,19 @@
 import type { MockedObject } from "vitest";
 import { SimpleChange } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FeatureKeysPipe } from "../pipe/keys.pipe";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoDisplayComponent } from "./feature-info-display.component";
 import { FeatureInfoDisplayType } from "./feature-info-display-type";
-import SpyObj = MockedObject;
 import { provideZoneChangeDetection } from "@angular/core";
 
 describe("FeatureInfoDisplayComponent", () => {
   let component: FeatureInfoDisplayComponent;
   let fixture: ComponentFixture<FeatureInfoDisplayComponent>;
-  let featureInfoConfigServiceSpy: SpyObj<GgcFeatureInfoConfigService>;
+  let featureInfoConfigServiceSpy: MockedObject<GgcFeatureInfoConfigService>;
   let nativeElement: HTMLElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     featureInfoConfigServiceSpy = {
       checkForCustomValues: vi
         .fn()
@@ -22,7 +21,7 @@ describe("FeatureInfoDisplayComponent", () => {
       filterAndSortAttributes: vi
         .fn()
         .mockName("FeatureInfoConfigService.filterAndSortAttributes")
-    };
+    } as unknown as MockedObject<GgcFeatureInfoConfigService>;
     featureInfoConfigServiceSpy.checkForCustomValues.mockReturnValue({});
     TestBed.configureTestingModule({
       imports: [FeatureInfoDisplayComponent, FeatureKeysPipe],
@@ -34,9 +33,7 @@ describe("FeatureInfoDisplayComponent", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(FeatureInfoDisplayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

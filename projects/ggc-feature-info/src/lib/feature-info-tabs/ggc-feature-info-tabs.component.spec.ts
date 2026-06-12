@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 import { SimpleChange } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 import {
@@ -15,14 +15,12 @@ describe("FeatureInfoTabsComponent", () => {
   let fixture: ComponentFixture<GgcFeatureInfoTabsComponent>;
   let sortFilterServiceSpy: Mock;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcFeatureInfoTabsComponent],
       providers: [GgcFeatureInfoConfigService]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GgcFeatureInfoTabsComponent);
     component = fixture.componentInstance;
     const featureInfoConfigService = TestBed.inject(
