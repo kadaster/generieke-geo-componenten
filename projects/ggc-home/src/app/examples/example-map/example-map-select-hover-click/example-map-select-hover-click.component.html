@@ -1,0 +1,43 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Dit voorbeeld gebruikt een WFS kaartlaag. Bij hover wordt de gemeentenaam
+      getoond. Met een klik kun je een gemeente selecteren. Er zijn 2 active
+      select-interacties, elk met een eigen selectIndex. De klikselectie heeft
+      ook een custom styling.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="functionality-layout">
+      <!-- DOCS:START functionality -->
+      <div class="map-controls">
+        <p class="mt-2">Gemeente onder cursor: {{ currentHoverGemeente() }}</p>
+        <p class="mt-2">
+          Geselecteerde gemeente: {{ geselecteerdeGemeente() }}
+        </p>
+      </div>
+      <div class="map-container">
+        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

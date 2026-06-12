@@ -8,7 +8,6 @@ import VectorLayer from "ol/layer/Vector";
 import OlMap from "ol/Map";
 import VectorSource from "ol/source/Vector";
 import { StyleLike } from "ol/style/Style";
-import { MapComponentEvent } from "../../model/map-component-event.model";
 import { CoreMapService } from "./core-map.service";
 import { SearchResultDoc } from "./SearchResultDoc.model";
 import { Extent } from "ol/extent";
@@ -16,7 +15,11 @@ import { ZoomOptions } from "./ZoomOptions.model";
 import { GeoJSON } from "ol/format";
 import { FormatType } from "../../enum/format-type";
 import { Observable } from "rxjs";
-import { DEFAULT_MAPINDEX, LayerChangedEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  LayerChangedEvent,
+  MapComponentEvent
+} from "@kadaster/ggc-models";
 
 /**
  * Service die kaartfunctionaliteit aanbiedt voor:
@@ -95,7 +98,7 @@ export class GgcMapService {
     for (const layer of this.getMap(mapIndex).getAllLayers()) {
       if (layer.getVisible()) {
         const zIndex = layer.getZIndex() ?? 0;
-        if (zIndex! > maxZIndex) {
+        if (zIndex > maxZIndex) {
           maxZIndex = zIndex!;
         }
       }
@@ -279,6 +282,24 @@ export class GgcMapService {
   }
 
   /**
+   * Controleert of een feature aanwezig is in de selectionlaag.
+   *
+   * Een feature wordt als aanwezig beschouwd wanneer:
+   * - dezelfde feature‑referentie voorkomt in de selectionlaag, of
+   * - een feature met hetzelfde id voorkomt in de selectionlaag
+   *
+   * @param feature OpenLayers feature die gecontroleerd wordt
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @returns `true` indien de feature in de selectionlaag zit, anders `false`
+   */
+  isFeatureInSelectionLayer(
+    feature: Feature<Geometry>,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): boolean {
+    return this.coreMapService.isFeatureInSelectionLayer(feature, mapIndex);
+  }
+
+  /**
    * Verwijdert alle features uit de selectionlaag.
    *
    * @param mapIndex Index van de kaart waarvoor de selectionlaag wordt
@@ -298,7 +319,7 @@ export class GgcMapService {
    * aangepast (default: DEFAULT_MAPINDEX)
    */
   changeSelectionLayerStyle(
-    styleLike: StyleLike,
+    styleLike: StyleLike | null,
     mapIndex: string = DEFAULT_MAPINDEX
   ) {
     this.coreMapService.changeSelectionLayerStyle(styleLike, mapIndex);
@@ -341,28 +362,10 @@ export class GgcMapService {
    */
   private getSearchResultDocFromEvent(evt: any): SearchResultDoc | undefined {
     let pdokDoc: SearchResultDoc | undefined;
-    if (evt.value && evt.value.docs && evt.value.docs.length > 0) {
+    if (evt.value?.docs && evt.value.docs.length > 0) {
       pdokDoc = evt.value.docs[0];
     }
     return pdokDoc;
-  }
-
-  /**
-   * Bepaalt de geometrie- of centroïdecoördinaten uit een PDOK-event.
-   *
-   * @param evt Event met PDOK zoekresultaten
-   * @returns WKT-representatie van coördinaten of `undefined`
-   */
-  private getCoordinatesFromEvent(evt: SearchResultDoc): string | undefined {
-    let coordinates: string | undefined;
-    const pdokDoc = this.getSearchResultDocFromEvent(evt);
-    if (pdokDoc) {
-      const geometrieOrCentroide = this.getGeometrieOrCentroide(pdokDoc);
-      if (geometrieOrCentroide) {
-        coordinates = geometrieOrCentroide;
-      }
-    }
-    return coordinates;
   }
 
   /**

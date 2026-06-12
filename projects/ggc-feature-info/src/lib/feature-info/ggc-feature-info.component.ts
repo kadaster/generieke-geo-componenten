@@ -1,4 +1,4 @@
-import type { QueryList } from "@angular/core";
+import { ElementRef, OnInit, QueryList } from "@angular/core";
 import {
   AfterContentInit,
   Component,
@@ -6,10 +6,10 @@ import {
   EventEmitter,
   inject,
   Input,
-  OnChanges,
   Output,
-  SimpleChanges,
-  TemplateRef
+  TemplateRef,
+  AfterViewInit,
+  OnDestroy
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -26,6 +26,15 @@ import {
 } from "../model/feature-info-component-event";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-info-display.component";
+import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
+import {
+  DEFAULT_MAPINDEX,
+  FeatureCollectionForLayer,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
+import { Subscription } from "rxjs";
+import { FeatureInfoEventService } from "../service/feature-info-event.service";
 
 /**
  * Het `FeatureInfoComponent` toont feature-informatie afkomstig uit kaartlagen
@@ -48,12 +57,11 @@ import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-inf
   styleUrls: ["./ggc-feature-info.component.css"],
   imports: [FeatureInfoDisplayComponent]
 })
-export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
-  /**
-   * Verzameling van features en metadata die weergegeven moeten worden.
-   * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
-   */
-  @Input() featureInfoCollection: FeatureInfoCollection | undefined;
+export class GgcFeatureInfoComponent
+  implements AfterContentInit, OnInit, AfterViewInit, OnDestroy
+{
+  /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
+  @Input() mapIndex: string = DEFAULT_MAPINDEX;
 
   /**
    * Geeft aan of een message moet worden getoond ("Geen informatie beschikbaar") wanneer er geen data is.
@@ -85,25 +93,25 @@ export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
    * Default: `">"`.
    */
   @Input() pagerNext = ">";
-
-  /**
-   * Map van veldnamen naar `CustomFeatureInfo` objecten.
-   * Hiermee kunnen veldnamen en/of veldwaarden aangepast worden.
-   */
-  @Input() customAttributeNamesAndValues: Map<string, CustomFeatureInfo>;
-
   /**
    * Verberg velden die leeg zijn (null of lege string).
    * Default: `false`.
    */
   @Input() hideEmptyFields = false;
-
+  /**
+   * Maak gebruik van auto-connect functionaliteit,
+   * auto-connect zorgt ervoor dat er automatische op
+   * het selection updated event wordt gereageerd en dat
+   * het actieve feature wordt gehighlighted.
+   * Default: `true`.
+   */
+  @Input() autoConnect = true;
+  @Input() autoStartSelect = true;
   /**
    * EventEmitter voor het versturen van component-gerelateerde events.
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
    */
   @Output() events = new EventEmitter<FeatureInfoComponentEvent>();
-
   protected customHeaderValueTemplates: Map<string, TemplateRef<any> | null> =
     new Map();
   protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
@@ -113,12 +121,94 @@ export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
   protected currentFeatureIndex = 0;
   protected currentFeature: object | null;
   protected emptyInfo = "Geen informatie beschikbaar";
-
+  private readonly featureInfoMapConnectService = inject(
+    FeatureInfoMapConnectService
+  );
+  private hasTabs = true;
+  private subscription: Subscription;
+  private subscriptionSelection: Subscription;
+  private eventService = inject(FeatureInfoEventService);
   @ContentChildren(ValueTemplateDirective)
   private readonly templates: QueryList<ValueTemplateDirective>;
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
+  /**
+   * Referentie naar het host element van dit component.
+   * Wordt gebruikt om in de DOM te zoeken naar GGC webcomponents.
+   */
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  private _featureInfoCollection: FeatureInfoCollection | undefined;
+
+  get featureInfoCollection(): FeatureInfoCollection | undefined {
+    return this._featureInfoCollection;
+  }
+
+  /**
+   * Verzameling van features en metadata die weergegeven moeten worden.
+   * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
+   */
+  @Input()
+  set featureInfoCollection(value: FeatureInfoCollection | undefined) {
+    this._featureInfoCollection = value;
+    this.handleFeatureInfoChanges();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
+
+  get customAttributeNamesAndValues():
+    | Map<string, CustomFeatureInfo>
+    | undefined {
+    return this._customAttributeNamesAndValues;
+  }
+
+  /**
+   * Map van een koppeling van veldnamen naar `CustomFeatureInfo` objecten,
+   * in de vorm van een customAttributeName en/of customAttributeValueFunction.
+   * Hiermee kunnen veldnamen en/of veldwaarden aangepast worden.
+   */
+  @Input()
+  set customAttributeNamesAndValues(
+    value: Map<string, CustomFeatureInfo> | undefined
+  ) {
+    this._customAttributeNamesAndValues = value;
+    this.handleFeatureInfoChanges();
+  }
+
+  /**
+   * FeatureInfoEvent afkomstig van ggc-feature-info-tabs.
+   */
+  @Input()
+  set featureInfoEvent(event: FeatureInfoComponentEvent | undefined) {
+    if (!event) {
+      return;
+    }
+    this.handleFeatureInfoEvent(event);
+  }
+
+  ngOnInit() {
+    if (this.autoConnect) {
+      this.subscribeToMapSelection(this.mapIndex);
+      this.subscription = this.eventService.events$.subscribe((event) =>
+        this.handleFeatureInfoEvent(event)
+      );
+    }
+  }
+
+  ngAfterViewInit(): void {
+    const featureInfoTabs = this.elementRef.nativeElement.closest(
+      "ggc-feature-info-tabs"
+    );
+    this.hasTabs = !!featureInfoTabs;
+    if (this.autoConnect && this.autoStartSelect) {
+      this.featureInfoMapConnectService.startSelect(
+        { style: null } as any,
+        this.mapIndex
+      );
+    }
+  }
 
   /**
    * Verwerkt de meegegeven templates na initialisatie van de content.
@@ -152,54 +242,12 @@ export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
       });
     });
   }
-
-  /**
-   * Reageert op wijzigingen in de input-properties.
-   * Filtert en sorteert attributen via `FeatureInfoConfigService`.
-   * Stuurt een event bij selectie van een object.
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes.featureInfoCollection ||
-      changes.customAttributeNamesAndValues
-    ) {
-      if (!this.featureInfoCollection) {
-        this.displayFeaturesProperties = undefined;
-      } else {
-        if (this.customAttributeNamesAndValues) {
-          this.featureInfoConfigService.setCustomFeatureInfo(
-            this.customAttributeNamesAndValues
-          );
-        }
-        const featuresProperties = this.getPropertiesFromFeatures(
-          this.featureInfoCollection.features
-        );
-        this.displayFeaturesProperties =
-          this.featureInfoConfigService.filterAndSortAttributes(
-            this.featureInfoCollection.layerName,
-            featuresProperties
-          );
-      }
-
-      if (
-        this.displayFeaturesProperties &&
-        this.displayFeaturesProperties.length > 0
-      ) {
-        this.currentFeatureIndex = 0;
-        this.setCurrentFeature();
-      } else {
-        this.currentFeatureIndex = -1;
-        this.currentFeature = null;
-        this.events.next(
-          new FeatureInfoComponentEvent(
-            FeatureInfoComponentEventType.SELECTEDOBJECT,
-            "Het huidige weergegeven object.",
-            undefined
-          )
-        );
-      }
-
-      this.pagerIsHidden = this.hidePager();
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    if (this.subscriptionSelection) {
+      this.subscriptionSelection.unsubscribe();
     }
   }
 
@@ -242,25 +290,6 @@ export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
   }
 
   /**
-   * Zet de huidige feature en verstuur een event.
-   * Wordt aangeroepen bij navigatie of initiële selectie.
-   */
-  private setCurrentFeature(): void {
-    this.currentFeature = this.displayFeaturesProperties
-      ? this.displayFeaturesProperties[this.currentFeatureIndex]
-      : null;
-    const featureForEvent = this.featureInfoCollection
-      ? this.featureInfoCollection.features[this.currentFeatureIndex]
-      : undefined;
-    const featureInfoComponentEvent = new FeatureInfoComponentEvent(
-      FeatureInfoComponentEventType.SELECTEDOBJECT,
-      "Het huidige weergegeven object.",
-      featureForEvent
-    );
-    this.events.next(featureInfoComponentEvent);
-  }
-
-  /**
    * Haal de properties uit een lijst van features.
    * @param features Een lijst van OpenLayers features of objecten.
    * @returns Een lijst van objecten met properties.
@@ -289,5 +318,133 @@ export class GgcFeatureInfoComponent implements OnChanges, AfterContentInit {
       this.displayFeaturesProperties !== undefined &&
       this.displayFeaturesProperties.length === 1
     );
+  }
+
+  /**
+   * Verwerkt het FeatureInfoEvent.
+   *
+   * @param event Het ontvangen FeatureInfoEvent
+   */
+  protected handleFeatureInfoEvent(event: FeatureInfoComponentEvent): void {
+    // bijv. tab gewijzigd, data vernieuwen, etc.
+    if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
+      this.featureInfoCollection = event.value;
+    }
+  }
+
+  /**
+   * Zet de huidige feature en verstuur een event.
+   * Wordt aangeroepen bij navigatie of initiële selectie.
+   */
+  private setCurrentFeature(): void {
+    this.currentFeature = this.displayFeaturesProperties
+      ? this.displayFeaturesProperties[this.currentFeatureIndex]
+      : null;
+    const featureForEvent = this.featureInfoCollection
+      ? this.featureInfoCollection.features[this.currentFeatureIndex]
+      : undefined;
+    const featureInfoComponentEvent = new FeatureInfoComponentEvent(
+      FeatureInfoComponentEventType.SELECTEDOBJECT,
+      "Het huidige weergegeven object.",
+      featureForEvent
+    );
+    this.highlightFeature(featureForEvent);
+    this.events.next(featureInfoComponentEvent);
+  }
+
+  /**
+   * Highlight het opgegeven feature op de kaart.
+   *
+   * @param feature Feature dat gehighlight moet worden
+   */
+  private highlightFeature(feature: object | undefined): void {
+    this.featureInfoMapConnectService.showHighlight(feature, this.mapIndex);
+  }
+
+  /**
+   * Verwerkt wijzigingen in de featureInfoCollection,
+   * ongeacht of deze via een @Input of interne logica komen.
+   */
+  private handleFeatureInfoChanges(): void {
+    if (!this.featureInfoCollection) {
+      this.displayFeaturesProperties = undefined;
+    } else {
+      if (this.customAttributeNamesAndValues) {
+        this.featureInfoConfigService.setCustomFeatureInfo(
+          this.customAttributeNamesAndValues
+        );
+      }
+      const featuresProperties = this.getPropertiesFromFeatures(
+        this.featureInfoCollection.features
+      );
+      this.displayFeaturesProperties =
+        this.featureInfoConfigService.filterAndSortAttributes(
+          this.featureInfoCollection.layerName,
+          featuresProperties
+        );
+    }
+
+    if (
+      this.displayFeaturesProperties &&
+      this.displayFeaturesProperties.length > 0
+    ) {
+      this.currentFeatureIndex = 0;
+      this.setCurrentFeature();
+    } else {
+      this.currentFeatureIndex = -1;
+      this.currentFeature = null;
+      this.events.next(
+        new FeatureInfoComponentEvent(
+          FeatureInfoComponentEventType.SELECTEDOBJECT,
+          "Het huidige weergegeven object.",
+          undefined
+        )
+      );
+    }
+
+    this.pagerIsHidden = this.hidePager();
+  }
+
+  private subscribeToMapSelection(mapIndex: string): void {
+    // Wanneer FeatureInfoTabs aanwezig is dan wordt de
+    // featureInfoCollection gezet via de tabs (hasTabs = true
+    this.featureInfoMapConnectService
+      .getObservableForMapSelection(mapIndex)
+      .then((mapSelectionEvent) => {
+        if (this.hasTabs) {
+          return;
+        }
+
+        this.subscriptionSelection = mapSelectionEvent.subscribe(
+          (event: MapComponentEvent) => {
+            if (
+              event.type !==
+              MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+            ) {
+              return;
+            }
+
+            const collections: FeatureCollectionForLayer[] =
+              event.value.featureCollectionForLayers;
+
+            if (!collections || collections.length === 0) {
+              this.featureInfoMapConnectService.clearHighlightLayer(mapIndex);
+              this.featureInfoCollection = undefined;
+              return;
+            }
+
+            this.featureInfoCollection = new FeatureInfoCollection(
+              collections
+                .map(
+                  (layer) =>
+                    layer.layerTitle || layer.layerName || layer.layerId
+                )
+                .filter((value) => value && value.trim().length > 0)
+                .join(", "),
+              collections.flatMap((layer) => layer.features ?? [])
+            );
+          }
+        );
+      });
   }
 }

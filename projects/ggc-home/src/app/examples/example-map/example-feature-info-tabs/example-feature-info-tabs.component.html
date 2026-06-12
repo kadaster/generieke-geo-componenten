@@ -1,0 +1,62 @@
+<app-example-format
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Dit voorbeeld toont FeatureInfo met de informatie geordend in tabbladen
+      per kaartlaag. Hiervoor wordt het FeatureInfoTabs component gebruikt.
+      Informatie wordt opgehaald door middel van een klik in de kaart voor lagen
+      waarvoor dit is ingesteld (getFeatureInfoOnSingleClick). De titel van een
+      kaartlaag wordt gebruikt als label op de tab bladen. Het actieve feature
+      wordt getoond in de kaart. De volgorde van de tabbladen kan worden
+      gewisseld, dit werkt echter pas na een nieuwe klik in de kaart.
+    </p>
+  </div>
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-md-5 col-sm-5">
+        <div class="feature-info-container">
+          <b>Feature Info</b>
+          <ggc-feature-info-tabs [mapIndex]="mapIndex" [showEmptyTabs]="true">
+            <ggc-feature-info
+              [featureInfoDisplayType]="featureInfoDisplayType"
+              [hidePagerWithOneFeature]="hidePagerWithOneFeature"
+              [mapIndex]="mapIndex"
+              [showEmptyMessage]="showEmptyMessage"
+            >
+            </ggc-feature-info
+          ></ggc-feature-info-tabs>
+          <br />
+          <div>
+            <label class="switch">
+              <input (change)="toggleTabOrder()" checked type="checkbox" />
+              <span class="slider round"></span>
+            </label>
+            Wissel volgorde van tabs
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-7 col-sm7">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

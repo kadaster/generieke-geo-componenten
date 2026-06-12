@@ -36,6 +36,13 @@ import { Tags } from "../tags.enum";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
+import { ExampleMapSelectComponent } from "../example-map/example-map-select/example-map-select.component";
+import { ExampleMapSelectHoverClickComponent } from "../example-map/example-map-select-hover-click/example-map-select-hover-click.component";
+import { ExampleMapSelectWmsComponent } from "../example-map/example-map-select-wms/example-map-select-wms.component";
+import { ExampleMapSelectDatasetTreeComponent } from "../example-map/example-map-select-dataset-tree/example-map-select-dataset-tree.component";
+import { ExampleFeatureInfoBasicComponent } from "../example-map/example-feature-info-basic/example-feature-info-basic.component";
+import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-info-tabs/example-feature-info-tabs.component";
+import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
 
 interface GroupedCards {
@@ -96,6 +103,14 @@ export class ExampleIndexComponent {
     new ExampleMeasure().componentInfo,
     new ExampleMeasureOwnStyleLabel().componentInfo,
     new ExampleMapZoomScalePositionComponent().componentInfo,
+    new ExampleMapSelectComponent().componentInfo,
+    new ExampleMapSelectHoverClickComponent().componentInfo,
+    new ExampleMapSelectWmsComponent().componentInfo,
+    new ExampleMapSelectDatasetTreeComponent().componentInfo,
+    new ExampleMapZoomScalePositionComponent().componentInfo,
+    new ExampleFeatureInfoBasicComponent().componentInfo,
+    new ExampleFeatureInfoTabsComponent().componentInfo,
+    new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
     new Example3dBasicComponent().componentInfo
   ];
 
@@ -126,11 +141,6 @@ export class ExampleIndexComponent {
     if (storedSearchTerm) {
       this.searchTerm = storedSearchTerm;
     }
-  }
-
-  protected storeSearchTerm(value: string) {
-    this.searchTerm = value;
-    sessionStorage.setItem("searchTerm", value);
   }
 
   protected get availableThemes(): string[] {
@@ -166,6 +176,27 @@ export class ExampleIndexComponent {
 
     const fixedOrder = [Tags.DATASET, Tags.LAYER, Tags.LEGEND, Tags.SEARCH];
     return this.sortArrayWithFixedOrder(Array.from(set), fixedOrder);
+  }
+
+  protected get groupedCards(): GroupedCards[] {
+    return Object.entries(
+      Object.groupBy(this.filteredCards(), (card) => card.theme.toString())
+    )
+      .filter(([, value]) => value)
+      .sort(
+        ([a], [b]) =>
+          this.themeOrder.indexOf(a as Themes) -
+          this.themeOrder.indexOf(b as Themes)
+      )
+      .map(([key, value]) => ({
+        theme: key,
+        cards: value!.slice().sort((c1, c2) => c1.title.localeCompare(c2.title))
+      }));
+  }
+
+  protected storeSearchTerm(value: string) {
+    this.searchTerm = value;
+    sessionStorage.setItem("searchTerm", value);
   }
 
   protected toggleTheme(theme: string): void {
@@ -248,22 +279,6 @@ export class ExampleIndexComponent {
     });
   }
 
-  protected get groupedCards(): GroupedCards[] {
-    return Object.entries(
-      Object.groupBy(this.filteredCards(), (card) => card.theme.toString())
-    )
-      .filter(([, value]) => value)
-      .sort(
-        ([a], [b]) =>
-          this.themeOrder.indexOf(a as Themes) -
-          this.themeOrder.indexOf(b as Themes)
-      )
-      .map(([key, value]) => ({
-        theme: key,
-        cards: value!.slice().sort((c1, c2) => c1.title.localeCompare(c2.title))
-      }));
-  }
-
   protected countThemes(theme: Themes) {
     return this.filteredCards("theme").filter((card) =>
       card.theme.includes(theme)
@@ -328,7 +343,7 @@ export class ExampleIndexComponent {
     try {
       return JSON.stringify(value).toLowerCase();
     } catch {
-      return String(value).toLowerCase();
+      return "";
     }
   }
 

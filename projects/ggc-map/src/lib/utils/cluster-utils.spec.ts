@@ -77,6 +77,7 @@ describe("ClusterUtils", () => {
 function createFeatureInfoCollection(features: Feature<Geometry>[]) {
   return {
     layerName: "test-layer",
+    layerId: "layer-id",
     features
   };
 }

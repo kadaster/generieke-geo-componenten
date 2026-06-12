@@ -105,7 +105,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
    */
   @Input() layerEnabledCallback: LayerEnabledCallback;
 
-  protected title: string;
+  protected title = signal("");
   protected visible = signal(true);
   protected enabled = signal(true);
 
@@ -210,12 +210,13 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   }
 
   private async updateTitleAndVisibility() {
-    this.title =
+    const newTitle =
       (await this.datasetTreeMapConnectService.getTitle(
         this._layer.layerId,
         this.mapIndex,
         this.viewerType
-      )) ?? this.title;
+      )) ?? this.title();
+    this.title.set(newTitle);
     const newVisible =
       (await this.datasetTreeMapConnectService.isVisible(
         this._layer.layerId,

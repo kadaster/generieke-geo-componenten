@@ -8,15 +8,16 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import TileSource from "ol/source/Tile";
 import WMTS from "ol/source/WMTS";
 import { Subscription } from "rxjs";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+
 import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
 import { Capabilities } from "../model/capabilities.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 /**
  * Door `<ggc-wmts-layer></ggc-wmts-layer>` op te nemen in de HTML kunnen WMTS-kaarten
@@ -185,14 +186,11 @@ export class GgcWmtsLayerComponent
     features: Feature<Geometry>[],
     coordinate: Coordinate
   ): void {
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        coordinate,
-        features,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      features,
+      this.getLayerId()
+    );
     this.events.emit(
       new MapComponentEvent(
         MapComponentEventTypes.WMTSFEATUREINFO,

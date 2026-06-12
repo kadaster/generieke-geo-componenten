@@ -1,0 +1,80 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathExtraConfig]="'example-map/example-map-select-dataset-tree/treeconfig.json'"
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Wij raden aan om bij selecties WFS of OGC kaartlagen te gebruiken in
+      plaats van WMS/WMTS kaartlagen, gezien dit meer mogelijkheden biedt en
+      makkelijker werkt. Zie het select (WMS/WMTS) voorbeeld voor details over
+      het gebruik van selecties in WMS/WMTS kaartlagen en zie het andere select
+      voorbeeld voor extra mogelijkheden voor WFS of OGC kaartlagen.
+    </p>
+    <p>
+      Bij het uitzetten van een kaartlaag wordt de huidige selectie automatisch
+      leeggehaald. Voor de BGT standaardvisualisatie en BAG (vector tiles) moet
+      eerst worden ingezoomd naar het juiste zoomniveau.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="functionality-layout">
+      <!-- DOCS:START functionality -->
+      <div class="map-controls">
+        <label class="ms-2">
+          <input
+            type="radio"
+            name="selectMode"
+            value="singleselect"
+            [(ngModel)]="selectMode"
+            (ngModelChange)="onSelectModeChange($event)"
+          />
+          Single select
+        </label>
+        <label class="ms-2">
+          <input
+            type="radio"
+            name="selectMode"
+            value="multiselect"
+            [(ngModel)]="selectMode"
+            (ngModelChange)="onSelectModeChange($event)"
+          />
+          Multi select
+        </label>
+
+        <div class="dataset-tree-container">
+          <ggc-dataset-tree
+            [mapIndex]="mapIndex"
+            [themes]="datasetTreeConfig"
+            [expandTreeOnInit]="true"
+          ></ggc-dataset-tree>
+        </div>
+        <div class="feature-info-container">
+          <ggc-feature-info-tabs [mapIndex]="mapIndex" [showEmptyTabs]="true">
+            <ggc-feature-info [mapIndex]="mapIndex"> </ggc-feature-info
+          ></ggc-feature-info-tabs>
+        </div>
+      </div>
+      <div class="map-container">
+        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

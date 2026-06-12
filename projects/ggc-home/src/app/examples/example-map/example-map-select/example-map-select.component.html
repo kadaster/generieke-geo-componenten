@@ -1,0 +1,104 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      GGC beidt ondersteuning voor selecties op alle kaartlagen, maar wij raden
+      aan om WFS of OGC kaartlagen te gebruiken, gezien dit makkelijker werkt.
+      Mocht je WMS of WMTS kaartlagen willen gebruiken, bekijk dan het voorbeeld
+      over selecties op WMS/WMTS lagen, gezien dit minder mogelijkheden biedt.
+    </p>
+    <p>Voor WFS en OGC kaartlagen zijn verschillende selectie methodes:</p>
+    <ul>
+      <li>
+        <strong>Single select</strong>: door te klikken kan je één feature
+        selecteren.
+      </li>
+      <li>
+        <strong>Multi select</strong>: je kan meerdere features selecteren en
+        een feature uit de selectie halen door op een geselecteerde feature te
+        klikken.
+      </li>
+      <li>
+        <strong>OpenLayers default</strong>: met een normale klik wordt één
+        feature geselecteerd en met een shift‑klik kan een multi‑selectie worden
+        gedaan.
+      </li>
+      <li>
+        <strong>Hover</strong>: een single select die met het instellen van de
+        condition nu werkt met de muis-hover in plaats van klikken.
+      </li>
+    </ul>
+  </div>
+
+  <div page-functionality>
+    <div class="functionality-layout">
+      <!-- DOCS:START functionality -->
+      <div class="map-controls">
+        <label class="ms-2">
+          <input
+            type="radio"
+            name="selectMode"
+            value="singleselect"
+            [(ngModel)]="selectMode"
+            (ngModelChange)="onSelectModeChange($event)"
+          />
+          Single select
+        </label>
+        <label class="ms-2">
+          <input
+            type="radio"
+            name="selectMode"
+            value="multiselect"
+            [(ngModel)]="selectMode"
+            (ngModelChange)="onSelectModeChange($event)"
+          />
+          Multi select
+        </label>
+        <label class="ms-2">
+          <input
+            type="radio"
+            name="selectMode"
+            value="default"
+            [(ngModel)]="selectMode"
+            (ngModelChange)="onSelectModeChange($event)"
+          />
+          Openlayers default
+        </label>
+        <label class="ms-2">
+          <input
+            type="radio"
+            name="selectMode"
+            value="hover"
+            [(ngModel)]="selectMode"
+            (ngModelChange)="onSelectModeChange($event)"
+          />
+          Hover
+        </label>
+
+        <p class="mt-2">
+          Geselecteerde provincies: {{ geselecteerdeProvincies() }}
+        </p>
+      </div>
+      <div class="map-container">
+        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

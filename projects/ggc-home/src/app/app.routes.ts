@@ -40,6 +40,14 @@ import { IntroductionComponent } from "./introduction/introduction.component";
 import { ExampleDrawTracingComponent } from "./examples/example-draw/example-draw-tracing/example-draw-tracing.component";
 import { ExampleDrawCenterEditBasicComponent } from "./examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component";
 import { ExampleMapZoomScalePositionComponent } from "./examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component";
+import { ExampleMapSelectComponent } from "./examples/example-map/example-map-select/example-map-select.component";
+import { ExampleMapSelectHoverClickComponent } from "./examples/example-map/example-map-select-hover-click/example-map-select-hover-click.component";
+import { ExampleMapSelectWmsComponent } from "./examples/example-map/example-map-select-wms/example-map-select-wms.component";
+import { ExampleMapSelectDatasetTreeComponent } from "./examples/example-map/example-map-select-dataset-tree/example-map-select-dataset-tree.component";
+import { ExampleFeatureInfoBasicComponent } from "./examples/example-map/example-feature-info-basic/example-feature-info-basic.component";
+import { ExampleFeatureInfoAdvComponent } from "./examples/example-map/example-feature-info-adv/example-feature-info-adv.component";
+import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-feature-info-tabs/example-feature-info-tabs.component";
+import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
 
 export const routes: Routes = [
@@ -282,10 +290,58 @@ export const routes: Routes = [
     data: { label: "measure-own-style-label" }
   },
   {
-    path: "example-map-zoom-scale-position",
+    path: "map-zoom-scale-position",
     title: "Kaart eigenschappen tonen | GGC-Home",
     component: ExampleMapZoomScalePositionComponent,
     data: { label: "example-map-zoom-scale-position" }
+  },
+  {
+    path: "example-map-select",
+    title: "Selecteren op de kaart | GGC-Home",
+    component: ExampleMapSelectComponent,
+    data: { label: "example-map-select" }
+  },
+  {
+    path: "example-map-select-hover-click",
+    title: "Selecteren met hover en klik | GGC-Home",
+    component: ExampleMapSelectHoverClickComponent,
+    data: { label: "example-map-select-hover-click" }
+  },
+  {
+    path: "example-map-select-wms",
+    title: "Selecteren op WMS of WMTS kaarten | GGC-Home",
+    component: ExampleMapSelectWmsComponent,
+    data: { label: "example-map-select-wms" }
+  },
+  {
+    path: "example-map-select-dataset-tree",
+    title: "Selecteren op de kaart met dataset tree | GGC-Home",
+    component: ExampleMapSelectDatasetTreeComponent,
+    data: { label: "example-map-select-dataset-tree" }
+  },
+  {
+    path: "feature-info-basic",
+    title: "Feature Info tonen | GGC-Home",
+    component: ExampleFeatureInfoBasicComponent,
+    data: { label: "example-feature-info-basic" }
+  },
+  {
+    path: "feature-info-adv",
+    title: "Feature Info tonen | GGC-Home",
+    component: ExampleFeatureInfoAdvComponent,
+    data: { label: "example-feature-info-adv" }
+  },
+  {
+    path: "feature-info-tabs",
+    title: "Feature Info tonen in Tabs | GGC-Home",
+    component: ExampleFeatureInfoTabsComponent,
+    data: { label: "example-feature-info-tabs" }
+  },
+  {
+    path: "feature-info-custom-names-values",
+    title: "Feature Info tonen in Tabs | GGC-Home",
+    component: ExampleFeatureInfoCustomNamesValuesComponent,
+    data: { label: "feature-info-custom-names-values" }
   },
   {
     path: "example-3d-basic",

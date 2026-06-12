@@ -121,11 +121,11 @@ export class GgcLegendComponent implements OnInit {
    */
   @Input()
   emptyLegendMessage = "Geen legenda beschikbaar";
+  /** Service voor het beheren van legenda-acties. */
 
   /** Interne opslag van de legenda's. */
   protected _legends = signal<Legend[]>([]);
 
-  /** Service voor het beheren van legenda-acties. */
   private readonly coreLegendService = inject(CoreLegendService);
   private readonly legendMapConnectService = inject(GgcLegendMapConnectService);
 
@@ -228,20 +228,6 @@ export class GgcLegendComponent implements OnInit {
     this._legends.set([...this._legends()]);
   }
 
-  private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
-    const aIndex = l1?.legendIndex ?? 0;
-    const bIndex = l2?.legendIndex ?? 0;
-    // Hogere index komt eerder in de lijst terecht
-    return bIndex - aIndex;
-  }
-
-  private sortDatasetLegends(l1: Legend, l2: Legend) {
-    const aIndex = l1.layerLegends?.[0]?.legendIndex ?? 0;
-    const bIndex = l2.layerLegends?.[0]?.legendIndex ?? 0;
-    // Hogere index komt eerder in de lijst terecht
-    return bIndex - aIndex;
-  }
-
   /**
    * Verwijder alle legenda's van het opgegeven layerId.
    * @param layerId Van dit layerId worden alle legenda's verwijderd.
@@ -278,22 +264,6 @@ export class GgcLegendComponent implements OnInit {
   }
 
   /**
-   * Wisselt alle legenda's op basis van een toggle-event.
-   * @param datasetLegendToggle Toggle-informatie.
-   */
-  private toggleAllLegends(datasetLegendToggle: DatasetLegendToggle): void {
-    if (
-      this._legends() != null &&
-      Array.isArray(this._legends()) &&
-      this.mapIndex === datasetLegendToggle.mapIndex
-    ) {
-      for (const legend of this._legends()) {
-        legend.expanded = datasetLegendToggle.expanded;
-      }
-    }
-  }
-
-  /**
    * Interne methode om een legenda te toggelen, inclusief keyboard-ondersteuning.
    * @param legend De legenda die moet worden gewisseld.
    * @param keyboardEvent Optioneel keyboard-event (Enter activeert toggle).
@@ -314,10 +284,6 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een IconList[] is.
    */
   protected isIconListArray(legend: LegendType): legend is IconList[] {
-    console.log(
-      "Hallo is IconListArrayl",
-      Array.isArray(legend) && legend.length > 0 && "imageUrl" in legend[0]
-    );
     return (
       Array.isArray(legend) && legend.length > 0 && "imageUrl" in legend[0]
     );
@@ -329,13 +295,6 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een LegendUrl is.
    */
   protected isLegendUrl(legend: LegendType): legend is LegendUrl {
-    console.log(
-      "Hallo is LegendUrl",
-      typeof legend === "object" &&
-        legend !== null &&
-        "legendUrl" in legend &&
-        legend.legendUrl !== ""
-    );
     return (
       typeof legend === "object" &&
       legend !== null &&
@@ -350,14 +309,6 @@ export class GgcLegendComponent implements OnInit {
    * @returns True als het een VectorTileStyle is.
    */
   protected isVectorTileStyle(legend: LegendType): legend is VectorTileStyle {
-    console.log(legend);
-    console.log(
-      "Hallo isVectorTileStyle",
-      typeof legend === "object" &&
-        legend !== null &&
-        "name" in legend &&
-        "url" in legend
-    );
     return (
       typeof legend === "object" &&
       legend !== null &&
@@ -373,6 +324,36 @@ export class GgcLegendComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
+    const aIndex = l1?.legendIndex ?? 0;
+    const bIndex = l2?.legendIndex ?? 0;
+    // Hogere index komt eerder in de lijst terecht
+    return bIndex - aIndex;
+  }
+
+  private sortDatasetLegends(l1: Legend, l2: Legend) {
+    const aIndex = l1.layerLegends?.[0]?.legendIndex ?? 0;
+    const bIndex = l2.layerLegends?.[0]?.legendIndex ?? 0;
+    // Hogere index komt eerder in de lijst terecht
+    return bIndex - aIndex;
+  }
+
+  /**
+   * Wisselt alle legenda's op basis van een toggle-event.
+   * @param datasetLegendToggle Toggle-informatie.
+   */
+  private toggleAllLegends(datasetLegendToggle: DatasetLegendToggle): void {
+    if (
+      this._legends() != null &&
+      Array.isArray(this._legends()) &&
+      this.mapIndex === datasetLegendToggle.mapIndex
+    ) {
+      for (const legend of this._legends()) {
+        legend.expanded = datasetLegendToggle.expanded;
+      }
+    }
   }
 
   private async initialise() {

@@ -1,7 +1,6 @@
 import type { MockedObject } from "vitest";
 import Geometry from "ol/geom/Geometry";
 import { GgcFeatureInfoComponent } from "./ggc-feature-info.component";
-import { SimpleChange, SimpleChanges } from "@angular/core";
 import {
   FeatureInfoComponentEvent,
   FeatureInfoComponentEventType
@@ -46,7 +45,7 @@ describe("FeatureInfoComponent, no testbed", () => {
 
   describe("when array is not present", () => {
     beforeEach(() => {
-      component.ngOnChanges(simpleChanges);
+      component.featureInfoCollection = undefined;
     });
 
     it("goToPreviousFeature should decrease currentFeatureIndex by one", () => {
@@ -79,10 +78,8 @@ describe("FeatureInfoComponent, no testbed", () => {
     beforeEach(() => {
       feature1 = { test: "123" };
       const features = [feature1];
+      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
       component.featureInfoCollection = { layerName: "laag", features };
-      component["currentFeatureIndex"] = 0;
-      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
-      component.ngOnChanges(simpleChanges);
     });
 
     it("goToPreviousFeature should not change currentFeature and currentFeatureIndex", () => {
@@ -133,9 +130,8 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature2 = { test: "456" };
       feature3 = { test: "789" };
       const features = [feature1, feature2, feature3];
+      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
       component.featureInfoCollection = { layerName: "laag", features };
-      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
-      component.ngOnChanges(simpleChanges);
       component["currentFeatureIndex"] = 1;
     });
 
@@ -190,12 +186,10 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature3 = new Feature({ test: "789" });
       const features = [feature1, feature2, feature3];
       component.featureInfoCollection = { layerName: "laag", features };
-      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
-      component.ngOnChanges(simpleChanges);
+      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
       component["currentFeatureIndex"] = 1;
 
       component.featureInfoCollection = undefined;
-      component.ngOnChanges(simpleChanges);
     });
 
     it("displayFeatures length should be 0", () => {
@@ -275,7 +269,6 @@ describe("FeatureInfoComponent, no testbed", () => {
           features: arrayContaningFeatures
         };
         featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
-        component.ngOnChanges(simpleChanges);
 
         expect(component.featureInfoCollection.features).toBe(
           arrayContaningFeatures

@@ -15,15 +15,16 @@ import ImageWMS, { Options as ImageSourceOptions } from "ol/source/ImageWMS";
 import TileSource from "ol/source/Tile";
 import { Options as TileSourceOptions } from "ol/source/TileWMS";
 import { noop } from "rxjs";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+
 import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
 import { DEVICE_PIXEL_RATIO } from "ol/has";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 /**
  * Door `<ggc-wms-layer></ggc-wms-layer>` op te nemen in de HTML kunnen WMS-kaarten
@@ -262,14 +263,11 @@ export class GgcWmsLayerComponent
     coordinate: Coordinate,
     message = "WMS getFeatureInfo resultaten: "
   ): void {
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        coordinate,
-        features,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      features,
+      this.getLayerId()
+    );
     this.events.emit(
       new MapComponentEvent(
         MapComponentEventTypes.WMSFEATUREINFO,
