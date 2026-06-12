@@ -13,6 +13,7 @@ import { GgcLayerService } from "./ggc-layer.service";
 import {
   FeatureCollectionForCoordinate,
   FeatureCollectionForLayer,
+  GGC_FEATURE_LAYERID,
   LayerChangedEventTrigger,
   MapComponentEvent,
   MapComponentEventTypes
@@ -58,7 +59,6 @@ export class CoreSelectionService {
   private readonly activeMapClickEventsKeys: Map<string, any> = new Map();
   private readonly activeSelectEventsKeys: Map<string, any> = new Map();
 
-  private readonly GGC_FEATURE_LAYERID = "ggc-feature-layerId";
   private readonly GGC_LAYER_IDS = "ggc-layerIds";
   private readonly GGC_SELECT_MODE = "ggc-select-mode";
 
@@ -296,7 +296,7 @@ export class CoreSelectionService {
       const layerId = layer.get("ggc-layer-id");
 
       if (layerId !== undefined) {
-        feature.set(this.GGC_FEATURE_LAYERID, layerId);
+        feature.set(GGC_FEATURE_LAYERID, layerId);
       }
 
       if (!layerIds || layerIds.length === 0) {
@@ -466,7 +466,7 @@ export class CoreSelectionService {
         /**
          * Manually add the feature to the collection as it is not in the selection layer yet
          */
-        featureToggle.set(this.GGC_FEATURE_LAYERID, layerId);
+        featureToggle.set(GGC_FEATURE_LAYERID, layerId);
         featureCollection.push(featureToggle);
       }
     }
@@ -503,7 +503,7 @@ export class CoreSelectionService {
   ): Map<string, Feature<Geometry>[]> {
     const layerFeatureMap = new Map<string, Feature<Geometry>[]>();
     for (const feature of features.getArray()) {
-      const layerId = feature.get(this.GGC_FEATURE_LAYERID) ?? "";
+      const layerId = feature.get(GGC_FEATURE_LAYERID) ?? "";
 
       let layerFeatures = layerFeatureMap.get(layerId);
       if (!layerFeatures) {
@@ -521,7 +521,7 @@ export class CoreSelectionService {
     layerId: string
   ) {
     for (const feature of newFeatures) {
-      feature.set(this.GGC_FEATURE_LAYERID, layerId);
+      feature.set(GGC_FEATURE_LAYERID, layerId);
       featureCollection.push(feature);
     }
   }

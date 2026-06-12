@@ -32,6 +32,7 @@ import { FeatureInfoMapConnectService } from "../service/feature-info-map-connec
 import {
   DEFAULT_MAPINDEX,
   FeatureCollectionForLayer,
+  GGC_FEATURE_LAYERID,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -312,11 +313,16 @@ export class GgcFeatureInfoComponent
   ): object[] {
     const arrayContainingFeatureProperties: object[] = [];
     features.forEach((feature) => {
+      let properties;
       if (feature instanceof Feature) {
-        arrayContainingFeatureProperties.push(feature.getProperties());
+        properties = feature.getProperties();
       } else {
-        arrayContainingFeatureProperties.push(feature);
+        properties = { ...feature };
       }
+
+      // Remove the custom layerId property
+      delete properties[GGC_FEATURE_LAYERID];
+      arrayContainingFeatureProperties.push(properties);
     });
     return arrayContainingFeatureProperties;
   }
