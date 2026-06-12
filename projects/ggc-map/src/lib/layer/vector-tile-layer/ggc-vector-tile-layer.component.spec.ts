@@ -1,10 +1,6 @@
 import { afterEach, MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
-import {
-  ComponentFixture,
-  TestBed
-  // tick();
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FeatureLike } from "ol/Feature";
 import VectorTileLayer from "ol/layer/VectorTile";
 import OlMap from "ol/Map";
@@ -141,7 +137,6 @@ describe("VectorTileLayerComponent", () => {
       }
     };
     component.ngOnInit();
-    // tick();
     await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -159,7 +154,6 @@ describe("VectorTileLayerComponent", () => {
     component.options = { minResolution: 10, maxResolution: 20 };
 
     component.ngOnInit();
-    // tick();
     await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -186,7 +180,6 @@ describe("VectorTileLayerComponent", () => {
     };
 
     component.ngOnInit();
-    // tick();
     await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -217,7 +210,6 @@ describe("VectorTileLayerComponent", () => {
     };
 
     component.ngOnInit();
-    // tick();
     await vi.runAllTimersAsync();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -244,7 +236,6 @@ describe("VectorTileLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(olMapMock);
     component.ngOnInit();
-    // tick();
     await vi.runAllTimersAsync();
     expect(getMapSpy).toHaveBeenCalled();
     expect(mapEventsServicespy).toHaveBeenCalled();
@@ -351,7 +342,6 @@ describe("VectorTileLayerComponent", () => {
       );
 
       component.ngOnInit();
-      // tick();
       await vi.runAllTimersAsync();
       expect(component["vectorTileSource"].getResolutions()).toEqual(
         resolutions.slice(0, 13)
@@ -364,7 +354,6 @@ describe("VectorTileLayerComponent", () => {
         enableOverzoom: false
       };
       component.ngOnInit();
-      // tick();
       vi.runAllTimers();
       expect(component["vectorTileSource"].getResolutions()).toEqual(
         resolutions

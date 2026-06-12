@@ -50,8 +50,6 @@ describe("MapComponent, ngAfterViewInit", () => {
     fixture = TestBed.createComponent(GgcMapComponent);
     coreMapService = TestBed.inject(CoreMapService);
     component = fixture.componentInstance;
-    // mapSpy = createSpyObj("Map", ["setTarget", "on", "getView"]);
-    // viewSpy = createSpyObj("View", ["on", "setZoom"]);
     viewSpy = {
       on: vi.fn() as unknown as MockedObject<View>["on"],
       setZoom: vi.fn()
