@@ -344,7 +344,19 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ggc-models/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-models/tsconfig.lib.json"
             }
+          }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "runnerConfig": "vitest.config.ts",
+            "setupFiles": ["src/test/setup-tests.ts"],
+            "tsConfig": "projects/ggc-models/tsconfig.spec.json"
           }
         },
         "lint": {
