@@ -12,6 +12,7 @@
     "test:ggc-feature-info": "ng test --project ggc-feature-info",
     "test:ggc-legend": "ng test --project ggc-legend",
     "test:ggc-map": "ng test --project ggc-map",
+    "test:ggc-models": "ng test --project ggc-models",
     "test:ggc-search-location": "ng test --project ggc-search-location",
     "test:ggc-toolbar": "ng test --project ggc-toolbar",
     "test:cov:ggc-cesium": "ng test --project ggc-cesium --code-coverage --watch=false --browsers=ChromeHeadlessNoSandbox --source-map=true",
