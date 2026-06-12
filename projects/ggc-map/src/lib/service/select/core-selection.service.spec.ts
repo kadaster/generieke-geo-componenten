@@ -1,4 +1,5 @@
 import { TestBed } from "@angular/core/testing";
+import { type MockedObject, vi } from "vitest";
 import { CoreSelectionService } from "./core-selection.service";
 import { GgcMapService } from "../../map/service/ggc-map.service";
 import Feature from "ol/Feature";
@@ -6,12 +7,12 @@ import { Geometry } from "ol/geom";
 import { Select } from "ol/interaction";
 import Collection from "ol/Collection";
 import Map from "ol/Map";
+import { of } from "rxjs";
 import {
+  FeatureCollectionForCoordinate,
   MapComponentEvent,
   MapComponentEventTypes
-} from "../../model/map-component-event.model";
-import { of } from "rxjs";
-import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
+} from "@kadaster/ggc-models";
 
 /**
  * Mock Select interaction zodat we OpenLayers niet volledig hoeven te initialiseren
@@ -93,19 +94,19 @@ describe("CoreSelectionService", () => {
   beforeEach(() => {
     map = new MockMap();
 
-    const mapServiceSpy = jasmine.createSpyObj<GgcMapService>("GgcMapService", [
-      "getMap",
-      "getLayer",
-      "clearSelectionLayer",
-      "addFeaturesToSelectionLayer",
-      "isFeatureInSelectionLayer",
-      "getLayerChangedObservable",
-      "changeSelectionLayerStyle"
-    ]);
+    const mapServiceSpy: MockedObject<GgcMapService> = {
+      getMap: vi.fn(),
+      getLayer: vi.fn(),
+      clearSelectionLayer: vi.fn(),
+      addFeaturesToSelectionLayer: vi.fn(),
+      isFeatureInSelectionLayer: vi.fn(),
+      getLayerChangedObservable: vi.fn(),
+      changeSelectionLayerStyle: vi.fn()
+    } as unknown as MockedObject<GgcMapService>;
 
-    mapServiceSpy.getMap.and.returnValue(map as unknown as Map);
-    mapServiceSpy.getLayer.and.returnValue(undefined);
-    mapServiceSpy.getLayerChangedObservable.and.returnValue(of());
+    mapServiceSpy.getMap.mockReturnValue(map as unknown as Map);
+    mapServiceSpy.getLayer.mockReturnValue(undefined);
+    mapServiceSpy.getLayerChangedObservable.mockReturnValue(of());
 
     TestBed.configureTestingModule({
       providers: [
@@ -121,9 +122,9 @@ describe("CoreSelectionService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should create an observable for a mapIndex", (done) => {
+  it("should create an observable for a mapIndex", () => {
     const mockSelect = new MockSelect();
-    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+    vi.spyOn(service as any, "getActiveSelectInteraction").mockReturnValue({
       select: mockSelect as unknown as Select
     });
 
@@ -131,7 +132,6 @@ describe("CoreSelectionService", () => {
       expect(event.type).toBe(
         MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION
       );
-      done();
     });
 
     service.clearSelection(MAP_INDEX);
@@ -151,7 +151,7 @@ describe("CoreSelectionService", () => {
       (interaction) => interaction instanceof Select
     );
 
-    expect(hasSelect).toBeTrue();
+    expect(hasSelect).toBeTruthy();
   });
 
   it("should store select interaction under provided selectIndex", () => {
@@ -171,7 +171,7 @@ describe("CoreSelectionService", () => {
 
     expect(activeInteraction).toBeTruthy();
     expect(activeInteraction.mapIndex).toBe(MAP_INDEX);
-    expect(activeInteraction.select instanceof Select).toBeTrue();
+    expect(activeInteraction.select instanceof Select).toBeTruthy();
   });
 
   it("stopSelect should remove the Select interaction from the map", () => {
@@ -188,16 +188,16 @@ describe("CoreSelectionService", () => {
     const hasSelect = interactions.some(
       (interaction) => interaction instanceof Select
     );
-    expect(hasSelect).toBeFalse();
+    expect(hasSelect).toBeFalsy();
     expect(service["activeMapClickEventsKeys"].size).toBe(0);
     expect(service["activeSelectEventsKeys"].size).toBe(0);
   });
 
-  it("clearSelection should clear selection and emit event", (done) => {
+  it("clearSelection should clear selection and emit event", () => {
     const mockSelect = new MockSelect();
     const feature = new Feature();
     mockSelect.selectFeature(feature);
-    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+    vi.spyOn(service as any, "getActiveSelectInteraction").mockReturnValue({
       select: mockSelect as unknown as Select
     });
 
@@ -206,7 +206,6 @@ describe("CoreSelectionService", () => {
         event.type === MapComponentEventTypes.SELECTIONSERVICE_CLEARSELECTION
       ) {
         expect(service.getCurrentSelection(MAP_INDEX)).toEqual([]);
-        done();
       }
     });
 
@@ -215,7 +214,7 @@ describe("CoreSelectionService", () => {
 
   it("setSelection should select provided features", () => {
     const mockSelect = new MockSelect();
-    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+    vi.spyOn(service as any, "getActiveSelectInteraction").mockReturnValue({
       select: mockSelect as unknown as Select
     });
 
@@ -234,14 +233,14 @@ describe("CoreSelectionService", () => {
     const mockSelect = new MockSelect();
     const feature = new Feature();
     mockSelect.selectFeature(feature);
-    spyOn<any>(service, "getActiveSelectInteraction").and.returnValue({
+    vi.spyOn(service as any, "getActiveSelectInteraction").mockReturnValue({
       select: mockSelect as unknown as Select
     });
 
     expect(service.getCurrentSelection(MAP_INDEX)).toEqual([feature]);
   });
 
-  it("should emit SELECTIONSERVICE_SELECTIONUPDATED when OpenLayers select event occurs", (done) => {
+  it("should emit SELECTIONSERVICE_SELECTIONUPDATED when OpenLayers select event occurs", () => {
     const receivedEvents: MapComponentEvent[] = [];
     service
       .getObservableForMap(MAP_INDEX)
@@ -269,7 +268,6 @@ describe("CoreSelectionService", () => {
     expect(selectionUpdatedEvents[0].value).toEqual(
       new FeatureCollectionForCoordinate()
     );
-    done();
   });
 
   function createSelectMock(
@@ -301,7 +299,7 @@ describe("CoreSelectionService", () => {
         select: createSelectMock("single")
       });
 
-      spyOn(service as any, "handleNewFeaturesForSelection");
+      vi.spyOn(service as any, "handleNewFeaturesForSelection");
 
       service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
 
@@ -316,7 +314,7 @@ describe("CoreSelectionService", () => {
         select: createSelectMock("single", [LAYER_ID])
       });
 
-      spyOn(service as any, "handleNewFeaturesForSelection");
+      vi.spyOn(service as any, "handleNewFeaturesForSelection");
 
       service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
 
@@ -331,7 +329,7 @@ describe("CoreSelectionService", () => {
         select: createSelectMock("single", ["other-layer"])
       });
 
-      spyOn(service as any, "handleNewFeaturesForSelection");
+      vi.spyOn(service as any, "handleNewFeaturesForSelection");
 
       service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
 
@@ -356,7 +354,7 @@ describe("CoreSelectionService", () => {
 
       const mapService = TestBed.inject(
         GgcMapService
-      ) as jasmine.SpyObj<GgcMapService>;
+      ) as MockedObject<GgcMapService>;
 
       expect(mapService.clearSelectionLayer).toHaveBeenCalledWith(MAP_INDEX);
       expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
@@ -377,9 +375,9 @@ describe("CoreSelectionService", () => {
 
       const mapService = TestBed.inject(
         GgcMapService
-      ) as jasmine.SpyObj<GgcMapService>;
+      ) as MockedObject<GgcMapService>;
 
-      mapService.isFeatureInSelectionLayer.and.returnValue(false);
+      mapService.isFeatureInSelectionLayer.mockReturnValue(false);
 
       service.handleFeatureInfoForLayer(MAP_INDEX, [feature], LAYER_ID);
 

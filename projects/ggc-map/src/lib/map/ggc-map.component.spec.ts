@@ -4,10 +4,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { filter } from "rxjs/operators";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../model/map-component-event.model";
 import { CoreSelectionService } from "../service/select/core-selection.service";
 import { GgcSelectionService } from "../service/select/ggc-selection.service";
 import { GgcMapComponent } from "./ggc-map.component";
@@ -17,7 +13,11 @@ import { CoreMapService } from "./service/core-map.service";
 import OlMap from "ol/Map";
 import View from "ol/View";
 import { provideZoneChangeDetection } from "@angular/core";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 describe("MapComponent, ngAfterViewInit", () => {
   let component: GgcMapComponent;

@@ -6,8 +6,7 @@ import { Geometry } from "ol/geom";
 
 import { GgcSelectionService } from "./ggc-selection.service";
 import { CoreSelectionService } from "./core-selection.service";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
-import { MapComponentEvent } from "../../model/map-component-event.model";
+import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
 import { SelectOptions } from "../../model/select-options";
 
 describe("GgcSelectionService", () => {

@@ -6,10 +6,9 @@ import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 import Style from "ol/style/Style";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
-import { MapComponentEventTypes } from "../../model/map-component-event.model";
 import { CoreMapService } from "./core-map.service";
 import { provideZoneChangeDetection } from "@angular/core";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, MapComponentEventTypes } from "@kadaster/ggc-models";
 import { Map } from "../../../../../../src/test/mocks/open-layers/Map";
 
 describe("CoreMapService", () => {
@@ -58,11 +57,7 @@ describe("CoreMapService", () => {
       () => {
         const myMap = "myMap";
 
-        const newMap: Map = coreMapService.createAndGetMap(
-          myMap,
-          3,
-          19
-        ) as unknown as Map;
+        coreMapService.createAndGetMap(myMap, 3, 19) as unknown as Map;
 
         expect(coreMapService["olMaps"].get(myMap)).toBeDefined();
         const defaultMap = coreMapService.getMap(myMap);

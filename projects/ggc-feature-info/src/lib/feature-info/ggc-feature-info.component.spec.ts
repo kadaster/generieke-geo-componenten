@@ -1,6 +1,6 @@
 import type { MockedObject } from "vitest";
-import { Component, SimpleChange, ViewChild } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { Component, ViewChild } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
 import {
   ValueTemplateDirective,
@@ -68,7 +68,7 @@ describe("FeatureInfoComponent", () => {
         .mockName("FeatureInfoConfigService.checkForCustomValues")
     } as unknown as MockedObject<GgcFeatureInfoConfigService>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcFeatureInfoComponent, FeatureKeysPipe],
       providers: [
@@ -78,9 +78,7 @@ describe("FeatureInfoComponent", () => {
         }
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GgcFeatureInfoComponent);
     component = fixture.componentInstance;
     nativeElement = fixture.nativeElement;
@@ -231,7 +229,7 @@ describe("FeatureInfoComponent", () => {
 describe("FeatureInfoWrapperComponent", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<WrapperComponent>;
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         WrapperComponent,
@@ -239,9 +237,7 @@ describe("FeatureInfoWrapperComponent", () => {
         ValueTemplateDirective
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(WrapperComponent);
     const wrapperComponent = fixture.debugElement.componentInstance;
     fixture.detectChanges();

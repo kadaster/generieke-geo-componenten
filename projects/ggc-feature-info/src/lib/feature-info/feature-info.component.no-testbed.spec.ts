@@ -13,9 +13,6 @@ import { provideZoneChangeDetection } from "@angular/core";
 describe("FeatureInfoComponent, no testbed", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<GgcFeatureInfoComponent>;
-  const simpleChanges: SimpleChanges = {
-    featureInfoCollection: {} as SimpleChange
-  };
   let featureInfoConfigSpy: MockedObject<GgcFeatureInfoConfigService>;
   let event: FeatureInfoComponentEvent;
 
@@ -24,7 +21,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       filterAndSortAttributes: vi
         .fn()
         .mockName("FeatureInfoConfigService.filterAndSortAttributes")
-    };
+    } as unknown as MockedObject<GgcFeatureInfoConfigService>;
     TestBed.configureTestingModule({
       providers: [
         {
@@ -78,7 +75,7 @@ describe("FeatureInfoComponent, no testbed", () => {
     beforeEach(() => {
       feature1 = { test: "123" };
       const features = [feature1];
-      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
+      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
       component.featureInfoCollection = { layerName: "laag", features };
     });
 
@@ -130,7 +127,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature2 = { test: "456" };
       feature3 = { test: "789" };
       const features = [feature1, feature2, feature3];
-      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
+      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
       component.featureInfoCollection = { layerName: "laag", features };
       component["currentFeatureIndex"] = 1;
     });
@@ -186,7 +183,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature3 = new Feature({ test: "789" });
       const features = [feature1, feature2, feature3];
       component.featureInfoCollection = { layerName: "laag", features };
-      featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
+      featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
       component["currentFeatureIndex"] = 1;
 
       component.featureInfoCollection = undefined;

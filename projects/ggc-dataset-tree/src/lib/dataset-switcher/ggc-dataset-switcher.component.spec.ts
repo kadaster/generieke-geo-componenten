@@ -1,13 +1,6 @@
 import type { Mock, MockedObject } from "vitest";
 import { SimpleChange } from "@angular/core";
-import {
-  ComponentFixture,
-  fakeAsync,
-  flushMicrotasks,
-  TestBed,
-  tick,
-  waitForAsync
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcDatasetTreeConnectService } from "../dataset-tree/service/connect.service";
 import { Dataset } from "../model/theme/dataset.model";

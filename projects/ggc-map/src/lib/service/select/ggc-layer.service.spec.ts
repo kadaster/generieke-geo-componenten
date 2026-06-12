@@ -18,14 +18,9 @@ describe("LayerService", () => {
   let service: GgcLayerService;
   let mapServiceSpy: MockedObject<GgcMapService>;
   let mockCreateComponent: Mock;
-  let capSpy: Pick<
-    MockedObject<CoreWmsWmtsCapabilitiesService>,
-    "getCapabilitiesForUrl" | "optionsFromCapabilities"
-  >;
-  let coreMapServiceSpy: Pick<
-    MockedObject<CoreMapService>,
-    "getLayerChangedObservable" | "getMap"
-  >;
+  let capSpy: MockedObject<CoreWmsWmtsCapabilitiesService>;
+  let coreMapServiceSpy: MockedObject<CoreMapService>;
+
   beforeEach(() => {
     const mapServiceMock = {
       getLayer: vi.fn().mockName("MapService.getLayer"),
@@ -47,7 +42,7 @@ describe("LayerService", () => {
         .fn()
         .mockName("coreMapService.getLayerChangedObservable"),
       getMap: vi.fn().mockName("coreMapService.getMap")
-    };
+    } as unknown as MockedObject<CoreMapService>;
     capSpy = {
       getCapabilitiesForUrl: vi
         .fn()
@@ -55,7 +50,7 @@ describe("LayerService", () => {
       optionsFromCapabilities: vi
         .fn()
         .mockName("CapabilitiesService.optionsFromCapabilities")
-    };
+    } as unknown as MockedObject<CoreWmsWmtsCapabilitiesService>;
     capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
 
     coreMapServiceSpy.getLayerChangedObservable.mockReturnValue(of());

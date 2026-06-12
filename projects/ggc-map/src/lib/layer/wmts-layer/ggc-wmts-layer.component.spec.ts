@@ -11,15 +11,15 @@ import { of } from "rxjs";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { Capabilities } from "../model/capabilities.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { GgcWmtsLayerComponent } from "./ggc-wmts-layer.component";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 describe("WmtsLayerComponent", () => {
   let component: GgcWmtsLayerComponent;

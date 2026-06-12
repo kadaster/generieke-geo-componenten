@@ -4,11 +4,6 @@ import MapEvent from "ol/MapEvent";
 import { ObjectEvent } from "ol/Object";
 import View from "ol/View";
 import { CoreDrawService } from "../drawing/service/core-draw.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes,
-  MapViewState
-} from "../model/map-component-event.model";
 import { CoreSelectionService } from "../service/select/core-selection.service";
 
 import { GgcMapComponent } from "./ggc-map.component";
@@ -18,7 +13,12 @@ import { CoreMapService } from "./service/core-map.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideZoneChangeDetection } from "@angular/core";
 import { of } from "rxjs";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEventTypes,
+  MapViewState
+} from "@kadaster/ggc-models";
+import { MapComponentEvent } from "@kadaster/ggc-models";
 
 describe("MapComponent(no-testbed), processEvent", () => {
   let mapComponent: GgcMapComponent;
@@ -35,17 +35,8 @@ describe("MapComponent(no-testbed), processEvent", () => {
     MockedObject<CoreLoadingService>,
     "addMapLoaders" | "destroyLoadersForMap"
   >;
-  let mapEventsServiceSpy: Pick<
-    MockedObject<CoreMapEventsService>,
-    | "emitSingleclickEventForMap"
-    | "emitZoomendEventForMap"
-    | "destroyEventsForMap"
-  >;
-  let coreSelectionServiceSpy: Pick<
-    MockedObject<CoreSelectionService>,
-    "handleSingleclickEventForMap" | "destroySelectionForMap"
-  >;
-
+  let mapEventsServiceSpy: MockedObject<CoreMapEventsService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   const mapEventOne: ObjectEvent = {
     type: "change:resolution",
     map: {} as OlMap
@@ -62,23 +53,28 @@ describe("MapComponent(no-testbed), processEvent", () => {
       getLayerChangedObservable: vi.fn().mockReturnValue(of()),
       destroyMap: vi.fn()
     };
+
     coreDrawServiceSpy = {
       addFeatureToLayer: vi.fn(),
       deleteLayers: vi.fn()
     };
+
     coreLoadingServiceSpy = {
       addMapLoaders: vi.fn(),
       destroyLoadersForMap: vi.fn()
     };
+
     mapEventsServiceSpy = {
       emitSingleclickEventForMap: vi.fn(),
       emitZoomendEventForMap: vi.fn(),
       destroyEventsForMap: vi.fn()
-    };
+    } as MockedObject<CoreMapEventsService>;
+
     coreSelectionServiceSpy = {
       handleSingleclickEventForMap: vi.fn(),
       destroySelectionForMap: vi.fn()
-    };
+    } as unknown as MockedObject<CoreSelectionService>;
+
     TestBed.configureTestingModule({
       providers: [
         { provide: CoreMapService, useValue: coreMapServiceSpy },

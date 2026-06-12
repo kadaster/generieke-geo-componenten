@@ -17,10 +17,6 @@ import Style, { StyleFunction } from "ol/style/Style";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { GgcGeojsonLayerComponent } from "./ggc-geojson-layer.component";
 import { ViewStateLayerStateExtent } from "ol/View";
@@ -30,26 +26,24 @@ import {
   withInterceptorsFromDi
 } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 describe("GeojsonLayerComponent", () => {
   let component: GgcGeojsonLayerComponent;
   let fixture: ComponentFixture<GgcGeojsonLayerComponent>;
   let debugElement: DebugElement;
   let resultLayer: VectorLayer<VectorSource<Feature<Geometry>>>;
-  let coreSelectionServiceSpy: Pick<
-    MockedObject<CoreSelectionService>,
-    "handleFeatureInfoForLayer" | "clearFeatureInfoForLayer"
-  >;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
 
   beforeEach(() => {
     coreSelectionServiceSpy = {
       handleFeatureInfoForLayer: vi
         .fn()
-        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer"),
-      clearFeatureInfoForLayer: vi
-        .fn()
-        .mockName("CoreSelectionServiceSpy.clearFeatureInfoForLayer")
-    };
+        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer")
+    } as unknown as MockedObject<CoreSelectionService>;
     TestBed.configureTestingModule({
       imports: [GgcGeojsonLayerComponent],
       providers: [

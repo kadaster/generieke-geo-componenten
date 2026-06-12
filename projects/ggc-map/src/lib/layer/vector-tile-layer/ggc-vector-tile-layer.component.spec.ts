@@ -12,10 +12,6 @@ import Style, { StyleFunction } from "ol/style/Style";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { GgcVectorTileLayerComponent } from "./ggc-vector-tile-layer.component";
 import { ViewStateLayerStateExtent } from "ol/View";
@@ -29,27 +25,25 @@ import {
   HttpTestingController,
   provideHttpClientTesting
 } from "@angular/common/http/testing";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 describe("VectorTileLayerComponent", () => {
   let component: GgcVectorTileLayerComponent;
   let fixture: ComponentFixture<GgcVectorTileLayerComponent>;
   let debugElement: DebugElement;
   let resultLayer: VectorTileLayer;
-  let coreSelectionServiceSpy: Pick<
-    MockedObject<CoreSelectionService>,
-    "handleFeatureInfoForLayer" | "clearFeatureInfoForLayer"
-  >;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     coreSelectionServiceSpy = {
       handleFeatureInfoForLayer: vi
         .fn()
-        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer"),
-      clearFeatureInfoForLayer: vi
-        .fn()
-        .mockName("CoreSelectionServiceSpy.clearFeatureInfoForLayer")
-    };
+        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer")
+    } as MockedObject<CoreSelectionService>;
     TestBed.configureTestingModule({
       imports: [GgcVectorTileLayerComponent],
       providers: [

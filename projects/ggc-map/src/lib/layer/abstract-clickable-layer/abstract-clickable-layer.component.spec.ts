@@ -10,10 +10,7 @@ class TestLayerComponent extends AbstractClickableLayerComponent<any> {}
 
 describe("AbstractClickableLayerComponent", () => {
   let component: TestLayerComponent;
-  let coreSelectionServiceSpy: Pick<
-    MockedObject<CoreSelectionService>,
-    "handleFeatureInfoForLayer" | "clearFeatureInfoForLayer"
-  >;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let fixture: ComponentFixture<TestLayerComponent>;
   let mapEventsService: CoreMapEventsService;
 
@@ -21,11 +18,8 @@ describe("AbstractClickableLayerComponent", () => {
     coreSelectionServiceSpy = {
       handleFeatureInfoForLayer: vi
         .fn()
-        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer"),
-      clearFeatureInfoForLayer: vi
-        .fn()
-        .mockName("CoreSelectionServiceSpy.clearFeatureInfoForLayer")
-    };
+        .mockName("CoreSelectionServiceSpy.handleFeatureInfoForLayer")
+    } as unknown as MockedObject<CoreSelectionService>;
     await TestBed.configureTestingModule({
       imports: [TestLayerComponent],
       providers: [

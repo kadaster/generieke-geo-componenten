@@ -20,21 +20,20 @@ import { of } from "rxjs";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 
 import { GgcWmsLayerComponent } from "./ggc-wms-layer.component";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 import BaseLayer from "ol/layer/Base";
 
 describe("WmsLayerComponent", () => {
   let component: GgcWmsLayerComponent;
   let fixture: ComponentFixture<GgcWmsLayerComponent>;
-  let debugElement: DebugElement;
   let resultLayer: ImageLayer<ImageSource>;
   let coreMapService: CoreMapService;
   let coreSelectionService: CoreSelectionService;
@@ -78,7 +77,6 @@ describe("WmsLayerComponent", () => {
     fixture = TestBed.createComponent(GgcWmsLayerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    debugElement = fixture.debugElement;
     coreMapService = TestBed.inject(CoreMapService);
     coreSelectionService = TestBed.inject(CoreSelectionService);
     httpTestingController = TestBed.inject(HttpTestingController);
