@@ -40,7 +40,7 @@ export type IconList = {
   /** URL naar het icoon-afbeelding. */
   imageUrl: string;
 
-  /** Beschrijvende tekst bij het icoon. */
+  /** Beschrijvende tekst van het icoon alt tekst. */
   iconDescription: string;
 
   /** Begeleidende tekst bij het icoon. */
