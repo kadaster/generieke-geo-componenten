@@ -18,8 +18,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["src/test/setup-tests.ts"],
-    server: {
-    },
+    server: {},
     coverage: {
       provider: "istanbul",
       reporter: ["text", "html", "lcov"],
