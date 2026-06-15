@@ -26,12 +26,8 @@ export class GgcDatasetTreeConnectService {
   private loadCesiumModule(): Promise<CesiumModule> {
     this.cesiumModulePromise ??= import(
       /* @vite-ignore */ "@kadaster/ggc-cesium"
-    ).catch((e) => {
-      console.debug(
-        `Autoconnect ggc-dataset-tree met ggc-cesium is niet gelukt: ${e}`,
-        e
-      );
-      throw e;
+    ).catch(() => {
+      // comment for sonar
     });
     return this.cesiumModulePromise;
   }
@@ -42,12 +38,8 @@ export class GgcDatasetTreeConnectService {
   private loadMapModule(): Promise<GgcMapModule> {
     this.mapModulePromise ??= import(
       /* @vite-ignore */ "@kadaster/ggc-map"
-    ).catch((e) => {
-      console.debug(
-        `Autoconnect ggc-dataset-tree met ggc-map is niet gelukt: ${e}`,
-        e
-      );
-      throw e;
+    ).catch(() => {
+      // comment for sonar
     });
     return this.mapModulePromise;
   }
@@ -62,10 +54,6 @@ export class GgcDatasetTreeConnectService {
       }
       return this.ggcCesiumSharedLayerService;
     } catch (e) {
-      console.debug(
-        `Autoconnect ggc-dataset-tree met ggc-cesium is niet gelukt (GgcSharedLayerService): ${e}`,
-        e
-      );
       return undefined;
     }
   }
@@ -96,10 +84,6 @@ export class GgcDatasetTreeConnectService {
       }
       return this.ggcOLMapEventsService;
     } catch (e) {
-      console.debug(
-        `Autoconnect ggc-dataset-tree met ggc-map is niet gelukt (GgcMapEventsService): ${e}`,
-        e
-      );
       return undefined;
     }
   }
