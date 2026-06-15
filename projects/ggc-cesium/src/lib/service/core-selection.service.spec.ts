@@ -103,19 +103,19 @@ describe("CoreSelectionService", () => {
     expect(service["highlightMap"]).toHaveLength(0);
   });
 
-  // it("should call clearCoreSelectionService() when undefined is received", () => {
-  //   const clearCoreSelectionServiceSpy = vi.spyOn(
-  //     service as any,
-  //     "clearCoreSelectionService"
-  //   );
-  //   const mousehandlerSpy = vi.spyOn(service["mouseHandler"], "destroy");
-  //
-  //   subject.next(undefined);
-  //   expect(mousehandlerSpy).toHaveBeenCalled();
-  //   expect(clearCoreSelectionServiceSpy).toHaveBeenCalled();
-  //   expect(service["lastHoveredFeature"]).toBeUndefined();
-  //   expect(service["highlightMap"]).toHaveLength(0);
-  // });
+  it("should call clearCoreSelectionService() when undefined is received", () => {
+    const clearCoreSelectionServiceSpy = vi.spyOn(
+      service as any,
+      "clearCoreSelectionService"
+    );
+    const mousehandlerSpy = vi.spyOn(service["mouseHandler"], "destroy");
+
+    subject.next(undefined);
+    expect(mousehandlerSpy).toHaveBeenCalled();
+    expect(clearCoreSelectionServiceSpy).toHaveBeenCalled();
+    expect(service["lastHoveredFeature"]).toBeUndefined();
+    expect(service["highlightMap"]).toHaveLength(0);
+  });
 
   describe("initializeSelections", () => {
     it("should replace the current selection array and call reAddSelections()", () => {
@@ -177,6 +177,42 @@ describe("CoreSelectionService", () => {
 
   describe("handleInputEvent", () => {
     const cesiumMock = createCesiumMock() as Viewer;
+
+    it("should call setHighlightOnFeature() and emit event when the type of feature is Cesium3DTileFeature", () => {
+      const pickedFeature = new Cesium3DTileFeature();
+      service["viewer"] = cesiumMock;
+      (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
+      const selection = createSelection(
+        ScreenSpaceEventType.RIGHT_CLICK,
+        Color.BLACK
+      );
+      const movement = {
+        position: { x: 955, y: 238 } as Cartesian2
+      };
+      //@ts-ignore
+      const getFeatureSpy = vi.spyOn(service, "getFeature");
+      //@ts-ignore
+      const setHighlightOnFeatureSpy = vi
+        .spyOn(service as any, "setHighlightOnFeature")
+        .mockImplementation(() => {
+          /* empty */
+        });
+      tiles3dLayerServiceSpy.getLayerName.mockReturnValue("layer1");
+
+      service.getClickEventsObservable().subscribe((evt: SelectionEvent) => {
+        expect(evt.layerName).toBe("layer1");
+        expect(evt.selectionEventType).toBe(
+          SelectionEventType.SELECTIONSERVICE_SELECTIONUPDATED
+        );
+        expect(evt.type).toBe(ScreenSpaceEventType.RIGHT_CLICK);
+        expect(evt.feature).toBe(pickedFeature);
+      });
+
+      service["handleInputEvent"](movement, selection);
+
+      expect(getFeatureSpy).toHaveBeenCalled();
+      expect(setHighlightOnFeatureSpy).toHaveBeenCalled();
+    });
 
     it("should call updateLastClickedEntity() and emit event when the type of feature is Entity", async () => {
       service["viewer"] = cesiumMock;
