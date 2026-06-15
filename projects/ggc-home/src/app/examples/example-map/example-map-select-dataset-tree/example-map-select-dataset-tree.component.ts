@@ -16,6 +16,9 @@ import {
   GgcFeatureInfoComponent,
   GgcFeatureInfoTabsComponent
 } from "@kadaster/ggc-feature-info";
+import Style from "ol/style/Style";
+import Fill from "ol/style/Fill";
+import Stroke from "ol/style/Stroke";
 
 @Component({
   selector: "app-example-map-select",
@@ -27,7 +30,8 @@ import {
     ExampleFormatComponent,
     FormsModule
   ],
-  templateUrl: "./example-map-select-dataset-tree.component.html"
+  templateUrl: "./example-map-select-dataset-tree.component.html",
+  styleUrl: "./example-map-select-dataset-tree.component.scss"
 })
 export class ExampleMapSelectDatasetTreeComponent
   extends ExampleFormatComponent
@@ -59,6 +63,16 @@ export class ExampleMapSelectDatasetTreeComponent
   protected selectMode: "singleselect" | "multiselect" = "singleselect";
 
   private readonly selectService = inject(GgcSelectionService);
+
+  private readonly selectStyle = new Style({
+    fill: new Fill({
+      color: "rgba(0, 147, 190, 0.2)"
+    }),
+    stroke: new Stroke({
+      color: "#0093be",
+      width: 3
+    })
+  });
 
   ngOnInit() {
     this.httpClient
@@ -95,7 +109,10 @@ export class ExampleMapSelectDatasetTreeComponent
         this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
         break;
       case "multiselect":
-        this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "multi", style: this.selectStyle },
+          this.mapIndex
+        );
         break;
     }
   }
