@@ -42,7 +42,7 @@ export class ExampleMapSelectWmsComponent
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.SELECT],
     imageLocation:
-      "code/examples/example-map/example-map-select-wms/example-select.png"
+      "code/examples/example-map/example-map-select-wms/example-map-select-wms.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-map/example-map-select-wms/example-map-select-wms.component.ts";
