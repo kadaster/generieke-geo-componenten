@@ -28,8 +28,7 @@ import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
     FormsModule,
     GgcFeatureInfoComponent
   ],
-  templateUrl: "./example-map-select-hover-click.component.html",
-  styleUrl: "./example-map-select-hover-click.component.scss"
+  templateUrl: "./example-map-select-hover-click.component.html"
 })
 export class ExampleMapSelectHoverClickComponent
   extends ExampleFormatComponent
