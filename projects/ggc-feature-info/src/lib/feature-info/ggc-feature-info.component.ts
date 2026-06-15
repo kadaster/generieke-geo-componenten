@@ -161,7 +161,7 @@ export class GgcFeatureInfoComponent
 
   /**
    * Verzameling van features en metadata die weergegeven moeten worden.
-   * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
+   * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
    */
   @Input()
   set featureInfoCollection(value: FeatureInfoCollection | undefined) {
@@ -395,7 +395,7 @@ export class GgcFeatureInfoComponent
       );
       this.displayFeaturesProperties =
         this.featureInfoConfigService.filterAndSortAttributes(
-          this.featureInfoCollection.layerName,
+          this.featureInfoCollection.layerId,
           featuresProperties
         );
     } else {
@@ -455,14 +455,16 @@ export class GgcFeatureInfoComponent
             }
 
             this.featureInfoCollection = new FeatureInfoCollection(
+              undefined,
+              collections.flatMap((layer) => layer.features ?? []),
               collections
-                .map(
-                  (layer) =>
-                    layer.layerTitle || layer.layerName || layer.layerId
-                )
+                .map((layer) => layer.layerTitle)
                 .filter((value) => value && value.trim().length > 0)
                 .join(", "),
-              collections.flatMap((layer) => layer.features ?? [])
+              collections
+                .map((layer) => layer.layerId)
+                .filter((value) => value && value.trim().length > 0)
+                .join(", ")
             );
           }
         );

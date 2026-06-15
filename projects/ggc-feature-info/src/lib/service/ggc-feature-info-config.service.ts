@@ -79,16 +79,16 @@ export class GgcFeatureInfoConfigService {
    *
    * Indien geen configuratie beschikbaar is, worden de originele feature properties geretourneerd.
    *
-   * @param layerName Naam van de layer waarvoor de configuratie geldt
+   * @param layerId Id van de layer waarvoor de configuratie geldt
    * @param featureProperties Lijst van feature objecten (key-value paren)
    * @returns Nieuwe lijst met gesorteerde en gefilterde feature properties
    */
   filterAndSortAttributes(
-    layerName: string,
+    layerId: string,
     featureProperties: object[]
   ): object[] {
     const config = this.sortFilterConfigs
-      ? this.sortFilterConfigs.find((conf) => conf.layerName === layerName)
+      ? this.sortFilterConfigs.find((conf) => conf.layerId === layerId)
       : undefined;
 
     if (!config && !this.customFeatureInfo) {
@@ -263,12 +263,12 @@ export class GgcFeatureInfoConfigService {
     b: FeatureInfoCollection
   ): number {
     if (this.sortFilterConfigs) {
-      // config wordt alleen gevonden wanneer de layerName gevonden wordt EN wanneer de config een tabIndex heeft
+      // config wordt alleen gevonden wanneer de layerId gevonden wordt EN wanneer de config een tabIndex heeft
       const configA = this.sortFilterConfigs.find(
-        (config) => config.layerName === a.layerName && !!config.tabIndex
+        (config) => config.layerId === a.layerId && !!config.tabIndex
       );
       const configB = this.sortFilterConfigs.find(
-        (config) => config.layerName === b.layerName && !!config.tabIndex
+        (config) => config.layerId === b.layerId && !!config.tabIndex
       );
       const tabIndexA = configA ? configA.tabIndex : undefined;
       const tabIndexB = configB ? configB.tabIndex : undefined;
