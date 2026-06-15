@@ -28,7 +28,7 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
       "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
-    tags: [Tags.FEATURE_INFO],
+    tags: [Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.png"
   } as ComponentInfo;

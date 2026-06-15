@@ -33,7 +33,7 @@ export class ExampleDrawEditBasicComponent
     introduction:
       "Verplaats en bewerk lijnen, punten, vlakken en rechthoeken met de muis.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.DRAW, Tags.MODIFY],
     imageLocation:
       "code/examples/example-draw/example-draw-edit-basic/example-draw-edit-basic.png"
