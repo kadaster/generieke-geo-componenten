@@ -3,9 +3,16 @@
  */
 export interface SortFilterConfigOptions {
   /**
+   * @deprecated
    * De naam van de layer waarop de sorteer- en filterconfiguratie van toepassing is.
+   * layerId vervangt de layerName
    */
-  layerName: string;
+  layerName?: string;
+
+  /**
+   * De layerId waarop de sorteer- en filterconfiguratie van toepassing is.
+   */
+  layerId: string;
 
   /**
    * Optionele index die bepaalt in welke tab deze configuratie wordt weergegeven.
@@ -33,7 +40,8 @@ export interface SortFilterConfigOptions {
 }
 
 export class SortFilterConfig {
-  layerName: string;
+  layerName?: string;
+  layerId: string;
   tabIndex?: number;
   attributeOrder?: string[];
   hideUnorderedAttributes? = true;
@@ -41,6 +49,7 @@ export class SortFilterConfig {
 
   constructor(sortFilterConfigOptions: SortFilterConfigOptions) {
     this.layerName = sortFilterConfigOptions.layerName;
+    this.layerId = sortFilterConfigOptions.layerId;
     this.tabIndex = sortFilterConfigOptions.tabIndex;
     this.attributeOrder = sortFilterConfigOptions.attributeOrder;
     if (sortFilterConfigOptions.hideUnorderedAttributes !== undefined) {

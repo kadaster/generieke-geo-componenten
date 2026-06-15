@@ -3,11 +3,11 @@
  */
 export interface CustomFeatureInfoOptions {
   /**
-   * De naam van de key waarop de valueFunction moet worden toegepast.
+   * De string waarmee de naam (key) wordt overschreven
    */
   customAttributeName?: string;
   /**
-   * De valueFunction die de waarde aanpast.
+   * De valueFunction die de waarde (value) aanpast.
    */
   customAttributeValueFunction?: (valueToBeChanged: string | number) => any;
 }
