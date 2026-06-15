@@ -23,7 +23,7 @@
     "test:cov:ggc-search-location": "ng test --project ggc-search-location --coverage --watch=false",
     "test:cov:ggc-toolbar": "ng test --project ggc-toolbar --coverage --watch=false",
     "test:cov:ggc-models": "ng test --project ggc-models --coverage --watch=false",
-    "test:cov:all": "npm run test:cov:ggc-models &&npm run test:cov:ggc-cesium && npm run test:cov:ggc-dataset-tree && npm run test:cov:ggc-feature-info && npm run test:cov:ggc-legend && npm run test:cov:ggc-map && npm run test:cov:ggc-search-location && npm run test:cov:ggc-toolbar",
+    "test:cov:all": "npm run test:cov:ggc-models && npm run test:cov:ggc-cesium && npm run test:cov:ggc-dataset-tree && npm run test:cov:ggc-feature-info && npm run test:cov:ggc-legend && npm run test:cov:ggc-map && npm run test:cov:ggc-search-location && npm run test:cov:ggc-toolbar",
     "lint:ggc-cesium": "ng lint --project ggc-cesium",
     "lint:ggc-dataset-tree": "ng lint --project ggc-dataset-tree",
     "lint:ggc-feature-info": "ng lint --project ggc-feature-info",
