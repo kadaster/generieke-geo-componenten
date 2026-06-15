@@ -49,11 +49,13 @@ describe("DatasetLegendComponent", () => {
         legend: [
           {
             imageUrl: "assets/icons/afgerond.svg",
-            text: "afgerond"
+            text: "afgerond",
+            iconDescription: "afgerond"
           },
           {
             imageUrl: "assets/icons/afgewezen.svg",
-            text: "afgewezen"
+            text: "afgewezen",
+            iconDescription: "afgewezen"
           }
         ]
       }
