@@ -123,12 +123,14 @@ export class GgcFeatureInfoTabsComponent
     FeatureInfoMapConnectService
   );
   @ContentChild(ValueTemplateDirective, { descendants: false })
-  private tabTemplate: ValueTemplateDirective;
+  private readonly tabTemplate: ValueTemplateDirective;
   private selectedTabFeatureInfo: FeatureInfoCollection | undefined;
   private lastSelectedTabOnClick: string;
-  private featureInfoConfigService = inject(GgcFeatureInfoConfigService);
-  private eventService = inject(FeatureInfoEventService);
-  private subscriptionSelection: Subscription;
+  private readonly featureInfoConfigService = inject(
+    GgcFeatureInfoConfigService
+  );
+  private readonly eventService = inject(FeatureInfoEventService);
+  private readonly subscriptionSelection: Subscription;
 
   ngAfterContentInit(): void {
     if (this.tabTemplate) {
@@ -154,6 +156,10 @@ export class GgcFeatureInfoTabsComponent
     this.subscriptionSelection?.unsubscribe();
   }
 
+  /**
+   * Set the active tab
+   * @param tab the new active tab
+   */
   onTabClicked(tab: string): void {
     this.lastSelectedTabOnClick = tab;
     this.setActiveTab(tab);
@@ -161,9 +167,9 @@ export class GgcFeatureInfoTabsComponent
 
   private onDataUpdate(): void {
     // create copy of featureInfoCollectionArray and check empty tabs
-    this.featureInfoCollectionArrayInternal = !this.featureInfoCollectionArray
-      ? []
-      : [...this.featureInfoCollectionArray];
+    this.featureInfoCollectionArrayInternal = this.featureInfoCollectionArray
+      ? [...this.featureInfoCollectionArray]
+      : [];
     this.checkShowEmptyTabs();
     if (this.featureInfoCollectionArrayInternal.length === 0) {
       const event = new FeatureInfoComponentEvent(

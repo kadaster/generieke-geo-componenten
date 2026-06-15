@@ -1,8 +1,34 @@
+/**
+ * Het object dat wordt gebruikt om de feature-info te sorteren en eventueel waardes niet te tonen.
+ */
 export interface SortFilterConfigOptions {
+  /**
+   * De naam van de layer waarop de sorteer- en filterconfiguratie van toepassing is.
+   */
   layerName: string;
+
+  /**
+   * Optionele index die bepaalt in welke tab deze configuratie wordt weergegeven.
+   */
   tabIndex?: number;
+
+  /**
+   * Bepaalt de volgorde waarin attributen worden weergegeven.
+   * Attributen die niet in deze lijst voorkomen worden afhankelijk van
+   * `hideUnorderedAttributes` wel of niet getoond.
+   */
   attributeOrder?: string[];
+
+  /**
+   * Wanneer `true`, worden attributen die niet in `attributeOrder` staan verborgen.
+   *
+   * @defaultValue false (tenzij expliciet gezet via de class default)
+   */
   hideUnorderedAttributes?: boolean;
+
+  /**
+   * Lijst van attributen die expliciet uitgesloten moeten worden van weergave.
+   */
   excludeAttributes?: string[];
 }
 
