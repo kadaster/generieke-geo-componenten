@@ -272,13 +272,19 @@ export class GgcMapService {
    * @param features Array van OpenLayers features met geometrie
    * @param mapIndex Index van de kaart waarop de features worden
    * toegevoegd (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
    * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
    */
   addFeaturesToSelectionLayer(
     features: Feature<Geometry>[],
-    mapIndex: string = DEFAULT_MAPINDEX
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
   ): MapComponentEvent {
-    return this.coreMapService.addFeaturesToSelectionLayer(features, mapIndex);
+    return this.coreMapService.addFeaturesToSelectionLayer(
+      features,
+      mapIndex,
+      selectIndex
+    );
   }
 
   /**
@@ -290,13 +296,19 @@ export class GgcMapService {
    *
    * @param feature OpenLayers feature die gecontroleerd wordt
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
    * @returns `true` indien de feature in de selectionlaag zit, anders `false`
    */
   isFeatureInSelectionLayer(
     feature: Feature<Geometry>,
-    mapIndex: string = DEFAULT_MAPINDEX
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
   ): boolean {
-    return this.coreMapService.isFeatureInSelectionLayer(feature, mapIndex);
+    return this.coreMapService.isFeatureInSelectionLayer(
+      feature,
+      mapIndex,
+      selectIndex
+    );
   }
 
   /**
@@ -304,10 +316,14 @@ export class GgcMapService {
    *
    * @param mapIndex Index van de kaart waarvoor de selectionlaag wordt
    * geleegd (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
    * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
    */
-  clearSelectionLayer(mapIndex: string = DEFAULT_MAPINDEX): MapComponentEvent {
-    return this.coreMapService.clearSelectionLayer(mapIndex);
+  clearSelectionLayer(
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): MapComponentEvent {
+    return this.coreMapService.clearSelectionLayer(mapIndex, selectIndex);
   }
 
   /**
@@ -317,12 +333,18 @@ export class GgcMapService {
    * @param styleLike OpenLayers stijl of stijl-functie
    * @param mapIndex Index van de kaart waarop de stijl wordt
    * aangepast (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
    */
   changeSelectionLayerStyle(
     styleLike: StyleLike | null,
-    mapIndex: string = DEFAULT_MAPINDEX
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
   ) {
-    this.coreMapService.changeSelectionLayerStyle(styleLike, mapIndex);
+    this.coreMapService.changeSelectionLayerStyle(
+      styleLike,
+      mapIndex,
+      selectIndex
+    );
   }
 
   /**

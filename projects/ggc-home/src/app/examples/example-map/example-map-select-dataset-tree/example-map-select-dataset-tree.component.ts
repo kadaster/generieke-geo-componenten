@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, AfterViewInit } from "@angular/core";
 import {
   GgcMapComponent,
   GgcSelectionService,
@@ -27,19 +27,22 @@ import {
     ExampleFormatComponent,
     FormsModule
   ],
-  templateUrl: "./example-map-select-dataset-tree.component.html",
-  styleUrl: "./example-map-select-dataset-tree.component.scss"
+  templateUrl: "./example-map-select-dataset-tree.component.html"
 })
 export class ExampleMapSelectDatasetTreeComponent
   extends ExampleFormatComponent
-  implements OnInit
+  implements OnInit, AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select-dataset-tree",
     title: "Selecteren op de kaart met dataset tree",
     introduction: "Selecteer en highlight features op diverse kaartlagen",
-    components: [Components.GGC_MAP, Components.GGC_DATASET_TREE],
+    components: [
+      Components.GGC_MAP,
+      Components.GGC_DATASET_TREE,
+      Components.GGC_FEATURE_INFO
+    ],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.SELECT, Tags.DATASET],
     imageLocation:
@@ -80,23 +83,19 @@ export class ExampleMapSelectDatasetTreeComponent
         console.log("features", data.value);
       }
     });
+  }
 
+  ngAfterViewInit() {
     this.onSelectModeChange("singleselect");
   }
 
   onSelectModeChange(mode: "singleselect" | "multiselect") {
     switch (mode) {
       case "singleselect":
-        this.selectService.startSelect(
-          { selectMode: "single", style: null },
-          this.mapIndex
-        );
+        this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
         break;
       case "multiselect":
-        this.selectService.startSelect(
-          { selectMode: "multi", style: null },
-          this.mapIndex
-        );
+        this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);
         break;
     }
   }

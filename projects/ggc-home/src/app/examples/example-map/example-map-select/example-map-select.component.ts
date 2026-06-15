@@ -18,6 +18,10 @@ import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
 import { pointerMove } from "ol/events/condition";
 import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
+import Style from "ol/style/Style";
+import Fill from "ol/style/Fill";
+import Stroke from "ol/style/Stroke";
+import CircleStyle from "ol/style/Circle";
 
 @Component({
   selector: "app-example-map-select",
@@ -53,6 +57,16 @@ export class ExampleMapSelectComponent
 
   private readonly selectService = inject(GgcSelectionService);
 
+  private readonly selectStyle = new Style({
+    fill: new Fill({
+      color: "rgba(0, 147, 190, 0.2)"
+    }),
+    stroke: new Stroke({
+      color: "#0093be",
+      width: 3
+    })
+  });
+
   ngOnInit() {
     this.httpClient
       .get("code/examples/example-map/example-map-select/kaartconfig.json")
@@ -78,7 +92,7 @@ export class ExampleMapSelectComponent
   }
 
   ngAfterViewInit() {
-    this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+    this.onSelectModeChange("singleselect");
   }
 
   onSelectModeChange(
@@ -86,20 +100,30 @@ export class ExampleMapSelectComponent
   ) {
     switch (mode) {
       case "singleselect":
-        this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "single", style: this.selectStyle },
+          this.mapIndex
+        );
         break;
       case "multiselect":
-        this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "multi", style: this.selectStyle },
+          this.mapIndex
+        );
         break;
       case "default":
         this.selectService.startSelect(
-          { selectMode: "openlayersDefault" },
+          { selectMode: "openlayersDefault", style: this.selectStyle },
           this.mapIndex
         );
         break;
       case "hover":
         this.selectService.startSelect(
-          { selectMode: "single", condition: pointerMove },
+          {
+            selectMode: "single",
+            condition: pointerMove,
+            style: this.selectStyle
+          },
           this.mapIndex
         );
     }

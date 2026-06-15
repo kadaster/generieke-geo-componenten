@@ -62,7 +62,7 @@ describe("FeatureInfoTabsComponent", () => {
     const feature1 = new Feature({ test: "123" });
     const feature2 = new Feature({ test: "456" });
     component.featureInfoCollectionArray = [
-      new FeatureInfoCollection("Naam1", [feature1, feature2])
+      new FeatureInfoCollection("Naam1", [feature1, feature2], "titel", "id")
     ];
 
     component.ngOnChanges({
@@ -71,7 +71,7 @@ describe("FeatureInfoTabsComponent", () => {
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
     expect(component["featureInfoCollectionArrayInternal"].length).toBe(1);
-    expect(component["selectedTab"]).toBe("Naam1");
+    expect(component["selectedTab"]).toBe("id");
     expect(component["selectedTabFeatureInfo"]).toBeDefined();
     expect(component["lastSelectedTabOnClick"]).toBeUndefined();
     expect(sortFilterServiceSpy).toHaveBeenCalled();
@@ -81,8 +81,13 @@ describe("FeatureInfoTabsComponent", () => {
     const feature1 = new Feature({ test: "123" });
     const feature2 = new Feature({ test: "456" });
     component.featureInfoCollectionArray = [
-      new FeatureInfoCollection("Not empty", [feature1, feature2]),
-      new FeatureInfoCollection("Empty", [])
+      new FeatureInfoCollection(
+        "Not empty",
+        [feature1, feature2],
+        "titel",
+        "id"
+      ),
+      new FeatureInfoCollection("Empty", [], "titel", "id")
     ];
 
     component.ngOnChanges({
@@ -100,8 +105,13 @@ describe("FeatureInfoTabsComponent", () => {
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
     component.featureInfoCollectionArray = [
-      new FeatureInfoCollection("Not empty", [feature1, feature2]),
-      new FeatureInfoCollection("Empty", [])
+      new FeatureInfoCollection(
+        "Not empty",
+        [feature1, feature2],
+        "titel",
+        "id"
+      ),
+      new FeatureInfoCollection("Empty", [], "titel", "id")
     ];
 
     component.ngOnChanges({
@@ -124,16 +134,22 @@ describe("FeatureInfoTabsComponent", () => {
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
     component.featureInfoCollectionArray = [
-      new FeatureInfoCollection("Naam1", [feature1]),
-      new FeatureInfoCollection("Clicked", [feature2])
+      new FeatureInfoCollection("Naam1", [feature1], "titelNaam1", "idNaam1"),
+      new FeatureInfoCollection(
+        "Clicked",
+        [feature2],
+        "titelClicked",
+        "idClicked"
+      )
     ];
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
     });
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
-    expect(receivedEvent.value.layerName).toBe(activeTabName);
-    expect(component["selectedTab"]).toBe(activeTabName);
+    expect(receivedEvent.value.layerTitle).toBe("titelNaam1");
+    expect(receivedEvent.value.layerId).toBe("idNaam1");
+    expect(component["selectedTab"]).toBe("idNaam1");
     expect(component["selectedTabFeatureInfo"]).toBeDefined();
     expect(component["lastSelectedTabOnClick"]).toBe(activeTabName);
   });
@@ -150,8 +166,8 @@ describe("FeatureInfoTabsComponent", () => {
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
     component.featureInfoCollectionArray = [
-      new FeatureInfoCollection("Tab1", [feature1]),
-      new FeatureInfoCollection("Tab2", [feature2])
+      new FeatureInfoCollection("Tab1", [feature1], "titel", "id1"),
+      new FeatureInfoCollection("Tab2", [feature2], "titel", "id2")
     ];
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
@@ -159,7 +175,7 @@ describe("FeatureInfoTabsComponent", () => {
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
     expect(receivedEvent.value.layerName).toBe("Tab1");
-    expect(component["selectedTab"]).toBe("Tab1");
+    expect(component["selectedTab"]).toBe("id1");
     expect(component["selectedTabFeatureInfo"]).toBeDefined();
   });
 
@@ -174,8 +190,8 @@ describe("FeatureInfoTabsComponent", () => {
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
     component.featureInfoCollectionArray = [
-      new FeatureInfoCollection("TabA", [feature1]),
-      new FeatureInfoCollection(tabName, [feature2])
+      new FeatureInfoCollection("TabA", [feature1], "titel", "ida"),
+      new FeatureInfoCollection(tabName, [feature2], "titel", "idb")
     ];
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
@@ -185,7 +201,7 @@ describe("FeatureInfoTabsComponent", () => {
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
     expect(component["featureInfoCollectionArrayInternal"].length).toBe(2);
-    expect(component["selectedTab"]).toBe(tabName);
+    expect(component["selectedTab"]).toBe("ida");
     expect(component["selectedTabFeatureInfo"]).toBeDefined();
     expect(component["lastSelectedTabOnClick"]).toBe(tabName);
   });

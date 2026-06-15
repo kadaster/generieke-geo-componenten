@@ -10,17 +10,17 @@
   >
     @for (info of featureInfoCollectionArrayInternal; track info) {
       <button
-        [id]="'tab-' + info.layerName"
+        [id]="'tab-' + info.layerTitle"
         role="tab"
-        [attr.aria-controls]="'tabpanel-' + info.layerName"
-        [attr.aria-selected]="info.layerName === selectedTab"
+        [attr.aria-controls]="'tabpanel-' + info.layerTitle"
+        [attr.aria-selected]="info.layerId === selectedTab"
         [ngClass]="{
-          active: info.layerName === selectedTab,
-          inactive: info.layerName !== selectedTab
+          active: info.layerId === selectedTab,
+          inactive: info.layerId !== selectedTab
         }"
         (click)="
           featureInfoCollectionArrayInternal.length > 1
-            ? onTabClicked(info.layerName)
+            ? onTabClicked(info.layerId)
             : null
         "
       >
@@ -29,11 +29,11 @@
             tabComponent ? tabComponent : defaultValueTemplate
           "
           [ngTemplateOutletContext]="{
-            layerName: info.layerName,
-            active: info.layerName === selectedTab
+            layerTitle: info.layerTitle,
+            active: info.layerId === selectedTab
           }"
         ></ng-container>
-        <ng-template #defaultValueTemplate>{{ info.layerName }}</ng-template>
+        <ng-template #defaultValueTemplate>{{ info.layerTitle }}</ng-template>
       </button>
     }
   </div>

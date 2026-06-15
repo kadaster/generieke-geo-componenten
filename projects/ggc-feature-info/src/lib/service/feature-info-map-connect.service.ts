@@ -32,15 +32,17 @@ export class FeatureInfoMapConnectService {
    *
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
    * selectie‑events worden gevolgd
+   * @param selectIndex Optionele selectIndex (default: undefined) waarvoor selectie‑events worden gevolgd
    * @returns Promise met een Observable van {@link MapComponentEvent}
    */
   getObservableForMapSelection(
-    mapIndex: string = DEFAULT_MAPINDEX
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
   ): Promise<Observable<MapComponentEvent>> {
     return this.connectService
       .getMapSelectionService()
       .then((selectionService: any) => {
-        return selectionService?.getObservable(mapIndex) ?? of();
+        return selectionService?.getObservable(mapIndex, selectIndex) ?? of();
       });
   }
 

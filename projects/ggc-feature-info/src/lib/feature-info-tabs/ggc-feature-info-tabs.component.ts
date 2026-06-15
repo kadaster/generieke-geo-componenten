@@ -22,7 +22,6 @@ import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import {
   DEFAULT_MAPINDEX,
-  FeatureCollectionForLayer,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -30,6 +29,16 @@ import { FeatureInfoMapConnectService } from "../service/feature-info-map-connec
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
 import { Subscription } from "rxjs";
 
+/**
+ * Component voor het weergeven van feature-informatie in tabbladen.
+ *
+ * @remarks
+ * Door `<ggc-feature-info-tabs></ggc-feature-info-tabs>` op te nemen in de HTML
+ * kan de tabbladenfunctionaliteit worden gebruikt.
+ *
+ * Binnen deze tags kan worden gespecificeerd hoe de tabbladen worden gevuld
+ * en welke content per tabblad wordt weergegeven.
+ */
 @Component({
   selector: "ggc-feature-info-tabs",
   templateUrl: "./ggc-feature-info-tabs.component.html",
@@ -43,13 +52,66 @@ export class GgcFeatureInfoTabsComponent
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
   /**
    * Verzameling van features en metadata die weergegeven moeten worden.
-   * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
+   * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
    */
   featureInfoCollectionArray: FeatureInfoCollection[];
-  @Input() showEmptyTabs = false; // default = false, lege tabbladen worden default niet getoond
-  @Input() ariaLabelledBy?: string; // if not provided, uses ariaLabel
-  @Input() ariaLabel = "feature-info"; // if both ariaLabelled and ariaLabel not provided, use default "feature-info"
+  /**
+   * Bepaalt of tabbladen zonder inhoud zichtbaar moeten zijn.
+   *
+   * @remarks
+   * Standaardwaarde: `false`.
+   *
+   * Wanneer ingesteld op `true`, worden tabbladen zonder inhoud
+   * (d.w.z. met een lege `features`-array) toch weergegeven.
+   * Bij `false` worden deze tabbladen verborgen.
+   */
+  @Input() showEmptyTabs = false;
+
+  /**
+   * Verwijst naar het element (via ID) dat het label levert voor deze component.
+   *
+   * @remarks
+   * Indien niet opgegeven, wordt {@link ariaLabel} gebruikt als fallback.
+   */
+  @Input() ariaLabelledBy?: string;
+
+  /**
+   * Direct aria-label voor de component.
+   *
+   * @remarks
+   * Standaardwaarde: `"feature-info"`.
+   *
+   * Wordt gebruikt wanneer {@link ariaLabelledBy} niet is opgegeven.
+   * Als beide niet zijn ingesteld, wordt de standaardwaarde `"feature-info"` gebruikt.
+   */
+  @Input() ariaLabel = "feature-info";
+
+  /**
+   * Bepaalt of events automatisch intern worden afgehandeld binnen de component.
+   *
+   * @remarks
+   * Standaardwaarde: `true`.
+   *
+   * Wanneer ingesteld op `true`, verwerkt de component de events zelf.
+   * Bij `false` worden de events niet intern afgehandeld en wordt verwacht
+   * dat de parent-component deze afhandeling verzorgt.
+   */
   @Input() autoConnect = true;
+  /**
+   * Verplicht output-event voor alle gebeurtenissen afkomstig van de tabbladenfunctionaliteit.
+   *
+   * @remarks
+   * Emit een {@link FeatureInfoComponentEvent} dat gebruikt kan worden
+   * om feature-informatie te tonen via het feature-informatiecomponent, wanneer
+   * bijvoorbeeld de autoconnect op false is gezet.
+   *
+   * De consumer van dit event dient een handler te definiëren met `$event` als parameter.
+   *
+   * Events worden in de volgende gevallen uitgezonden:
+   * - Wanneer een ander tabblad wordt geselecteerd
+   * - Wanneer de `featureInfoCollectionArray` `undefined` is
+   *   (in dit geval is de `value` van het event ook `undefined`)
+   */
   @Output() events: EventEmitter<FeatureInfoComponentEvent> =
     new EventEmitter<FeatureInfoComponentEvent>();
   protected tabComponent?: TemplateRef<any>;
@@ -60,12 +122,14 @@ export class GgcFeatureInfoTabsComponent
     FeatureInfoMapConnectService
   );
   @ContentChild(ValueTemplateDirective, { descendants: false })
-  private tabTemplate: ValueTemplateDirective;
+  private readonly tabTemplate: ValueTemplateDirective;
   private selectedTabFeatureInfo: FeatureInfoCollection | undefined;
   private lastSelectedTabOnClick: string;
-  private featureInfoConfigService = inject(GgcFeatureInfoConfigService);
-  private eventService = inject(FeatureInfoEventService);
-  private subscriptionSelection: Subscription;
+  private readonly featureInfoConfigService = inject(
+    GgcFeatureInfoConfigService
+  );
+  private readonly eventService = inject(FeatureInfoEventService);
+  private readonly subscriptionSelection: Subscription;
 
   ngAfterContentInit(): void {
     if (this.tabTemplate) {
@@ -91,6 +155,10 @@ export class GgcFeatureInfoTabsComponent
     this.subscriptionSelection?.unsubscribe();
   }
 
+  /**
+   * Set the active tab
+   * @param tab the new active tab
+   */
   onTabClicked(tab: string): void {
     this.lastSelectedTabOnClick = tab;
     this.setActiveTab(tab);
@@ -98,9 +166,9 @@ export class GgcFeatureInfoTabsComponent
 
   private onDataUpdate(): void {
     // create copy of featureInfoCollectionArray and check empty tabs
-    this.featureInfoCollectionArrayInternal = !this.featureInfoCollectionArray
-      ? []
-      : [...this.featureInfoCollectionArray];
+    this.featureInfoCollectionArrayInternal = this.featureInfoCollectionArray
+      ? [...this.featureInfoCollectionArray]
+      : [];
     this.checkShowEmptyTabs();
     if (this.featureInfoCollectionArrayInternal.length === 0) {
       const event = new FeatureInfoComponentEvent(
@@ -119,15 +187,15 @@ export class GgcFeatureInfoTabsComponent
     }
   }
 
-  private setActiveTab(layerName: string): void {
+  private setActiveTab(layerId: string): void {
     let idx = this.featureInfoCollectionArrayInternal.findIndex(
-      (tabFeatureInfo) => tabFeatureInfo.layerName === layerName
+      (tabFeatureInfo) => tabFeatureInfo.layerId === layerId
     );
     if (idx === -1) {
       idx = 0;
     }
     this.selectedTabFeatureInfo = this.featureInfoCollectionArrayInternal[idx];
-    this.selectedTab = this.selectedTabFeatureInfo.layerName;
+    this.selectedTab = this.selectedTabFeatureInfo.layerId;
     const event = new FeatureInfoComponentEvent(
       FeatureInfoComponentEventType.SELECTEDTAB,
       "Het huidige weergegeven tabblad.",
@@ -158,15 +226,7 @@ export class GgcFeatureInfoTabsComponent
             MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
           ) {
             this.featureInfoCollectionArray =
-              event.value.featureCollectionForLayers.map(
-                (featureCollection: FeatureCollectionForLayer) => ({
-                  ...featureCollection,
-                  layerName:
-                    featureCollection.layerTitle ||
-                    featureCollection.layerName ||
-                    featureCollection.layerId
-                })
-              );
+              event.value.featureCollectionForLayers;
             this.onDataUpdate();
           }
         })

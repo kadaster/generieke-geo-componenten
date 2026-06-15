@@ -72,6 +72,17 @@ export class GgcWmtsLayerComponent
       this.options.layer = this.options?.layerName;
     }
 
+    if (this.options?.getFeatureInfoOnSingleclick === true) {
+      this.singleclick = this.mapEventsService
+        .getSingleclickObservableForMap(this.mapIndex)
+        .subscribe((evt) => {
+          this.getFeatureInfo(evt);
+        });
+    }
+    if (this.options?.maxFeaturesOnSingleclick !== undefined) {
+      this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
+    }
+
     this.capabilitiesSubscription = this.capabilitiesService
       .getCapabilitiesForUrl(
         (this.options?.url as string) ||
@@ -209,6 +220,11 @@ export class GgcWmtsLayerComponent
   ngOnDestroy(): void {
     if (this.capabilitiesSubscription !== undefined) {
       this.capabilitiesSubscription.unsubscribe();
+    }
+
+    // unsubscribe on singleclick
+    if (this.singleclick !== undefined) {
+      this.singleclick.unsubscribe();
     }
 
     super.ngOnDestroy();
