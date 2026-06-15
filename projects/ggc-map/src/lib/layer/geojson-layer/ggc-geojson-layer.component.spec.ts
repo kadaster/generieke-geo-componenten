@@ -338,34 +338,6 @@ describe("GeojsonLayerComponent", () => {
     expect(resultLayer.get("ggc-layer-id")).toBe("testLayer");
   });
 
-  it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-    const coreMapService: CoreMapService =
-      debugElement.injector.get(CoreMapService);
-    const mapEventsService: CoreMapEventsService =
-      debugElement.injector.get(CoreMapEventsService);
-    const mapEventsServicespy = spyOn<CoreMapEventsService, any>(
-      mapEventsService,
-      "getSingleclickObservableForMap"
-    ).and.callThrough();
-    component.options = { getFeatureInfoOnSingleclick: true };
-    const onMock = {
-      addLayer(_layer) {
-        return;
-      },
-      removeLayer(_layer) {
-        return;
-      }
-    } as OlMap;
-
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(onMock);
-    component.ngOnInit();
-    expect(getMapSpy).toHaveBeenCalled();
-    expect(mapEventsServicespy).toHaveBeenCalled();
-  });
-
   it(
     "should return a feature to the foundFeatures-array if the maxFeaturesonSingleclick is not yet reached " +
       "when limitFeatures() is called",

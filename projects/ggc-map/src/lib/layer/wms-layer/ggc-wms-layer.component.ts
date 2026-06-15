@@ -63,6 +63,17 @@ export class GgcWmsLayerComponent
       this.options.layers = this.options?.layerName;
     }
 
+    if (this.options?.getFeatureInfoOnSingleclick === true) {
+      this.singleclick = this.mapEventsService
+        .getSingleclickObservableForMap(this.mapIndex)
+        .subscribe((evt) => {
+          this.getFeatureInfo(evt);
+        });
+    }
+    if (this.options?.maxFeaturesOnSingleclick !== undefined) {
+      this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
+    }
+
     const urlForCapabilities =
       this.options?.url || this.options?.sourceOptions?.url;
     if (this.options?.getCapabilities !== false && urlForCapabilities) {
@@ -193,6 +204,11 @@ export class GgcWmsLayerComponent
   /** Verwijdert de laag en voert opruimacties uit. */
   ngOnDestroy(): void {
     super.ngOnDestroy();
+
+    // unsubscribe on singleclick
+    if (this.singleclick !== undefined) {
+      this.singleclick.unsubscribe();
+    }
   }
 
   /**

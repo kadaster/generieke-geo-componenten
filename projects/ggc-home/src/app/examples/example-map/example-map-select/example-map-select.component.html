@@ -1,6 +1,6 @@
 <app-example-format
-  [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
   [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
@@ -47,46 +47,46 @@
   </div>
 
   <div page-functionality>
-    <div class="functionality-layout">
+    <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="map-controls">
+      <div class="col-xl-3 col-md-4 col-sm-5">
         <label class="ms-2">
           <input
-            type="radio"
-            name="selectMode"
-            value="singleselect"
-            [(ngModel)]="selectMode"
             (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="singleselect"
           />
           Single select
         </label>
         <label class="ms-2">
           <input
-            type="radio"
-            name="selectMode"
-            value="multiselect"
-            [(ngModel)]="selectMode"
             (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="multiselect"
           />
           Multi select
         </label>
         <label class="ms-2">
           <input
-            type="radio"
-            name="selectMode"
-            value="default"
-            [(ngModel)]="selectMode"
             (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="default"
           />
           Openlayers default
         </label>
         <label class="ms-2">
           <input
-            type="radio"
-            name="selectMode"
-            value="hover"
-            [(ngModel)]="selectMode"
             (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="hover"
           />
           Hover
         </label>
@@ -95,8 +95,10 @@
           Geselecteerde provincies: {{ geselecteerdeProvincies() }}
         </p>
       </div>
-      <div class="map-container">
-        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>
+      <div class="col-xl-9 col-md-8 col-sm-7">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"> </ggc-map>
+        </div>
       </div>
       <!-- DOCS:END functionality -->
     </div>

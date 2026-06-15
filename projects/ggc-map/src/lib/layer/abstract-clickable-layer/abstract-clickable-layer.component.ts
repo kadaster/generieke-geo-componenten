@@ -13,30 +13,14 @@ export class AbstractClickableLayerComponent<T>
   protected maxFeaturesOnSingleclick = 8;
   protected options?: AbstractClickableLayerOptions;
   protected mapEventsService = inject(CoreMapEventsService);
-  private singleclick: Subscription;
+  protected singleclick: Subscription;
 
   ngOnInit(): void {
     super.ngOnInit();
-
-    if (this.options?.getFeatureInfoOnSingleclick === true) {
-      this.singleclick = this.mapEventsService
-        .getSingleclickObservableForMap(this.mapIndex)
-        .subscribe((evt) => {
-          this.getFeatureInfo(evt);
-        });
-    }
-    if (this.options?.maxFeaturesOnSingleclick !== undefined) {
-      this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
-    }
   }
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
-
-    // unsubscribe on singleclick
-    if (this.singleclick !== undefined) {
-      this.singleclick.unsubscribe();
-    }
   }
 
   protected getFeatureInfo(_event: MapBrowserEvent): void {

@@ -10,16 +10,43 @@ export class GgcFeatureInfoConfigService {
   private sortFilterConfigs: SortFilterConfig[];
   private customFeatureInfo: Map<string, CustomFeatureInfo>;
 
+  /**
+   * Stelt de sorteer- en filterconfiguraties in per layer.
+   *
+   * Deze configuraties bepalen o.a.:
+   * - de volgorde van attributen;
+   * - welke attributen verborgen moeten worden;
+   * - optioneel de tab-volgorde via `tabIndex`.
+   *
+   * @param sortFilterConfigs Lijst met {@link SortFilterConfig} per layer
+   */
   setConfig(sortFilterConfigs: SortFilterConfig[]): void {
     this.sortFilterConfigs = sortFilterConfigs;
   }
 
+  /**
+   * Stelt de custom feature info configuratie in.
+   *
+   * Deze configuratie maakt het mogelijk om:
+   * - custom attributenamen te definiëren;
+   * - attributewaarden dynamisch te transformeren via functies.
+   *
+   * @param customFeatureInfo Map met keys en bijbehorende {@link CustomFeatureInfo}
+   */
   setCustomFeatureInfo(
     customFeatureInfo: Map<string, CustomFeatureInfo>
   ): void {
     this.customFeatureInfo = customFeatureInfo;
   }
 
+  /**
+   * Stelt een custom sorteerfunctie in voor tabs (feature info collecties).
+   *
+   * Wanneer deze functie is ingesteld, wordt deze gebruikt in plaats van de standaard sortering
+   * op basis van `tabIndex` uit {@link SortFilterConfig}.
+   *
+   * @param sortTabFunction Vergelijkingsfunctie zoals gebruikt door `Array.sort`
+   */
   setSortTabFunction(
     sortTabFunction: (
       a: FeatureInfoCollection,
@@ -29,16 +56,39 @@ export class GgcFeatureInfoConfigService {
     this.sortTabFunction = sortTabFunction;
   }
 
+  /**
+   * Sorteert de tabs (feature info collecties) in-place.
+   *
+   * Gebruikt de ingestelde sorteerfunctie via {@link setSortTabFunction},
+   * of de interne standaardimplementatie indien geen custom functie is ingesteld.
+   *
+   * @param data Lijst van {@link FeatureInfoCollection} die gesorteerd moet worden
+   */
   sortTabs(data: FeatureInfoCollection[]): void {
     data.sort(this.sortTabFunction.bind(this));
   }
 
+  /**
+   * Sorteert en filtert attributen van features op basis van de configuratie voor een layer.
+   *
+   * De volgende stappen worden toegepast:
+   * - uitsluiten van attributen (`excludeAttributes`);
+   * - sorteren volgens `attributeOrder`;
+   * - optioneel verbergen van niet-gesorteerde attributen (`hideUnorderedAttributes`);
+   * - vervangen van attributenamen via custom configuratie.
+   *
+   * Indien geen configuratie beschikbaar is, worden de originele feature properties geretourneerd.
+   *
+   * @param layerId Id van de layer waarvoor de configuratie geldt
+   * @param featureProperties Lijst van feature objecten (key-value paren)
+   * @returns Nieuwe lijst met gesorteerde en gefilterde feature properties
+   */
   filterAndSortAttributes(
-    layerName: string,
+    layerId: string,
     featureProperties: object[]
   ): object[] {
     const config = this.sortFilterConfigs
-      ? this.sortFilterConfigs.find((conf) => conf.layerName === layerName)
+      ? this.sortFilterConfigs.find((conf) => conf.layerId === layerId)
       : undefined;
 
     if (!config && !this.customFeatureInfo) {
@@ -64,6 +114,19 @@ export class GgcFeatureInfoConfigService {
     return filteredFeatureProperties;
   }
 
+  /**
+   * Past custom waarde-transformaties toe op een feature.
+   *
+   * Voor elke entry in {@link CustomFeatureInfo} wordt:
+   * - bepaald of een key matcht (op originele of custom naam);
+   * - indien van toepassing een custom functie uitgevoerd op de waarde.
+   *
+   * Bij fouten in de custom functie wordt de originele waarde behouden.
+   *
+   * @param currentFeature Het originele feature object
+   * @param objectKeys Lijst van keys binnen het feature object die moeten aangepast worden met custom values
+   * @returns Nieuw feature object met aangepaste waarden
+   */
   checkForCustomValues(
     currentFeature: { [key: string]: any },
     objectKeys: string[]
@@ -71,7 +134,7 @@ export class GgcFeatureInfoConfigService {
     if (!this.customFeatureInfo) {
       return currentFeature;
     }
-    const displayFeature = Object.assign({}, currentFeature);
+    const displayFeature = { ...currentFeature };
     this.customFeatureInfo.forEach(
       (
         featureInfoCustom: CustomFeatureInfo,
@@ -164,7 +227,7 @@ export class GgcFeatureInfoConfigService {
       const featureInfocustom = this.customFeatureInfo.get(oldKey);
       if (featureInfocustom) {
         const customKey = featureInfocustom.getCustomAttributeName();
-        return customKey !== undefined ? customKey : oldKey;
+        return customKey ?? oldKey;
       }
     }
     return oldKey;
@@ -200,12 +263,12 @@ export class GgcFeatureInfoConfigService {
     b: FeatureInfoCollection
   ): number {
     if (this.sortFilterConfigs) {
-      // config wordt alleen gevonden wanneer de layerName gevonden wordt EN wanneer de config een tabIndex heeft
+      // config wordt alleen gevonden wanneer de layerId gevonden wordt EN wanneer de config een tabIndex heeft
       const configA = this.sortFilterConfigs.find(
-        (config) => config.layerName === a.layerName && !!config.tabIndex
+        (config) => config.layerId === a.layerId && !!config.tabIndex
       );
       const configB = this.sortFilterConfigs.find(
-        (config) => config.layerName === b.layerName && !!config.tabIndex
+        (config) => config.layerId === b.layerId && !!config.tabIndex
       );
       const tabIndexA = configA ? configA.tabIndex : undefined;
       const tabIndexB = configB ? configB.tabIndex : undefined;

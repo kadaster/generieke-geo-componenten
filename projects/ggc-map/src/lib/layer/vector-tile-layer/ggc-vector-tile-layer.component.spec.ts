@@ -219,27 +219,6 @@ describe("VectorTileLayerComponent", () => {
     expect(strokeObject?.getWidth()).toBe(3);
   }));
 
-  it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", fakeAsync(() => {
-    const coreMapService: CoreMapService =
-      debugElement.injector.get(CoreMapService);
-    const mapEventsService: CoreMapEventsService =
-      debugElement.injector.get(CoreMapEventsService);
-    const mapEventsServicespy = spyOn<CoreMapEventsService, any>(
-      mapEventsService,
-      "getSingleclickObservableForMap"
-    ).and.callThrough();
-    component.options = { getFeatureInfoOnSingleclick: true };
-
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(olMapMock);
-    component.ngOnInit();
-    tick();
-    expect(getMapSpy).toHaveBeenCalled();
-    expect(mapEventsServicespy).toHaveBeenCalled();
-  }));
-
   it(
     "should return a feature to the foundFeatures-array if the maxFeaturesonSingleclick is not yet reached " +
       "when limitFeatures() is called",

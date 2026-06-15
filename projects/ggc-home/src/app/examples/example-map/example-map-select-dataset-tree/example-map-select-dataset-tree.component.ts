@@ -27,8 +27,7 @@ import {
     ExampleFormatComponent,
     FormsModule
   ],
-  templateUrl: "./example-map-select-dataset-tree.component.html",
-  styleUrl: "./example-map-select-dataset-tree.component.scss"
+  templateUrl: "./example-map-select-dataset-tree.component.html"
 })
 export class ExampleMapSelectDatasetTreeComponent
   extends ExampleFormatComponent

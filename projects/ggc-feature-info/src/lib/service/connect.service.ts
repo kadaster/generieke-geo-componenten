@@ -20,7 +20,6 @@ export class GgcFeatureInfoConnectService {
       }
       return this.mapService;
     } catch (e) {
-      console.debug(`Autoconnect ggc-feature-info met ggc-map: ${e}`, e);
       return undefined;
     }
   }
@@ -35,7 +34,6 @@ export class GgcFeatureInfoConnectService {
       }
       return this.mapSelectionService;
     } catch (e) {
-      console.debug(`Autoconnect ggc-feature-info met ggc-map: ${e}`, e);
       return undefined;
     }
   }
@@ -47,10 +45,6 @@ export class GgcFeatureInfoConnectService {
     this.mapModulePromise ??= import(
       /* @vite-ignore */ "@kadaster/ggc-map"
     ).catch((e) => {
-      console.debug(
-        `Autoconnect ggc-feature-info met ggc-map is niet gelukt: ${e}`,
-        e
-      );
       throw e;
     });
     return this.mapModulePromise;

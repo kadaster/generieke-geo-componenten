@@ -10,17 +10,26 @@ import Geometry from "ol/geom/Geometry";
 export class FeatureInfoCollection {
   constructor(
     /**
+     * @deprecated
      * De naam van de kaartla(a)g(en) waaraan de features gekoppeld zijn.
      * Deze wordt gevuld met layerTitle, layerName of layerId
      * Deze waarde wordt doorgaans gebruikt als titel of label
      * in de feature‑info UI.
      *
      */
-    public layerName: string,
+    public layerName: string | undefined,
     /**
      * De verzameling features die horen bij de opgegeven kaartla(a)g(en).
      *
      */
-    public features: Feature<Geometry>[] | object[]
+    public features: Feature<Geometry>[] | object[],
+    /**
+     * De weergavetitel van de laag van deze featureInfoCollection.
+     */
+    public layerTitle: string,
+    /**
+     * De layerId waarbij de featureInfoCollection hoort
+     */
+    public layerId: string
   ) {}
 }

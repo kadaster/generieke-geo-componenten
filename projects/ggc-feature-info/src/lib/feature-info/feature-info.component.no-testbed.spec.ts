@@ -75,7 +75,12 @@ describe("FeatureInfoComponent, no testbed", () => {
       feature1 = { test: "123" };
       const features = [feature1];
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-      component.featureInfoCollection = { layerName: "laag", features };
+      component.featureInfoCollection = {
+        layerName: "laag",
+        features,
+        layerTitle: "titel",
+        layerId: "id"
+      };
     });
 
     it("goToPreviousFeature should not change currentFeature and currentFeatureIndex", () => {
@@ -127,7 +132,12 @@ describe("FeatureInfoComponent, no testbed", () => {
       feature3 = { test: "789" };
       const features = [feature1, feature2, feature3];
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
-      component.featureInfoCollection = { layerName: "laag", features };
+      component.featureInfoCollection = {
+        layerName: "laag",
+        features,
+        layerTitle: "titel",
+        layerId: "id"
+      };
       component["currentFeatureIndex"] = 1;
     });
 
@@ -181,7 +191,12 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature2 = new Feature({ test: "456" });
       const feature3 = new Feature({ test: "789" });
       const features = [feature1, feature2, feature3];
-      component.featureInfoCollection = { layerName: "laag", features };
+      component.featureInfoCollection = {
+        layerName: "laag",
+        features,
+        layerTitle: "titel",
+        layerId: "id"
+      };
       featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
       //component.ngOnChanges(simpleChanges);
       component["currentFeatureIndex"] = 1;
@@ -264,12 +279,14 @@ describe("FeatureInfoComponent, no testbed", () => {
         const features = [{ a: "a" }, { b: "b" }];
         component.featureInfoCollection = {
           layerName: "laag",
-          features: arrayContaningFeatures
+          features: arrayContaningFeatures,
+          layerTitle: "titel",
+          layerId: "id"
         };
         featureInfoConfigSpy.filterAndSortAttributes.and.returnValue(features);
         //component.ngOnChanges(simpleChanges);
 
-        expect(component.featureInfoCollection.features).toBe(
+        expect(component.featureInfoCollection!.features).toBe(
           arrayContaningFeatures
         );
       }
