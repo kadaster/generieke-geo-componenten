@@ -40,7 +40,7 @@ describe("GgcLegendUrlComponent", () => {
   it("should detect svg url correctly", () => {
     component.legend = { legendUrl: "http://test.com/icon.svg" } as any;
 
-    expect(component.isSvg()).toBeTrue();
+    expect(component.isSvg()).toBeTruthy();
   });
 
   it("should fetch svg when legend is set", () => {
