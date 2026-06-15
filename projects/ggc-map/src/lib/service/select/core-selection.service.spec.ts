@@ -102,7 +102,7 @@ describe("CoreSelectionService", () => {
       isFeatureInSelectionLayer: vi.fn(),
       getLayerChangedObservable: vi.fn(),
       changeSelectionLayerStyle: vi.fn(),
-      clearHighlightLayer: vi.fn(),
+      clearHighlightLayer: vi.fn()
     } as unknown as MockedObject<GgcMapService>;
 
     mapServiceSpy.getMap.mockReturnValue(map as unknown as Map);
