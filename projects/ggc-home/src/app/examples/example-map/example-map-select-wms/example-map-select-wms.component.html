@@ -18,35 +18,39 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Wij raden aan om bij selecties WFS of OGC kaartlagen te gebruiken in
-      plaats van WMS/WMTS kaartlagen, gezien dit meer mogelijkheden biedt en
-      makkelijker werkt. Zie hiervoor het andere selectie voorbeeld.
+      <i
+        >Wij raden aan om objecten te selecteren op WFS of OGC API kaartlagen in
+        plaats van WMS/WMTS kaartlagen. Deze bieden meer mogelijkheden en zijn
+        makkelijker in te richten. Bekijk dit voorbeeld over
+        <a [routerLink]="['/example-map-select']">
+          selectiemogelijkheden met een WFS of OGC API kaartlaag</a
+        >.</i
+      >
     </p>
     <p>
-      Een selectie op een WMS of WMTS kaartlaag wordt wel ondersteunt, maar
-      werkt anders dan een geojson of een vector kaartlaag, omdat de features
-      niet in de front-end zijn opgeslagen. Er is wel ondersteuning voor WMS en
-      WMTS kaartlagen, maar deze moeten wel goed geconfigureerd worden:
+      Selectie op een WMS of WMTS kaartlaag werkt anders dan een GeoJSON of een
+      vector kaartlaag, omdat de objecten niet in de front-end zijn opgeslagen.
+      De juiste configuratie is daarom belangrijk bij selectie op WMS/WMTS
+      kaartlagen:
     </p>
     <ul>
       <li>
-        De property getFeatureInfoOnSingleclick moet op true worden gezet voor
-        WMS of WMTS kaartlagen die geselecteerd moeten kunnen worden.
+        Zet de property <code>getFeatureInfoOnSingleclick</code> op "true" voor
+        WMS of WMTS kaartlagen die gebruikers mogen selecteren.
       </li>
       <li>
-        Selecties op WMS of WTMS kaartlagen werken alleen met singleclick op een
-        single en multi select modus.
+        Gebruik op single en multi select altijd de default condition
+        <code>singleclick</code>.
       </li>
       <li>
-        De feature info van de WMS/WMTS moet ook een geometry teruggeven, anders
-        kan de feature niet worden weergegeven.
+        Een object kan alleen op de kaart weergegeven worden als de WMS of WMTS
+        de geometry aanlevert in de feature info
       </li>
     </ul>
     <p>
-      Verder werken WMS en WMTS kaartlagen hetzelfde en kunnen op dezelfde
-      manier (en ook tegelijkertijd) gebruikt worden in de SelectionService met
-      andere kaartlagen. Ook de optie LayerIds voor het starten van een selectie
-      werkt met de WMS/WMTS kaartlagen.
+      De SelectionService werkt voor WMS en WMTS op dezelfde manier als andere
+      kaartlaag types. Ze kunnen ook tegelijkertijd met andere kaartlaag types
+      gebruikt worden. Ook kunnen selecties gestart worden met LayerIds.
     </p>
   </div>
 

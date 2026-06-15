@@ -36,8 +36,8 @@ export class ExampleMapSelectComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select",
-    title: "Selecteren op de kaart",
-    introduction: "Selecteer en highlight features op de kaart",
+    title: "Objecten selecteren op de kaart",
+    introduction: "Kies en markeer objecten door in de kaart te klikken.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.SELECT],
