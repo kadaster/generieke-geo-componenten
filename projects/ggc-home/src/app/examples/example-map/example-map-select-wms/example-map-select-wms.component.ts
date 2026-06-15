@@ -21,8 +21,7 @@ import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 @Component({
   selector: "app-example-map-select",
   imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
-  templateUrl: "./example-map-select-wms.component.html",
-  styleUrl: "./example-map-select-wms.component.scss"
+  templateUrl: "./example-map-select-wms.component.html"
 })
 export class ExampleMapSelectWmsComponent
   extends ExampleFormatComponent
