@@ -303,10 +303,10 @@ describe("WmtsLayerComponent", () => {
     );
 
     it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-      const mapEventsServicespy = spyOn(
+      const mapEventsServicespy = vi.spyOn(
         mapEventsService,
         "getSingleclickObservableForMap"
-      ).and.callThrough();
+      );
 
       component["options"] = { getFeatureInfoOnSingleclick: true };
       component.ngOnInit();
@@ -316,10 +316,10 @@ describe("WmtsLayerComponent", () => {
     });
 
     it("when options.getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-      const mapEventsServicespy = spyOn(
+      const mapEventsServicespy = vi.spyOn(
         mapEventsService,
         "getSingleclickObservableForMap"
-      ).and.callThrough();
+      );
 
       component["options"] = { getFeatureInfoOnSingleclick: true };
       component.ngOnInit();

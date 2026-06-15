@@ -9,7 +9,6 @@ import { never, singleClick } from "ol/events/condition";
 import Layer from "ol/layer/Layer";
 import { Collection } from "ol";
 import { filter } from "rxjs/operators";
-import { GgcLayerService } from "./ggc-layer.service";
 import {
   FeatureCollectionForCoordinate,
   FeatureCollectionForLayer,
@@ -64,10 +63,9 @@ export class CoreSelectionService {
 
   private readonly ggcMapService = inject(GgcMapService);
   private readonly coreMapService = inject(CoreMapService);
-  private readonly ggcLayerService = inject(GgcLayerService);
 
   constructor() {
-    this.ggcLayerService.getLayerChangedObservable().subscribe((event) => {
+    this.coreMapService.getLayerChangedObservable().subscribe((event) => {
       if (event.eventTrigger === LayerChangedEventTrigger.LAYER_REMOVED) {
         this.clearAllSelectionsForMapIndex(event.mapIndex);
       }
@@ -483,7 +481,9 @@ export class CoreSelectionService {
       const layerCollection: FeatureCollectionForLayer = {
         layerId,
         layerName: "",
-        layerTitle: this.ggcLayerService.getTitle(layerId, mapIndex),
+        layerTitle: this.ggcMapService
+          .getLayer(layerId, mapIndex)
+          ?.get("ggc-title"),
         features
       };
 

@@ -7,7 +7,6 @@ import {
   HttpTestingController,
   provideHttpClientTesting
 } from "@angular/common/http/testing";
-import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MapBrowserEvent } from "ol";
 import { Coordinate } from "ol/coordinate";
@@ -469,10 +468,10 @@ describe("WmsLayerComponent", () => {
   });
 
   it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-    const mapEventsServicespy = spyOn(
+    const mapEventsServicespy = vi.spyOn(
       mapEventsService,
       "getSingleclickObservableForMap"
-    ).and.callThrough();
+    );
 
     component["options"] = { getFeatureInfoOnSingleclick: true };
     component.ngOnInit();
@@ -482,10 +481,10 @@ describe("WmsLayerComponent", () => {
   });
 
   it("when options.getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-    const mapEventsServicespy = spyOn(
+    const mapEventsServicespy = vi.spyOn(
       mapEventsService,
       "getSingleclickObservableForMap"
-    ).and.callThrough();
+    );
 
     component["options"] = { getFeatureInfoOnSingleclick: true };
     component.ngOnInit();
