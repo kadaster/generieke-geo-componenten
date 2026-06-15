@@ -13,20 +13,19 @@ import {
 import { provideZoneChangeDetection } from "@angular/core";
 import { Polygon } from "ol/geom";
 import { vi } from "vitest";
+vi.mock("ol/geom/Polygon", () => ({
+  fromExtent: () =>
+    new Polygon([
+      [
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [0, 0]
+      ]
+    ])
+}));
 
 describe("DatasetLegendComponent", () => {
-  vi.mock("ol/geom/Polygon", () => ({
-    fromExtent: () =>
-      new Polygon([
-        [
-          [0, 0],
-          [1, 0],
-          [1, 1],
-          [0, 0]
-        ]
-      ])
-  }));
-
   let component: GgcLegendComponent;
   let fixture: ComponentFixture<GgcLegendComponent>;
   let legendService: CoreLegendService;

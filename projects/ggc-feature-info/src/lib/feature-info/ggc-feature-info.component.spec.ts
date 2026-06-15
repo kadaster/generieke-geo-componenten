@@ -199,13 +199,10 @@ describe("FeatureInfoComponent", () => {
     expect(pagerNextElement).not.toBeNull();
   });
 
-  it("when the pagerPrevious and pagerNext haven't been set, it should be the default < and >", () => {
+  it("should use provided pagerPrevious and pagerNext values", () => {
     const feature = new Feature({ test: "123" });
     const secondFeature = new Feature({ test: "456" });
-    component.featureInfoCollection = {
-      layerName: "laag",
-      features: [feature, secondFeature]
-    };
+
     featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" },
       { test: "456" }
@@ -213,6 +210,11 @@ describe("FeatureInfoComponent", () => {
 
     component.pagerPrevious = "previous";
     component.pagerNext = "next";
+
+    component.featureInfoCollection = {
+      layerName: "laag",
+      features: [feature, secondFeature]
+    };
 
     fixture.detectChanges();
 
