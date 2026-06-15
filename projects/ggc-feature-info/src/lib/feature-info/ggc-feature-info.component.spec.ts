@@ -112,7 +112,9 @@ describe("FeatureInfoComponent", () => {
     const feature1 = new Feature({ test: "123" });
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature1]
+      features: [feature1],
+      layerTitle: "title",
+      layerId: "id"
     };
 
     const emptyMessageElement = nativeElement.querySelector(".ggc-fi-empty");
@@ -130,7 +132,9 @@ describe("FeatureInfoComponent", () => {
     const feature = new Feature({ test: "123" });
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature]
+      features: [feature],
+      layerTitle: "title",
+      layerId: "id"
     };
     fixture.detectChanges();
 
@@ -151,7 +155,9 @@ describe("FeatureInfoComponent", () => {
 
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature]
+      features: [feature],
+      layerTitle: "title",
+      layerId: "id"
     };
     featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
       { test: "123" }
@@ -179,7 +185,9 @@ describe("FeatureInfoComponent", () => {
     ]);
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature, secondFeature]
+      features: [feature, secondFeature],
+      layerTitle: "title",
+      layerId: "id"
     };
 
     fixture.detectChanges();
@@ -200,7 +208,9 @@ describe("FeatureInfoComponent", () => {
     const secondFeature = new Feature({ test: "456" });
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature, secondFeature]
+      features: [feature, secondFeature],
+      layerTitle: "title",
+      layerId: "id"
     };
     featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
       { test: "123" },

@@ -35,11 +35,11 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 describe("WmsLayerComponent", () => {
   let component: GgcWmsLayerComponent;
   let fixture: ComponentFixture<GgcWmsLayerComponent>;
-  let debugElement: DebugElement;
   let resultLayer: ImageLayer<ImageSource>;
   let coreMapService: CoreMapService;
   let coreSelectionService: CoreSelectionService;
   let capabilitiesService: SpyObj<CoreWmsWmtsCapabilitiesService>;
+  let mapEventsService: CoreMapEventsService;
 
   let httpTestingController: HttpTestingController;
 
@@ -71,8 +71,8 @@ describe("WmsLayerComponent", () => {
     fixture = TestBed.createComponent(GgcWmsLayerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    debugElement = fixture.debugElement;
     coreMapService = TestBed.inject(CoreMapService);
+    mapEventsService = TestBed.inject(CoreMapEventsService);
     coreSelectionService = TestBed.inject(CoreSelectionService);
     httpTestingController = TestBed.inject(HttpTestingController);
     capabilitiesService = TestBed.inject(
@@ -458,6 +458,39 @@ describe("WmsLayerComponent", () => {
     component["addDpiToParams"](params, 1);
 
     expect(params).toEqual({});
+  });
+
+  it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
+    const mapEventsServicespy = spyOn(
+      mapEventsService,
+      "getSingleclickObservableForMap"
+    ).and.callThrough();
+
+    component["options"] = { getFeatureInfoOnSingleclick: true };
+    component.ngOnInit();
+
+    expect(mapEventsServicespy).toHaveBeenCalled();
+    expect(component["singleclick"]).toBeDefined();
+  });
+
+  it("when options.getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
+    const mapEventsServicespy = spyOn(
+      mapEventsService,
+      "getSingleclickObservableForMap"
+    ).and.callThrough();
+
+    component["options"] = { getFeatureInfoOnSingleclick: true };
+    component.ngOnInit();
+
+    expect(mapEventsServicespy).toHaveBeenCalled();
+    expect(component["singleclick"]).toBeDefined();
+  });
+
+  it("when options.maxFeaturesOnSingleclick is set, maxFeaturesOnSingleclick should be set on component", () => {
+    component["options"] = { maxFeaturesOnSingleclick: 15 };
+    component.ngOnInit();
+
+    expect(component["maxFeaturesOnSingleclick"]).toBe(15);
   });
 
   function setWMSKaartlaagVariables(nameLayer: string) {

@@ -59,21 +59,11 @@ export class ExampleMapSelectComponent
 
   private readonly selectStyle = new Style({
     fill: new Fill({
-      color: "rgba(0, 115, 149, 0.5)"
+      color: "rgba(0, 147, 190, 0.2)"
     }),
     stroke: new Stroke({
-      color: "#007395",
-      width: 5
-    }),
-    image: new CircleStyle({
-      radius: 7,
-      fill: new Fill({
-        color: "rgba(0, 115, 149, 0.5)"
-      }),
-      stroke: new Stroke({
-        color: "#007395",
-        width: 5
-      })
+      color: "#0093be",
+      width: 3
     })
   });
 

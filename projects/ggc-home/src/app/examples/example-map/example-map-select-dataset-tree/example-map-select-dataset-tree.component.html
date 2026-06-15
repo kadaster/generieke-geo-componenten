@@ -1,9 +1,9 @@
 <app-example-format
-  [title]="componentInfo.title"
-  [pathModule]="urlComponentModule"
-  [urlTSDocs]="tsDocsUrl"
-  [pathExtraConfig]="'example-map/example-map-select-dataset-tree/treeconfig.json'"
   [extraConfigLabel]="`DatasetTree Configuration (json)`"
+  [pathExtraConfig]="'example-map/example-map-select-dataset-tree/treeconfig.json'"
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
@@ -59,46 +59,50 @@
   </div>
 
   <div page-functionality>
-    <div class="functionality-layout">
+    <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="map-controls">
+      <div class="col-xl-3 col-md-4 col-sm-5">
         <label class="ms-2">
           <input
-            type="radio"
-            name="selectMode"
-            value="singleselect"
-            [(ngModel)]="selectMode"
             (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="singleselect"
           />
           Single select
         </label>
         <label class="ms-2">
           <input
-            type="radio"
-            name="selectMode"
-            value="multiselect"
-            [(ngModel)]="selectMode"
             (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="multiselect"
           />
           Multi select
         </label>
-
+        <br />
+        <br />
         <div class="dataset-tree-container">
           <ggc-dataset-tree
+            [expandTreeOnInit]="true"
             [mapIndex]="mapIndex"
             [themes]="datasetTreeConfig"
-            [expandTreeOnInit]="true"
           ></ggc-dataset-tree>
         </div>
+        <br />
         <div class="feature-info-container">
           <ggc-feature-info-tabs [mapIndex]="mapIndex" [showEmptyTabs]="true">
-            <ggc-feature-info [mapIndex]="mapIndex" [autoStartSelect]="false">
+            <ggc-feature-info [autoStartSelect]="false" [mapIndex]="mapIndex">
             </ggc-feature-info
           ></ggc-feature-info-tabs>
         </div>
       </div>
-      <div class="map-container">
-        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>
+      <div class="col-xl-9 col-md-8 col-sm-7">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"> </ggc-map>
+        </div>
       </div>
       <!-- DOCS:END functionality -->
     </div>

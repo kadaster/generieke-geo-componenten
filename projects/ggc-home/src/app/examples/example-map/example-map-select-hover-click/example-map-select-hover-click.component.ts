@@ -19,6 +19,9 @@ import { FormsModule } from "@angular/forms";
 import { pointerMove } from "ol/events/condition";
 import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
+import Style from "ol/style/Style";
+import Fill from "ol/style/Fill";
+import Stroke from "ol/style/Stroke";
 
 @Component({
   selector: "app-example-map-select",
@@ -28,8 +31,7 @@ import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
     FormsModule,
     GgcFeatureInfoComponent
   ],
-  templateUrl: "./example-map-select-hover-click.component.html",
-  styleUrl: "./example-map-select-hover-click.component.scss"
+  templateUrl: "./example-map-select-hover-click.component.html"
 })
 export class ExampleMapSelectHoverClickComponent
   extends ExampleFormatComponent
@@ -60,6 +62,16 @@ export class ExampleMapSelectHoverClickComponent
 
   private readonly selectService = inject(GgcSelectionService);
 
+  private readonly hoverStyle = new Style({
+    fill: new Fill({
+      color: "rgba(0, 147, 190, 0.15)"
+    }),
+    stroke: new Stroke({
+      color: "#0093be",
+      width: 3
+    })
+  });
+
   ngOnInit() {
     this.httpClient
       .get(
@@ -87,7 +99,7 @@ export class ExampleMapSelectHoverClickComponent
 
   ngAfterViewInit() {
     this.selectService.startSelect(
-      { selectMode: "single", condition: pointerMove },
+      { selectMode: "single", condition: pointerMove, style: this.hoverStyle },
       this.mapIndex,
       this.selectIndexHover
     );

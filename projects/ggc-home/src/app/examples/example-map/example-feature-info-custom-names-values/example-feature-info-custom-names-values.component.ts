@@ -54,7 +54,7 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
     this.setCustomFeatureInfoNames();
     this.featureInfoConfigService.setConfig([
       {
-        layerName: "Gemeenten",
+        layerId: "gemeenten",
         attributeOrder: ["naam", "code", "ligtInProvincieNaam"],
         hideUnorderedAttributes: true
       }
