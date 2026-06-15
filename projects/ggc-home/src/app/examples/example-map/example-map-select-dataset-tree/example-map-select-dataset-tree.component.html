@@ -20,18 +20,13 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      <i
-        >Wij raden aan om objecten te selecteren op WFS of OGC API kaartlagen in
-        plaats van WMS/WMTS kaartlagen. Deze bieden meer mogelijkheden en zijn
-        makkelijker in te richten. Bekijk dit voorbeeld over
-        <a [routerLink]="['/example-map-select']">
-          selectiemogelijkheden met een WFS of OGC API kaartlaag</a
-        >.</i
-      >
+      Dit voorbeeld laat het effect zien van selectie op meerdere kaartlagen.
+      Voor de BGT standaardvisualisatie en BAG (vector tiles) moet eerst worden
+      ingezoomd totdat deze kaartlagen zichtbaar zijn.
     </p>
     <p>
-      Dit voorbeeld bevat de selectiemethoden voor WFS, OGC API, WMS en WMTS
-      kaartlagen:
+      Voor WFS, OGC API, WMS en WMTS worden de volgende selectiemethodes
+      ondersteund:
     </p>
     <ul>
       <li>
@@ -51,10 +46,16 @@
     </ul>
 
     <p>
-      <strong>Let op</strong>: bij het uitzetten van een kaartlaag wordt de
-      huidige selectie automatisch volledig verwijderd. Voor de BGT
-      standaardvisualisatie en BAG (vector tiles) moet eerst worden ingezoomd
-      totdat de kaartlagen zichtbaar zijn.
+      Bij het uitzetten van een kaartlaag wordt de volledige selectie van alle
+      kaartlagen automatisch gewist.
+    </p>
+    <p>
+      <strong>Let op</strong>: Wij raden aan om objecten te selecteren op WFS of
+      OGC API kaartlagen in plaats van WMS/WMTS kaartlagen. Deze bieden meer
+      mogelijkheden en zijn makkelijker in te richten. Bekijk dit voorbeeld over
+      <a [routerLink]="['/example-map-select']">
+        selectiemogelijkheden met een WFS of OGC API kaartlaag</a
+      >.
     </p>
   </div>
 

@@ -27,30 +27,52 @@
         >.</i
       >
     </p>
+    <p>Voor WMS en WMTS worden de volgende selectiemethodes ondersteund:</p>
+    <ul>
+      <li>
+        <strong>Single select</strong>: selecteer één object door te klikken in
+        de kaart.
+      </li>
+      <li>
+        <strong>Multi select</strong>:
+        <ul>
+          <li>selecteer meerdere objecten door te klikken in de kaart.</li>
+          <li>
+            verwijder een object uit de selectie door op een geselecteerd object
+            te klikken.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
     <p>
-      Selectie op een WMS of WMTS kaartlaag werkt anders dan een GeoJSON of een
-      vector kaartlaag, omdat de objecten niet in de front-end zijn opgeslagen.
-      De juiste configuratie is daarom belangrijk bij selectie op WMS/WMTS
-      kaartlagen:
+      Bij WMS/WMTS kaartlagen wordt objectinformatie niet door de browser
+      opgeslagen. Bij klikken op de kaart wordt de objectinformatie van de
+      betreffende locatie opgehaald. Hiervoor is het belangrijk om op het
+      volgende te letten:
     </p>
     <ul>
       <li>
         Zet de property <code>getFeatureInfoOnSingleclick</code> op "true" voor
-        WMS of WMTS kaartlagen die gebruikers mogen selecteren.
+        WMS/WMTS kaartlagen die gebruikers mogen selecteren.
       </li>
       <li>
         Gebruik op single en multi select altijd de default condition
         <code>singleclick</code>.
       </li>
       <li>
-        Een object kan alleen op de kaart weergegeven worden als de WMS of WMTS
-        de geometry aanlevert in de feature info
+        Om het object weer te kunnen geven, moet de feature info(*) van de
+        WMS/WMTS een geometry teruggeven.
       </li>
     </ul>
     <p>
       De SelectionService werkt voor WMS en WMTS op dezelfde manier als andere
-      kaartlaag types. Ze kunnen ook tegelijkertijd met andere kaartlaag types
+      kaartlaag types. Ze kunnen tegelijkertijd met andere kaartlaag types
       gebruikt worden. Ook kunnen selecties gestart worden met LayerIds.
+    </p>
+    <p>
+      (*) Dit is de feature info van de Web Map Service (WMS) of Web Map Tile
+      Service (WMTS).
     </p>
   </div>
 

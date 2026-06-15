@@ -21,7 +21,6 @@ import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
-import CircleStyle from "ol/style/Circle";
 
 @Component({
   selector: "app-example-map-select",
@@ -36,7 +35,7 @@ export class ExampleMapSelectComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select",
-    title: "Objecten selecteren op de kaart",
+    title: "Objecten selecteren op de kaart (WFS/OGC API)",
     introduction: "Kies en markeer objecten door in de kaart te klikken.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],

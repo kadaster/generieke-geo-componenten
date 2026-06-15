@@ -17,10 +17,32 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In de rechter kolom kun je verschillende opties instellen die invloed
-      hebben op hoe de feature info wordt weergegeven. Let wel de opties voor
-      het tonen van paginering werkt pas na een nieuwe klik in de kaart.
+      Dit is mogelijk voor WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector
+      Tiles met
+      <code>getFeatureInfoOnSingleClick</code>. Dit voorbeeld toont de grenzen
+      van gemeenten. Na klikken in de kaart wordt de informatie opgehaald van de
+      kaartlaag. De informatie van het gekozen object wordt getoond en het
+      object wordt op de kaart gemarkeerd.
     </p>
+    <p>Instelmogelijkheden voor het tonen van objectinformatie:</p>
+    <ul>
+      <li>
+        Toon melding "Geen informatie beschikbaar" als geen gemeente is
+        geselecteerd (<code>showEmptyMessage</code>)
+      </li>
+      <li>
+        Verberg "1 van 1" als maar één object geselecteerd is
+        (<code>hidePagerWithOneFeature</code>). Deze wijziging wordt pas actief
+        nadat een nieuwe selectie is gedaan.
+      </li>
+      <li>
+        Wisselen tussen lijst- of tabelweergave
+        (<code>FeatureInfoDisplayType</code>)
+      </li>
+      <li>
+        Highlight stijl veranderen (<code>changeHighlightLayerStyle</code>)
+      </li>
+    </ul>
   </div>
   <div page-functionality>
     <div class="row">
