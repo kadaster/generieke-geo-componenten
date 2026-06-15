@@ -5,7 +5,6 @@ import { GgcLocationService } from "./ggc-location.service";
 import { CoreViewerService } from "./core-viewer.service";
 import { Viewer } from "@cesium/widgets";
 import { createCesiumMock } from "../viewer/viewer-mock";
-import { Entity } from "@cesium/engine";
 import { cameraUtils } from "../utils/camera-utils";
 import { vi } from "vitest";
 describe("GgcLocationService", () => {

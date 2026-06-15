@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 import { GeoJsonLayerService } from "./geojson-layer.service";
-import { fakeAsync, flush, TestBed } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import {
   Color,
   DataSource,

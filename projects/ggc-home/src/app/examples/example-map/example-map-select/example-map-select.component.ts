@@ -1,4 +1,10 @@
-import { Component, inject, OnInit, signal, AfterViewInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  AfterViewInit
+} from "@angular/core";
 import {
   GgcMapComponent,
   GgcSelectionService,
