@@ -22,11 +22,11 @@ export default defineConfig({
       provider: "istanbul",
       reporter: ["text", "html", "lcov"],
       reportsDirectory: "./coverage",
-      exclude: ["src/test/**", "**/*.spec.ts"],
+      exclude: ["src/test/**", "**/*.spec.ts"]
     }
   },
   ssr: { noExternal: [/^ol/, /^geotiff/] },
   optimizeDeps: {
-    exclude: ["ol"],
+    exclude: ["ol"]
   }
 });

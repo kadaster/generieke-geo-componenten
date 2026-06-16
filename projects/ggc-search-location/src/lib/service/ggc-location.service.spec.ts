@@ -1,5 +1,5 @@
 import { Mock, MockedObject, vi } from "vitest";
-import { TestBed, tick } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { GgcSearchLocationService } from "./ggc-location.service";
 import { GgcSearchLocationConnectService } from "./connect.service";
 import { take } from "rxjs/operators";

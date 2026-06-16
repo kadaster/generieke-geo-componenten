@@ -30,7 +30,6 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
-import VectorTileLayer from "ol/layer/VectorTile";
 
 describe("GeojsonLayerComponent", () => {
   let component: GgcGeojsonLayerComponent;
