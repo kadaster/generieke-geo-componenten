@@ -18,16 +18,15 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["src/test/setup-tests.ts"],
-    server: {},
     coverage: {
       provider: "istanbul",
       reporter: ["text", "html", "lcov"],
       reportsDirectory: "./coverage",
-      exclude: ["src/test/**", "**/*.spec.ts"]
+      exclude: ["src/test/**", "**/*.spec.ts"],
     }
   },
   ssr: { noExternal: [/^ol/, /^geotiff/] },
   optimizeDeps: {
-    exclude: ["ol"]
+    exclude: ["ol"],
   }
 });

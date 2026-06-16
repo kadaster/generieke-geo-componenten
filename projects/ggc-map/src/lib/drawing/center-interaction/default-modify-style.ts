@@ -41,6 +41,14 @@ export const defaultHighlightStyle: StyleLike = [
 export const defaultSelectedPointStyle: Style = new Style({
   image: new CircleStyle({
     radius: 6,
+    fill: new Fill({ color: modifyWhite }),
+    stroke: new Stroke({ color: modifyBlue, width: 2 })
+  })
+});
+
+export const defaultPointModifyStyle: Style = new Style({
+  image: new CircleStyle({
+    radius: 6,
     fill: new Fill({ color: modifyBlue }),
     stroke: new Stroke({ color: modifyWhite, width: 2 })
   })

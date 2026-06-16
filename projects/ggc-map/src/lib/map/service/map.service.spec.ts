@@ -290,7 +290,10 @@ describe("MapService", () => {
 
       mapService.clearSelectionLayer();
 
-      expect(clearSelectionLayerSpy).toHaveBeenCalledWith(DEFAULT_MAPINDEX);
+      expect(clearSelectionLayerSpy).toHaveBeenCalledWith(
+        DEFAULT_MAPINDEX,
+        undefined
+      );
     });
 
     it("clearSelectionLayer, should call coreMapService with mapIndex.", () => {
@@ -315,7 +318,8 @@ describe("MapService", () => {
 
       expect(addFeaturesToSelectionLayerSpy).toHaveBeenCalledWith(
         [],
-        DEFAULT_MAPINDEX
+        DEFAULT_MAPINDEX,
+        undefined
       );
     });
 
@@ -328,7 +332,11 @@ describe("MapService", () => {
 
       mapService.addFeaturesToSelectionLayer([], mapIndex);
 
-      expect(addFeaturesToSelectionLayerSpy).toHaveBeenCalledWith([], mapIndex);
+      expect(addFeaturesToSelectionLayerSpy).toHaveBeenCalledWith(
+        [],
+        mapIndex,
+        undefined
+      );
     });
 
     it("when changeSelectionLayerStyle() is called it should call the coreMapService with the mapIndex and the given style", () => {
@@ -343,7 +351,8 @@ describe("MapService", () => {
 
       expect(changeSelectionStyleLayerSpy).toHaveBeenCalledWith(
         style,
-        mapIndex
+        mapIndex,
+        undefined
       );
     });
   });

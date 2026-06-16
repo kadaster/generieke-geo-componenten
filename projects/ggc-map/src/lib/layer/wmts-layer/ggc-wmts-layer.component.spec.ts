@@ -28,6 +28,7 @@ describe("WmtsLayerComponent", () => {
   let resultTileLayer: Tile<TileSource>;
   let capabilitiesService: MockedObject<CoreWmsWmtsCapabilitiesService>;
   let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
+  let mapEventsService: CoreMapEventsService;
 
   beforeEach(() => {
     const capSpy = {
@@ -72,6 +73,7 @@ describe("WmtsLayerComponent", () => {
     fixture.detectChanges();
     debugElement = fixture.debugElement;
     resultTileLayer = new Tile();
+    mapEventsService = TestBed.inject(CoreMapEventsService);
     capabilitiesService = TestBed.inject(
       CoreWmsWmtsCapabilitiesService
     ) as MockedObject<CoreWmsWmtsCapabilitiesService>;
@@ -299,6 +301,39 @@ describe("WmtsLayerComponent", () => {
         ).toHaveBeenCalled();
       }
     );
+
+    it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
+      const mapEventsServicespy = vi.spyOn(
+        mapEventsService,
+        "getSingleclickObservableForMap"
+      );
+
+      component["options"] = { getFeatureInfoOnSingleclick: true };
+      component.ngOnInit();
+
+      expect(mapEventsServicespy).toHaveBeenCalled();
+      expect(component["singleclick"]).toBeDefined();
+    });
+
+    it("when options.getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
+      const mapEventsServicespy = vi.spyOn(
+        mapEventsService,
+        "getSingleclickObservableForMap"
+      );
+
+      component["options"] = { getFeatureInfoOnSingleclick: true };
+      component.ngOnInit();
+
+      expect(mapEventsServicespy).toHaveBeenCalled();
+      expect(component["singleclick"]).toBeDefined();
+    });
+
+    it("when options.maxFeaturesOnSingleclick is set, maxFeaturesOnSingleclick should be set on component", () => {
+      component["options"] = { maxFeaturesOnSingleclick: 15 };
+      component.ngOnInit();
+
+      expect(component["maxFeaturesOnSingleclick"]).toBe(15);
+    });
 
     it("when emitFeatureInfoEvent is called it should emit an event and call CoreSelectionService", () => {
       component.options = {

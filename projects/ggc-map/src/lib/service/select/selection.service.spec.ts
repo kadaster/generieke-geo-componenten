@@ -23,7 +23,14 @@ describe("GgcSelectionService", () => {
         .mockName("CoreSelectionService.clearSelectionForMap"),
       getObservableForMap: vi
         .fn()
-        .mockName("CoreSelectionService.getObservableForMap")
+        .mockName("CoreSelectionService.getObservableForMap"),
+      clearSelection: vi.fn().mockName("CoreSelectionService.clearSelection"),
+      startSelect: vi.fn().mockName("CoreSelectionService.startSelect"),
+      setSelection: vi.fn().mockName("CoreSelectionService.setSelection"),
+      stopSelect: vi.fn().mockName("CoreSelectionService.stopSelect"),
+      getCurrentSelection: vi
+        .fn()
+        .mockName("CoreSelectionService.getCurrentSelection")
     };
     TestBed.configureTestingModule({
       providers: [
@@ -92,7 +99,8 @@ describe("GgcSelectionService", () => {
       selectionService.clearSelection("map-2");
 
       expect(coreSelectionServiceSpy.clearSelection).toHaveBeenCalledWith(
-        "map-2"
+        "map-2",
+        undefined
       );
     });
   });
@@ -148,7 +156,8 @@ describe("GgcSelectionService", () => {
 
       expect(result).toBe(observable$);
       expect(coreSelectionServiceSpy.getObservableForMap).toHaveBeenCalledWith(
-        "map-6"
+        "map-6",
+        undefined
       );
     });
   });

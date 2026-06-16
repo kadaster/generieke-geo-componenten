@@ -101,7 +101,8 @@ describe("CoreSelectionService", () => {
       addFeaturesToSelectionLayer: vi.fn(),
       isFeatureInSelectionLayer: vi.fn(),
       getLayerChangedObservable: vi.fn(),
-      changeSelectionLayerStyle: vi.fn()
+      changeSelectionLayerStyle: vi.fn(),
+      clearHighlightLayer: vi.fn()
     } as unknown as MockedObject<GgcMapService>;
 
     mapServiceSpy.getMap.mockReturnValue(map as unknown as Map);
@@ -356,10 +357,14 @@ describe("CoreSelectionService", () => {
         GgcMapService
       ) as MockedObject<GgcMapService>;
 
-      expect(mapService.clearSelectionLayer).toHaveBeenCalledWith(MAP_INDEX);
+      expect(mapService.clearSelectionLayer).toHaveBeenCalledWith(
+        MAP_INDEX,
+        "select-1"
+      );
       expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
         [feature],
-        MAP_INDEX
+        MAP_INDEX,
+        "select-1"
       );
     });
 
@@ -383,7 +388,8 @@ describe("CoreSelectionService", () => {
 
       expect(mapService.addFeaturesToSelectionLayer).toHaveBeenCalledWith(
         [feature],
-        MAP_INDEX
+        MAP_INDEX,
+        "select-1"
       );
     });
   });

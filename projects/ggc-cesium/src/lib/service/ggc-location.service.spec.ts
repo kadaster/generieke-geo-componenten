@@ -7,6 +7,7 @@ import { Viewer } from "@cesium/widgets";
 import { createCesiumMock } from "../viewer/viewer-mock";
 import { cameraUtils } from "../utils/camera-utils";
 import { vi } from "vitest";
+import { Entity } from "@cesium/engine";
 describe("GgcLocationService", () => {
   let service: GgcLocationService;
   let coreViewerServiceMock: MockedObject<CoreViewerService>;
@@ -51,43 +52,48 @@ describe("GgcLocationService", () => {
     expect(service).toBeTruthy();
   });
 
-  // it("should zoom to current location", async () => {
-  //   service.zoomToCurrentLocation();
-  //   expect(locationServiceMock).toHaveBeenCalled();
-  //   setTimeout(() => {
-  //     expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
-  //   });
-  // });
-  //
-  // it("should zoom to current location and mark", async () => {
-  //   service.zoomToCurrentLocationAndMark();
-  //   expect(locationServiceMock).toHaveBeenCalled();
-  //   setTimeout(() => {
-  //     expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
-  //     expect(cesiumMock.entities?.add).toHaveBeenCalled();
-  //     expect(cesiumMock.entities?.remove).not.toHaveBeenCalled();
-  //   });
-  // });
-  //
-  // it("should zoom to current location and renew mark", async () => {
-  //   service["marked"] = new Entity();
-  //   service.zoomToCurrentLocationAndMark();
-  //   expect(locationServiceMock).toHaveBeenCalled();
-  //   setTimeout(() => {
-  //     expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
-  //     expect(cesiumMock.entities?.add).toHaveBeenCalled();
-  //     expect(cesiumMock.entities?.remove).toHaveBeenCalled();
-  //   });
-  // });
-  //
-  // it("should remove mark", async () => {
-  //   service["marked"] = new Entity();
-  //   service.removeLocationMark();
-  //   expect(locationServiceMock).not.toHaveBeenCalled();
-  //   setTimeout(() => {
-  //     expect(cesiumMock.camera?.flyTo).not.toHaveBeenCalled();
-  //     expect(cesiumMock.entities?.add).not.toHaveBeenCalled();
-  //     expect(cesiumMock.entities?.remove).toHaveBeenCalled();
-  //   });
-  // });
+  it("should zoom to current location", async () => {
+    service.zoomToCurrentLocation();
+    expect(locationServiceMock).toHaveBeenCalled();
+
+    await Promise.resolve();
+
+    expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
+  });
+
+  it("should zoom to current location and mark", async () => {
+    service.zoomToCurrentLocationAndMark();
+    expect(locationServiceMock).toHaveBeenCalled();
+
+    await Promise.resolve();
+
+    expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
+    expect(cesiumMock.entities?.add).toHaveBeenCalled();
+    expect(cesiumMock.entities?.remove).not.toHaveBeenCalled();
+  });
+
+  it("should zoom to current location and renew mark", async () => {
+    service["marked"] = new Entity();
+    service.zoomToCurrentLocationAndMark();
+    expect(locationServiceMock).toHaveBeenCalled();
+
+    await Promise.resolve();
+
+    expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalled();
+    expect(cesiumMock.entities?.add).toHaveBeenCalled();
+    expect(cesiumMock.entities?.remove).toHaveBeenCalled();
+  });
+
+  it("should remove mark", async () => {
+    service["marked"] = new Entity();
+    service.removeLocationMark();
+
+    await Promise.resolve();
+
+    expect(locationServiceMock).not.toHaveBeenCalled();
+
+    expect(cesiumMock.camera?.flyTo).not.toHaveBeenCalled();
+    expect(cesiumMock.entities?.add).not.toHaveBeenCalled();
+    expect(cesiumMock.entities?.remove).toHaveBeenCalled();
+  });
 });

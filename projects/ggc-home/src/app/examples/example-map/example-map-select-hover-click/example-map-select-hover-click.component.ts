@@ -1,4 +1,10 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnInit,
+  signal
+} from "@angular/core";
 import {
   GgcMapComponent,
   GgcSelectionService,
@@ -11,20 +17,25 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
 import { pointerMove } from "ol/events/condition";
-import Style from "ol/style/Style";
-import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
 import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
+import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
+import Style from "ol/style/Style";
+import Fill from "ol/style/Fill";
+import Stroke from "ol/style/Stroke";
 
 @Component({
   selector: "app-example-map-select",
-  imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
-  templateUrl: "./example-map-select-hover-click.component.html",
-  styleUrl: "./example-map-select-hover-click.component.scss"
+  imports: [
+    GgcMapComponent,
+    ExampleFormatComponent,
+    FormsModule,
+    GgcFeatureInfoComponent
+  ],
+  templateUrl: "./example-map-select-hover-click.component.html"
 })
 export class ExampleMapSelectHoverClickComponent
   extends ExampleFormatComponent
-  implements OnInit
+  implements OnInit, AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
@@ -32,7 +43,7 @@ export class ExampleMapSelectHoverClickComponent
     title: "Selecteren met hover en klik",
     introduction:
       "Selecteer en highlight features met zowel een hover en een klik op de kaart",
-    components: [Components.GGC_MAP],
+    components: [Components.GGC_MAP, Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.SELECT],
     imageLocation:
@@ -45,23 +56,21 @@ export class ExampleMapSelectHoverClickComponent
   protected mapConfig: Webservice[];
   protected mapIndex = "example-select";
 
-  protected geselecteerdeGemeente = signal<string>("geen");
   protected currentHoverGemeente = signal<string>("geen");
-
+  protected readonly selectIndexClick = "selectIndexClick";
   private readonly selectIndexHover = "selectIndexHover";
-  private readonly selectIndexClick = "selectIndexClick";
-  private readonly clickSelectStyle = new Style({
-    fill: new Fill({
-      color: "rgba(255, 0, 0, 0.2)"
-    }),
-    stroke: new Stroke({
-      color: "#ff0000",
-      width: 4,
-      lineJoin: "round"
-    })
-  });
 
   private readonly selectService = inject(GgcSelectionService);
+
+  private readonly hoverStyle = new Style({
+    fill: new Fill({
+      color: "rgba(0, 147, 190, 0.15)"
+    }),
+    stroke: new Stroke({
+      color: "#0093be",
+      width: 3
+    })
+  });
 
   ngOnInit() {
     this.httpClient
@@ -72,26 +81,7 @@ export class ExampleMapSelectHoverClickComponent
         this.mapConfig = data as Webservice[];
       });
     this.selectService
-      .getObservable(this.selectIndexClick)
-      .subscribe((mapEvent) => {
-        if (mapEvent.type === "selectionServiceSelectionUpdated") {
-          const features =
-            (mapEvent.value as FeatureCollectionForCoordinate)
-              .featureCollectionForLayers[0]?.features ?? [];
-          const gemeentes: string[] = features.map(
-            (feature: any) =>
-              feature?.values_?.statnaam +
-              " (" +
-              feature?.values_?.statcode +
-              ")"
-          );
-          this.geselecteerdeGemeente.set(
-            gemeentes.length == 0 ? "geen" : gemeentes[0]
-          );
-        }
-      });
-    this.selectService
-      .getObservable(this.selectIndexHover)
+      .getObservable(this.mapIndex, this.selectIndexHover)
       .subscribe((mapEvent) => {
         if (mapEvent.type === "selectionServiceSelectionUpdated") {
           const features =
@@ -105,14 +95,16 @@ export class ExampleMapSelectHoverClickComponent
           );
         }
       });
+  }
 
+  ngAfterViewInit() {
     this.selectService.startSelect(
-      { selectMode: "single", condition: pointerMove },
+      { selectMode: "single", condition: pointerMove, style: this.hoverStyle },
       this.mapIndex,
       this.selectIndexHover
     );
     this.selectService.startSelect(
-      { selectMode: "single", style: this.clickSelectStyle },
+      { selectMode: "single" },
       this.mapIndex,
       this.selectIndexClick
     );

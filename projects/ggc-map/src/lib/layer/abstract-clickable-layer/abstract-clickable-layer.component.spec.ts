@@ -12,7 +12,6 @@ describe("AbstractClickableLayerComponent", () => {
   let component: TestLayerComponent;
   let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let fixture: ComponentFixture<TestLayerComponent>;
-  let mapEventsService: CoreMapEventsService;
 
   beforeEach(async () => {
     coreSelectionServiceSpy = {
@@ -32,43 +31,9 @@ describe("AbstractClickableLayerComponent", () => {
     fixture = TestBed.createComponent(TestLayerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    mapEventsService = TestBed.inject(CoreMapEventsService);
   });
 
   it("should create", () => {
     expect(component).toBeTruthy();
-  });
-
-  it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-    const mapEventsServicespy = vi.spyOn(
-      mapEventsService,
-      "getSingleclickObservableForMap"
-    );
-
-    component["options"] = { getFeatureInfoOnSingleclick: true };
-    component.ngOnInit();
-
-    expect(mapEventsServicespy).toHaveBeenCalled();
-    expect(component["singleclick"]).toBeDefined();
-  });
-
-  it("when options.getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
-    const mapEventsServicespy = vi.spyOn(
-      mapEventsService,
-      "getSingleclickObservableForMap"
-    );
-
-    component["options"] = { getFeatureInfoOnSingleclick: true };
-    component.ngOnInit();
-
-    expect(mapEventsServicespy).toHaveBeenCalled();
-    expect(component["singleclick"]).toBeDefined();
-  });
-
-  it("when options.maxFeaturesOnSingleclick is set, maxFeaturesOnSingleclick should be set on component", () => {
-    component["options"] = { maxFeaturesOnSingleclick: 15 };
-    component.ngOnInit();
-
-    expect(component["maxFeaturesOnSingleclick"]).toBe(15);
   });
 });

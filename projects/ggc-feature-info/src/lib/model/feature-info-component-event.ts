@@ -1,3 +1,6 @@
+/**
+ * Het type van het event voor de feature info
+ */
 export enum FeatureInfoComponentEventType {
   SELECTEDOBJECT = "selectedObject",
   SELECTEDTAB = "selectedTab"

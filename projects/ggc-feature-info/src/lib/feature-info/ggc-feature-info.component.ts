@@ -1,15 +1,17 @@
-import { ElementRef, OnInit, QueryList } from "@angular/core";
 import {
   AfterContentInit,
   Component,
   ContentChildren,
+  ElementRef,
   EventEmitter,
   inject,
   Input,
+  OnInit,
   Output,
   TemplateRef,
   AfterViewInit,
-  OnDestroy
+  OnDestroy,
+  QueryList
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -30,6 +32,7 @@ import { FeatureInfoMapConnectService } from "../service/feature-info-map-connec
 import {
   DEFAULT_MAPINDEX,
   FeatureCollectionForLayer,
+  GGC_FEATURE_LAYERID,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -62,6 +65,12 @@ export class GgcFeatureInfoComponent
 {
   /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
+
+  /** Unieke naam/index van de selectie index waarvoor Feature Info getoond moet worden, indien opgegeven.
+   *  Feature-info zal in dit geval luisteren naar de select interactie waar de mapIndex en selectIndex overeenkomt.
+   *  Als selectIndex undefined is, dan wordt alleen naar de mapIndex gekeken.
+   */
+  @Input() selectIndex: string | undefined = undefined;
 
   /**
    * Geeft aan of een message moet worden getoond ("Geen informatie beschikbaar") wanneer er geen data is.
@@ -106,6 +115,11 @@ export class GgcFeatureInfoComponent
    * Default: `true`.
    */
   @Input() autoConnect = true;
+  /**
+   * Wanneer false, dan start de feature-info niet automatisch de selection interaction.
+   * De feature-info blijft wel luisteren naar events op de opgegeven mapIndex/selectIndex en doet de betreffende highlighting.
+   * Met deze optie kan de afnemer zelf de select interactie starten met de gewenste parameters.
+   */
   @Input() autoStartSelect = true;
   /**
    * EventEmitter voor het versturen van component-gerelateerde events.
@@ -127,7 +141,7 @@ export class GgcFeatureInfoComponent
   private hasTabs = true;
   private subscription: Subscription;
   private subscriptionSelection: Subscription;
-  private eventService = inject(FeatureInfoEventService);
+  private readonly eventService = inject(FeatureInfoEventService);
   @ContentChildren(ValueTemplateDirective)
   private readonly templates: QueryList<ValueTemplateDirective>;
   private readonly featureInfoConfigService = inject(
@@ -147,7 +161,7 @@ export class GgcFeatureInfoComponent
 
   /**
    * Verzameling van features en metadata die weergegeven moeten worden.
-   * Bevat een `layerName` en een lijst van features (OpenLayers of plain objects).
+   * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
    */
   @Input()
   set featureInfoCollection(value: FeatureInfoCollection | undefined) {
@@ -190,7 +204,7 @@ export class GgcFeatureInfoComponent
 
   ngOnInit() {
     if (this.autoConnect) {
-      this.subscribeToMapSelection(this.mapIndex);
+      this.subscribeToMapSelection(this.mapIndex, this.selectIndex);
       this.subscription = this.eventService.events$.subscribe((event) =>
         this.handleFeatureInfoEvent(event)
       );
@@ -299,11 +313,16 @@ export class GgcFeatureInfoComponent
   ): object[] {
     const arrayContainingFeatureProperties: object[] = [];
     features.forEach((feature) => {
+      let properties;
       if (feature instanceof Feature) {
-        arrayContainingFeatureProperties.push(feature.getProperties());
+        properties = feature.getProperties();
       } else {
-        arrayContainingFeatureProperties.push(feature);
+        properties = { ...feature };
       }
+
+      // Remove the custom layerId property
+      delete properties[GGC_FEATURE_LAYERID];
+      arrayContainingFeatureProperties.push(properties);
     });
     return arrayContainingFeatureProperties;
   }
@@ -315,8 +334,7 @@ export class GgcFeatureInfoComponent
   hidePager(): boolean {
     return (
       this.hidePagerWithOneFeature &&
-      this.displayFeaturesProperties !== undefined &&
-      this.displayFeaturesProperties.length === 1
+      this.displayFeaturesProperties?.length === 1
     );
   }
 
@@ -366,9 +384,7 @@ export class GgcFeatureInfoComponent
    * ongeacht of deze via een @Input of interne logica komen.
    */
   private handleFeatureInfoChanges(): void {
-    if (!this.featureInfoCollection) {
-      this.displayFeaturesProperties = undefined;
-    } else {
+    if (this.featureInfoCollection) {
       if (this.customAttributeNamesAndValues) {
         this.featureInfoConfigService.setCustomFeatureInfo(
           this.customAttributeNamesAndValues
@@ -379,9 +395,11 @@ export class GgcFeatureInfoComponent
       );
       this.displayFeaturesProperties =
         this.featureInfoConfigService.filterAndSortAttributes(
-          this.featureInfoCollection.layerName,
+          this.featureInfoCollection.layerId,
           featuresProperties
         );
+    } else {
+      this.displayFeaturesProperties = undefined;
     }
 
     if (
@@ -405,11 +423,14 @@ export class GgcFeatureInfoComponent
     this.pagerIsHidden = this.hidePager();
   }
 
-  private subscribeToMapSelection(mapIndex: string): void {
+  private subscribeToMapSelection(
+    mapIndex: string,
+    selectIndex?: string
+  ): void {
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
     // featureInfoCollection gezet via de tabs (hasTabs = true
     this.featureInfoMapConnectService
-      .getObservableForMapSelection(mapIndex)
+      .getObservableForMapSelection(mapIndex, selectIndex)
       .then((mapSelectionEvent) => {
         if (this.hasTabs) {
           return;
@@ -434,14 +455,16 @@ export class GgcFeatureInfoComponent
             }
 
             this.featureInfoCollection = new FeatureInfoCollection(
+              undefined,
+              collections.flatMap((layer) => layer.features ?? []),
               collections
-                .map(
-                  (layer) =>
-                    layer.layerTitle || layer.layerName || layer.layerId
-                )
+                .map((layer) => layer.layerTitle)
                 .filter((value) => value && value.trim().length > 0)
                 .join(", "),
-              collections.flatMap((layer) => layer.features ?? [])
+              collections
+                .map((layer) => layer.layerId)
+                .filter((value) => value && value.trim().length > 0)
+                .join(", ")
             );
           }
         );

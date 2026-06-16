@@ -22,7 +22,9 @@ describe("GgcFeatureInfoConfigService > ", () => {
   });
 
   it("setSortFilterConfig should set sortFilterConfig", () => {
-    const config = [new SortFilterConfig({ layerName: "naam1", tabIndex: 1 })];
+    const config = [
+      new SortFilterConfig({ layerName: "naam1", tabIndex: 1, layerId: "id" })
+    ];
     service.setConfig(config);
 
     expect(service["sortFilterConfigs"]).toBe(config);
@@ -31,34 +33,54 @@ describe("GgcFeatureInfoConfigService > ", () => {
   describe("sortTabs", () => {
     it("sortTabs should sort the tabs according to tabIndex of sortFilterConfig", () => {
       const config = [
-        new SortFilterConfig({ layerName: "third", tabIndex: 3 }),
-        new SortFilterConfig({ layerName: "first", tabIndex: 1 }),
-        new SortFilterConfig({ layerName: "second", tabIndex: 2 })
+        new SortFilterConfig({
+          layerName: "third",
+          tabIndex: 3,
+          layerId: "id3"
+        }),
+        new SortFilterConfig({
+          layerName: "first",
+          tabIndex: 1,
+          layerId: "id1"
+        }),
+        new SortFilterConfig({
+          layerName: "second",
+          tabIndex: 2,
+          layerId: "id2"
+        })
       ];
       const testData = [
-        new FeatureInfoCollection("second", []),
-        new FeatureInfoCollection("third", []),
-        new FeatureInfoCollection("first", [])
+        new FeatureInfoCollection("second", [], "titel2", "id2"),
+        new FeatureInfoCollection("third", [], "titel3", "id3"),
+        new FeatureInfoCollection("first", [], "titel1", "id1")
       ];
       service.setConfig(config);
 
       service.sortTabs(testData);
 
-      expect(testData[0].layerName).toBe("first");
-      expect(testData[1].layerName).toBe("second");
-      expect(testData[2].layerName).toBe("third");
+      expect(testData[0].layerTitle).toBe("titel1");
+      expect(testData[1].layerTitle).toBe("titel2");
+      expect(testData[2].layerTitle).toBe("titel3");
     });
 
     it("sortTabs should only sort the tabs present in SortFilterConfig", () => {
       const config = [
-        new SortFilterConfig({ layerName: "third", tabIndex: 3 }),
-        new SortFilterConfig({ layerName: "first", tabIndex: 1 })
+        new SortFilterConfig({
+          layerName: "third",
+          tabIndex: 3,
+          layerId: "id3"
+        }),
+        new SortFilterConfig({
+          layerName: "first",
+          tabIndex: 1,
+          layerId: "id1"
+        })
       ];
       const testData = [
-        new FeatureInfoCollection("not first", []),
-        new FeatureInfoCollection("third", []),
-        new FeatureInfoCollection("last", []),
-        new FeatureInfoCollection("first", [])
+        new FeatureInfoCollection("not first", [], "titel", "id0"),
+        new FeatureInfoCollection("third", [], "titel", "id3"),
+        new FeatureInfoCollection("last", [], "titel", "id4"),
+        new FeatureInfoCollection("first", [], "titel", "id1")
       ];
       service.setConfig(config);
 
@@ -72,9 +94,9 @@ describe("GgcFeatureInfoConfigService > ", () => {
 
     it("sortTabs should not sort the tabs if no SortFilterConfig is set", () => {
       const testData = [
-        new FeatureInfoCollection("three", []),
-        new FeatureInfoCollection("two", []),
-        new FeatureInfoCollection("one", [])
+        new FeatureInfoCollection("three", [], "titel", "id3"),
+        new FeatureInfoCollection("two", [], "titel", "id2"),
+        new FeatureInfoCollection("one", [], "titel", "id1")
       ];
 
       service.sortTabs(testData);
@@ -86,17 +108,17 @@ describe("GgcFeatureInfoConfigService > ", () => {
 
     it("custom sortFunction should be used when set for sorting tabs", () => {
       const testData = [
-        new FeatureInfoCollection("z", []),
-        new FeatureInfoCollection("a", []),
-        new FeatureInfoCollection("c", []),
-        new FeatureInfoCollection("j", [])
+        new FeatureInfoCollection("z", [], "titel", "idz"),
+        new FeatureInfoCollection("a", [], "titel", "ida"),
+        new FeatureInfoCollection("c", [], "titel", "idc"),
+        new FeatureInfoCollection("j", [], "titel", "idj")
       ];
       service.setSortTabFunction(
         (a: FeatureInfoCollection, b: FeatureInfoCollection): number => {
-          if (a.layerName < b.layerName) {
+          if (a.layerId < b.layerId) {
             return -1;
           }
-          if (a.layerName > b.layerName) {
+          if (a.layerId > b.layerId) {
             return 1;
           }
           return 0;
@@ -128,7 +150,8 @@ describe("GgcFeatureInfoConfigService > ", () => {
       const config = [
         new SortFilterConfig({
           layerName: "Kaartlaag",
-          tabIndex: 3
+          tabIndex: 3,
+          layerId: "id3"
         })
       ];
       const testData = [
@@ -148,7 +171,8 @@ describe("GgcFeatureInfoConfigService > ", () => {
           layerName: "Kaartlaag",
           tabIndex: 3,
           hideUnorderedAttributes: false,
-          excludeAttributes: ["b"]
+          excludeAttributes: ["b"],
+          layerId: "id3"
         })
       ];
       const testData = [
@@ -159,7 +183,7 @@ describe("GgcFeatureInfoConfigService > ", () => {
 
       const result: {
         [key: string]: any;
-      } = service.filterAndSortAttributes("Kaartlaag", testData);
+      } = service.filterAndSortAttributes("id3", testData);
 
       expect(result.length).toBe(2);
       expect(result[0].id).toBe(1);
@@ -175,7 +199,8 @@ describe("GgcFeatureInfoConfigService > ", () => {
         new SortFilterConfig({
           layerName: "Kaartlaag",
           tabIndex: 3,
-          attributeOrder: ["toelichting", "b"]
+          attributeOrder: ["toelichting", "b"],
+          layerId: "id3"
         })
       ];
       const testData = [
@@ -184,7 +209,7 @@ describe("GgcFeatureInfoConfigService > ", () => {
       ];
       service.setConfig(config);
 
-      const result = service.filterAndSortAttributes("Kaartlaag", testData);
+      const result = service.filterAndSortAttributes("id3", testData);
 
       expect(result.length).toBe(2);
       expect(result[0]).toEqual({ toelichting: "tekst", b: true });
@@ -199,7 +224,8 @@ describe("GgcFeatureInfoConfigService > ", () => {
           layerName: "Kaartlaag",
           tabIndex: 3,
           attributeOrder: ["toelichting", "b"],
-          hideUnorderedAttributes: false
+          hideUnorderedAttributes: false,
+          layerId: "id3"
         })
       ];
       const testData = [
@@ -208,7 +234,7 @@ describe("GgcFeatureInfoConfigService > ", () => {
       ];
       service.setConfig(config);
 
-      const result = service.filterAndSortAttributes("Kaartlaag", testData);
+      const result = service.filterAndSortAttributes("id3", testData);
 
       expect(result.length).toBe(2);
       expect(result[0]).toEqual({
@@ -247,7 +273,8 @@ describe("GgcFeatureInfoConfigService > ", () => {
             tabIndex: 3,
             attributeOrder: ["omschrijving", "b"],
             hideUnorderedAttributes: false,
-            excludeAttributes: ["toelichting"]
+            excludeAttributes: ["toelichting"],
+            layerId: "id3"
           })
         ];
         const testData = [
@@ -268,7 +295,7 @@ describe("GgcFeatureInfoConfigService > ", () => {
         ];
         service.setConfig(config);
 
-        const result = service.filterAndSortAttributes("Kaartlaag", testData);
+        const result = service.filterAndSortAttributes("id3", testData);
 
         expect(result.length).toBe(2);
         expect(result[0]).toEqual({
@@ -304,7 +331,8 @@ describe("GgcFeatureInfoConfigService > ", () => {
           layerName: "Kaartlaag",
           tabIndex: 3,
           attributeOrder: ["bestaat", "niet"],
-          excludeAttributes: ["toelichting", "id", "status"]
+          excludeAttributes: ["toelichting", "id", "status"],
+          layerId: "id3"
         })
       ];
       const testData = [
@@ -313,7 +341,7 @@ describe("GgcFeatureInfoConfigService > ", () => {
       ];
       service.setConfig(config);
 
-      const result = service.filterAndSortAttributes("Kaartlaag", testData);
+      const result = service.filterAndSortAttributes("id3", testData);
 
       expect(result.length).toBe(2);
       expect(result[0]).toEqual({});
@@ -404,7 +432,8 @@ describe("GgcFeatureInfoConfigService > ", () => {
             tabIndex: 3,
             attributeOrder: ["omschrijving", "b"],
             hideUnorderedAttributes: false,
-            excludeAttributes: ["toelichting"]
+            excludeAttributes: ["toelichting"],
+            layerId: "id3"
           })
         ];
         const testData = [
@@ -439,7 +468,7 @@ describe("GgcFeatureInfoConfigService > ", () => {
         service.setConfig(config);
         service.setCustomFeatureInfo(customAttributeNames);
 
-        const result = service.filterAndSortAttributes("Kaartlaag", testData);
+        const result = service.filterAndSortAttributes("id3", testData);
 
         expect(result.length).toBe(2);
         expect(result[0]).toEqual({

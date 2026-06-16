@@ -45,8 +45,12 @@ export class AbstractBaseLayerComponent<T extends Layer>
     }
   }
 
-  cleanup() {
+  disable() {
     this.ngOnDestroy();
+  }
+
+  enable() {
+    // placeholder
   }
 
   public getLayerId(): string {

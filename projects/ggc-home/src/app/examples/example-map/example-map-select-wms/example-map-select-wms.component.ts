@@ -17,6 +17,9 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
 import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
+import Style from "ol/style/Style";
+import Fill from "ol/style/Fill";
+import Stroke from "ol/style/Stroke";
 
 @Component({
   selector: "app-example-map-select",
@@ -51,6 +54,16 @@ export class ExampleMapSelectWmsComponent
 
   private readonly selectService = inject(GgcSelectionService);
 
+  private readonly selectStyle = new Style({
+    fill: new Fill({
+      color: "rgba(0, 147, 190, 0.2)"
+    }),
+    stroke: new Stroke({
+      color: "#0093be",
+      width: 3
+    })
+  });
+
   ngOnInit() {
     this.httpClient
       .get("code/examples/example-map/example-map-select-wms/kaartconfig.json")
@@ -76,16 +89,25 @@ export class ExampleMapSelectWmsComponent
   }
 
   ngAfterViewInit() {
-    this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+    this.selectService.startSelect(
+      { selectMode: "single", style: this.selectStyle },
+      this.mapIndex
+    );
   }
 
   onSelectModeChange(mode: "singleselect" | "multiselect") {
     switch (mode) {
       case "singleselect":
-        this.selectService.startSelect({ selectMode: "single" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "single", style: this.selectStyle },
+          this.mapIndex
+        );
         break;
       case "multiselect":
-        this.selectService.startSelect({ selectMode: "multi" }, this.mapIndex);
+        this.selectService.startSelect(
+          { selectMode: "multi", style: this.selectStyle },
+          this.mapIndex
+        );
         break;
     }
   }
