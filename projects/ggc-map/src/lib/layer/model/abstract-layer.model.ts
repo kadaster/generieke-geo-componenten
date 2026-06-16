@@ -25,7 +25,7 @@ export interface AbstractBaseLayerOptions {
   visible?: boolean;
 
   /**
-   * Optioneel: wanneer true, dan wordt de kaartlaag niet verwijderd van de kaart. Deze wordt verborgen.
+   * Optioneel: wanneer true, dan wordt de kaartlaag niet verwijderd van de kaart bij toggle van visibility, maar wordt de visibility gewijzigd.
    */
   persistent?: boolean;
 }
