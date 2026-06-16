@@ -19,12 +19,11 @@ export class ExampleFeatureInfoBasicComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-basic",
-    title: "Toon informatie over geografische objecten op de kaart.",
-    introduction:
-      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
+    title: "Objectinformatie weergeven",
+    introduction: "Toon informatie over geografische objecten op de kaart.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
-    tags: [Tags.FEATURE_INFO],
+    tags: [Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-map/example-feature-info-basic/example-feature-info-basic.png"
   } as ComponentInfo;

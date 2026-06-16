@@ -23,12 +23,12 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-custom-names-values",
-    title: "Toon aangepaste informatie over geografische objecten op de kaart.",
+    title: "Objectinformatie aangepast weergeven",
     introduction:
-      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
+      "Toon informatie over geografische objecten op de kaart in een eigen weergave.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
-    tags: [Tags.FEATURE_INFO],
+    tags: [Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.png"
   } as ComponentInfo;

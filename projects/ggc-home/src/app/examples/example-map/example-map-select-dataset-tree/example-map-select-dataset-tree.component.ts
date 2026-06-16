@@ -16,6 +16,7 @@ import {
   GgcFeatureInfoComponent,
   GgcFeatureInfoTabsComponent
 } from "@kadaster/ggc-feature-info";
+import { RouterLink } from "@angular/router";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
@@ -28,7 +29,8 @@ import Stroke from "ol/style/Stroke";
     GgcFeatureInfoComponent,
     GgcFeatureInfoTabsComponent,
     ExampleFormatComponent,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: "./example-map-select-dataset-tree.component.html",
   styleUrl: "./example-map-select-dataset-tree.component.scss"
@@ -40,8 +42,9 @@ export class ExampleMapSelectDatasetTreeComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select-dataset-tree",
-    title: "Selecteren op de kaart met dataset tree",
-    introduction: "Selecteer en highlight features op diverse kaartlagen",
+    title: "Selecteren op de kaart met kaartlaag keuze",
+    introduction:
+      "Selecteer en markeer objecten door in geactiveerde kaartlagen te klikken.",
     components: [
       Components.GGC_MAP,
       Components.GGC_DATASET_TREE,

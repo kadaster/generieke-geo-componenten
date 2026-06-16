@@ -20,16 +20,42 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Wij raden aan om bij selecties WFS of OGC kaartlagen te gebruiken in
-      plaats van WMS/WMTS kaartlagen, gezien dit meer mogelijkheden biedt en
-      makkelijker werkt. Zie het select (WMS/WMTS) voorbeeld voor details over
-      het gebruik van selecties in WMS/WMTS kaartlagen en zie het andere select
-      voorbeeld voor extra mogelijkheden voor WFS of OGC kaartlagen.
+      Dit voorbeeld laat het effect zien van selectie op meerdere kaartlagen.
+      Voor de BGT standaardvisualisatie en BAG (vector tiles) moet eerst worden
+      ingezoomd totdat deze kaartlagen zichtbaar zijn.
     </p>
     <p>
-      Bij het uitzetten van een kaartlaag wordt de huidige selectie automatisch
-      leeggehaald. Voor de BGT standaardvisualisatie en BAG (vector tiles) moet
-      eerst worden ingezoomd naar het juiste zoomniveau.
+      Voor WFS, OGC API, WMS en WMTS worden de volgende selectiemethodes
+      ondersteund:
+    </p>
+    <ul>
+      <li>
+        <strong>Single select</strong>: selecteer één object door te klikken in
+        de kaart.
+      </li>
+      <li>
+        <strong>Multi select</strong>:
+        <ul>
+          <li>selecteer meerdere objecten door te klikken in de kaart.</li>
+          <li>
+            verwijder een object uit de selectie door op een geselecteerd object
+            te klikken.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <p>
+      Bij het uitzetten van een kaartlaag wordt de volledige selectie van alle
+      kaartlagen automatisch gewist.
+    </p>
+    <p>
+      <strong>Let op</strong>: Wij raden aan om objecten te selecteren op WFS of
+      OGC API kaartlagen in plaats van WMS/WMTS kaartlagen. Deze bieden meer
+      mogelijkheden en zijn makkelijker in te richten. Bekijk dit voorbeeld over
+      <a [routerLink]="['/example-map-select']">
+        selectiemogelijkheden met een WFS of OGC API kaartlaag</a
+      >.
     </p>
   </div>
 

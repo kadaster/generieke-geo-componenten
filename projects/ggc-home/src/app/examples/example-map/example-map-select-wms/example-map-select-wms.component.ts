@@ -17,13 +17,14 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
 import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
+import { RouterLink } from "@angular/router";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 
 @Component({
   selector: "app-example-map-select",
-  imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
+  imports: [GgcMapComponent, ExampleFormatComponent, FormsModule, RouterLink],
   templateUrl: "./example-map-select-wms.component.html",
   styleUrl: "./example-map-select-wms.component.scss"
 })
@@ -34,13 +35,14 @@ export class ExampleMapSelectWmsComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select-wms",
-    title: "Selecteren op de kaart (WMS/WMTS)",
-    introduction: "Selecteer en highlight features op de WMS/WMTS kaarten",
+    title: "Objecten selecteren op de kaart (WMS/WMTS)",
+    introduction:
+      "Kies en markeer objecten door in de WMS/WMTS kaart te klikken.",
     components: [Components.GGC_MAP],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.SELECT],
     imageLocation:
-      "code/examples/example-map/example-map-select-wms/example-select.png"
+      "code/examples/example-map/example-map-select-wms/example-map-select-wms.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-map/example-map-select-wms/example-map-select-wms.component.ts";

@@ -18,30 +18,45 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      GGC beidt ondersteuning voor selecties op alle kaartlagen, maar wij raden
-      aan om WFS of OGC kaartlagen te gebruiken, gezien dit makkelijker werkt.
-      Mocht je WMS of WMTS kaartlagen willen gebruiken, bekijk dan het voorbeeld
-      over selecties op WMS/WMTS lagen, gezien dit minder mogelijkheden biedt.
+      Met het ggc-map component kan op ieder type kaartlaag een object
+      geselecteerd worden. Selecteren van objecten werkt het beste met WFS en
+      OGC API kaartlagen. Dit komt doordat alle objecten in de browser
+      beschikbaar zijn.
     </p>
-    <p>Voor WFS en OGC kaartlagen zijn verschillende selectie methodes:</p>
+    <p>
+      Dit voorbeeld bevat de selectiemethoden voor WFS, deze zijn ook
+      beschikbaar voor OGC API Features en OGC API Tiles:
+    </p>
+    <p>Instelmogelijkheden voor de selectService:</p>
     <ul>
       <li>
-        <strong>Single select</strong>: door te klikken kan je één feature
-        selecteren.
+        <strong>Single select</strong>: selecteer één object door te klikken in
+        de kaart.
       </li>
       <li>
-        <strong>Multi select</strong>: je kan meerdere features selecteren en
-        een feature uit de selectie halen door op een geselecteerde feature te
-        klikken.
+        <strong>Multi select</strong>:
+        <ul>
+          <li>selecteer meerdere objecten door te klikken in de kaart.</li>
+          <li>
+            verwijder een object uit de selectie door op een geselecteerd object
+            te klikken.
+          </li>
+        </ul>
       </li>
       <li>
-        <strong>OpenLayers default</strong>: met een normale klik wordt één
-        feature geselecteerd en met een shift‑klik kan een multi‑selectie worden
-        gedaan.
+        <strong>OpenLayers default</strong>:
+        <ul>
+          <li>selecteer één object door te klikken in de kaart.</li>
+          <li>
+            selecteer meerdere objecten door shift ingedrukt te houden en te
+            klikken in de kaart.
+          </li>
+        </ul>
       </li>
       <li>
-        <strong>Hover</strong>: een single select die met het instellen van de
-        condition nu werkt met de muis-hover in plaats van klikken.
+        <strong>Hover</strong>: selecteer één object door de muis over de kaart
+        te bewegen (dit werkt hetzelfde als single select, zonder te klikken op
+        de kaart).
       </li>
     </ul>
   </div>

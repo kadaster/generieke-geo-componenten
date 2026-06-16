@@ -64,6 +64,7 @@ export class ExampleIndexComponent {
     Themes.KAARTLAGEN,
     Themes.KAARTBEDIENING,
     Themes.INFORMATIE_OP_KAART,
+    Themes.TEKENEN,
     Themes.LEGENDA,
     Themes.ZOEKEN,
     Themes.KAARTWEERGAVE_KIEZEN,

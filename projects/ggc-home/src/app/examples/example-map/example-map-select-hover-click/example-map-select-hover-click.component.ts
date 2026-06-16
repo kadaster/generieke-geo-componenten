@@ -40,9 +40,9 @@ export class ExampleMapSelectHoverClickComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-map-select-hover-click",
-    title: "Selecteren met hover en klik",
+    title: "Objecten selecteren met hover en klik",
     introduction:
-      "Selecteer en highlight features met zowel een hover en een klik op de kaart",
+      "Kies en markeer objecten door de muis over de kaart te bewegen of te klikken.\n",
     components: [Components.GGC_MAP, Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.SELECT],

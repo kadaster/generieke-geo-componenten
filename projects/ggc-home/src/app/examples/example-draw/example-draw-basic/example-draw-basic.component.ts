@@ -23,7 +23,7 @@ export class ExampleDrawBasicComponent
     introduction:
       "Teken lijnen, punten, vlakken, rechthoeken en cirkels met de muis.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.DRAW],
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"

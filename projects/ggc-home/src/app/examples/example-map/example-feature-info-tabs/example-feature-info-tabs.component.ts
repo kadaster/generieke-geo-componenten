@@ -32,13 +32,12 @@ export class ExampleFeatureInfoTabsComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/feature-info-tabs",
-    title:
-      "Toon informatie over geografische objecten op de kaart in tabbladen per kaartlaag",
+    title: "Objectinformatie weergeven in tabbladen",
     introduction:
-      "Met het feature-informatie component kan informatie uit de WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector Tiles getoond worden in een dialoog met of zonder tabbladen.",
+      "Toon informatie over geografische objecten op de kaart in tabbladen.",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
-    tags: [Tags.FEATURE_INFO],
+    tags: [Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-map/example-feature-info-tabs/example-feature-info-tabs.png"
   } as ComponentInfo;
