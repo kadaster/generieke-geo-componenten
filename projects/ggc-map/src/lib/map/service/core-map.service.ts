@@ -64,7 +64,7 @@ export class CoreMapService {
     VectorLayer<VectorSource<Feature<Geometry>>>
   > = new Map();
 
-  private readonly LayerChangedSubject: Subject<LayerChangedEvent> =
+  private readonly layerChangedSubject: Subject<LayerChangedEvent> =
     new Subject();
 
   constructor() {
@@ -83,7 +83,15 @@ export class CoreMapService {
   }
 
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
-    return this.LayerChangedSubject.asObservable();
+    return this.layerChangedSubject.asObservable();
+  }
+
+  emitLayerChangedEvent(
+    layerId: string,
+    mapIndex: string,
+    eventTrigger: LayerChangedEventTrigger
+  ) {
+    this.layerChangedSubject.next({ layerId, mapIndex, eventTrigger });
   }
 
   createAndGetMap(
@@ -354,7 +362,7 @@ export class CoreMapService {
       })
     });
     newMap.getLayers().on("add", (event) => {
-      this.LayerChangedSubject.next({
+      this.layerChangedSubject.next({
         layerId: event.element.get("ggc-layer-id"),
         mapIndex,
         eventTrigger: LayerChangedEventTrigger.LAYER_ADDED

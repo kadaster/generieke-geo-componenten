@@ -22,6 +22,7 @@ import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabil
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
 import { DEVICE_PIXEL_RATIO } from "ol/has";
 import {
+  LayerChangedEventTrigger,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -63,13 +64,8 @@ export class GgcWmsLayerComponent
       this.options.layers = this.options?.layerName;
     }
 
-    if (this.options?.getFeatureInfoOnSingleclick === true) {
-      this.singleclick = this.mapEventsService
-        .getSingleclickObservableForMap(this.mapIndex)
-        .subscribe((evt) => {
-          this.getFeatureInfo(evt);
-        });
-    }
+    this.enable();
+
     if (this.options?.maxFeaturesOnSingleclick !== undefined) {
       this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
     }
@@ -204,11 +200,7 @@ export class GgcWmsLayerComponent
   /** Verwijdert de laag en voert opruimacties uit. */
   ngOnDestroy(): void {
     super.ngOnDestroy();
-
-    // unsubscribe on singleclick
-    if (this.singleclick !== undefined) {
-      this.singleclick.unsubscribe();
-    }
+    this.unsubscribeOnClickEvent();
   }
 
   /**
@@ -258,6 +250,28 @@ export class GgcWmsLayerComponent
       }
       this.wmsSource.updateParams({ STYLES: newStyles });
       this.updateLocalSourceOptionsFromWmsSource();
+    }
+  }
+
+  enable() {
+    super.enable();
+    this.subscribeOnClickEvent();
+  }
+
+  private subscribeOnClickEvent() {
+    this.unsubscribeOnClickEvent();
+    if (this.options?.getFeatureInfoOnSingleclick === true) {
+      this.singleclick = this.mapEventsService
+        .getSingleclickObservableForMap(this.mapIndex)
+        .subscribe((evt) => {
+          this.getFeatureInfo(evt);
+        });
+    }
+  }
+
+  private unsubscribeOnClickEvent() {
+    if (this.singleclick !== undefined) {
+      this.singleclick.unsubscribe();
     }
   }
 

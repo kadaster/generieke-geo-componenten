@@ -32,6 +32,7 @@ import {
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayerComponent } from "../../layer/abstract-base-layer/abstract-base-layer.component";
 import Layer from "ol/layer/Layer";
+import { CoreMapService } from "../../map/service/core-map.service";
 
 /**
  * Centrale service voor het beheren van kaartlagen binnen GGC.
@@ -51,7 +52,7 @@ import Layer from "ol/layer/Layer";
   providedIn: "root"
 })
 export class GgcLayerService {
-  private readonly mapService = inject(GgcMapService);
+  private readonly mapService = inject(CoreMapService);
   private readonly appRef = inject(ApplicationRef);
 
   private readonly layerChangedSubject: Subject<LayerChangedEvent> =
@@ -294,8 +295,9 @@ export class GgcLayerService {
       this.mapService.getMap(mapIndex).removeLayer(layer);
       this.mapLayerComponents
         .get(this.buildLayerComponentKey(mapIndex, layerId))
-        ?.cleanup();
-      this.emitLayerChanged(
+        ?.disable();
+      // the layer service will automatically react on this event
+      this.mapService.emitLayerChangedEvent(
         layerId,
         mapIndex,
         LayerChangedEventTrigger.LAYER_REMOVED
