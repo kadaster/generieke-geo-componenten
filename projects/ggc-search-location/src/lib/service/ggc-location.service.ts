@@ -72,46 +72,43 @@ export class GgcSearchLocationService {
    * Start het ophalen van de huidige locatie.
    *
    * Kan eenmalig de locatie ophalen of de locatie blijven volgen (tracken).
-   * De resultaten worden naar de kaart gestuurd en via de locationEvents verzonden.
+   * De resultaten worden naar de kaart gestuurd (indien aanwezig) en via de locationEvents verzonden.
    *
    * @param track - Indien `true`, blijft de service de locatie volgen via `watchPosition`.
-   * @param mapIndex - De index van de doelkaart.
+   * @param mapIndex - De index van de kaart indien aanwezig.
    * @returns Een Promise die wordt afgerond zodra de initiële setup is voltooid.
    */
-  async getLocation(
-    track: boolean,
-    mapIndex = DEFAULT_MAPINDEX
-  ): Promise<void> {
+  async getLocation(track = false, mapIndex = DEFAULT_MAPINDEX): Promise<void> {
     const mapService = (await this.connectService.getMapService()) as any;
     if (mapService) {
       const map = mapService.getMap(mapIndex);
       if (map) {
         await this.setGeolocationLayerStyle(mapService, mapIndex);
-        if (track) {
-          if (!this.geolocations.has(mapIndex)) {
-            this.geolocations.set(
-              mapIndex,
-              navigator.geolocation.watchPosition(
-                (position: GeolocationPosition) =>
-                  this.processPositionSuccess(mapIndex, position),
-                (error: GeolocationPositionError) => {
-                  this.stopTrackLocation(mapIndex);
-                  this.geolocationPositionError.next(error);
-                }
-              )
-            );
-          }
-        } else {
-          navigator.geolocation.getCurrentPosition(
+      }
+    }
+    if (track) {
+      if (!this.geolocations.has(mapIndex)) {
+        this.geolocations.set(
+          mapIndex,
+          navigator.geolocation.watchPosition(
             (position: GeolocationPosition) =>
               this.processPositionSuccess(mapIndex, position),
             (error: GeolocationPositionError) => {
               this.stopTrackLocation(mapIndex);
               this.geolocationPositionError.next(error);
             }
-          );
-        }
+          )
+        );
       }
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) =>
+          this.processPositionSuccess(mapIndex, position),
+        (error: GeolocationPositionError) => {
+          this.stopTrackLocation(mapIndex);
+          this.geolocationPositionError.next(error);
+        }
+      );
     }
   }
 
