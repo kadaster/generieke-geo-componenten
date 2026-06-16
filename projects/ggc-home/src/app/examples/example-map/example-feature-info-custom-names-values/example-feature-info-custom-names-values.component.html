@@ -17,14 +17,43 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Dit voorbeeld toont een aangepast FeatureInfo resultaat. De gewenste
-      sortering van velden is ingesteld met behulp van de
-      <i>FeatureInfoConfigService</i> ('naam', 'code' en 'ligtInProvincieNaam').
-      Het instellen van <i>hideUnorderedAttributes = true</i> zorgt ervoor dat
-      de overige velden niet worden getoond. Attribuutveldnamen (code en
-      ligtInProvincieNaam) en attribuutveldwaarden (code en naam) zijn aangepast
-      met behulp van <i>customAttributeNamesAndValues</i>.
+      Dit is mogelijk voor WMTS- ,WMS-, GeoJSON-kaart(en) en OGC API vector
+      Tiles.
     </p>
+    <p>
+      Dit voorbeeld toont de grenzen van gemeenten. Na het kiezen van een
+      gemeente zie je de aangepaste informatie.
+    </p>
+    <p>Instelmogelijkheden voor de <code>featureInfoConfigService</code>:</p>
+    <ul>
+      <li>
+        <code>attributeOrder</code>: volgorde van de attributen instellen.
+      </li>
+      <li>
+        <code>hideUnorderedAttributes</code>: verbergen van velden. Alleen de
+        attributen die zijn meegegenen in atributeOrder worden getoond (in dit
+        voorbeeld 'naam', 'code', en 'ligtInProvincieNaam').
+      </li>
+    </ul>
+    <p>Instelmogelijkheden voor <code>customFeatureInfo</code>:</p>
+    <ul>
+      <li>
+        <code>customAttributeName</code>: aanpassen van namen van
+        attribuutvelden. In dit voorbeeld:
+      </li>
+      <ul>
+        <li>code => gemeente code</li>
+        <li>ligtInProvincieNaam => ligt in</li>
+      </ul>
+      <li>
+        <code>customAttributeValueFunction</code>: aanpassen van waarden van
+        attribuutvelden. In dit voorbeeld:
+      </li>
+      <ul>
+        <li>naam => gemeente + naam</li>
+        <li>code => GM + code</li>
+      </ul>
+    </ul>
   </div>
   <div page-functionality>
     <div class="row">
@@ -33,16 +62,6 @@
         <div class="feature-info-container">
           <i>Toon alleen de velden 'naam', 'code' en 'ligtInProvincieNaam'</i>
           <br />
-          <br />
-          <i>Aangepaste veld namen:</i>
-          <br />
-          <div>code => <b>gemeente code</b></div>
-          <div>ligtInProvincieNaam => <b>ligt in</b></div>
-          <br />
-          <i>Aangepaste waardes:</i>
-          <br />
-          <div>code => <b>GM</b> + code</div>
-          <div>naam => <b>gemeente</b> + naam</div>
           <br />
           <ggc-feature-info
             [customAttributeNamesAndValues]="customAttributeNamesAndValues"

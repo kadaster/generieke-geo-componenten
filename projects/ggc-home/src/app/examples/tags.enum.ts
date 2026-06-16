@@ -10,6 +10,7 @@ export enum Tags {
   LOCATION = "location",
   MEASURE = "measure",
   MODIFY = "modify",
+  OBJECTINFO = "objectinfo",
   OGC_API = "OGC API",
   SCALE = "scale",
   SEARCH = "search",
@@ -18,6 +19,5 @@ export enum Tags {
   STYLE = "style",
   TOOLBAR = "toolbar",
   TRACE = "trace",
-  ZOOM = "zoom",
-  FEATURE_INFO = "featureinfo"
+  ZOOM = "zoom"
 }

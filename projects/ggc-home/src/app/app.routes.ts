@@ -133,6 +133,12 @@ export const routes: Routes = [
     data: { label: "Layer JSON config)" }
   },
   {
+    path: "example-3d-basic",
+    title: "Layer-3D | GGC-Home",
+    component: Example3dBasicComponent,
+    data: { label: "example-3d-basic" }
+  },
+  {
     path: "snapping-basic",
     title: "Snappen | GGC-Home",
     component: ExampleSnappingBasicComponent,
@@ -297,56 +303,50 @@ export const routes: Routes = [
   },
   {
     path: "example-map-select",
-    title: "Selecteren op de kaart | GGC-Home",
+    title: "Selecteren op kaart | GGC-Home",
     component: ExampleMapSelectComponent,
     data: { label: "example-map-select" }
   },
   {
     path: "example-map-select-hover-click",
-    title: "Selecteren met hover en klik | GGC-Home",
+    title: "Selecteren hover/klik | GGC-Home",
     component: ExampleMapSelectHoverClickComponent,
     data: { label: "example-map-select-hover-click" }
   },
   {
     path: "example-map-select-wms",
-    title: "Selecteren op WMS of WMTS kaarten | GGC-Home",
+    title: "Selecteren WMS/WMTS | GGC-Home",
     component: ExampleMapSelectWmsComponent,
     data: { label: "example-map-select-wms" }
   },
   {
     path: "example-map-select-dataset-tree",
-    title: "Selecteren op de kaart met dataset tree | GGC-Home",
+    title: "Selecteren met kaartkeuze | GGC-Home",
     component: ExampleMapSelectDatasetTreeComponent,
     data: { label: "example-map-select-dataset-tree" }
   },
   {
     path: "feature-info-basic",
-    title: "Feature Info tonen | GGC-Home",
+    title: "Feature Info | GGC-Home",
     component: ExampleFeatureInfoBasicComponent,
     data: { label: "example-feature-info-basic" }
   },
   {
     path: "feature-info-adv",
-    title: "Feature Info tonen | GGC-Home",
+    title: "Feature Info | GGC-Home",
     component: ExampleFeatureInfoAdvComponent,
     data: { label: "example-feature-info-adv" }
   },
   {
     path: "feature-info-tabs",
-    title: "Feature Info tonen in Tabs | GGC-Home",
+    title: "Feature Info tabs | GGC-Home",
     component: ExampleFeatureInfoTabsComponent,
     data: { label: "example-feature-info-tabs" }
   },
   {
     path: "feature-info-custom-names-values",
-    title: "Feature Info tonen in Tabs | GGC-Home",
+    title: "Feature Info aangepast | GGC-Home",
     component: ExampleFeatureInfoCustomNamesValuesComponent,
     data: { label: "feature-info-custom-names-values" }
-  },
-  {
-    path: "example-3d-basic",
-    title: "3D kaart tonen | GGC-Home",
-    component: Example3dBasicComponent,
-    data: { label: "example-3d-basic" }
   }
 ];

@@ -31,7 +31,7 @@ export class ExampleDrawTracingComponent
     introduction:
       "Bij het tekenen automatisch bestaande lijnen of vlakken volgen.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.DRAW, Tags.TRACE],
     imageLocation:
       "code/examples/example-draw/example-draw-tracing/example-draw-tracing.png"
