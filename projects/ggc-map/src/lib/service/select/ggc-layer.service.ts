@@ -173,13 +173,25 @@ export class GgcLayerService {
     layerOptions: AbstractConfigurableLayerOptions,
     webserviceType: Webservice2DType
   ): string | undefined {
-    if (layerOptions.persistent === true && layerOptions.layerId) {
+    if (
+      layerOptions.persistent === true &&
+      layerOptions.layerId &&
+      layerOptions.mapIndex
+    ) {
       const layer = this.mapService.getLayer(
         layerOptions.layerId,
         layerOptions.mapIndex
       );
       if (layer) {
         layer.setVisible(true);
+        this.mapLayerComponents
+          .get(
+            this.buildLayerComponentKey(
+              layerOptions.mapIndex,
+              layerOptions.layerId
+            )
+          )
+          ?.enable();
         this.emitLayerChanged(
           layerOptions.layerId,
           layerOptions.mapIndex ?? DEFAULT_MAPINDEX,

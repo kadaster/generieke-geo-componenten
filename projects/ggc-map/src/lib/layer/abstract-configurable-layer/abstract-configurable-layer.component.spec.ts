@@ -10,7 +10,6 @@ import { CoreMapService } from "../../map/service/core-map.service";
 import { AbstractConfigurableLayerComponent } from "./abstract-configurable-layer.component";
 import { ViewStateLayerStateExtent } from "ol/View";
 import { Options } from "ol/source/ImageStatic";
-import objectContaining = jasmine.objectContaining;
 import { zoomlevelToResolution } from "../../utils/epsg28992";
 import { expect } from "vitest";
 
