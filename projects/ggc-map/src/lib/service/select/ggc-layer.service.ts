@@ -181,6 +181,21 @@ export class GgcLayerService {
     layerOptions: AbstractConfigurableLayerOptions,
     webserviceType: Webservice2DType
   ): string | undefined {
+    if (layerOptions.persistent === true && layerOptions.layerId) {
+      const layer = this.mapService.getLayer(
+        layerOptions.layerId,
+        layerOptions.mapIndex
+      );
+      if (layer) {
+        layer.setVisible(true);
+        this.emitLayerChanged(
+          layerOptions.layerId,
+          layerOptions.mapIndex ?? DEFAULT_MAPINDEX,
+          LayerChangedEventTrigger.LAYER_ADDED
+        );
+        return layerOptions.layerId;
+      }
+    }
     switch (webserviceType) {
       case Webservice2DType.GEOJSON:
         return this.addGeojsonLayer(layerOptions as GeojsonLayerOptions);
@@ -273,7 +288,11 @@ export class GgcLayerService {
   removeLayer(mapIndex: string, layerId: string) {
     const layer = this.mapService.getLayer(layerId, mapIndex);
     if (layer) {
-      this.mapService.getMap(mapIndex).removeLayer(layer);
+      if (layer.get("persistent") === true) {
+        layer.setVisible(false);
+      } else {
+        this.mapService.getMap(mapIndex).removeLayer(layer);
+      }
       this.emitLayerChanged(
         layerId,
         mapIndex,
@@ -316,7 +335,7 @@ export class GgcLayerService {
    * Controleert of een laag zichtbaar is.
    */
   isVisible(layerId: string, mapIndex = DEFAULT_MAPINDEX): boolean {
-    return this.mapService.getLayer(layerId, mapIndex) !== undefined;
+    return this.mapService.getLayer(layerId, mapIndex)?.getVisible() ?? false;
   }
 
   /**

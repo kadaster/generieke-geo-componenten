@@ -53,6 +53,7 @@ export class AbstractBaseLayerComponent<T extends Layer>
     this.olLayer = layer;
     this.olLayer.set("ggc-layer-id", this.options?.layerId);
     this.olLayer.set("ggc-title", this.options?.title);
+    this.olLayer.set("persistent", this.options?.persistent);
 
     this.map = this.coreMapService.getMap(this.mapIndex);
     this.map.addLayer(this.olLayer);
