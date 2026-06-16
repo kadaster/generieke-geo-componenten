@@ -1,43 +1,48 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-  GgcLayerBrtAchtergrondkaartComponentMock,
-  GgcMapComponentMock,
-  GgcMapServiceMock,
-  GgcLayerServiceMock
-} from "../../../../../src/test/mocks/ggc/ggc-map";
-import {
-  GgcMapComponent,
-  GgcMapService,
-  GgcLayerService,
-  GgcLayerBrtAchtergrondkaartComponent
-} from "@kadaster/ggc-map";
+import { GgcMapService, GgcLayerService } from "@kadaster/ggc-map";
 
 import { GgcHomeComponent } from "./ggc-home.component";
+import { type MockedObject, vi } from "vitest";
+import { View } from "ol";
 
 describe("GgcHomeComponent", () => {
   let component: GgcHomeComponent;
   let fixture: ComponentFixture<GgcHomeComponent>;
 
+  const mockMap = {
+    clearHighlightLayer: vi.fn(),
+    clearSelectionLayer: vi.fn(),
+    addFeaturesToHighlightLayer: vi.fn(),
+    changeHighlightLayerStyle: vi.fn(),
+    markFeature: vi.fn(),
+    getMap: vi.fn(() => {
+      return viewMock;
+    }),
+    zoomToCoordinate: vi.fn(),
+    getLayerChangedObservable: vi.fn()
+  };
+
+  const viewMock = {
+    getResolution: vi.fn(),
+    adjustZoom: vi.fn(),
+    fit: vi.fn(),
+    getCenter: vi.fn,
+    on: vi.fn(),
+    setZoom: vi.fn()
+  } as unknown as MockedObject<View>;
+
+  const layerServiceMock = {
+    // alleen wat nodig is
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcHomeComponent],
       providers: [
-        { provide: GgcMapService, useClass: GgcMapServiceMock },
-        { provide: GgcLayerService, useClass: GgcLayerServiceMock }
+        { provide: GgcMapService, useValue: mockMap },
+        { provide: GgcLayerService, useValue: layerServiceMock }
       ]
-    })
-      .overrideComponent(GgcHomeComponent, {
-        remove: {
-          imports: [GgcMapComponent, GgcLayerBrtAchtergrondkaartComponent]
-        },
-        add: {
-          imports: [
-            GgcMapComponentMock,
-            GgcLayerBrtAchtergrondkaartComponentMock
-          ]
-        }
-      })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(GgcHomeComponent);
     component = fixture.componentInstance;

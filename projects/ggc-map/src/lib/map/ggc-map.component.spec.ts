@@ -1,4 +1,4 @@
-import type { MockedObject } from "vitest";
+import type { Mocked, MockedObject } from "vitest";
 import { HttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
@@ -18,25 +18,44 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import { of } from "rxjs";
 
 describe("MapComponent, ngAfterViewInit", () => {
   let component: GgcMapComponent;
   let fixture: ComponentFixture<GgcMapComponent>;
-  let coreMapService: CoreMapService;
+  let coreMapService: Mocked<CoreMapService>;
 
   const httpClientSpy = {
     get: vi.fn().mockName("HttpClient.get")
   };
-  let mapSpy: MockedObject<OlMap>;
-  let viewSpy: MockedObject<View>;
+  let mapMock: MockedObject<OlMap>;
+  let viewMock: MockedObject<View>;
 
   beforeEach(() => {
+    viewMock = {
+      on: vi.fn(),
+      setZoom: vi.fn()
+    } as unknown as MockedObject<View>;
+
+    mapMock = {
+      setTarget: vi.fn(),
+      on: vi.fn(),
+      getView: vi.fn().mockReturnValue(viewMock)
+    } as unknown as MockedObject<OlMap>;
+
+    coreMapService = {
+      createAndGetMap: vi.fn().mockReturnValue(mapMock as unknown as OlMap),
+      getLayerChangedObservable: vi.fn().mockReturnValue(of()),
+      destroyMap: vi.fn().mockReturnValue(of())
+    } as MockedObject<CoreMapService>;
+
     TestBed.configureTestingModule({
       imports: [GgcMapComponent],
       providers: [
         CoreMapService,
         CoreLoadingService,
         GgcCrsConfigService,
+        { provide: CoreMapService, useValue: coreMapService as CoreMapService },
         CoreMapEventsService,
         CoreSelectionService,
         GgcSelectionService,
@@ -44,22 +63,8 @@ describe("MapComponent, ngAfterViewInit", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(GgcMapComponent);
-    coreMapService = TestBed.inject(CoreMapService);
     component = fixture.componentInstance;
-    mapSpy = {
-      setTarget: vi.fn(),
-      on: vi.fn() as unknown as MockedObject<OlMap>["on"],
-      getView: vi.fn().mockReturnValue(viewSpy)
-    } as MockedObject<OlMap>;
-    viewSpy = {
-      on: vi.fn() as unknown as MockedObject<View>["on"],
-      setZoom: vi.fn()
-    } as MockedObject<View>;
-    vi.spyOn(coreMapService as any, "createAndGetMap").mockReturnValue(mapSpy);
   });
 
   it("Events should be set", async () => {
@@ -73,23 +78,23 @@ describe("MapComponent, ngAfterViewInit", () => {
         );
       });
     fixture.detectChanges();
-    expect(mapSpy.setTarget).toHaveBeenCalled();
-    expect(mapSpy.on).toHaveBeenCalledTimes(4);
-    expect(vi.mocked(mapSpy.on).mock.calls[0][0] as unknown as string).toEqual(
+    expect(mapMock.setTarget).toHaveBeenCalled();
+    expect(mapMock.on).toHaveBeenCalledTimes(4);
+    expect(vi.mocked(mapMock.on).mock.calls[0][0] as unknown as string).toEqual(
       "precompose"
     );
-    expect(vi.mocked(mapSpy.on).mock.calls[1][0] as unknown as string).toEqual(
+    expect(vi.mocked(mapMock.on).mock.calls[1][0] as unknown as string).toEqual(
       "rendercomplete"
     );
-    expect(vi.mocked(mapSpy.on).mock.calls[2][0] as unknown as string).toEqual(
+    expect(vi.mocked(mapMock.on).mock.calls[2][0] as unknown as string).toEqual(
       "singleclick"
     );
-    expect(vi.mocked(mapSpy.on).mock.calls[3][0] as unknown as string).toEqual(
+    expect(vi.mocked(mapMock.on).mock.calls[3][0] as unknown as string).toEqual(
       "moveend"
     );
-    expect(mapSpy.getView).toHaveBeenCalled();
-    expect(viewSpy.on).toHaveBeenCalled();
-    expect(viewSpy.setZoom).toHaveBeenCalledWith(3);
+    expect(mapMock.getView).toHaveBeenCalled();
+    expect(viewMock.on).toHaveBeenCalled();
+    expect(viewMock.setZoom).toHaveBeenCalledWith(3);
   });
 
   it("Events should be unset", () => {

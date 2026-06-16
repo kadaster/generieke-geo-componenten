@@ -5,12 +5,13 @@ import { LayerToggleComponent } from "./layer-toggle.component";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
 import { EMPTY, Subject } from "rxjs";
 import MapEvent from "ol/MapEvent";
+import OlMap from "ol/Map";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import {
   LayerChangedEvent,
   LayerChangedEventTrigger
 } from "@kadaster/ggc-models";
-import { createFakeMapEvent } from "../../../../../../src/test/mocks/ggc/mock-ggc-map.service";
+import { View } from "ol";
 
 describe("LayerToggleComponent", () => {
   let component: LayerToggleComponent;
@@ -20,8 +21,30 @@ describe("LayerToggleComponent", () => {
 
   let layerChanged$: Subject<LayerChangedEvent>;
   let zoomend$: Subject<MapEvent>;
+  let mapMock: OlMap;
 
   beforeEach(async () => {
+    const viewMock = {
+      getResolution(): void {
+        /* mock */
+      },
+      adjustZoom(_delta: number, _optAnchor?): void {
+        /* mock */
+      },
+      fit(_extent, _fitOptions): void {
+        /* mock */
+      },
+      getCenter(): void {
+        /* mock */
+      }
+    } as View;
+
+    mapMock = {
+      getView() {
+        return viewMock;
+      }
+    } as OlMap;
+
     layerChanged$ = new Subject<any>();
     zoomend$ = new Subject<any>();
 
@@ -120,7 +143,7 @@ describe("LayerToggleComponent", () => {
       Promise.resolve(true)
     );
 
-    zoomend$.next(createFakeMapEvent("zoomend"));
+    zoomend$.next(new MapEvent("zoomend", mapMock));
 
     expect(component["enabled"]()).toBe(true);
   });

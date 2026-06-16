@@ -1,7 +1,6 @@
-import type { Mock, MockedObject } from "vitest";
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { GgcLayerService } from "./ggc-layer.service";
-import { GgcMapService } from "../../map/service/ggc-map.service";
 import { WmtsLayerOptions } from "../../layer/model/wmts-layer.model";
 import {
   provideHttpClient,
@@ -16,64 +15,47 @@ import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
-  let mapServiceSpy: MockedObject<GgcMapService>;
-  let mockCreateComponent: Mock;
+  // let mapServiceSpy: MockedObject<GgcMapService>;
   let capSpy: MockedObject<CoreWmsWmtsCapabilitiesService>;
   let coreMapServiceSpy: MockedObject<CoreMapService>;
 
   beforeEach(() => {
-    const mapServiceMock = {
-      getLayer: vi.fn().mockName("MapService.getLayer"),
-      getMap: vi.fn().mockName("MapService.getMap"),
-      getLayerChangedObservable: vi
-        .fn()
-        .mockName("MapService.getLayerChangedObservable")
-    };
-
-    mapServiceMock.getLayer.mockReturnValue(null);
-    mapServiceMock.getMap.mockReturnValue({
-      removeLayer: vi.fn()
-    });
-    mapServiceMock.getLayerChangedObservable.mockReturnValue(of());
-
-    mockCreateComponent = vi.fn();
     coreMapServiceSpy = {
+      getLayer: vi.fn().mockName("CoreMapService.getLayer"),
       getLayerChangedObservable: vi
         .fn()
-        .mockName("coreMapService.getLayerChangedObservable"),
-      getMap: vi.fn().mockName("coreMapService.getMap")
+        .mockName("coreMapService.getLayerChangedObservable")
+        .mockReturnValue(of()),
+      getMap: vi
+        .fn()
+        .mockName("coreMapService.getMap")
+        .mockReturnValue({
+          addLayer: vi.fn(),
+          removeLayer: vi.fn()
+        } as unknown as OlMap),
+      emitLayerChangedEvent: vi.fn()
     } as unknown as MockedObject<CoreMapService>;
     capSpy = {
       getCapabilitiesForUrl: vi
         .fn()
-        .mockName("CapabilitiesService.getCapabilitiesForUrl"),
+        .mockName("CapabilitiesService.getCapabilitiesForUrl")
+        .mockReturnValue(of({})),
       optionsFromCapabilities: vi
         .fn()
         .mockName("CapabilitiesService.optionsFromCapabilities")
     } as unknown as MockedObject<CoreWmsWmtsCapabilitiesService>;
-    capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
-
-    coreMapServiceSpy.getLayerChangedObservable.mockReturnValue(of());
-    coreMapServiceSpy.getMap.mockReturnValue({
-      addLayer: vi.fn(),
-      removeLayer: vi.fn()
-    } as unknown as OlMap);
 
     TestBed.configureTestingModule({
       providers: [
         GgcLayerService,
         provideHttpClient(withInterceptorsFromDi()),
-        { provide: GgcMapService, useValue: mapServiceMock },
+        // { provide: GgcMapService, useValue: mapServiceSpy },
         { provide: CoreWmsWmtsCapabilitiesService, useValue: capSpy },
         { provide: CoreMapService, useValue: coreMapServiceSpy }
       ]
     });
 
     service = TestBed.inject(GgcLayerService);
-    mapServiceSpy = TestBed.inject(
-      GgcMapService
-    ) as MockedObject<GgcMapService>;
-    (globalThis as any).createComponent = mockCreateComponent;
   });
 
   afterEach(() => {
@@ -148,25 +130,28 @@ describe("LayerService", () => {
       removeLayer: vi.fn()
     };
 
-    mapServiceSpy.getLayer.mockReturnValue(mockLayer as any);
-    mapServiceSpy.getMap.mockReturnValue(mockMap as any);
+    coreMapServiceSpy.getLayer.mockReturnValue(mockLayer as any);
+    coreMapServiceSpy.getMap.mockReturnValue(mockMap as any);
 
     service.removeLayer("testMap", "testLayer");
 
-    expect(mapServiceSpy.getLayer).toHaveBeenCalledWith("testLayer", "testMap");
+    expect(coreMapServiceSpy.getLayer).toHaveBeenCalledWith(
+      "testLayer",
+      "testMap"
+    );
     expect(mockMap.removeLayer).toHaveBeenCalledWith(mockLayer);
   });
 
   it("should not remove a layer if it does not exist", () => {
-    mapServiceSpy.getLayer.mockReturnValue(undefined);
+    coreMapServiceSpy.getLayer.mockReturnValue(undefined);
 
     service.removeLayer("testMap", "nonexistentLayer");
 
-    expect(mapServiceSpy.getLayer).toHaveBeenCalledWith(
+    expect(coreMapServiceSpy.getLayer).toHaveBeenCalledWith(
       "nonexistentLayer",
       "testMap"
     );
-    expect(mapServiceSpy.getMap).not.toHaveBeenCalled();
+    expect(coreMapServiceSpy.getMap).not.toHaveBeenCalled();
   });
 
   it("should return all active legends", () => {

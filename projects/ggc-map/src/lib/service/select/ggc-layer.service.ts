@@ -14,7 +14,6 @@ import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { WmtsLayerOptions } from "../../layer/model/wmts-layer.model";
 import { GgcWmtsLayerComponent } from "../../layer/wmts-layer/ggc-wmts-layer.component";
 import { GgcWmsLayerComponent } from "../../layer/wms-layer/ggc-wms-layer.component";
-import { GgcMapService } from "../../map/service/ggc-map.service";
 import { AbstractConfigurableLayerOptions } from "../../layer/model/abstract-layer.model";
 import { GgcLayerBrtAchtergrondkaartComponent } from "../../layer/layer-brt-achtergrondkaart/ggc-layer-brt-achtergrondkaart.component";
 import { Webservice } from "../../layer/model/webservice.model";
