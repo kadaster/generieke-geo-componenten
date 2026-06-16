@@ -13,10 +13,7 @@ import { provideZoneChangeDetection } from "@angular/core";
 
 describe("GgcOgcApiCapabilitiesService", () => {
   let service: GgcOgcApiCapabilitiesService;
-  let coreMock: Pick<
-    MockedObject<CoreOgcApiCapabilitiesService>,
-    "getLandingPageInfo" | "getStyles" | "getTiles"
-  >;
+  let coreMock: MockedObject<CoreOgcApiCapabilitiesService>;
 
   const BASE_URL = "https://example.org/ogcapi";
 
@@ -27,7 +24,7 @@ describe("GgcOgcApiCapabilitiesService", () => {
         .mockName("CoreOgcApiCapabilitiesService.getLandingPageInfo"),
       getStyles: vi.fn().mockName("CoreOgcApiCapabilitiesService.getStyles"),
       getTiles: vi.fn().mockName("CoreOgcApiCapabilitiesService.getTiles")
-    };
+    } as MockedObject<CoreOgcApiCapabilitiesService>;
 
     TestBed.configureTestingModule({
       providers: [

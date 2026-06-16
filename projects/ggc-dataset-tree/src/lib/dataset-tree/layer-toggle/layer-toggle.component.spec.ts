@@ -15,20 +15,8 @@ import { createFakeMapEvent } from "../../../../../../src/test/mocks/ggc/mock-gg
 describe("LayerToggleComponent", () => {
   let component: LayerToggleComponent;
   let fixture: ComponentFixture<LayerToggleComponent>;
-  let datasetTreeMapConnectServiceSpy: Pick<
-    MockedObject<DatasetTreeMapConnectService>,
-    | "isVisible"
-    | "getTitle"
-    | "getEnabled"
-    | "toggleVisibility"
-    | "getZoomendObservableForMap"
-    | "getLayerChangedObservable"
-    | "getTriggerObservable"
-  >;
-  let coreDatasetTreeServiceSpy: Pick<
-    MockedObject<CoreDatasetTreeService>,
-    "emitDatasetTreeEvent"
-  >;
+  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
+  let coreDatasetTreeServiceSpy: MockedObject<CoreDatasetTreeService>;
 
   let layerChanged$: Subject<LayerChangedEvent>;
   let zoomend$: Subject<MapEvent>;
@@ -56,12 +44,12 @@ describe("LayerToggleComponent", () => {
         .fn()
         .mockName("DatasetTreeMapConnectService.getTriggerObservable")
         .mockReturnValue(EMPTY)
-    };
+    } as MockedObject<DatasetTreeMapConnectService>;
     coreDatasetTreeServiceSpy = {
       emitDatasetTreeEvent: vi
         .fn()
         .mockName("CoreDatasettreeService.emitDatasetTreeEvent")
-    };
+    } as MockedObject<CoreDatasetTreeService>;
 
     await TestBed.configureTestingModule({
       providers: [

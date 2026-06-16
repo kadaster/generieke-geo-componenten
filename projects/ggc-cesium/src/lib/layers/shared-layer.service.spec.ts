@@ -15,30 +15,9 @@ import { vi } from "vitest";
 describe("SharedLayerService", () => {
   let service: GgcSharedLayerService;
 
-  let geoJsonServiceSpy: Pick<
-    MockedObject<GeoJsonLayerService>,
-    | "addLayer"
-    | "removeLayer"
-    | "isVisible"
-    | "getEnabled"
-    | "getLayerChangedObservable"
-  >;
-  let tiles3dServiceSpy: Pick<
-    MockedObject<Tiles3dLayerService>,
-    | "addLayer"
-    | "removeLayer"
-    | "isVisible"
-    | "getEnabled"
-    | "getLayerChangedObservable"
-  >;
-  let wmtsServiceSpy: Pick<
-    MockedObject<WmtsLayerService>,
-    | "addLayer"
-    | "removeLayer"
-    | "isVisible"
-    | "getEnabled"
-    | "getLayerChangedObservable"
-  >;
+  let geoJsonServiceSpy: MockedObject<GeoJsonLayerService>;
+  let tiles3dServiceSpy: MockedObject<Tiles3dLayerService>;
+  let wmtsServiceSpy: MockedObject<WmtsLayerService>;
 
   beforeEach(() => {
     geoJsonServiceSpy = {
@@ -49,7 +28,7 @@ describe("SharedLayerService", () => {
       getLayerChangedObservable: vi
         .fn()
         .mockName("GeoJsonLayerService.getLayerChangedObservable")
-    };
+    } as MockedObject<GeoJsonLayerService>;
     tiles3dServiceSpy = {
       addLayer: vi.fn().mockName("Tiles3dLayerService.addLayer"),
       removeLayer: vi.fn().mockName("Tiles3dLayerService.removeLayer"),
@@ -58,7 +37,7 @@ describe("SharedLayerService", () => {
       getLayerChangedObservable: vi
         .fn()
         .mockName("Tiles3dLayerService.getLayerChangedObservable")
-    };
+    } as MockedObject<Tiles3dLayerService>;
     wmtsServiceSpy = {
       addLayer: vi.fn().mockName("WmtsLayerService.addLayer"),
       removeLayer: vi.fn().mockName("WmtsLayerService.removeLayer"),
@@ -67,7 +46,7 @@ describe("SharedLayerService", () => {
       getLayerChangedObservable: vi
         .fn()
         .mockName("WmtsLayerService.getLayerChangedObservable")
-    };
+    } as MockedObject<WmtsLayerService>;
 
     geoJsonServiceSpy.getLayerChangedObservable.mockReturnValue(
       new Subject<CesiumLayerChangedEvent>()

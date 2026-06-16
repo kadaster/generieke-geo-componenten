@@ -16,27 +16,21 @@ describe("ToolbarItemDrawComponent", () => {
   let fixture: ComponentFixture<GgcToolbarItemDrawComponent>;
   let debugElement: DebugElement;
 
-  let drawServiceSpy: Pick<
-    MockedObject<GgcDrawService>,
-    "startDraw" | "stopDraw" | "clearLayer"
-  >;
-  let connectServiceSpy: Pick<
-    MockedObject<GgcToolbarConnectService>,
-    "getDrawService"
-  >;
+  let drawServiceSpy: MockedObject<GgcDrawService>;
+  let connectServiceSpy: MockedObject<GgcToolbarConnectService>;
 
   beforeEach(async () => {
     drawServiceSpy = {
       startDraw: vi.fn().mockName("GgcDrawService.startDraw"),
       stopDraw: vi.fn().mockName("GgcDrawService.stopDraw"),
       clearLayer: vi.fn().mockName("GgcDrawService.clearLayer")
-    };
+    } as MockedObject<GgcDrawService>;
 
     connectServiceSpy = {
       getDrawService: vi
         .fn()
         .mockName("GgcToolbarConnectService.getDrawService")
-    };
+    } as MockedObject<GgcToolbarConnectService>;
 
     connectServiceSpy.getDrawService.mockResolvedValue(drawServiceSpy);
 

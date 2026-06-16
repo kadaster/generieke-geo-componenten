@@ -29,10 +29,7 @@ describe("ViewerComponent", () => {
   let component: GgcViewerComponent;
   let fixture: ComponentFixture<GgcViewerComponent>;
   let cesiumMock: Partial<Viewer>;
-  let coreSelectionServiceSpy: Pick<
-    MockedObject<CoreSelectionService>,
-    "initializeSelections" | "destroyAllSelections" | "getClickEventsObservable"
-  >;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let viewerService: GgcViewerService;
 
   beforeEach(async () => {
@@ -46,7 +43,7 @@ describe("ViewerComponent", () => {
       getClickEventsObservable: vi
         .fn()
         .mockName("CoreSelectionService.getClickEventsObservable")
-    };
+    } as MockedObject<CoreSelectionService>;
     const cameraSpy = {
       setCameraValues: vi.fn().mockName("CoreCameraService.setCameraValues")
     };

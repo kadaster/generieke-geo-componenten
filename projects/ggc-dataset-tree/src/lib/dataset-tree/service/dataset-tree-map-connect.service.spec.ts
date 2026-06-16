@@ -12,12 +12,7 @@ describe("DatasetTreeMapConnectService", () => {
   let mockMapLayerService: any;
   let mockMapEventsService: any;
 
-  let mockConnectService: Pick<
-    MockedObject<GgcDatasetTreeConnectService>,
-    | "getGgcCesiumSharedLayerService"
-    | "getGgcOLLayerService"
-    | "getGgcOLMapEventsService"
-  >;
+  let mockConnectService: MockedObject<GgcDatasetTreeConnectService>;
 
   beforeEach(async () => {
     mockCesiumLayerService = {
@@ -56,7 +51,7 @@ describe("DatasetTreeMapConnectService", () => {
       getGgcOLMapEventsService: vi
         .fn()
         .mockName("GgcDatasetTreeConnectService.getGgcOLMapEventsService")
-    };
+    } as MockedObject<GgcDatasetTreeConnectService>;
 
     await TestBed.configureTestingModule({
       providers: [

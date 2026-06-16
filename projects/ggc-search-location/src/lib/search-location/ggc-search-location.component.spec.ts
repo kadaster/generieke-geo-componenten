@@ -15,23 +15,9 @@ describe("GgcSearchLocationComponent", () => {
   let component: GgcSearchLocationComponent;
   let fixture: ComponentFixture<GgcSearchLocationComponent>;
 
-  let pdokServiceSpy: Pick<
-    MockedObject<PdokLocationApiService>,
-    | "setMinQueryLength"
-    | "setNumberOfSuggestions"
-    | "searchOnTermChange"
-    | "item"
-  >;
-  let locationServiceSpy: Pick<
-    MockedObject<GgcSearchLocationService>,
-    | "getLocationEventsObservable"
-    | "getGeolocationPositionErrorSubject"
-    | "getLocation"
-  >;
-  let connectServiceSpy: Pick<
-    MockedObject<GgcSearchLocationConnectService>,
-    "getMapService"
-  >;
+  let pdokServiceSpy: MockedObject<PdokLocationApiService>;
+  let locationServiceSpy: MockedObject<GgcSearchLocationService>;
+  let connectServiceSpy: MockedObject<GgcSearchLocationConnectService>;
   let mapServiceMock: any;
 
   const mockFeature = {
@@ -52,7 +38,7 @@ describe("GgcSearchLocationComponent", () => {
         .fn()
         .mockName("PdokLocationApiService.searchOnTermChange"),
       item: vi.fn().mockName("PdokLocationApiService.item")
-    };
+    } as MockedObject<PdokLocationApiService>;
     locationServiceSpy = {
       getLocationEventsObservable: vi
         .fn()
@@ -63,12 +49,12 @@ describe("GgcSearchLocationComponent", () => {
           "GgcSearchLocationService.getGeolocationPositionErrorSubject"
         ),
       getLocation: vi.fn().mockName("GgcSearchLocationService.getLocation")
-    };
+    } as MockedObject<GgcSearchLocationService>;
     connectServiceSpy = {
       getMapService: vi
         .fn()
         .mockName("GgcSearchLocationConnectService.getMapService")
-    };
+    } as MockedObject<GgcSearchLocationConnectService>;
     mapServiceMock = {
       zoomToGeometryWithZoomOptions: vi
         .fn()

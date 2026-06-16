@@ -15,10 +15,7 @@ describe("GgcSearchLocationService", () => {
   });
 
   let service: GgcSearchLocationService;
-  let connectServiceSpy: Pick<
-    MockedObject<GgcSearchLocationConnectService>,
-    "getMapService"
-  >;
+  let connectServiceSpy: MockedObject<GgcSearchLocationConnectService>;
   let mapServiceMock: any;
 
   const mockCoords = {
@@ -35,7 +32,7 @@ describe("GgcSearchLocationService", () => {
       getMapService: vi
         .fn()
         .mockName("GgcSearchLocationConnectService.getMapService")
-    };
+    } as MockedObject<GgcSearchLocationConnectService>;
 
     connectServiceSpy.getMapService.mockReturnValue(mapServiceMock);
 

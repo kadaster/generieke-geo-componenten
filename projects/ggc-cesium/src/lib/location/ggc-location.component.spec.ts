@@ -8,17 +8,14 @@ import { vi } from "vitest";
 describe("LocationComponent", () => {
   let component: GgcLocationComponent;
   let fixture: ComponentFixture<GgcLocationComponent>;
-  let locationServiceSpy: Pick<
-    MockedObject<GgcLocationService>,
-    "zoomToCurrentLocation"
-  >;
+  let locationServiceSpy: MockedObject<GgcLocationService>;
 
   beforeEach(async () => {
     locationServiceSpy = {
       zoomToCurrentLocation: vi
         .fn()
         .mockName("LocationService.zoomToCurrentLocation")
-    };
+    } as MockedObject<GgcLocationService>;
     await TestBed.configureTestingModule({
       imports: [GgcLocationComponent],
       providers: [{ provide: GgcLocationService, useValue: locationServiceSpy }]

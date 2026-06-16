@@ -14,10 +14,7 @@ import { vi } from "vitest";
 describe("ControlsComponent", () => {
   let component: GgcControlsComponent;
   let fixture: ComponentFixture<GgcControlsComponent>;
-  let coreViewerServiceSpy: Pick<
-    MockedObject<CoreViewerService>,
-    "getViewerObservable" | "getViewer"
-  >;
+  let coreViewerServiceSpy: MockedObject<CoreViewerService>;
   let cesiumMock: Partial<Viewer>;
   const viewerSubject: Subject<Viewer> = new Subject<Viewer>();
 
@@ -27,7 +24,7 @@ describe("ControlsComponent", () => {
         .fn()
         .mockName("CoreViewerService.getViewerObservable"),
       getViewer: vi.fn().mockName("CoreViewerService.getViewer")
-    };
+    } as MockedObject<CoreViewerService>;
     await TestBed.configureTestingModule({
       imports: [GgcControlsComponent],
       providers: [

@@ -23,18 +23,9 @@ import { MapComponentEvent } from "@kadaster/ggc-models";
 describe("MapComponent(no-testbed), processEvent", () => {
   let mapComponent: GgcMapComponent;
   let fixture: ComponentFixture<GgcMapComponent>;
-  let coreMapServiceSpy: Pick<
-    MockedObject<CoreMapService>,
-    "getMap" | "getLayerChangedObservable" | "destroyMap"
-  >;
-  let coreDrawServiceSpy: Pick<
-    MockedObject<CoreDrawService>,
-    "addFeatureToLayer" | "deleteLayers"
-  >;
-  let coreLoadingServiceSpy: Pick<
-    MockedObject<CoreLoadingService>,
-    "addMapLoaders" | "destroyLoadersForMap"
-  >;
+  let coreMapServiceSpy: MockedObject<CoreMapService>;
+  let coreDrawServiceSpy: MockedObject<CoreDrawService>;
+  let coreLoadingServiceSpy: MockedObject<CoreLoadingService>;
   let mapEventsServiceSpy: MockedObject<CoreMapEventsService>;
   let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   const mapEventOne: ObjectEvent = {
@@ -52,17 +43,17 @@ describe("MapComponent(no-testbed), processEvent", () => {
       getMap: vi.fn(),
       getLayerChangedObservable: vi.fn().mockReturnValue(of()),
       destroyMap: vi.fn()
-    };
+    } as MockedObject<CoreMapService>;
 
     coreDrawServiceSpy = {
       addFeatureToLayer: vi.fn(),
       deleteLayers: vi.fn()
-    };
+    } as MockedObject<CoreDrawService>;
 
     coreLoadingServiceSpy = {
       addMapLoaders: vi.fn(),
       destroyLoadersForMap: vi.fn()
-    };
+    } as MockedObject<CoreLoadingService>;
 
     mapEventsServiceSpy = {
       emitSingleclickEventForMap: vi.fn(),

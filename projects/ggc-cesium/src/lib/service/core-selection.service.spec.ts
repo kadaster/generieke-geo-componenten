@@ -24,18 +24,9 @@ import { vi } from "vitest";
 
 describe("CoreSelectionService", () => {
   let service: CoreSelectionService;
-  let coreViewerServiceSpy: Pick<
-    MockedObject<CoreViewerService>,
-    "setViewer" | "getViewerObservable"
-  >;
-  let tiles3dLayerServiceSpy: Pick<
-    MockedObject<Tiles3dLayerService>,
-    "getLayerName"
-  >;
-  let geoJsonLayerServiceSpy: Pick<
-    MockedObject<GeoJsonLayerService>,
-    "getLayerName" | "getEntitiesFunction" | "getEntitiesHighlightFunction"
-  >;
+  let coreViewerServiceSpy: MockedObject<CoreViewerService>;
+  let tiles3dLayerServiceSpy: MockedObject<Tiles3dLayerService>;
+  let geoJsonLayerServiceSpy: MockedObject<GeoJsonLayerService>;
   let subject: Subject<Viewer | undefined>;
 
   beforeEach(() => {
@@ -44,11 +35,11 @@ describe("CoreSelectionService", () => {
       getViewerObservable: vi
         .fn()
         .mockName("CoreViewerService.getViewerObservable")
-    };
+    } as MockedObject<CoreViewerService>;
 
     tiles3dLayerServiceSpy = {
       getLayerName: vi.fn().mockName("Tiles3dLayerService.getLayerName")
-    };
+    } as MockedObject<Tiles3dLayerService>;
 
     geoJsonLayerServiceSpy = {
       getLayerName: vi.fn().mockName("GeoJsonLayerService.getLayerName"),
@@ -58,7 +49,7 @@ describe("CoreSelectionService", () => {
       getEntitiesHighlightFunction: vi
         .fn()
         .mockName("GeoJsonLayerService.getEntitiesHighlightFunction")
-    };
+    } as MockedObject<GeoJsonLayerService>;
     TestBed.configureTestingModule({
       providers: [
         CoreSelectionService,

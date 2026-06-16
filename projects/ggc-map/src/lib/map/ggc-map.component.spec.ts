@@ -27,8 +27,8 @@ describe("MapComponent, ngAfterViewInit", () => {
   const httpClientSpy = {
     get: vi.fn().mockName("HttpClient.get")
   };
-  let mapSpy: Pick<MockedObject<OlMap>, "setTarget" | "on" | "getView">;
-  let viewSpy: Pick<MockedObject<View>, "on" | "setZoom">;
+  let mapSpy: MockedObject<OlMap>;
+  let viewSpy: MockedObject<View>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -50,15 +50,15 @@ describe("MapComponent, ngAfterViewInit", () => {
     fixture = TestBed.createComponent(GgcMapComponent);
     coreMapService = TestBed.inject(CoreMapService);
     component = fixture.componentInstance;
-    viewSpy = {
-      on: vi.fn() as unknown as MockedObject<View>["on"],
-      setZoom: vi.fn()
-    };
     mapSpy = {
       setTarget: vi.fn(),
       on: vi.fn() as unknown as MockedObject<OlMap>["on"],
       getView: vi.fn().mockReturnValue(viewSpy)
-    };
+    } as MockedObject<OlMap>;
+    viewSpy = {
+      on: vi.fn() as unknown as MockedObject<View>["on"],
+      setZoom: vi.fn()
+    } as MockedObject<View>;
     vi.spyOn(coreMapService as any, "createAndGetMap").mockReturnValue(mapSpy);
   });
 

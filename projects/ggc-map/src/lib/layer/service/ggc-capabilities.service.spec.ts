@@ -12,14 +12,8 @@ import { provideZoneChangeDetection } from "@angular/core";
 describe("GgcCapabilitiesService", () => {
   let service: GgcCapabilitiesService;
 
-  let wmsWmtsSvcSpy: Pick<
-    MockedObject<GgcWmsWmtsCapabilitiesService>,
-    "getServiceCapabilitiesWMS" | "getServiceCapabilitiesWMTS"
-  >;
-  let ogcApiSvcSpy: Pick<
-    MockedObject<GgcOgcApiCapabilitiesService>,
-    "getServiceCapabilitiesOgcApi"
-  >;
+  let wmsWmtsSvcSpy: MockedObject<GgcWmsWmtsCapabilitiesService>;
+  let ogcApiSvcSpy: MockedObject<GgcOgcApiCapabilitiesService>;
 
   const baseUrl = "https://example.test/service";
 
@@ -31,13 +25,13 @@ describe("GgcCapabilitiesService", () => {
       getServiceCapabilitiesWMTS: vi
         .fn()
         .mockName("GgcWmsWmtsCapabilitiesService.getServiceCapabilitiesWMTS")
-    };
+    } as MockedObject<GgcWmsWmtsCapabilitiesService>;
 
     ogcApiSvcSpy = {
       getServiceCapabilitiesOgcApi: vi
         .fn()
         .mockName("GgcOgcApiCapabilitiesService.getServiceCapabilitiesOgcApi")
-    };
+    } as MockedObject<GgcOgcApiCapabilitiesService>;
 
     TestBed.configureTestingModule({
       providers: [

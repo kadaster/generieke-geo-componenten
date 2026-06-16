@@ -9,7 +9,7 @@ import { cameraUtils } from "../utils/camera-utils";
 import { vi } from "vitest";
 describe("GgcLocationService", () => {
   let service: GgcLocationService;
-  let coreViewerServiceMock: Pick<MockedObject<CoreViewerService>, "getViewer">;
+  let coreViewerServiceMock: MockedObject<CoreViewerService>;
   let locationServiceMock: any;
   let cesiumMock: Partial<Viewer>;
 
@@ -24,7 +24,7 @@ describe("GgcLocationService", () => {
 
     coreViewerServiceMock = {
       getViewer: vi.fn().mockName("CoreViewerService.getViewer")
-    };
+    } as MockedObject<CoreViewerService>;
     cesiumMock = createCesiumMock();
 
     vi.spyOn(cameraUtils, "flyToLookAtPosition");

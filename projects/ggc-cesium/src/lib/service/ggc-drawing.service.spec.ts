@@ -21,14 +21,8 @@ import { vi } from "vitest";
 
 describe("GgcDrawingService", () => {
   let service: GgcDrawingService;
-  let coreViewerServiceSpy: Pick<
-    MockedObject<CoreViewerService>,
-    "setViewer" | "getViewerObservable"
-  >;
-  let coreSelectionServiceSpy: Pick<
-    MockedObject<CoreSelectionService>,
-    "destroySelection" | "getSelection" | "addSelection"
-  >;
+  let coreViewerServiceSpy: MockedObject<CoreViewerService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let subject: Subject<Viewer | undefined>;
   let cesiumMock: Viewer;
 
@@ -38,14 +32,14 @@ describe("GgcDrawingService", () => {
       getViewerObservable: vi
         .fn()
         .mockName("CoreViewerService.getViewerObservable")
-    };
+    } as MockedObject<CoreViewerService>;
     coreSelectionServiceSpy = {
       destroySelection: vi
         .fn()
         .mockName("CoreSelectionService.destroySelection"),
       getSelection: vi.fn().mockName("CoreSelectionService.getSelection"),
       addSelection: vi.fn().mockName("CoreSelectionService.addSelection")
-    };
+    } as MockedObject<CoreSelectionService>;
 
     TestBed.configureTestingModule({
       providers: [

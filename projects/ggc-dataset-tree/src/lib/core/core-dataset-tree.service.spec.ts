@@ -19,10 +19,7 @@ import { ViewerType } from "@kadaster/ggc-models";
 describe("DatasetTreeService", () => {
   let service: CoreDatasetTreeService;
 
-  let datasetTreeMapConnectServiceSpy: Pick<
-    MockedObject<DatasetTreeMapConnectService>,
-    "isVisible"
-  >;
+  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [CoreDatasetTreeService, GgcDatasetTreeModelCreateService]
@@ -30,7 +27,7 @@ describe("DatasetTreeService", () => {
 
     datasetTreeMapConnectServiceSpy = {
       isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible")
-    };
+    } as MockedObject<DatasetTreeMapConnectService>;
 
     TestBed.configureTestingModule({
       providers: [
