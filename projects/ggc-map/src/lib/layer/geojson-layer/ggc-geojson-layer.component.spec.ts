@@ -30,6 +30,7 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import VectorTileLayer from "ol/layer/VectorTile";
 
 describe("GeojsonLayerComponent", () => {
   let component: GgcGeojsonLayerComponent;
@@ -63,27 +64,36 @@ describe("GeojsonLayerComponent", () => {
     debugElement = fixture.debugElement;
   });
 
-  const addLayerMock = {
-    addLayer(layer) {
-      resultLayer = layer as VectorLayer<VectorSource<Feature<Geometry>>>;
-    },
-    removeLayer(_layer) {
-      return;
-    }
-  } as OlMap;
+  // const addLayerMock = {
+  //   addLayer(layer) {
+  //     resultLayer = layer as VectorLayer<VectorSource<Feature<Geometry>>>;
+  //   },
+  //   removeLayer(_layer) {
+  //     return;
+  //   }
+  // } as OlMap;
 
-  const createMapSpy = () => {
-    // create ol.Map mock
-    const mapSpy = {
-      forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
-      removeLayer: vi.fn().mockName("ol.Map.removeLayer")
-    } as Pick<MockedObject<OlMap>, "forEachFeatureAtPixel" | "removeLayer">;
-    mapSpy.forEachFeatureAtPixel;
-    mapSpy.removeLayer.mockImplementation((() => {
-      /* empty */
-    }) as any);
-    return mapSpy;
-  };
+  // const createMapSpy = () => {
+  //   // create ol.Map mock
+  //   const mapSpy = {
+  //     forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
+  //     removeLayer: vi.fn().mockName("ol.Map.removeLayer")
+  //   } as Pick<MockedObject<OlMap>, "forEachFeatureAtPixel" | "removeLayer">;
+  //   mapSpy.forEachFeatureAtPixel;
+  //   mapSpy.removeLayer.mockImplementation((() => {
+  //     /* empty */
+  //   }) as any);
+  //   return mapSpy;
+  // };
+
+  const createMapSpy = () =>
+    ({
+      addLayer: vi.fn().mockImplementation((layer) => {
+        resultLayer = layer as VectorLayer<VectorSource<Feature<Geometry>>>;
+      }),
+      removeLayer: vi.fn(),
+      forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel")
+    }) as unknown as MockedObject<OlMap>;
 
   it("should create", () => {
     expect(component).toBeTruthy();
@@ -95,7 +105,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
 
     component.options = {
       sourceOptions: {
@@ -122,7 +132,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
 
     component.options = {
       sourceOptions: {},
@@ -153,7 +163,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
 
     component.options = {
       sourceOptions: {
@@ -172,7 +182,7 @@ describe("GeojsonLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
 
     component.options = {
       sourceOptions: {
@@ -191,7 +201,7 @@ describe("GeojsonLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
 
     component.options = {
       layerOptions: {
@@ -218,7 +228,7 @@ describe("GeojsonLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
 
     component.options = {
       layerOptions: {
@@ -255,7 +265,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.getMinResolution()).toBe(100);
@@ -272,7 +282,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.getMaxResolution()).toBe(861);
@@ -289,7 +299,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.getZIndex()).toBe(123);
@@ -306,7 +316,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     // NOTE: jasmine 3.5.0 introduces toBeInstanceOf()
@@ -325,7 +335,7 @@ describe("GeojsonLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(addLayerMock);
+      .mockReturnValue(createMapSpy());
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
     expect(resultLayer.get("ggc-layer-id")).toBe("testLayer");

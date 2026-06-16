@@ -67,28 +67,14 @@ describe("VectorTileLayerComponent", () => {
 
   afterEach(() => vi.useRealTimers());
 
-  const olMapMock = {
-    addLayer(layer) {
-      resultLayer = layer as VectorTileLayer;
-    },
-    removeLayer(_layer) {
-      void _layer;
-      return;
-    }
-  } as OlMap;
-
-  const createMapSpy = () => {
-    // create ol.Map mock
-    const mapSpy = {
-      forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
-      removeLayer: vi.fn().mockName("ol.Map.removeLayer")
-    } as Pick<MockedObject<OlMap>, "forEachFeatureAtPixel" | "removeLayer">;
-    mapSpy.forEachFeatureAtPixel;
-    mapSpy.removeLayer.mockImplementation((() => {
-      /* empty */
-    }) as any);
-    return mapSpy;
-  };
+  const createOlMapMock = () =>
+    ({
+      addLayer: vi.fn().mockImplementation((layer) => {
+        resultLayer = layer as VectorTileLayer;
+      }),
+      removeLayer: vi.fn(),
+      forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel")
+    }) as unknown as MockedObject<OlMap>;
 
   it("when attributions is provided for a layer, it should be contained in the source", async () => {
     const coreMapService: CoreMapService =
@@ -96,7 +82,7 @@ describe("VectorTileLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(olMapMock);
+      .mockReturnValue(createOlMapMock());
 
     component.options = {
       sourceOptions: {
@@ -123,7 +109,7 @@ describe("VectorTileLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(olMapMock);
+      .mockReturnValue(createOlMapMock());
 
     component.options = {
       sourceOptions: {
@@ -143,7 +129,7 @@ describe("VectorTileLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(olMapMock);
+      .mockReturnValue(createOlMapMock());
 
     component.options = { minResolution: 10, maxResolution: 20 };
 
@@ -160,7 +146,7 @@ describe("VectorTileLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(olMapMock);
+      .mockReturnValue(createOlMapMock());
 
     component.options = {
       layerOptions: {
@@ -188,7 +174,7 @@ describe("VectorTileLayerComponent", () => {
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(olMapMock);
+      .mockReturnValue(createOlMapMock());
 
     component.options = {
       layerOptions: {
@@ -228,7 +214,7 @@ describe("VectorTileLayerComponent", () => {
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
-      .mockReturnValue(olMapMock);
+      .mockReturnValue(createOlMapMock());
     component.ngOnInit();
     await vi.runAllTimersAsync();
     expect(getMapSpy).toHaveBeenCalled();
@@ -275,7 +261,7 @@ describe("VectorTileLayerComponent", () => {
       getFeatureInfoOnSingleclick: true
     };
     component.ngOnInit();
-    const mapSpy = createMapSpy();
+    const mapSpy = createOlMapMock();
     component["map"] = mapSpy as unknown as OlMap;
 
     const eventSpy = vi.spyOn(component.events, "emit");
@@ -308,7 +294,7 @@ describe("VectorTileLayerComponent", () => {
       getFeatureInfoOnSingleclick: false,
       hitTolerance: 5
     };
-    const mapSpy = createMapSpy();
+    const mapSpy = createOlMapMock();
     component["map"] = mapSpy as unknown as OlMap;
 
     const pixel: Pixel = [123, 456];
