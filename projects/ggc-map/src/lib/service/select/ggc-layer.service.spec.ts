@@ -131,7 +131,9 @@ describe("LayerService", () => {
   });
 
   it("should remove a layer", () => {
-    const mockLayer = {};
+    const mockLayer = {
+      get: jasmine.createSpy("get").and.returnValue(undefined)
+    };
     const mockMap = {
       removeLayer: jasmine.createSpy()
     };
