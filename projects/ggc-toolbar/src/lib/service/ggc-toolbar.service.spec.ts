@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Injector } from "@angular/core";
 import { GgcToolbarConnectService } from "./connect.service";
@@ -5,10 +6,12 @@ import { GgcToolbarService } from "./ggc-toolbar.service";
 
 describe("GgcToolbarService", () => {
   let service: GgcToolbarService;
-  let injectorSpy: jasmine.SpyObj<Injector>;
+  let injectorSpy: MockedObject<Injector>;
 
   beforeEach(() => {
-    injectorSpy = jasmine.createSpyObj("Injector", ["get"]);
+    injectorSpy = {
+      get: vi.fn().mockName("Injector.get")
+    };
 
     TestBed.configureTestingModule({
       providers: [

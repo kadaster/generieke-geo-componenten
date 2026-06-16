@@ -21,11 +21,11 @@ import {
 describe("center-coordinate-utils", () => {
   describe("coordinatesAreEqual", () => {
     it("returns true within margin", () => {
-      expect(coordinatesAreEqual([1, 1], [1 + 1e-10, 1])).toBeTrue();
+      expect(coordinatesAreEqual([1, 1], [1 + 1e-10, 1])).toBe(true);
     });
 
     it("returns false outside margin", () => {
-      expect(coordinatesAreEqual([1, 1], [1.1, 1])).toBeFalse();
+      expect(coordinatesAreEqual([1, 1], [1.1, 1])).toBe(false);
     });
   });
 
@@ -122,11 +122,11 @@ describe("center-coordinate-utils", () => {
 
   describe("coordinateIsOnSegment", () => {
     it("is true for on-segment non-vertex", () => {
-      expect(coordinateIsOnSegment([0, 0], [10, 0], [5, 0])).toBeTrue();
+      expect(coordinateIsOnSegment([0, 0], [10, 0], [5, 0])).toBe(true);
     });
 
     it("is false for vertex", () => {
-      expect(coordinateIsOnSegment([0, 0], [10, 0], [0, 0])).toBeFalse();
+      expect(coordinateIsOnSegment([0, 0], [10, 0], [0, 0])).toBe(false);
     });
   });
 
@@ -143,7 +143,7 @@ describe("center-coordinate-utils", () => {
           ]
         ])
       );
-      expect(intersectsCoordinate(poly, [5, 5])).toBeTrue();
+      expect(intersectsCoordinate(poly, [5, 5])).toBe(true);
     });
 
     it("false for point outside polygon", () => {
@@ -158,7 +158,7 @@ describe("center-coordinate-utils", () => {
           ]
         ])
       );
-      expect(intersectsCoordinate(poly, [20, 20])).toBeFalse();
+      expect(intersectsCoordinate(poly, [20, 20])).toBe(false);
     });
 
     it("lineString always false", () => {
@@ -168,7 +168,7 @@ describe("center-coordinate-utils", () => {
           [10, 0]
         ])
       );
-      expect(intersectsCoordinate(line, [5, 0])).toBeFalse();
+      expect(intersectsCoordinate(line, [5, 0])).toBe(false);
     });
   });
 

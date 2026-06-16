@@ -25,13 +25,13 @@ export class AbstractBaseLayerComponent<T extends Layer>
 
   ngOnInit(): void {
     this.rdNewConfig = this.crsConfig.getRdNewCrsConfig();
-    if (!this.options) {
+    if (this.options) {
+      this.options.layerId ??= this.generateLayerId();
+    } else {
       this.options = {
         mapIndex: this.mapIndex,
         layerId: this.generateLayerId()
       };
-    } else if (this.options.layerId == undefined) {
-      this.options.layerId = this.generateLayerId();
     }
     if (this.options.mapIndex !== undefined) {
       this.mapIndex = this.options.mapIndex;
@@ -43,6 +43,14 @@ export class AbstractBaseLayerComponent<T extends Layer>
     if (this.map !== undefined && this.olLayer !== undefined) {
       this.map.removeLayer(this.olLayer);
     }
+  }
+
+  disable() {
+    this.ngOnDestroy();
+  }
+
+  enable() {
+    // placeholder
   }
 
   public getLayerId(): string {

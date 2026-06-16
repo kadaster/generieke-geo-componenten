@@ -25,8 +25,8 @@ export class Example3dBasicComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-basic",
-    title: "3D Kaart tonen",
-    introduction: "Toon een 3D kaart basic voorbeeld.",
+    title: "Kaartlaag toevoegen: OGC API 3D Tiles",
+    introduction: "Voeg een 3D laag toe aan de kaart met OGC API 3D Tiles.",
     components: [Components.GGC_3D],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],

@@ -14,6 +14,7 @@ import Draw, {
 import { unByKey } from "ol/Observable";
 import { Observable, Subject } from "rxjs";
 import {
+  MapComponentEvent,
   ObservableMapWrapper,
   MapComponentDrawTypes
 } from "@kadaster/ggc-models";
@@ -24,7 +25,6 @@ import {
   DrawInteractionEventTypes,
   StyleLikeMap
 } from "../../model/draw-interaction-event.model";
-import { MapComponentEvent } from "../../model/map-component-event.model";
 import { DrawOptions } from "../../model/draw-options";
 import {
   ModifyInteractionEvent,

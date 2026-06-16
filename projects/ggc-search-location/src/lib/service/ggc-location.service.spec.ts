@@ -1,11 +1,21 @@
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { Mock, MockedObject, vi } from "vitest";
+import { TestBed } from "@angular/core/testing";
 import { GgcSearchLocationService } from "./ggc-location.service";
 import { GgcSearchLocationConnectService } from "./connect.service";
 import { take } from "rxjs/operators";
 
 describe("GgcSearchLocationService", () => {
+  Object.defineProperty(globalThis.navigator, "geolocation", {
+    value: {
+      getCurrentPosition: vi.fn(),
+      clearWatch: vi.fn(),
+      watchPosition: vi.fn()
+    },
+    configurable: true
+  });
+
   let service: GgcSearchLocationService;
-  let connectServiceSpy: jasmine.SpyObj<GgcSearchLocationConnectService>;
+  let connectServiceSpy: MockedObject<GgcSearchLocationConnectService>;
   let mapServiceMock: any;
 
   const mockCoords = {
@@ -14,16 +24,17 @@ describe("GgcSearchLocationService", () => {
   };
 
   beforeEach(() => {
-    mapServiceMock = jasmine.createSpyObj("GgcMapService", [
-      "getMap",
-      "getExtraLayer"
-    ]);
-    connectServiceSpy = jasmine.createSpyObj(
-      "GgcSearchLocationConnectService",
-      ["loadMapService", "getMapService"]
-    );
+    mapServiceMock = {
+      getMap: vi.fn().mockName("GgcMapService.getMap"),
+      getExtraLayer: vi.fn().mockName("GgcMapService.getExtraLayer")
+    };
+    connectServiceSpy = {
+      getMapService: vi
+        .fn()
+        .mockName("GgcSearchLocationConnectService.getMapService")
+    } as MockedObject<GgcSearchLocationConnectService>;
 
-    connectServiceSpy.getMapService.and.returnValue(mapServiceMock);
+    connectServiceSpy.getMapService.mockReturnValue(mapServiceMock);
 
     TestBed.configureTestingModule({
       providers: [
@@ -44,7 +55,7 @@ describe("GgcSearchLocationService", () => {
 
   describe("getLocation", () => {
     beforeEach(() => {
-      spyOn(navigator.geolocation, "getCurrentPosition").and.callFake(
+      vi.spyOn(navigator.geolocation, "getCurrentPosition").mockImplementation(
         (success) => {
           success({
             coords: mockCoords,
@@ -53,22 +64,28 @@ describe("GgcSearchLocationService", () => {
         }
       );
 
-      spyOn(navigator.geolocation, "watchPosition").and.callFake((success) => {
-        success({
-          coords: mockCoords,
-          timestamp: Date.now()
-        } as GeolocationPosition);
-        return 123;
-      });
+      vi.spyOn(navigator.geolocation, "watchPosition").mockImplementation(
+        (success) => {
+          success({
+            coords: mockCoords,
+            timestamp: Date.now()
+          } as GeolocationPosition);
+          return 123;
+        }
+      );
 
-      spyOn(navigator.geolocation, "clearWatch").and.stub();
+      vi.spyOn(navigator.geolocation, "clearWatch").mockImplementation(() => {
+        /* empty */
+      });
     });
 
-    it("moet de huidige locatie ophalen (track: false)", fakeAsync(() => {
+    it("moet de huidige locatie ophalen (track: false)", async () => {
       const mapMock = {};
-      const layerMock = jasmine.createSpyObj("VectorLayer", ["setStyle"]);
-      mapServiceMock.getMap.and.returnValue(mapMock);
-      mapServiceMock.getExtraLayer.and.returnValue(layerMock);
+      const layerMock = {
+        setStyle: vi.fn().mockName("VectorLayer.setStyle")
+      };
+      mapServiceMock.getMap.mockReturnValue(mapMock);
+      mapServiceMock.getExtraLayer.mockReturnValue(layerMock);
 
       let result: Array<number> | undefined;
       service
@@ -76,35 +93,33 @@ describe("GgcSearchLocationService", () => {
         .pipe(take(1))
         .subscribe((c) => (result = c));
 
-      service.getLocation(false);
-      tick();
+      await service.getLocation(false);
 
       expect(navigator.geolocation.getCurrentPosition).toHaveBeenCalled();
       expect(result).toBeDefined();
       // Controleer of RD coördinaten kloppen na transformatie van Utrecht LonLat
       expect(result![0]).toBeGreaterThan(100000);
-    }));
+    });
 
-    it("moet tracking starten (track: true)", fakeAsync(() => {
+    it("moet tracking starten (track: true)", async () => {
       const mapMock = {};
-      mapServiceMock.getMap.and.returnValue(mapMock);
+      mapServiceMock.getMap.mockReturnValue(mapMock);
 
-      service.getLocation(true, "default");
-      tick();
+      await service.getLocation(true, "default");
 
       expect(navigator.geolocation.watchPosition).toHaveBeenCalled();
-      expect(service["geolocations"].has("default")).toBeTrue();
-    }));
+      expect(service["geolocations"].has("default")).toBe(true);
+    });
 
-    it("moet een foutmelding sturen via de Subject bij een geolocatie fout", fakeAsync(() => {
+    it("moet een foutmelding sturen via de Subject bij een geolocatie fout", async () => {
       const errorMock = { code: 1, message: "User denied Geolocation" };
-      (navigator.geolocation.getCurrentPosition as jasmine.Spy).and.callFake(
+      (navigator.geolocation.getCurrentPosition as Mock).mockImplementation(
         (success, error) => {
           error(errorMock);
         }
       );
 
-      mapServiceMock.getMap.and.returnValue({});
+      mapServiceMock.getMap.mockReturnValue({});
 
       let errorResult: any;
       service
@@ -112,22 +127,21 @@ describe("GgcSearchLocationService", () => {
         .pipe(take(1))
         .subscribe((e) => (errorResult = e));
 
-      service.getLocation(false);
-      tick();
+      await service.getLocation(false);
 
       expect(errorResult).toEqual(errorMock);
-    }));
+    });
   });
 
   describe("stopTrackLocation", () => {
     it("moet de watch stoppen en de administratie opschonen", () => {
-      const clearWatchSpy = spyOn(navigator.geolocation, "clearWatch");
+      const clearWatchSpy = vi.spyOn(navigator.geolocation, "clearWatch");
       service["geolocations"].set("default", 123);
 
       service.stopTrackLocation("default");
 
       expect(clearWatchSpy).toHaveBeenCalledWith(123);
-      expect(service["geolocations"].has("default")).toBeFalse();
+      expect(service["geolocations"].has("default")).toBe(false);
     });
   });
 });

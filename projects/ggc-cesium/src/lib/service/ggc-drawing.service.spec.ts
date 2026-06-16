@@ -1,3 +1,4 @@
+import { expect, Mock, MockedObject } from "vitest";
 import { CoreViewerService } from "./core-viewer.service";
 import { Subject } from "rxjs";
 import { Viewer } from "@cesium/widgets";
@@ -12,30 +13,33 @@ import {
   ScreenSpaceEventType,
   VerticalOrigin
 } from "@cesium/engine";
-import { createCesiumMock } from "../viewer/viewer-mock.spec";
+import { createCesiumMock } from "../viewer/viewer-mock";
 import { GgcDrawingService } from "./ggc-drawing.service";
 import { DrawingType } from "../model/enums";
 import { CoreSelectionService } from "./core-selection.service";
-import Spy = jasmine.Spy;
-import objectContaining = jasmine.objectContaining;
+import { vi } from "vitest";
 
 describe("GgcDrawingService", () => {
   let service: GgcDrawingService;
-  let coreViewerServiceSpy: jasmine.SpyObj<CoreViewerService>;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreViewerServiceSpy: MockedObject<CoreViewerService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let subject: Subject<Viewer | undefined>;
   let cesiumMock: Viewer;
 
   beforeEach(async () => {
-    coreViewerServiceSpy = jasmine.createSpyObj("CoreViewerService", [
-      "setViewer",
-      "getViewerObservable"
-    ]);
-    coreSelectionServiceSpy = jasmine.createSpyObj("CoreSelectionService", [
-      "destroySelection",
-      "getSelection",
-      "addSelection"
-    ]);
+    coreViewerServiceSpy = {
+      setViewer: vi.fn().mockName("CoreViewerService.setViewer"),
+      getViewerObservable: vi
+        .fn()
+        .mockName("CoreViewerService.getViewerObservable")
+    } as MockedObject<CoreViewerService>;
+    coreSelectionServiceSpy = {
+      destroySelection: vi
+        .fn()
+        .mockName("CoreSelectionService.destroySelection"),
+      getSelection: vi.fn().mockName("CoreSelectionService.getSelection"),
+      addSelection: vi.fn().mockName("CoreSelectionService.addSelection")
+    } as MockedObject<CoreSelectionService>;
 
     TestBed.configureTestingModule({
       providers: [
@@ -45,7 +49,7 @@ describe("GgcDrawingService", () => {
       ]
     });
     subject = new Subject<Viewer | undefined>();
-    coreViewerServiceSpy.getViewerObservable.and.returnValue(
+    coreViewerServiceSpy.getViewerObservable.mockReturnValue(
       subject.asObservable()
     );
 
@@ -65,10 +69,10 @@ describe("GgcDrawingService", () => {
   ));
 
   it("should call initializeDrawingService() when a new Viewer is received", () => {
-    const initializeCoreSelectionServiceSpy = spyOn<any>(
-      service,
+    const initializeCoreSelectionServiceSpy = vi.spyOn(
+      service as any,
       "initializeDrawingService"
-    ).and.callThrough();
+    );
 
     subject.next(cesiumMock);
     expect(initializeCoreSelectionServiceSpy).toHaveBeenCalled();
@@ -76,15 +80,18 @@ describe("GgcDrawingService", () => {
   });
 
   it("should call clearDrawingService() when undefined is received", () => {
-    const clearCoreSelectionServiceSpy = spyOn<any>(
-      service,
+    const clearCoreSelectionServiceSpy = vi.spyOn(
+      service as any,
       "clearDrawingService"
-    ).and.callThrough();
-    const mousehandlerSpy = spyOn(
+    );
+    const mousehandlerSpy = vi.spyOn(
       service["screenSpaceEventHandler"],
       "destroy"
     );
-    const drawEventSubjectSpy = spyOn(service["drawEventSubject"], "complete");
+    const drawEventSubjectSpy = vi.spyOn(
+      service["drawEventSubject"],
+      "complete"
+    );
 
     subject.next(undefined);
     expect(mousehandlerSpy).toHaveBeenCalled();
@@ -100,7 +107,7 @@ describe("GgcDrawingService", () => {
     );
 
     it("should call destroySelection() on the CoreSelectionService and add an InputAction to the screenSpaceEventHandler", () => {
-      const setInputActionSpy = spyOn(
+      const setInputActionSpy = vi.spyOn(
         service["screenSpaceEventHandler"],
         "setInputAction"
       );
@@ -111,40 +118,38 @@ describe("GgcDrawingService", () => {
       expect(setInputActionSpy).toHaveBeenCalled();
     });
 
-    it("should add a Point with default styling as an Entity in Cesium, return it and throw an event when addDrawing() is called", (done) => {
+    it("should add a Point with default styling as an Entity in Cesium, return it and throw an event when addDrawing() is called", async () => {
       service.getDrawEventObservable().subscribe((evt) => {
         expect(evt.location[0]).toEqual(4.317012899514346);
         expect(evt.location[1]).toEqual(52.085608763159264);
         expect(evt.terrainHeight).toEqual(44.26550618107624);
-        done();
       });
       const entity = { id: "3" } as unknown as Entity;
 
-      (cesiumMock.entities.add as Spy).and.returnValue(entity);
+      (cesiumMock.entities.add as Mock).mockReturnValue(entity);
 
       service["addDrawing"](DrawingType.Point, earthPosition);
 
       expect(cesiumMock.entities.add).toHaveBeenCalledWith(
-        objectContaining({
+        expect.objectContaining({
           position: earthPosition,
           point: service["defaultPointStyle"]
         })
       );
-      expect(service["drawEntityIds"]).toHaveSize(1);
+      expect(service["drawEntityIds"]).toHaveLength(1);
       expect(service["drawEntityIds"][0]).toEqual("3");
     });
 
-    it("should add a custom Svg with an Entity in Cesium, return it and throw an event when addDrawing() is called", (done) => {
+    it("should add a custom Svg with an Entity in Cesium, return it and throw an event when addDrawing() is called", async () => {
       service.getDrawEventObservable().subscribe((evt) => {
         expect(evt.location[0]).toEqual(4.317012899514346);
         expect(evt.location[1]).toEqual(52.085608763159264);
         expect(evt.terrainHeight).toEqual(44.26550618107624);
-        done();
       });
 
       const entity = { id: "8" } as unknown as Entity;
 
-      (cesiumMock.entities.add as Spy).and.returnValue(entity);
+      (cesiumMock.entities.add as Mock).mockReturnValue(entity);
 
       const styleMap = new Map<DrawingType, PointGraphics | string>();
       styleMap.set(DrawingType.Svg, createCustomSvg());
@@ -154,7 +159,7 @@ describe("GgcDrawingService", () => {
       service["addDrawing"](DrawingType.Svg, earthPosition);
 
       expect(cesiumMock.entities.add).toHaveBeenCalledWith(
-        objectContaining({
+        expect.objectContaining({
           position: earthPosition,
           billboard: {
             image: createCustomSvg(),
@@ -164,7 +169,7 @@ describe("GgcDrawingService", () => {
           }
         })
       );
-      expect(service["drawEntityIds"]).toHaveSize(1);
+      expect(service["drawEntityIds"]).toHaveLength(1);
       expect(service["drawEntityIds"][0]).toEqual("8");
     });
   });
@@ -174,7 +179,7 @@ describe("GgcDrawingService", () => {
       "should remove the LEFT_CLICK ScreenSpaceEventType from the screenSpaceEventHandler and reset the " +
         "selections in the CoreSelectionService when stopDraw() is called ",
       () => {
-        const removeInputActionSpy = spyOn(
+        const removeInputActionSpy = vi.spyOn(
           service["screenSpaceEventHandler"],
           "removeInputAction"
         );

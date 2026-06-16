@@ -21,7 +21,7 @@ export class ExampleMeasure extends ExampleFormatComponent implements OnInit {
     introduction:
       "Lengtes en oppervlaktes laten zien bij het tekenen van een figuur.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.MEASURE],
     imageLocation:
       "code/examples/example-measure/example-measure/example-measure.png"

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { GgcDatasetTreeModelCreateService } from "../../core/ggc-dataset-tree-model-create.service";
@@ -14,17 +14,14 @@ describe("LayerSelectorComponent", () => {
   let fixture: ComponentFixture<LayerSelectorComponent>;
   let component: LayerSelectorComponent;
   const service: DatasetTreeWebservice = new DatasetTreeWebservice([]);
-  let datasetTreeMapConnectServiceSpy: jasmine.SpyObj<DatasetTreeMapConnectService>;
 
-  beforeEach(waitForAsync(() => {
-    datasetTreeMapConnectServiceSpy =
-      jasmine.createSpyObj<DatasetTreeMapConnectService>(
-        "DatasetTreeMapConnectService",
-        ["getLayerChangedObservable"]
-      );
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.and.returnValue(
-      Promise.resolve(Promise.resolve(of()))
-    );
+  beforeEach(() => {
+    const datasetTreeMapConnectServiceSpy = {
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+        .mockReturnValue(Promise.resolve(Promise.resolve(of())))
+    };
     TestBed.configureTestingModule({
       imports: [LayerSelectorComponent],
       providers: [
@@ -37,9 +34,7 @@ describe("LayerSelectorComponent", () => {
         }
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LayerSelectorComponent);
     component = fixture.componentInstance;
 
@@ -68,8 +63,7 @@ describe("LayerSelectorComponent", () => {
       component.datasets = [new Dataset("myDataset", [service], "")];
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
-      expect(element).toBeFalsy();
-      expect(element).toMatch("");
+      expect(element).toBeNull();
       expect(element).toBeDefined();
     });
 
@@ -79,7 +73,6 @@ describe("LayerSelectorComponent", () => {
       ];
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
-      expect(element).toBeFalsy();
       expect(element).toBeNull();
       expect(element).toBeDefined();
     });

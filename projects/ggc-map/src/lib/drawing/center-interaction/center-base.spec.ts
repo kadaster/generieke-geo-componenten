@@ -32,10 +32,10 @@ describe("CenterBase", () => {
   });
 
   it("setMap() should attach correctly to a map and initialize overlays", () => {
-    const crossHairOverlaySetMapSpy = spyOn(
+    const crossHairOverlaySetMapSpy = vi.spyOn(
       centerBase["crossHairOverlay"]!,
       "setMap"
-    ).and.callThrough();
+    );
     centerBase.setMap(mapMock);
 
     // Controleer dat de crossHairoverlay correct de kaart hebben gekregen
@@ -64,7 +64,7 @@ describe("CenterBase", () => {
     const p1 = [0, 0];
     const p2 = [3, 4];
 
-    spyOn(mapMock, "getPixelFromCoordinate").and.callFake((coord) => {
+    vi.spyOn(mapMock, "getPixelFromCoordinate").mockImplementation((coord) => {
       if (coord === c1) return p1;
       if (coord === c2) return p2;
       return p1;

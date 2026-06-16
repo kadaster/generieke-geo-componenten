@@ -21,7 +21,7 @@ describe("SnapService", () => {
   });
 
   it("should call coreSnapService.startSnap", () => {
-    spyOn(coreSnapService, "startSnap");
+    vi.spyOn(coreSnapService, "startSnap");
     service.startSnap(layerName, mapIndex, {
       pixelTolerance: 30,
       snapLayers: ["snapLayer"],
@@ -40,14 +40,14 @@ describe("SnapService", () => {
   });
 
   it("should call coreSnapService.stopSnap", () => {
-    spyOn(coreSnapService, "stopSnap");
+    vi.spyOn(coreSnapService, "stopSnap");
     service.stopSnap(mapIndex);
 
     expect(coreSnapService.stopSnap).toHaveBeenCalledWith(mapIndex);
   });
 
   it("should call coreSnapService.getSnapExtendedEventsObservable", () => {
-    spyOn(coreSnapService, "getSnapExtendedEventsObservable");
+    vi.spyOn(coreSnapService, "getSnapExtendedEventsObservable");
     service.getSnapExtendedEventsObservable(mapIndex);
 
     expect(

@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Layer } from "ol/layer";
 import OlMap from "ol/Map";
 import { Source } from "ol/source";
@@ -31,12 +31,12 @@ describe("AbstractBaseLayerComponent", () => {
   let coreMapService: CoreMapService;
   let debugElement: DebugElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [AbstractBaseLayerComponent, TestLayerComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
   beforeEach(() => {
     fixture = TestBed.createComponent(TestLayerComponent);
     component = fixture.componentInstance;
@@ -72,7 +72,7 @@ describe("AbstractBaseLayerComponent", () => {
     });
 
     it("should not call generateLayerId when layerId is sel", () => {
-      spyOn(component as any, "generateLayerId");
+      vi.spyOn(component as any, "generateLayerId");
       component["options"] = { mapIndex: "map", layerId: "test" };
       component.ngOnInit();
 
@@ -95,9 +95,9 @@ describe("AbstractBaseLayerComponent", () => {
         }
       } as OlMap;
 
-      const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-        removeLayerMock
-      );
+      const getMapSpy = vi
+        .spyOn(coreMapService, "getMap")
+        .mockReturnValue(removeLayerMock);
       component.setTestLayer(new Layer({ extent: [1, 2, 3, 4] }));
       component.ngOnDestroy();
 

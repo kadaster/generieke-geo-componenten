@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DebugElement } from "@angular/core";
 
 import OlMap from "ol/Map";
@@ -24,12 +24,12 @@ describe("ScaleLineComponent", () => {
     }
   } as OlMap;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcScaleLineComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcScaleLineComponent);
@@ -48,8 +48,10 @@ describe("ScaleLineComponent", () => {
   it("ngOnInit should create scaleLineControl and add it to the map", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(mapMock);
-    const getScaleLineOptionsSpy = spyOn<any>(
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(mapMock);
+    const getScaleLineOptionsSpy = vi.spyOn(
       component,
       "createScaleLineOptions"
     );
@@ -77,7 +79,9 @@ describe("ScaleLineComponent", () => {
   it("when the component is destroyed, removeControl should be called on the map", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(mapMock);
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(mapMock);
     component.ngOnInit();
     component.ngOnDestroy();
 

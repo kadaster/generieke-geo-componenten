@@ -16,13 +16,12 @@ describe("CoreViewerService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should receive events from the observable", (done) => {
+  it("should receive events from the observable", async () => {
     service
       .getViewerObservable()
       .pipe(skip(1))
       .subscribe((viewer) => {
         expect(viewer).toBeDefined();
-        done();
       });
 
     service.setViewer({} as Viewer);
