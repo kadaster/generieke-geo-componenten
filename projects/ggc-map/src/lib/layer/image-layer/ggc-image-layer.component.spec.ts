@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { GgcImageLayerComponent } from "./ggc-image-layer.component";
@@ -9,12 +9,12 @@ describe("ImageLayerComponent", () => {
   let fixture: ComponentFixture<GgcImageLayerComponent>;
   let debugElement: DebugElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcImageLayerComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcImageLayerComponent);
     component = fixture.componentInstance;

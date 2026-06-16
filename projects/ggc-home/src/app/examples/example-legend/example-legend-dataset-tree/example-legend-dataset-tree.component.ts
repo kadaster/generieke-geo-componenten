@@ -28,10 +28,10 @@ export class ExampleLegendDatasetTreeComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/legend-dataset-tree",
-    title: "Legend automatisch bijwerken na kaartlaag keuze",
+    title: "Legenda automatisch bijwerken na kaartlaag keuze",
     introduction:
       "Toon de legenda van één of meer kaartlagen. Actieve kaartlagen worden automatisch zichtbaar in de legenda.",
-    components: [Components.GGC_LEGEND],
+    components: [Components.GGC_LEGEND, Components.GGC_DATASET_TREE],
     theme: [Themes.LEGENDA],
     tags: [Tags.LEGEND, Tags.DATASET],
     imageLocation:

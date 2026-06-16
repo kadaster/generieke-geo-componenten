@@ -18,7 +18,7 @@ describe("CoreDrawValidationService", () => {
   });
 
   it("should not create drawValidators if the validatorFunctions array is empty", () => {
-    spyOn(service["validators"], "set");
+    vi.spyOn(service["validators"], "set");
     service.addValidators("TESTMAP", new Feature<Geometry>(), []);
     expect(service["validators"].set).not.toHaveBeenCalled();
   });
@@ -27,17 +27,17 @@ describe("CoreDrawValidationService", () => {
     const mapIndex = "TESTMAP";
     const drawValidator = new DrawValidator(new Feature<Geometry>(), []);
     service["validators"].set(mapIndex, [drawValidator]);
-    spyOn(drawValidator, "finish");
-    spyOn(drawValidator, "destroy");
+    vi.spyOn(drawValidator, "finish");
+    vi.spyOn(drawValidator, "destroy");
     service.checkAndRemoveValidators(mapIndex);
     expect(drawValidator.finish).toHaveBeenCalled();
     expect(drawValidator.destroy).toHaveBeenCalled();
   });
 
   it("should add the validators to the map", () => {
-    spyOn(service["validators"], "set").and.callThrough();
+    vi.spyOn(service["validators"], "set");
     service.addValidators("TESTMAP", new Feature<Geometry>(), [() => true]);
     expect(service["validators"].set).toHaveBeenCalled();
-    expect(service["validators"].has("TESTMAP")).toBeTrue();
+    expect(service["validators"].has("TESTMAP")).toBe(true);
   });
 });

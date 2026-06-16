@@ -5,10 +5,10 @@ import {
   OnInit,
   Output
 } from "@angular/core";
-import { MapComponentEvent } from "../../model/map-component-event.model";
 import { AbstractBaseLayerComponent } from "../abstract-base-layer/abstract-base-layer.component";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
 import { zoomlevelToResolution } from "../../utils/epsg28992";
+import { MapComponentEvent } from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-abstract-configurable-layer",

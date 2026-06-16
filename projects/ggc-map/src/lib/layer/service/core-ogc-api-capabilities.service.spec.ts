@@ -82,7 +82,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
     ["https://example.test/another", "https://example.test/another/"].forEach(
       (base) => {
-        it(`triggered een HTTP‑call voor baseUrl ${base} en werkt de cache bij`, (done) => {
+        it(`triggered een HTTP‑call voor baseUrl ${base} en werkt de cache bij`, async () => {
           const result = service.getLandingPageInfo(base);
 
           result.subscribe((info) => {
@@ -103,7 +103,6 @@ describe("CoreOgcApiCapabilitiesService", () => {
             );
 
             expect((service as any).landingPagesMap.get(base)).toEqual(result);
-            done();
           });
 
           const req = httpMock.expectOne(
@@ -116,11 +115,10 @@ describe("CoreOgcApiCapabilitiesService", () => {
       }
     );
 
-    it("gebruikt defaults als title/description ontbreken", (done) => {
+    it("gebruikt defaults als title/description ontbreken", async () => {
       service.getLandingPageInfo(baseUrlNoSlash).subscribe((info) => {
         expect(info.title).toBe("(zonder titel)"); // default
         expect(info.description).toBe(""); // default
-        done();
       });
 
       const req = httpMock.expectOne(urlExpectedNoSlash);
@@ -129,7 +127,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
       req.flush(landingResponse({ title: undefined, description: undefined }));
     });
 
-    it("zet link-properties op undefined wanneer links geen array is", (done) => {
+    it("zet link-properties op undefined wanneer links geen array is", async () => {
       service.getLandingPageInfo(baseUrlNoSlash).subscribe((info) => {
         expect(info.links.apiDef).toBeUndefined();
         expect(info.links.apiDoc).toBeUndefined();
@@ -137,7 +135,6 @@ describe("CoreOgcApiCapabilitiesService", () => {
         expect(info.links.collections).toBeUndefined();
         expect(info.links.tilesetsVector).toBeUndefined();
         expect(info.links.styles).toBeUndefined();
-        done();
       });
 
       const req = httpMock.expectOne(urlExpectedNoSlash);
@@ -147,7 +144,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
   });
 
   describe("getTiles", () => {
-    it("zou een error terug moeten geven als href undefined is", (done) => {
+    it("zou een error terug moeten geven als href undefined is", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -157,18 +154,17 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
       service.getTiles(baseUrl).subscribe({
         next: (_) => {
-          fail("Zou geen resultaat op moeten leveren");
+          throw new Error("Zou geen resultaat op moeten leveren");
         },
         error: (err: Error) => {
           expect(err.message).toEqual(
             "Tiles-link niet gevonden in landing page."
           );
-          done();
         }
       });
     });
 
-    it("zou gecached resultaat terug moeten geven", (done) => {
+    it("zou gecached resultaat terug moeten geven", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -185,12 +181,11 @@ describe("CoreOgcApiCapabilitiesService", () => {
       service.getTiles(baseUrl).subscribe({
         next: (tile) => {
           expect(tile).toEqual(ogcApiTile);
-          done();
         }
       });
     });
 
-    it("zou tiles resultaat moeten parsen en teruggeven", (done) => {
+    it("zou tiles resultaat moeten parsen en teruggeven", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -206,7 +201,6 @@ describe("CoreOgcApiCapabilitiesService", () => {
       service.getTiles(baseUrl).subscribe({
         next: (tile) => {
           expect(tile).toEqual(response);
-          done();
         }
       });
 
@@ -217,7 +211,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
       req.flush(response);
     });
 
-    it("zou foutmelding moeten geven bij een foutief resultaat", (done) => {
+    it("zou foutmelding moeten geven bij een foutief resultaat", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -227,13 +221,12 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
       service.getTiles(baseUrl).subscribe({
         next: (_) => {
-          fail("Zou juist een foutmelding moeten geven");
+          throw new Error("Zou juist een foutmelding moeten geven");
         },
         error: (error: Error) => {
           expect(error.message).toEqual(
             "Http failure response for tilesUrl: 500 Internal Server Error"
           );
-          done();
         }
       });
 
@@ -245,7 +238,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
   });
 
   describe("getStyles", () => {
-    it("zou een error terug moeten geven als href undefined is", (done) => {
+    it("zou een error terug moeten geven als href undefined is", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -255,18 +248,17 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
       service.getStyles(baseUrl).subscribe({
         next: (_) => {
-          fail("Zou geen resultaat op moeten leveren");
+          throw new Error("Zou geen resultaat op moeten leveren");
         },
         error: (err: Error) => {
           expect(err.message).toEqual(
             "Styles-link niet gevonden in landing page."
           );
-          done();
         }
       });
     });
 
-    it("zou gecached resultaat terug moeten geven", (done) => {
+    it("zou gecached resultaat terug moeten geven", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -284,12 +276,11 @@ describe("CoreOgcApiCapabilitiesService", () => {
       service.getStyles(baseUrl).subscribe({
         next: (styles) => {
           expect(styles).toEqual(ogcApiStyles);
-          done();
         }
       });
     });
 
-    it("zou styles resultaat moeten parsen en teruggeven", (done) => {
+    it("zou styles resultaat moeten parsen en teruggeven", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -315,7 +306,6 @@ describe("CoreOgcApiCapabilitiesService", () => {
       service.getStyles(baseUrl).subscribe({
         next: (tile) => {
           expect(tile).toEqual(response.styles);
-          done();
         }
       });
 
@@ -326,7 +316,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
       req.flush(response);
     });
 
-    it("zou foutmelding moeten geven bij een foutief resultaat", (done) => {
+    it("zou foutmelding moeten geven bij een foutief resultaat", async () => {
       const baseUrl = "https://baseUrl";
       const mockObservable = of({
         title: "test",
@@ -336,13 +326,12 @@ describe("CoreOgcApiCapabilitiesService", () => {
 
       service.getStyles(baseUrl).subscribe({
         next: (_) => {
-          fail("Zou juist een foutmelding moeten geven");
+          throw new Error("Zou juist een foutmelding moeten geven");
         },
         error: (error: Error) => {
           expect(error.message).toEqual(
             "Http failure response for stylesUrl: 500 Internal Server Error"
           );
-          done();
         }
       });
 

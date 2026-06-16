@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import Control from "ol/control/Control";
 import { toStringHDMS } from "ol/coordinate";
 
@@ -30,12 +30,12 @@ describe("ControlMousePositionComponent", () => {
     }
   } as OlMap;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CoordinateFormatPipe],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcMousePositionComponent);
@@ -52,15 +52,15 @@ describe("ControlMousePositionComponent", () => {
   });
 
   it("ngOninit should call setCoordinateFormatOnMousePositionControl(), setMousePositionControlOnMap() and createMousePositionOptions()", () => {
-    const setCoordinateFormatOnMousePositionControlSpy = spyOn<any>(
-      component,
+    const setCoordinateFormatOnMousePositionControlSpy = vi.spyOn(
+      component as any,
       "setCoordinateFormatOnMousePositionControl"
     );
-    const setMousePositionControlOnMapSpy = spyOn<any>(
-      component,
+    const setMousePositionControlOnMapSpy = vi.spyOn(
+      component as any,
       "setMousePositionControlOnMap"
     );
-    const getMousePositionOptionsSpy = spyOn<any>(
+    const getMousePositionOptionsSpy = vi.spyOn(
       component,
       "createMousePositionOptions"
     );
@@ -75,19 +75,21 @@ describe("ControlMousePositionComponent", () => {
   it("setCoordinateFormatOnMousePositionControl should call setCoordinateFormat() on mousePositionControl", () => {
     component.ngOnInit();
 
-    const setCoordinateFormatSpy = spyOn(
+    const setCoordinateFormatSpy = vi.spyOn(
       component["mousePositionControl"],
       "setCoordinateFormat"
     );
     component["setCoordinateFormatOnMousePositionControl"]();
 
-    expect(setCoordinateFormatSpy).toHaveBeenCalledWith(jasmine.any(Function));
+    expect(setCoordinateFormatSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it("setMousePositionControlOnMap() should add MousePositionControl to the map", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(mapMock);
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(mapMock);
 
     component["setMousePositionControlOnMap"]();
 
@@ -154,7 +156,9 @@ describe("ControlMousePositionComponent", () => {
   it("when the component is destroyed, removeControl should be called on the map", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(mapMock);
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(mapMock);
     component.ngOnInit();
     component.ngOnDestroy();
 

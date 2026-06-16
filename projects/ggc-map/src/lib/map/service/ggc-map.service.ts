@@ -8,7 +8,6 @@ import VectorLayer from "ol/layer/Vector";
 import OlMap from "ol/Map";
 import VectorSource from "ol/source/Vector";
 import { StyleLike } from "ol/style/Style";
-import { MapComponentEvent } from "../../model/map-component-event.model";
 import { CoreMapService } from "./core-map.service";
 import { SearchResultDoc } from "./SearchResultDoc.model";
 import { Extent } from "ol/extent";
@@ -16,7 +15,11 @@ import { ZoomOptions } from "./ZoomOptions.model";
 import { GeoJSON } from "ol/format";
 import { FormatType } from "../../enum/format-type";
 import { Observable } from "rxjs";
-import { DEFAULT_MAPINDEX, LayerChangedEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  LayerChangedEvent,
+  MapComponentEvent
+} from "@kadaster/ggc-models";
 
 /**
  * Service die kaartfunctionaliteit aanbiedt voor:
@@ -95,7 +98,7 @@ export class GgcMapService {
     for (const layer of this.getMap(mapIndex).getAllLayers()) {
       if (layer.getVisible()) {
         const zIndex = layer.getZIndex() ?? 0;
-        if (zIndex! > maxZIndex) {
+        if (zIndex > maxZIndex) {
           maxZIndex = zIndex!;
         }
       }
@@ -269,13 +272,43 @@ export class GgcMapService {
    * @param features Array van OpenLayers features met geometrie
    * @param mapIndex Index van de kaart waarop de features worden
    * toegevoegd (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
    * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
    */
   addFeaturesToSelectionLayer(
     features: Feature<Geometry>[],
-    mapIndex: string = DEFAULT_MAPINDEX
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
   ): MapComponentEvent {
-    return this.coreMapService.addFeaturesToSelectionLayer(features, mapIndex);
+    return this.coreMapService.addFeaturesToSelectionLayer(
+      features,
+      mapIndex,
+      selectIndex
+    );
+  }
+
+  /**
+   * Controleert of een feature aanwezig is in de selectionlaag.
+   *
+   * Een feature wordt als aanwezig beschouwd wanneer:
+   * - dezelfde feature‑referentie voorkomt in de selectionlaag, of
+   * - een feature met hetzelfde id voorkomt in de selectionlaag
+   *
+   * @param feature OpenLayers feature die gecontroleerd wordt
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
+   * @returns `true` indien de feature in de selectionlaag zit, anders `false`
+   */
+  isFeatureInSelectionLayer(
+    feature: Feature<Geometry>,
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): boolean {
+    return this.coreMapService.isFeatureInSelectionLayer(
+      feature,
+      mapIndex,
+      selectIndex
+    );
   }
 
   /**
@@ -283,10 +316,14 @@ export class GgcMapService {
    *
    * @param mapIndex Index van de kaart waarvoor de selectionlaag wordt
    * geleegd (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
    * @returns {@link MapComponentEvent} dat aangeeft of de actie succesvol was
    */
-  clearSelectionLayer(mapIndex: string = DEFAULT_MAPINDEX): MapComponentEvent {
-    return this.coreMapService.clearSelectionLayer(mapIndex);
+  clearSelectionLayer(
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): MapComponentEvent {
+    return this.coreMapService.clearSelectionLayer(mapIndex, selectIndex);
   }
 
   /**
@@ -296,12 +333,18 @@ export class GgcMapService {
    * @param styleLike OpenLayers stijl of stijl-functie
    * @param mapIndex Index van de kaart waarop de stijl wordt
    * aangepast (default: DEFAULT_MAPINDEX)
+   * @param selectIndex de optionele selectIndex als deze is meegegeven bij het maken van de selectie
    */
   changeSelectionLayerStyle(
-    styleLike: StyleLike,
-    mapIndex: string = DEFAULT_MAPINDEX
+    styleLike: StyleLike | null,
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
   ) {
-    this.coreMapService.changeSelectionLayerStyle(styleLike, mapIndex);
+    this.coreMapService.changeSelectionLayerStyle(
+      styleLike,
+      mapIndex,
+      selectIndex
+    );
   }
 
   /**
@@ -341,28 +384,10 @@ export class GgcMapService {
    */
   private getSearchResultDocFromEvent(evt: any): SearchResultDoc | undefined {
     let pdokDoc: SearchResultDoc | undefined;
-    if (evt.value && evt.value.docs && evt.value.docs.length > 0) {
+    if (evt.value?.docs && evt.value.docs.length > 0) {
       pdokDoc = evt.value.docs[0];
     }
     return pdokDoc;
-  }
-
-  /**
-   * Bepaalt de geometrie- of centroïdecoördinaten uit een PDOK-event.
-   *
-   * @param evt Event met PDOK zoekresultaten
-   * @returns WKT-representatie van coördinaten of `undefined`
-   */
-  private getCoordinatesFromEvent(evt: SearchResultDoc): string | undefined {
-    let coordinates: string | undefined;
-    const pdokDoc = this.getSearchResultDocFromEvent(evt);
-    if (pdokDoc) {
-      const geometrieOrCentroide = this.getGeometrieOrCentroide(pdokDoc);
-      if (geometrieOrCentroide) {
-        coordinates = geometrieOrCentroide;
-      }
-    }
-    return coordinates;
   }
 
   /**

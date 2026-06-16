@@ -33,13 +33,13 @@ describe("MapService", () => {
   });
 
   it("should return the map", () => {
-    spyOn(coreMapService, "getMap");
+    vi.spyOn(coreMapService, "getMap");
     mapService.getMap("my-map");
     expect(coreMapService.getMap).toHaveBeenCalledWith("my-map");
   });
 
   it("should return the layer", () => {
-    spyOn(coreMapService, "getLayer");
+    vi.spyOn(coreMapService, "getLayer");
     mapService.getLayer("my-layer");
     expect(coreMapService.getLayer).toHaveBeenCalledWith(
       "my-layer",
@@ -48,7 +48,7 @@ describe("MapService", () => {
   });
 
   it("should return the extra layer", () => {
-    spyOn(coreMapService, "getExtraLayer");
+    vi.spyOn(coreMapService, "getExtraLayer");
     mapService.getExtraLayer("selection");
     expect(coreMapService.getExtraLayer).toHaveBeenCalledWith(
       "selection",
@@ -72,8 +72,8 @@ describe("MapService", () => {
         }
       } as OlMap;
 
-      spyOn(coreMapService, "checkMapIndex").and.returnValue(true);
-      spyOn(coreMapService, "getMap").and.returnValue(getViewMock);
+      vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
+      vi.spyOn(coreMapService, "getMap").mockReturnValue(getViewMock);
 
       mapService.zoomToCoordinate([12, 34]);
 
@@ -82,15 +82,16 @@ describe("MapService", () => {
 
     it("should not zoom if the map does not exist", () => {
       const getViewMock = {
-        getView(_crds: Extent) {}
+        getView(_crds: Extent) {
+          /* empty */
+        }
       };
-      const checkMapIndexSpy = spyOn(
-        coreMapService,
-        "checkMapIndex"
-      ).and.returnValue(false);
-      const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-        getViewMock as OlMap
-      );
+      const checkMapIndexSpy = vi
+        .spyOn(coreMapService, "checkMapIndex")
+        .mockReturnValue(false);
+      const getMapSpy = vi
+        .spyOn(coreMapService, "getMap")
+        .mockReturnValue(getViewMock as OlMap);
       mapService.zoomToCoordinate([12, 34], "bestaat_niet", 14);
 
       expect(getMapSpy).not.toHaveBeenCalled();
@@ -113,9 +114,9 @@ describe("MapService", () => {
     } as OlMap;
 
     const setupSpies = (mapIndexValue: boolean) => {
-      spyOn(coreMapService, "checkMapIndex").and.returnValue(mapIndexValue);
-      spyOn(coreMapService, "decideMapComponentEventType");
-      spyOn(coreMapService, "getMap").and.returnValue(getViewMock);
+      vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(mapIndexValue);
+      vi.spyOn(coreMapService, "decideMapComponentEventType");
+      vi.spyOn(coreMapService, "getMap").mockReturnValue(getViewMock);
     };
 
     const runCommonAssertions = (
@@ -211,7 +212,7 @@ describe("MapService", () => {
 
   describe("highlightLayer interaction", () => {
     it("clearHighlightLayer, should call coreMapService.", () => {
-      const clearHighlightLayerSpy = spyOn(
+      const clearHighlightLayerSpy = vi.spyOn(
         coreMapService,
         "clearHighlightLayer"
       );
@@ -224,7 +225,7 @@ describe("MapService", () => {
 
     it("clearHighlightLayer, should call coreMapService with mapIndex.", () => {
       const mapIndex = "onbekend";
-      const clearHighlightLayerSpy = spyOn(
+      const clearHighlightLayerSpy = vi.spyOn(
         coreMapService,
         "clearHighlightLayer"
       );
@@ -236,7 +237,7 @@ describe("MapService", () => {
     });
 
     it("addFeaturesToHighlightLayer, should call coreMapService.", () => {
-      const addFeaturesToHighlightLayerSpy = spyOn(
+      const addFeaturesToHighlightLayerSpy = vi.spyOn(
         coreMapService,
         "addFeaturesToHighlightLayer"
       );
@@ -252,7 +253,7 @@ describe("MapService", () => {
 
     it("addFeaturesToHighlightLayer, should call coreMapService with mapIndex.", () => {
       const mapIndex = "onbekend";
-      const addFeaturesToHighlightLayerSpy = spyOn(
+      const addFeaturesToHighlightLayerSpy = vi.spyOn(
         coreMapService,
         "addFeaturesToHighlightLayer"
       );
@@ -264,7 +265,7 @@ describe("MapService", () => {
     });
 
     it("when changeHighlightLayerStyle() is called it should call the coreMapService with the mapIndex and the given style", () => {
-      const changeHighlightStyleLayerSpy = spyOn<any>(
+      const changeHighlightStyleLayerSpy = vi.spyOn(
         coreMapService,
         "changeHighlightLayerStyle"
       );
@@ -282,19 +283,22 @@ describe("MapService", () => {
 
   describe("selectionLayer interaction", () => {
     it("clearSelectionLayer, should call coreMapService.", () => {
-      const clearSelectionLayerSpy = spyOn(
+      const clearSelectionLayerSpy = vi.spyOn(
         coreMapService,
         "clearSelectionLayer"
       );
 
       mapService.clearSelectionLayer();
 
-      expect(clearSelectionLayerSpy).toHaveBeenCalledWith(DEFAULT_MAPINDEX);
+      expect(clearSelectionLayerSpy).toHaveBeenCalledWith(
+        DEFAULT_MAPINDEX,
+        undefined
+      );
     });
 
     it("clearSelectionLayer, should call coreMapService with mapIndex.", () => {
       const mapIndex = "onbekend";
-      const clearSelectionLayerSpy = spyOn(
+      const clearSelectionLayerSpy = vi.spyOn(
         coreMapService,
         "clearHighlightLayer"
       );
@@ -305,7 +309,7 @@ describe("MapService", () => {
     });
 
     it("addFeaturesToSelectionLayer called without mapIndex, should call coreMapService without mapIndex.", () => {
-      const addFeaturesToSelectionLayerSpy = spyOn(
+      const addFeaturesToSelectionLayerSpy = vi.spyOn(
         coreMapService,
         "addFeaturesToSelectionLayer"
       );
@@ -314,24 +318,29 @@ describe("MapService", () => {
 
       expect(addFeaturesToSelectionLayerSpy).toHaveBeenCalledWith(
         [],
-        DEFAULT_MAPINDEX
+        DEFAULT_MAPINDEX,
+        undefined
       );
     });
 
     it("addFeaturesToSelectionLayer called with mapIndex, should call coreMapService with mapIndex.", () => {
       const mapIndex = "onbekend";
-      const addFeaturesToSelectionLayerSpy = spyOn(
+      const addFeaturesToSelectionLayerSpy = vi.spyOn(
         coreMapService,
         "addFeaturesToSelectionLayer"
       );
 
       mapService.addFeaturesToSelectionLayer([], mapIndex);
 
-      expect(addFeaturesToSelectionLayerSpy).toHaveBeenCalledWith([], mapIndex);
+      expect(addFeaturesToSelectionLayerSpy).toHaveBeenCalledWith(
+        [],
+        mapIndex,
+        undefined
+      );
     });
 
     it("when changeSelectionLayerStyle() is called it should call the coreMapService with the mapIndex and the given style", () => {
-      const changeSelectionStyleLayerSpy = spyOn<any>(
+      const changeSelectionStyleLayerSpy = vi.spyOn(
         coreMapService,
         "changeSelectionLayerStyle"
       );
@@ -342,7 +351,8 @@ describe("MapService", () => {
 
       expect(changeSelectionStyleLayerSpy).toHaveBeenCalledWith(
         style,
-        mapIndex
+        mapIndex,
+        undefined
       );
     });
   });
@@ -363,7 +373,7 @@ describe("MapService", () => {
           };
         }
       } as OlMap;
-      spyOn(coreMapService, "getMap").and.returnValue(getViewMock);
+      vi.spyOn(coreMapService, "getMap").mockReturnValue(getViewMock);
     });
 
     it("when zoomlevel is not maxZoomlevel, it should return false", () => {
@@ -371,7 +381,7 @@ describe("MapService", () => {
 
       const isNotMaxZoom = mapService.isMaxZoomlevel();
 
-      expect(isNotMaxZoom).toBeFalse();
+      expect(isNotMaxZoom).toBe(false);
     });
 
     it("when zoomlevel is undefined, it should return false", () => {
@@ -379,7 +389,7 @@ describe("MapService", () => {
 
       const isNotMaxZoom = mapService.isMaxZoomlevel();
 
-      expect(isNotMaxZoom).toBeFalse();
+      expect(isNotMaxZoom).toBe(false);
     });
 
     it("when zoomlevel equals maxZoom, it should return true", () => {
@@ -387,7 +397,7 @@ describe("MapService", () => {
 
       const isNotMaxZoom = mapService.isMaxZoomlevel();
 
-      expect(isNotMaxZoom).toBeTrue();
+      expect(isNotMaxZoom).toBe(true);
     });
   });
 });

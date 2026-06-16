@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Legend } from "../model/legend.model";
 import { GgcLegendComponent } from "./ggc-legend.component";
@@ -11,12 +11,25 @@ import {
   MapboxStyle
 } from "../legend-mapbox/model/legend-mapbox.model";
 import { provideZoneChangeDetection } from "@angular/core";
+import { Polygon } from "ol/geom";
+import { vi } from "vitest";
+vi.mock("ol/geom/Polygon", () => ({
+  fromExtent: () =>
+    new Polygon([
+      [
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [0, 0]
+      ]
+    ])
+}));
 
 describe("DatasetLegendComponent", () => {
   let component: GgcLegendComponent;
   let fixture: ComponentFixture<GgcLegendComponent>;
   let legendService: CoreLegendService;
-  let mapboxStyleServiceSpy: jasmine.SpyObj<MapboxStyleService>;
+  let mapboxStyleServiceMock: MapboxStyleService;
 
   const collapsableDatasetLegend: Legend[] = [
     {
@@ -49,11 +62,13 @@ describe("DatasetLegendComponent", () => {
         legend: [
           {
             imageUrl: "assets/icons/afgerond.svg",
-            text: "afgerond"
+            text: "afgerond",
+            iconDescription: "afgerond"
           },
           {
             imageUrl: "assets/icons/afgewezen.svg",
-            text: "afgewezen"
+            text: "afgewezen",
+            iconDescription: "afgewezen"
           }
         ]
       }
@@ -85,23 +100,18 @@ describe("DatasetLegendComponent", () => {
     ]
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
+    mapboxStyleServiceMock = {
+      getMapboxStyle: vi.fn(),
+      removeRasterLayers: vi.fn(),
+      getItems: vi.fn(),
+      getLayersids: vi.fn()
+    } as unknown as MapboxStyleService;
+
     TestBed.configureTestingModule({
-      providers: [CoreLegendService]
-    }).compileComponents();
-  }));
-
-  beforeEach(async () => {
-    mapboxStyleServiceSpy = jasmine.createSpyObj("MapboxStyleService", [
-      "getMapboxStyle",
-      "removeRasterLayers",
-      "getItems",
-      "getLayersids"
-    ]);
-
-    await TestBed.configureTestingModule({
       providers: [
-        { provide: MapboxStyleService, useValue: mapboxStyleServiceSpy },
+        CoreLegendService,
+        { provide: MapboxStyleService, useValue: mapboxStyleServiceMock },
         provideZoneChangeDetection()
       ]
       // eventueel je componenten of andere providers
@@ -122,7 +132,6 @@ describe("DatasetLegendComponent", () => {
     "when there is no dataset available, " +
       'it should display "Geen datasets geselecteerd!"',
     async () => {
-      await fixture.whenStable();
       const element = fixture.debugElement.query(By.css("span"));
       const firstChildData = element.nativeElement.firstChild.data;
       expect(firstChildData).toEqual("Geen datasets geselecteerd!");
@@ -136,7 +145,6 @@ describe("DatasetLegendComponent", () => {
       component.legends = [JSON.parse(JSON.stringify(legendEmpty))];
       component.showEmptyLegendMessage = true;
       fixture.detectChanges();
-      await fixture.whenStable();
       const element = fixture.debugElement.query(
         By.css(".ggc-dl-empty-legend-message")
       );
@@ -153,7 +161,6 @@ describe("DatasetLegendComponent", () => {
       component.emptyLegendMessage = "aanpasbare lege legenda bericht";
       component.showEmptyLegendMessage = true;
       fixture.detectChanges();
-      await fixture.whenStable();
       const element = fixture.debugElement.query(
         By.css(".ggc-dl-empty-legend-message")
       );
@@ -168,7 +175,6 @@ describe("DatasetLegendComponent", () => {
     async () => {
       component.legends = [JSON.parse(JSON.stringify(legendIcon))];
       fixture.detectChanges();
-      await fixture.whenStable();
       const element = fixture.debugElement.query(By.css("span"));
       const firstChildData = element.nativeElement.firstChild.data.trim();
       expect(firstChildData).toEqual("BAG Terugmeldingen");
@@ -182,7 +188,6 @@ describe("DatasetLegendComponent", () => {
       component.legends = [JSON.parse(JSON.stringify(legendIcon))];
       component.showLegendsName = false;
       fixture.detectChanges();
-      await fixture.whenStable();
       const imgElement = fixture.debugElement.query(
         By.css(".ggc-dl-iconlist-image")
       );
@@ -204,19 +209,17 @@ describe("DatasetLegendComponent", () => {
       "the html should contain a ggc-legend-mapbox component with a legendItem with title = (zee)water",
     async () => {
       component.legends = [legendMapbox];
-      mapboxStyleServiceSpy.getMapboxStyle.and.returnValue(
-        // @ts-ignore
-        of(testStyle as MapboxStyle)
+      vi.mocked(mapboxStyleServiceMock.getMapboxStyle).mockReturnValue(
+        of(testStyle)
       );
-      mapboxStyleServiceSpy.getItems.and.returnValue(
+      vi.mocked(mapboxStyleServiceMock.getItems).mockReturnValue(
         mapboxLegendItems as LegendItem[]
       );
-      mapboxStyleServiceSpy.getLayersids.and.returnValue([
+      vi.mocked(mapboxStyleServiceMock.getLayersids).mockReturnValue([
         "Onderlegger Nederland"
       ]);
 
       fixture.detectChanges();
-      await fixture.whenStable();
       const mapboxNode = fixture.debugElement.query(
         By.css("ggc-legend-mapbox")
       );
@@ -237,26 +240,24 @@ describe("DatasetLegendComponent", () => {
     component.legends = [JSON.parse(JSON.stringify(legendIcon))];
     component.toggleLegend(component.legends[0]);
     fixture.detectChanges();
-    await fixture.whenStable();
     expect(component.legends[0].expanded).toEqual(true);
     const element = fixture.debugElement.query(By.css("button"));
-    expect(element.children[0].classes["fa-angle-right"]).toBeTrue();
-    expect(element.children[1].classes["fa-angle-down"]).toBeTrue();
-    expect(
-      element.children[0].classes["ggc-dl-dataset-toggle-collapsed"]
-    ).toBeTrue();
-    expect(
-      element.children[1].classes["ggc-dl-dataset-toggle-expanded"]
-    ).toBeTrue();
+    expect(element.children[0].classes["fa-angle-right"]).toBe(true);
+    expect(element.children[1].classes["fa-angle-down"]).toBe(true);
+    expect(element.children[0].classes["ggc-dl-dataset-toggle-collapsed"]).toBe(
+      true
+    );
+    expect(element.children[1].classes["ggc-dl-dataset-toggle-expanded"]).toBe(
+      true
+    );
   });
 
   it("when legend has no property collapsable=true toggleLegend gives a console warning", async () => {
-    console.warn = jasmine.createSpy("warn");
+    console.warn = vi.fn();
     component.collapsable = false;
     component.legends = [JSON.parse(JSON.stringify(legendIcon))];
     component.toggleLegend(component.legends[0]);
     fixture.detectChanges();
-    await fixture.whenStable();
     expect(console.warn).toHaveBeenCalledWith(
       "Set DatasetLegendComponent.collapsable = true om legends in of uit te klappen."
     );
@@ -272,7 +273,6 @@ describe("DatasetLegendComponent", () => {
 
     // expand all
     legendService.expandAll$.next({ mapIndex: "Jan", expanded: true });
-    await fixture.whenStable();
 
     // verify
     expect(component.legends[0].expanded).toEqual(true);
@@ -280,7 +280,6 @@ describe("DatasetLegendComponent", () => {
 
     // collapse all
     legendService.expandAll$.next({ mapIndex: "Jan", expanded: false });
-    await fixture.whenStable();
 
     // verify
     expect(component.legends[0].expanded).toEqual(false);
@@ -298,7 +297,6 @@ describe("DatasetLegendComponent", () => {
 
     // expand all with another mapIndex
     legendService.expandAll$.next({ mapIndex: "NOT Kees", expanded: true });
-    await fixture.whenStable();
 
     // verify
     expect(component.legends[0].expanded).toEqual(false);
@@ -411,7 +409,7 @@ describe("DatasetLegendComponent", () => {
     component.removeLegend("id");
     expect(component["_legends"]()).toEqual([]);
   });
-  const testStyle = {
+  const testStyle: MapboxStyle = {
     version: 8,
     metadata: {
       "ol:webfonts":
@@ -421,8 +419,6 @@ describe("DatasetLegendComponent", () => {
     name: "",
     sprite: "",
     id: "achtergrondkaart_standaard",
-    pitch: 0,
-    center: [5.3878, 52.1561],
     glyphs:
       "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/resources/fonts/{fontstack}/{range}.pbf",
     layers: [
@@ -430,16 +426,12 @@ describe("DatasetLegendComponent", () => {
         id: "Onderlegger Nederland",
         type: LayerType.Fill,
         paint: {
-          "fill-color": [
-            "match",
-            ["get", "vistext"],
-            "(zee)water",
-            "#80BDE3",
-            "transparent"
-          ]
+          "fill-color": ["match", "(zee)water", "#80BDE3", "transparent"]
         },
         source: "brt",
-        "source-layer": "nederland"
+        "source-layer": "nederland",
+        filterCopy: [],
+        filter: []
       }
     ],
     sources: {

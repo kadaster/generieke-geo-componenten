@@ -56,7 +56,7 @@ describe("CenterModify", () => {
     const centerModify = new CenterModify(centerModifyOptions);
     centerModify["calculatePixelDistanceOfCoordinates"] = featureFar;
     centerModify.setMap(mockMap);
-    spyOn(mockMap, "getPixelFromCoordinate").and.returnValue([5, 8]);
+    vi.spyOn(mockMap, "getPixelFromCoordinate").mockReturnValue([5, 8]);
 
     expect(centerModify["targetSource"]?.getFeatures()[0]).toBeDefined();
     // no feature selected
@@ -70,7 +70,7 @@ describe("CenterModify", () => {
     centerModify["calculatePixelDistanceOfCoordinates"] = featureNear;
 
     centerModify.setMap(mockMap);
-    spyOn(mockMap, "getPixelFromCoordinate").and.returnValue([5, 8]);
+    vi.spyOn(mockMap, "getPixelFromCoordinate").mockReturnValue([5, 8]);
 
     expect(centerModify["targetSource"]?.getFeatures()[0]).toBeDefined();
     // selected feature
@@ -114,7 +114,7 @@ describe("CenterModify", () => {
     const centerModify = new CenterModify(centerModifyOptions);
     centerModify["calculatePixelDistanceOfCoordinates"] = featureNear;
     centerModify.setMap(mockMap);
-    spyOn(mockMap, "getPixelFromCoordinate").and.returnValue([5, 8]);
+    vi.spyOn(mockMap, "getPixelFromCoordinate").mockReturnValue([5, 8]);
 
     expect(centerModify["targetSource"]?.getFeatures()[0]).toBeDefined();
 
@@ -360,7 +360,7 @@ describe("CenterModify", () => {
         const coords = polygon.getCoordinates()[0];
         // [100,100] removed; ring must stay closed: first and last equal
         expect(coords[0]).toEqual(coords[coords.length - 1]);
-        expect(coords.some((c) => c[0] === 100 && c[1] === 100)).toBeFalse();
+        expect(coords.some((c) => c[0] === 100 && c[1] === 100)).toBe(false);
       });
 
       it("should remove the entire Polygon feature if only 1 coordinate would remain after removal", () => {
@@ -415,7 +415,7 @@ describe("CenterModify", () => {
         const polygon = polygonFeature.getGeometry() as Polygon;
         const coords = polygon.getCoordinates()[0];
         expect(coords[0]).toEqual(coords[coords.length - 1]);
-        expect(coords.some((c) => c[0] === 150 && c[1] === 200)).toBeFalse();
+        expect(coords.some((c) => c[0] === 150 && c[1] === 200)).toBe(false);
       });
     });
   });

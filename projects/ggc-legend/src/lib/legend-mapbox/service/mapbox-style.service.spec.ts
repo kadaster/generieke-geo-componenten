@@ -93,11 +93,11 @@ describe("MapboxStyleService", () => {
         property: "type"
       } as StopsPattern;
 
-      expect(service.isPatternWithStops(pattern)).toBeTrue();
+      expect(service.isPatternWithStops(pattern)).toBe(true);
     });
 
     it("should return false for non-stops pattern", () => {
-      expect(service.isPatternWithStops("string")).toBeFalse();
+      expect(service.isPatternWithStops("string")).toBe(false);
     });
   });
 
@@ -112,11 +112,11 @@ describe("MapboxStyleService", () => {
         "#000",
         "#ccc"
       ] as MatchPattern;
-      expect(service.isPatternWithMatch(pattern)).toBeTrue();
+      expect(service.isPatternWithMatch(pattern)).toBe(true);
     });
 
     it("should return false for invalid pattern", () => {
-      expect(service.isPatternWithMatch("string")).toBeFalse();
+      expect(service.isPatternWithMatch("string")).toBe(false);
     });
   });
 
@@ -214,8 +214,8 @@ describe("MapboxStyleService", () => {
       const items = service.getItems(style, false);
 
       expect(items.length).toBeGreaterThan(0);
-      expect(items.some((item) => item.title === "A")).toBeTrue();
-      expect(items.some((item) => item.title === "B")).toBeTrue();
+      expect(items.some((item) => item.title === "A")).toBe(true);
+      expect(items.some((item) => item.title === "B")).toBe(true);
     });
 
     it("should skip invalid paint patterns", () => {

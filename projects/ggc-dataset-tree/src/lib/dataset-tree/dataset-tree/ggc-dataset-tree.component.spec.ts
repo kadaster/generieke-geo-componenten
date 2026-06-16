@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcDatasetTreeModelCreateService } from "../../core/ggc-dataset-tree-model-create.service";
 import { Dataset } from "../../model/theme/dataset.model";
 import { Theme } from "../../model/theme/theme.model";
@@ -19,8 +19,6 @@ describe("DatasetTreeComponent", () => {
   let nativeElement: HTMLElement;
 
   let testRecursionTree = [];
-
-  let datasetTreeMapConnectServiceSpy: jasmine.SpyObj<DatasetTreeMapConnectService>;
 
   function createTreeForTest(niveau: number, open = false): Theme[] {
     let i;
@@ -44,25 +42,14 @@ describe("DatasetTreeComponent", () => {
     return themeArray;
   }
 
-  beforeEach(waitForAsync(() => {
-    datasetTreeMapConnectServiceSpy =
-      jasmine.createSpyObj<DatasetTreeMapConnectService>(
-        "DatasetTreeMapConnectService",
-        ["isVisible", "getTitle", "getLayerChangedObservable"]
-      );
-    datasetTreeMapConnectServiceSpy.isVisible.and.callFake((layerId) => {
-      if (layerId == "testLayer") return Promise.resolve(true);
-      if (layerId == "testLayer2") return Promise.resolve(false);
-      return Promise.resolve(false);
-    });
-    datasetTreeMapConnectServiceSpy.getTitle.and.callFake((layerId) => {
-      if (layerId == "testLayer") return Promise.resolve("testLayer");
-      if (layerId == "testLayer2") return Promise.resolve("testLayer2");
-      return Promise.resolve("");
-    });
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.and.returnValue(
-      Promise.resolve(of())
-    );
+  beforeEach(() => {
+    const datasetTreeMapConnectServiceSpy = {
+      isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
+      getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+    };
     TestBed.configureTestingModule({
       imports: [
         GgcDatasetTreeComponent,
@@ -78,9 +65,21 @@ describe("DatasetTreeComponent", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
+    datasetTreeMapConnectServiceSpy.isVisible.mockImplementation((layerId) => {
+      if (layerId == "testLayer") return Promise.resolve(true);
+      if (layerId == "testLayer2") return Promise.resolve(false);
+      return Promise.resolve(false);
+    });
+    datasetTreeMapConnectServiceSpy.getTitle.mockImplementation((layerId) => {
+      if (layerId == "testLayer") return Promise.resolve("testLayer");
+      if (layerId == "testLayer2") return Promise.resolve("testLayer2");
+      return Promise.resolve("");
+    });
+    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
+      Promise.resolve(of())
+    );
+
     fixture = TestBed.createComponent(GgcDatasetTreeComponent);
     component = fixture.componentInstance;
     component.themes = [];
@@ -115,9 +114,10 @@ describe("DatasetTreeComponent", () => {
       async () => {
         component.themes = createTreeForTest(5, true);
 
-        fixture.detectChanges();
         // Making sure all child components are stable and all promises are handled
-        await fixture.whenStable();
+        fixture.detectChanges();
+        await Promise.resolve();
+        await new Promise(setImmediate);
         fixture.detectChanges();
 
         const themeTrWithCounter: NodeListOf<HTMLButtonElement> =
@@ -125,17 +125,31 @@ describe("DatasetTreeComponent", () => {
             "tr.ggc-dt-btn-ts-collapse td:nth-child(1)"
           );
         expect(themeTrWithCounter.length).toBe(6);
-        expect(themeTrWithCounter[0].innerText).toBe("ThemeNiveau 1 (1/1)");
-        expect(themeTrWithCounter[1].innerText).toBe("ThemeNiveau 2 (1/1)");
-        expect(themeTrWithCounter[2].innerText).toBe("ThemeNiveau 3 (1/1)");
-        expect(themeTrWithCounter[3].innerText).toBe("ThemeNiveau 4 (1/1)");
-        expect(themeTrWithCounter[4].innerText).toBe("ThemeNiveau 5 (1/1)");
-        expect(themeTrWithCounter[5].innerText).toBe("LaatsteTheme (1/1)");
+        expect(themeTrWithCounter[0].textContent?.trim()).toBe(
+          "ThemeNiveau 1 (1/1)"
+        );
+        expect(themeTrWithCounter[1].textContent?.trim()).toBe(
+          "ThemeNiveau 2 (1/1)"
+        );
+        expect(themeTrWithCounter[2].textContent?.trim()).toBe(
+          "ThemeNiveau 3 (1/1)"
+        );
+        expect(themeTrWithCounter[3].textContent?.trim()).toBe(
+          "ThemeNiveau 4 (1/1)"
+        );
+        expect(themeTrWithCounter[4].textContent?.trim()).toBe(
+          "ThemeNiveau 5 (1/1)"
+        );
+        expect(themeTrWithCounter[5].textContent?.trim()).toBe(
+          "LaatsteTheme (1/1)"
+        );
 
         const datasetButtons: NodeListOf<HTMLButtonElement> =
           nativeElement.querySelectorAll("tr.ggc-dt-btn-ls-collapse");
         expect(datasetButtons.length).toBe(1);
-        expect(datasetButtons[0].innerText).toContain("testDataset (1/2)");
+        expect(datasetButtons[0].textContent?.trim()).toContain(
+          "testDataset (1/2)"
+        );
       }
     );
 
@@ -143,6 +157,7 @@ describe("DatasetTreeComponent", () => {
       "with multiple other themes inside an other theme, and showActiveCounters false" +
         "it should find the themeName and datasetName in deeper layers and should not show count of active dataset",
       async () => {
+        vi.useFakeTimers();
         testRecursionTree = createTreeForTest(5, true);
 
         component.showActiveCounters = false;
@@ -150,7 +165,7 @@ describe("DatasetTreeComponent", () => {
 
         fixture.detectChanges();
         // Making sure all child components are stable and all promises are handled
-        await fixture.whenStable();
+        await vi.runAllTimersAsync();
         fixture.detectChanges();
 
         const buttons = nativeElement.querySelectorAll(
@@ -163,19 +178,19 @@ describe("DatasetTreeComponent", () => {
             "tr.ggc-dt-btn-ts-collapse td:nth-child(1)"
           );
         expect(themeButtons.length).toBe(6);
-        expect(themeButtons[0].innerText).toBe("ThemeNiveau 1 (1)");
-        expect(themeButtons[1].innerText).toBe("ThemeNiveau 2 (1)");
-        expect(themeButtons[2].innerText).toBe("ThemeNiveau 3 (1)");
-        expect(themeButtons[3].innerText).toBe("ThemeNiveau 4 (1)");
-        expect(themeButtons[4].innerText).toBe("ThemeNiveau 5 (1)");
-        expect(themeButtons[5].innerText).toBe("LaatsteTheme (1)");
+        expect(themeButtons[0].textContent?.trim()).toBe("ThemeNiveau 1 (1)");
+        expect(themeButtons[1].textContent?.trim()).toBe("ThemeNiveau 2 (1)");
+        expect(themeButtons[2].textContent?.trim()).toBe("ThemeNiveau 3 (1)");
+        expect(themeButtons[3].textContent?.trim()).toBe("ThemeNiveau 4 (1)");
+        expect(themeButtons[4].textContent?.trim()).toBe("ThemeNiveau 5 (1)");
+        expect(themeButtons[5].textContent?.trim()).toBe("LaatsteTheme (1)");
 
         const datasetButtons: NodeListOf<HTMLButtonElement> =
           nativeElement.querySelectorAll(
             "tr.ggc-dt-btn-ls-collapse td:nth-child(1)"
           );
         expect(datasetButtons.length).toBe(1);
-        expect(datasetButtons[0].innerText).toContain("testDataset");
+        expect(datasetButtons[0].textContent?.trim()).toContain("testDataset");
       }
     );
 
@@ -228,24 +243,21 @@ describe("DatasetTreeComponent", () => {
     classes: string[]
   ) {
     const element = nativeElement.querySelector(querySelector);
-    expect(element)
-      .withContext(`Expected ${querySelector} to be present in DOM tree`)
-      .not.toBeNull();
+    expect(
+      element,
+      `Expected ${querySelector} to be present in DOM tree`
+    ).not.toBeNull();
     if (element) {
       classes.forEach((cssClass) => {
-        expect(element.classList.contains(cssClass))
-          .withContext(
-            `Expecting ${querySelector} to contain class ${cssClass}`
-          )
-          .toBeTrue();
+        expect(
+          element.classList.contains(cssClass),
+          `Expecting ${querySelector} to contain class ${cssClass}`
+        ).toBe(true);
       });
-      expect(element.classList.length)
-        .withContext(
-          `Expecting ${querySelector}'s classlist to match '${classes.join(
-            " "
-          )}'`
-        )
-        .toEqual(classes.length);
+      expect(
+        element.classList.length,
+        `Expecting ${querySelector}'s classlist to match '${classes.join(" ")}'`
+      ).toEqual(classes.length);
     }
   }
 });

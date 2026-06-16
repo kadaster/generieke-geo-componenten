@@ -25,16 +25,15 @@ import {
 } from "../../core/constants";
 import { CrsConfig } from "../../core/model/crs-config.model";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+
 import { CoreLoadingService } from "./core-loading.service";
 import { Observable, Subject } from "rxjs";
 import {
   DEFAULT_MAPINDEX,
   LayerChangedEvent,
-  LayerChangedEventTrigger
+  LayerChangedEventTrigger,
+  MapComponentEventTypes,
+  MapComponentEvent
 } from "@kadaster/ggc-models";
 
 @Injectable({
@@ -65,12 +64,8 @@ export class CoreMapService {
     VectorLayer<VectorSource<Feature<Geometry>>>
   > = new Map();
 
-  private readonly LayerChangedSubject: Subject<LayerChangedEvent> =
+  private readonly layerChangedSubject: Subject<LayerChangedEvent> =
     new Subject();
-
-  getLayerChangedObservable(): Observable<LayerChangedEvent> {
-    return this.LayerChangedSubject.asObservable();
-  }
 
   constructor() {
     this.rdNewConfig = this.crsConfigService.getRdNewCrsConfig();
@@ -87,6 +82,18 @@ export class CoreMapService {
     addProjection(this.rdNewProjection);
   }
 
+  getLayerChangedObservable(): Observable<LayerChangedEvent> {
+    return this.layerChangedSubject.asObservable();
+  }
+
+  emitLayerChangedEvent(
+    layerId: string,
+    mapIndex: string,
+    eventTrigger: LayerChangedEventTrigger
+  ) {
+    this.layerChangedSubject.next({ layerId, mapIndex, eventTrigger });
+  }
+
   createAndGetMap(
     mapIndex?: string,
     minZoomLevel = 0,
@@ -98,15 +105,8 @@ export class CoreMapService {
 
     if (!this.olMaps.has(mapIndex)) {
       // create a new map and drawlayer for this map
-      const newMap = this.createNewOlMap();
+      const newMap = this.createNewOlMap(mapIndex);
       this.olMaps.set(mapIndex, newMap);
-      newMap.getLayers().on("add", (event) => {
-        this.LayerChangedSubject.next({
-          layerId: event.element.get("ggc-layer-id"),
-          mapIndex,
-          eventTrigger: LayerChangedEventTrigger.LAYER_ADDED
-        });
-      });
     }
     const map = this.olMaps.get(mapIndex) as OlMap;
 
@@ -146,7 +146,7 @@ export class CoreMapService {
   getMap(mapIndex?: string): OlMap {
     mapIndex = mapIndex ?? DEFAULT_MAPINDEX;
     if (!this.olMaps.has(mapIndex)) {
-      this.olMaps.set(mapIndex, this.createNewOlMap());
+      this.olMaps.set(mapIndex, this.createNewOlMap(mapIndex));
     }
     return this.olMaps.get(mapIndex) as OlMap;
   }
@@ -237,36 +237,101 @@ export class CoreMapService {
 
   addFeaturesToSelectionLayer(
     features: Feature<Geometry>[],
-    mapIndex: string
+    mapIndex: string,
+    selectIndex?: string
   ): MapComponentEvent {
     if (this.checkMapIndex(mapIndex)) {
-      // We know for sure that the selectionLayer exists, checkMapIndex indirectly checks that
-      const selectionSource = this.getSelectionLayerSource(
-        mapIndex
-      ) as VectorSource<Feature<Geometry>>;
-      selectionSource.addFeatures(features);
+      const source = this.getSelectionLayerSource(mapIndex, selectIndex);
+      source?.addFeatures(features);
       return this.decideMapComponentEventType(true, mapIndex);
     }
     return this.decideMapComponentEventType(false, mapIndex);
   }
 
-  clearSelectionLayer(mapIndex: string): MapComponentEvent {
+  /**
+   * Controleert of een feature aanwezig is in de selectionlaag.
+   *
+   * Een feature wordt als aanwezig beschouwd wanneer:
+   * - dezelfde feature‑referentie voorkomt in de selectionlaag, of
+   * - een feature met hetzelfde id voorkomt in de selectionlaag
+   *
+   * @param feature OpenLayers feature die gecontroleerd wordt
+   * @param mapIndex Index van de kaart (default: DEFAULT_MAPINDEX)
+   * @param selectIndex Optionele index van de selectie
+   * @returns `true` indien de feature in de selectionlaag zit, anders `false`
+   */
+  isFeatureInSelectionLayer(
+    feature: Feature<Geometry>,
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): boolean {
+    if (!this.checkMapIndex(mapIndex)) {
+      return false;
+    }
+
+    const source = this.getSelectionLayerSource(mapIndex, selectIndex);
+    if (!source) {
+      return false;
+    }
+
+    const featureId = feature.getId();
+    return source.getFeatures().some((selectionFeature) => {
+      if (selectionFeature === feature) {
+        return true;
+      }
+
+      if (featureId !== undefined) {
+        return selectionFeature.getId() === featureId;
+      }
+
+      if (
+        (feature as any).values_?.id &&
+        (selectionFeature as any).values_?.id
+      ) {
+        return (
+          (feature as any).values_?.id == (selectionFeature as any).values_?.id
+        );
+      }
+
+      return false;
+    });
+  }
+
+  clearSelectionLayer(
+    mapIndex: string,
+    selectIndex?: string
+  ): MapComponentEvent {
     if (this.checkMapIndex(mapIndex)) {
-      const selectionLayerSource = this.getSelectionLayerSource(
-        mapIndex
-      ) as VectorSource<Feature<Geometry>>;
-      selectionLayerSource?.clear();
+      if (selectIndex) {
+        const key = `${mapIndex}-${selectIndex}-selection`;
+        const layer = this.extraLayersMap.get(key);
+        layer?.getSource()?.clear();
+      } else {
+        this.getSelectionLayerSource(mapIndex)?.clear();
+      }
+
       return this.decideMapComponentEventType(true, mapIndex);
     }
     return this.decideMapComponentEventType(false, mapIndex);
   }
 
-  changeSelectionLayerStyle(styleLike: StyleLike, mapIndex: string) {
-    this.changeLayerStyle(styleLike, mapIndex, "selection");
+  changeSelectionLayerStyle(
+    styleLike: StyleLike | null,
+    mapIndex: string,
+    selectIndex?: string
+  ) {
+    this.changeLayerStyle(styleLike, mapIndex, "selection", selectIndex);
   }
 
-  changeLayerStyle(styleLike: StyleLike, mapIndex: string, layername: string) {
-    const layer = this.extraLayersMap.get(`${mapIndex}-${layername}`);
+  changeLayerStyle(
+    styleLike: StyleLike | null,
+    mapIndex: string,
+    layername: string,
+    selectIndex?: string
+  ) {
+    const layer = selectIndex
+      ? this.extraLayersMap.get(`${mapIndex}-${selectIndex}-${layername}`)
+      : this.extraLayersMap.get(`${mapIndex}-${layername}`);
     layer?.setStyle(styleLike);
   }
 
@@ -283,8 +348,8 @@ export class CoreMapService {
     return layer;
   }
 
-  private createNewOlMap(): OlMap {
-    return new OlMap({
+  private createNewOlMap(mapIndex: string): OlMap {
+    const newMap = new OlMap({
       controls: this.getControls(),
       interactions: defaultInteractions({
         // Is always set to false because of the interaction with the tabindex if it's provided.
@@ -296,6 +361,39 @@ export class CoreMapService {
         projection: this.rdNewProjection
       })
     });
+    newMap.getLayers().on("add", (event) => {
+      this.layerChangedSubject.next({
+        layerId: event.element.get("ggc-layer-id"),
+        mapIndex,
+        eventTrigger: LayerChangedEventTrigger.LAYER_ADDED
+      });
+    });
+    return newMap;
+  }
+
+  addSelectLayer(mapIndex: string, selectIndex: string) {
+    const key = `${mapIndex}-${selectIndex}-selection`;
+
+    const layer = this.createLayerAndAddToMap(mapIndex);
+    this.readdHighlightLayer(mapIndex);
+    this.setDefaultSelectionLayerStyle(mapIndex, selectIndex);
+
+    this.extraLayersMap.set(key, layer);
+  }
+
+  removeSelectLayer(mapIndex: string, selectIndex: string) {
+    const key = `${mapIndex}-${selectIndex}-selection`;
+    this.extraLayersMap.delete(key);
+  }
+
+  private readdHighlightLayer(mapIndex: string) {
+    const highlightLayer = this.extraLayersMap.get(`${mapIndex}-highlight`);
+    const map = this.getMap(mapIndex);
+
+    if (highlightLayer && map) {
+      highlightLayer.setMap(null);
+      highlightLayer.setMap(map);
+    }
   }
 
   private getControls(): Collection<Control> {
@@ -337,9 +435,14 @@ export class CoreMapService {
   }
 
   private getSelectionLayerSource(
-    mapIndex: string
+    mapIndex: string,
+    selectIndex?: string
   ): VectorSource<Feature<Geometry>> | null | undefined {
-    return this.extraLayersMap.get(`${mapIndex}-selection`)?.getSource();
+    return selectIndex
+      ? this.extraLayersMap
+          .get(`${mapIndex}-${selectIndex}-selection`)
+          ?.getSource()
+      : this.extraLayersMap.get(`${mapIndex}-selection`)?.getSource();
   }
 
   private createExtraLayers(mapIndex: string): void {
@@ -378,7 +481,10 @@ export class CoreMapService {
     layer?.setStyle(highlightStyle);
   }
 
-  private setDefaultSelectionLayerStyle(mapIndex: string): void {
+  private setDefaultSelectionLayerStyle(
+    mapIndex: string,
+    selectIndex?: string
+  ): void {
     const fill = new Fill({
       color: "rgba(255,255,255,0.5)"
     });
@@ -395,7 +501,9 @@ export class CoreMapService {
         radius: 5
       })
     });
-    const layer = this.extraLayersMap.get(`${mapIndex}-selection`);
+    const layer = selectIndex
+      ? this.extraLayersMap.get(`${mapIndex}-${selectIndex}-selection`)
+      : this.extraLayersMap.get(`${mapIndex}-selection`);
     layer?.setStyle(selectionStyle);
   }
 }

@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
@@ -12,16 +13,18 @@ import { provideZoneChangeDetection } from "@angular/core";
 
 describe("GgcOgcApiCapabilitiesService", () => {
   let service: GgcOgcApiCapabilitiesService;
-  let coreMock: jasmine.SpyObj<CoreOgcApiCapabilitiesService>;
+  let coreMock: MockedObject<CoreOgcApiCapabilitiesService>;
 
   const BASE_URL = "https://example.org/ogcapi";
 
   beforeEach(() => {
-    coreMock = jasmine.createSpyObj("CoreOgcApiCapabilitiesService", [
-      "getLandingPageInfo",
-      "getStyles",
-      "getTiles"
-    ]);
+    coreMock = {
+      getLandingPageInfo: vi
+        .fn()
+        .mockName("CoreOgcApiCapabilitiesService.getLandingPageInfo"),
+      getStyles: vi.fn().mockName("CoreOgcApiCapabilitiesService.getStyles"),
+      getTiles: vi.fn().mockName("CoreOgcApiCapabilitiesService.getTiles")
+    } as MockedObject<CoreOgcApiCapabilitiesService>;
 
     TestBed.configureTestingModule({
       providers: [
@@ -35,7 +38,7 @@ describe("GgcOgcApiCapabilitiesService", () => {
   });
 
   describe("getServiceCapabilitiesOgcApi", () => {
-    it("bouwt ServiceCapabilities met gefilterde RD styles & tiles, correcte URL en resoluties", (done) => {
+    it("bouwt ServiceCapabilities met gefilterde RD styles & tiles, correcte URL en resoluties", async () => {
       const landingPage: OGCAPILandingPageInfo = {
         title: "OGC API Example",
         description: "Beschrijving",
@@ -104,9 +107,9 @@ describe("GgcOgcApiCapabilitiesService", () => {
         tilesets: [tilesetRD, tilesetNonRD]
       };
 
-      coreMock.getLandingPageInfo.and.returnValue(of(landingPage));
-      coreMock.getStyles.and.returnValue(of([rdStyle, nonRdStyle]));
-      coreMock.getTiles.and.returnValue(of(tiles));
+      coreMock.getLandingPageInfo.mockReturnValue(of(landingPage));
+      coreMock.getStyles.mockReturnValue(of([rdStyle, nonRdStyle]));
+      coreMock.getTiles.mockReturnValue(of(tiles));
 
       service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
         next: (capabilities) => {
@@ -141,13 +144,11 @@ describe("GgcOgcApiCapabilitiesService", () => {
           // maxResolution = 3440.64 / 2^(12-1) = 1.68
           expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(0.84, 6);
           expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(1.68, 6);
-
-          done();
         }
       });
     });
 
-    it('gebruikt fallback URL wanneer geen rel="item" link beschikbaar is', (done) => {
+    it('gebruikt fallback URL wanneer geen rel="item" link beschikbaar is', async () => {
       const landingPage: OGCAPILandingPageInfo = {
         title: "OGC API Example",
         description: "Beschrijving",
@@ -189,9 +190,9 @@ describe("GgcOgcApiCapabilitiesService", () => {
         tilesets: [tilesetRDNoItem]
       };
 
-      coreMock.getLandingPageInfo.and.returnValue(of(landingPage));
-      coreMock.getStyles.and.returnValue(of([rdStyle]));
-      coreMock.getTiles.and.returnValue(of(tiles));
+      coreMock.getLandingPageInfo.mockReturnValue(of(landingPage));
+      coreMock.getStyles.mockReturnValue(of([rdStyle]));
+      coreMock.getTiles.mockReturnValue(of(tiles));
 
       service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
         next: (capabilities) => {
@@ -200,12 +201,11 @@ describe("GgcOgcApiCapabilitiesService", () => {
           expect(layer.url).toBe(
             "https://tiles.example/tms/28992/{z}/{x}/{y}?f=mvt"
           );
-          done();
         }
       });
     });
 
-    it("levert lege layers als er geen RD tilesets zijn", (done) => {
+    it("levert lege layers als er geen RD tilesets zijn", async () => {
       const landingPage: OGCAPILandingPageInfo = {
         title: "OGC API Example",
         links: {}
@@ -239,14 +239,13 @@ describe("GgcOgcApiCapabilitiesService", () => {
         ]
       };
 
-      coreMock.getLandingPageInfo.and.returnValue(of(landingPage));
-      coreMock.getStyles.and.returnValue(of(styles));
-      coreMock.getTiles.and.returnValue(of(tiles));
+      coreMock.getLandingPageInfo.mockReturnValue(of(landingPage));
+      coreMock.getStyles.mockReturnValue(of(styles));
+      coreMock.getTiles.mockReturnValue(of(tiles));
 
       service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
         next: (capabilities) => {
           expect(capabilities.layers.length).toBe(0);
-          done();
         }
       });
     });

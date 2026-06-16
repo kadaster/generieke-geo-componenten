@@ -3,13 +3,23 @@ import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 
 /**
+ * @deprecated verhuisd naar ggc-models
  * Verzameling van features die behoren tot één specifieke kaartlaag.
  */
 export class FeatureCollectionForLayer {
   /**
+   * @deprecated
    * Naam van de laag waartoe de features behoren.
    */
   layerName: string;
+  /**
+   * LayerId van de laag waartoe de features behoren.
+   */
+  layerId: string;
+  /**
+   * Title van de laag waartoe de features behoren, indien opgegeven.
+   */
+  layerTitle?: string;
   /**
    * Lijst van OpenLayers features met geometrie.
    */
@@ -17,6 +27,7 @@ export class FeatureCollectionForLayer {
 }
 
 /**
+ * @deprecated verhuisd naar ggc-models
  * Verzameling van features gegroepeerd per laag voor een specifieke
  * kaartcoördinaat.
  *
@@ -40,11 +51,4 @@ export class FeatureCollectionForCoordinate {
     this.coordinate = coord;
     this.featureCollectionForLayers = [];
   }
-}
-
-// CurrentAndPreviousSelection niet exporteren in public api, want dit is een intern model.
-// Wordt niet doorgegeven aan de afnemers van het component.
-export class CurrentAndPreviousSelection {
-  current: FeatureCollectionForCoordinate | undefined;
-  previous: FeatureCollectionForCoordinate | undefined;
 }

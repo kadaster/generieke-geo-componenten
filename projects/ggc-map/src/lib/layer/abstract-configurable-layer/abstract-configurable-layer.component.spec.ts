@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Layer } from "ol/layer";
 import ImageLayer from "ol/layer/Image";
 import OlMap from "ol/Map";
@@ -12,6 +12,7 @@ import { ViewStateLayerStateExtent } from "ol/View";
 import { Options } from "ol/source/ImageStatic";
 import objectContaining = jasmine.objectContaining;
 import { zoomlevelToResolution } from "../../utils/epsg28992";
+import { expect } from "vitest";
 
 @Component({ template: "" })
 class TestLayerComponent extends AbstractConfigurableLayerComponent<
@@ -36,12 +37,12 @@ describe("AbstractConfigurableLayerComponent", () => {
   let debugElement: DebugElement;
   let resultLayer: ImageLayer<ImageSource>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [AbstractConfigurableLayerComponent, TestLayerComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
-  }));
+  });
   beforeEach(() => {
     fixture = TestBed.createComponent(TestLayerComponent);
     component = fixture.componentInstance;
@@ -65,10 +66,9 @@ describe("AbstractConfigurableLayerComponent", () => {
   it("when attributions is provided via options.attributions, it should be contained in the source", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     const layer = new Layer({});
 
     layer.setSource(new ImageStatic({ url: "//" } as Options));
@@ -92,10 +92,9 @@ describe("AbstractConfigurableLayerComponent", () => {
   it("should set the layer id from options", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn<CoreMapService, any>(
-      coreMapService,
-      "getMap"
-    ).and.returnValue(addLayerMock);
+    const getMapSpy = vi
+      .spyOn<CoreMapService, any>(coreMapService, "getMap")
+      .mockReturnValue(addLayerMock);
     const layer = new Layer({});
 
     layer.setSource(new ImageStatic({ url: "//" } as Options));
@@ -126,7 +125,7 @@ describe("AbstractConfigurableLayerComponent", () => {
     component.ngOnInit();
 
     expect(component["layerOptions"]).not.toEqual(
-      objectContaining({
+      expect.objectContaining({
         zIndex: undefined,
         url: "",
         imageExtent: []

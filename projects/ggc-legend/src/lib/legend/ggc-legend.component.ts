@@ -122,6 +122,7 @@ export class GgcLegendComponent implements OnInit {
    */
   @Input()
   emptyLegendMessage = "Geen legenda beschikbaar";
+  /** Service voor het beheren van legenda-acties. */
 
   /**
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
@@ -144,7 +145,6 @@ export class GgcLegendComponent implements OnInit {
   /** Interne opslag van de legenda's. */
   protected _legends = signal<Legend[]>([]);
 
-  /** Service voor het beheren van legenda-acties. */
   private readonly coreLegendService = inject(CoreLegendService);
   private readonly legendMapConnectService = inject(GgcLegendMapConnectService);
 
@@ -259,20 +259,6 @@ export class GgcLegendComponent implements OnInit {
     this._legends.set([...this._legends()]);
   }
 
-  private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
-    const aIndex = l1?.legendIndex ?? 0;
-    const bIndex = l2?.legendIndex ?? 0;
-    // Hogere index komt eerder in de lijst terecht
-    return bIndex - aIndex;
-  }
-
-  private sortDatasetLegends(l1: Legend, l2: Legend) {
-    const aIndex = l1.layerLegends?.[0]?.legendIndex ?? 0;
-    const bIndex = l2.layerLegends?.[0]?.legendIndex ?? 0;
-    // Hogere index komt eerder in de lijst terecht
-    return bIndex - aIndex;
-  }
-
   /**
    * Verwijder alle legenda's van het opgegeven layerId.
    * @param layerId Van dit layerId worden alle legenda's verwijderd.
@@ -305,22 +291,6 @@ export class GgcLegendComponent implements OnInit {
       console.warn(
         "Set DatasetLegendComponent.collapsable = true om legends in of uit te klappen."
       );
-    }
-  }
-
-  /**
-   * Wisselt alle legenda's op basis van een toggle-event.
-   * @param datasetLegendToggle Toggle-informatie.
-   */
-  private toggleAllLegends(datasetLegendToggle: DatasetLegendToggle): void {
-    if (
-      this._legends() != null &&
-      Array.isArray(this._legends()) &&
-      this.mapIndex === datasetLegendToggle.mapIndex
-    ) {
-      for (const legend of this._legends()) {
-        legend.expanded = datasetLegendToggle.expanded;
-      }
     }
   }
 
@@ -385,6 +355,36 @@ export class GgcLegendComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  private sortLayerLegends(l1: LayerLegend, l2: LayerLegend) {
+    const aIndex = l1?.legendIndex ?? 0;
+    const bIndex = l2?.legendIndex ?? 0;
+    // Hogere index komt eerder in de lijst terecht
+    return bIndex - aIndex;
+  }
+
+  private sortDatasetLegends(l1: Legend, l2: Legend) {
+    const aIndex = l1.layerLegends?.[0]?.legendIndex ?? 0;
+    const bIndex = l2.layerLegends?.[0]?.legendIndex ?? 0;
+    // Hogere index komt eerder in de lijst terecht
+    return bIndex - aIndex;
+  }
+
+  /**
+   * Wisselt alle legenda's op basis van een toggle-event.
+   * @param datasetLegendToggle Toggle-informatie.
+   */
+  private toggleAllLegends(datasetLegendToggle: DatasetLegendToggle): void {
+    if (
+      this._legends() != null &&
+      Array.isArray(this._legends()) &&
+      this.mapIndex === datasetLegendToggle.mapIndex
+    ) {
+      for (const legend of this._legends()) {
+        legend.expanded = datasetLegendToggle.expanded;
+      }
+    }
   }
 
   private async initialise() {

@@ -33,7 +33,7 @@ import { NgClass } from "@angular/common";
  */
 @Component({
   selector: "ggc-toolbar-item",
-  styleUrl: "./ggc-toolbar-item.component.css",
+  styleUrl: "./ggc-toolbar-item.component.scss",
   templateUrl: "./ggc-toolbar-item.component.html",
   imports: [NgClass]
 })

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetLabelTemplateDirective } from "./dataset-label-template.directive";
 
 @Component({
@@ -22,13 +22,10 @@ describe("ValueTemplateDirective", () => {
   let fixture: ComponentFixture<WrapperComponent>;
   let wrapperComponent: any;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [WrapperComponent, DatasetLabelTemplateDirective]
     }).compileComponents();
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(WrapperComponent);
     wrapperComponent = fixture.debugElement.componentInstance;
   });

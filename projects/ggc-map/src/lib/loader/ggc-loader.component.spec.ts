@@ -29,7 +29,7 @@ describe("LoaderComponent", () => {
   });
 
   it("should subscribe when the mapIndex is set", () => {
-    spyOn(mapEventService, "getLoadingObservableForMap").and.returnValue(
+    vi.spyOn(mapEventService, "getLoadingObservableForMap").mockReturnValue(
       loadingSubject
     );
     component.mapIndex = "loading-map";
@@ -39,7 +39,7 @@ describe("LoaderComponent", () => {
   });
 
   it("should unsubscribe on destroy", () => {
-    spyOn(mapEventService, "getLoadingObservableForMap").and.returnValue(
+    vi.spyOn(mapEventService, "getLoadingObservableForMap").mockReturnValue(
       loadingSubject
     );
     loadingSubject.next(true);
@@ -53,7 +53,7 @@ describe("LoaderComponent", () => {
   });
 
   it("should unsubscribe on mapIndex change", () => {
-    spyOn(mapEventService, "getLoadingObservableForMap").and.callFake(
+    vi.spyOn(mapEventService, "getLoadingObservableForMap").mockImplementation(
       (mapIndex: string) => {
         return mapIndex === "loading-map"
           ? loadingSubject

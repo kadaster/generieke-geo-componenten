@@ -33,7 +33,7 @@ export class ExampleDrawCenterDrawComponent
     title: "Tekenen met markering op de kaart",
     introduction: "Tekenen met vingers (mobiele device) of toetsenbord.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.DRAW, Tags.KEYBOARD],
     imageLocation:
       "code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.png"
