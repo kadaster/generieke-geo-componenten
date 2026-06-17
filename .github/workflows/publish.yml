@@ -94,6 +94,10 @@ jobs:
             bump "ggc-dataset-tree"
           fi
 
+          if [ "$GGC_FEATURE_INFO" = "true" ]; then
+            bump "ggc-feature-info"
+          fi
+
           if [ "$GGC_LEGEND" = "true" ]; then
             bump "ggc-legend"
           fi
@@ -152,6 +156,10 @@ jobs:
 
           if [ "$GGC_DATASET_TREE" = "true" ]; then
             tag "ggc-dataset-tree"
+          fi
+
+          if [ "$GGC_FEATURE_INFO" = "true" ]; then
+            tag "ggc-feature-info"
           fi
 
           if [ "$GGC_LEGEND" = "true" ]; then
@@ -224,6 +232,10 @@ jobs:
 
           if [ "$GGC_DATASET_TREE" = "true" ]; then
             build_and_publish "ggc-dataset-tree"
+          fi
+
+          if [ "$GGC_FEATURE_INFO" = "true" ]; then
+            build_and_publish "ggc-feature-info"
           fi
 
           if [ "$GGC_LEGEND" = "true" ]; then
