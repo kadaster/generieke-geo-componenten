@@ -3,17 +3,6 @@
     "themeName": "Achtergrond kaart",
     "datasets": [
       {
-        "datasetName": "BRT Achtergrond",
-        "services": [
-          {
-            "layers": [
-              { "layerId": "brtAchtergrondkaartStandaard" },
-              { "layerId": "brtAchtergrondkaartGrijs" }
-            ]
-          }
-        ]
-      },
-      {
         "datasetName": "Luchtfoto",
         "services": [
           {

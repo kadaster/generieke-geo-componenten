@@ -36,6 +36,12 @@
     },
     {
       "path": "./projects/ggc-home/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ggc-foss4g/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/ggc-foss4g/tsconfig.spec.json"
     }
   ]
 }

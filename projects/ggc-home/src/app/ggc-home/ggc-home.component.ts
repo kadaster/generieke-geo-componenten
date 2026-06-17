@@ -25,6 +25,8 @@ export class GgcHomeComponent implements AfterViewInit {
   readonly githubUrl = githubUrl;
   readonly tsdocsUrl = tsdocsUrl;
 
+  bla = "bla";
+
   navItems = [
     {
       label: "Introductie",

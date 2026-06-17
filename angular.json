@@ -127,126 +127,6 @@
         }
       }
     },
-    "ggc-home": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "projects/ggc-home",
-      "sourceRoot": "projects/ggc-home/src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:application",
-          "options": {
-            "browser": "projects/ggc-home/src/main.ts",
-            "tsConfig": "projects/ggc-home/tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/ggc-home/public"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/ggc-home/src/app",
-                "output": "/code/"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@cesium/engine/Source/Assets",
-                "output": "/assets/cesium/Assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@cesium/engine/Build/Workers",
-                "output": "/assets/cesium/Workers"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@cesium/engine/Source/Widget",
-                "output": "/assets/cesium/Widget"
-              }
-            ],
-            "sourceMap": {
-              "styles": true,
-              "scripts": true,
-              "vendor": true
-            },
-            "styles": [
-              "projects/ggc-home/src/styles.scss",
-              "node_modules/ol/ol.css",
-              "@cesium/widgets/Source/widgets.css"
-            ],
-            "scripts": [
-              "./node_modules/jquery/dist/jquery.min.js",
-              "./node_modules/popper.js/dist/umd/popper.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "6MB",
-                  "maximumError": "7MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "projects/ggc-home/src/environments/environment.ts",
-                  "with": "projects/ggc-home/src/environments/environment.prod.ts"
-                }
-              ],
-              "outputHashing": "all"
-            },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve": {
-          "builder": "@angular/build:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "ggc-home:build:production"
-            },
-            "development": {
-              "buildTarget": "ggc-home:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "runner": "vitest",
-            "runnerConfig": "vitest.config.ts",
-            "setupFiles": ["src/test/setup-tests.ts"]
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "projects/ggc-home/**/*.ts",
-              "projects/ggc-home/**/*.html"
-            ]
-          }
-        }
-      }
-    },
     "ggc-legend": {
       "projectType": "library",
       "root": "projects/ggc-legend",
@@ -447,6 +327,82 @@
             "lintFilePatterns": [
               "projects/ggc-toolbar/**/*.ts",
               "projects/ggc-toolbar/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "ggc-foss4g": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/ggc-foss4g",
+      "sourceRoot": "projects/ggc-foss4g/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/ggc-foss4g/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/ggc-foss4g/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/ggc-foss4g/public"
+              }
+            ],
+            "styles": ["projects/ggc-foss4g/src/styles.scss"]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "10MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "ggc-foss4g:build:production"
+            },
+            "development": {
+              "buildTarget": "ggc-foss4g:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-foss4g/**/*.ts",
+              "projects/ggc-foss4g/**/*.html"
             ]
           }
         }
