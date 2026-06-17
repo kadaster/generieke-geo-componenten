@@ -69,6 +69,7 @@ jobs:
         env:
           VERSION_BUMP: ${{ github.event.inputs.version_bump }}
           GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
@@ -129,6 +130,7 @@ jobs:
       - name: Tag versions
         env:
           GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
@@ -193,6 +195,7 @@ jobs:
       - name: Publish to npm
         env:
           GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
