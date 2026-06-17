@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "tslib": "^2.3.0",
-    "@kadaster/ggc-models": "^2.0.0"
+    "@kadaster/ggc-models": "^3.0.0"
   },
   "publishConfig": {
     "directory": "../../dist/ggc-cesium",
