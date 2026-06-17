@@ -204,8 +204,7 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   }
 
   private async updateEnabled() {
-    let finalEnabled = true;
-    let computedEnabled = true;
+    let computedEnabled = this.enabled();
 
     if (this.autoConnectLayerStatus) {
       computedEnabled =
@@ -215,6 +214,8 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
           this.viewerType
         )) ?? true;
     }
+
+    let finalEnabled = computedEnabled;
 
     if (this.layerEnabledCallback) {
       const override = await this.layerEnabledCallback({
