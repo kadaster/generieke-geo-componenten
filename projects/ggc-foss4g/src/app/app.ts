@@ -1,12 +1,10 @@
-import { Component, signal } from "@angular/core";
+import { Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { BasicViewerComponent } from "./basic-viewer/basic-viewer.component";
+import { GgcFoss4gMenuComponent } from "./ggc-foss4g-menu/ggc-foss4g-menu.component";
 
 @Component({
   selector: "app-root",
-  imports: [RouterOutlet, BasicViewerComponent],
+  imports: [RouterOutlet, GgcFoss4gMenuComponent],
   templateUrl: "./app.html"
 })
-export class App {
-  protected readonly title = signal("ggc-foss4g");
-}
+export class App {}

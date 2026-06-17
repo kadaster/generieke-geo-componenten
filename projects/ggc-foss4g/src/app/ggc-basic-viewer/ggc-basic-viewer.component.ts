@@ -7,7 +7,7 @@ import {
 @Component({
   selector: "app-basic-viewer",
   imports: [GgcLayerBrtAchtergrondkaartComponent, GgcMapComponent],
-  templateUrl: "./basic-viewer.component.html",
-  styleUrl: "./basic-viewer.component.scss"
+  templateUrl: "./ggc-basic-viewer.component.html",
+  styleUrl: "./ggc-basic-viewer.component.scss"
 })
-export class BasicViewerComponent {}
+export class GgcBasicViewerComponent {}

@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BasicViewerComponent } from "./basic-viewer.component";
+import { GgcBasicViewerComponent } from "./ggc-basic-viewer.component";
 
 describe("BasicViewerComponent", () => {
-  let component: BasicViewerComponent;
-  let fixture: ComponentFixture<BasicViewerComponent>;
+  let component: GgcBasicViewerComponent;
+  let fixture: ComponentFixture<GgcBasicViewerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BasicViewerComponent]
+      imports: [GgcBasicViewerComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BasicViewerComponent);
+    fixture = TestBed.createComponent(GgcBasicViewerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

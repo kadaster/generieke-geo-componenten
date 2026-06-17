@@ -22,6 +22,7 @@
     "@cesium/engine": "21.0.1",
     "@cesium/widgets": "13.2.1",
     "@kadaster/ggc-map": "^3.0.0",
+    "@kadaster/ggc-search-location": "^3.0.0",
     "@piwikpro/ngx-piwik-pro": "^2.5.0",
     "jsonschema": "^1.5.0",
     "rxjs": "^7.8.2",
