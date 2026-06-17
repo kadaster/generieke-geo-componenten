@@ -23,6 +23,13 @@ export interface AbstractBaseLayerOptions {
    * Optioneel: wanneer true, dan is de kaartlaag initieel zichtbaar op de kaart.
    */
   visible?: boolean;
+
+  /**
+   * Optioneel: wanneer true, dan wordt deze layer niet meer verwijderd als deze wordt uitgezet met de dataset-tree,
+   * maar wordt de laag onzichtbaar gemaakt, waardoor deze intern wel blijft bestaan.
+   * Met deze optie worden bijvoorbeeld features die op een later moment handmatig zijn toegevoegd ook bewaard op de laag als deze wordt uitgezet.
+   */
+  persistent?: boolean;
 }
 
 /**
@@ -48,6 +55,18 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
    * en er op de beschikbare featureInfo kan worden geklikt.
    */
   maxResolution?: number;
+
+  /**
+   * Optioneel: Instellen van het minimale zoomniveau waarbij de kaartlaag zichtbaar is.
+   * Wordt overschreven door maxResolution als deze is opgegeven.
+   */
+  minZoomLevel?: number;
+
+  /**
+   * Optioneel: Instellen van het maximale zoomniveau waarbij de kaartlaag zichtbaar is.
+   * Wordt overschreven door minResolution als deze is opgegeven.
+   */
+  maxZoomlevel?: number;
 
   /**
    * Optioneel: Instellen van de z-index voor de volgorde waarin de layer in de kaart

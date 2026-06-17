@@ -22,7 +22,6 @@ import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabil
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
 import { DEVICE_PIXEL_RATIO } from "ol/has";
 import {
-  LayerChangedEventTrigger,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -164,7 +163,13 @@ export class GgcWmsLayerComponent
           FEATURE_COUNT: this.maxFeaturesOnSingleclick
         }
       );
-      if (featureInfoUrl !== undefined) {
+      if (featureInfoUrl === undefined) {
+        this.emitFeatureInfoEvent(
+          [],
+          coordinate,
+          "Geen featureInfoUrl gevonden"
+        );
+      } else {
         this.httpClient.get(featureInfoUrl).subscribe(
           (data) => {
             const formatGeoJSON = new GeoJSON();
@@ -180,12 +185,6 @@ export class GgcWmsLayerComponent
                 error.statusText
             );
           }
-        );
-      } else {
-        this.emitFeatureInfoEvent(
-          [],
-          coordinate,
-          "Geen featureInfoUrl gevonden"
         );
       }
     } else {
@@ -231,7 +230,6 @@ export class GgcWmsLayerComponent
         this.wmsSource.updateParams({ STYLES: style });
         this.updateLocalSourceOptionsFromWmsSource();
       }
-      return;
     } else if (Array.isArray(currentLayers)) {
       const index = currentLayers.indexOf(layerName);
 
@@ -256,6 +254,11 @@ export class GgcWmsLayerComponent
   enable() {
     super.enable();
     this.subscribeOnClickEvent();
+  }
+
+  disable() {
+    super.disable();
+    this.unsubscribeOnClickEvent();
   }
 
   private subscribeOnClickEvent() {

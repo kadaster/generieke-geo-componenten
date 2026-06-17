@@ -28,6 +28,7 @@ import {
   ViewerType
 } from "@kadaster/ggc-models";
 import { GgcLegendMapConnectService } from "./service/legend-map-connect.service";
+import { LayerLegendEnabledCallback } from "../model/layer-legend-enabled-callback.model";
 
 /**
  * Het dataset legenda component toont de legenda van kaartlagen
@@ -123,6 +124,24 @@ export class GgcLegendComponent implements OnInit {
   emptyLegendMessage = "Geen legenda beschikbaar";
   /** Service voor het beheren van legenda-acties. */
 
+  /**
+   * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
+   * optioneel kunt **overschrijven**.
+   */
+  @Input() layerLegendEnabledCallback: LayerLegendEnabledCallback;
+
+  /**
+   * Bepaalt of events automatisch intern worden afgehandeld binnen de component.
+   *
+   * @remarks
+   * Standaardwaarde: `true`.
+   *
+   * Wanneer ingesteld op `true`, verwerkt de component de events zelf.
+   * Bij `false` worden de events niet intern afgehandeld en wordt verwacht
+   * dat de parent-component deze afhandeling verzorgt.
+   */
+  @Input() autoConnect = true;
+
   /** Interne opslag van de legenda's. */
   protected _legends = signal<Legend[]>([]);
 
@@ -168,7 +187,7 @@ export class GgcLegendComponent implements OnInit {
    * Default is TWEE_D
    */
   @Input()
-  get viewerType(): string {
+  get viewerType(): ViewerType {
     return this._viewerType;
   }
 
@@ -189,7 +208,9 @@ export class GgcLegendComponent implements OnInit {
         this.toggleAllLegends(datasetLegenToggle);
       }
     );
-    void this.initialise();
+    if (this.autoConnect) {
+      void this.initialise();
+    }
   }
 
   /**
@@ -199,7 +220,7 @@ export class GgcLegendComponent implements OnInit {
    * Indien er geen legenda is meegegeven, maar wel een titel. Dan wordt de titel ook niet getoond indien `showEmptyLegendMessage = false`.
    * @param legend De legenda om toe te voegen
    */
-  addLegend(legend: LayerLegend) {
+  async addLegend(legend: LayerLegend) {
     if (
       !this.isLegendUrl(legend.legend) &&
       !this.isIconListArray(legend.legend) &&
@@ -207,6 +228,16 @@ export class GgcLegendComponent implements OnInit {
       !this.showEmptyLegendMessage
     ) {
       return;
+    }
+    if (this.layerLegendEnabledCallback) {
+      const enabled = await this.layerLegendEnabledCallback({
+        layerLegend: legend,
+        mapIndex: this.mapIndex,
+        viewerType: this.viewerType
+      });
+      if (typeof enabled === "boolean" && !enabled) {
+        return;
+      }
     }
     const datasetLegendNew: Legend = {
       name: legend.serviceTitle ?? legend.layerTitle ?? "",
