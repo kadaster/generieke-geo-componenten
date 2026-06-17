@@ -1,5 +1,6 @@
+import type { MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { View } from "ol";
 import { Coordinate } from "ol/coordinate";
 import Tile from "ol/layer/Tile";
@@ -10,38 +11,50 @@ import { of } from "rxjs";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { Capabilities } from "../model/capabilities.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { GgcWmtsLayerComponent } from "./ggc-wmts-layer.component";
-import SpyObj = jasmine.SpyObj;
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 describe("WmtsLayerComponent", () => {
   let component: GgcWmtsLayerComponent;
   let fixture: ComponentFixture<GgcWmtsLayerComponent>;
   let debugElement: DebugElement;
   let resultTileLayer: Tile<TileSource>;
-  let capabilitiesService: SpyObj<CoreWmsWmtsCapabilitiesService>;
-  let coreSelectionServiceSpy: SpyObj<CoreSelectionService>;
+  let capabilitiesService: MockedObject<CoreWmsWmtsCapabilitiesService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
+  let mapEventsService: CoreMapEventsService;
 
-  beforeEach(waitForAsync(() => {
-    const capSpy = jasmine.createSpyObj("CapabilitiesService", [
-      "getCapabilitiesForUrl",
-      "hasFeatureInfoUrl",
-      "optionsFromCapabilities",
-      "createGetFeatureInfoUrlObservable"
-    ]);
-    capSpy.getCapabilitiesForUrl.and.returnValue(of({}));
-    capSpy.optionsFromCapabilities.and.returnValue(of({}));
-    const selectionSpy = jasmine.createSpyObj("CoreSelectionService", [
-      "handleFeatureInfoForLayer",
-      "clearFeatureInfoForLayer"
-    ]);
+  beforeEach(() => {
+    const capSpy = {
+      getCapabilitiesForUrl: vi
+        .fn()
+        .mockName("CapabilitiesService.getCapabilitiesForUrl"),
+      hasFeatureInfoUrl: vi
+        .fn()
+        .mockName("CapabilitiesService.hasFeatureInfoUrl"),
+      optionsFromCapabilities: vi
+        .fn()
+        .mockName("CapabilitiesService.optionsFromCapabilities"),
+      createGetFeatureInfoUrlObservable: vi
+        .fn()
+        .mockName("CapabilitiesService.createGetFeatureInfoUrlObservable")
+    };
+    capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
+    capSpy.optionsFromCapabilities.mockReturnValue(of({}));
+    const selectionSpy = {
+      handleFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionService.handleFeatureInfoForLayer"),
+      clearFeatureInfoForLayer: vi
+        .fn()
+        .mockName("CoreSelectionService.clearFeatureInfoForLayer")
+    };
     TestBed.configureTestingModule({
       imports: [GgcWmtsLayerComponent],
       providers: [
@@ -52,7 +65,7 @@ describe("WmtsLayerComponent", () => {
         { provide: CoreWmsWmtsCapabilitiesService, useValue: capSpy }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcWmtsLayerComponent);
@@ -60,12 +73,13 @@ describe("WmtsLayerComponent", () => {
     fixture.detectChanges();
     debugElement = fixture.debugElement;
     resultTileLayer = new Tile();
+    mapEventsService = TestBed.inject(CoreMapEventsService);
     capabilitiesService = TestBed.inject(
       CoreWmsWmtsCapabilitiesService
-    ) as jasmine.SpyObj<CoreWmsWmtsCapabilitiesService>;
+    ) as MockedObject<CoreWmsWmtsCapabilitiesService>;
     coreSelectionServiceSpy = TestBed.inject(
       CoreSelectionService
-    ) as jasmine.SpyObj<CoreSelectionService>;
+    ) as MockedObject<CoreSelectionService>;
   });
 
   const addTileLayerMock = {
@@ -84,9 +98,9 @@ describe("WmtsLayerComponent", () => {
   it("when a layer is supplied, it should be used as a parameter", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-      addTileLayerMock
-    );
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(addTileLayerMock);
 
     component.options = {
       sourceOptions: {
@@ -94,7 +108,7 @@ describe("WmtsLayerComponent", () => {
       }
     };
 
-    capabilitiesService.optionsFromCapabilities.and.callFake(
+    capabilitiesService.optionsFromCapabilities.mockImplementation(
       (_: any, config: any) => {
         expect(config.layer).toBe("my-layer");
         return config;
@@ -107,9 +121,9 @@ describe("WmtsLayerComponent", () => {
   it("when ngOnInit is called, it should subscribe to the capabilities service", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-      addTileLayerMock
-    );
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(addTileLayerMock);
 
     component.ngOnInit();
 
@@ -121,21 +135,20 @@ describe("WmtsLayerComponent", () => {
     it("unsubscribe from singleclick events, removeLayer should be called on the map", () => {
       const coreMapService: CoreMapService =
         debugElement.injector.get(CoreMapService);
-      const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-        addTileLayerMock
-      );
+      const getMapSpy = vi
+        .spyOn(coreMapService, "getMap")
+        .mockReturnValue(addTileLayerMock);
       const mapEventsService: CoreMapEventsService =
         debugElement.injector.get(CoreMapEventsService);
-      const mapEventsServicespy = spyOn(
-        mapEventsService,
-        "getSingleclickObservableForMap"
-      ).and.returnValue(of());
+      const mapEventsServicespy = vi
+        .spyOn(mapEventsService, "getSingleclickObservableForMap")
+        .mockReturnValue(of());
 
       component.options = {
         getFeatureInfoOnSingleclick: true
       };
       component.ngOnInit();
-      spyOn(component["singleclick"], "unsubscribe").and.callThrough();
+      vi.spyOn(component["singleclick"], "unsubscribe");
       component.ngOnDestroy();
 
       expect(mapEventsServicespy).toHaveBeenCalled();
@@ -149,9 +162,9 @@ describe("WmtsLayerComponent", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
 
-    const getMapSpy = spyOn(coreMapService, "getMap").and.returnValue(
-      addTileLayerMock
-    );
+    const getMapSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue(addTileLayerMock);
 
     component.options = {
       layerOptions: {
@@ -191,7 +204,7 @@ describe("WmtsLayerComponent", () => {
             minResolution: 20
           }
         };
-        const emitFeatureInfoEventSpy = spyOn(
+        const emitFeatureInfoEventSpy = vi.spyOn(
           component,
           "emitFeatureInfoEvent"
         );
@@ -204,12 +217,12 @@ describe("WmtsLayerComponent", () => {
       "when getFeatureInfo is called and capabilities is undefined, " +
         "an event with an empty array will be emitted",
       () => {
-        capabilitiesService.getCapabilitiesForUrl.and.returnValue(
+        capabilitiesService.getCapabilitiesForUrl.mockReturnValue(
           of(undefined)
         );
         component.ngOnInit();
         component["map"] = mapViewMock;
-        const emitFeatureInfoEventSpy = spyOn(
+        const emitFeatureInfoEventSpy = vi.spyOn(
           component,
           "emitFeatureInfoEvent"
         );
@@ -226,11 +239,11 @@ describe("WmtsLayerComponent", () => {
         "an event with an empty array will be emitted",
       () => {
         component["map"] = mapViewMock;
-        const emitFeatureInfoEventSpy = spyOn(
+        const emitFeatureInfoEventSpy = vi.spyOn(
           component,
           "emitFeatureInfoEvent"
         );
-        capabilitiesService.hasFeatureInfoUrl.and.returnValue(false);
+        capabilitiesService.hasFeatureInfoUrl.mockReturnValue(false);
         component["capabilities"] = {} as Capabilities;
 
         component.getFeatureInfo(evt);
@@ -245,11 +258,11 @@ describe("WmtsLayerComponent", () => {
         "an event with an empty array will be emitted",
       () => {
         component["map"] = mapViewMock;
-        const emitFeatureInfoEventSpy = spyOn(
+        const emitFeatureInfoEventSpy = vi.spyOn(
           component,
           "emitFeatureInfoEvent"
-        ).and.callThrough();
-        capabilitiesService.hasFeatureInfoUrl.and.returnValue(true);
+        );
+        capabilitiesService.hasFeatureInfoUrl.mockReturnValue(true);
         // simulate feature data
         const featureData = {
           type: "Feature",
@@ -262,7 +275,7 @@ describe("WmtsLayerComponent", () => {
             tekst: "2"
           }
         };
-        capabilitiesService.createGetFeatureInfoUrlObservable.and.returnValue(
+        capabilitiesService.createGetFeatureInfoUrlObservable.mockReturnValue(
           of(featureData)
         );
         component["capabilities"] = {} as Capabilities;
@@ -288,6 +301,39 @@ describe("WmtsLayerComponent", () => {
         ).toHaveBeenCalled();
       }
     );
+
+    it("when getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
+      const mapEventsServicespy = vi.spyOn(
+        mapEventsService,
+        "getSingleclickObservableForMap"
+      );
+
+      component["options"] = { getFeatureInfoOnSingleclick: true };
+      component.ngOnInit();
+
+      expect(mapEventsServicespy).toHaveBeenCalled();
+      expect(component["singleclick"]).toBeDefined();
+    });
+
+    it("when options.getFeatureInfoOnSingleclick is true, add singleclick listener to map", () => {
+      const mapEventsServicespy = vi.spyOn(
+        mapEventsService,
+        "getSingleclickObservableForMap"
+      );
+
+      component["options"] = { getFeatureInfoOnSingleclick: true };
+      component.ngOnInit();
+
+      expect(mapEventsServicespy).toHaveBeenCalled();
+      expect(component["singleclick"]).toBeDefined();
+    });
+
+    it("when options.maxFeaturesOnSingleclick is set, maxFeaturesOnSingleclick should be set on component", () => {
+      component["options"] = { maxFeaturesOnSingleclick: 15 };
+      component.ngOnInit();
+
+      expect(component["maxFeaturesOnSingleclick"]).toBe(15);
+    });
 
     it("when emitFeatureInfoEvent is called it should emit an event and call CoreSelectionService", () => {
       component.options = {

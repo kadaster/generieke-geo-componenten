@@ -1,5 +1,6 @@
-import { Component, SimpleChange, ViewChild } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import type { MockedObject } from "vitest";
+import { Component, ViewChild } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
 import {
   ValueTemplateDirective,
@@ -48,7 +49,8 @@ import { GgcFeatureInfoComponent } from "./ggc-feature-info.component";
   imports: [GgcFeatureInfoComponent, ValueTemplateDirective]
 })
 class WrapperComponent {
-  @ViewChild(GgcFeatureInfoComponent) featureInfoChild: GgcFeatureInfoComponent;
+  @ViewChild(GgcFeatureInfoComponent)
+  featureInfoChild: GgcFeatureInfoComponent;
   protected readonly ValueTemplateDirectiveType = ValueTemplateDirectiveType;
 }
 
@@ -56,13 +58,17 @@ describe("FeatureInfoComponent", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<GgcFeatureInfoComponent>;
   let nativeElement: HTMLElement;
-  const featureInfoConfigServiceSpy: jasmine.SpyObj<GgcFeatureInfoConfigService> =
-    jasmine.createSpyObj("FeatureInfoConfigService", [
-      "filterAndSortAttributes",
-      "checkForCustomValues"
-    ]);
+  const featureInfoConfigServiceSpy: MockedObject<GgcFeatureInfoConfigService> =
+    {
+      filterAndSortAttributes: vi
+        .fn()
+        .mockName("FeatureInfoConfigService.filterAndSortAttributes"),
+      checkForCustomValues: vi
+        .fn()
+        .mockName("FeatureInfoConfigService.checkForCustomValues")
+    } as unknown as MockedObject<GgcFeatureInfoConfigService>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GgcFeatureInfoComponent, FeatureKeysPipe],
       providers: [
@@ -72,13 +78,11 @@ describe("FeatureInfoComponent", () => {
         }
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GgcFeatureInfoComponent);
     component = fixture.componentInstance;
     nativeElement = fixture.nativeElement;
-    featureInfoConfigServiceSpy.checkForCustomValues.and.returnValue([
+    featureInfoConfigServiceSpy.checkForCustomValues.mockReturnValue([
       { test: "123" }
     ]);
   });
@@ -112,12 +116,10 @@ describe("FeatureInfoComponent", () => {
     const feature1 = new Feature({ test: "123" });
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature1]
+      features: [feature1],
+      layerTitle: "title",
+      layerId: "id"
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([{}]);
-
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
-    fixture.detectChanges();
 
     const emptyMessageElement = nativeElement.querySelector(".ggc-fi-empty");
 
@@ -128,16 +130,16 @@ describe("FeatureInfoComponent", () => {
   });
 
   it("when hidePagerWithOneFeature is not set it should default always show the pager", () => {
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
+      { test: "123" }
+    ]);
     const feature = new Feature({ test: "123" });
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature]
+      features: [feature],
+      layerTitle: "title",
+      layerId: "id"
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
-      { test: "123" }
-    ]);
-
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
     fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
@@ -154,17 +156,17 @@ describe("FeatureInfoComponent", () => {
 
   it("when hidePagerWithOneFeature is set to true it not show the pager when there is only one feature", () => {
     const feature = new Feature({ test: "123" });
+
     component.featureInfoCollection = {
       layerName: "laag",
-      features: [feature]
+      features: [feature],
+      layerTitle: "title",
+      layerId: "id"
     };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" }
     ]);
-
     component.hidePagerWithOneFeature = true;
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
-    fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
     const pagerPreviousElement = nativeElement.querySelector(
@@ -180,17 +182,18 @@ describe("FeatureInfoComponent", () => {
   it("when hidePagerWithOneFeature is set to true, but there is more than 1 feature, it should show the pager", () => {
     const feature = new Feature({ test: "123" });
     const secondFeature = new Feature({ test: "456" });
-    component.featureInfoCollection = {
-      layerName: "laag",
-      features: [feature, secondFeature]
-    };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+    component.hidePagerWithOneFeature = true;
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" },
       { test: "456" }
     ]);
+    component.featureInfoCollection = {
+      layerName: "laag",
+      features: [feature, secondFeature],
+      layerTitle: "title",
+      layerId: "id"
+    };
 
-    component.hidePagerWithOneFeature = true;
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
     fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
@@ -204,22 +207,24 @@ describe("FeatureInfoComponent", () => {
     expect(pagerNextElement).not.toBeNull();
   });
 
-  it("when the pagerPrevious and pagerNext haven't been set, it should be the default < and >", () => {
+  it("should use provided pagerPrevious and pagerNext values", () => {
     const feature = new Feature({ test: "123" });
     const secondFeature = new Feature({ test: "456" });
-    component.featureInfoCollection = {
-      layerName: "laag",
-      features: [feature, secondFeature]
-    };
-    featureInfoConfigServiceSpy.filterAndSortAttributes.and.returnValue([
+
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" },
       { test: "456" }
     ]);
 
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
-
     component.pagerPrevious = "previous";
     component.pagerNext = "next";
+
+    component.featureInfoCollection = {
+      layerName: "laag",
+      features: [feature, secondFeature],
+      layerTitle: "title",
+      layerId: "id"
+    };
 
     fixture.detectChanges();
 
@@ -236,7 +241,7 @@ describe("FeatureInfoComponent", () => {
 describe("FeatureInfoWrapperComponent", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<WrapperComponent>;
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         WrapperComponent,
@@ -244,9 +249,7 @@ describe("FeatureInfoWrapperComponent", () => {
         ValueTemplateDirective
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(WrapperComponent);
     const wrapperComponent = fixture.debugElement.componentInstance;
     fixture.detectChanges();

@@ -37,9 +37,9 @@ describe("WmtsLayerService", () => {
 
       expect(service["layers"]?.length).toBe(1);
       expect(service["layerMap"].size).toBe(1);
-      expect(service["layerMap"].has(layerId)).toBeTrue();
+      expect(service["layerMap"].has(layerId)).toBe(true);
       const layerObject = service["layerMap"].get(layerId);
-      expect(layerObject?.layer instanceof ImageryLayer).toBeTrue();
+      expect(layerObject?.layer instanceof ImageryLayer).toBe(true);
       expect(layerObject?.zIndex).toBe(2);
     });
 

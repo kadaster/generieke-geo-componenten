@@ -1,19 +1,37 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
-import { CoreSelectionService } from "./core-selection.service";
-import { SelectionModeTypes } from "./selection-type.enum";
-import { GgcSelectionService } from "./ggc-selection.service";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { Observable, of } from "rxjs";
+import Feature from "ol/Feature";
+import { Geometry } from "ol/geom";
 
-describe("SelectService", () => {
+import { GgcSelectionService } from "./ggc-selection.service";
+import { CoreSelectionService } from "./core-selection.service";
+import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+import { SelectOptions } from "../../model/select-options";
+
+describe("GgcSelectionService", () => {
   let selectionService: GgcSelectionService;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
 
   beforeEach(() => {
-    const selectionSpyObj = jasmine.createSpyObj("CoreSelectionService", [
-      "setSelectionModeFormapIndex",
-      "clearSelectionForMap",
-      "getObservableForMap"
-    ]);
+    const selectionSpyObj = {
+      setSelectionModeFormapIndex: vi
+        .fn()
+        .mockName("CoreSelectionService.setSelectionModeFormapIndex"),
+      clearSelectionForMap: vi
+        .fn()
+        .mockName("CoreSelectionService.clearSelectionForMap"),
+      getObservableForMap: vi
+        .fn()
+        .mockName("CoreSelectionService.getObservableForMap"),
+      clearSelection: vi.fn().mockName("CoreSelectionService.clearSelection"),
+      startSelect: vi.fn().mockName("CoreSelectionService.startSelect"),
+      setSelection: vi.fn().mockName("CoreSelectionService.setSelection"),
+      stopSelect: vi.fn().mockName("CoreSelectionService.stopSelect"),
+      getCurrentSelection: vi
+        .fn()
+        .mockName("CoreSelectionService.getCurrentSelection")
+    };
     TestBed.configureTestingModule({
       providers: [
         GgcSelectionService,
@@ -23,43 +41,124 @@ describe("SelectService", () => {
     selectionService = TestBed.inject(GgcSelectionService);
     coreSelectionServiceSpy = TestBed.inject(
       CoreSelectionService
-    ) as jasmine.SpyObj<CoreSelectionService>;
+    ) as MockedObject<CoreSelectionService>;
   });
 
   it("should be created", () => {
     expect(selectionService).toBeTruthy();
   });
 
-  it("when setSingleselectMode is called, it should make a call to the CoreSelectionService with parameter singleselect", () => {
-    selectionService.setSingleselectMode();
+  describe("setSingleselectMode (deprecated)", () => {
+    it("should call startSelect with single select mode and default mapIndex", () => {
+      selectionService.setSingleselectMode();
 
-    expect(
-      coreSelectionServiceSpy.setSelectionModeFormapIndex
-    ).toHaveBeenCalledWith(SelectionModeTypes.SINGLE_SELECT, DEFAULT_MAPINDEX);
+      expect(coreSelectionServiceSpy.startSelect).toHaveBeenCalledWith(
+        { selectMode: "single" },
+        DEFAULT_MAPINDEX,
+        undefined
+      );
+    });
   });
 
-  it("when setMultiselectMode is called, it should make a call to the CoreSelectionService with parameter multiselect", () => {
-    const mapIndex = "mapIndex";
-    selectionService.setMultiselectMode(mapIndex);
+  describe("setMultiselectMode (deprecated)", () => {
+    it("should call startSelect with multi select mode and default mapIndex", () => {
+      selectionService.setMultiselectMode();
 
-    expect(
-      coreSelectionServiceSpy.setSelectionModeFormapIndex
-    ).toHaveBeenCalledWith(SelectionModeTypes.MULTI_SELECT, mapIndex);
+      expect(coreSelectionServiceSpy.startSelect).toHaveBeenCalledWith(
+        { selectMode: "multi" },
+        DEFAULT_MAPINDEX,
+        undefined
+      );
+    });
   });
 
-  it("when clearSelectionFormapIndex is called, it should make a call to the CoreSelectionService", () => {
-    selectionService.clearSelection();
+  describe("startSelect", () => {
+    it("should delegate startSelect to CoreSelectionService", () => {
+      const options: SelectOptions = { selectMode: "single" };
 
-    expect(coreSelectionServiceSpy.clearSelectionForMap).toHaveBeenCalledWith(
-      DEFAULT_MAPINDEX
-    );
+      selectionService.startSelect(options, "map-0", "select-0");
+
+      expect(coreSelectionServiceSpy.startSelect).toHaveBeenCalledWith(
+        options,
+        "map-0",
+        "select-0"
+      );
+    });
   });
 
-  it("when getObservableFormapIndex is called, it should make a call to the CoreSelectionService", () => {
-    selectionService.getObservable();
+  describe("stopSelect", () => {
+    it("should call stopSelect with a custom mapIndex", () => {
+      selectionService.stopSelect("map-1");
 
-    expect(coreSelectionServiceSpy.getObservableForMap).toHaveBeenCalledWith(
-      DEFAULT_MAPINDEX
-    );
+      expect(coreSelectionServiceSpy.stopSelect).toHaveBeenCalledWith("map-1");
+    });
+  });
+
+  describe("clearSelection", () => {
+    it("should call clearSelection with a custom mapIndex", () => {
+      selectionService.clearSelection("map-2");
+
+      expect(coreSelectionServiceSpy.clearSelection).toHaveBeenCalledWith(
+        "map-2",
+        undefined
+      );
+    });
+  });
+
+  describe("setSelectionForLayer (deprecated)", () => {
+    it("should delegate to setSelection with a custom mapIndex", () => {
+      const features: Feature<Geometry>[] = [new Feature<Geometry>()];
+
+      selectionService.setSelectionForLayer(features, "test-layer", "map-3");
+
+      expect(coreSelectionServiceSpy.setSelection).toHaveBeenCalledWith(
+        features,
+        "map-3"
+      );
+    });
+  });
+
+  describe("setSelection", () => {
+    it("should call setSelection with a custom mapIndex", () => {
+      const features: Feature<Geometry>[] = [new Feature<Geometry>()];
+
+      selectionService.setSelection(features, "map-4");
+
+      expect(coreSelectionServiceSpy.setSelection).toHaveBeenCalledWith(
+        features,
+        "map-4"
+      );
+    });
+  });
+
+  describe("getCurrentSelection", () => {
+    it("should return the current selection for a custom mapIndex", () => {
+      const features: Feature<Geometry>[] = [new Feature<Geometry>()];
+      coreSelectionServiceSpy.getCurrentSelection.mockReturnValue(features);
+
+      const result = selectionService.getCurrentSelection("map-5");
+
+      expect(result).toBe(features);
+      expect(coreSelectionServiceSpy.getCurrentSelection).toHaveBeenCalledWith(
+        "map-5"
+      );
+    });
+  });
+
+  describe("getObservable", () => {
+    it("should return the observable for a custom mapIndex", () => {
+      const observable$: Observable<MapComponentEvent> = of(
+        {} as MapComponentEvent
+      );
+      coreSelectionServiceSpy.getObservableForMap.mockReturnValue(observable$);
+
+      const result = selectionService.getObservable("map-6");
+
+      expect(result).toBe(observable$);
+      expect(coreSelectionServiceSpy.getObservableForMap).toHaveBeenCalledWith(
+        "map-6",
+        undefined
+      );
+    });
   });
 });

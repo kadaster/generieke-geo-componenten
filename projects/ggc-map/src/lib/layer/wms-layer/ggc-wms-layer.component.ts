@@ -15,15 +15,17 @@ import ImageWMS, { Options as ImageSourceOptions } from "ol/source/ImageWMS";
 import TileSource from "ol/source/Tile";
 import { Options as TileSourceOptions } from "ol/source/TileWMS";
 import { noop } from "rxjs";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+
 import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
 import { DEVICE_PIXEL_RATIO } from "ol/has";
+import {
+  LayerChangedEventTrigger,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 /**
  * Door `<ggc-wms-layer></ggc-wms-layer>` op te nemen in de HTML kunnen WMS-kaarten
@@ -60,6 +62,12 @@ export class GgcWmsLayerComponent
 
     if (this.options != undefined && this.options?.layers == undefined) {
       this.options.layers = this.options?.layerName;
+    }
+
+    this.enable();
+
+    if (this.options?.maxFeaturesOnSingleclick !== undefined) {
+      this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
     }
 
     const urlForCapabilities =
@@ -192,6 +200,7 @@ export class GgcWmsLayerComponent
   /** Verwijdert de laag en voert opruimacties uit. */
   ngOnDestroy(): void {
     super.ngOnDestroy();
+    this.unsubscribeOnClickEvent();
   }
 
   /**
@@ -244,6 +253,28 @@ export class GgcWmsLayerComponent
     }
   }
 
+  enable() {
+    super.enable();
+    this.subscribeOnClickEvent();
+  }
+
+  private subscribeOnClickEvent() {
+    this.unsubscribeOnClickEvent();
+    if (this.options?.getFeatureInfoOnSingleclick === true) {
+      this.singleclick = this.mapEventsService
+        .getSingleclickObservableForMap(this.mapIndex)
+        .subscribe((evt) => {
+          this.getFeatureInfo(evt);
+        });
+    }
+  }
+
+  private unsubscribeOnClickEvent() {
+    if (this.singleclick !== undefined) {
+      this.singleclick.unsubscribe();
+    }
+  }
+
   /** Werkt de lokale sourceOptions.params bij op basis van de WMS-bron. */
   private updateLocalSourceOptionsFromWmsSource(): void {
     this.options = this.options ?? {};
@@ -262,14 +293,11 @@ export class GgcWmsLayerComponent
     coordinate: Coordinate,
     message = "WMS getFeatureInfo resultaten: "
   ): void {
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        coordinate,
-        features,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      features,
+      this.getLayerId()
+    );
     this.events.emit(
       new MapComponentEvent(
         MapComponentEventTypes.WMSFEATUREINFO,

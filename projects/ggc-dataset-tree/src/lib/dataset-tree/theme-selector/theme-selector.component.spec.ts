@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LayerSelectorComponent } from "../layer-selector/layer-selector.component";
 
 import { ThemeSelectorComponent } from "./theme-selector.component";
@@ -9,17 +9,12 @@ describe("ThemeSelectorComponent", () => {
   let component: ThemeSelectorComponent;
   let fixture: ComponentFixture<ThemeSelectorComponent>;
 
-  let datasetTreeMapConnectServiceSpy: jasmine.SpyObj<DatasetTreeMapConnectService>;
-
-  beforeEach(waitForAsync(() => {
-    datasetTreeMapConnectServiceSpy =
-      jasmine.createSpyObj<DatasetTreeMapConnectService>(
-        "DatasetTreeMapConnectService",
-        ["getLayerChangedObservable"]
-      );
-    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.and.returnValue(
-      Promise.resolve(Promise.resolve(of()))
-    );
+  beforeEach(() => {
+    const datasetTreeMapConnectServiceSpy = {
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+    };
     TestBed.configureTestingModule({
       imports: [ThemeSelectorComponent, LayerSelectorComponent],
       providers: [
@@ -29,9 +24,10 @@ describe("ThemeSelectorComponent", () => {
         }
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
+    datasetTreeMapConnectServiceSpy.getLayerChangedObservable.mockReturnValue(
+      Promise.resolve(Promise.resolve(of()))
+    );
     fixture = TestBed.createComponent(ThemeSelectorComponent);
     component = fixture.componentInstance;
     component.themes = [];

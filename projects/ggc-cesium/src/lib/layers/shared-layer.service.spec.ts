@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { GgcSharedLayerService } from "./ggc-shared-layer.service";
 import { GeoJsonLayerService } from "./geojson-layer.service";
@@ -9,44 +10,51 @@ import {
   CesiumLayerChangedEvent,
   Webservice3DType
 } from "@kadaster/ggc-models";
+import { vi } from "vitest";
 
 describe("SharedLayerService", () => {
   let service: GgcSharedLayerService;
 
-  let geoJsonServiceSpy: jasmine.SpyObj<GeoJsonLayerService>;
-  let tiles3dServiceSpy: jasmine.SpyObj<Tiles3dLayerService>;
-  let wmtsServiceSpy: jasmine.SpyObj<WmtsLayerService>;
+  let geoJsonServiceSpy: MockedObject<GeoJsonLayerService>;
+  let tiles3dServiceSpy: MockedObject<Tiles3dLayerService>;
+  let wmtsServiceSpy: MockedObject<WmtsLayerService>;
 
   beforeEach(() => {
-    geoJsonServiceSpy = jasmine.createSpyObj("GeoJsonLayerService", [
-      "addLayer",
-      "removeLayer",
-      "isVisible",
-      "getEnabled",
-      "getLayerChangedObservable"
-    ]);
-    tiles3dServiceSpy = jasmine.createSpyObj("Tiles3dLayerService", [
-      "addLayer",
-      "removeLayer",
-      "isVisible",
-      "getEnabled",
-      "getLayerChangedObservable"
-    ]);
-    wmtsServiceSpy = jasmine.createSpyObj("WmtsLayerService", [
-      "addLayer",
-      "removeLayer",
-      "isVisible",
-      "getEnabled",
-      "getLayerChangedObservable"
-    ]);
+    geoJsonServiceSpy = {
+      addLayer: vi.fn().mockName("GeoJsonLayerService.addLayer"),
+      removeLayer: vi.fn().mockName("GeoJsonLayerService.removeLayer"),
+      isVisible: vi.fn().mockName("GeoJsonLayerService.isVisible"),
+      getEnabled: vi.fn().mockName("GeoJsonLayerService.getEnabled"),
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("GeoJsonLayerService.getLayerChangedObservable")
+    } as MockedObject<GeoJsonLayerService>;
+    tiles3dServiceSpy = {
+      addLayer: vi.fn().mockName("Tiles3dLayerService.addLayer"),
+      removeLayer: vi.fn().mockName("Tiles3dLayerService.removeLayer"),
+      isVisible: vi.fn().mockName("Tiles3dLayerService.isVisible"),
+      getEnabled: vi.fn().mockName("Tiles3dLayerService.getEnabled"),
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("Tiles3dLayerService.getLayerChangedObservable")
+    } as MockedObject<Tiles3dLayerService>;
+    wmtsServiceSpy = {
+      addLayer: vi.fn().mockName("WmtsLayerService.addLayer"),
+      removeLayer: vi.fn().mockName("WmtsLayerService.removeLayer"),
+      isVisible: vi.fn().mockName("WmtsLayerService.isVisible"),
+      getEnabled: vi.fn().mockName("WmtsLayerService.getEnabled"),
+      getLayerChangedObservable: vi
+        .fn()
+        .mockName("WmtsLayerService.getLayerChangedObservable")
+    } as MockedObject<WmtsLayerService>;
 
-    geoJsonServiceSpy.getLayerChangedObservable.and.returnValue(
+    geoJsonServiceSpy.getLayerChangedObservable.mockReturnValue(
       new Subject<CesiumLayerChangedEvent>()
     );
-    tiles3dServiceSpy.getLayerChangedObservable.and.returnValue(
+    tiles3dServiceSpy.getLayerChangedObservable.mockReturnValue(
       new Subject<CesiumLayerChangedEvent>()
     );
-    wmtsServiceSpy.getLayerChangedObservable.and.returnValue(
+    wmtsServiceSpy.getLayerChangedObservable.mockReturnValue(
       new Subject<CesiumLayerChangedEvent>()
     );
 
@@ -91,15 +99,15 @@ describe("SharedLayerService", () => {
 
     expect(geoJsonServiceSpy.addLayer).toHaveBeenCalledWith(
       "geojsonUrl",
-      jasmine.objectContaining({ layerId: "idGeojson" })
+      expect.objectContaining({ layerId: "idGeojson" })
     );
     expect(wmtsServiceSpy.addLayer).toHaveBeenCalledWith(
       "wmtsUrl",
-      jasmine.objectContaining({ layerId: "idWtms" })
+      expect.objectContaining({ layerId: "idWtms" })
     );
     expect(tiles3dServiceSpy.addLayer).toHaveBeenCalledWith(
       "drieDtilesUrl",
-      jasmine.objectContaining({ layerId: "idTiles3D" })
+      expect.objectContaining({ layerId: "idTiles3D" })
     );
   });
 
@@ -142,14 +150,14 @@ describe("SharedLayerService", () => {
   });
 
   it("should return true if any service reports visible", () => {
-    wmtsServiceSpy.isVisible.and.returnValue(false);
-    geoJsonServiceSpy.isVisible.and.returnValue(true);
+    wmtsServiceSpy.isVisible.mockReturnValue(false);
+    geoJsonServiceSpy.isVisible.mockReturnValue(true);
 
-    expect(service.isVisible("id1")).toBeTrue();
+    expect(service.isVisible("id1")).toBe(true);
   });
 
   it("should remove layer if currently visible when toggled", () => {
-    geoJsonServiceSpy.isVisible.and.returnValue(true);
+    geoJsonServiceSpy.isVisible.mockReturnValue(true);
 
     const layer: LayerConfig = { layerId: "id1" } as LayerConfig;
 
@@ -165,9 +173,9 @@ describe("SharedLayerService", () => {
   });
 
   it("should add layer if currently not visible when toggled", () => {
-    geoJsonServiceSpy.isVisible.and.returnValue(false);
-    wmtsServiceSpy.isVisible.and.returnValue(false);
-    tiles3dServiceSpy.isVisible.and.returnValue(false);
+    geoJsonServiceSpy.isVisible.mockReturnValue(false);
+    wmtsServiceSpy.isVisible.mockReturnValue(false);
+    tiles3dServiceSpy.isVisible.mockReturnValue(false);
 
     const layer: LayerConfig = {
       layerId: "id1",
@@ -195,7 +203,7 @@ describe("SharedLayerService", () => {
   });
 
   it("should return enabled of a layer", () => {
-    wmtsServiceSpy.getEnabled.and.returnValue(true);
+    wmtsServiceSpy.getEnabled.mockReturnValue(true);
     service["layerConfigurations"].push({
       url: "https:////x",
       type: Webservice3DType.WMTS,
@@ -227,12 +235,12 @@ describe("SharedLayerService", () => {
         } as LayerConfig
       ]
     });
-    wmtsServiceSpy.isVisible.and.callFake((id) => {
+    wmtsServiceSpy.isVisible.mockImplementation((id) => {
       if (id == "id1") return true;
       if (id == "id2") return false;
       return false;
     });
-    wmtsServiceSpy.getEnabled.and.returnValue(true);
+    wmtsServiceSpy.getEnabled.mockReturnValue(true);
     expect(service.getCurrentActiveLegends()).toEqual([
       {
         layerId: "id1",

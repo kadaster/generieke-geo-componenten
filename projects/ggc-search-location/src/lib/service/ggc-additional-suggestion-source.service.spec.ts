@@ -16,13 +16,12 @@ describe("GgcAdditionalSuggestionSourceService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("zou een lege array moeten teruggeven bij het zoeken", (done: DoneFn) => {
+  it("zou een lege array moeten teruggeven bij het zoeken", async () => {
     service
       .search("test query")
       .subscribe((suggestions: AdditionalSuggestion[]) => {
         expect(suggestions).toEqual([]);
         expect(suggestions.length).toBe(0);
-        done();
       });
   });
 });

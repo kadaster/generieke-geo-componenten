@@ -1,0 +1,56 @@
+<app-example-format
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld worden selectie door hover en klikken gecombineerd. Er
+      wordt een WFS kaartlaag met gemeentegrenzen gebruikt.Door over een
+      gemeente te bewegen met de muis (hover) wordt de naam van de geselecteerde
+      gemeente getoond. Ook wordt de gemeente op de kaart blauw gemarkeerd. Met
+      een klik op een gemeente wordt deze geselecteerd en rood gemarkeerd.
+    </p>
+    <p>
+      Er zijn 2 actieve select-interacties, elk met een eigen selectIndex. De
+      klikselectie heeft een custom styling, waardoor de selecties rood worden
+      gemarkeerd (in plaats van default blauw).
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-md-4 col-sm-5">
+        <p class="mt-2">Gemeente onder cursor: {{ currentHoverGemeente() }}</p>
+        <div class="feature-info-container">
+          <ggc-feature-info
+            [autoStartSelect]="false"
+            [mapIndex]="mapIndex"
+            [selectIndex]="selectIndexClick"
+          >
+          </ggc-feature-info>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-7">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"> </ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

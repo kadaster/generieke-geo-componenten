@@ -13,7 +13,7 @@ describe("drawValidator", () => {
   type Callback = () => any;
 
   it("should set the change listener", () => {
-    spyOn(feature, "on").and.callThrough();
+    vi.spyOn(feature, "on");
     drawValidator = new DrawValidator(feature, []);
     expect(feature.on).toHaveBeenCalled();
   });
@@ -27,12 +27,12 @@ describe("drawValidator", () => {
         }
         return { target: feature, type, listener };
       };
-      spyOn(feature, "on").and.callFake(
+      vi.spyOn(feature, "on").mockImplementation(
         fakeOnChange as FeatureOnSignature<EventsKey>
       );
     });
     it("should call the validation function", () => {
-      const spy = jasmine.createSpy();
+      const spy = vi.fn();
       drawValidator = new DrawValidator(feature, [spy]);
       expect(feature.on).toHaveBeenCalled();
       callback();
@@ -40,7 +40,7 @@ describe("drawValidator", () => {
     });
 
     it("should call the validation function once", () => {
-      const spy = jasmine.createSpy();
+      const spy = vi.fn();
       drawValidator = new DrawValidator(feature, [spy]);
       expect(feature.on).toHaveBeenCalled();
       callback();
@@ -50,9 +50,9 @@ describe("drawValidator", () => {
     });
 
     it("should stop validating if a validator fails", () => {
-      const spy1 = jasmine.createSpy();
-      const spy2 = jasmine.createSpy();
-      spy1.and.returnValue(false);
+      const spy1 = vi.fn();
+      const spy2 = vi.fn();
+      spy1.mockReturnValue(false);
       drawValidator = new DrawValidator(feature, [spy1, spy2]);
       expect(feature.on).toHaveBeenCalled();
       callback();
@@ -61,9 +61,9 @@ describe("drawValidator", () => {
     });
 
     it("reset the style if the validator succeeds", () => {
-      const spy1 = jasmine.createSpy();
-      spy1.and.returnValue(true);
-      spyOn(feature, "setStyle");
+      const spy1 = vi.fn();
+      spy1.mockReturnValue(true);
+      vi.spyOn(feature, "setStyle");
       drawValidator = new DrawValidator(feature, [spy1]);
       drawValidator["wasValid"] = false;
       expect(feature.on).toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe("drawValidator", () => {
     const invalidFinishDrawStyle = () => new Style();
     drawValidator = new DrawValidator(feature, [() => false]);
     drawValidator.styleMap = { invalidFinishDrawStyle };
-    spyOn(feature, "setStyle");
+    vi.spyOn(feature, "setStyle");
 
     drawValidator.finish();
     expect(feature.setStyle).toHaveBeenCalledWith(invalidFinishDrawStyle);

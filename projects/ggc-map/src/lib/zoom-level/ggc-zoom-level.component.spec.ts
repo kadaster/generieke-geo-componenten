@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import View from "ol/View";
 import { Observable, of, Subscription } from "rxjs";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
@@ -7,6 +7,7 @@ import { CoreMapEventsService } from "../map/service/core-map-events.service";
 import { CoreMapService } from "../map/service/core-map.service";
 import { GgcZoomLevelComponent } from "./ggc-zoom-level.component";
 import { provideZoneChangeDetection } from "@angular/core";
+import OlMap from "ol/Map";
 
 describe("ZoomLevelComponent", () => {
   let component: GgcZoomLevelComponent;
@@ -15,7 +16,7 @@ describe("ZoomLevelComponent", () => {
   let debugElement: DebugElement;
   let mapEventsService: CoreMapEventsService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     class MapEventsServiceMock {
       getZoomendObservableForMap() {
         return new Observable();
@@ -30,7 +31,7 @@ describe("ZoomLevelComponent", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GgcZoomLevelComponent);
@@ -49,9 +50,13 @@ describe("ZoomLevelComponent", () => {
   it("when onInit() is called, subscribe should be executed, ", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    const coreMapServiceSpy = spyOn(coreMapService, "getMap").and.stub();
+    const coreMapServiceSpy = vi
+      .spyOn(coreMapService, "getMap")
+      .mockReturnValue({} as unknown as OlMap);
 
-    spyOn(mapEventsService, "getZoomendObservableForMap").and.returnValue(of());
+    vi.spyOn(mapEventsService, "getZoomendObservableForMap").mockReturnValue(
+      of()
+    );
 
     component.ngOnInit();
 
@@ -65,7 +70,7 @@ describe("ZoomLevelComponent", () => {
       }
     } as View;
 
-    spyOn(component["map"], "getView").and.returnValue(viewMock);
+    vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
 
     component["getZoomLevel"]();
     fixture.detectChanges();
@@ -75,7 +80,7 @@ describe("ZoomLevelComponent", () => {
     const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
 
     expect(zoomLevelElement).not.toBeNull();
-    expect((zoomLevelElement as HTMLElement).innerText).toEqual("9");
+    expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual("9");
   });
 
   it("when zoom level is a decimal number getZoomLlevel() should return it rounded to 2 decimals ", () => {
@@ -85,7 +90,7 @@ describe("ZoomLevelComponent", () => {
       }
     } as View;
 
-    spyOn(component["map"], "getView").and.returnValue(viewMock);
+    vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
 
     component["getZoomLevel"]();
     fixture.detectChanges();
@@ -95,16 +100,19 @@ describe("ZoomLevelComponent", () => {
     const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
 
     expect(zoomLevelElement).not.toBeNull();
-    expect((zoomLevelElement as HTMLElement).innerText).toEqual("3.14");
+    expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual(
+      "3.14"
+    );
   });
 
   it("when ngDestroy is called, unsubscribe should be executed, ", () => {
     component["zoomendSubscription"] = new Subscription();
 
-    const subscriptionSpy = spyOn(
-      component["zoomendSubscription"],
-      "unsubscribe"
-    ).and.stub();
+    const subscriptionSpy = vi
+      .spyOn(component["zoomendSubscription"], "unsubscribe")
+      .mockImplementation(() => {
+        /* empty */
+      });
 
     component.ngOnDestroy();
 

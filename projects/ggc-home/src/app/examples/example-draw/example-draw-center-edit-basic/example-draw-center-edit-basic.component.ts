@@ -6,12 +6,7 @@ import {
   signal
 } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import {
-  GgcDrawService,
-  GgcMapComponent,
-  MapComponentEventTypes,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import GeoJSON from "ol/format/GeoJSON";
@@ -19,6 +14,10 @@ import * as polygonExamples from "./example-polygons.json";
 import { HttpClient } from "@angular/common/http";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-example-draw-center-edit-basic",
@@ -36,7 +35,7 @@ export class ExampleDrawCenterEditBasicComponent
     introduction:
       "Bewerk lijnen, punten, vlakken en rechthoeken met vingers (mobiele device) of toetsenbord.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.DRAW, Tags.MODIFY],
     imageLocation:
       "code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.png"
@@ -86,7 +85,7 @@ export class ExampleDrawCenterEditBasicComponent
   }
 
   // Toevoegen van tekeningen bij het openen van de kaart
-  onMapEvent(mapComponentEvent: any) {
+  onMapEvent(mapComponentEvent: MapComponentEvent) {
     if (mapComponentEvent.type === MapComponentEventTypes.MAPINITIALIZED) {
       const features = new GeoJSON().readFeatures(polygonExamples).slice(0, 5);
       for (const feature of features) {

@@ -1,4 +1,5 @@
-import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import type { MockedObject } from "vitest";
+import { TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import {
   HttpTestingController,
@@ -15,7 +16,7 @@ import { GgcAdditionalSuggestionSourceService } from "./ggc-additional-suggestio
 describe("PdokLocationApiService", () => {
   let service: PdokLocationApiService;
   let httpMock: HttpTestingController;
-  let additionalSourceSpy: jasmine.SpyObj<GgcAdditionalSuggestionSourceService>;
+  let additionalSourceSpy: MockedObject<GgcAdditionalSuggestionSourceService>;
 
   const mockPdokLocationApiResult = {
     collections: [
@@ -39,10 +40,10 @@ describe("PdokLocationApiService", () => {
   };
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj("GgcAdditionalSuggestionSourceService", [
-      "search"
-    ]);
-    spy.search.and.returnValue(of([]));
+    const spy = {
+      search: vi.fn().mockName("GgcAdditionalSuggestionSourceService.search")
+    };
+    spy.search.mockReturnValue(of([]));
 
     TestBed.configureTestingModule({
       providers: [
@@ -56,15 +57,11 @@ describe("PdokLocationApiService", () => {
     httpMock = TestBed.inject(HttpTestingController);
     additionalSourceSpy = TestBed.inject(
       GgcAdditionalSuggestionSourceService
-    ) as jasmine.SpyObj<GgcAdditionalSuggestionSourceService>;
+    ) as MockedObject<GgcAdditionalSuggestionSourceService>;
     service = TestBed.inject(PdokLocationApiService);
 
     const req = httpMock.expectOne((r) => r.url.endsWith("collections?f=json"));
     req.flush(mockPdokLocationApiResult);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
   });
 
   it("moet de service correct initialiseren en default collecties instellen", () => {
@@ -91,7 +88,8 @@ describe("PdokLocationApiService", () => {
       });
     });
 
-    it("moet 3 keer opnieuw proberen bij een HTTP fout (retry logic)", fakeAsync(() => {
+    it("moet 3 keer opnieuw proberen bij een HTTP fout (retry logic)", () => {
+      vi.useFakeTimers();
       const term = "fout";
       let errorOccurred = false;
 
@@ -106,16 +104,17 @@ describe("PdokLocationApiService", () => {
 
       // Poging 2 t/m 4 (de 3 retries met 500ms delay)
       for (let i = 0; i < 3; i++) {
-        tick(500);
+        vi.advanceTimersByTime(500);
+
         httpMock
           .expectOne((r) => r.url.includes("search?q=fout"))
           .error(new ProgressEvent("error"));
       }
 
-      expect(errorOccurred).toBeTrue();
-    }));
+      expect(errorOccurred).toBe(true);
+    });
 
-    it("moet extra suggesties van de GgcAdditionalSuggestionSourceService toevoegen", (done) => {
+    it("moet extra suggesties van de GgcAdditionalSuggestionSourceService toevoegen", async () => {
       const term = "test";
       const mockAltSuggestions = [
         {
@@ -125,7 +124,7 @@ describe("PdokLocationApiService", () => {
           collection: "custom"
         }
       ];
-      additionalSourceSpy.search.and.returnValue(of(mockAltSuggestions as any));
+      additionalSourceSpy.search.mockReturnValue(of(mockAltSuggestions as any));
 
       service.search(term).subscribe((response) => {
         expect(response.features.length).toBe(1);
@@ -133,23 +132,21 @@ describe("PdokLocationApiService", () => {
           "Extra Locatie"
         );
         expect(response.numberReturned).toBe(1);
-        done();
       });
 
       const req = httpMock.expectOne((r) => r.url.includes("search?q=test"));
       req.flush({ features: [], numberReturned: 0 });
     });
 
-    it("moet extra suggesties vooraan plaatsen als alternativeSuggestionsFirst true is", (done) => {
+    it("moet extra suggesties vooraan plaatsen als alternativeSuggestionsFirst true is", async () => {
       const term = "test";
-      additionalSourceSpy.search.and.returnValue(
+      additionalSourceSpy.search.mockReturnValue(
         of([{ id: "alt", display_name: "Alt" }] as any)
       );
 
       service.search(term, true).subscribe((response) => {
         expect(response.features[0].id).toBe("alt");
         expect(response.features[1].id).toBe("pdok-1");
-        done();
       });
 
       const req = httpMock.expectOne((r) => r.url.includes("search?q=test"));
@@ -170,19 +167,20 @@ describe("PdokLocationApiService", () => {
   });
 
   describe("searchOnTermChange", () => {
-    it("moet debouncen en alleen zoeken bij voldoende lengte", fakeAsync(() => {
+    it("moet debouncen en alleen zoeken bij voldoende lengte", () => {
+      vi.useFakeTimers();
       const searchTerms = ["u", "ut", "utr"];
       const terms$ = of(...searchTerms);
 
       service.searchOnTermChange(terms$).subscribe();
 
       // Wacht op de debounceTime van 400ms
-      tick(400);
+      vi.advanceTimersByTime(400);
 
       // 'u' is te kort (minQueryLength = 2), 'ut' wordt overruled door 'utr' (debounce)
       const req = httpMock.expectOne((r) => r.url.includes("q=utr"));
       req.flush({ response: {} });
-    }));
+    });
   });
 
   describe("item", () => {
@@ -207,15 +205,15 @@ describe("PdokLocationApiService", () => {
   });
 
   describe("configuratie", () => {
-    it("moet de minimale query lengte correct bijwerken", fakeAsync(() => {
+    it("moet de minimale query lengte correct bijwerken", () => {
       service.setMinQueryLength(5);
 
       service.searchOnTermChange(of("abc")).subscribe();
-      tick(400);
+      Promise.resolve();
 
       // 'abc' heeft lengte 3, wat nu kleiner is dan de nieuwe minQueryLength van 5
       httpMock.expectNone((r) => r.url.includes("q=abc"));
-    }));
+    });
 
     it("moet het aantal suggesties correct bijwerken", () => {
       service.setNumberOfSuggestions(25);

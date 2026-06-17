@@ -42,12 +42,11 @@ describe("MapEventsService", () => {
       expect(service["singleclickMap"].get(mapIndex)).toBeDefined();
     });
 
-    it("emitSingleclickEventForMap should emit event", (done) => {
+    it("emitSingleclickEventForMap should emit event", async () => {
       const mapIndex = "mapIndex";
 
       service.getSingleclickObservableForMap(mapIndex).subscribe((evt) => {
         expect(evt.type).toEqual("singleclickTest");
-        done();
       });
 
       service.emitSingleclickEventForMap(
@@ -100,12 +99,11 @@ describe("MapEventsService", () => {
       expect(service["zoomendMap"].get(mapIndex)).toBeDefined();
     });
 
-    it("emitZoomendEventForMap should emit event", (done) => {
+    it("emitZoomendEventForMap should emit event", async () => {
       const mapIndex = "mapIndex";
 
       service.getZoomendObservableForMap(mapIndex).subscribe((evt) => {
         expect(evt.type).toEqual("zoomEndTest");
-        done();
       });
 
       service.emitZoomendEventForMap(

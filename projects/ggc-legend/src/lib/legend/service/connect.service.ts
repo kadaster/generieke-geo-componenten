@@ -27,10 +27,6 @@ export class GgcLegendConnectService {
     this.cesiumModulePromise ??= import(
       /* @vite-ignore */ "@kadaster/ggc-cesium"
     ).catch((e) => {
-      console.debug(
-        `Autoconnect ggc-legend met ggc-cesium is niet gelukt: ${e}`,
-        e
-      );
       throw e;
     });
     return this.cesiumModulePromise;
@@ -43,10 +39,6 @@ export class GgcLegendConnectService {
     this.mapModulePromise ??= import(
       /* @vite-ignore */ "@kadaster/ggc-map"
     ).catch((e) => {
-      console.debug(
-        `Autoconnect ggc-legend met ggc-map is niet gelukt: ${e}`,
-        e
-      );
       throw e;
     });
     return this.mapModulePromise;
@@ -62,10 +54,6 @@ export class GgcLegendConnectService {
       }
       return this.ggcCesiumSharedLayerService;
     } catch (e) {
-      console.debug(
-        `Autoconnect ggc-legend met ggc-cesium is niet gelukt (GgcSharedLayerService): ${e}`,
-        e
-      );
       return undefined;
     }
   }
@@ -78,10 +66,6 @@ export class GgcLegendConnectService {
       }
       return this.ggcOLLayerService;
     } catch (e) {
-      console.debug(
-        `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcLayerService): ${e}`,
-        e
-      );
       return undefined;
     }
   }
@@ -96,10 +80,6 @@ export class GgcLegendConnectService {
       }
       return this.ggcOLMapEventsService;
     } catch (e) {
-      console.debug(
-        `Autoconnect ggc-legend met ggc-map is niet gelukt (GgcMapEventsService): ${e}`,
-        e
-      );
       return undefined;
     }
   }

@@ -1,11 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import {
-  GgcDrawService,
-  GgcMapComponent,
-  MapComponentEventTypes,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import GeoJSON from "ol/format/GeoJSON";
@@ -14,6 +9,7 @@ import { altKeyOnly, always, singleClick } from "ol/events/condition";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import MapBrowserEvent from "ol/MapBrowserEvent";
+import { MapComponentEventTypes } from "@kadaster/ggc-models";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 export enum EditType {
@@ -37,7 +33,7 @@ export class ExampleDrawEditBasicComponent
     introduction:
       "Verplaats en bewerk lijnen, punten, vlakken en rechthoeken met de muis.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.DRAW, Tags.MODIFY],
     imageLocation:
       "code/examples/example-draw/example-draw-edit-basic/example-draw-edit-basic.png"

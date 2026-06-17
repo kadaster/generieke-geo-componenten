@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Tiles3dLayerService } from "./tiles3d-layer.service";
 import {
@@ -11,6 +12,7 @@ import { CoreCameraService } from "../service/core-camera.service";
 import { LayerObject } from "../model/core-interfaces";
 import { LayerConfig, TilesetConfig } from "../model/interfaces";
 import { Subscription } from "rxjs";
+import { vi } from "vitest";
 
 describe("Tiles3dLayerService", () => {
   let service: Tiles3dLayerService;
@@ -50,12 +52,12 @@ describe("Tiles3dLayerService", () => {
   });
 
   describe("on addLayer", () => {
-    let createTilesetSpy: jasmine.Spy<any>;
+    let createTilesetSpy: Mock<any>;
     let layer: LayerConfig;
     const layerId = "testName";
     beforeEach(() => {
-      createTilesetSpy = spyOn<any>(service, "createTileset");
-      createTilesetSpy.and.resolveTo({} as Cesium3DTileset);
+      createTilesetSpy = vi.spyOn(service as any, "createTileset");
+      createTilesetSpy.mockResolvedValue({} as Cesium3DTileset);
 
       layer = {
         layerId: layerId,
@@ -69,8 +71,8 @@ describe("Tiles3dLayerService", () => {
 
       expect(service["layers"]?.length).toBe(1);
       expect(service["layerMap"].size).toBe(1);
-      expect(service["layerMap"].has(layerId)).toBeTrue();
-      expect(service["layerMap"].get(layerId)?.showFromDataset).toBeTrue();
+      expect(service["layerMap"].has(layerId)).toBe(true);
+      expect(service["layerMap"].get(layerId)?.showFromDataset).toBe(true);
       expect(
         service["layerMap"].get(layerId)?.showFromCameraCallback
       ).toBeUndefined();
@@ -88,8 +90,8 @@ describe("Tiles3dLayerService", () => {
 
       expect(service["layers"]?.length).toBe(1);
       expect(service["layerMap"].size).toBe(1);
-      expect(service["layerMap"].has(layerId)).toBeTrue();
-      expect(service["layerMap"].get(layerId)?.showFromDataset).toBeFalse();
+      expect(service["layerMap"].has(layerId)).toBe(true);
+      expect(service["layerMap"].get(layerId)?.showFromDataset).toBe(false);
       expect(
         service["layerMap"].get(layerId)?.showFromCameraCallback
       ).toBeUndefined();
@@ -113,7 +115,7 @@ describe("Tiles3dLayerService", () => {
 
       expect(service["layers"]?.length).toBe(1);
       expect(service["layerMap"].size).toBe(1);
-      expect(service["layerMap"].has(layerId)).toBeTrue();
+      expect(service["layerMap"].has(layerId)).toBe(true);
       expect(service["createTileset"]).toHaveBeenCalledWith(
         "3DTilesetLayer/url",
         constructorOptions
@@ -135,7 +137,7 @@ describe("Tiles3dLayerService", () => {
 
       expect(service["layers"]?.length).toBe(1);
       expect(service["layerMap"].size).toBe(1);
-      expect(service["layerMap"].has(layerId)).toBeTrue();
+      expect(service["layerMap"].has(layerId)).toBe(true);
       expect(service["createTileset"]).toHaveBeenCalledWith(
         "3DTilesetLayer/url",
         undefined
@@ -161,9 +163,9 @@ describe("Tiles3dLayerService", () => {
 
       await createTilesetSpy;
 
-      expect(
-        service["cameraSubscriptions"].has("layer-with-function")
-      ).toBeTrue();
+      expect(service["cameraSubscriptions"].has("layer-with-function")).toBe(
+        true
+      );
     });
 
     describe("on getLayerName", () => {
