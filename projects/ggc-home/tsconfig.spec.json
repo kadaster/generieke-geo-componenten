@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../../out-tsc/spec",
-    "types": ["vitest/globals", "node"],
-    "lib": ["dom", "es2018", "esNext"]
-  },
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
-}
