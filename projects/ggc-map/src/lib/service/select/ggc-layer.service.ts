@@ -128,6 +128,7 @@ export class GgcLayerService {
    * en voegt hun zichtbare lagen toe aan de kaart.
    */
   loadWebservices(services: Webservice[], mapIndex: string) {
+    this.removeCurrentLayers(mapIndex);
     this.mapConfigurations.set(mapIndex, services);
     for (const service of services) {
       this.loadWebservice(service, mapIndex);
@@ -504,6 +505,19 @@ export class GgcLayerService {
 
       return updatedLayer;
     });
+  }
+
+  private removeCurrentLayers(mapIndex: string) {
+    const configuration = this.mapConfigurations.get(mapIndex);
+    if (configuration) {
+      configuration.forEach((service) => {
+        service.layers.forEach((layer) => {
+          if (layer.layerId) {
+            this.removeLayer(mapIndex, layer.layerId);
+          }
+        });
+      });
+    }
   }
 
   /**
