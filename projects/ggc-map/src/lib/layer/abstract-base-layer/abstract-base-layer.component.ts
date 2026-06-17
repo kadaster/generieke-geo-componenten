@@ -25,13 +25,13 @@ export class AbstractBaseLayerComponent<T extends Layer>
 
   ngOnInit(): void {
     this.rdNewConfig = this.crsConfig.getRdNewCrsConfig();
-    if (!this.options) {
+    if (this.options) {
+      this.options.layerId ??= this.generateLayerId();
+    } else {
       this.options = {
         mapIndex: this.mapIndex,
         layerId: this.generateLayerId()
       };
-    } else if (this.options.layerId == undefined) {
-      this.options.layerId = this.generateLayerId();
     }
     if (this.options.mapIndex !== undefined) {
       this.mapIndex = this.options.mapIndex;
@@ -45,6 +45,14 @@ export class AbstractBaseLayerComponent<T extends Layer>
     }
   }
 
+  disable() {
+    // placeholder
+  }
+
+  enable() {
+    // placeholder
+  }
+
   public getLayerId(): string {
     return this.options!.layerId!;
   }
@@ -53,6 +61,7 @@ export class AbstractBaseLayerComponent<T extends Layer>
     this.olLayer = layer;
     this.olLayer.set("ggc-layer-id", this.options?.layerId);
     this.olLayer.set("ggc-title", this.options?.title);
+    this.olLayer.set("persistent", this.options?.persistent);
 
     this.map = this.coreMapService.getMap(this.mapIndex);
     this.map.addLayer(this.olLayer);

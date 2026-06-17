@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import {
   Cartesian2,
   Cartesian3,
@@ -16,10 +17,9 @@ import {
   getLookAtPositionAndRange
 } from "./camera-utils";
 import { Viewer } from "@cesium/widgets";
-import { createCesiumMock } from "../viewer/viewer-mock.spec";
+import { createCesiumMock } from "../viewer/viewer-mock";
 import { LookAtPosition, Position } from "../model/interfaces";
-import Spy = jasmine.Spy;
-
+import { vi } from "vitest";
 describe("getCameraValues", () => {
   it("should return cameraPosition", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
@@ -93,8 +93,8 @@ describe("createFlyToOptions", () => {
 describe("getLookAtPositionAndRange", () => {
   it("it should return a position and range when looking at a position", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    (viewer.camera?.getPickRay as Spy).and.returnValue({} as Ray);
-    (viewer.scene?.globe.pick as Spy).and.returnValue(
+    (viewer.camera?.getPickRay as Mock).mockReturnValue({} as Ray);
+    (viewer.scene?.globe.pick as Mock).mockReturnValue(
       Cartesian3.fromDegrees(4.6, 52.5, 10)
     );
     const value = getLookAtPositionAndRange(viewer.camera!, viewer as Viewer);
@@ -105,8 +105,8 @@ describe("getLookAtPositionAndRange", () => {
   });
   it("it should return undefined when not looking at a position", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    (viewer.camera?.getPickRay as Spy).and.returnValue({} as Ray);
-    (viewer.scene?.globe.pick as Spy).and.returnValue(undefined);
+    (viewer.camera?.getPickRay as Mock).mockReturnValue({} as Ray);
+    (viewer.scene?.globe.pick as Mock).mockReturnValue(undefined);
     const value = getLookAtPositionAndRange(viewer.camera!, viewer as Viewer);
     expect(value).toBe(undefined);
   });
@@ -115,31 +115,31 @@ describe("getLookAtPositionAndRange", () => {
 describe("getLookAtCartesian", () => {
   it("should get the camera towards a cartesian", () => {
     const viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    const cameraSpy = (viewer.camera?.getPickRay as Spy).and.returnValue(
+    const cameraMock = (viewer.camera?.getPickRay as Mock).mockReturnValue(
       new Ray()
     );
-    const resultSpy = (viewer.scene?.globe.pick as Spy).and.returnValue(
+    const resultMock = (viewer.scene?.globe.pick as Mock).mockReturnValue(
       new Cartesian3()
     );
 
     getLookAtCartesian(viewer.camera!, viewer as Viewer);
 
-    expect(cameraSpy).toHaveBeenCalledWith(new Cartesian2(100, 50));
-    expect(resultSpy).toHaveBeenCalledWith(new Ray(), viewer.scene!);
+    expect(cameraMock).toHaveBeenCalledWith(new Cartesian2(100, 50));
+    expect(resultMock).toHaveBeenCalledWith(new Ray(), viewer.scene!);
   });
 });
 
 describe("flyToLookAtPosition", () => {
   let viewer: Partial<Viewer>;
-  let cameraLookAtSpy: Spy<jasmine.Func>;
-  let cameraLookAtTransformSpy: Spy<jasmine.Func>;
+  let cameraLookAtMock: any;
+  let cameraLookAtTransformMock: any;
 
   beforeEach(() => {
     viewer = createCesiumMock({ cameraPitch: -Math.PI / 8 });
-    cameraLookAtSpy = (viewer.camera?.lookAt as Spy).and.returnValue({});
-    cameraLookAtTransformSpy = (
-      viewer.camera?.lookAtTransform as Spy
-    ).and.returnValue({});
+    cameraLookAtMock = (viewer.camera?.lookAt as Mock).mockReturnValue({});
+    cameraLookAtTransformMock = (
+      viewer.camera?.lookAtTransform as Mock
+    ).mockReturnValue({});
   });
 
   it("should fly to look at the position with given orientation and range", async () => {
@@ -161,11 +161,11 @@ describe("flyToLookAtPosition", () => {
       2.0943951023931953,
       75
     );
-    expect(cameraLookAtSpy).toHaveBeenCalledWith(
+    expect(cameraLookAtMock).toHaveBeenCalledWith(
       lookAtPositionResult,
       headingPitchRangeResult
     );
-    expect(cameraLookAtTransformSpy).toHaveBeenCalledWith(Matrix4.IDENTITY);
+    expect(cameraLookAtTransformMock).toHaveBeenCalledWith(Matrix4.IDENTITY);
   });
 
   it("should fly to look at the position without given orientation and range", async () => {
@@ -182,11 +182,11 @@ describe("flyToLookAtPosition", () => {
     );
     const headingPitchRangeResult = new HeadingPitchRange(0, -Math.PI / 8, 500);
 
-    expect(cameraLookAtSpy).toHaveBeenCalledWith(
+    expect(cameraLookAtMock).toHaveBeenCalledWith(
       lookAtPositionResult,
       headingPitchRangeResult
     );
-    expect(cameraLookAtTransformSpy).toHaveBeenCalledWith(Matrix4.IDENTITY);
+    expect(cameraLookAtTransformMock).toHaveBeenCalledWith(Matrix4.IDENTITY);
   });
 });
 
@@ -199,10 +199,9 @@ describe("getTerrainHeight", () => {
         computeHeight: 50
       }
     } as unknown as TerrainProvider;
-    const sampleTerrainMostDetailedUtilsSpy = spyOn(
-      cameraUtils as any,
-      "sampleTerrainMostDetailedUtils"
-    ).and.returnValue(Promise.resolve([{ height: 100 } as Cartographic]));
+    const sampleTerrainMostDetailedUtilsSpy = vi
+      .spyOn(cameraUtils as any, "sampleTerrainMostDetailedUtils")
+      .mockReturnValue(Promise.resolve([{ height: 100 } as Cartographic]));
 
     const result = await (cameraUtils as any).getTerrainHeight(
       position,

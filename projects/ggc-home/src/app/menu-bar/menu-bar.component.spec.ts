@@ -13,7 +13,6 @@ describe("MenuBarComponent", () => {
 
     fixture = TestBed.createComponent(MenuBarComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
   it("should create", () => {

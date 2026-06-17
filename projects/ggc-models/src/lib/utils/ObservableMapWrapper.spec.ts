@@ -13,13 +13,13 @@ describe("ObservableMapWrapper", () => {
   describe("has", () => {
     it("should return false if the map has not been set", () => {
       const map = new ObservableMapWrapper<string, string>(() => new Subject());
-      expect(map.has("non-existant")).toBeFalse();
+      expect(map.has("non-existant")).toBeFalsy();
     });
 
     it("should return true if the map has not been set", () => {
       const map = new ObservableMapWrapper<string, string>(() => new Subject());
       map.getOrCreate("item");
-      expect(map.has("item")).toBeTrue();
+      expect(map.has("item")).toBeTruthy();
     });
   });
 
@@ -27,9 +27,9 @@ describe("ObservableMapWrapper", () => {
     it("should delete the item", () => {
       const map = new ObservableMapWrapper<string, string>(() => new Subject());
       map.getOrCreate("item");
-      expect(map.has("item")).toBeTrue();
+      expect(map.has("item")).toBeTruthy();
       map.delete("item");
-      expect(map.has("item")).toBeFalse();
+      expect(map.has("item")).toBeFalsy();
     });
   });
 
@@ -55,8 +55,8 @@ describe("ObservableMapWrapper", () => {
       });
       const result = map.getOrCreateSubject("item");
 
-      expect(result instanceof Subject).toBeTrue();
-      expect(created).toBeTrue();
+      expect(result instanceof Subject).toBeTruthy();
+      expect(created).toBeTruthy();
     });
 
     it("should create the map and return the observable", () => {
@@ -67,7 +67,7 @@ describe("ObservableMapWrapper", () => {
       });
       map.getOrCreateObservable("item");
 
-      expect(created).toBeTrue();
+      expect(created).toBeTruthy();
     });
   });
 });

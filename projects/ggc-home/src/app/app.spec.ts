@@ -10,7 +10,6 @@ describe("App", () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(App);
-    fixture.whenStable();
   });
 
   it("should create the app", () => {

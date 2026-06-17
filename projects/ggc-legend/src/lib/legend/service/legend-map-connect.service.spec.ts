@@ -10,52 +10,38 @@ describe("GgcLegendMapConnectService", () => {
   let mapLayerService: any;
   let mapEventsService: any;
 
-  let legendConnectSpy: jasmine.SpyObj<GgcLegendConnectService>;
+  let legendConnectSpy: GgcLegendConnectService;
 
   beforeEach(async () => {
     cesiumLayerService = {
-      getLegendAddedObservable: jasmine
-        .createSpy()
-        .and.returnValue(of("add-3d")),
-      getLegendRemovedObservable: jasmine
-        .createSpy()
-        .and.returnValue(of("remove-3d")),
-      getEnabled: jasmine.createSpy().and.returnValue(true),
-      getCurrentActiveLegends: jasmine
-        .createSpy()
-        .and.returnValue([{ legendUrl: "cesium-legend" }])
+      getLegendAddedObservable: vi.fn().mockReturnValue(of("add-3d")),
+      getLegendRemovedObservable: vi.fn().mockReturnValue(of("remove-3d")),
+      getEnabled: vi.fn().mockReturnValue(true),
+      getCurrentActiveLegends: vi
+        .fn()
+        .mockReturnValue([{ legendUrl: "cesium-legend" }])
     };
 
     mapLayerService = {
-      getLegendAddedObservable: jasmine
-        .createSpy()
-        .and.returnValue(of("add-2d")),
-      getLegendRemovedObservable: jasmine
-        .createSpy()
-        .and.returnValue(of("remove-2d")),
-      getEnabled: jasmine.createSpy().and.returnValue(false),
-      getCurrentActiveLegends: jasmine
-        .createSpy()
-        .and.returnValue([{ legendUrl: "map-legend" }])
+      getLegendAddedObservable: vi.fn().mockReturnValue(of("add-2d")),
+      getLegendRemovedObservable: vi.fn().mockReturnValue(of("remove-2d")),
+      getEnabled: vi.fn().mockReturnValue(false),
+      getCurrentActiveLegends: vi
+        .fn()
+        .mockReturnValue([{ legendUrl: "map-legend" }])
     };
 
     mapEventsService = {
-      getZoomendObservableForMap: jasmine
-        .createSpy()
-        .and.returnValue(of("zoom-2d"))
+      getZoomendObservableForMap: vi.fn().mockReturnValue(of("zoom-2d"))
     };
 
-    legendConnectSpy = jasmine.createSpyObj("GgcLegendConnectService", [
-      "getGgcCesiumSharedLayerService",
-      "getGgcOLLayerService",
-      "getGgcOLMapEventsService"
-    ]);
-
-    legendConnectSpy.getGgcCesiumSharedLayerService.and.resolveTo(
-      cesiumLayerService
-    );
-    legendConnectSpy.getGgcOLLayerService.and.resolveTo(mapLayerService);
-    legendConnectSpy.getGgcOLMapEventsService.and.resolveTo(mapEventsService);
+    legendConnectSpy = {
+      getGgcCesiumSharedLayerService: vi
+        .fn()
+        .mockResolvedValue(cesiumLayerService),
+      getGgcOLLayerService: vi.fn().mockResolvedValue(mapLayerService),
+      getGgcOLMapEventsService: vi.fn().mockResolvedValue(mapEventsService)
+    } as unknown as GgcLegendConnectService;
 
     await TestBed.configureTestingModule({
       providers: [
@@ -81,7 +67,7 @@ describe("GgcLegendMapConnectService", () => {
       const result: any[] = [];
       obs.subscribe((v) => result.push(v));
 
-      expect(result).toEqual(jasmine.arrayContaining(["add-2d", "add-3d"]));
+      expect(result).toEqual(expect.arrayContaining(["add-2d", "add-3d"]));
     });
   });
 
@@ -93,7 +79,7 @@ describe("GgcLegendMapConnectService", () => {
       obs.subscribe((v) => result.push(v));
 
       expect(result).toEqual(
-        jasmine.arrayContaining(["remove-2d", "remove-3d"])
+        expect.arrayContaining(["remove-2d", "remove-3d"])
       );
     });
   });
@@ -113,9 +99,9 @@ describe("GgcLegendMapConnectService", () => {
       const legends = await service.getCurrentActiveLegends("mapIndex");
 
       expect(legends).toEqual(
-        jasmine.arrayContaining([
-          jasmine.objectContaining({ legendUrl: "map-legend" }),
-          jasmine.objectContaining({ legendUrl: "cesium-legend" })
+        expect.arrayContaining([
+          expect.objectContaining({ legendUrl: "map-legend" }),
+          expect.objectContaining({ legendUrl: "cesium-legend" })
         ])
       );
     });
@@ -125,7 +111,7 @@ describe("GgcLegendMapConnectService", () => {
     it("should return combined enabled state", async () => {
       const enabled = await service.getEnabled("layerId", "mapIndex");
 
-      expect(enabled).toBeFalse();
+      expect(enabled).toBe(false);
     });
   });
 });

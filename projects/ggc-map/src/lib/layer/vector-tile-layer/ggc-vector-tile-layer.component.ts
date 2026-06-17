@@ -18,16 +18,17 @@ import VectorTileSource, {
   Options as VectorOptions
 } from "ol/source/VectorTile";
 import TileGrid from "ol/tilegrid/TileGrid";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
+
 import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
 import { VectorTileLayerOptions } from "../model/vector-tile-layer.model";
 import BaseLayer from "ol/layer/Base";
 import { zoomlevelToResolution } from "../../utils/epsg28992";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-vector-tile-layer",
@@ -303,14 +304,11 @@ export class GgcVectorTileLayerComponent
       }
     );
     const foundFeaturesCopy = this.foundFeatures.slice();
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        event.coordinate,
-        foundFeaturesCopy,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      foundFeaturesCopy,
+      this.getLayerId()
+    );
     const mapComponentEvent = new MapComponentEvent(
       MapComponentEventTypes.VECTORFEATUREINFO,
       this.mapIndex,

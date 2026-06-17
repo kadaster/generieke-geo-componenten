@@ -1,33 +1,39 @@
+import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Color, ScreenSpaceEventType } from "@cesium/engine";
 import { SelectionConfig, SelectionEvent } from "../model/interfaces";
 import { CoreSelectionService } from "./core-selection.service";
 import { GgcSelectionService } from "./ggc-selection.service";
 import { Subject } from "rxjs";
-
+import { vi } from "vitest";
 describe("GgcSelectionService", () => {
   let service: GgcSelectionService;
-  let coreService: jasmine.SpyObj<CoreSelectionService>;
+  let coreService: MockedObject<CoreSelectionService>;
   let selection: SelectionConfig;
   let selections: SelectionConfig[];
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj(
-      "CoreSelectionService",
-      [
-        "initializeSelections",
-        "addSelection",
-        "clearSelection",
-        "clearAllSelections",
-        "destroySelection",
-        "destroyAllSelections",
-        "getClickEventsObservable"
-      ],
-      {
-        currentSupportedEvents: [ScreenSpaceEventType.LEFT_DOWN],
-        clickEvent: new Subject<SelectionEvent>()
-      }
-    );
+    const spy = {
+      initializeSelections: vi
+        .fn()
+        .mockName("CoreSelectionService.initializeSelections"),
+      addSelection: vi.fn().mockName("CoreSelectionService.addSelection"),
+      clearSelection: vi.fn().mockName("CoreSelectionService.clearSelection"),
+      clearAllSelections: vi
+        .fn()
+        .mockName("CoreSelectionService.clearAllSelections"),
+      destroySelection: vi
+        .fn()
+        .mockName("CoreSelectionService.destroySelection"),
+      destroyAllSelections: vi
+        .fn()
+        .mockName("CoreSelectionService.destroyAllSelections"),
+      getClickEventsObservable: vi
+        .fn()
+        .mockName("CoreSelectionService.getClickEventsObservable"),
+      currentSupportedEvents: [ScreenSpaceEventType.LEFT_DOWN],
+      clickEvent: new Subject<SelectionEvent>()
+    };
 
     TestBed.configureTestingModule({
       providers: [
@@ -38,7 +44,7 @@ describe("GgcSelectionService", () => {
     service = TestBed.inject(GgcSelectionService);
     coreService = TestBed.inject(
       CoreSelectionService
-    ) as jasmine.SpyObj<CoreSelectionService>;
+    ) as MockedObject<CoreSelectionService>;
 
     selection = {
       eventType: ScreenSpaceEventType.LEFT_CLICK,
@@ -87,7 +93,7 @@ describe("GgcSelectionService", () => {
 
   it("should return an Observable from the CoreSelectionService when getSelectionEventsObservable() is called", () => {
     const observable = new Subject<SelectionEvent>().asObservable();
-    coreService.getClickEventsObservable.and.returnValue(observable);
+    coreService.getClickEventsObservable.mockReturnValue(observable);
     const selectionEventsObservable = service.getSelectionEventsObservable();
     expect(selectionEventsObservable).toEqual(observable);
   });

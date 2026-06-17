@@ -1,11 +1,6 @@
+import type { MockedObject } from "vitest";
 import { DebugElement } from "@angular/core";
-import {
-  ComponentFixture,
-  fakeAsync,
-  flushMicrotasks,
-  TestBed,
-  waitForAsync
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import {
   ToolbarItemMeasureComponentEvent,
@@ -13,7 +8,6 @@ import {
 } from "../../event/toolbar-item-measure-event";
 
 import { GgcToolbarItemMeasureComponent } from "./ggc-toolbar-item-measure.component";
-import SpyObj = jasmine.SpyObj;
 import { provideZoneChangeDetection } from "@angular/core";
 import { GgcDrawService } from "@kadaster/ggc-map/src/lib/drawing/service/ggc-draw.service";
 import { GgcToolbarConnectService } from "../../service/connect.service";
@@ -23,22 +17,23 @@ describe("ToolbarItemMeasureComponent", () => {
   let fixture: ComponentFixture<GgcToolbarItemMeasureComponent>;
   let debugElement: DebugElement;
 
-  let drawServiceSpy: SpyObj<GgcDrawService>;
-  let connectServiceSpy: SpyObj<GgcToolbarConnectService>;
+  let drawServiceSpy: MockedObject<GgcDrawService>;
+  let connectServiceSpy: MockedObject<GgcToolbarConnectService>;
 
-  beforeEach(waitForAsync(() => {
-    drawServiceSpy = jasmine.createSpyObj("GgcDrawService", [
-      "startDraw",
-      "stopDraw",
-      "clearLayer"
-    ]);
+  beforeEach(() => {
+    drawServiceSpy = {
+      startDraw: vi.fn().mockName("GgcDrawService.startDraw"),
+      stopDraw: vi.fn().mockName("GgcDrawService.stopDraw"),
+      clearLayer: vi.fn().mockName("GgcDrawService.clearLayer")
+    } as MockedObject<GgcDrawService>;
 
-    connectServiceSpy = jasmine.createSpyObj("GgcToolbarConnectService", [
-      "getDrawService",
-      "getMapComponentDrawTypes"
-    ]);
+    connectServiceSpy = {
+      getDrawService: vi
+        .fn()
+        .mockName("GgcToolbarConnectService.getDrawService")
+    } as MockedObject<GgcToolbarConnectService>;
 
-    connectServiceSpy.getDrawService.and.resolveTo(drawServiceSpy);
+    connectServiceSpy.getDrawService.mockResolvedValue(drawServiceSpy);
 
     TestBed.configureTestingModule({
       imports: [GgcToolbarItemMeasureComponent],
@@ -50,14 +45,11 @@ describe("ToolbarItemMeasureComponent", () => {
         provideZoneChangeDetection()
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(async () => {
     fixture = TestBed.createComponent(GgcToolbarItemMeasureComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 
-    await fixture.whenStable();
     fixture.detectChanges();
   });
 
@@ -94,32 +86,32 @@ describe("ToolbarItemMeasureComponent", () => {
       );
     });
 
-    it("should emit STOP when stopMeasure is called", fakeAsync(() => {
+    it("should emit STOP when stopMeasure is called", async () => {
       component.stopMeasure();
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.stopDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.STOP);
-    }));
+    });
 
-    it("should emit LINE when measureLine is called", fakeAsync(() => {
+    it("should emit LINE when measureLine is called", async () => {
       component.measureLine();
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.LINE);
-    }));
+    });
 
-    it("should emit POLYGON when measurePolygon is called", fakeAsync(() => {
+    it("should emit POLYGON when measurePolygon is called", async () => {
       component.measurePolygon();
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.startDraw).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.POLYGON);
-    }));
+    });
 
-    it("should emit CLEAR when eraseMeasureLayer is called", fakeAsync(() => {
+    it("should emit CLEAR when eraseMeasureLayer is called", async () => {
       component.eraseMeasureLayer();
-      flushMicrotasks();
+      await Promise.resolve();
       expect(drawServiceSpy.clearLayer).toHaveBeenCalled();
       expect(event.toolbarItemName).toBe(ToolbarItemMeasureType.CLEAR);
-    }));
+    });
   });
 });

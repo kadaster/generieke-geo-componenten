@@ -1,65 +1,55 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { Component, ViewChild } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcToolbarItemComponent } from "../toolbar-item/ggc-toolbar-item.component";
 import { GgcToolbarComponent } from "./ggc-toolbar.component";
 import { provideZoneChangeDetection } from "@angular/core";
 
 @Component({
-  imports: [GgcToolbarItemComponent, GgcToolbarComponent],
-  template: ` <ggc-toolbar class="toolbar-position">
-    <ggc-toolbar-item [icon]="'fab fa-linux'" [title]="'test title'">
-      <div>Hello World</div>
-    </ggc-toolbar-item>
-  </ggc-toolbar>`
+  imports: [GgcToolbarComponent, GgcToolbarItemComponent],
+  template: `
+    <ggc-toolbar>
+      <ggc-toolbar-item [icon]="'fab fa-linux'" [title]="'test title'">
+        <div>Hello World</div>
+      </ggc-toolbar-item>
+    </ggc-toolbar>
+  `
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
-class TestToolBar {
-  @ViewChild(GgcToolbarComponent) toolbar: GgcToolbarComponent;
+class TestHostComponent {
+  @ViewChild(GgcToolbarComponent)
+  toolbar: GgcToolbarComponent;
 }
 
 describe("ToolboxComponent", () => {
-  let component: GgcToolbarComponent;
-  let fixture: ComponentFixture<GgcToolbarComponent>;
+  let hostFixture: ComponentFixture<TestHostComponent>;
+  let hostComponent: TestHostComponent;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [GgcToolbarComponent, TestToolBar, GgcToolbarItemComponent],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestHostComponent],
       providers: [provideZoneChangeDetection()]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(GgcToolbarComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    hostFixture = TestBed.createComponent(TestHostComponent);
+    hostComponent = hostFixture.componentInstance;
+    hostFixture.detectChanges();
   });
 
   it("should create", () => {
-    expect(component).toBeTruthy();
+    expect(hostComponent).toBeTruthy();
   });
 
-  it(
-    "When handleClick methode is activated, it should add the child content of ggc-toolbar-item " +
-      "to the div element .ggc-toolbar-content ",
-    () => {
-      const testFixture = TestBed.createComponent(TestToolBar);
+  it("should render item content after click", () => {
+    const toolbar = hostComponent.toolbar;
 
-      testFixture.detectChanges();
+    (toolbar as any).children.forEach((child: any) => child.handleClick());
 
-      const componentInstance = testFixture.componentInstance;
-      // simulate button click
-      componentInstance.toolbar["children"].forEach((child) =>
-        child.handleClick()
-      );
+    hostFixture.detectChanges();
 
-      testFixture.detectChanges();
+    const content = hostFixture.debugElement.query(
+      By.css(".ggc-toolbar-content")
+    ).nativeElement;
 
-      const deC: DebugElement = testFixture.debugElement.query(
-        By.css(".ggc-toolbar-content")
-      );
-
-      expect(deC.nativeNode.innerText).toBe("Hello World");
-    }
-  );
+    expect(content.textContent).toContain("Hello World");
+  });
 });

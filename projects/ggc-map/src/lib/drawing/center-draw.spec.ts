@@ -42,14 +42,11 @@ describe("CenterDraw", () => {
   });
 
   it("setMap() should attach correctly to a map and initialize overlays", () => {
-    const overlaySetMapSpy = spyOn(
-      centerDraw["overlay"]!,
-      "setMap"
-    ).and.callThrough();
-    const crossHairOverlaySetMapSpy = spyOn(
+    const overlaySetMapSpy = vi.spyOn(centerDraw["overlay"]!, "setMap");
+    const crossHairOverlaySetMapSpy = vi.spyOn(
       centerDraw["crossHairOverlay"]!,
       "setMap"
-    ).and.callThrough();
+    );
 
     centerDraw.setMap(mapMock);
 
@@ -73,14 +70,11 @@ describe("CenterDraw", () => {
   });
 
   it("setMap() should detach correctly from a map", () => {
-    const overlaySetMapSpy = spyOn(
-      centerDraw["overlay"]!,
-      "setMap"
-    ).and.callThrough();
-    const crossHairOverlaySetMapSpy = spyOn(
+    const overlaySetMapSpy = vi.spyOn(centerDraw["overlay"]!, "setMap");
+    const crossHairOverlaySetMapSpy = vi.spyOn(
       centerDraw["crossHairOverlay"]!,
       "setMap"
-    ).and.callThrough();
+    );
     centerDraw.setMap(null);
     // Controleer dat de overlays van de kaart zijn ontkoppeld
     expect(overlaySetMapSpy).toHaveBeenCalledWith(null);
@@ -88,10 +82,10 @@ describe("CenterDraw", () => {
   });
 
   it("registerListener() should listen to view changes and call updateCenterPoint", () => {
-    const updateCenterPointSpy = spyOn(
+    const updateCenterPointSpy = vi.spyOn(
       centerDraw as any,
       "updateCenterPoint"
-    ).and.callThrough();
+    );
 
     // Registreer de luisteraars
     centerDraw["registerListeners"]!(mapMock);
@@ -173,7 +167,7 @@ describe("CenterDraw", () => {
   });
 
   it("appendCoordinates() should call initializeSketch if sketchGeometry  is undefined", () => {
-    const initialize = spyOn(centerDraw as any, "initializeSketch");
+    const initialize = vi.spyOn(centerDraw as any, "initializeSketch");
     centerDraw["type"] = "LineString"; // Stel het type in
     centerDraw["sketchGeometry"] = undefined; // Geen bestaande geometrie
     // Roep appendCoordinates aan
@@ -182,7 +176,10 @@ describe("CenterDraw", () => {
   });
 
   it("appendCoordinates() should initialize a Point geometry and set its coordinates", () => {
-    const finishDrawing = spyOn(centerDraw, "finishDrawing");
+    const finishDrawing = vi
+      .spyOn(centerDraw, "finishDrawing")
+      .mockReturnValue(undefined);
+
     centerDraw["type"] = "Point"; // Stel het type in op Point
     // Roep appendCoordinates aan
     centerDraw.appendCoordinates();
@@ -282,7 +279,7 @@ describe("CenterDraw", () => {
       [100, 200]
     ]);
     const source = centerDraw["overlay"]!.getSource()!;
-    spyOn(source, "clear");
+    vi.spyOn(source, "clear");
     // Roep de methode aan
     centerDraw.removeLastPoint();
     // Verifieer abortDrawing is aangeroepen
@@ -326,7 +323,7 @@ describe("CenterDraw", () => {
     ]);
 
     const source = centerDraw["overlay"]!.getSource()!;
-    spyOn(source, "clear");
+    vi.spyOn(source, "clear");
 
     centerDraw.removeLastPoint();
 
@@ -353,7 +350,7 @@ describe("CenterDraw", () => {
       [30, 40]
     ]);
     // Controleer dat de functie `dispatchEvent` is aangeroepen
-    spyOn(centerDraw, "dispatchEvent");
+    vi.spyOn(centerDraw, "dispatchEvent");
     expect(centerDraw.dispatchEvent).toHaveBeenCalled;
   });
   it("finishDrawing() should remove a redundant point from Polygon add it to the target source and finish the drawing", () => {
@@ -377,7 +374,7 @@ describe("CenterDraw", () => {
       [10, 20]
     ]);
     // Controleer dat de functie `dispatchEvent` is aangeroepen
-    spyOn(centerDraw, "dispatchEvent");
+    vi.spyOn(centerDraw, "dispatchEvent");
     expect(centerDraw.dispatchEvent).toHaveBeenCalled;
   });
 
@@ -410,7 +407,7 @@ describe("CenterDraw", () => {
   });
   it("abortDrawing() should clear the overlay", () => {
     // Mock de clear-functie van de overlay-bron
-    const clearSpy = spyOn(centerDraw["overlay"]!.getSource()!, "clear");
+    const clearSpy = vi.spyOn(centerDraw["overlay"]!.getSource()!, "clear");
 
     // Roep de methode aan
     (centerDraw as any).abortDrawing();

@@ -1,12 +1,6 @@
+import type { Mock, MockedObject } from "vitest";
 import { SimpleChange } from "@angular/core";
-import {
-  ComponentFixture,
-  fakeAsync,
-  flushMicrotasks,
-  TestBed,
-  tick,
-  waitForAsync
-} from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcDatasetTreeConnectService } from "../dataset-tree/service/connect.service";
 import { Dataset } from "../model/theme/dataset.model";
@@ -24,33 +18,35 @@ describe("GgcDatasetSwitcherComponent", () => {
   let fixture: ComponentFixture<GgcDatasetSwitcherComponent>;
 
   let olLayerServiceMock: {
-    setVisibilityLayers: jasmine.Spy;
-    isVisible: jasmine.Spy;
+    setVisibilityLayers: Mock;
+    isVisible: Mock;
   };
 
-  let connectServiceMock: jasmine.SpyObj<GgcDatasetTreeConnectService>;
+  let connectServiceMock: MockedObject<GgcDatasetTreeConnectService>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     olLayerServiceMock = {
-      setVisibilityLayers: jasmine.createSpy("setVisibilityLayers"),
-      isVisible: jasmine.createSpy("isVisible")
+      setVisibilityLayers: vi.fn(),
+      isVisible: vi.fn()
     };
 
-    connectServiceMock = jasmine.createSpyObj("GgcDatasetTreeConnectService", [
-      "getGgcOLLayerService"
-    ]);
-
-    connectServiceMock.getGgcOLLayerService.and.resolveTo(olLayerServiceMock);
+    connectServiceMock = {
+      getGgcOLLayerService: vi
+        .fn()
+        .mockName("GgcDatasetTreeConnectService.getGgcOLLayerService")
+        .mockResolvedValue(olLayerServiceMock)
+    } as MockedObject<GgcDatasetTreeConnectService>;
 
     TestBed.configureTestingModule({
       imports: [GgcDatasetSwitcherComponent],
       providers: [
-        { provide: GgcDatasetTreeConnectService, useValue: connectServiceMock }
+        {
+          provide: GgcDatasetTreeConnectService,
+          useValue: connectServiceMock
+        }
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
     component = fixture.componentInstance;
 
@@ -62,21 +58,26 @@ describe("GgcDatasetSwitcherComponent", () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("should create", () => {
     expect(component).toBeTruthy();
   });
 
   describe("ngOnChanges", () => {
     it("should do nothing when themes change is missing", () => {
-      const spy = spyOn(component as any, "setInitialActiveTheme");
+      const spy = vi.spyOn(component as any, "setInitialActiveTheme");
 
       component.ngOnChanges({});
 
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it("should NOT schedule initial activation when themes do not become available", fakeAsync(() => {
-      const spy = spyOn(component as any, "setInitialActiveTheme");
+    it("should NOT schedule initial activation when themes do not become available", async () => {
+      vi.useFakeTimers();
+      const spy = vi.spyOn(component as any, "setInitialActiveTheme");
 
       const themes = createThemes(["Theme A", "Theme B"]);
       component.themes = themes;
@@ -85,34 +86,40 @@ describe("GgcDatasetSwitcherComponent", () => {
         themes: new SimpleChange(themes, themes, false)
       });
 
-      tick(200);
+      vi.advanceTimersByTime(200);
+
+      await vi.runAllTimersAsync();
 
       expect(spy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it("should schedule initial activation when themes become available", fakeAsync(() => {
-      const spy = spyOn(
-        component as any,
-        "setInitialActiveTheme"
-      ).and.resolveTo();
+    it("should schedule initial activation when themes become available", async () => {
+      vi.useFakeTimers();
+
+      const spy = vi
+        .spyOn(component as any, "setInitialActiveTheme")
+        .mockResolvedValue(undefined);
 
       const themes = createThemes(["Theme A", "Theme B"]);
       component.themes = themes;
 
       component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
 
-      tick(100);
+      vi.advanceTimersByTime(100);
+
+      await vi.runAllTimersAsync();
 
       expect(spy).toHaveBeenCalledWith(themes);
-    }));
+    });
   });
 
   describe("initial active theme selection", () => {
-    it("should pick the visible theme and emit event", fakeAsync(() => {
+    it("should pick the visible theme and emit event", async () => {
+      vi.useFakeTimers();
       const themes = createThemesWithLayers();
       component.themes = themes;
 
-      olLayerServiceMock.isVisible.and.callFake(
+      olLayerServiceMock.isVisible.mockImplementation(
         (layerId: string) => layerId === "b-1"
       );
 
@@ -121,8 +128,8 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
 
-      tick(100);
-      flushMicrotasks();
+      vi.advanceTimersByTime(100);
+      await vi.runAllTimersAsync();
 
       expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
 
@@ -131,21 +138,22 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme B");
-    }));
+    });
 
-    it("should fall back to first theme when none visible", fakeAsync(() => {
+    it("should fall back to first theme when none visible", async () => {
+      vi.useFakeTimers();
       const themes = createThemesWithLayers();
       component.themes = themes;
 
-      olLayerServiceMock.isVisible.and.returnValue(false);
+      olLayerServiceMock.isVisible.mockReturnValue(false);
 
       const emitted: DatasetSwitcherEvent[] = [];
       component.events.subscribe((e) => emitted.push(e));
 
       component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
 
-      tick(100);
-      flushMicrotasks();
+      vi.advanceTimersByTime(100);
+      await vi.runAllTimersAsync();
 
       expect(component["activeTheme"]?.themeName).toBe("Theme A");
 
@@ -157,12 +165,12 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme A");
-    }));
+    });
   });
 
   describe("handleChangeEvent", () => {
     it("should ignore invalid events", () => {
-      const emitSpy = spyOn(component.events, "emit");
+      const emitSpy = vi.spyOn(component.events, "emit");
 
       component.handleChangeEvent({ target: {} } as any);
 
@@ -171,7 +179,7 @@ describe("GgcDatasetSwitcherComponent", () => {
     });
 
     it("should ignore unknown theme", () => {
-      const emitSpy = spyOn(component.events, "emit");
+      const emitSpy = vi.spyOn(component.events, "emit");
       component.themes = createThemes(["Theme A"]);
 
       component.handleChangeEvent({ target: { id: "X" } } as any);
@@ -179,16 +187,18 @@ describe("GgcDatasetSwitcherComponent", () => {
       expect(emitSpy).not.toHaveBeenCalled();
     });
 
-    it("should switch theme and update visibility", fakeAsync(() => {
+    it("should switch theme and update visibility", async () => {
+      vi.useFakeTimers();
+
       const themes = createThemesWithLayers();
       component.themes = themes;
       component["activeTheme"] = themes[0];
 
-      const emitSpy = spyOn(component.events, "emit").and.callThrough();
+      const emitSpy = vi.spyOn(component.events, "emit");
 
       component.handleChangeEvent({ target: { id: "Theme B" } } as any);
 
-      flushMicrotasks();
+      await vi.runAllTimersAsync();
 
       expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
 
@@ -205,11 +215,13 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       expect(emitSpy).toHaveBeenCalled();
       expect(component["activeTheme"]?.themeName).toBe("Theme B");
-    }));
+    });
   });
 
   describe("template basics", () => {
-    it("should render radio buttons", fakeAsync(() => {
+    it("should render radio buttons", async () => {
+      vi.useFakeTimers();
+
       const localFixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
       const localComponent = localFixture.componentInstance;
 
@@ -222,7 +234,8 @@ describe("GgcDatasetSwitcherComponent", () => {
       localComponent["activeTheme"] = localComponent.themes[0];
 
       localFixture.detectChanges();
-      tick();
+      vi.advanceTimersByTime(100);
+      await vi.runAllTimersAsync();
       localFixture.detectChanges();
 
       const radios = localFixture.debugElement.queryAll(
@@ -232,7 +245,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       expect(radios.length).toBe(2);
       expect(radios[0].properties.checked).toBe(true);
       expect(radios[1].properties.checked).toBe(false);
-    }));
+    });
   });
 });
 

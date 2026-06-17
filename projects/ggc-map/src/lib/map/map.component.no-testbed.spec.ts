@@ -1,13 +1,9 @@
+import type { MockedObject } from "vitest";
 import OlMap from "ol/Map";
 import MapEvent from "ol/MapEvent";
 import { ObjectEvent } from "ol/Object";
 import View from "ol/View";
 import { CoreDrawService } from "../drawing/service/core-draw.service";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes,
-  MapViewState
-} from "../model/map-component-event.model";
 import { CoreSelectionService } from "../service/select/core-selection.service";
 
 import { GgcMapComponent } from "./ggc-map.component";
@@ -15,20 +11,23 @@ import { CoreLoadingService } from "./service/core-loading.service";
 import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import createSpyObj = jasmine.createSpyObj;
 import { provideZoneChangeDetection } from "@angular/core";
 import { of } from "rxjs";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEventTypes,
+  MapViewState
+} from "@kadaster/ggc-models";
+import { MapComponentEvent } from "@kadaster/ggc-models";
 
 describe("MapComponent(no-testbed), processEvent", () => {
   let mapComponent: GgcMapComponent;
   let fixture: ComponentFixture<GgcMapComponent>;
-  let coreMapServiceSpy: jasmine.SpyObj<CoreMapService>;
-  let coreDrawServiceSpy: jasmine.SpyObj<CoreDrawService>;
-  let coreLoadingServiceSpy: jasmine.SpyObj<CoreLoadingService>;
-  let mapEventsServiceSpy: jasmine.SpyObj<CoreMapEventsService>;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
-
+  let coreMapServiceSpy: MockedObject<CoreMapService>;
+  let coreDrawServiceSpy: MockedObject<CoreDrawService>;
+  let coreLoadingServiceSpy: MockedObject<CoreLoadingService>;
+  let mapEventsServiceSpy: MockedObject<CoreMapEventsService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   const mapEventOne: ObjectEvent = {
     type: "change:resolution",
     map: {} as OlMap
@@ -40,23 +39,33 @@ describe("MapComponent(no-testbed), processEvent", () => {
   } as unknown as ObjectEvent;
 
   beforeEach(() => {
-    coreMapServiceSpy = createSpyObj("CoreMapService", [
-      "getMap",
-      "getLayerChangedObservable"
-    ]);
-    coreMapServiceSpy.getLayerChangedObservable.and.returnValue(of());
-    coreDrawServiceSpy = createSpyObj("CoreDrawService", ["addFeatureToLayer"]);
-    coreLoadingServiceSpy = createSpyObj("CoreLoadingService", [
-      "addMapLoaders",
-      "destroyLoadersForMap"
-    ]);
-    mapEventsServiceSpy = createSpyObj("MapEventsService", [
-      "emitSingleclickEventForMap",
-      "emitZoomendEventForMap"
-    ]);
-    coreSelectionServiceSpy = createSpyObj("CoreSelectionService", [
-      "handleSingleclickEventForMap"
-    ]);
+    coreMapServiceSpy = {
+      getMap: vi.fn(),
+      getLayerChangedObservable: vi.fn().mockReturnValue(of()),
+      destroyMap: vi.fn()
+    } as MockedObject<CoreMapService>;
+
+    coreDrawServiceSpy = {
+      addFeatureToLayer: vi.fn(),
+      deleteLayers: vi.fn()
+    } as MockedObject<CoreDrawService>;
+
+    coreLoadingServiceSpy = {
+      addMapLoaders: vi.fn(),
+      destroyLoadersForMap: vi.fn()
+    } as MockedObject<CoreLoadingService>;
+
+    mapEventsServiceSpy = {
+      emitSingleclickEventForMap: vi.fn(),
+      emitZoomendEventForMap: vi.fn(),
+      destroyEventsForMap: vi.fn()
+    } as MockedObject<CoreMapEventsService>;
+
+    coreSelectionServiceSpy = {
+      handleSingleclickEventForMap: vi.fn(),
+      destroySelectionForMap: vi.fn()
+    } as unknown as MockedObject<CoreSelectionService>;
+
     TestBed.configureTestingModule({
       providers: [
         { provide: CoreMapService, useValue: coreMapServiceSpy },
@@ -90,7 +99,7 @@ describe("MapComponent(no-testbed), processEvent", () => {
   });
 
   it('should receive an event when "resolution:change" and "moveeend" event are processed', () => {
-    spyOn(mapComponent, "getLocationFromMapEvent").and.returnValue(
+    vi.spyOn(mapComponent, "getLocationFromMapEvent").mockReturnValue(
       {} as MapViewState
     );
     const events: MapComponentEvent[] = [];

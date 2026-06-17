@@ -14,6 +14,10 @@ on:
         type: boolean
         description: Release ggc-dataset-tree
         default: false
+      ggc_feature_info:
+        type: boolean
+        description: Release ggc-feature-info
+        default: false
       ggc_legend:
         type: boolean
         description: Release ggc-legend
@@ -65,6 +69,7 @@ jobs:
         env:
           VERSION_BUMP: ${{ github.event.inputs.version_bump }}
           GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
@@ -88,6 +93,10 @@ jobs:
 
           if [ "$GGC_DATASET_TREE" = "true" ]; then
             bump "ggc-dataset-tree"
+          fi
+
+          if [ "$GGC_FEATURE_INFO" = "true" ]; then
+            bump "ggc-feature-info"
           fi
 
           if [ "$GGC_LEGEND" = "true" ]; then
@@ -121,6 +130,7 @@ jobs:
       - name: Tag versions
         env:
           GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
@@ -148,6 +158,10 @@ jobs:
 
           if [ "$GGC_DATASET_TREE" = "true" ]; then
             tag "ggc-dataset-tree"
+          fi
+
+          if [ "$GGC_FEATURE_INFO" = "true" ]; then
+            tag "ggc-feature-info"
           fi
 
           if [ "$GGC_LEGEND" = "true" ]; then
@@ -181,6 +195,7 @@ jobs:
       - name: Publish to npm
         env:
           GGC_DATASET_TREE: ${{ github.event.inputs.ggc_dataset_tree }}
+          GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
@@ -220,6 +235,10 @@ jobs:
 
           if [ "$GGC_DATASET_TREE" = "true" ]; then
             build_and_publish "ggc-dataset-tree"
+          fi
+
+          if [ "$GGC_FEATURE_INFO" = "true" ]; then
+            build_and_publish "ggc-feature-info"
           fi
 
           if [ "$GGC_LEGEND" = "true" ]; then

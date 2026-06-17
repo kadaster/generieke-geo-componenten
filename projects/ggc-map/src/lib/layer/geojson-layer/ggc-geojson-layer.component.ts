@@ -16,13 +16,13 @@ import VectorLayer from "ol/layer/Vector";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import Cluster from "ol/source/Cluster";
 import VectorSource from "ol/source/Vector";
-import {
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "../../model/map-component-event.model";
 import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
 import { GeojsonLayerOptions } from "../model/geojson-layer.model";
 import { CoreOgcApiFeaturesService } from "../service/core-ogc-api-features.service";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 /**
  * Door `<ggc-geojson-layer></ggc-geojson-layer>` op te nemen in de HTML kunnen
@@ -238,7 +238,6 @@ export class GgcGeojsonLayerComponent
    */
   getFeatureInfo(event: MapBrowserEvent) {
     const pixel = event.pixel;
-
     this.map.forEachFeatureAtPixel(
       pixel,
       (feature) => this.limitFeatures(feature),
@@ -250,14 +249,12 @@ export class GgcGeojsonLayerComponent
     /* Kopie van de foundFeatures meegeven, omdat dit anders later fout gaat met
      de objectreferentie bij het zetten van foundFeatures.length op 0. */
     const foundFeaturesCopy = this.foundFeatures.slice();
-    if (this.layerName) {
-      this.coreSelectionService.handleFeatureInfoForLayer(
-        this.mapIndex,
-        event.coordinate,
-        foundFeaturesCopy,
-        this.layerName
-      );
-    }
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex,
+      foundFeaturesCopy,
+      this.getLayerId()
+    );
+
     const mapComponentEvent = new MapComponentEvent(
       MapComponentEventTypes.GEOJSONFEATUREINFO,
       this.mapIndex,

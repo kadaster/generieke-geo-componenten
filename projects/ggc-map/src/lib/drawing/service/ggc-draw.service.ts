@@ -7,13 +7,16 @@ import {
   DrawInteractionEvent,
   StyleLikeMap
 } from "../../model/draw-interaction-event.model";
-import { MapComponentEvent } from "../../model/map-component-event.model";
 import { DrawOptions } from "../../model/draw-options";
 import { ModifyInteractionEvent } from "../../model/modify-interaction-event.model";
 import { CoreDrawService } from "./core-draw.service";
 import { Coordinate } from "ol/coordinate";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
-import { DEFAULT_MAPINDEX, MapComponentDrawTypes } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  MapComponentEvent,
+  MapComponentDrawTypes
+} from "@kadaster/ggc-models";
 import { StyleLike } from "ol/style/Style";
 import { CenterModifyOptions } from "../center-interaction/center-modify";
 

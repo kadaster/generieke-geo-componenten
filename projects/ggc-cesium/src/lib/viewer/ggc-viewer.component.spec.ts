@@ -1,6 +1,7 @@
+import type { MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GgcViewerComponent } from "./ggc-viewer.component";
-import { createCesiumMock } from "./viewer-mock.spec";
+import { createCesiumMock } from "./viewer-mock";
 import {
   Camera,
   Cartesian3,
@@ -22,48 +23,53 @@ import { GgcViewerService } from "../service/ggc-viewer.service";
 import { CoreSelectionService } from "../service/core-selection.service";
 import { Observable } from "rxjs";
 import { provideZoneChangeDetection } from "@angular/core";
-
+import { vi } from "vitest";
+import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 describe("ViewerComponent", () => {
   let component: GgcViewerComponent;
   let fixture: ComponentFixture<GgcViewerComponent>;
   let cesiumMock: Partial<Viewer>;
-  let coreSelectionServiceSpy: jasmine.SpyObj<CoreSelectionService>;
+  let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let viewerService: GgcViewerService;
 
   beforeEach(async () => {
-    coreSelectionServiceSpy = jasmine.createSpyObj("CoreSelectionService", [
-      "setOptions",
-      "initializeSelections",
-      "destroyAllSelections",
-      "getClickEventsObservable"
-    ]);
-    const cameraSpy = jasmine.createSpyObj("CoreCameraService", [
-      "setCameraValues"
-    ]);
+    coreSelectionServiceSpy = {
+      initializeSelections: vi
+        .fn()
+        .mockName("CoreSelectionService.initializeSelections"),
+      destroyAllSelections: vi
+        .fn()
+        .mockName("CoreSelectionService.destroyAllSelections"),
+      getClickEventsObservable: vi
+        .fn()
+        .mockName("CoreSelectionService.getClickEventsObservable")
+    } as MockedObject<CoreSelectionService>;
+    const cameraSpy = {
+      setCameraValues: vi.fn().mockName("CoreCameraService.setCameraValues")
+    };
 
     await TestBed.configureTestingModule({
       imports: [GgcViewerComponent],
       providers: [
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
         { provide: CoreCameraService, useValue: cameraSpy },
-        { provide: CoreCameraService, useValue: cameraSpy },
+        { provide: GgcSharedLayerService, useValue: {} },
         provideZoneChangeDetection()
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(GgcViewerComponent);
     component = fixture.componentInstance;
-    coreSelectionServiceSpy.getClickEventsObservable.and.returnValue(
+    coreSelectionServiceSpy.getClickEventsObservable.mockReturnValue(
       new Observable<SelectionEvent>()
     );
     cesiumMock = createCesiumMock();
     viewerService = TestBed.inject(GgcViewerService);
-    spyOn<any>(component, "createViewer").and.returnValue(
+    vi.spyOn(component as any, "createViewer").mockReturnValue(
       new Promise((resolve) => {
         resolve(cesiumMock);
       })
     );
-    await fixture.whenStable();
   });
 
   it("should create", async () => {
@@ -74,7 +80,9 @@ describe("ViewerComponent", () => {
     expect(component).toBeTruthy();
 
     fixture.detectChanges();
-    await fixture.whenStable();
+    await Promise.resolve();
+    await Promise.resolve();
+
     expect(ready).toBe(true);
     expect(cesiumMock.camera!.flyTo).not.toHaveBeenCalled();
   });
@@ -97,7 +105,8 @@ describe("ViewerComponent", () => {
         }
       };
       fixture.detectChanges();
-      await fixture.whenStable();
+      await Promise.resolve();
+      await Promise.resolve();
 
       expect(component["viewer"].scene!.light).toBeInstanceOf(DirectionalLight);
       expect(component["viewer"].scene!.light.intensity).toBe(10);
@@ -114,7 +123,8 @@ describe("ViewerComponent", () => {
       };
 
       fixture.detectChanges();
-      await fixture.whenStable();
+      await Promise.resolve();
+      await Promise.resolve();
 
       expect(component["viewer"].scene!.light).toBeInstanceOf(DirectionalLight);
       const light = component["viewer"].scene!.light as DirectionalLight;
@@ -128,17 +138,16 @@ describe("ViewerComponent", () => {
   describe("cameraOptions", () => {
     beforeEach(async () => {
       fixture.detectChanges();
-      await fixture.whenStable();
     });
 
     it("flyTo should use camera.lookatTransform when cameraOptions is LookAtObject", async () => {
       const json = getJson();
       const cameraOptions = { geojson: json } as LookAtObject;
 
-      spyOn<any>(viewerService, "getExtent").and.callThrough();
-      spyOn<any>(viewerService, "getCenter").and.callThrough();
-      spyOn<any>(viewerService, "calculateDistance").and.callThrough();
-      spyOn<any>(viewerService, "getExtentRecursive").and.callThrough();
+      vi.spyOn(viewerService, "getExtent");
+      vi.spyOn(viewerService, "getCenter");
+      vi.spyOn(viewerService, "calculateDistance");
+      vi.spyOn(viewerService as any, "getExtentRecursive");
 
       const extent = viewerService["getExtent"](json);
       const center = viewerService["getCenter"](extent);
@@ -163,7 +172,7 @@ describe("ViewerComponent", () => {
     });
 
     it("flyTo should use camera.lookat when cameraOptions is LookatPosition", async () => {
-      spyOn<any>(cameraUtils, "getTerrainHeight").and.returnValue(
+      vi.spyOn(cameraUtils, "getTerrainHeight").mockReturnValue(
         new Promise((resolve) => {
           resolve(100);
         })
@@ -173,7 +182,7 @@ describe("ViewerComponent", () => {
         lookAtPosition: { lon: 10, lat: 10 }
       } as LookAtPosition;
 
-      await fixture.whenStable();
+      await Promise.resolve();
 
       expect(cesiumMock.camera?.lookAt).toHaveBeenCalled();
     });
@@ -202,10 +211,10 @@ describe("ViewerComponent", () => {
 
     describe("onKeyDown", () => {
       class MockCamera {
-        lookUp = jasmine.createSpy("lookUp");
-        lookDown = jasmine.createSpy("lookDown");
-        lookLeft = jasmine.createSpy("lookLeft");
-        lookRight = jasmine.createSpy("lookRight");
+        lookUp = vi.fn();
+        lookDown = vi.fn();
+        lookLeft = vi.fn();
+        lookRight = vi.fn();
       }
 
       beforeEach(() => {

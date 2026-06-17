@@ -1,0 +1,121 @@
+<app-example-format
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Met het ggc-map component kan op ieder type kaartlaag een object
+      geselecteerd worden. Selecteren van objecten werkt het beste met WFS en
+      OGC API kaartlagen. Dit komt doordat alle objecten in de browser
+      beschikbaar zijn.
+    </p>
+    <p>
+      Dit voorbeeld bevat de selectiemethoden voor WFS, deze zijn ook
+      beschikbaar voor OGC API Features en OGC API Tiles:
+    </p>
+    <p>Instelmogelijkheden voor de selectService:</p>
+    <ul>
+      <li>
+        <strong>Single select</strong>: selecteer één object door te klikken in
+        de kaart.
+      </li>
+      <li>
+        <strong>Multi select</strong>:
+        <ul>
+          <li>selecteer meerdere objecten door te klikken in de kaart.</li>
+          <li>
+            verwijder een object uit de selectie door op een geselecteerd object
+            te klikken.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>OpenLayers default</strong>:
+        <ul>
+          <li>selecteer één object door te klikken in de kaart.</li>
+          <li>
+            selecteer meerdere objecten door shift ingedrukt te houden en te
+            klikken in de kaart.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>Hover</strong>: selecteer één object door de muis over de kaart
+        te bewegen (dit werkt hetzelfde als single select, zonder te klikken op
+        de kaart).
+      </li>
+    </ul>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-md-4 col-sm-5">
+        <label class="ms-2">
+          <input
+            (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="singleselect"
+          />
+          Single select
+        </label>
+        <label class="ms-2">
+          <input
+            (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="multiselect"
+          />
+          Multi select
+        </label>
+        <label class="ms-2">
+          <input
+            (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="default"
+          />
+          Openlayers default
+        </label>
+        <label class="ms-2">
+          <input
+            (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="hover"
+          />
+          Hover
+        </label>
+
+        <p class="mt-2">
+          Geselecteerde provincies: {{ geselecteerdeProvincies() }}
+        </p>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-7">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"> </ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

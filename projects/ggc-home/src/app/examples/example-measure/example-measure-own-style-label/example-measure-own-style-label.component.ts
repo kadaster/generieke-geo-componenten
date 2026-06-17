@@ -24,7 +24,7 @@ export class ExampleMeasureOwnStyleLabel
     title: "Gebruiken van een eigen stijl op labels met meetwaarden.",
     introduction: "Toepassen van eigen stijl op labels tijdens het meten.",
     components: [Components.GGC_MAP],
-    theme: [Themes.INFORMATIE_OP_KAART],
+    theme: [Themes.TEKENEN],
     tags: [Tags.MEASURE, Tags.STYLE],
     imageLocation:
       "code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.png"

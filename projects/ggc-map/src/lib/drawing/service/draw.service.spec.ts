@@ -30,7 +30,7 @@ describe("DrawService", () => {
 
   it("should call coreDrawService.addFeatureToLayer", () => {
     const feature = new Feature<Geometry>();
-    spyOn(coreService, "addFeatureToLayer");
+    vi.spyOn(coreService, "addFeatureToLayer");
 
     service.addFeatureToLayer(layerName, feature, mapIndex);
 
@@ -43,7 +43,7 @@ describe("DrawService", () => {
 
   it("should call coreDrawService.appendCoordinates", () => {
     const coordinates = [150000, 450000];
-    spyOn(coreService, "appendCoordinates");
+    vi.spyOn(coreService, "appendCoordinates");
 
     service.appendCoordinates(coordinates, mapIndex);
 
@@ -54,49 +54,49 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService removeLastPoint", () => {
-    spyOn(coreService, "removeLastPoint");
+    vi.spyOn(coreService, "removeLastPoint");
     service.removeLastPoint(mapIndex);
 
     expect(coreService.removeLastPoint).toHaveBeenCalledWith(mapIndex);
   });
 
   it("should call coreDrawService getSketchCoordinates", () => {
-    spyOn(coreService, "getSketchCoordinates");
+    vi.spyOn(coreService, "getSketchCoordinates");
     service.getSketchCoordinates(mapIndex);
 
     expect(coreService.getSketchCoordinates).toHaveBeenCalledWith(mapIndex);
   });
 
   it("should call coreDrawService.clearLayer", () => {
-    spyOn(coreService, "clearLayer");
+    vi.spyOn(coreService, "clearLayer");
     service.clearLayer(layerName, mapIndex);
 
     expect(coreService.clearLayer).toHaveBeenCalledWith(layerName, mapIndex);
   });
 
   it("should call coreDrawService.deleteLayer", () => {
-    spyOn(coreService, "deleteLayer");
+    vi.spyOn(coreService, "deleteLayer");
     service.deleteLayer(layerName, mapIndex);
 
     expect(coreService.deleteLayer).toHaveBeenCalledWith(layerName, mapIndex);
   });
 
   it("should call coreDrawService.finishCurrentDraw", () => {
-    spyOn(coreService, "finishCurrentDraw");
+    vi.spyOn(coreService, "finishCurrentDraw");
     service.finishCurrentDraw(mapIndex);
 
     expect(coreService.finishCurrentDraw).toHaveBeenCalledWith(mapIndex);
   });
 
   it("should call coreDrawService.getDrawObservable", () => {
-    spyOn(coreService, "getDrawObservable");
+    vi.spyOn(coreService, "getDrawObservable");
     service.getDrawEventsObservable(mapIndex);
 
     expect(coreService.getDrawObservable).toHaveBeenCalledWith(mapIndex);
   });
 
   it("should call coreDrawService.getModifyEventsObservable", () => {
-    spyOn(coreService, "getModifyEventsObservable");
+    vi.spyOn(coreService, "getModifyEventsObservable");
     service.getModifyEventsObservable(mapIndex);
 
     expect(coreService.getModifyEventsObservable).toHaveBeenCalledWith(
@@ -105,14 +105,14 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService.removeLastPoint", () => {
-    spyOn(coreService, "removeLastPoint");
+    vi.spyOn(coreService, "removeLastPoint");
     service.removeLastPoint(mapIndex);
 
     expect(coreService.removeLastPoint).toHaveBeenCalledWith(mapIndex);
   });
 
   it("should call getDrawEventsObservable.clearLayer", () => {
-    spyOn(coreService, "getDrawObservable");
+    vi.spyOn(coreService, "getDrawObservable");
     service.getDrawEventsObservable(mapIndex);
 
     expect(coreService.getDrawObservable).toHaveBeenCalledWith(mapIndex);
@@ -122,8 +122,8 @@ describe("DrawService", () => {
     const features = [new Feature()];
     const source = new VectorSource({ features });
     const layer = new VectorLayer({ source });
-    spyOn(source, "getFeatures").and.callThrough();
-    spyOn(coreLayerService, "getDrawLayer").and.returnValue(layer);
+    vi.spyOn(source, "getFeatures");
+    vi.spyOn(coreLayerService, "getDrawLayer").mockReturnValue(layer);
     const result = service.getFeaturesFromLayer(layerName, mapIndex);
 
     expect(coreLayerService.getDrawLayer).toHaveBeenCalledWith(
@@ -138,7 +138,7 @@ describe("DrawService", () => {
     const source = new VectorSource();
     const layer = new VectorLayer({ source });
     layer.setVisible(false);
-    spyOn(coreLayerService, "getDrawLayer").and.returnValue(layer);
+    vi.spyOn(coreLayerService, "getDrawLayer").mockReturnValue(layer);
     const result = service.isLayerVisible(layerName, mapIndex);
 
     expect(coreLayerService.getDrawLayer).toHaveBeenCalledWith(
@@ -150,7 +150,7 @@ describe("DrawService", () => {
 
   it("should call coreDrawService.setDrawStyle", () => {
     const styleLikeMap = {};
-    spyOn(coreService, "setDrawStyle");
+    vi.spyOn(coreService, "setDrawStyle");
     service.setDrawStyle(layerName, styleLikeMap, mapIndex);
 
     expect(coreService.setDrawStyle).toHaveBeenCalledWith(
@@ -161,7 +161,7 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService.setLayerVisibility", () => {
-    spyOn(coreService, "setLayerVisibility");
+    vi.spyOn(coreService, "setLayerVisibility");
     service.setLayerVisibility(layerName, true, mapIndex);
 
     expect(coreService.setLayerVisibility).toHaveBeenCalledWith(
@@ -172,7 +172,7 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService.setLayerZIndex", () => {
-    spyOn(coreService, "setLayerZIndex");
+    vi.spyOn(coreService, "setLayerZIndex");
     service.setLayerZIndex(42, layerName, mapIndex);
 
     expect(coreService.setLayerZIndex).toHaveBeenCalledWith(
@@ -183,7 +183,7 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService.startDraw", () => {
-    spyOn(coreService, "startDraw");
+    vi.spyOn(coreService, "startDraw");
     service.startDraw(layerName, MapComponentDrawTypes.POLYGON, {}, mapIndex);
 
     expect(coreService.startDraw).toHaveBeenCalledWith(
@@ -195,7 +195,7 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService.startModify", () => {
-    spyOn(coreService, "startModify");
+    vi.spyOn(coreService, "startModify");
     service.startModify(layerName, mapIndex, {}, undefined, undefined);
 
     expect(coreService.startModify).toHaveBeenCalledWith(
@@ -208,16 +208,16 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService.stopDraw", () => {
-    spyOn(coreService, "stopDraw");
+    vi.spyOn(coreService, "stopDraw");
     service.stopDraw(layerName);
 
     expect(coreService.stopDraw).toHaveBeenCalledWith(layerName);
   });
 
   it("should call coreDrawService.stopDrawAndClearLayer", () => {
-    spyOn(service, "stopDraw");
-    spyOn(coreService, "deleteLayer");
-    spyOn(service, "clearLayer");
+    vi.spyOn(service, "stopDraw");
+    vi.spyOn(coreService, "deleteLayer");
+    vi.spyOn(service, "clearLayer");
     service.stopDrawAndClearLayer(layerName, mapIndex);
 
     expect(coreService.deleteLayer).toHaveBeenCalledWith(layerName, mapIndex);
@@ -226,28 +226,28 @@ describe("DrawService", () => {
   });
 
   it("should call coreDrawService.stopModify", () => {
-    spyOn(coreService, "stopModify");
+    vi.spyOn(coreService, "stopModify");
     service.stopModify(mapIndex);
 
     expect(coreService.stopModify).toHaveBeenCalledWith(mapIndex);
   });
 
   it("should call coreDrawService.toggleLayer", () => {
-    spyOn(coreService, "toggleLayer");
+    vi.spyOn(coreService, "toggleLayer");
     service.toggleLayer(layerName, mapIndex);
 
     expect(coreService.toggleLayer).toHaveBeenCalledWith(layerName, mapIndex);
   });
 
   it("should call coreDrawService.startMove", () => {
-    spyOn(coreService, "startMove");
+    vi.spyOn(coreService, "startMove");
     service.startMove(layerName, mapIndex);
 
     expect(coreService.startMove).toHaveBeenCalledWith(layerName, mapIndex, {});
   });
 
   it("should call coreDrawService.stopMove", () => {
-    spyOn(coreService, "stopMove");
+    vi.spyOn(coreService, "stopMove");
     service.stopMove(mapIndex);
 
     expect(coreService.stopMove).toHaveBeenCalledWith(mapIndex);

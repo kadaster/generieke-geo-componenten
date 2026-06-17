@@ -1,0 +1,110 @@
+<app-example-format
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
+  [pathExtraConfig]="'example-map/example-map-select-dataset-tree/treeconfig.json'"
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Dit voorbeeld laat het effect zien van selectie op meerdere kaartlagen.
+      Voor de BGT standaardvisualisatie en BAG (vector tiles) moet eerst worden
+      ingezoomd totdat deze kaartlagen zichtbaar zijn.
+    </p>
+    <p>
+      Voor WFS, OGC API, WMS en WMTS worden de volgende selectiemethodes
+      ondersteund:
+    </p>
+    <ul>
+      <li>
+        <strong>Single select</strong>: selecteer één object door te klikken in
+        de kaart.
+      </li>
+      <li>
+        <strong>Multi select</strong>:
+        <ul>
+          <li>selecteer meerdere objecten door te klikken in de kaart.</li>
+          <li>
+            verwijder een object uit de selectie door op een geselecteerd object
+            te klikken.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <p>
+      Bij het uitzetten van een kaartlaag wordt de volledige selectie van alle
+      kaartlagen automatisch gewist.
+    </p>
+    <p>
+      <strong>Let op</strong>: Wij raden aan om objecten te selecteren op WFS of
+      OGC API kaartlagen in plaats van WMS/WMTS kaartlagen. Deze bieden meer
+      mogelijkheden en zijn makkelijker in te richten. Bekijk dit voorbeeld over
+      <a [routerLink]="['/example-map-select']">
+        selectiemogelijkheden met een WFS of OGC API kaartlaag</a
+      >.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-md-4 col-sm-5">
+        <label class="ms-2">
+          <input
+            (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="singleselect"
+          />
+          Single select
+        </label>
+        <label class="ms-2">
+          <input
+            (ngModelChange)="onSelectModeChange($event)"
+            [(ngModel)]="selectMode"
+            name="selectMode"
+            type="radio"
+            value="multiselect"
+          />
+          Multi select
+        </label>
+        <br />
+        <div class="dataset-tree-container">
+          <ggc-dataset-tree
+            [expandTreeOnInit]="true"
+            [mapIndex]="mapIndex"
+            [themes]="datasetTreeConfig"
+          ></ggc-dataset-tree>
+        </div>
+        <br />
+        <div class="feature-info-container">
+          <ggc-feature-info-tabs [mapIndex]="mapIndex" [showEmptyTabs]="true">
+            <ggc-feature-info [autoStartSelect]="false" [mapIndex]="mapIndex">
+            </ggc-feature-info
+          ></ggc-feature-info-tabs>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-7">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"> </ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>
