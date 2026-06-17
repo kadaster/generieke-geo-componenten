@@ -6,7 +6,6 @@
       {
         "layerId": "vectortile-brt",
         "title": "BRT achtergrondkaart (standaard)",
-        "zIndex": 0,
         "style": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox",
         "enableOverzoom": true,
         "zIndex": -10,
@@ -29,31 +28,38 @@
         "activeLegend": [
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/nieuw.svg",
-            "text": "Nieuw"
+            "text": "Nieuw",
+            "iconDescription": "Blauwe pin met een uitroepteken"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/in_onderzoek.svg",
-            "text": "In onderzoek"
+            "text": "In onderzoek",
+            "iconDescription": "Oranje pin met een vraagteken"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/geparkeerd.svg",
-            "text": "Geparkeerd"
+            "text": "Geparkeerd",
+            "iconDescription": "Oranje pin met een pauzeteken"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/doorgestuurd.svg",
-            "text": "Doorgestuurd"
+            "text": "Doorgestuurd",
+            "iconDescription": "Oranje pin met een pijl naar rechts"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/goedgekeurd.svg",
-            "text": "Goedgekeurd en ingepland"
+            "text": "Goedgekeurd en ingepland",
+            "iconDescription": "Oranje pin met een vinkje"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/afgerond.svg",
-            "text": "Afgerond met aanpassing"
+            "text": "Afgerond met aanpassing",
+            "iconDescription": "Groene pin met 2 vinkjes"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/afgewezen.svg",
-            "text": "Afgerond zonder aanpassing"
+            "text": "Afgerond zonder aanpassing",
+            "iconDescription": "Groene pin met een kruis"
           }
         ],
         "legendIndex": 2,
