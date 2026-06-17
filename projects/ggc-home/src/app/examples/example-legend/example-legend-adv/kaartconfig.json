@@ -6,9 +6,9 @@
       {
         "layerId": "vectortile-brt",
         "title": "BRT achtergrondkaart (standaard)",
+        "zIndex": 0,
         "style": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox",
         "enableOverzoom": true,
-        "zIndex": -10,
         "legendIndex": 1,
         "activeLegend": {
           "name": "standaard__netherlandsrdnewquad",
@@ -63,6 +63,23 @@
           }
         ],
         "legendIndex": 2,
+        "zIndex": 10,
+        "maxResolution": 215.04
+      }
+    ]
+  },
+  {
+    "type": "wms",
+    "url": "https://service.pdok.nl/kadaster/bag-terugmeldingen/wms/v1_0",
+    "layers": [
+      {
+        "layerId": "bag-meldingen",
+        "title": "Terugmeldingen BAG",
+        "layerName": "bagterugmeldingen",
+        "activeLegend": {
+          "legendUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/terugmeldingen.svg"
+        },
+        "legendIndex": 3,
         "zIndex": 10,
         "maxResolution": 215.04
       }
