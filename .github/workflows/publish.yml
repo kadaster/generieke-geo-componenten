@@ -14,6 +14,10 @@ on:
         type: boolean
         description: Release ggc-dataset-tree
         default: false
+      ggc_feature-info:
+        type: boolean
+        description: Release ggc-feature-info
+        default: false
       ggc_legend:
         type: boolean
         description: Release ggc-legend
