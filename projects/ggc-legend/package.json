@@ -5,7 +5,7 @@
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@kadaster/ggc-cesium": "*",
-    "@kadaster/ggc-map": "^2.0.0"
+    "@kadaster/ggc-map": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "@kadaster/ggc-cesium": {
