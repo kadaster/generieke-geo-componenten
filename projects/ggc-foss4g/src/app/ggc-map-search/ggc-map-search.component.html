@@ -1,0 +1,9 @@
+<p>GGC map example met search</p>
+<div style="height: 400px">
+  <ggc-map></ggc-map>
+  <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+  <ggc-search-location
+    (events)="logSearchComponentEvents($event)"
+    [searchLocationOptions]="searchLocationOptions"
+  ></ggc-search-location>
+</div>
