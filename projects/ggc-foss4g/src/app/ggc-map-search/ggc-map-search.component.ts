@@ -28,7 +28,7 @@ export class GgcMapSearchComponent {
       ["functioneel_gebied", "andere tekst voor functioneel gebied"]
     ]),
     searchCurrentLocation: {
-      type: SearchCurrentLocationType.SELECT,
+      type: SearchCurrentLocationType.BUTTON,
       icon: "fas fa-map-marker-alt",
       loadIcon: "fa-spin fas fa-spinner",
       label: "Gebruik mijn locatie"

@@ -27,7 +27,7 @@
                 "input": "projects/ggc-foss4g/public"
               }
             ],
-            "styles": ["projects/ggc-foss4g/src/styles.scss"]
+            "styles": ["projects/ggc-foss4g/src/styles.scss", "node_modules/@fortawesome/fontawesome-free/css/all.min.css"]
           },
           "configurations": {
             "production": {

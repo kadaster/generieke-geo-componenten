@@ -21,6 +21,7 @@
     "@angular/router": "21.1.0",
     "@cesium/engine": "21.0.1",
     "@cesium/widgets": "13.2.1",
+    "@fortawesome/fontawesome-free": "^7.2.0",
     "@kadaster/ggc-map": "^3.0.0",
     "@kadaster/ggc-search-location": "^3.0.0",
     "@piwikpro/ngx-piwik-pro": "^2.5.0",
