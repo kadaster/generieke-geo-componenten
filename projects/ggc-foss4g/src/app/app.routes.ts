@@ -1,8 +1,10 @@
 import { Routes } from "@angular/router";
-import { GgcBasicViewerComponent } from "./ggc-basic-viewer/ggc-basic-viewer.component";
-import { GgcMapSearchComponent } from "./ggc-map-search/ggc-map-search.component";
+import { Opdr1KaartviewerBouwenComponent } from "./opdr-1-kaartviewer-bouwen/opdr-1-kaartviewer-bouwen.component";
+import { Opdr2ComponentenConfiguratieComponent } from "./opdr-2-componenten-configuratie/opdr-2-componenten-configuratie.component";
+import { Opdr3KaartConfiguratieComponent } from "./opdr-3-kaart-configuratie/opdr-3-kaart-configuratie.component";
 
 export const routes: Routes = [
-  { path: "basic-viewer", component: GgcBasicViewerComponent },
-  { path: "map-search", component: GgcMapSearchComponent }
+  { path: "opdracht1", component: Opdr1KaartviewerBouwenComponent },
+  { path: "opdracht2", component: Opdr2ComponentenConfiguratieComponent },
+  { path: "opdracht3", component: Opdr3KaartConfiguratieComponent }
 ];

@@ -1,1 +1,38 @@
-<p>opdr-2-componenten-configuratie works!</p>
+<h1>Opdracht 2</h1>
+<h2>Een kaartviewer configureren</h2>
+<div class="row">
+  <div class="col-xl-2 col-md-3 col-sm-12">
+    <span>Zoeken: </span>
+    <ggc-search-location
+      (events)="logSearchComponentEvents($event)"
+      [searchLocationOptions]="searchLocationOptions"
+    ></ggc-search-location>
+    <br />
+    <span>Kaartlagen</span>
+    <ggc-dataset-tree
+      [themes]="datasetTreeThemes"
+      [expandTreeOnInit]="true"
+    ></ggc-dataset-tree>
+  </div>
+  <div class="col-xl-8 col-md-7 col-sm-12">
+    <div style="height: 80vh">
+      <ggc-map [webServices]="webServices"></ggc-map>
+      <ggc-toolbar>
+        <ggc-toolbar-item-draw
+          stopIcon="fas fa-mouse-pointer"
+          drawIcon="fas fa-circle"
+          drawLineIcon="fas fa-project-diagram"
+          drawCircleIcon="far fa-dot-circle"
+          drawRectangleIcon="far fa-square"
+          drawPolygonIcon="fas fa-draw-polygon"
+          deleteIcon="fas fa-trash-alt"
+          moveIcon="far fa-hand-paper"
+          editIcon="fas fa-pencil-alt"
+        ></ggc-toolbar-item-draw>
+      </ggc-toolbar>
+    </div>
+  </div>
+  <div class="col-xl-2 col-md-2 col-sm-12">
+    <ggc-feature-info></ggc-feature-info>
+  </div>
+</div>
