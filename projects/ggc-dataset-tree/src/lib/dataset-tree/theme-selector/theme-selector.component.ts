@@ -100,6 +100,18 @@ export class ThemeSelectorComponent implements OnInit {
    * Default is TWEE_D
    */
   @Input() viewerType = ViewerType.TWEE_D;
+  /**
+   * Wanneer ingesteld op `true`, verwerkt de component de layerChangedEvents vanuit de GgcLayerService zelf als een layer veranderd van dezelfde mapIndex.
+   * Dit gaat dan over de weergegeven titel van de laag en de weergegeven status of de laag aangezet, uitgezet of en/disabled is.
+   * Bij `false` worden de events niet intern afgehandeld en zal dit zelf geprogrammeerd moeten worden.
+   */
+  @Input() autoConnectLayerStatus = true;
+  /**
+   * Wanneer ingesteld op `true`, zal de dataset-tree automatisch lagen aan- of uitzetten in het 2D of 3D map component met dezelfde mapIndex als deze worden getoggled in de dataset-tree.
+   * Bij `false` worden de kaartlagen niet automatisch aan- of uitgezet in de kaart en zal dit zelf geprogrammeerd moeten worden.
+   * Hiervoor kan dan de output events worden gebruikt.
+   */
+  @Input() autoConnectLayerToggle = true;
 
   private _themes: Theme[];
 
