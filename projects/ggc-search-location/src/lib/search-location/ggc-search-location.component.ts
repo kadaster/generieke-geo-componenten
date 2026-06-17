@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   Component,
+  computed,
   ElementRef,
   EventEmitter,
   HostListener,
@@ -9,6 +10,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  Signal,
   ViewChild,
   ViewChildren,
   ViewEncapsulation
@@ -20,6 +22,7 @@ import {
   SearchComponentEventTypes
 } from "../model/search-component-event.model";
 import { AdditionalSuggestion } from "../model/additional-suggestion.model";
+import * as proj4x from "proj4";
 
 import {
   CdkListbox,
@@ -38,8 +41,10 @@ import {
 import { PdokLocationApiService } from "../service/pdok-location-api.service";
 import { SearchLocationOptions } from "../model/search-location-options.model";
 import { GgcSearchLocationConnectService } from "../service/connect.service";
+import { ViewerType } from "@kadaster/ggc-models";
 
 const BTN_SUFFIX = "btn-form-icon";
+const proj4 = (proj4x as any).default;
 
 /**
  * Component voor het zoeken naar locaties en adressen met behulp van de PDOK Location API.
@@ -76,6 +81,13 @@ export class GgcSearchLocationComponent implements OnInit {
   protected collectionIdTranslations: Map<string, string>;
   protected readonly searchCurrentLocationTypes = SearchCurrentLocationType;
 
+  protected readonly hasSearch: Signal<boolean> = computed(
+    () => !this.searchLocationOptions?.hideSearch
+  );
+  protected readonly hasLocation: Signal<boolean> = computed(
+    () => this.searchLocationOptions?.searchCurrentLocation !== undefined
+  );
+
   @ViewChildren(CdkOption, {})
   private readonly listOptions: QueryList<
     CdkOption<PdokLocationApiSearchFeature | AdditionalSuggestion>
@@ -95,6 +107,9 @@ export class GgcSearchLocationComponent implements OnInit {
   private result?: PdokLocationApiSearchFeature | SearchComponentEventTypes;
   private readonly searchTerm$ = new BehaviorSubject<string>("");
   private formatTypeCache: any;
+  private readonly viewerType: Signal<ViewerType> = computed(
+    () => this.searchLocationOptions?.viewerType ?? ViewerType.TWEE_D
+  );
 
   /** De CSS-klasse voor de 'verwijder' knop in het zoekveld. */
   get classClearButton(): string {
@@ -462,32 +477,55 @@ export class GgcSearchLocationComponent implements OnInit {
     feature: PdokLocationApiSearchFeature | number[]
   ): Promise<void> {
     if (this.searchLocationOptions?.zoomToResult) {
-      const mapService = (await this.connectService.getMapService()) as any;
-      if (mapService) {
-        const formatType = await this.loadFormatType();
-        if (Array.isArray(feature)) {
-          mapService.zoomToGeometryWithZoomOptions(
-            JSON.stringify({ type: "Point", coordinates: feature }),
-            {
-              mapIndex: this.searchLocationOptions?.mapIndex,
-              fitOptions: { padding: [50, 50, 50, 50] }
-            },
-            formatType.GEOJSON
-          );
-        } else if (feature.bbox) {
-          mapService.zoomToExtent(feature.bbox, {
-            mapIndex: this.searchLocationOptions?.mapIndex,
-            fitOptions: { padding: [50, 50, 50, 50] }
-          });
-        } else if (feature.geometry) {
-          mapService.zoomToGeometryWithZoomOptions(
-            JSON.stringify(feature.geometry),
-            {
-              mapIndex: this.searchLocationOptions?.mapIndex,
-              fitOptions: { padding: [50, 50, 50, 50] }
-            },
-            formatType.GEOJSON
-          );
+      switch (this.viewerType()) {
+        case ViewerType.TWEE_D: {
+          const mapService = (await this.connectService.getMapService()) as any;
+          if (mapService) {
+            const formatType = await this.loadFormatType();
+            if (Array.isArray(feature)) {
+              mapService.zoomToGeometryWithZoomOptions(
+                JSON.stringify({ type: "Point", coordinates: feature }),
+                {
+                  mapIndex: this.searchLocationOptions?.mapIndex,
+                  fitOptions: { padding: [50, 50, 50, 50] }
+                },
+                formatType.GEOJSON
+              );
+            } else if (feature.bbox) {
+              mapService.zoomToExtent(feature.bbox, {
+                mapIndex: this.searchLocationOptions?.mapIndex,
+                fitOptions: { padding: [50, 50, 50, 50] }
+              });
+            } else if (feature.geometry) {
+              mapService.zoomToGeometryWithZoomOptions(
+                JSON.stringify(feature.geometry),
+                {
+                  mapIndex: this.searchLocationOptions?.mapIndex,
+                  fitOptions: { padding: [50, 50, 50, 50] }
+                },
+                formatType.GEOJSON
+              );
+            }
+          }
+          break;
+        }
+        case ViewerType.DRIE_D: {
+          const cesiumLocationService =
+            (await this.connectService.getGgcLocationService()) as any;
+          if (cesiumLocationService) {
+            if (Array.isArray(feature)) {
+              const coordinates = proj4("EPSG:28992", "EPSG:4326", feature);
+              cesiumLocationService.zoomToCurrentLocation({
+                longitude: coordinates[0],
+                latitude: coordinates[1]
+              } as GeolocationCoordinates);
+            } else if (feature.bbox) {
+              //todo TMS-10913
+            } else if (feature.geometry) {
+              //todo TMS-10913
+            }
+          }
+          break;
         }
       }
     }
@@ -501,28 +539,53 @@ export class GgcSearchLocationComponent implements OnInit {
     feature: PdokLocationApiSearchFeature | number[]
   ): Promise<void> {
     if (this.searchLocationOptions?.markResult) {
-      const mapService = (await this.connectService.getMapService()) as any;
-      if (mapService) {
-        const formatType = await this.loadFormatType();
-        if (Array.isArray(feature)) {
-          mapService.markFeature(
-            JSON.stringify({ type: "Point", coordinates: feature }),
-            this.searchLocationOptions?.mapIndex,
-            formatType.GEOJSON
-          );
-        } else if (feature?.properties?.href) {
-          this.pdokLocationApiService
-            .item(feature)
-            .pipe(take(1))
-            .subscribe((item: PdokLocationApiCollectionFeature | null) => {
-              if (item?.geometry) {
+      switch (this.viewerType()) {
+        case ViewerType.TWEE_D:
+          {
+            const mapService =
+              (await this.connectService.getMapService()) as any;
+            if (mapService) {
+              const formatType = await this.loadFormatType();
+              if (Array.isArray(feature)) {
                 mapService.markFeature(
-                  JSON.stringify(item.geometry),
+                  JSON.stringify({ type: "Point", coordinates: feature }),
                   this.searchLocationOptions?.mapIndex,
                   formatType.GEOJSON
                 );
+              } else if (feature?.properties?.href) {
+                this.pdokLocationApiService
+                  .item(feature)
+                  .pipe(take(1))
+                  .subscribe(
+                    (item: PdokLocationApiCollectionFeature | null) => {
+                      if (item?.geometry) {
+                        mapService.markFeature(
+                          JSON.stringify(item.geometry),
+                          this.searchLocationOptions?.mapIndex,
+                          formatType.GEOJSON
+                        );
+                      }
+                    }
+                  );
               }
-            });
+            }
+          }
+          break;
+        case ViewerType.DRIE_D: {
+          const cesiumLocationService =
+            (await this.connectService.getGgcLocationService()) as any;
+          if (cesiumLocationService) {
+            if (Array.isArray(feature)) {
+              const coordinates = proj4("EPSG:28992", "EPSG:4326", feature);
+              cesiumLocationService.addLocationMark({
+                longitude: coordinates[0],
+                latitude: coordinates[1]
+              } as GeolocationCoordinates);
+            } else if (feature?.properties?.href) {
+              //todo TMS-10913
+            }
+          }
+          break;
         }
       }
     }

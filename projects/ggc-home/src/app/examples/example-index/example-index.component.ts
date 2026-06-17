@@ -37,6 +37,7 @@ import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
 import { SortPipe } from "../../pipes/sort.pipe";
 import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
+import { ExampleSearchLocationOnlyLocationComponent } from "../example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 
 interface GroupedCards {
   theme: string;
@@ -66,6 +67,7 @@ export class ExampleIndexComponent {
   protected selectedTags = new Set<string>();
   protected cards: ComponentInfo[] = [
     new ExampleSearchLocationComponent().componentInfo,
+    new ExampleSearchLocationOnlyLocationComponent().componentInfo,
     new ExampleDatasetTreeBasicComponent().componentInfo,
     new ExampleDatasetTreeBasicListComponent().componentInfo,
     new ExampleDrawBasicComponent().componentInfo,

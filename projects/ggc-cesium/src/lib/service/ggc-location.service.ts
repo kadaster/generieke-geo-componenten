@@ -2,7 +2,6 @@ import { inject, Injectable } from "@angular/core";
 import { CoreViewerService } from "./core-viewer.service";
 import { Cartesian3, Entity, HeightReference } from "@cesium/engine";
 import { cameraUtils } from "../utils/camera-utils";
-import { Subject } from "rxjs";
 import { CameraOptions } from "../model/interfaces";
 
 @Injectable({
@@ -10,8 +9,6 @@ import { CameraOptions } from "../model/interfaces";
 })
 export class GgcLocationService {
   private readonly coreViewerService = inject(CoreViewerService);
-  private readonly geolocationPositionError: Subject<GeolocationPositionError> =
-    new Subject<GeolocationPositionError>();
   private marked: Entity | undefined = undefined;
   private markerSvg: string;
 
@@ -19,41 +16,34 @@ export class GgcLocationService {
     this.markerSvg = this.getSvg();
   }
 
-  zoomToCurrentLocation(): void {
-    this.getLocation().then(async (location: GeolocationPosition) => {
-      const cameraOptions: CameraOptions = {
-        lookAtPosition: {
-          lon: location.coords.longitude,
-          lat: location.coords.latitude
-        }
-      } as CameraOptions;
-      const viewer = this.coreViewerService.getViewer();
-      if (viewer) {
-        await cameraUtils.flyToLookAtPosition(cameraOptions, viewer);
+  async zoomToCurrentLocation(
+    coordinates: GeolocationCoordinates
+  ): Promise<void> {
+    const cameraOptions: CameraOptions = {
+      lookAtPosition: {
+        lon: coordinates.longitude,
+        lat: coordinates.latitude
+      }
+    } as CameraOptions;
+    const viewer = this.coreViewerService.getViewer();
+    if (viewer) {
+      await cameraUtils.flyToLookAtPosition(cameraOptions, viewer);
+    }
+  }
+
+  addLocationMark(coordinates: GeolocationCoordinates): void {
+    this.removeLocationMark();
+    this.marked = new Entity({
+      position: Cartesian3.fromDegrees(
+        coordinates.longitude,
+        coordinates.latitude
+      ),
+      billboard: {
+        image: this.markerSvg,
+        heightReference: HeightReference.CLAMP_TO_GROUND
       }
     });
-  }
-
-  zoomToCurrentLocationAndMark(): void {
-    this.zoomToCurrentLocation();
-    this.addLocationMark();
-  }
-
-  addLocationMark(): void {
-    this.removeLocationMark();
-    this.getLocation().then((location: GeolocationPosition) => {
-      this.marked = new Entity({
-        position: Cartesian3.fromDegrees(
-          location.coords.longitude,
-          location.coords.latitude
-        ),
-        billboard: {
-          image: this.markerSvg,
-          heightReference: HeightReference.CLAMP_TO_GROUND
-        }
-      });
-      this.coreViewerService.getViewer()?.entities.add(this.marked);
-    });
+    this.coreViewerService.getViewer()?.entities.add(this.marked);
   }
 
   removeLocationMark(): void {
@@ -63,28 +53,8 @@ export class GgcLocationService {
     }
   }
 
-  getGeolocationPositionErrorSubject(): Subject<GeolocationPositionError> {
-    return this.geolocationPositionError;
-  }
-
   public setMarkerSvg(markerSvg: string) {
     this.markerSvg = markerSvg;
-  }
-
-  private getLocation(): Promise<GeolocationPosition> {
-    return new Promise<GeolocationPosition>((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject(new Error("No support for geolocation"));
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        (position: GeolocationPosition) => {
-          resolve(position);
-        },
-        (error: GeolocationPositionError) =>
-          this.geolocationPositionError.next(error)
-      );
-    });
   }
 
   private getSvg(): string {

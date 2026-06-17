@@ -157,6 +157,7 @@ export class GgcSearchLocationService {
       position.coords.longitude,
       position.coords.latitude
     ]);
+
     this.locationEventsMap.getOrCreateSubject(mapIndex).next(coordinates);
     this.currentLocation.next(coordinates);
   }
