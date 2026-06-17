@@ -46,7 +46,7 @@ export class AbstractBaseLayerComponent<T extends Layer>
   }
 
   disable() {
-    this.ngOnDestroy();
+    // placeholder
   }
 
   enable() {

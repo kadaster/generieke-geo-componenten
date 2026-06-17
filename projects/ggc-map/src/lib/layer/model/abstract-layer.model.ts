@@ -25,7 +25,9 @@ export interface AbstractBaseLayerOptions {
   visible?: boolean;
 
   /**
-   * Optioneel: wanneer true, dan wordt de kaartlaag niet verwijderd van de kaart bij toggle van visibility, maar wordt de visibility gewijzigd.
+   * Optioneel: wanneer true, dan wordt deze layer niet meer verwijderd als deze wordt uitgezet met de dataset-tree,
+   * maar wordt de laag onzichtbaar gemaakt, waardoor deze intern wel blijft bestaan.
+   * Met deze optie worden bijvoorbeeld features die op een later moment handmatig zijn toegevoegd ook bewaard op de laag als deze wordt uitgezet.
    */
   persistent?: boolean;
 }
