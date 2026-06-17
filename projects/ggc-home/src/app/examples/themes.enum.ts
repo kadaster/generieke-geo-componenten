@@ -6,5 +6,6 @@ export enum Themes {
   LEGENDA = "Legenda",
   TEKENEN = "Tekenen en meten",
   WERKBALK = "Werkbalk",
-  ZOEKEN = "Zoeken"
+  ZOEKEN = "Zoeken",
+  DRIED = "3D"
 }

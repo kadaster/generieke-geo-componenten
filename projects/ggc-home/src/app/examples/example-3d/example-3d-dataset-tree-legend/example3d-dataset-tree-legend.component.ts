@@ -2,7 +2,6 @@ import { Component, inject, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
-import { Tags } from "../../tags.enum";
 import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
@@ -13,37 +12,50 @@ import {
 } from "@kadaster/ggc-cesium";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { HttpClient } from "@angular/common/http";
+import { ViewerType } from "@kadaster/ggc-models";
+import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
+import { GgcLegendComponent } from "@kadaster/ggc-legend";
 
 @Component({
-  selector: "app-example-3d-basic",
-  templateUrl: "./example-3d-basic.component.html",
-  styleUrl: "./example-3d-basic.component.scss",
-  imports: [GgcViewerComponent, GgcControlsComponent, ExampleFormatComponent],
+  selector: "app-example-3d-dataset-tree-legend",
+  templateUrl: "./example3d-dataset-tree-legend.component.html",
+  styleUrl: "./example3d-dataset-tree-legend.component.scss",
+  imports: [
+    GgcViewerComponent,
+    GgcControlsComponent,
+    ExampleFormatComponent,
+    GgcDatasetTreeComponent,
+    GgcLegendComponent
+  ],
   encapsulation: ViewEncapsulation.None
 })
-export class Example3dBasicComponent {
+export class Example3dDatasetTreeLegendComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
-    route: "/example-3d-basic",
-    title: "Kaartlaag toevoegen: OGC API 3D Tiles",
-    introduction: "Voeg een 3D laag toe aan de kaart met OGC API 3D Tiles.",
-    components: [Components.GGC_3D],
+    route: "/example-3d-dataset-tree-legend",
+    title: "3D kaart met dataset tree en legenda",
+    introduction: "Weergave van een 3D kaart met een dataset-tree en legenda",
+    components: [
+      Components.GGC_3D,
+      Components.GGC_DATASET_TREE,
+      Components.GGC_LEGEND
+    ],
     theme: [Themes.DRIED],
-    tags: [Tags.LAYER],
+    tags: [],
     imageLocation:
-      "code/examples/example-3d/example-3d-basic/example-3d-basic.png"
+      "code/examples/example-3d/example-3d-dataset-tree-legend/example-3d-dataset-tree-legend.png"
   } as ComponentInfo;
 
   urlComponentModule =
-    "example-3d/example-3d-basic/example-3d-basic.component.ts";
+    "example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/modules/ggc-map_src_public-api.html`;
   // DOCS-SKIP:END
 
-  protected hideLogo = false;
   protected cameraOptions: CameraOptions;
   protected webService: Webservice[];
+  protected datasetTreeConfig: Theme[];
   protected viewerOptions: ViewerOptions = {
-    elementId: "cesium-basic",
+    elementId: "cesium-dataset-tree-legend",
     terrainModelUrl:
       "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1/collections/digitaalterreinmodel/quantized-mesh",
     directionalLightOptions: {
@@ -51,8 +63,11 @@ export class Example3dBasicComponent {
       intensity: 2.5
     }
   };
+
+  protected viewerType = ViewerType.DRIE_D;
+
   protected kaartConfig =
-    "code/examples/example-3d/example-3d-basic/kaartconfig.json";
+    "code/examples/example-3d/example-3d-dataset-tree-legend/kaartconfig.json";
 
   private readonly httpClient = inject(HttpClient);
 
@@ -60,6 +75,13 @@ export class Example3dBasicComponent {
     this.httpClient.get(this.kaartConfig).subscribe((data) => {
       this.webService = data as Webservice[];
     });
+    this.httpClient
+      .get(
+        "code/examples/example-3d/example-3d-dataset-tree-legend/treeconfig.json"
+      )
+      .subscribe((data) => {
+        this.datasetTreeConfig = data as Theme[];
+      });
   }
 
   public onCesiumReady() {
@@ -67,9 +89,5 @@ export class Example3dBasicComponent {
     setTimeout(() => {
       this.cameraOptions = cameraOptionsTorentjeDenHaag;
     });
-  }
-
-  protected toggleHideLogo() {
-    this.hideLogo = !this.hideLogo;
   }
 }

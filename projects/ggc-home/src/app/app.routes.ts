@@ -50,6 +50,8 @@ import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+import { Example3dDatasetTreeLegendComponent } from "./examples/example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component";
+import { Example3dLayerCameraOptionsComponent } from "./examples/example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component";
 
 export const routes: Routes = [
   {
@@ -138,6 +140,18 @@ export const routes: Routes = [
     title: "Layer-3D | GGC-Home",
     component: Example3dBasicComponent,
     data: { label: "example-3d-basic" }
+  },
+  {
+    path: "example-3d-dataset-tree-legend",
+    title: "3D kaart met dataset-tree en legenda | GGC-Home",
+    component: Example3dDatasetTreeLegendComponent,
+    data: { label: "example-3d-dataset-tree-legend" }
+  },
+  {
+    path: "example-3d-layer-camera-options",
+    title: "Layer-3D met eigen camera opties | GGC-Home",
+    component: Example3dLayerCameraOptionsComponent,
+    data: { label: "example-3d-layer-camera-options" }
   },
   {
     path: "snapping-basic",
