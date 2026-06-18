@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 1rem;
+}
+
+h1 {
+  margin-bottom: 0.1rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+}
+
+.row {
+  margin-top: 1.5rem;
+}
+
+.container-map {
+  position: relative;
+}
+
+.container-toolbar {
+  position: absolute;
+  top: 5px;
+  left: 17px;
+}

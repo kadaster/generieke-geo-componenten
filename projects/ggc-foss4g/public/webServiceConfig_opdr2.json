@@ -19,7 +19,7 @@
         "layerId": "gemeenten",
         "title": "Gemeenten",
         "layerName": "gemeentegebied",
-        "visible": false,
+        "visible": true,
         "getFeatureInfoOnSingleclick": true
       }
     ]
@@ -45,7 +45,7 @@
       {
         "layerId": "provincies",
         "title": "Provincies (WFS)",
-        "visible": true
+        "visible": false
       }
     ]
   },

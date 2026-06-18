@@ -2,21 +2,17 @@
 <h2>Een kaartviewer configureren</h2>
 <div class="row">
   <div class="col-xl-2 col-md-3 col-sm-12">
-    <span>Zoeken: </span>
-    <ggc-search-location
-      (events)="logSearchComponentEvents($event)"
-      [searchLocationOptions]="searchLocationOptions"
-    ></ggc-search-location>
-    <br />
-    <span>Kaartlagen</span>
+    <h3>Kaartlagen</h3>
     <ggc-dataset-tree
       [themes]="datasetTreeThemes"
       [expandTreeOnInit]="true"
     ></ggc-dataset-tree>
   </div>
-  <div class="col-xl-8 col-md-7 col-sm-12">
-    <div style="height: 80vh">
+  <div class="container-map col-xl-8 col-md-7 col-sm-12">
+    <div style="height: 60vh">
       <ggc-map [webServices]="webServices"></ggc-map>
+    </div>
+    <div class="container-toolbar">
       <ggc-toolbar>
         <ggc-toolbar-item-draw
           stopIcon="fas fa-mouse-pointer"
@@ -33,6 +29,14 @@
     </div>
   </div>
   <div class="col-xl-2 col-md-2 col-sm-12">
+    <h3>Zoeken:</h3>
+    <ggc-search-location
+      (events)="logSearchComponentEvents($event)"
+      [searchLocationOptions]="searchLocationOptions"
+    ></ggc-search-location>
+    <br />
+    <br />
+    <h3>Objectinformatie</h3>
     <ggc-feature-info></ggc-feature-info>
   </div>
 </div>
