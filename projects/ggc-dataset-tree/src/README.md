@@ -1,5 +1,4 @@
 # Generieke Geo Componenten - ggc-dataset-tree
-
 ## GGC Dataset-Tree
 
 Met de Dataset-tree componenten kunnen eenvoudig meerdere lagen worden geladen. Deze lagen zijn gegroepeerd in thema’s en datasets.
@@ -37,7 +36,9 @@ Een van de benodigde onderdelen om de dataset-switcher goed te laten werken zijn
 Deze buttons werken als een radio button en representeren uiteindelijk welke kaartlagen er getoond worden.
 De 1e button zal standaard geactiveerd worden.
 
+
 ---
+
 
 De Generieke Geo Componenten (GGC) helpen softwareontwikkelaars om snel een kaartviewer te ontwikkelen.
 
