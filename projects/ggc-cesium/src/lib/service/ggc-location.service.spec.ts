@@ -16,7 +16,7 @@ describe("GgcLocationService", () => {
 
   const mockCoordinates: GeolocationCoordinates = {
     latitude: 52.3676,
-    longitude: 4.9041,
+    longitude: 4.9041
   } as GeolocationCoordinates;
 
   beforeEach(() => {
