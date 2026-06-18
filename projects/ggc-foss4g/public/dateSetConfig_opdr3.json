@@ -14,7 +14,7 @@
         "datasetName": "WMTS kaartlagen",
         "services": [
           {
-            "layers": [{ "layerId": "bgt-standaardvisualisatie" }]
+            "layers": [{ "layerId": "brtAchtergrondkaartStandaard" }, { "layerId": "bgt-standaardvisualisatie"}]
           }
         ]
       },
@@ -24,8 +24,7 @@
           {
             "layers": [
               { "layerId": "provincies" },
-              { "layerId": "brkFeatures" },
-              { "layerId": "brkFeaturesNederland"}
+              { "layerId": "brkFeatures" }
             ]
           }
         ]

@@ -14,7 +14,10 @@
         "datasetName": "WMTS kaartlagen",
         "services": [
           {
-            "layers": [{ "layerId": "bgt-standaardvisualisatie" }]
+            "layers": [
+              { "layerId": "brtAchtergrondkaartStandaard" },
+              { "layerId": "bgt-standaardvisualisatie" }
+            ]
           }
         ]
       },

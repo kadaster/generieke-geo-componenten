@@ -14,6 +14,7 @@ import {
   GgcToolbarComponent,
   GgcToolbarItemDrawComponent
 } from "@kadaster/ggc-toolbar";
+import { GgcLegendComponent } from "@kadaster/ggc-legend";
 
 @Component({
   selector: "app-opdr-2-componenten-configuratie",
@@ -23,7 +24,8 @@ import {
     GgcDatasetTreeComponent,
     GgcFeatureInfoComponent,
     GgcToolbarComponent,
-    GgcToolbarItemDrawComponent
+    GgcToolbarItemDrawComponent,
+    GgcLegendComponent
   ],
   templateUrl: "./opdr-2-componenten-configuratie.component.html",
   styleUrl: "./opdr-2-componenten-configuratie.component.scss"
@@ -51,8 +53,8 @@ export class Opdr2ComponentenConfiguratieComponent
   protected webServices: Webservice[] = [];
   protected datasetTreeThemes: Theme[] = [];
 
-  private http: HttpClient = inject(HttpClient);
-  private mapService: GgcMapService = inject(GgcMapService);
+  private readonly http: HttpClient = inject(HttpClient);
+  private readonly mapService: GgcMapService = inject(GgcMapService);
 
   ngOnInit() {
     this.http.get("webServiceConfig_opdr2.json").subscribe((data) => {

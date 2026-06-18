@@ -25,7 +25,7 @@ Of voeg extra lagen toe en zet deze aan en uit met de dataset-tree.
 ### Opdracht 3: Kaartviewer configureren
 In deze basis viewer is een GGC-map gemaakt met een aantal kaartlagen er in.
 Pas de lagen aan en creeer eenvoudig je eigen kaartbeeld door de kaartconfiguratie.
-Denk aan het toevoegen van extra lagen en instellen van zoomniveaus.
+Denk aan het toevoegen van extra lagen (bijvoorbeeld de OGC API Features 3D) en instellen van zoomniveaus.
 
 ## Handige links:
 PDOK https://api.pdok.nl/

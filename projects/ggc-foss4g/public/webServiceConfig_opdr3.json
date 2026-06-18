@@ -7,6 +7,9 @@
         "layerId": "brtAchtergrondkaartStandaard",
         "title": "BRT achtergrond kaart Standaard (WMTS)",
         "layerName": "standaard",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/legend.png"
+        },
         "zIndex": -20
       }
     ]
@@ -19,6 +22,9 @@
         "layerId": "gemeenten",
         "title": "Gemeenten",
         "layerName": "gemeentegebied",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Gemeentegebied/Gemeentegebied.png"
+        },
         "visible": false,
         "getFeatureInfoOnSingleclick": true
       }
@@ -32,15 +38,21 @@
         "layerId": "bgt-standaardvisualisatie",
         "title": "BGT standaardvisualisatie",
         "layerName": "standaardvisualisatie",
+        "activeLegend": [
+          {
+            "legendUrl": "https://service.pdok.nl/lv/bgt/wmts/v1_0/standaardvisualisatie/legend.png"
+          }
+        ],
         "maxResolution": 0.84,
         "visible": true,
-        "getFeatureInfoOnSingleclick": true
+        "getFeatureInfoOnSingleclick": true,
+        "zIndex": 1
       }
     ]
   },
   {
     "type": "geojson",
-    "url": "https://service.pdok.nl/cbs/gebiedsindelingen/2026/wfs/v1_0?request=GetFeature&service=WFS&VERSION=2.0.0&typenames=provincie_gegeneraliseerd&outputformat=application/json",
+    "url": "https://service.pdok.nl/kadaster/brk-bestuurlijke-gebieden/wfs/v1_0?https://service.pdok.nl/kadaster/brk-bestuurlijke-gebieden/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typeNames=bestuurlijkegebieden:Provinciegebied&outputFormat=application/json",
     "layers": [
       {
         "layerId": "provincies",
@@ -51,27 +63,15 @@
   },
   {
     "type": "geojson",
-    "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=1000&bbox=189555,465100,200880,473760&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/28992",
+    "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?bbox=6.5615668640070695%2C53.21592738037114%2C6.571481537102649%2C53.22114297901007&crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F28992&limit=1000&f=json",
     "layers": [
       {
         "layerId": "brkFeatures",
-        "title": "Buurten Apeldoorn (OGC Features)",
-        "visible": false,
-        "limit": 1000,
-        "maxFeatures": 5000
-      }
-    ]
-  },
-  {
-    "type": "geojson",
-    "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=100&bbox=234000,579500,238500,583500&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/28992",
-    "layers": [
-      {
-        "layerId": "brkFeaturesNederland",
-        "title": "Percelen Groningen (OGC Features)",
-        "visible": false,
-        "limit": 1000,
-        "maxFeatures": 5000
+        "title": "Buurten Groningen (OGC API Features)",
+        "visible": true,
+        "limit": 10000,
+        "maxFeatures": 50000,
+        "zIndex": 2
       }
     ]
   },
@@ -84,7 +84,7 @@
         "title": "BAG (vector tiles)",
         "style": "https://api.pdok.nl/kadaster/bag/ogc/v2/styles/bag_standaardvisualisatie__netherlandsrdnewquad?f=mapbox",
         "maxResolution": 0.84,
-        "visible": true,
+        "visible": false,
         "enableOverzoom": true
       }
     ]

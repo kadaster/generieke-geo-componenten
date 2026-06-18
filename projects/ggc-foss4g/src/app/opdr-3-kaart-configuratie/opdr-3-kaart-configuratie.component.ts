@@ -3,10 +3,16 @@ import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { HttpClient } from "@angular/common/http";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
+import { GgcLegendComponent } from "@kadaster/ggc-legend";
 
 @Component({
   selector: "app-opdr-3-kaart-configuratie",
-  imports: [GgcMapComponent, GgcDatasetTreeComponent, GgcFeatureInfoComponent],
+  imports: [
+    GgcMapComponent,
+    GgcDatasetTreeComponent,
+    GgcFeatureInfoComponent,
+    GgcLegendComponent
+  ],
   templateUrl: "./opdr-3-kaart-configuratie.component.html",
   styleUrl: "./opdr-3-kaart-configuratie.component.scss"
 })

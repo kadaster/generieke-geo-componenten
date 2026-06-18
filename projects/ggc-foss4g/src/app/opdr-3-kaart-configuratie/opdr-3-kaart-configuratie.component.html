@@ -1,25 +1,31 @@
 <h1>Opdracht 3</h1>
 <h2>Kaartviewer configureren</h2>
 <div class="row">
-  <div class="col-xl-2 col-md-3 col-sm-12">
+  <div class="container-kaartlagen col-xl-2 col-md-3 col-sm-12">
     <h3>Kaartlagen</h3>
-    <ggc-dataset-tree
-      [themes]="datasetTreeThemes"
-      [expandTreeOnInit]="true"
-    ></ggc-dataset-tree>
-    <p>
-      <i
-        >Let op: BGT standaardvisualisatie en BAG (vector tiles) zijn alleen
-        zichtbaar als de kaart ver genoeg is ingezoomd.</i
-      >
-    </p>
+    <div>
+      <ggc-dataset-tree
+        [themes]="datasetTreeThemes"
+        [expandTreeOnInit]="true"
+      ></ggc-dataset-tree>
+      <p>
+        <i
+          >Let op: BGT standaardvisualisatie en BAG (vector tiles) zijn alleen
+          zichtbaar als de kaart ver genoeg is ingezoomd.</i
+        >
+      </p>
+    </div>
+    <h3>Legenda</h3>
+    <div>
+      <ggc-legend></ggc-legend>
+    </div>
   </div>
   <div class="col-xl-6 col-md-5 col-sm-12">
-    <div style="height: 70vh">
+    <div style="height: 80vh">
       <ggc-map [webServices]="webService"></ggc-map>
     </div>
   </div>
-  <div class="col-xl-4 col-md-4 col-sm-12">
+  <div class="container-feature-info col-xl-4 col-md-4 col-sm-12">
     <h3>Objectinformatie</h3>
     <ggc-feature-info></ggc-feature-info>
   </div>

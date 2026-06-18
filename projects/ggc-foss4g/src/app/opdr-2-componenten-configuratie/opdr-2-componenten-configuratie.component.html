@@ -1,15 +1,20 @@
-<script src="opdr-2-componenten-configuratie.component.ts"></script><h1>Opdracht 2</h1>
+<script src="opdr-2-componenten-configuratie.component.ts"></script>
+<h1>Opdracht 2</h1>
 <h2>Een kaartviewer configureren</h2>
 <div class="row">
-  <div class="col-xl-2 col-md-3 col-sm-12">
+  <div class="container-kaartlagen col-xl-2 col-md-3 col-sm-12">
     <h3>Kaartlagen</h3>
     <ggc-dataset-tree
       [themes]="datasetTreeThemes"
       [expandTreeOnInit]="true"
     ></ggc-dataset-tree>
+    <h3>Legenda</h3>
+    <div>
+      <ggc-legend></ggc-legend>
+    </div>
   </div>
   <div class="container-map col-xl-8 col-md-7 col-sm-12">
-    <div style="height: 70vh">
+    <div style="height: 80vh">
       <ggc-map [webServices]="webServices"></ggc-map>
     </div>
     <div class="container-toolbar">
@@ -28,7 +33,7 @@
       </ggc-toolbar>
     </div>
   </div>
-  <div class="col-xl-2 col-md-2 col-sm-12">
+  <div class="container-zoeken col-xl-2 col-md-2 col-sm-12">
     <h3>Zoeken:</h3>
     <ggc-search-location
       (events)="logSearchComponentEvents($event)"
