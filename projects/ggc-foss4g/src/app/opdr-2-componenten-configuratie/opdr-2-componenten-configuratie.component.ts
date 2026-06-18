@@ -1,10 +1,5 @@
 import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
-import {
-  GgcLayerBrtAchtergrondkaartComponent,
-  GgcMapComponent,
-  GgcMapService,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import {
   GgcSearchLocationComponent,
   SearchComponentEvent,
@@ -15,25 +10,20 @@ import {
 import { HttpClient } from "@angular/common/http";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
-import { Extent } from "ol/interaction";
-import { Geometry } from "ol/geom";
 import {
   GgcToolbarComponent,
-  GgcToolbarItemDrawComponent,
-  GgcToolbarItemMeasureComponent
+  GgcToolbarItemDrawComponent
 } from "@kadaster/ggc-toolbar";
 
 @Component({
   selector: "app-opdr-2-componenten-configuratie",
   imports: [
-    GgcLayerBrtAchtergrondkaartComponent,
     GgcMapComponent,
     GgcSearchLocationComponent,
     GgcDatasetTreeComponent,
     GgcFeatureInfoComponent,
     GgcToolbarComponent,
-    GgcToolbarItemDrawComponent,
-    GgcToolbarItemMeasureComponent
+    GgcToolbarItemDrawComponent
   ],
   templateUrl: "./opdr-2-componenten-configuratie.component.html",
   styleUrl: "./opdr-2-componenten-configuratie.component.scss"
