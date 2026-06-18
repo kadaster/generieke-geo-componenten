@@ -47,6 +47,7 @@ import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-
 import { ExampleSearchLocationOnlyLocationComponent } from "../example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 import { Example3dDatasetTreeLegendComponent } from "../example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component";
 import { Example3dLayerCameraOptionsComponent } from "../example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component";
+import { Example3dDatasetSwitcherComponent } from "../example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
 
 interface GroupedCards {
   theme: string;
@@ -118,7 +119,8 @@ export class ExampleIndexComponent {
     new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
     new Example3dBasicComponent().componentInfo,
     new Example3dDatasetTreeLegendComponent().componentInfo,
-    new Example3dLayerCameraOptionsComponent().componentInfo
+    new Example3dLayerCameraOptionsComponent().componentInfo,
+    new Example3dDatasetSwitcherComponent().componentInfo
   ];
 
   private readonly selectedComponentsKey = "selectedComponents";

@@ -52,6 +52,7 @@ import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 import { Example3dDatasetTreeLegendComponent } from "./examples/example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component";
 import { Example3dLayerCameraOptionsComponent } from "./examples/example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component";
+import { Example3dDatasetSwitcherComponent } from "./examples/example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
 
 export const routes: Routes = [
   {
@@ -152,6 +153,12 @@ export const routes: Routes = [
     title: "Layer-3D met eigen camera opties | GGC-Home",
     component: Example3dLayerCameraOptionsComponent,
     data: { label: "example-3d-layer-camera-options" }
+  },
+  {
+    path: "example-3d-dataset-switcher",
+    title: "3D kaart met dataset switcher | GGC-Home",
+    component: Example3dDatasetSwitcherComponent,
+    data: { label: "example-3d-dataset-switcher" }
   },
   {
     path: "snapping-basic",

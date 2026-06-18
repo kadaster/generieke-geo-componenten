@@ -1,0 +1,73 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathKaartConfig]="kaartConfig"
+  [pathExtraConfig]="'example-3d/example-3d-dataset-switcher/switcherconfig.json'"
+  [extraConfigLabel]="`Dataset Switcher Configuratie (json)`"
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Deze functie wordt vaak gebruikt om van achtergrondkaart te wisselen
+      (bijvoorbeeld met een luchtfoto), maar kan ook gebruikt worden om een
+      complete verzameling van kaartlagen te wisselen.
+    </p>
+    <p>
+      Om de knoppen van de buttons te koppelen aan de kaartlagen, is het
+      noodzakelijk om de <code>name</code> van de
+      <code>DatasetSwitcherButton</code> dezelfde naam te geven als de
+      <code>themeName</code> uit de <code>datasetSwitcherConfig</code>. Deze
+      naam wordt ook gebruikt bij het tonen van de knop.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row">
+      <div class="col-xl-3 col-md-4 col-sm-12">
+        <div class="cesium-controls">
+          <span><b>Cesium controls</b></span>
+          <br />
+          <ggc-cesium-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-cesium-controls>
+        </div>
+        <ggc-dataset-switcher
+          [themes]="datasetSwitcherConfig"
+          [datasetSwitcherButtons]="datasetSwitcherButtons"
+          [viewerType]="viewerType"
+        ></ggc-dataset-switcher>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-12">
+        <div class="map-container">
+          <ggc-cesium-viewer
+            [viewerOptions]="viewerOptions"
+            [cameraOptions]="cameraOptions"
+            (ready)="onCesiumReady()"
+            [webServices]="webService"
+          ></ggc-cesium-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DOCS:END functionality -->
+</app-example-format>

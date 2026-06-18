@@ -203,4 +203,35 @@ export class DatasetTreeMapConnectService {
       mapIndex
     );
   }
+
+  /**
+   * Zet de zichtbaarheid van meerdere lagen tegelijkertijd.
+   *
+   * @param layerIds - lijst met layerIds
+   * @param visible - geeft aan of de lagen zichtbaar moeten zijn
+   * @param mapIndex - de mapIndex van de layer (alleen relevant voor 2D, default: DEFAULT_MAPINDEX)
+   * @param viewerType - geeft aan of een 2D service of een 3D service moet worden aangeroepen
+   */
+  async setVisibilityLayers(
+    layerIds: string[],
+    visible: boolean,
+    viewerType: ViewerType,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Promise<void> {
+    switch (viewerType) {
+      case ViewerType.TWEE_D:
+        (await this.getGgcOLLayerService()).setVisibilityLayers(
+          layerIds,
+          visible,
+          mapIndex
+        );
+        break;
+
+      case ViewerType.DRIE_D:
+        (
+          (await this.connectService.getGgcCesiumSharedLayerService()) as any
+        ).setVisibilityLayers(layerIds, visible);
+        break;
+    }
+  }
 }

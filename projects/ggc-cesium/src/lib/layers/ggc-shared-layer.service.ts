@@ -148,6 +148,25 @@ export class GgcSharedLayerService {
     })?.type;
   }
 
+  /**
+   * Zet de zichtbaarheid van meerdere lagen tegelijkertijd.
+   * De methode is idempotent: er worden geen dubbele add/remove acties uitgevoerd.
+   *
+   * @param layerIds Lijst met layerIds
+   * @param visible Geeft aan of de lagen zichtbaar moeten zijn
+   */
+  setVisibilityLayers(layerIds: string[], visible: boolean): void {
+    layerIds
+      .filter((layerId: string) => layerId !== undefined)
+      .forEach((layerId: string) => {
+        if (visible && !this.isVisible(layerId)) {
+          this.addLayerFromLayersConfig(layerId);
+        } else if (!visible && this.isVisible(layerId)) {
+          this.removeLayer(layerId);
+        }
+      });
+  }
+
   private determineLayerService(layerId: string): BaseLayerService | undefined {
     const layerType = this.getTypeOfLayer(layerId);
     if (!layerType) {
