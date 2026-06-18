@@ -125,7 +125,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
     if (!theme) return;
 
     this.sendChangeEvent(theme);
-    this.processMap(theme);
+    void this.processMap(theme);
   }
 
   /**
@@ -153,12 +153,12 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    *
    * @param theme - The theme dat geactiveerd moet worden.
    */
-  private processMap(theme: Theme) {
+  private async processMap(theme: Theme) {
     if (this.activeTheme) {
-      this.setVisibilityTheme(this.activeTheme, false);
+      await this.setVisibilityTheme(this.activeTheme, false);
     }
 
-    this.setVisibilityTheme(theme, true);
+    await this.setVisibilityTheme(theme, true);
     this.activeTheme = theme;
   }
 
@@ -181,7 +181,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * @param theme - Theme waarvan de lagen aangepast moeten worden.
    * @param visible - Gewenste zichtbaarheid.
    */
-  private setVisibilityTheme(theme: Theme, visible: boolean) {
+  private async setVisibilityTheme(theme: Theme, visible: boolean) {
     theme.datasets.forEach((dataset: Dataset) =>
       dataset.services.forEach(
         async (service: DatasetTreeWebservice) =>
@@ -212,28 +212,14 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
   private async setInitialActiveTheme(themes: Theme[]): Promise<void> {
     if (!themes.length) return;
 
-    let activeTheme: Theme | undefined;
-
-    activeTheme = themes.find((theme) =>
-      theme.datasets.some((dataset: Dataset) =>
-        dataset.services.some((service: DatasetTreeWebservice) =>
-          service.layers.some((layer: DatasetTreeLayer) =>
-            this.datasetTreeMapConnectService.isVisible(
-              layer.layerId,
-              this.mapIndex,
-              this.viewerType
-            )
-          )
-        )
-      )
-    );
+    let activeTheme = await this.findFirstActiveTheme(themes);
 
     if (!activeTheme) {
       const firstButtonName = this.datasetSwitcherButtons?.[0]?.name;
       if (firstButtonName) {
         activeTheme = this.getThemeFromName(firstButtonName);
         if (activeTheme) {
-          this.setVisibilityTheme(activeTheme, true);
+          await this.setVisibilityTheme(activeTheme, true);
         }
       }
     }
@@ -242,5 +228,28 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
 
     this.activeTheme = activeTheme;
     this.sendChangeEvent(activeTheme);
+  }
+
+  private async findFirstActiveTheme(
+    themes: Theme[]
+  ): Promise<Theme | undefined> {
+    for (const theme of themes) {
+      for (const dataset of theme.datasets) {
+        for (const service of dataset.services) {
+          for (const layer of service.layers) {
+            const visible = await this.datasetTreeMapConnectService.isVisible(
+              layer.layerId,
+              this.mapIndex,
+              this.viewerType
+            );
+
+            if (visible) {
+              return theme;
+            }
+          }
+        }
+      }
+    }
+    return undefined;
   }
 }

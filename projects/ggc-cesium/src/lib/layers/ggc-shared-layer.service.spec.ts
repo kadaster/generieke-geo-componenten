@@ -251,4 +251,72 @@ describe("SharedLayerService", () => {
       }
     ]);
   });
+
+  describe("setVisibilityLayers", () => {
+    beforeEach(() => {
+      service["layerConfigurations"].push({
+        url: "https://test",
+        type: Webservice3DType.GEOJSON,
+        layers: [
+          { layerId: "id1", layerName: "layer1", url: "url" } as LayerConfig,
+          { layerId: "id2", layerName: "layer2", url: "url" } as LayerConfig
+        ]
+      });
+    });
+
+    it("should add layer when visible = true and layer is not visible", () => {
+      geoJsonServiceSpy.isVisible.mockReturnValue(false);
+      wmtsServiceSpy.isVisible.mockReturnValue(false);
+      tiles3dServiceSpy.isVisible.mockReturnValue(false);
+
+      service.setVisibilityLayers(["id1"], true);
+
+      expect(geoJsonServiceSpy.addLayer).toHaveBeenCalled();
+    });
+
+    it("should NOT add layer when already visible", () => {
+      geoJsonServiceSpy.isVisible.mockReturnValue(true);
+
+      service.setVisibilityLayers(["id1"], true);
+
+      expect(geoJsonServiceSpy.addLayer).not.toHaveBeenCalled();
+    });
+
+    it("should remove layer when visible = false and layer is visible", () => {
+      geoJsonServiceSpy.isVisible.mockReturnValue(true);
+
+      service.setVisibilityLayers(["id1"], false);
+
+      expect(geoJsonServiceSpy.removeLayer).toHaveBeenCalledWith("id1");
+    });
+
+    it("should NOT remove layer when already not visible", () => {
+      geoJsonServiceSpy.isVisible.mockReturnValue(false);
+      wmtsServiceSpy.isVisible.mockReturnValue(false);
+      tiles3dServiceSpy.isVisible.mockReturnValue(false);
+
+      service.setVisibilityLayers(["id1"], false);
+
+      expect(geoJsonServiceSpy.removeLayer).not.toHaveBeenCalled();
+    });
+
+    it("should handle multiple layerIds correctly", () => {
+      geoJsonServiceSpy.isVisible.mockImplementation(
+        (id: string) => id === "id1"
+      );
+
+      service.setVisibilityLayers(["id1", "id2"], false);
+
+      expect(geoJsonServiceSpy.removeLayer).toHaveBeenCalledWith("id1");
+      expect(geoJsonServiceSpy.removeLayer).not.toHaveBeenCalledWith("id2");
+    });
+
+    it("should ignore undefined layerIds", () => {
+      geoJsonServiceSpy.isVisible.mockReturnValue(false);
+
+      service.setVisibilityLayers(["id1", undefined as any], true);
+
+      expect(geoJsonServiceSpy.addLayer).toHaveBeenCalledTimes(1);
+    });
+  });
 });
