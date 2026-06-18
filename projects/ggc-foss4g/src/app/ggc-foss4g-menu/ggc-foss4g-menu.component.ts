@@ -11,7 +11,6 @@ export class GgcFoss4gMenuComponent {
   private readonly router: Router = inject(Router);
 
   protected navigateTo(route: string) {
-    console.log(route);
     switch (route) {
       case "opdracht 1":
         this.router.navigate(["/opdracht1"]);
@@ -23,7 +22,7 @@ export class GgcFoss4gMenuComponent {
         this.router.navigate(["/opdracht3"]);
         break;
       default:
-        this.router.navigate(["/"]);
+        this.router.navigate(["/opdracht1"]);
         break;
     }
   }
