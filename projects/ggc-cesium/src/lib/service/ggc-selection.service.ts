@@ -7,7 +7,7 @@ import { SelectionConfig } from "../model/interfaces";
   providedIn: "root"
 })
 export class GgcSelectionService {
-  private coreSelectionService = inject(CoreSelectionService);
+  private readonly coreSelectionService = inject(CoreSelectionService);
 
   public initializeSelections(selections: SelectionConfig[]) {
     this.coreSelectionService.initializeSelections(selections);
@@ -35,5 +35,15 @@ export class GgcSelectionService {
 
   public getSelectionEventsObservable() {
     return this.coreSelectionService.getClickEventsObservable();
+  }
+
+  /**
+   * Return een observable die mapEvents terug geeft met daarin een FeatureCollectionForCoordinate.
+   * @param selectIndex De selectIndex waarvoor je events wilt ontvangen. Mocht deze niet opgegeven zijn, dan krijg je alle selectie events terug.
+   */
+  public getFeatureCollectionForCoordinateObservable(selectIndex?: string) {
+    return this.coreSelectionService.getFeatureCollectionForCoordinateObservable(
+      selectIndex
+    );
   }
 }

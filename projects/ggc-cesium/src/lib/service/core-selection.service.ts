@@ -13,7 +13,7 @@ import {
   ScreenSpaceEventType
 } from "@cesium/engine";
 import { Viewer } from "@cesium/widgets";
-import { Subject } from "rxjs";
+import { filter, map, Observable, Subject } from "rxjs";
 import { Tiles3dLayerService } from "../layers/tiles3d-layer.service";
 import {
   SelectionConfig,
@@ -22,6 +22,13 @@ import {
 } from "../model/interfaces";
 import { CoreViewerService } from "./core-viewer.service";
 import { GeoJsonLayerService } from "../layers/geojson-layer.service";
+import {
+  DEFAULT_CESIUM_MAPINDEX,
+  FeatureCollectionForCoordinate,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
+import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 
 export type ScreenSpaceEvent =
   | ScreenSpaceEventHandler.MotionEvent
@@ -46,6 +53,7 @@ export class CoreSelectionService {
   private readonly tiles3DService = inject(Tiles3dLayerService);
   private readonly geoJsonLayerService = inject(GeoJsonLayerService);
   private readonly coreViewerService = inject(CoreViewerService);
+  private readonly sharedLayerService = inject(GgcSharedLayerService);
   private selections: SelectionConfig[] = [];
   private readonly clickEvent: Subject<SelectionEvent> =
     new Subject<SelectionEvent>();
@@ -84,7 +92,8 @@ export class CoreSelectionService {
       this.clickEvent.next({
         selectionEventType:
           SelectionEventType.SELECTIONSERVICE_SELECTIONCLEARED,
-        type: selection.eventType
+        type: selection.eventType,
+        selectIndex: selection.selectIndex
       });
     }
   }
@@ -119,6 +128,51 @@ export class CoreSelectionService {
 
   public getClickEventsObservable() {
     return this.clickEvent.asObservable();
+  }
+
+  public getFeatureCollectionForCoordinateObservable(
+    selectIndex?: string
+  ): Observable<MapComponentEvent> {
+    return this.clickEvent.asObservable().pipe(
+      filter((event) => {
+        return selectIndex === undefined || event.selectIndex === selectIndex;
+      }),
+      map((event) => {
+        const featureCollectionForCoordinate =
+          new FeatureCollectionForCoordinate();
+
+        if (event.layerName) {
+          // The provided layerName is already a layerId
+          const layerId = event.layerName;
+          const layerTitle = this.sharedLayerService.getTitle(layerId);
+
+          let features: object[] = [];
+          if (event.feature instanceof Cesium3DTileFeature) {
+            features = this.cesium3DTileFeatureToGenericFeatures(event.feature);
+          } else if (event.feature instanceof Entity) {
+            features = this.cesiumGeoJsonFeatureToGenericFeatures(
+              event.feature
+            );
+          }
+
+          featureCollectionForCoordinate.featureCollectionForLayers.push({
+            layerName: "",
+            layerId: layerId,
+            layerTitle: layerTitle,
+            features: features as any
+          });
+        }
+
+        return new MapComponentEvent(
+          MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
+          DEFAULT_CESIUM_MAPINDEX,
+          "3d selectie geupdatet",
+          "",
+          featureCollectionForCoordinate,
+          event.selectIndex
+        );
+      })
+    );
   }
 
   private clearHighlight(type: ScreenSpaceEventType) {
@@ -213,7 +267,8 @@ export class CoreSelectionService {
       layerName:
         pickedFeature instanceof Cesium3DTileFeature
           ? this.tiles3DService.getLayerName(pickedFeature)
-          : this.geoJsonLayerService.getLayerName(pickedFeature)
+          : this.geoJsonLayerService.getLayerName(pickedFeature),
+      selectIndex: selection.selectIndex
     });
   }
 
@@ -376,5 +431,32 @@ export class CoreSelectionService {
     this.lastClickedEntity = undefined;
     this.isSilhouetteActivated = false;
     this.highlightMap = new Map<ScreenSpaceEventType, PostProcessStage>();
+  }
+
+  private cesium3DTileFeatureToGenericFeatures(
+    feature: Cesium3DTileFeature | undefined
+  ) {
+    const properties: object[] = [];
+    if (feature !== undefined) {
+      const obj: { [x: string]: string } = {};
+      feature.getPropertyIds().forEach((id: string) => {
+        obj[id] = feature.getProperty(id);
+      });
+      properties.push(obj);
+    }
+    return properties;
+  }
+
+  private cesiumGeoJsonFeatureToGenericFeatures(entity: Entity | undefined) {
+    const properties: object[] = [];
+    if (entity?.properties !== undefined) {
+      const obj: { [x: string]: string } = {};
+      entity?.properties.propertyNames.forEach((id: string) => {
+        obj[id] =
+          entity.properties === undefined ? "" : entity.properties[id]._value;
+      });
+      properties.push(obj);
+    }
+    return properties;
   }
 }

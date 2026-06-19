@@ -49,6 +49,7 @@ export type CameraOptions = CameraPosition | LookAtPosition | LookAtObject;
 export interface SelectionConfig {
   eventType: ScreenSpaceEventType;
   highlightColor?: Color;
+  selectIndex?: string;
 }
 
 export interface SelectionEvent {
@@ -57,6 +58,7 @@ export interface SelectionEvent {
   location?: number[] | number[][];
   feature?: any;
   layerName?: string;
+  selectIndex?: string;
 }
 
 export enum SelectionEventType {

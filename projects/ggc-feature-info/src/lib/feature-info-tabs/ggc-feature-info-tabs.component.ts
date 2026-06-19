@@ -23,7 +23,8 @@ import { NgClass, NgTemplateOutlet } from "@angular/common";
 import {
   DEFAULT_MAPINDEX,
   MapComponentEvent,
-  MapComponentEventTypes
+  MapComponentEventTypes,
+  ViewerType
 } from "@kadaster/ggc-models";
 import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
@@ -48,8 +49,16 @@ import { Subscription } from "rxjs";
 export class GgcFeatureInfoTabsComponent
   implements OnInit, OnChanges, AfterContentInit, OnDestroy
 {
-  /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
+  /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden
+   * Een 3D viewer maakt geen gebruikt van een mapIndex, dus die kan dan worden leeggelaten.
+   * Wel kan een 3D viewer gebruik maken van een selectIndex, netzoals een 2D viewer.
+   * */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  /** Unieke naam/index van de selectie index waarvoor Feature Info getoond moet worden, indien opgegeven.
+   *  Feature-info zal in dit geval luisteren naar de select interactie waar de mapIndex en selectIndex overeenkomt.
+   *  Als selectIndex undefined is, dan wordt alleen naar de mapIndex gekeken.
+   */
+  @Input() selectIndex: string | undefined = undefined;
   /**
    * Verzameling van features en metadata die weergegeven moeten worden.
    * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
@@ -97,6 +106,10 @@ export class GgcFeatureInfoTabsComponent
    * dat de parent-component deze afhandeling verzorgt.
    */
   @Input() autoConnect = true;
+  /**
+   * Geeft aan of dit feature info component gebruikt wordt voor 2D of 3D kaart.
+   */
+  @Input() viewerType = ViewerType.TWEE_D;
   /**
    * Verplicht output-event voor alle gebeurtenissen afkomstig van de tabbladenfunctionaliteit.
    *
@@ -176,7 +189,10 @@ export class GgcFeatureInfoTabsComponent
         "Het huidige weergegeven tabblad.",
         undefined
       );
-      this.featureInfoMapConnectService.clearHighlightLayer(this.mapIndex);
+      this.featureInfoMapConnectService.clearHighlightLayer(
+        this.viewerType,
+        this.mapIndex
+      );
       this.eventService.emit(event);
       this.events.emit(event);
     } else {
@@ -218,7 +234,7 @@ export class GgcFeatureInfoTabsComponent
 
   private subscribeToMapSelection(mapIndex: string) {
     this.featureInfoMapConnectService
-      .getObservableForMapSelection(mapIndex)
+      .getObservableForMapSelection(this.viewerType, mapIndex, this.selectIndex)
       .then((s) =>
         s.subscribe((event: MapComponentEvent) => {
           if (

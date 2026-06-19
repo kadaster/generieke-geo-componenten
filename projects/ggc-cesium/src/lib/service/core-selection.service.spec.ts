@@ -1,4 +1,5 @@
 import type { Mock, MockedObject } from "vitest";
+import { vi } from "vitest";
 import { inject, TestBed } from "@angular/core/testing";
 import {
   Cartesian2,
@@ -20,13 +21,19 @@ import { Subject } from "rxjs";
 import { SelectionEvent, SelectionEventType } from "../model/interfaces";
 import { Tiles3dLayerService } from "../layers/tiles3d-layer.service";
 import { GeoJsonLayerService } from "../layers/geojson-layer.service";
-import { vi } from "vitest";
+import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
+import {
+  FeatureCollectionForCoordinate,
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 describe("CoreSelectionService", () => {
   let service: CoreSelectionService;
   let coreViewerServiceSpy: MockedObject<CoreViewerService>;
   let tiles3dLayerServiceSpy: MockedObject<Tiles3dLayerService>;
   let geoJsonLayerServiceSpy: MockedObject<GeoJsonLayerService>;
+  let sharedLayerServiceSpy: MockedObject<GgcSharedLayerService>;
   let subject: Subject<Viewer | undefined>;
 
   beforeEach(() => {
@@ -40,6 +47,10 @@ describe("CoreSelectionService", () => {
     tiles3dLayerServiceSpy = {
       getLayerName: vi.fn().mockName("Tiles3dLayerService.getLayerName")
     } as MockedObject<Tiles3dLayerService>;
+
+    sharedLayerServiceSpy = {
+      getTitle: vi.fn().mockName("Tiles3dLayerService.getTitle")
+    } as MockedObject<GgcSharedLayerService>;
 
     geoJsonLayerServiceSpy = {
       getLayerName: vi.fn().mockName("GeoJsonLayerService.getLayerName"),
@@ -55,7 +66,8 @@ describe("CoreSelectionService", () => {
         CoreSelectionService,
         { provide: CoreViewerService, useValue: coreViewerServiceSpy },
         { provide: Tiles3dLayerService, useValue: tiles3dLayerServiceSpy },
-        { provide: GeoJsonLayerService, useValue: geoJsonLayerServiceSpy }
+        { provide: GeoJsonLayerService, useValue: geoJsonLayerServiceSpy },
+        { provide: GgcSharedLayerService, useValue: sharedLayerServiceSpy }
       ]
     });
     subject = new Subject<Viewer | undefined>();
@@ -128,8 +140,7 @@ describe("CoreSelectionService", () => {
         ScreenSpaceEventType.LEFT_CLICK,
         Color.TURQUOISE
       );
-      const selections = createSelections(1);
-      service["selections"] = selections;
+      service["selections"] = createSelections(1);
       //@ts-ignore
       const reAddSelectionsSpy = vi.spyOn(service, "reAddSelections");
 
@@ -589,6 +600,136 @@ describe("CoreSelectionService", () => {
 
       expect(singleArray.length).toEqual(2);
       expect(singleArray).toEqual([5, 6]);
+    });
+  });
+
+  describe("getFeatureCollectionForCoordinateObservable", () => {
+    it("should emit a mapped MapComponentEvent when selectIndex matches and feature is Cesium3DTileFeature", () => {
+      const clickSubject = service["clickEvent"];
+      const feature = new Cesium3DTileFeature();
+
+      sharedLayerServiceSpy.getTitle.mockReturnValue("Layer title");
+
+      const convertSpy = vi
+        .spyOn(service as any, "cesium3DTileFeatureToGenericFeatures")
+        .mockReturnValue([{ id: 1 }]);
+
+      let result: MapComponentEvent | undefined;
+
+      service
+        .getFeatureCollectionForCoordinateObservable("index1")
+        .subscribe((event) => {
+          result = event;
+        });
+
+      clickSubject.next({
+        layerName: "layer1",
+        feature,
+        selectIndex: "index1"
+      } as any);
+
+      expect(convertSpy).toHaveBeenCalledWith(feature);
+      expect(sharedLayerServiceSpy.getTitle).toHaveBeenCalledWith("layer1");
+
+      expect(result).toBeDefined();
+      expect(result?.type).toBe(
+        MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+      );
+
+      const fc = (result as any).value as FeatureCollectionForCoordinate;
+      expect(fc.featureCollectionForLayers.length).toBe(1);
+      expect(fc.featureCollectionForLayers[0].layerId).toBe("layer1");
+      expect(fc.featureCollectionForLayers[0].layerTitle).toBe("Layer title");
+      expect(fc.featureCollectionForLayers[0].features).toEqual([{ id: 1 }]);
+    });
+
+    it("should emit when selectIndex is undefined (no filtering)", () => {
+      const clickSubject = service["clickEvent"];
+
+      let emitted = false;
+
+      service.getFeatureCollectionForCoordinateObservable().subscribe(() => {
+        emitted = true;
+      });
+
+      clickSubject.next({
+        layerName: "layer1",
+        feature: undefined,
+        selectIndex: "different"
+      } as any);
+
+      expect(emitted).toBe(true);
+    });
+
+    it("should NOT emit when selectIndex does not match", () => {
+      const clickSubject = service["clickEvent"];
+
+      let emitted = false;
+
+      service
+        .getFeatureCollectionForCoordinateObservable("index1")
+        .subscribe(() => {
+          emitted = true;
+        });
+
+      clickSubject.next({
+        layerName: "layer1",
+        feature: undefined,
+        selectIndex: "other-index"
+      } as any);
+
+      expect(emitted).toBe(false);
+    });
+
+    it("should map Entity features using cesiumGeoJsonFeatureToGenericFeatures", () => {
+      const clickSubject = service["clickEvent"];
+      const entity = new Entity();
+
+      sharedLayerServiceSpy.getTitle.mockReturnValue("Layer title");
+
+      const convertSpy = vi
+        .spyOn(service as any, "cesiumGeoJsonFeatureToGenericFeatures")
+        .mockReturnValue([{ id: 2 }]);
+
+      let result: MapComponentEvent | undefined;
+
+      service
+        .getFeatureCollectionForCoordinateObservable()
+        .subscribe((event) => {
+          result = event;
+        });
+
+      clickSubject.next({
+        layerName: "layer2",
+        feature: entity,
+        selectIndex: "index1"
+      } as any);
+
+      expect(convertSpy).toHaveBeenCalledWith(entity);
+
+      const fc = (result as any).value as FeatureCollectionForCoordinate;
+      expect(fc.featureCollectionForLayers[0].features).toEqual([{ id: 2 }]);
+    });
+
+    it("should handle events without layerName (empty feature collection)", () => {
+      const clickSubject = service["clickEvent"];
+
+      let result: MapComponentEvent | undefined;
+
+      service
+        .getFeatureCollectionForCoordinateObservable()
+        .subscribe((event) => {
+          result = event;
+        });
+
+      clickSubject.next({
+        layerName: undefined,
+        feature: undefined,
+        selectIndex: "index1"
+      } as any);
+
+      const fc = (result as any).value as FeatureCollectionForCoordinate;
+      expect(fc.featureCollectionForLayers.length).toBe(0);
     });
   });
 });

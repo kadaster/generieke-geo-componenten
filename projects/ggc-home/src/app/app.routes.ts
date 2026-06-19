@@ -53,6 +53,8 @@ import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-s
 import { Example3dDatasetTreeLegendComponent } from "./examples/example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component";
 import { Example3dLayerCameraOptionsComponent } from "./examples/example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component";
 import { Example3dDatasetSwitcherComponent } from "./examples/example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
+import { Example3dFeatureInfoComponent } from "./examples/example-3d/example-3d-feature-info/example3d-feature-info.component";
+import { Example3dFeatureInfoAutoConnectComponent } from "./examples/example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
 
 export const routes: Routes = [
   {
@@ -159,6 +161,18 @@ export const routes: Routes = [
     title: "3D kaart met dataset switcher | GGC-Home",
     component: Example3dDatasetSwitcherComponent,
     data: { label: "example-3d-dataset-switcher" }
+  },
+  {
+    path: "example-3d-feature-info",
+    title: "3D kaart met feature info component | GGC-Home",
+    component: Example3dFeatureInfoComponent,
+    data: { label: "example-3d-feature-info" }
+  },
+  {
+    path: "example-3d-feature-info-auto-connect",
+    title: "3D kaart met feature info component (autoconnect) | GGC-Home",
+    component: Example3dFeatureInfoAutoConnectComponent,
+    data: { label: "example-3d-feature-info-auto-connect" }
   },
   {
     path: "snapping-basic",

@@ -5,12 +5,18 @@ type GgcMapModule = {
   GgcMapService: Type<unknown>;
 };
 
+type GgcCesiumModule = {
+  GgcSelectionService: Type<unknown>;
+};
+
 @Injectable({ providedIn: "root" })
 export class GgcFeatureInfoConnectService {
   private mapSelectionService?: unknown;
   private mapService?: unknown;
+  private cesiumSelectionService?: unknown;
   private readonly injector = inject(Injector);
   private mapModulePromise?: Promise<GgcMapModule>;
+  private cesiumModulePromise?: Promise<GgcCesiumModule>;
 
   async getMapService(): Promise<unknown> {
     try {
@@ -38,6 +44,20 @@ export class GgcFeatureInfoConnectService {
     }
   }
 
+  async getCesiumSelectionService(): Promise<unknown> {
+    try {
+      if (!this.cesiumSelectionService) {
+        const module = await this.loadCesiumModule();
+        this.cesiumSelectionService = this.injector.get(
+          module.GgcSelectionService
+        );
+      }
+      return this.cesiumSelectionService;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
   /**
    * Lazy load Map module (once)
    */
@@ -48,5 +68,17 @@ export class GgcFeatureInfoConnectService {
       throw e;
     });
     return this.mapModulePromise;
+  }
+
+  /**
+   * Lazy load Map module (once)
+   */
+  private loadCesiumModule(): Promise<GgcCesiumModule> {
+    this.cesiumModulePromise ??= import(
+      /* @vite-ignore */ "@kadaster/ggc-cesium"
+    ).catch((e) => {
+      throw e;
+    });
+    return this.cesiumModulePromise;
   }
 }

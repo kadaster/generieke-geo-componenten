@@ -1,0 +1,74 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld zijn 2 selecties gestart op de 3D kaart; 1 selectie met
+      een klik met een blauwe highlight en 1 selectie via een hover met een
+      groene highlight. Beide selecties hebben een unieke selectIndex en door
+      een selectIndex in te stellen in het feature info component, kan de
+      feature-info getoond worden van alleen de klik-selectie en niet de hover.
+      Er kan bijvoorbeeld ook op de events van de hover-selectIndex worden
+      gereageerd.
+    </p>
+    <p>
+      Het feature-info component kan ook zelf een selectie starten, maar zie
+      hiervoor het andere voorbeeld. In dit voorbeeld is autoStartSelect
+      uitgezet om dit te voorkomen.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row">
+      <div class="col-xl-4 col-md-4 col-sm-12">
+        <div class="cesium-controls">
+          <span><b>Cesium controls</b></span>
+          <br />
+          <ggc-cesium-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-cesium-controls>
+        </div>
+        <b>Feature Info</b>
+        <br />
+        <ggc-feature-info
+          [viewerType]="viewerType"
+          [autoStartSelect]="false"
+          [selectIndex]="selectIndexClick"
+        ></ggc-feature-info>
+      </div>
+      <div class="col-xl-8 col-md-8 col-sm-12">
+        <div class="map-container">
+          <ggc-cesium-viewer
+            [viewerOptions]="viewerOptions"
+            [cameraOptions]="cameraOptions"
+            (ready)="onCesiumReady()"
+            [webServices]="webService"
+          ></ggc-cesium-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DOCS:END functionality -->
+</app-example-format>

@@ -6,6 +6,7 @@ import { CoreSelectionService } from "./core-selection.service";
 import { GgcSelectionService } from "./ggc-selection.service";
 import { Subject } from "rxjs";
 import { vi } from "vitest";
+import { MapComponentEvent } from "@kadaster/ggc-models/src/lib/models/map-component-event.model";
 describe("GgcSelectionService", () => {
   let service: GgcSelectionService;
   let coreService: MockedObject<CoreSelectionService>;
@@ -31,6 +32,7 @@ describe("GgcSelectionService", () => {
       getClickEventsObservable: vi
         .fn()
         .mockName("CoreSelectionService.getClickEventsObservable"),
+      getFeatureCollectionForCoordinateObservable: vi.fn(),
       currentSupportedEvents: [ScreenSpaceEventType.LEFT_DOWN],
       clickEvent: new Subject<SelectionEvent>()
     };
@@ -95,6 +97,16 @@ describe("GgcSelectionService", () => {
     const observable = new Subject<SelectionEvent>().asObservable();
     coreService.getClickEventsObservable.mockReturnValue(observable);
     const selectionEventsObservable = service.getSelectionEventsObservable();
+    expect(selectionEventsObservable).toEqual(observable);
+  });
+
+  it("should return an Observable from the CoreSelectionService when getFeatureCollectionForCoordinateObservable() is called", () => {
+    const observable = new Subject<MapComponentEvent>().asObservable();
+    coreService.getFeatureCollectionForCoordinateObservable.mockReturnValue(
+      observable
+    );
+    const selectionEventsObservable =
+      service.getFeatureCollectionForCoordinateObservable();
     expect(selectionEventsObservable).toEqual(observable);
   });
 });
