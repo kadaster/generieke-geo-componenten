@@ -22,5 +22,18 @@
         "tiled": true
       }
     ]
+  },
+  {
+    "type": "geojson",
+    "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=100&bbox=232000,581000,234000,583000&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/28992",
+    "layers": [
+      {
+        "layerId": "brkFeatures",
+        "title": "Buurten Groningen (OGC Features)",
+        "visible": true,
+        "limit": 10000,
+        "maxFeatures": 50000
+      }
+    ]
   }
 ]

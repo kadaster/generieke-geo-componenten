@@ -22,7 +22,7 @@ export class GgcFoss4gMenuComponent {
         this.router.navigate(["/opdracht3"]);
         break;
       default:
-        this.router.navigate(["/opdracht1"]);
+        this.router.navigate(["/intro"]);
         break;
     }
   }

@@ -82,6 +82,7 @@
       {
         "layerId": "bagVector",
         "title": "BAG (vector tiles)",
+        "zIndex": 100000,
         "style": "https://api.pdok.nl/kadaster/bag/ogc/v2/styles/bag_standaardvisualisatie__netherlandsrdnewquad?f=mapbox",
         "maxResolution": 0.84,
         "visible": false,
