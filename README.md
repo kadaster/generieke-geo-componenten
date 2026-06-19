@@ -28,8 +28,8 @@ Pas de lagen aan en creeer eenvoudig je eigen kaartbeeld door de kaartconfigurat
 Denk aan het toevoegen van extra lagen (bijvoorbeeld de OGC API Features 3D) en instellen van zoomniveaus.
 
 ## Handige links:
+GGC home https://generiekegeocomponenten.nl
 PDOK https://api.pdok.nl/
-GGC home https://generiekegeocomponenten.nl en https://stackblitz.com/github/kadaster/generieke-geo-componenten
 
 
 ## Licentie
