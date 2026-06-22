@@ -4,6 +4,7 @@
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
+    "dompurify": "^3.4.11",
     "@kadaster/ggc-cesium": "*",
     "@kadaster/ggc-map": "^3.0.0"
   },
