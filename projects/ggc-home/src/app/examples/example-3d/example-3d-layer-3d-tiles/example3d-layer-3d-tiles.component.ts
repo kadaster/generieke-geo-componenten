@@ -2,6 +2,7 @@ import { Component, inject, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
+import { Tags } from "../../tags.enum";
 import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
@@ -14,27 +15,27 @@ import { ExampleFormatComponent } from "../../example-format/example-format.comp
 import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: "app-example-3d-basic",
-  templateUrl: "./example-3d-basic.component.html",
-  styleUrl: "./example-3d-basic.component.scss",
+  selector: "app-example-3d-layer-3d-tiles",
+  templateUrl: "./example3d-layer-3d-tiles.component.html",
+  styleUrl: "./example3d-layer-3d-tiles.component.scss",
   imports: [GgcViewerComponent, GgcControlsComponent, ExampleFormatComponent],
   encapsulation: ViewEncapsulation.None
 })
-export class Example3dBasicComponent {
+export class Example3dLayer3dTilesComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
-    route: "/example-3d-basic",
-    title: "3D kaart",
-    introduction: "Toon een 3D kaart.",
+    route: "/example-3d-layer-3d-tiles",
+    title: "Kaartlaag toevoegen: OGC API 3D Tiles",
+    introduction: "Voeg een 3D laag toe aan de kaart met OGC API 3D Tiles.",
     components: [Components.GGC_3D],
     theme: [Themes.DRIED],
-    tags: [],
+    tags: [Tags.LAYER],
     imageLocation:
-      "code/examples/example-3d/example-3d-basic/example-3d-basic.png"
+      "code/examples/example-3d/example-3d-layer-3d-tiles/example-3d-layer-3d-tiles.png"
   } as ComponentInfo;
 
   urlComponentModule =
-    "example-3d/example-3d-basic/example-3d-basic.component.ts";
+    "example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/modules/ggc-map_src_public-api.html`;
   // DOCS-SKIP:END
 
@@ -42,7 +43,7 @@ export class Example3dBasicComponent {
   protected cameraOptions: CameraOptions;
   protected webService: Webservice[];
   protected viewerOptions: ViewerOptions = {
-    elementId: "cesium-basic",
+    elementId: "cesium-layer-3d-tiles",
     terrainModelUrl:
       "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1/collections/digitaalterreinmodel/quantized-mesh",
     directionalLightOptions: {
@@ -51,7 +52,7 @@ export class Example3dBasicComponent {
     }
   };
   protected kaartConfig =
-    "code/examples/example-3d/example-3d-basic/kaartconfig.json";
+    "code/examples/example-3d/example-3d-layer-3d-tiles/kaartconfig.json";
 
   private readonly httpClient = inject(HttpClient);
 
@@ -66,9 +67,5 @@ export class Example3dBasicComponent {
     setTimeout(() => {
       this.cameraOptions = cameraOptionsTorentjeDenHaag;
     });
-  }
-
-  protected toggleHideLogo() {
-    this.hideLogo = !this.hideLogo;
   }
 }

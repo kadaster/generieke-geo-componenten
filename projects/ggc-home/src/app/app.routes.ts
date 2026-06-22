@@ -56,6 +56,7 @@ import { Example3dDatasetSwitcherComponent } from "./examples/example-3d/example
 import { Example3dFeatureInfoComponent } from "./examples/example-3d/example-3d-feature-info/example3d-feature-info.component";
 import { Example3dFeatureInfoAutoConnectComponent } from "./examples/example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
 import { Example3dSearchComponent } from "./examples/example-3d/example-3d-search/example3d-search.component";
+import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
 
 export const routes: Routes = [
   {
@@ -141,7 +142,7 @@ export const routes: Routes = [
   },
   {
     path: "example-3d-basic",
-    title: "Layer-3D | GGC-Home",
+    title: "3D kaart | GGC-Home",
     component: Example3dBasicComponent,
     data: { label: "example-3d-basic" }
   },
@@ -180,6 +181,12 @@ export const routes: Routes = [
     title: "3D kaart met zoek component | GGC-Home",
     component: Example3dSearchComponent,
     data: { label: "example-3d-search" }
+  },
+  {
+    path: "example-3d-layer-3d-tiles",
+    title: "3D kaart met een 3D layer | GGC-Home",
+    component: Example3dLayer3dTilesComponent,
+    data: { label: "example-3d-layer-3d-tiles" }
   },
   {
     path: "snapping-basic",

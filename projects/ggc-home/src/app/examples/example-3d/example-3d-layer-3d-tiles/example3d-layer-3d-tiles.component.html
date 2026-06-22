@@ -19,18 +19,13 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      De 3D-kaart component maakt gebruik van de Cesium Library. De kaart kan
-      met de muis of met de GGC-cesium-controls worden bediend.
-      <br />
       In dit voorbeeld zijn het terrein en de gebouwen uit de 3D
-      Basisvoorziening als lagen toegevoegd aan de kaart.
-    </p>
-    <p>
-      Met <code>[hideLogo]="true"</code> kan het Cesium logo verborgen worden
-      (het logo is standaard zichtbaar).
+      Basisvoorziening als lagen toegevoegd aan de kaart. Deze kaartlagen worden
+      in MapBox Vector Tiles formaat opgevraagd bij een OGC API - Tiles.
       <br />
-      <strong>Let op</strong>: wanneer data wordt getoond uit Cesium-ion (het
-      dataplatform van Cesium), dan moet het Cesium-ion logo getoond worden.
+      Naast de kaartconfiguratie zijn er ook nog andere opties to configureren
+      voor 3D tiles in de TileSetConfig. Zie hiervoor het voorbeeld Camera
+      opties instellen voor 3D layer.
     </p>
   </div>
 
@@ -51,9 +46,6 @@
             [defaultCameraPosition]="'far fa-eye'"
           ></ggc-cesium-controls>
         </div>
-        <button class="hide-logo-button" (click)="toggleHideLogo()">
-          {{ hideLogo ? "Toon logo" : "Verberg logo" }}
-        </button>
       </div>
       <div class="col-xl-9 col-md-8 col-sm-12">
         <div class="map-container">

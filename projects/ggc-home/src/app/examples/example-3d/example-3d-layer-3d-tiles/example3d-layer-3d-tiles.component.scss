@@ -1,0 +1,13 @@
+ggc-cesium-controls {
+  .gc-controls button:focus {
+    border: 2px blue solid;
+  }
+}
+
+.row {
+  display: flex;
+}
+
+.hide-logo-button {
+  margin: 20px 0;
+}
