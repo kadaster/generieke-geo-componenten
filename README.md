@@ -17,8 +17,10 @@ https://stackblitz.com/github/kadaster/generieke-geo-componenten/tree/TMS-FOSS4G
 
 ### Opdracht 1: Kaartviewer bouwen
 
-Dit is een basis opzet van een kaartviewer met alleen het [ggc-map component](https://generiekegeocomponenten.nl/layer-wmts) met een achtergrondkaart.
-Voeg hier componenten aan toe zoals bijvoorbeeld kaartlaagkeuze ([ggc-dataset-tree](https://generiekegeocomponenten.nl/dataset-tree-basic)) of een zoekbalk [ggc-search-location](https://generiekegeocomponenten.nl/search-location).
+Dit is een basis opzet van een kaartviewer met alleen het [ggc-map component](https://generiekegeocomponenten.nl/layer-wmts) 
+met een achtergrondkaart.
+Voeg hier componenten aan toe zoals bijvoorbeeld kaartlaagkeuze ([ggc-dataset-tree](https://generiekegeocomponenten.nl/dataset-tree-basic)) 
+of een zoekbalk [ggc-search-location](https://generiekegeocomponenten.nl/search-location).
 
 Bonus: voeg ook andere kaartlagen toe of pas de styling/layout aan van de componenten die je hebt toegevoegd.
 
@@ -28,26 +30,24 @@ Bonus: voeg ook andere kaartlagen toe of pas de styling/layout aan van de compon
 In deze opdracht hebben we een kaartviewer gemaakt met meerdere componenten. Kijk hoe je deze aan kunt passen naar eigen wens.
 Denk bijvoorbeeld aan styling of layout, of kijk naar de mogelijkheden van de verschillende componenten.
 
-Bonus: voeg ook andere kaartlagen toe en zet deze aan of uit met de dataset-tree.
+Bonus: voeg ook andere kaartlagen toe en zet deze standaard aan of uit met de ggc-dataset-tree, of toon de legenda in ggc-legend.
 
 ### Opdracht 3: Kaartviewer configureren
 
 In deze basis viewer is het [ggc-map component](https://generiekegeocomponenten.nl/layer-wmts) toegevoegd 
 met een aantal kaartlagen.
-Pas de lagen aan en creëer eenvoudig je eigen kaartbeeld door de kaartconfiguratie. 
+Pas de kaartconfiguratie aan en creëer eenvoudig je eigen kaartbeeld.
 Denk aan het toevoegen van extra lagen (bijvoorbeeld de OGC API Features 3D) en het instellen van zoomniveaus.
 
 ## Handige links:
 
-* GGC home https://generiekegeocomponenten.nl: voorbeelden van de verschillende functionaliteiten van componenten
-* PDOK https://api.pdok.nl/: datasets voor kaartlagen
+* [GGC Home](https://generiekegeocomponenten.nl): bekijk onze [voorbeelden](https://generiekegeocomponenten.nl/example-index), de [quick start](https://generiekegeocomponenten.nl/quick-start) of de [TSDocs](https://www.generiekegeocomponenten.nl/tsdocs/).
+* [GitHub FOSS4G opdrachten](https://github.com/kadaster/generieke-geo-componenten/tree/TMS-FOSS4G-example): code lokaal openen op eigen device
+* [PDOK](https://api.pdok.nl/): datasets voor kaartlagen
 
 ## Licentie
 
 Dit project is gratis en open-source software, gelicentieerd onder de [European Union Public License (EUPL) v1.2](LICENSE.md). De documentatie in GGC Home (onder `/projects/ggc-home`) is gelicentieerd onder [Creative Commons Attribution Share Alike 4.0 International (`CC-BY-SA-4.0`)](https://creativecommons.org/licenses/by-sa/4.0/deed.nl).
 
-## Documentatie
-
-Bekijk onze [voorbeelden](https://generiekegeocomponenten.nl/example-index), de [quick start](https://generiekegeocomponenten.nl/quick-start) of de [TSDocs](https://www.generiekegeocomponenten.nl/tsdocs/).
 
 © Documentatie: Dienst voor het kadaster en de openbare registers (Kadaster). Deze documentatie (met uitzondering van de TSDocs) is gelicentieerd onder CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
