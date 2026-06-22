@@ -110,6 +110,11 @@ describe("GgcSearchLocationComponent", () => {
   });
 
   describe("Toetsenbord en Input", () => {
+    beforeEach(() => {
+      (component as any).input = {
+        nativeElement: document.createElement("input")
+      };
+    });
     it("moet de zoekterm wissen bij Escape", async () => {
       component["inputValue"] = "Utrecht";
       const event = new KeyboardEvent("keyup", { key: "Escape" });
@@ -118,15 +123,15 @@ describe("GgcSearchLocationComponent", () => {
       expect(component["inputValue"]).toBe("");
     });
 
-    // it("moet suggesties zoeken bij normale invoer", async () => {
-    //   const spy = vi.spyOn(component["searchTerm$"], "next");
-    //   const event = { target: { value: "Rotterdam" } } as any;
-    //   component.onInputUp(event as KeyboardEvent);
-    //
-    //   await Promise.resolve();
-    //
-    //   expect(spy).toHaveBeenCalledWith("Rotterdam");
-    // });
+    it("moet suggesties zoeken bij normale invoer", async () => {
+      const spy = vi.spyOn(component["searchTerm$"], "next");
+      const event = { target: { value: "Rotterdam" } } as any;
+      component.onInputUp(event as KeyboardEvent);
+
+      await Promise.resolve();
+
+      expect(spy).toHaveBeenCalledWith("Rotterdam");
+    });
   });
 
   describe("Suggesties verwerken", () => {

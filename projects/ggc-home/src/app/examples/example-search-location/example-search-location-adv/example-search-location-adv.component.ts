@@ -37,7 +37,7 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
     components: [Components.GGC_SEARCH_LOCATION],
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:
-      "code/examples/example-search-location/example-search-location/example-search-location.png"
+      "code/examples/example-search-location/example-search-location/example-search-location-only-location.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-search-location/example-search-location-adv/example-search-location-adv.component.ts";
