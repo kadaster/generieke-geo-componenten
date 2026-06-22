@@ -23,7 +23,7 @@ Voeg hier componenten aan toe zoals bijvoorbeeld kaartlaagkeuze ([ggc-dataset-tr
 Bonus: voeg ook andere kaartlagen toe of pas de styling/layout aan van de componenten die je hebt toegevoegd.
 
 
-### Oprdacht 2: Componenten configureren
+### Opdracht 2: Componenten configureren
 
 In deze opdracht hebben we een kaartviewer gemaakt met meerdere componenten. Kijk hoe je deze aan kunt passen naar eigen wens.
 Denk bijvoorbeeld aan styling of layout, of kijk naar de mogelijkheden van de verschillende componenten.
