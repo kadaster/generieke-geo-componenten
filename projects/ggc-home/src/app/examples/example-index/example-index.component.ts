@@ -50,6 +50,7 @@ import { Example3dLayerCameraOptionsComponent } from "../example-3d/example-3d-l
 import { Example3dDatasetSwitcherComponent } from "../example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
 import { Example3dFeatureInfoComponent } from "../example-3d/example-3d-feature-info/example3d-feature-info.component";
 import { Example3dFeatureInfoAutoConnectComponent } from "../example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
+import { Example3dSearchComponent } from "../example-3d/example-3d-search/example3d-search.component";
 
 interface GroupedCards {
   theme: string;
@@ -124,7 +125,8 @@ export class ExampleIndexComponent {
     new Example3dLayerCameraOptionsComponent().componentInfo,
     new Example3dDatasetSwitcherComponent().componentInfo,
     new Example3dFeatureInfoComponent().componentInfo,
-    new Example3dFeatureInfoAutoConnectComponent().componentInfo
+    new Example3dFeatureInfoAutoConnectComponent().componentInfo,
+    new Example3dSearchComponent().componentInfo
   ];
 
   private readonly selectedComponentsKey = "selectedComponents";

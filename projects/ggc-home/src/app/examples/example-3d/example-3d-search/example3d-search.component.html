@@ -18,15 +18,11 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld zijn features te selecteren en die worden automatisch
-      getoond in het feature-info component. Het feature-info component start
-      automatisch een selectie die werkt met een enkele klik en een blauwe
-      highlight.
-    </p>
-    <p>
-      Mocht je de selectie-instellingen willen aanpassen, dan moet je zelf een
-      selectie starten en autoStartSelect uitzetten. Zie hiervoor het andere 3d
-      voorbeeld met meerdere selecties.
+      In dit voorbeeld is een zoekbalk gekoppeld aan de 3D kaart om te zoeken op
+      bijvoorbeeld steden en adressen. Ook is het mogelijk om naar je huidige
+      locatie te zoomen via de zoekbalk. Verschillende opties kunnen
+      geconfigureerd worden; in dit voorbeeld wordt automatisch ingezoomd en
+      gemarkeerd bij een zoekopdracht.
     </p>
   </div>
 
@@ -35,6 +31,10 @@
     <div class="row">
       <div class="col-xl-4 col-md-4 col-sm-12">
         <div class="cesium-controls">
+          <ggc-search-location
+            [searchLocationOptions]="searchLocationOptions"
+          ></ggc-search-location>
+          <br />
           <span><b>Cesium controls</b></span>
           <br />
           <ggc-cesium-controls
@@ -47,9 +47,6 @@
             [defaultCameraPosition]="'far fa-eye'"
           ></ggc-cesium-controls>
         </div>
-        <b>Feature Info</b>
-        <br />
-        <ggc-feature-info [viewerType]="viewerType"></ggc-feature-info>
       </div>
       <div class="col-xl-8 col-md-8 col-sm-12">
         <div class="map-container">

@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { CoreViewerService } from "./core-viewer.service";
-import { Cartesian3, Entity, HeightReference } from "@cesium/engine";
+import { Cartesian3, Entity, HeightReference, Rectangle } from "@cesium/engine";
 import { cameraUtils } from "../utils/camera-utils";
 import { CameraOptions } from "../model/interfaces";
 
@@ -29,6 +29,19 @@ export class GgcLocationService {
     if (viewer) {
       await cameraUtils.flyToLookAtPosition(cameraOptions, viewer);
     }
+  }
+
+  zoomToBBox(bbox: number[]) {
+    const viewer = this.coreViewerService.getViewer();
+    if (!viewer) return;
+
+    const [west, south, east, north] = bbox;
+
+    const rectangle = Rectangle.fromDegrees(west, south, east, north);
+
+    viewer.camera.setView({
+      destination: rectangle
+    });
   }
 
   addLocationMark(coordinates: GeolocationCoordinates): void {

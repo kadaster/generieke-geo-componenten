@@ -55,6 +55,7 @@ import { Example3dLayerCameraOptionsComponent } from "./examples/example-3d/exam
 import { Example3dDatasetSwitcherComponent } from "./examples/example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
 import { Example3dFeatureInfoComponent } from "./examples/example-3d/example-3d-feature-info/example3d-feature-info.component";
 import { Example3dFeatureInfoAutoConnectComponent } from "./examples/example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
+import { Example3dSearchComponent } from "./examples/example-3d/example-3d-search/example3d-search.component";
 
 export const routes: Routes = [
   {
@@ -173,6 +174,12 @@ export const routes: Routes = [
     title: "3D kaart met feature info component (autoconnect) | GGC-Home",
     component: Example3dFeatureInfoAutoConnectComponent,
     data: { label: "example-3d-feature-info-auto-connect" }
+  },
+  {
+    path: "example-3d-search",
+    title: "3D kaart met zoek component | GGC-Home",
+    component: Example3dSearchComponent,
+    data: { label: "example-3d-search" }
   },
   {
     path: "snapping-basic",
