@@ -30,7 +30,7 @@ export class ExampleSearchLocationOnlyLocationComponent extends ExampleFormatCom
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-only-location",
     title: "Huidige locatie",
-    introduction: "Ga naar je huidige locatie.",
+    introduction: "Hier wordt alleen de huidige locatie knop getoond. Het zoeken zelf is niet enabled. Ga naar je huidige locatie door op de locatie knop te drukken.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.LOCATION],
