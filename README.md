@@ -1,36 +1,46 @@
 # Generieke Geo Componenten
+
 ## Workshop FOSS4G voorbeeld
 
-Deze branch (`TMS-FOSS4G-example`) bevat voorbeelden en informatie voor de FOSS4G workshop.
-
+Deze branch (`TMS-FOSS4G-example`) bevat opdrachten en voorbeelden voor de FOSS4G workshop over de Generieke Geo Componenten.
 
 ## Opdrachten
 
-We hebben 3 opdrachten voorbereid in deze brach. Je kan ze in Stackblitz openen:
+We hebben 3 opdrachten voorbereid in deze branch. In deze opdrachten ga je op verschillende manieren 
+met de componenten aan de slag. Je kunt kiezen uit: 
+* Opdracht 1 - Kaartviewer bouwen: component(en) toevoegen aan een kaartviewer
+* Opdracht 2 - Componenten configureren: bestaande componenten in een kaarviewer aanpassen (bijvoorbeeld styling, layout, configuratie componenten)
+* Opdracht 3 - Kaartviewer configureren: kaartlagen toevoegen aan een kaartviewer en configureren (bijvoorbeeld zoomniveau's of legenda)
+
+Je kunt alle drie de opdrachten in Stackblitz openen:
 https://stackblitz.com/github/kadaster/generieke-geo-componenten/tree/TMS-FOSS4G-example
 
-In deze opdrachten ga je op verschillende manieren met de componenten aan de slag.
-
 ### Opdracht 1: Kaartviewer bouwen
-Dit is een basis opzet met alleen GGC-map een een achtergrondkaart.
-Voeg hier compontenten aan toe zoals bv. ggc-dataset-tree of seach-location.
-Bonus: En toon evt ook andere kaarten of pas styling of layout aan.
+
+Dit is een basis opzet van een kaartviewer met alleen het [ggc-map component](https://generiekegeocomponenten.nl/layer-wmts) met een achtergrondkaart.
+Voeg hier componenten aan toe zoals bijvoorbeeld kaartlaagkeuze ([ggc-dataset-tree](https://generiekegeocomponenten.nl/dataset-tree-basic)) of een zoekbalk [ggc-search-location](https://generiekegeocomponenten.nl/search-location).
+
+Bonus: voeg ook andere kaartlagen toe of pas de styling/layout aan van de componenten die je hebt toegevoegd.
+
 
 ### Oprdacht 2: Componenten configureren
-In deze opdracht hebben we al een opzet gemaakt met meerdere componenten.
-Kijk hoe je deze aan kunt passen naar eigen wens. 
-Denk bijvoorbeeld aan styling of layout of kijk naar de mogelijkheden van de verschillende componenten.
-Of voeg extra lagen toe en zet deze aan en uit met de dataset-tree.
+
+In deze opdracht hebben we een kaartviewer gemaakt met meerdere componenten. Kijk hoe je deze aan kunt passen naar eigen wens.
+Denk bijvoorbeeld aan styling of layout, of kijk naar de mogelijkheden van de verschillende componenten.
+
+Bonus: voeg ook andere kaartlagen toe en zet deze aan of uit met de dataset-tree.
 
 ### Opdracht 3: Kaartviewer configureren
-In deze basis viewer is een GGC-map gemaakt met een aantal kaartlagen er in.
-Pas de lagen aan en creeer eenvoudig je eigen kaartbeeld door de kaartconfiguratie.
-Denk aan het toevoegen van extra lagen (bijvoorbeeld de OGC API Features 3D) en instellen van zoomniveaus.
+
+In deze basis viewer is het [ggc-map component](https://generiekegeocomponenten.nl/layer-wmts) toegevoegd 
+met een aantal kaartlagen.
+Pas de lagen aan en creëer eenvoudig je eigen kaartbeeld door de kaartconfiguratie. 
+Denk aan het toevoegen van extra lagen (bijvoorbeeld de OGC API Features 3D) en het instellen van zoomniveaus.
 
 ## Handige links:
-GGC home https://generiekegeocomponenten.nl
-PDOK https://api.pdok.nl/
 
+* GGC home https://generiekegeocomponenten.nl: voorbeelden van de verschillende functionaliteiten van componenten
+* PDOK https://api.pdok.nl/: datasets voor kaartlagen
 
 ## Licentie
 
