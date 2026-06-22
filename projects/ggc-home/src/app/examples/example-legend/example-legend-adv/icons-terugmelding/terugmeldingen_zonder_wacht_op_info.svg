@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg
-    height="300"
+    height="258"
     width="250"
     xmlns="http://www.w3.org/2000/svg"
 >
@@ -34,21 +34,7 @@
     <!-- text -->
     <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Melding in onderzoek</text>
   </g>
-  <g aria-label="oranje pin met een pauzeteken" id="legend-item-geparkeerd" role="img" transform="translate(3 89)">
-    <!-- icoon -->
-    <g>
-      <path
-        d="M 13.33333206176758 1.999996185302734 C 10.30609130859375 1.999996185302734 7.460042953491211 3.178867340087891 5.319452285766602 5.3194580078125 C 3.178871154785156 7.460037231445312 2.000001907348633 10.30608749389648 2.000001907348633 13.33332824707031 C 2.000001907348633 14.84952735900879 2.829402923583984 18.82344818115234 8.384122848510742 28.40290832519531 C 10.21505355834961 31.56047058105469 12.06180095672607 34.45955657958984 13.333420753479 36.40081024169922 C 14.60139751434326 34.46519088745117 16.44163131713867 31.57638168334961 18.2700023651123 28.42452812194824 C 23.83563232421875 18.83016777038574 24.66666221618652 14.8512077331543 24.66666221618652 13.33332824707031 C 24.66666221618652 10.30608749389648 23.48779296875 7.460037231445312 21.34721183776855 5.3194580078125 C 19.20662307739258 3.178867340087891 16.36057281494141 1.999996185302734 13.33333206176758 1.999996185302734 M 13.33333206176758 -3.814697265625e-06 C 20.6971321105957 -3.814697265625e-06 26.66666221618652 5.969539642333984 26.66666221618652 13.33332824707031 C 26.66666221618652 20.69712829589844 13.33333206176758 40 13.33333206176758 40 C 13.33333206176758 40 1.9073486328125e-06 20.69712829589844 1.9073486328125e-06 13.33332824707031 C 1.9073486328125e-06 5.969539642333984 5.969532012939453 -3.814697265625e-06 13.33333206176758 -3.814697265625e-06 Z"
-        fill="#e17020"/>
-      <g fill="#e17020" transform="translate(5.5 7.5)">
-        <rect height="15" rx="1.071" width="3.214" x="3.214" y="0" />
-        <rect height="15" rx="1.071" width="3.214" x="9.881" y="0" />
-      </g>
-    </g>
-    <!-- text -->
-    <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Melding geparkeerd</text>
-  </g>
-  <g aria-label="oranje pin met een pijl naar rechts" id="legend-item-doorgestuurd" role="img" transform="translate(3 131)">
+  <g aria-label="oranje pin met een pijl naar rechts" id="legend-item-doorgestuurd" role="img" transform="translate(3 89)">
     <!-- icoon -->
     <g>
       <path
@@ -63,7 +49,7 @@
     <!-- text -->
     <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Melding doorgestuurd</text>
   </g>
-  <g aria-label="oranje pin met een vinkje" id="legend-item-ingepland" role="img" transform="translate(3 173)">
+  <g aria-label="oranje pin met een vinkje" id="legend-item-ingepland" role="img" transform="translate(3 131)">
     <!-- icoon -->
     <g>
       <path
@@ -77,7 +63,7 @@
     <!-- text -->
     <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Goedgekeurd en ingepland</text>
   </g>
-  <g aria-label="groene pin met 2 vinkjes" id="legend-item-afgerond" role="img" transform="translate(3 215)">
+  <g aria-label="groene pin met 2 vinkjes" id="legend-item-afgerond" role="img" transform="translate(3 173)">
     <!-- icoon -->
     <g>
       <path
@@ -91,7 +77,7 @@
     <!-- text -->
     <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Afgerond met aanpassing</text>
   </g>
-  <g aria-label="groene pin met een kruis" id="legend-item-afgewezen" role="img" transform="translate(3 257)">
+  <g aria-label="groene pin met een kruis" id="legend-item-afgewezen" role="img" transform="translate(3 215)">
     <!-- icoon -->
     <g>
       <path
