@@ -51,3 +51,6 @@ Dit project is gratis en open-source software, gelicentieerd onder de [European 
 
 
 © Documentatie: Dienst voor het kadaster en de openbare registers (Kadaster). Deze documentatie (met uitzondering van de TSDocs) is gelicentieerd onder CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+
+## Evaluatie
+Aan het einde van de workshop horen we graag jullie reactie. [Hier vind je het evaluatieformulier](https://forms.office.com/Pages/ResponsePage.aspx?id=msacNDLIPUetjtQF0RHz9LJBQosJeWhJgLJ_lTXKoV5UOTVaREJJMEpNMFNJS1FJR1RDRUcxMFNQMi4u). Alvast bedankt voor het invullen!
