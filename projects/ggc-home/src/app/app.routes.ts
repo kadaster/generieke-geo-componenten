@@ -57,6 +57,8 @@ import { Example3dFeatureInfoComponent } from "./examples/example-3d/example-3d-
 import { Example3dFeatureInfoAutoConnectComponent } from "./examples/example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
 import { Example3dSearchComponent } from "./examples/example-3d/example-3d-search/example3d-search.component";
 import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
+import { Example3dLayerWmtsComponent } from "./examples/example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
+import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 
 export const routes: Routes = [
   {
@@ -187,6 +189,18 @@ export const routes: Routes = [
     title: "3D kaart met een 3D layer | GGC-Home",
     component: Example3dLayer3dTilesComponent,
     data: { label: "example-3d-layer-3d-tiles" }
+  },
+  {
+    path: "example-3d-layer-wmts",
+    title: "3D kaart met een WMTS layer | GGC-Home",
+    component: Example3dLayerWmtsComponent,
+    data: { label: "example-3d-layer-wmts" }
+  },
+  {
+    path: "example-3d-layer-geojson",
+    title: "3D kaart met een Geojson layer | GGC-Home",
+    component: Example3dLayerGeojsonComponent,
+    data: { label: "example-3d-layer-geojson" }
   },
   {
     path: "snapping-basic",

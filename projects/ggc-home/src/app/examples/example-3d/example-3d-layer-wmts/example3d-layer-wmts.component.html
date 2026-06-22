@@ -1,0 +1,64 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathKaartConfig]="kaartConfig"
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld zijn het terrein en de gebouwen uit de 3D
+      Basisvoorziening als lagen toegevoegd aan de kaart. Deze kaartlagen worden
+      in MapBox Vector Tiles formaat opgevraagd bij een OGC API - Tiles.
+      <br />
+      Naast de kaartconfiguratie zijn er ook nog andere opties to configureren
+      voor 3D tiles in de TileSetConfig. Zie hiervoor het voorbeeld Camera
+      opties instellen voor 3D layer.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row">
+      <div class="col-xl-3 col-md-4 col-sm-12">
+        <div class="cesium-controls">
+          <span><b>Cesium controls</b></span>
+          <br />
+          <ggc-cesium-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-cesium-controls>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-12">
+        <div class="map-container">
+          <ggc-cesium-viewer
+            [viewerOptions]="viewerOptions"
+            [cameraOptions]="cameraOptions"
+            [hideLogo]="hideLogo"
+            (ready)="onCesiumReady()"
+            [webServices]="webService"
+          ></ggc-cesium-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DOCS:END functionality -->
+</app-example-format>

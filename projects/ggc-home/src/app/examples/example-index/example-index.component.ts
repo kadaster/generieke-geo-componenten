@@ -52,6 +52,8 @@ import { Example3dFeatureInfoComponent } from "../example-3d/example-3d-feature-
 import { Example3dFeatureInfoAutoConnectComponent } from "../example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
 import { Example3dSearchComponent } from "../example-3d/example-3d-search/example3d-search.component";
 import { Example3dLayer3dTilesComponent } from "../example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
+import { Example3dLayerWmtsComponent } from "../example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
+import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 
 interface GroupedCards {
   theme: string;
@@ -128,7 +130,9 @@ export class ExampleIndexComponent {
     new Example3dFeatureInfoComponent().componentInfo,
     new Example3dFeatureInfoAutoConnectComponent().componentInfo,
     new Example3dSearchComponent().componentInfo,
-    new Example3dLayer3dTilesComponent().componentInfo
+    new Example3dLayer3dTilesComponent().componentInfo,
+    new Example3dLayerWmtsComponent().componentInfo,
+    new Example3dLayerGeojsonComponent().componentInfo
   ];
 
   private readonly selectedComponentsKey = "selectedComponents";
