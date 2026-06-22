@@ -170,7 +170,9 @@ describe("CoreSelectionService", () => {
     const cesiumMock = createCesiumMock() as Viewer;
 
     it("should call setHighlightOnFeature() and emit event when the type of feature is Cesium3DTileFeature", () => {
-      const pickedFeature = Object.create(Cesium3DTileFeature.prototype) as Cesium3DTileFeature;
+      const pickedFeature = Object.create(
+        Cesium3DTileFeature.prototype
+      ) as Cesium3DTileFeature;
       service["viewer"] = cesiumMock;
       (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const selection = createSelection(
@@ -467,7 +469,9 @@ describe("CoreSelectionService", () => {
     it("should return a feature if ScreenSpaceEventType is MOUSE_MOVE", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
-      const pickedFeature = Object.create(Cesium3DTileFeature.prototype) as Cesium3DTileFeature;
+      const pickedFeature = Object.create(
+        Cesium3DTileFeature.prototype
+      ) as Cesium3DTileFeature;
       (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const endPosition = new Cartesian2();
 
@@ -483,7 +487,9 @@ describe("CoreSelectionService", () => {
     it("should return a feature if ScreenSpaceEventType is LEFT_CLICK", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
-      const pickedFeature = Object.create(Cesium3DTileFeature.prototype) as Cesium3DTileFeature;
+      const pickedFeature = Object.create(
+        Cesium3DTileFeature.prototype
+      ) as Cesium3DTileFeature;
       (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const position = new Cartesian2();
 
