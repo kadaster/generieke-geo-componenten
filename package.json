@@ -47,7 +47,7 @@
     "lint:prettier:all": "prettier --write \"**/*.{ts,html,scss}\"",
     "build:ggc-cesium": "ng build --project ggc-cesium --configuration production",
     "build:ggc-dataset-tree": "ng build --project ggc-dataset-tree --configuration production",
-    "build:ggc-dataset-tree-element": "ng run ggc-dataset-tree:build-element:production",
+    "build:ggc-dataset-tree-element": "ng run ggc-dataset-tree:build-element:production && cat dist/ggc-dataset-tree-element/runtime.js dist/ggc-dataset-tree-element/polyfills.js dist/ggc-dataset-tree-element/main.js > dist/ggc-dataset-tree-element/bundle.js",
     "build:ggc-feature-info": "ng build --project ggc-feature-info --configuration production",
     "build:ggc-legend": "ng build --project ggc-legend --configuration production",
     "build:ggc-elements": "ng run ggc-map:build-elements:production",
