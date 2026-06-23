@@ -175,6 +175,11 @@ export default async function (plop: NodePlopAPI) {
       },
       {
         type: "confirm",
+        name: "includeMap",
+        message: "Wil je een kaart toevoegen: "
+      },
+      {
+        type: "confirm",
         name: "confirm",
         message: (data) => {
           const comps = data.componentImports?.length
@@ -249,6 +254,11 @@ export default async function (plop: NodePlopAPI) {
           type: "add",
           path: `${dirLocation}/${data.exampleFolder}.component.ts`,
           templateFile: `${TEMPLATE_BASE}/example.ts.hbs`
+        },
+        {
+          type: "add",
+          path: `${dirLocation}//kaartconfig.json`,
+          templateFile: `${TEMPLATE_BASE}/kaartconfig.json.hbs`
         },
         {
           type: "modify",
