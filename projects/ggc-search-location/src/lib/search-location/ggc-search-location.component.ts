@@ -2,10 +2,12 @@ import { HttpErrorResponse } from "@angular/common/http";
 import {
   Component,
   computed,
+  effect,
   ElementRef,
   EventEmitter,
   HostListener,
   inject,
+  input,
   Input,
   OnInit,
   Output,
@@ -29,14 +31,14 @@ import {
   CdkOption,
   ListboxValueChangeEvent
 } from "@angular/cdk/listbox";
-import { NgClass } from "@angular/common";
+import {JsonPipe, NgClass} from "@angular/common";
 import { SearchCurrentLocationType } from "../model/search-current-location.model";
 import { GgcSearchLocationService } from "../service/ggc-location.service";
 import { first, take } from "rxjs/operators";
 import {
   PdokLocationApiCollectionFeature,
   PdokLocationApiSearchFeature,
-  PdokLocationApiSearchResponse
+  PdokLocationApiSearchResponse, SearchCollection
 } from "../model/pdok-location-api-collection.model";
 import { PdokLocationApiService } from "../service/pdok-location-api.service";
 import { SearchLocationOptions } from "../model/search-location-options.model";
@@ -58,11 +60,11 @@ const proj4 = (proj4x as any).default;
   templateUrl: "./ggc-search-location.component.html",
   encapsulation: ViewEncapsulation.None,
   styleUrls: ["./ggc-search-location.component.scss"],
-  imports: [NgClass, CdkListbox, CdkOption]
+  imports: [NgClass, CdkListbox, CdkOption, JsonPipe]
 })
 export class GgcSearchLocationComponent implements OnInit {
   /** Configuratieopties voor de zoekfunctionaliteit, zoals zoomniveaus en PDOK-collecties. */
-  @Input() searchLocationOptions: SearchLocationOptions;
+  searchLocationOptions = input<SearchLocationOptions|undefined>(undefined);
 
   /** EventEmitter die events verzendt bij zoekresultaten, fouten of statuswijzigingen. */
   @Output() events: EventEmitter<SearchComponentEvent> =
@@ -82,10 +84,22 @@ export class GgcSearchLocationComponent implements OnInit {
   protected readonly searchCurrentLocationTypes = SearchCurrentLocationType;
 
   protected readonly hasSearch: Signal<boolean> = computed(
-    () => !this.searchLocationOptions?.hideSearch
+    () => !this.searchLocationOptions()?.hideSearch
   );
   protected readonly hasLocation: Signal<boolean> = computed(
-    () => this.searchLocationOptions?.searchCurrentLocation !== undefined
+    () => this.searchLocationOptions()?.searchCurrentLocation !== undefined
+  );
+
+  protected readonly labelText: Signal<string|null> = computed(
+    () => this.searchLocationOptions()?.labelText ?? null
+  );
+
+  protected readonly locationIcon: Signal<string|null> = computed(
+    () => this.searchLocationOptions()?.searchCurrentLocation?.loadIcon ?? null
+  );
+
+  protected readonly locationLoadIcon: Signal<string|null> = computed(
+    () => this.searchLocationOptions()?.searchCurrentLocation?.loadIcon ?? null
   );
 
   @ViewChildren(CdkOption, {})
@@ -108,7 +122,7 @@ export class GgcSearchLocationComponent implements OnInit {
   private readonly searchTerm$ = new BehaviorSubject<string>("");
   private formatTypeCache: any;
   private readonly viewerType: Signal<ViewerType> = computed(
-    () => this.searchLocationOptions?.viewerType ?? ViewerType.TWEE_D
+    () => this.searchLocationOptions()?.viewerType ?? ViewerType.TWEE_D
   );
 
   /** De CSS-klasse voor de 'verwijder' knop in het zoekveld. */
@@ -146,35 +160,89 @@ export class GgcSearchLocationComponent implements OnInit {
   constructor() {
     this.clsSearchButton = `${this._classSearchButton} ${BTN_SUFFIX}`;
     this.clsClearButton = `${this._classClearButton} ${BTN_SUFFIX}`;
+    this.elementIds = new SearchComponentElementIds({});
+    effect(() => {
+      const options = this.searchLocationOptions();
+
+      if (options?.minQueryLength != null && options.minQueryLength > 0) {
+        this.pdokLocationApiService.setMinQueryLength(options.minQueryLength);
+      }
+
+      if (options?.numberOfSuggestions != null && options.numberOfSuggestions > 0) {
+        this.pdokLocationApiService.setNumberOfSuggestions(options.numberOfSuggestions);
+      }
+
+      if (options?.elementIds) {
+        this.elementIds = options.elementIds;
+      }
+
+      if (!options?.hideCollectionId) {
+        this.collectionIdTranslations = new Map<string, string>([]);
+        if (options?.collectionIdTranslations) {
+          this.collectionIdTranslations = new Map([
+            ...this.collectionIdTranslations,
+            ...options.collectionIdTranslations
+          ]);
+        }
+      }
+
+      if (options?.initialResult) {
+        options.initialResult.subscribe(
+          (value: PdokLocationApiSearchFeature) => {
+            if (value.properties.display_name) {
+              this.inputValue = value.properties.display_name;
+              this.result = value;
+            }
+          }
+        );
+      }
+
+      if (options?.initialSearchTerm) {
+        const trimmed = options.initialSearchTerm.trim();
+        if (trimmed) {
+          this.hasInitialSearchterm = true;
+          this.inputValue = trimmed;
+          this.searchTerm$.next(trimmed);
+        }
+      }
+
+      if (Array.isArray(options?.filterCollections) && options.filterCollections.length > 0) {
+        this.pdokLocationApiService.collectionsLoaded$
+          .pipe(take(1))
+          .subscribe((collectionsResult) => {
+            const collections = collectionsResult.collections?.filter(
+              (collection) => options.filterCollections.includes(collection.id)
+            );
+            if (collections) {
+              this.pdokLocationApiService.setCustomCollections(collections.map((item) =>(             {
+                id: item.id,
+                version: item.version,
+                relevance: 1
+              } as SearchCollection)));
+            }
+          });
+      }
+
+      if (
+        this.searchTerm &&
+        (options?.triggerSearch === undefined ||
+          options.triggerSearch)
+      ) {
+        this.hasInitialSearchterm = true;
+        this.searchTerm$.next(this._searchTerm);
+      }
+    });
   }
 
   /**
    * Initialiseert de component, configureert de PDOK-service en start de zoekterm-subscriber.
    */
   ngOnInit() {
-    if (this.searchLocationOptions?.minQueryLength > 0) {
-      this.pdokLocationApiService.setMinQueryLength(
-        this.searchLocationOptions.minQueryLength
-      );
-    }
-
-    if (this.searchLocationOptions?.numberOfSuggestions > 0) {
-      this.pdokLocationApiService.setNumberOfSuggestions(
-        this.searchLocationOptions.numberOfSuggestions
-      );
-    }
-
-    if (this.searchLocationOptions?.elementIds) {
-      this.elementIds = this.searchLocationOptions.elementIds;
-    } else {
-      this.elementIds = new SearchComponentElementIds({});
-    }
-
     // Subscribe to searchSuggestionService.search
     this.pdokLocationApiService
       .searchOnTermChange(
         this.searchTerm$,
-        this.searchLocationOptions?.alternativeSuggestionsFirst
+        this.searchLocationOptions()?.alternativeSuggestionsFirst
       )
       .subscribe({
         next: (results: PdokLocationApiSearchResponse | null) => {
@@ -188,45 +256,6 @@ export class GgcSearchLocationComponent implements OnInit {
         }
       });
 
-    if (this.searchLocationOptions?.initialResult) {
-      this.searchLocationOptions.initialResult.subscribe(
-        (value: PdokLocationApiSearchFeature) => {
-          if (value.properties.display_name) {
-            this.inputValue = value.properties.display_name;
-            this.result = value;
-          }
-        }
-      );
-    }
-
-    if (this.searchLocationOptions?.initialSearchTerm) {
-      const trimmed = this.searchLocationOptions.initialSearchTerm.trim();
-      if (trimmed) {
-        this.hasInitialSearchterm = true;
-        this.inputValue = trimmed;
-        this.searchTerm$.next(trimmed);
-      }
-    }
-
-    if (
-      this.searchTerm &&
-      (this.searchLocationOptions?.triggerSearch === undefined ||
-        this.searchLocationOptions.triggerSearch)
-    ) {
-      this.hasInitialSearchterm = true;
-      this.searchTerm$.next(this._searchTerm);
-    }
-
-    if (this.searchLocationOptions?.hideCollectionId !== true) {
-      this.collectionIdTranslations = new Map<string, string>([]);
-      if (this.searchLocationOptions?.collectionIdTranslations) {
-        this.collectionIdTranslations = new Map([
-          ...this.collectionIdTranslations,
-          ...this.searchLocationOptions.collectionIdTranslations
-        ]);
-      }
-    }
-
     this.clsSearchButton = this._classSearchButton + " " + BTN_SUFFIX;
     this.clsClearButton = this._classClearButton + " " + BTN_SUFFIX;
   }
@@ -239,9 +268,9 @@ export class GgcSearchLocationComponent implements OnInit {
     this.inputCurrentLocation = false;
     this.searchTerm$.next(this.inputValue);
     this.resetSuggestionsAndResult();
-    if (this.searchLocationOptions?.markResult) {
+    if (this.searchLocationOptions()?.markResult) {
       ((await this.connectService.getMapService()) as any)?.clearHighlightLayer(
-        this.searchLocationOptions?.mapIndex
+        this.searchLocationOptions()?.mapIndex
       );
     }
   }
@@ -262,7 +291,7 @@ export class GgcSearchLocationComponent implements OnInit {
         if (
           this.suggestions.length > 0 ||
           (this.showCurrentLocation &&
-            this.searchLocationOptions?.searchCurrentLocation?.type ===
+            this.searchLocationOptions()?.searchCurrentLocation?.type ===
               SearchCurrentLocationType.SELECT)
         ) {
           if (this.listOptions && this.listOptions.get(0)) {
@@ -476,7 +505,7 @@ export class GgcSearchLocationComponent implements OnInit {
   private async processZoomToResult(
     feature: PdokLocationApiSearchFeature | number[]
   ): Promise<void> {
-    if (this.searchLocationOptions?.zoomToResult) {
+    if (this.searchLocationOptions()?.zoomToResult) {
       switch (this.viewerType()) {
         case ViewerType.TWEE_D: {
           const mapService = (await this.connectService.getMapService()) as any;
@@ -486,21 +515,21 @@ export class GgcSearchLocationComponent implements OnInit {
               mapService.zoomToGeometryWithZoomOptions(
                 JSON.stringify({ type: "Point", coordinates: feature }),
                 {
-                  mapIndex: this.searchLocationOptions?.mapIndex,
+                  mapIndex: this.searchLocationOptions()?.mapIndex,
                   fitOptions: { padding: [50, 50, 50, 50] }
                 },
                 formatType.GEOJSON
               );
             } else if (feature.bbox) {
-              mapService.zoomToExtent(feature.bbox, {
-                mapIndex: this.searchLocationOptions?.mapIndex,
+             mapService.zoomToExtent(feature.bbox, {
+                mapIndex: this.searchLocationOptions()?.mapIndex,
                 fitOptions: { padding: [50, 50, 50, 50] }
               });
             } else if (feature.geometry) {
               mapService.zoomToGeometryWithZoomOptions(
                 JSON.stringify(feature.geometry),
                 {
-                  mapIndex: this.searchLocationOptions?.mapIndex,
+                  mapIndex: this.searchLocationOptions()?.mapIndex,
                   fitOptions: { padding: [50, 50, 50, 50] }
                 },
                 formatType.GEOJSON
@@ -538,7 +567,7 @@ export class GgcSearchLocationComponent implements OnInit {
   private async processMarkResult(
     feature: PdokLocationApiSearchFeature | number[]
   ): Promise<void> {
-    if (this.searchLocationOptions?.markResult) {
+    if (this.searchLocationOptions()?.markResult) {
       switch (this.viewerType()) {
         case ViewerType.TWEE_D:
           {
@@ -549,7 +578,7 @@ export class GgcSearchLocationComponent implements OnInit {
               if (Array.isArray(feature)) {
                 mapService.markFeature(
                   JSON.stringify({ type: "Point", coordinates: feature }),
-                  this.searchLocationOptions?.mapIndex,
+                  this.searchLocationOptions()?.mapIndex,
                   formatType.GEOJSON
                 );
               } else if (feature?.properties?.href) {
@@ -561,7 +590,7 @@ export class GgcSearchLocationComponent implements OnInit {
                       if (item?.geometry) {
                         mapService.markFeature(
                           JSON.stringify(item.geometry),
-                          this.searchLocationOptions?.mapIndex,
+                          this.searchLocationOptions()?.mapIndex,
                           formatType.GEOJSON
                         );
                       }
@@ -645,7 +674,7 @@ export class GgcSearchLocationComponent implements OnInit {
    */
   onInputFocus() {
     this.showSuggestions = true;
-    if (this.searchLocationOptions?.searchCurrentLocation) {
+    if (this.searchLocationOptions()?.searchCurrentLocation) {
       this.showCurrentLocation = true;
     }
   }

@@ -392,6 +392,27 @@
           },
           "defaultConfiguration": "production"
         },
+        "build-element": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/ggc-search-location/src/lib/elements/ggc-search-location.element.ts",
+            "index": "projects/ggc-search-location/src/lib/elements/index.html",
+            "tsConfig": "projects/ggc-search-location/tsconfig.lib.json",
+            "outputPath": "dist/ggc-search-location-element"
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "none"
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "outputHashing": "none"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {

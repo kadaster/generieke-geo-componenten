@@ -41,4 +41,5 @@ export interface SearchLocationOptions {
   zoomToResult: boolean;
   /** Voor welk ViewerType is dit SearchLocationComponent. */
   viewerType: ViewerType;
+  filterCollections: string[];
 }
