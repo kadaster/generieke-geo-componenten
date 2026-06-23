@@ -186,16 +186,22 @@ export default async function (plop: NodePlopAPI) {
             ? data.componentImports.join(", ")
             : "(geen)";
           const tagsStr = data.tags?.length ? data.tags.join(", ") : "(geen)";
+          const compTagStr = data.componentTags?.length
+            ? data.componentTags.join(", ")
+            : "(geen)";
 
           return [
             "",
             "Dit gaat er gebeuren:",
-            `  Map:          example-${data.name}`,
+            `  Directory:          example-${data.name}`,
             `  Titel:        ${data.title}`,
+            `  Theme:        ${data.theme}`,
             `  Layout:       ${data.layout}`,
-            `  Componenten:  ${comps}`,
+            `  ComponentenImports: ${comps}`,
+            `  ComponentenTags:  ${compTagStr}`,
             `  Tags:         ${tagsStr}`,
-            `  Theme:         ${data.theme}`,
+            `  Tabblad naam: ${data.route}`,
+            `  Map:         ${data.includeMap}`,
             "",
             "Klopt dit? Bestanden nu aanmaken?"
           ].join("\n");
@@ -278,7 +284,7 @@ export default async function (plop: NodePlopAPI) {
           pattern: /\/\/ PLOP:ROUTE/,
           template: `  {
     path: "${data.name}",
-    title: "${data.title} | GGC-Home",
+    title: "${data.route} | GGC-Home",
     component: ${data.className},
     data: { label: "${data.name}" }
   },
