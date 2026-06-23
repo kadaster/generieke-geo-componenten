@@ -12,10 +12,7 @@
         <div class="form-control">
           <span class="font-italic">Locatie laden</span>
           @if (locationLoadIcon()) {
-            <span
-              [ngClass]="locationLoadIcon()"
-              aria-hidden="true"
-            ></span>
+            <span [ngClass]="locationLoadIcon()" aria-hidden="true"></span>
           }
         </div>
       }
@@ -75,19 +72,11 @@
             type="button"
           >
             @if (loadCurrentLocation) {
-              @if (   locationLoadIcon()) {
-                <span
-                  [ngClass]="
-                   locationLoadIcon()
-                  "
-                  aria-hidden="true"
-                ></span>
+              @if (locationLoadIcon()) {
+                <span [ngClass]="locationLoadIcon()" aria-hidden="true"></span>
               }
-            } @else if (   locationIcon()) {
-              <span
-                [ngClass]="   locationIcon()"
-                aria-hidden="true"
-              ></span>
+            } @else if (locationIcon()) {
+              <span [ngClass]="locationIcon()" aria-hidden="true"></span>
             }
           </button>
         }
@@ -134,10 +123,7 @@
             [cdkOption]="{ id: 'current-location' }"
           >
             @if (locationIcon()) {
-              <span
-                [ngClass]="locationIcon()"
-                aria-hidden="true"
-              ></span>
+              <span [ngClass]="locationIcon()" aria-hidden="true"></span>
             }
             {{
               searchLocationOptions()?.searchCurrentLocation?.label ??
@@ -192,16 +178,10 @@
   >
     @if (loadCurrentLocation) {
       @if (locationLoadIcon()) {
-        <span
-          [ngClass]="locationLoadIcon()"
-          aria-hidden="true"
-        ></span>
+        <span [ngClass]="locationLoadIcon()" aria-hidden="true"></span>
       }
     } @else if (locationIcon()) {
-      <span
-        [ngClass]="locationIcon()"
-        aria-hidden="true"
-      ></span>
+      <span [ngClass]="locationIcon()" aria-hidden="true"></span>
     }
   </button>
 }

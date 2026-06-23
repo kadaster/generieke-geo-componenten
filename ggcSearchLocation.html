@@ -1,49 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <style>
-    .map-container {
-      align-items: stretch;
-      display: flex;
-      height: 100%;
-      justify-content: stretch;
-      min-height: 50vh;
-      position: relative;
-      width: 100%;
+  <head>
+    <style>
+      .map-container {
+        align-items: stretch;
+        display: flex;
+        height: 100%;
+        justify-content: stretch;
+        min-height: 50vh;
+        position: relative;
+        width: 100%;
 
-      & > * {
-        flex-basis: 100%;
-        flex-grow: 1;
+        & > * {
+          flex-basis: 100%;
+          flex-grow: 1;
+        }
       }
-    }
-  </style>
-</head>
-<body>
-<ggc-search-location id="search"  ></ggc-search-location>
-<div class="map-container">
-<ggc-map id="map"  ></ggc-map>
-</div>
-<ggc-layer-brt-achtergrondkaart ></ggc-layer-brt-achtergrondkaart>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<script type="module" src="dist/ggc-search-location-element/ggc-search-location.js"></script>
-<script type="module">
-  customElements.whenDefined('ggc-search-location').then(() => {
-    const el = document.getElementById('search');
+    </style>
+  </head>
+  <body>
+    <ggc-search-location id="search"></ggc-search-location>
+    <div class="map-container">
+      <ggc-map id="map"></ggc-map>
+    </div>
+    <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="module"
+      src="dist/ggc-search-location-element/ggc-search-location.js"
+    ></script>
+    <script type="module">
+      customElements.whenDefined("ggc-search-location").then(() => {
+        const el = document.getElementById("search");
 
-    if (!el) return;
+        if (!el) return;
 
-    el.searchLocationOptions = {
-      zoomToResult: true,
-      markResult: true,
-      filterCollections: ['woonplaats'],
-    };
+        el.searchLocationOptions = {
+          zoomToResult: true,
+          markResult: true
+        };
 
-    el.addEventListener('events', e => {
-      console.log(e.detail);
-    });
-  });
+        el.addEventListener("pdokLocationCollections", (e) => {
+          const collections = e.detail.collections;
+          if (Array.isArray(collections)) {
+            el.customPdokLocationCollections = collections
+              .filter((collection) =>
+                ["woonplaats", "provinciegebied"].includes(collection.id)
+              )
+              .map((collection) => ({
+                id: collection.id,
+                version: collection.version,
+                relevance: 1
+              }));
+          }
+        });
 
-</script>
-</body>
+        el.addEventListener("events", (e) => {
+          console.log(e.detail);
+        });
+      });
+    </script>
+  </body>
 </html>

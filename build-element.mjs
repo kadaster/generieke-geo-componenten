@@ -1,13 +1,11 @@
-import { build } from 'esbuild';
+import { build } from "esbuild";
 
 await build({
-  entryPoints: [
-    'dist/ggc-search-location-element/browser/main.js'
-  ],
+  entryPoints: ["dist/ggc-search-location-element/browser/main.js"],
   bundle: true,
   minify: true,
-  format: 'iife',
-  outfile: 'dist/ggc-search-location-element/ggc-search-location.js'
+  format: "iife",
+  outfile: "dist/ggc-search-location-element/ggc-search-location.js"
 });
 
-console.log('Single bundle generated');
+console.log("Single bundle generated");

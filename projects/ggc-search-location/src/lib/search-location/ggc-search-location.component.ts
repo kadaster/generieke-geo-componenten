@@ -31,14 +31,16 @@ import {
   CdkOption,
   ListboxValueChangeEvent
 } from "@angular/cdk/listbox";
-import {JsonPipe, NgClass} from "@angular/common";
+import { JsonPipe, NgClass } from "@angular/common";
 import { SearchCurrentLocationType } from "../model/search-current-location.model";
 import { GgcSearchLocationService } from "../service/ggc-location.service";
 import { first, take } from "rxjs/operators";
 import {
   PdokLocationApiCollectionFeature,
+  PdokLocationApiResult,
   PdokLocationApiSearchFeature,
-  PdokLocationApiSearchResponse, SearchCollection
+  PdokLocationApiSearchResponse,
+  SearchCollection
 } from "../model/pdok-location-api-collection.model";
 import { PdokLocationApiService } from "../service/pdok-location-api.service";
 import { SearchLocationOptions } from "../model/search-location-options.model";
@@ -64,10 +66,16 @@ const proj4 = (proj4x as any).default;
 })
 export class GgcSearchLocationComponent implements OnInit {
   /** Configuratieopties voor de zoekfunctionaliteit, zoals zoomniveaus en PDOK-collecties. */
-  searchLocationOptions = input<SearchLocationOptions|undefined>(undefined);
+  searchLocationOptions = input<SearchLocationOptions | undefined>(undefined);
+  customPdokLocationCollections = input<SearchCollection[] | undefined>(
+    undefined
+  );
 
   /** EventEmitter die events verzendt bij zoekresultaten, fouten of statuswijzigingen. */
   @Output() events: EventEmitter<SearchComponentEvent> =
+    new EventEmitter<any>();
+
+  @Output() pdokLocationCollections: EventEmitter<PdokLocationApiResult> =
     new EventEmitter<any>();
 
   protected elementIds: SearchComponentElementIds;
@@ -90,15 +98,15 @@ export class GgcSearchLocationComponent implements OnInit {
     () => this.searchLocationOptions()?.searchCurrentLocation !== undefined
   );
 
-  protected readonly labelText: Signal<string|null> = computed(
+  protected readonly labelText: Signal<string | null> = computed(
     () => this.searchLocationOptions()?.labelText ?? null
   );
 
-  protected readonly locationIcon: Signal<string|null> = computed(
+  protected readonly locationIcon: Signal<string | null> = computed(
     () => this.searchLocationOptions()?.searchCurrentLocation?.loadIcon ?? null
   );
 
-  protected readonly locationLoadIcon: Signal<string|null> = computed(
+  protected readonly locationLoadIcon: Signal<string | null> = computed(
     () => this.searchLocationOptions()?.searchCurrentLocation?.loadIcon ?? null
   );
 
@@ -168,8 +176,13 @@ export class GgcSearchLocationComponent implements OnInit {
         this.pdokLocationApiService.setMinQueryLength(options.minQueryLength);
       }
 
-      if (options?.numberOfSuggestions != null && options.numberOfSuggestions > 0) {
-        this.pdokLocationApiService.setNumberOfSuggestions(options.numberOfSuggestions);
+      if (
+        options?.numberOfSuggestions != null &&
+        options.numberOfSuggestions > 0
+      ) {
+        this.pdokLocationApiService.setNumberOfSuggestions(
+          options.numberOfSuggestions
+        );
       }
 
       if (options?.elementIds) {
@@ -206,32 +219,29 @@ export class GgcSearchLocationComponent implements OnInit {
         }
       }
 
-      if (Array.isArray(options?.filterCollections) && options.filterCollections.length > 0) {
-        this.pdokLocationApiService.collectionsLoaded$
-          .pipe(take(1))
-          .subscribe((collectionsResult) => {
-            const collections = collectionsResult.collections?.filter(
-              (collection) => options.filterCollections.includes(collection.id)
-            );
-            if (collections) {
-              this.pdokLocationApiService.setCustomCollections(collections.map((item) =>(             {
-                id: item.id,
-                version: item.version,
-                relevance: 1
-              } as SearchCollection)));
-            }
-          });
-      }
-
       if (
         this.searchTerm &&
-        (options?.triggerSearch === undefined ||
-          options.triggerSearch)
+        (options?.triggerSearch === undefined || options.triggerSearch)
       ) {
         this.hasInitialSearchterm = true;
         this.searchTerm$.next(this._searchTerm);
       }
     });
+
+    effect(() => {
+      const customCollections = this.customPdokLocationCollections();
+      if (customCollections && customCollections.length > 0) {
+        this.pdokLocationApiService.setCustomCollections(customCollections);
+      } else {
+        this.pdokLocationApiService.setDefaultCollections();
+      }
+    });
+
+    this.pdokLocationApiService.collectionsLoaded$
+      .pipe(take(1))
+      .subscribe((collectionsResult: PdokLocationApiResult) => {
+        this.pdokLocationCollections.emit(collectionsResult);
+      });
   }
 
   /**
@@ -521,7 +531,7 @@ export class GgcSearchLocationComponent implements OnInit {
                 formatType.GEOJSON
               );
             } else if (feature.bbox) {
-             mapService.zoomToExtent(feature.bbox, {
+              mapService.zoomToExtent(feature.bbox, {
                 mapIndex: this.searchLocationOptions()?.mapIndex,
                 fitOptions: { padding: [50, 50, 50, 50] }
               });
