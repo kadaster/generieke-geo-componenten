@@ -62,7 +62,7 @@ const proj4 = (proj4x as any).default;
   templateUrl: "./ggc-search-location.component.html",
   encapsulation: ViewEncapsulation.None,
   styleUrls: ["./ggc-search-location.component.scss"],
-  imports: [NgClass, CdkListbox, CdkOption, JsonPipe]
+  imports: [NgClass, CdkListbox, CdkOption]
 })
 export class GgcSearchLocationComponent implements OnInit {
   /** Configuratieopties voor de zoekfunctionaliteit, zoals zoomniveaus en PDOK-collecties. */
@@ -232,14 +232,12 @@ export class GgcSearchLocationComponent implements OnInit {
       const customCollections = this.customPdokLocationCollections();
       if (customCollections && customCollections.length > 0) {
         this.pdokLocationApiService.setCustomCollections(customCollections);
-      } else {
-        this.pdokLocationApiService.setDefaultCollections();
       }
     });
 
     this.pdokLocationApiService.collectionsLoaded$
-      .pipe(take(1))
-      .subscribe((collectionsResult: PdokLocationApiResult) => {
+      ?.pipe(take(1))
+      ?.subscribe((collectionsResult: PdokLocationApiResult) => {
         this.pdokLocationCollections.emit(collectionsResult);
       });
   }

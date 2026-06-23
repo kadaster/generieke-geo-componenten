@@ -91,19 +91,19 @@ describe("GgcSearchLocationComponent", () => {
 
   describe("Initialisatie", () => {
     it("moet de pdok service configureren op basis van searchLocationOptions", () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         minQueryLength: 4,
         numberOfSuggestions: 15
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       expect(pdokServiceSpy.setMinQueryLength).toHaveBeenCalledWith(4);
       expect(pdokServiceSpy.setNumberOfSuggestions).toHaveBeenCalledWith(15);
     });
 
     it("moet een initiële zoekterm verwerken", () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         initialSearchTerm: "Amsterdam"
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       expect(component["inputValue"]).toBe("Amsterdam");
     });
@@ -164,9 +164,9 @@ describe("GgcSearchLocationComponent", () => {
   describe("Kaart Interactie (Zoom & Mark)", () => {
     it("moet zoomToExtent aanroepen als een resultaat een bbox heeft", async () => {
       const featureWithBbox = { ...mockFeature, bbox: [1, 2, 3, 4] } as any;
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         zoomToResult: true
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
 
       component["loadFormatType"] = vi.fn().mockResolvedValue({
@@ -182,10 +182,10 @@ describe("GgcSearchLocationComponent", () => {
     });
 
     it("moet de highlight layer wissen bij clearSearchTerm", async () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         markResult: true,
         mapIndex: "test-map"
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       component.clearSearchTerm();
       await Promise.resolve();
