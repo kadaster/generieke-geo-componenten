@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>GGC map webcomponent demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <!--    <link rel="stylesheet" href="../../dist/ggc-map-element/styles.css" />-->
     <link rel="stylesheet" href="../../dist/ggc-dataset-tree-element/styles.css" />
     <link rel="stylesheet" href="./styles.css" />
@@ -16,13 +17,15 @@
     <script src="./app.js" defer></script>
   </head>
   <body>
+  <ggc-search-location-element id="ggc-search-location" map-index="plain-js-demo-map"></ggc-search-location-element>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
   <ggc-dataset-tree-element id="ggc-dataset-tree" map-index="plain-js-demo-map"></ggc-dataset-tree-element>
     <main class="demo-shell">
       <section class="map-panel" aria-label="Kaart">
         <ggc-map-element
           id="ggc-map"
           map-index="plain-js-demo-map"
-          min-zoomlevel="5"
           max-zoomlevel="9"
         ></ggc-map-element>
       </section>

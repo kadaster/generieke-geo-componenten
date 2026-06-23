@@ -60,6 +60,7 @@ const defaultWebServices = [
 
 const mapElement = document.querySelector("#ggc-map");
 const datasetTreeElement = document.querySelector("#ggc-dataset-tree");
+const searchLocationElement = document.querySelector("#ggc-search-location");
 const webservicesTextarea = document.querySelector("#webservices");
 const applyConfigButton = document.querySelector("#apply-config");
 const clearEventsButton = document.querySelector("#clear-events");
@@ -74,6 +75,10 @@ customElements.whenDefined("ggc-map-element").then(() => {
 customElements.whenDefined("ggc-dataset-tree-element").then(() => {
   applyDatasetTreeConfig();
 });
+
+customElements.whenDefined("ggc-search-location-element").then(() => {
+  searchLocationElement.searchLocationOptions = {zoomToResult: true, markResult: true, mapIndex: 'plain-js-demo-map'};
+})
 
 function applyDatasetTreeConfig() {
   datasetTreeElement.themes = [

@@ -6,7 +6,8 @@
     "paths": {
       "@kadaster/ggc-models": ["projects/ggc-models/src/public-api.ts"],
       "@kadaster/ggc-map": ["projects/ggc-map/src/public-api.ts"],
-      "@kadaster/ggc-cesium": ["projects/ggc-cesium/src/public-api.ts"]
+      "@kadaster/ggc-cesium": ["projects/ggc-cesium/src/public-api.ts"],
+      "@kadaster/ggc-search-location": ["projects/ggc-search-location/src/public-api.ts"]
     }
   },
   "files": ["src/elements/main.ts"],
