@@ -45,6 +45,7 @@ import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "../example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+// PLOP:IMPORT
 
 interface GroupedCards {
   theme: string;
@@ -114,6 +115,7 @@ export class ExampleIndexComponent {
     new ExampleFeatureInfoBasicComponent().componentInfo,
     new ExampleFeatureInfoTabsComponent().componentInfo,
     new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
+    // PLOP:CARD
     new Example3dBasicComponent().componentInfo
   ];
 

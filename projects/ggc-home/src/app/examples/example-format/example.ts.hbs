@@ -1,0 +1,64 @@
+import { Component, OnInit } from "@angular/core";
+import { ExampleFormatComponent } from "../../example-format/example-format.component";
+{{#each componentImports}}
+{{{this}}}
+{{/each}}
+{{#if kaartConfig}}
+import { Webservice } from "@kadaster/ggc-map";
+{{/if}}
+import { ComponentInfo } from "../../component-info.model";
+import { Components } from "../../components.enum";
+import { Themes } from "../../themes.enum";
+import { Tags } from "../../tags.enum";
+
+@Component({
+  selector: "{{{selector}}}",
+  imports: [ExampleFormatComponent{{#each ngImports}}, {{{this}}}{{/each}}],
+  templateUrl: "./{{{exampleFolder}}}.component.html"
+})
+export class {{{className}}}
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
+  readonly componentInfo: ComponentInfo = {
+    route: "{{{componentInfoRoute}}}",
+    title: "{{{title}}}",
+    introduction: "{{{introduction}}}",
+    components: [{{#each components}}Components.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
+    theme: [Themes.{{{themeKey}}}],
+    tags: [{{#each tags}}Tags.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
+    imageLocation:
+      "{{{imageLocation}}}"
+  } as ComponentInfo;
+  urlComponentModule =
+    "{{{urlComponentModule}}}";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/{{{tsDocsClass}}}.html`;
+  // DOCS-SKIP:END
+
+  {{#if mapIndex}}
+  mapIndex = "{{{exampleFolder}}}";
+  {{/if}}
+  {{#if kaartConfig}}
+  mapConfig: Webservice[];
+  {{/if}}
+
+  ngOnInit() {
+    {{#if kaartConfig}}
+    this.httpClient
+      .get("code/examples/{{{categoryFolder}}}/{{{exampleFolder}}}/kaartconfig.json")
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+      });
+    {{/if}}
+    // TODO: vul hier eventuele initialisatielogica voor dit voorbeeld in
+  }
+
+  {{#if advancedButton}}
+  goToAdvanced(): void {
+    this.goToPage("{{{toggleRoute}}}");
+  }
+  {{/if}}
+
+  // TODO: vul hier de methodes voor de specifieke bediening van dit voorbeeld in
+}
