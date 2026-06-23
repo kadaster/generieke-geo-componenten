@@ -267,10 +267,10 @@ export default async function (plop: NodePlopAPI) {
           path: "src/app/app.routes.ts",
           pattern: /\/\/ PLOP:ROUTE/,
           template: `  {
-    path: "${data.route}",
+    path: "${data.name}",
     title: "${data.title} | GGC-Home",
     component: ${data.className},
-    data: { label: "${data.route}" }
+    data: { label: "${data.name}" }
   },
   // PLOP:ROUTE`
         },
