@@ -1,15 +1,15 @@
 import { Component, OnInit } from "@angular/core";
-import { ExampleFormatComponent } from "../../example-format/example-format.component";
+import { ExampleFormatComponent } from "{{{examplesRoot}}}../example-format/example-format.component";
 {{#each componentImports}}
 {{{this}}}
 {{/each}}
 {{#if kaartConfig}}
 import { Webservice } from "@kadaster/ggc-map";
 {{/if}}
-import { ComponentInfo } from "../../component-info.model";
-import { Components } from "../../components.enum";
-import { Themes } from "../../themes.enum";
-import { Tags } from "../../tags.enum";
+import { ComponentInfo } from "{{{examplesRoot}}}../component-info.model";
+import { Components } from "{{{examplesRoot}}}../components.enum";
+import { Themes } from "{{{examplesRoot}}}../themes.enum";
+import { Tags } from "{{{examplesRoot}}}../tags.enum";
 
 @Component({
   selector: "{{{selector}}}",
@@ -25,8 +25,8 @@ export class {{{className}}}
     route: "{{{componentInfoRoute}}}",
     title: "{{{title}}}",
     introduction: "{{{introduction}}}",
-    components: [{{#each components}}Components.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
-    theme: [Themes.{{{themeKey}}}],
+    components: [{{#each componentTags}}Components.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
+    theme: [Themes.{{{theme}}}],
     tags: [{{#each tags}}Tags.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
     imageLocation:
       "{{{imageLocation}}}"

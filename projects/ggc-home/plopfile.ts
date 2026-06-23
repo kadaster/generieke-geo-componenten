@@ -33,51 +33,51 @@ const directoryChoices = [
 
 // Components-enum tags die je kan aanvinken in de prompt
 const componentTagChoices = [
-  "ggc-dataset-switcher",
-  "ggc-dataset-tree",
-  "ggc-legend",
-  "ggc-map",
-  "ggc-search-location",
-  "ggc-toolbar",
-  "ggc-feature-info",
-  "ggc-3d / ggc-cesium"
+  "GGC_DATASET_SWITCHER",
+  "GGC_DATASET_TREE",
+  "GGC_LEGEND",
+  "GGC_MAP",
+  "GGC_SEARCH_LOCATION",
+  "GGC_TOOLBAR",
+  "GGC_FEATURE_INFO",
+  "GGC_3D"
 ];
 
 // Tags-enum tags die je kan aanvinken in de prompt
 const tagChoices = [
-  "controls",
-  "dataset",
-  "draw",
-  "highlight",
-  "import",
-  "keyboard",
-  "layer",
-  "legend",
-  "location",
-  "measure",
-  "modify",
-  "objectinfo",
+  "CONTROLS",
+  "DATASET",
+  "DRAW",
+  "HIGHLIGHT",
+  "IMPORT",
+  "KEYBOARD",
+  "LAYER",
+  "LEGEND",
+  "LOCATION",
+  "MEASURE",
+  "MODIFY",
+  "OBJECTINFO",
   "OGC API",
-  "scale",
-  "search",
-  "select",
-  "snap",
-  "style",
-  "toolbar",
-  "trace",
-  "zoom"
+  "SCALE",
+  "SEARCH",
+  "SELECT",
+  "SNAP",
+  "STYLE",
+  "TOOLBAR",
+  "TRACE",
+  "ZOOM"
 ];
 
 // Themes-enum tags die je kan aanvinken in de prompt
 const themeChoices = [
-  "Informatie presenteren",
-  "Kaartbediening",
-  "Kaartlagen",
-  "Kaartweergave kiezen",
-  "Legenda",
-  "Tekenen en meten",
-  "Werkbalk",
-  "Zoeken"
+  "INFORMATIE_OP_KAART",
+  "KAARTBEDIENING",
+  "KAARTLAGEN",
+  "KAARTWEERGAVE_KIEZEN",
+  "LEGENDA",
+  "TEKENEN",
+  "WERKBALK",
+  "ZOEKEN"
 ];
 
 // ---------------------------------------------------------------------------
@@ -106,8 +106,8 @@ export default async function (plop: NodePlopAPI) {
         message:
           "Bestandsnaam (zonder 'example-' prefix, bv. 'feature-info-basic'):",
         validate: (v) =>
-          /^[a-z]+(-[a-z]+)*$/.test(v) ||
-          "Gebruik alleen kleine letters en koppeltekens"
+          /^[a-z0-9]+(-[a-z0-9]+)*$/.test(v) ||
+          "Gebruik alleen kleine letters, cijfers en koppeltekens"
       },
       {
         type: "list",
@@ -151,16 +151,14 @@ export default async function (plop: NodePlopAPI) {
         name: "componentImports",
         message:
           "Welke component worden gebruikt? (Kies alle componenten, dan worden ze geimporteerd): ",
-        choices: Object.keys(componentImportMap),
-        default: []
+        choices: Object.keys(componentImportMap)
       },
       {
         type: "checkbox",
         name: "componentTags",
         message:
           "Welke component tag wil je toevoegen? (Kies standaard een compontent. Kies alleen meerdere componenten als het voorbeeld bedoeld is om de interactie tussen de componenten te laten zien)(laat leeg om later in te vullen): ",
-        choices: componentTagChoices,
-        default: []
+        choices: componentTagChoices
       },
       {
         type: "checkbox",
@@ -168,6 +166,12 @@ export default async function (plop: NodePlopAPI) {
         message: "Welke tags? (laat leeg om later in te vullen): ",
         choices: tagChoices,
         default: []
+      },
+      {
+        type: "input",
+        name: "route",
+        message:
+          "Welke titel voor de router? (wordt in tabblad in browser getoond, houd het zo kort mogelijk. Er wordt automatisch  '| GGC-Home' achter gevoegd): "
       },
       {
         type: "confirm",
@@ -186,6 +190,7 @@ export default async function (plop: NodePlopAPI) {
             `  Layout:       ${data.layout}`,
             `  Componenten:  ${comps}`,
             `  Tags:         ${tagsStr}`,
+            `  Theme:         ${data.theme}`,
             "",
             "Klopt dit? Bestanden nu aanmaken?"
           ].join("\n");
@@ -209,7 +214,6 @@ export default async function (plop: NodePlopAPI) {
       data.componentInfoRoute = `/${kebab}`;
       data.imageLocation = `code/examples/${categoryFolder}/${data.exampleFolder}/${data.exampleFolder}.png`;
       data.urlComponentModule = `${categoryFolder}/${data.exampleFolder}/${data.exampleFolder}.component.ts`;
-      data.theme = themeChoices[data.theme];
       // router naam
 
       data.componentImports = (data.componentImports ?? [])
@@ -228,8 +232,13 @@ export default async function (plop: NodePlopAPI) {
       console.log("data.exampleFolder: /", data.exampleFolder);
       console.log("file: /", data.exampleFolder, ".component");
       console.log("plaatslocation:", dirLocation, "/", data.exampleFolder);
+      console.log("theme: ", data.theme);
       const TEMPLATE_BASE = "src/app/examples/example-format";
-      const stripped = categoryFolder.replace(/^examples\//, "");
+      const importPathPart = categoryFolder.startsWith("examples/")
+        ? categoryFolder.replace(/^examples\//, "../")
+        : "..";
+      data.examplesRoot = categoryFolder.startsWith("examples/") ? "../" : "";
+
       const actions = [
         {
           type: "add",
@@ -245,13 +254,31 @@ export default async function (plop: NodePlopAPI) {
           type: "modify",
           path: "src/app/examples/example-index/example-index.component.ts",
           pattern: /\/\/ PLOP:IMPORT/,
-          template: `import { ${data.className} } from "../${stripped}/${data.exampleFolder}/${data.exampleFolder}.component";\n// PLOP:IMPORT`
+          template: `import { ${data.className} } from "${importPathPart}/${data.exampleFolder}/${data.exampleFolder}.component";\n// PLOP:IMPORT`
         },
         {
           type: "modify",
           path: "src/app/examples/example-index/example-index.component.ts",
           pattern: /\/\/ PLOP:CARD/,
           template: `new ${data.className}().componentInfo,\n    // PLOP:CARD`
+        },
+        {
+          type: "modify",
+          path: "src/app/app.routes.ts",
+          pattern: /\/\/ PLOP:ROUTE/,
+          template: `  {
+    path: "${data.route}",
+    title: "${data.title} | GGC-Home",
+    component: ${data.className},
+    data: { label: "${data.route}" }
+  },
+  // PLOP:ROUTE`
+        },
+        {
+          type: "modify",
+          path: "src/app/app.routes.ts",
+          pattern: /\/\/ PLOP:IMPORTROUTE/,
+          template: `import { ${data.className} } from "./${categoryFolder}/${data.exampleFolder}/${data.exampleFolder}.component";\n// PLOP:IMPORTROUTE`
         }
       ];
 

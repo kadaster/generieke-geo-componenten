@@ -50,6 +50,7 @@ import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+// PLOP:IMPORTROUTE
 
 export const routes: Routes = [
   {
@@ -350,6 +351,7 @@ export const routes: Routes = [
     component: ExampleFeatureInfoTabsComponent,
     data: { label: "example-feature-info-tabs" }
   },
+  // PLOP:ROUTE
   {
     path: "feature-info-custom-names-values",
     title: "Feature Info aangepast | GGC-Home",
