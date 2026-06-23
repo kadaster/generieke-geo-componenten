@@ -66,6 +66,38 @@
           },
           "defaultConfiguration": "production"
         },
+        "build-element": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "main": "projects/ggc-dataset-tree/src/elements/main.ts",
+            "index": "projects/ggc-dataset-tree/src/elements/index.html",
+            "outputPath": "dist/ggc-dataset-tree-element",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/ggc-dataset-tree/tsconfig.element.json",
+            "styles": ["node_modules/ol/ol.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "4MB",
+                  "maximumError": "6MB"
+                }
+              ],
+              "extractLicenses": false,
+              "optimization": true,
+              "outputHashing": "none"
+            },
+            "development": {
+              "extractLicenses": false,
+              "optimization": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
@@ -308,6 +340,70 @@
               "tsConfig": "projects/ggc-map/tsconfig.lib.json"
             }
           }
+        },
+        "build-element": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "main": "projects/ggc-map/src/elements/main.ts",
+            "index": "projects/ggc-map/src/elements/index.html",
+            "outputPath": "dist/ggc-map-element",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/ggc-map/tsconfig.element.json",
+            "styles": ["node_modules/ol/ol.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "4MB",
+                  "maximumError": "6MB"
+                }
+              ],
+              "extractLicenses": false,
+              "optimization": true,
+              "outputHashing": "none"
+            },
+            "development": {
+              "extractLicenses": false,
+              "optimization": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "build-elements": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "main": "projects/ggc-map/src/elements/combined-main.ts",
+            "index": "projects/ggc-map/src/elements/combined-index.html",
+            "outputPath": "dist/ggc-elements",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/ggc-map/tsconfig.elements.json",
+            "styles": ["node_modules/ol/ol.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "4MB",
+                  "maximumError": "6MB"
+                }
+              ],
+              "extractLicenses": false,
+              "optimization": true,
+              "outputHashing": "none"
+            },
+            "development": {
+              "extractLicenses": false,
+              "optimization": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular/build:unit-test",

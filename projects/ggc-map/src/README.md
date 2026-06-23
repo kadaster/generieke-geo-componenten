@@ -48,6 +48,27 @@ Dit project is gratis en open-source software, gelicentieerd onder de [European 
 
 Bekijk onze [voorbeelden](https://generiekegeocomponenten.nl/example-index), de [quick start](https://generiekegeocomponenten.nl/quick-start) of de [TSDocs](https://www.generiekegeocomponenten.nl/tsdocs/).
 
+## Webcomponent
+
+`ggc-map` kan ook als Angular custom element gebouwd worden:
+
+```bash
+npm run build:ggc-map-element
+```
+
+De build komt in `dist/ggc-map-element`. Neem `runtime.js`, `polyfills.js`,
+`main.js` en `styles.css` op in de hostapplicatie en gebruik daarna:
+
+```html
+<ggc-map-element style="height: 500px"></ggc-map-element>
+```
+
+Inputs worden door Angular Elements als properties ondersteund. Attributen voor
+primitieve waarden gebruiken kebab-case, bijvoorbeeld `map-index`.
+
+Een plain HTML/JavaScript demo staat in `projects/ggc-map-webcomponent-demo`.
+Open deze vanuit de workspace nadat de webcomponent-build is gemaakt.
+
 © Documentatie: Dienst voor het kadaster en de openbare registers (Kadaster). Deze documentatie (met uitzondering van de TSDocs) is gelicentieerd onder CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
 
 ## Bugs

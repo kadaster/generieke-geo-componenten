@@ -1,0 +1,142 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  color: #202124;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.demo-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  height: 100%;
+  min-height: 100%;
+}
+
+.map-panel {
+  min-height: 420px;
+}
+
+ggc-map-element {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.control-panel {
+  border-left: 1px solid #d6dce5;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  overflow: auto;
+  padding: 20px;
+}
+
+.control-panel h1,
+.control-panel h2,
+.control-panel p {
+  margin: 0;
+}
+
+.control-panel h1 {
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.control-panel h2 {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.control-panel p {
+  color: #4a5565;
+  line-height: 1.45;
+}
+
+.control-panel label {
+  font-weight: 700;
+}
+
+.control-panel textarea {
+  border: 1px solid #aab4c3;
+  border-radius: 4px;
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+  min-height: 280px;
+  padding: 10px;
+  resize: vertical;
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  background: #154273;
+  border: 1px solid #154273;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
+.actions button + button {
+  background: #fff;
+  color: #154273;
+}
+
+.actions button[aria-invalid="true"] {
+  border-color: #b00020;
+}
+
+.event-log {
+  border: 1px solid #d6dce5;
+  border-radius: 4px;
+  flex: 1;
+  line-height: 1.4;
+  list-style-position: inside;
+  margin: 0;
+  min-height: 140px;
+  overflow: auto;
+  padding: 10px;
+}
+
+.event-log li + li {
+  margin-top: 8px;
+}
+
+@media (max-width: 860px) {
+  .demo-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(420px, 58vh) auto;
+  }
+
+  .control-panel {
+    border-left: 0;
+    border-top: 1px solid #d6dce5;
+  }
+}

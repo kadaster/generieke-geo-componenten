@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <title>GGC map webcomponent demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../dist/ggc-map-element/styles.css" />
+    <link rel="stylesheet" href="../../dist/ggc-dataset-tree-element/styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="../../dist/ggc-map-element/runtime.js" defer></script>
+    <script src="../../dist/ggc-map-element/polyfills.js" defer></script>
+    <script src="../../dist/ggc-map-element/main.js" defer></script>
+    <script src="../../dist/ggc-dataset-tree-element/runtime.js" defer></script>
+    <script src="../../dist/ggc-dataset-tree-element/polyfills.js" defer></script>
+    <script src="../../dist/ggc-dataset-tree-element/main.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+  <ggc-dataset-tree-element id="ggc-dataset-tree" map-index="plain-js-demo-map"></ggc-dataset-tree-element>
+    <main class="demo-shell">
+      <section class="map-panel" aria-label="Kaart">
+        <ggc-map-element
+          id="ggc-map"
+          map-index="plain-js-demo-map"
+          min-zoomlevel="5"
+          max-zoomlevel="9"
+        ></ggc-map-element>
+      </section>
+
+      <aside class="control-panel" aria-label="Configuratie">
+        <h1>GGC map webcomponent</h1>
+        <p>
+          Deze pagina gebruikt alleen HTML en JavaScript. De Angular runtime zit
+          in de gebouwde webcomponent-bestanden.
+        </p>
+
+        <label for="webservices">webServices</label>
+        <textarea id="webservices" spellcheck="false"></textarea>
+
+        <div class="actions">
+          <button id="apply-config" type="button">Laad configuratie</button>
+          <button id="clear-events" type="button">Wis events</button>
+        </div>
+
+        <h2>Events</h2>
+        <ol id="event-log" class="event-log" aria-live="polite"></ol>
+      </aside>
+    </main>
+  </body>
+</html>
