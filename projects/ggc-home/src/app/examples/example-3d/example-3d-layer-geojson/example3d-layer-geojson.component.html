@@ -19,14 +19,16 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld zijn het terrein en de gebouwen uit de 3D
-      Basisvoorziening als lagen toegevoegd aan de kaart. Deze kaartlagen worden
-      in MapBox Vector Tiles formaat opgevraagd bij een OGC API - Tiles.
+      In dit voorbeeld zijn 2 geojson lagen toegevoegd bovenop de
+      achtergrondkaart. De rode lijnen zijn de gemeentelijnen, waarbij de rode
+      kleur is toegevoegd in de configuratie. De roze labels zijn BAG
+      terugmeldingen, waarbij ook de style is ingesteld in de configuratie. De
+      BGT meldingen zijn de rode pins. Deze rode pins is een SVG afbeelding die
+      is ingeladen via de geoJsonConfig die gekoppeld is via het layerId. Deze
+      entitiesFunction kan uiteraard worden uitgebreid met extra logica waardoor
+      verschillende SVGs gekoppeld kunnen worden aan specifieke properties van
+      het object.
       <br />
-      Naast de kaartconfiguratie zijn er ook nog andere opties to configureren
-      voor 3D tiles in de TileSetConfig. Zie hiervoor het voorbeeld Camera
-      opties instellen voor 3D layer.
-    </p>
   </div>
 
   <div page-functionality>
@@ -55,6 +57,7 @@
             [hideLogo]="hideLogo"
             (ready)="onCesiumReady()"
             [webServices]="webService"
+            [geoJsonConfigs]="geoJsonConfigs"
           ></ggc-cesium-viewer>
         </div>
       </div>

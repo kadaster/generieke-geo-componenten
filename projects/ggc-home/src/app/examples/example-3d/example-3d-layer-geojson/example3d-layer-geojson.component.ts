@@ -6,6 +6,7 @@ import { Tags } from "../../tags.enum";
 import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
+  GeoJsonConfig,
   GgcControlsComponent,
   GgcViewerComponent,
   ViewerOptions,
@@ -13,6 +14,12 @@ import {
 } from "@kadaster/ggc-cesium";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { HttpClient } from "@angular/common/http";
+import {
+  BillboardGraphics,
+  Entity,
+  HeightReference,
+  VerticalOrigin
+} from "@cesium/engine";
 
 @Component({
   selector: "app-example-3d-layer-geojson",
@@ -25,7 +32,7 @@ export class Example3dLayerGeojsonComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-geojson",
-    title: "(WIP) Kaartlaag toevoegen: Geojson",
+    title: "Kaartlaag toevoegen: Geojson",
     introduction: "Voeg een Geojson laag toe aan de 3D kaart.",
     components: [Components.GGC_3D],
     theme: [Themes.DRIED],
@@ -53,6 +60,22 @@ export class Example3dLayerGeojsonComponent {
   };
   protected kaartConfig =
     "code/examples/example-3d/example-3d-layer-geojson/kaartconfig.json";
+
+  protected geoJsonConfigs: GeoJsonConfig[] = [
+    {
+      layerId: "terugmeldingen-bgt",
+      entitiesFunction: (entity: Entity) => {
+        entity.billboard = new BillboardGraphics({
+          image:
+            "code/examples/example-3d/example-3d-layer-geojson/pointer-pin.svg",
+          scale: 0.05,
+          heightReference: HeightReference.CLAMP_TO_GROUND,
+          verticalOrigin: VerticalOrigin.BOTTOM,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY
+        });
+      }
+    }
+  ];
 
   private readonly httpClient = inject(HttpClient);
 

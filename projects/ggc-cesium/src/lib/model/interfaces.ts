@@ -165,8 +165,7 @@ export interface GeoJsonConfig {
    * Optioneel: Een functie van het type EntitiesFunction. Deze functie verwacht
    * een Entity als parameter en heeft void als return type. In deze functie kan
    * de styling van een Entity (een GeoJson feature wordt in Cesium als Entity weergegeven)
-   * aangepast worden. Hieronder is een voorbeeld gegeven waarbij een ander icoon
-   * wordt ingesteld op basis van de waarde van een property van het feature.
+   * aangepast worden.
    */
   entitiesFunction?: EntitiesFunction;
 
