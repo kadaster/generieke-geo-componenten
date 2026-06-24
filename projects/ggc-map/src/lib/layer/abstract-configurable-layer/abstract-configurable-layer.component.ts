@@ -53,12 +53,12 @@ export class AbstractConfigurableLayerComponent<T>
     }
 
     if (
-      this.options?.maxZoomlevel !== undefined &&
+      this.options?.maxZoomLevel !== undefined &&
       this.options.minResolution == undefined
     ) {
       this.layerOptions = {
         ...this.layerOptions,
-        minResolution: zoomlevelToResolution(this.options.maxZoomlevel)
+        minResolution: zoomlevelToResolution(this.options.maxZoomLevel)
       };
     }
   }

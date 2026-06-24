@@ -156,21 +156,21 @@ describe("AbstractConfigurableLayerComponent", () => {
     });
 
     it("should set minResolution based on maxZoomlevel when minResolution is not provided", () => {
-      const maxZoomlevel = 10;
-      component["options"] = { maxZoomlevel };
+      const maxZoomLevel = 10;
+      component["options"] = { maxZoomLevel: maxZoomLevel };
 
       component.ngOnInit();
 
       expect(component["layerOptions"].minResolution).toBe(
-        zoomlevelToResolution(maxZoomlevel)
+        zoomlevelToResolution(maxZoomLevel)
       );
     });
 
     it("should NOT override minResolution when both maxZoomlevel and minResolution are provided", () => {
-      const maxZoomlevel = 10;
+      const maxZoomLevel = 10;
       const minResolution = 4321;
 
-      component["options"] = { maxZoomlevel, minResolution };
+      component["options"] = { maxZoomLevel, minResolution };
 
       component.ngOnInit();
 
