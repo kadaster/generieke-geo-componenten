@@ -77,7 +77,7 @@
         "title": "Terugmeldingen BAG",
         "layerName": "bagterugmeldingen",
         "activeLegend": {
-          "legendUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/terugmeldingen_met_wachten_op_info.svg"
+          "legendUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/terugmeldingen_met_wacht_op_info.svg"
         },
         "legendIndex": 3,
         "zIndex": 10,
