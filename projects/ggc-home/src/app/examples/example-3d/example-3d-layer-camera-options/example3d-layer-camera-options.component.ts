@@ -34,11 +34,11 @@ export class Example3dLayerCameraOptionsComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-camera-options",
-    title: "Camera opties instellen voor 3D layer",
+    title: "3D Camera opties instellen voor layer",
     introduction: "Eigen camera opties instellen voor een 3D layer",
     components: [Components.GGC_3D, Components.GGC_DATASET_TREE],
-    theme: [Themes.DRIED],
-    tags: [Tags.LAYER],
+    theme: [Themes.KAARTLAGEN],
+    tags: [Tags.LAYER, Tags.DATASET, Tags.OGC_API, Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-camera-options/example-3d-layer-camera-options.png"
   } as ComponentInfo;

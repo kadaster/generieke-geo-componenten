@@ -32,11 +32,11 @@ export class Example3dLayerGeojsonComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-geojson",
-    title: "Kaartlaag toevoegen: Geojson",
+    title: "3D Kaartlaag toevoegen: Geojson",
     introduction: "Voeg een Geojson laag toe aan de 3D kaart.",
     components: [Components.GGC_3D],
-    theme: [Themes.DRIED],
-    tags: [Tags.LAYER],
+    theme: [Themes.KAARTLAGEN],
+    tags: [Tags.LAYER, Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-geojson/example-3d-layer-geojson.png"
   } as ComponentInfo;

@@ -14,6 +14,7 @@ import { ExampleFormatComponent } from "../../example-format/example-format.comp
 import { HttpClient } from "@angular/common/http";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
 import { ViewerType } from "@kadaster/ggc-models";
+import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-3d-feature-info-auto-connect",
@@ -34,9 +35,9 @@ export class Example3dFeatureInfoAutoConnectComponent {
     title: "3D kaart met feature info (autoconnect)",
     introduction:
       "3D kaart en een feature info weergave die automatisch verbind.",
-    components: [Components.GGC_3D, Components.GGC_FEATURE_INFO],
-    theme: [Themes.DRIED],
-    tags: [],
+    components: [Components.GGC_FEATURE_INFO],
+    theme: [Themes.INFORMATIE_OP_KAART],
+    tags: [Tags.DRIED, Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-3d/example-3d-feature-info-auto-connect/example-3d-feature-info-auto-connect.png"
   } as ComponentInfo;

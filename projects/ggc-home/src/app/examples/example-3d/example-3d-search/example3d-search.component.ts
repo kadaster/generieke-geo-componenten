@@ -18,6 +18,7 @@ import {
   SearchCurrentLocationType,
   SearchLocationOptions
 } from "@kadaster/ggc-search-location";
+import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-3d-search",
@@ -37,9 +38,9 @@ export class Example3dSearchComponent {
     route: "/example-3d-search",
     title: "3D kaart met zoek component",
     introduction: "3D kaart met een zoekfunctie en huidige locatie.",
-    components: [Components.GGC_3D, Components.GGC_SEARCH_LOCATION],
-    theme: [Themes.DRIED],
-    tags: [],
+    components: [Components.GGC_SEARCH_LOCATION],
+    theme: [Themes.ZOEKEN],
+    tags: [Tags.DRIED, Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-3d/example-3d-search/example-3d-search.png"
   } as ComponentInfo;

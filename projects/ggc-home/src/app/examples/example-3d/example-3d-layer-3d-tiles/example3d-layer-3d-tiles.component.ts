@@ -25,11 +25,11 @@ export class Example3dLayer3dTilesComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-3d-tiles",
-    title: "Kaartlaag toevoegen: OGC API 3D Tiles",
+    title: "3D Kaartlaag toevoegen: OGC API 3D Tiles",
     introduction: "Voeg een 3D laag toe aan de kaart met OGC API 3D Tiles.",
     components: [Components.GGC_3D],
-    theme: [Themes.DRIED],
-    tags: [Tags.LAYER],
+    theme: [Themes.KAARTLAGEN],
+    tags: [Tags.LAYER, Tags.DRIED, Tags.OGC_API],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-3d-tiles/example-3d-layer-3d-tiles.png"
   } as ComponentInfo;

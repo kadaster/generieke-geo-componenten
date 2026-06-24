@@ -15,6 +15,7 @@ import { HttpClient } from "@angular/common/http";
 import { ViewerType } from "@kadaster/ggc-models";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 import { GgcLegendComponent } from "@kadaster/ggc-legend";
+import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-3d-dataset-tree-legend",
@@ -35,13 +36,9 @@ export class Example3dDatasetTreeLegendComponent {
     route: "/example-3d-dataset-tree-legend",
     title: "3D kaart met dataset tree en legenda",
     introduction: "Weergave van een 3D kaart met een dataset-tree en legenda",
-    components: [
-      Components.GGC_3D,
-      Components.GGC_DATASET_TREE,
-      Components.GGC_LEGEND
-    ],
-    theme: [Themes.DRIED],
-    tags: [],
+    components: [Components.GGC_DATASET_TREE, Components.GGC_LEGEND],
+    theme: [Themes.KAARTWEERGAVE_KIEZEN],
+    tags: [Tags.DRIED, Tags.DATASET, Tags.LEGEND, Tags.LAYER],
     imageLocation:
       "code/examples/example-3d/example-3d-dataset-tree-legend/example-3d-dataset-tree-legend.png"
   } as ComponentInfo;

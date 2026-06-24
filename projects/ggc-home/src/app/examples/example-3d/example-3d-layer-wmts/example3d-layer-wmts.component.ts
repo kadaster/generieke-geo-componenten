@@ -25,11 +25,11 @@ export class Example3dLayerWmtsComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-wmts",
-    title: "Kaartlaag toevoegen: WMTS",
+    title: "3D Kaartlaag toevoegen: WMTS",
     introduction: "Voeg een WMTS laag toe aan de 3D kaart.",
     components: [Components.GGC_3D],
-    theme: [Themes.DRIED],
-    tags: [Tags.LAYER],
+    theme: [Themes.KAARTLAGEN],
+    tags: [Tags.LAYER, Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-wmts/example-3d-layer-wmts.png"
   } as ComponentInfo;

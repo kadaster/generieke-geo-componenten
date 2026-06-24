@@ -16,7 +16,7 @@
     "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wfs/v1_0?request=GetFeature&service=WFS&version=2.0.0&TYPENAMES=Gemeentegebied&outputFormat=json&srsname=urn:ogc:def:crs:EPSG::4326",
     "layers": [
       {
-        "layerId": "provincies",
+        "layerId": "gemeentes",
         "zIndex": 1,
         "loadOptions": {
           "stroke": "#FF0000",

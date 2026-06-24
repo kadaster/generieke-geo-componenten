@@ -18,6 +18,7 @@ import {
   GgcDatasetSwitcherComponent,
   Theme
 } from "@kadaster/ggc-dataset-tree";
+import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-3d-dataset-switcher",
@@ -37,9 +38,9 @@ export class Example3dDatasetSwitcherComponent {
     route: "/example-3d-dataset-switcher",
     title: "3D kaart met dataset switcher",
     introduction: "Weergave van een 3D kaart met een dataset-switcher",
-    components: [Components.GGC_3D, Components.GGC_DATASET_SWITCHER],
-    theme: [Themes.DRIED],
-    tags: [],
+    components: [Components.GGC_DATASET_SWITCHER],
+    theme: [Themes.KAARTWEERGAVE_KIEZEN],
+    tags: [Tags.DRIED, Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-3d/example-3d-dataset-switcher/example-3d-dataset-switcher.png"
   } as ComponentInfo;

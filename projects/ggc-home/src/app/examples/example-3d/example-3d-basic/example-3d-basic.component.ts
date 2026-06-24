@@ -12,6 +12,7 @@ import {
 } from "@kadaster/ggc-cesium";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { HttpClient } from "@angular/common/http";
+import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-3d-basic",
@@ -27,8 +28,8 @@ export class Example3dBasicComponent {
     title: "3D kaart",
     introduction: "Toon een 3D kaart.",
     components: [Components.GGC_3D],
-    theme: [Themes.DRIED],
-    tags: [],
+    theme: [Themes.KAARTLAGEN],
+    tags: [Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-basic/example-3d-basic.png"
   } as ComponentInfo;

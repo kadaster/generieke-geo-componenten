@@ -16,6 +16,7 @@ import { HttpClient } from "@angular/common/http";
 import { Color, ScreenSpaceEventType } from "@cesium/engine";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
 import { ViewerType } from "@kadaster/ggc-models";
+import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "app-example-3d-feature-info",
@@ -36,9 +37,9 @@ export class Example3dFeatureInfoComponent {
     title: "3D kaart met feature info en meerdere selecties",
     introduction:
       "3D kaart en een feature info weergave met meerdere selecties.",
-    components: [Components.GGC_3D, Components.GGC_FEATURE_INFO],
-    theme: [Themes.DRIED],
-    tags: [],
+    components: [Components.GGC_FEATURE_INFO],
+    theme: [Themes.INFORMATIE_OP_KAART],
+    tags: [Tags.DRIED, Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-3d/example-3d-feature-info/example-3d-feature-info.png"
   } as ComponentInfo;
