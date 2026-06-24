@@ -66,7 +66,7 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
    * Optioneel: Instellen van het maximale zoomniveau waarbij de kaartlaag zichtbaar is.
    * Wordt overschreven door minResolution als deze is opgegeven.
    */
-  maxZoomlevel?: number;
+  maxZoomLevel?: number;
 
   /**
    * Optioneel: Instellen van de z-index voor de volgorde waarin de layer in de kaart
