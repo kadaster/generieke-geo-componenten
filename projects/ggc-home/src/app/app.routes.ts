@@ -67,6 +67,8 @@ import { CookieDeclarationComponent } from "./cookie-declaration/cookie-declarat
 import { ExampleLayerStylesComponent } from "./examples/example-layer/example-layer-styles/example-layer-styles.component";
 import { ExampleLayerStylesVectorTileComponent } from "./examples/example-layer/example-layer-styles-vector-tile/example-layer-styles-vector-tile.component";
 import { ExampleCapabilitiesLayerOptionsComponent } from "./examples/example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
+import { ExampleMapExtraOverzichtComponent } from "./examples/example-map/example-map-extra-overzicht/example-map-extra-overzicht.component";
+import { ExampleMapDriedExtraOverzichtComponent } from "./examples/example-map/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -474,5 +476,17 @@ export const routes: Routes = [
     title: "In eigen collectie zoeken | GGC-Home",
     component: ExampleSearchLocationAlternativeSearchComponent,
     data: { label: "search-location-alternative-search" }
+  },
+  {
+    path: "map-extra-overzicht",
+    title: "Kaart met extra overzicht | GGC-Home",
+    component: ExampleMapExtraOverzichtComponent,
+    data: { label: "map-extra-overzicht" }
+  },
+  {
+    path: "map-dried-extra-overzicht",
+    title: "Kaart met extra overzicht 3D | GGC-Home",
+    component: ExampleMapDriedExtraOverzichtComponent,
+    data: { label: "map-dried-extra-overzicht" }
   }
 ];

@@ -1,0 +1,23 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "zIndex": -20
+      }
+    ]
+  },
+  {
+    "url": "https://service.pdok.nl/kadaster/kadastralekaart/wmts/v5_0",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerName": "Kadastralekaart"
+      }
+    ]
+  }
+]
