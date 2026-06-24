@@ -1,5 +1,131 @@
-<div class="utrecht-page-body__content downloads-npm-page">
+<div class="utrecht-page-body__content quickstart-page">
   <h1 class="nl-heading nl-heading--level-3 ggc-heading">
-    De quick start van GGC is nog in ontwikkeling.
+    Quick start met de Generieke Geo Componenten
   </h1>
+  <p class="nl-paragraph ggc-paragraph">
+    Deze quick start helpt je op weg om te beginnen met de Generieke Geo
+    Componenten in een Angular applicatie.
+  </p>
+  <h2 class="nl-heading nl-heading--level-4 ggc-heading">Inhoudsopgave</h2>
+  <ol class="ggc-paragraph-list">
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 1 ? 'selected' : ''"
+    >
+      <button (click)="currentStep = 1">
+        De eerste kaart, met <code>ggc-map</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 2 ? 'selected' : ''"
+    >
+      <button (click)="currentStep = 2">
+        Tonen van de legenda, met <code>ggc-legend</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 3 ? 'selected' : ''"
+    >
+      <button (click)="currentStep = 3">
+        Zoeken met de <code>ggc-search-location</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 4 ? 'selected' : ''"
+    >
+      <button (click)="currentStep = 4">
+        Kaartlagen aan- en uitvinken met de <code>ggc-dataset-tree</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 5 ? 'selected' : ''"
+    >
+      <button (click)="currentStep = 5">
+        Wisselen tussen kaartlagen met de <code>ggc-dataset-switcher</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 6 ? 'selected' : ''"
+    >
+      <button (click)="currentStep = 6">
+        Het maken van een toolbar met de <code>ggc-toolbar</code>
+      </button>
+    </li>
+  </ol>
+  @if (currentStep === 1) {
+    <img
+      src="assets/quickstart/overzicht.png"
+      alt="Overzicht kaartviewer met de generieke geo componenten"
+    />
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">Benodigdheden</h2>
+    <p class="nl-paragraph ggc-paragraph">
+      Om te beginnen zijn is het belangrijk dat je ervaring hebt met:
+    </p>
+    <ul class="ggc-paragraph-list">
+      <li class="nl-paragraph ggc-paragraph">HTML/CSS</li>
+      <li class="nl-paragraph ggc-paragraph">JavaScript/TypeScript</li>
+      <li class="nl-paragraph ggc-paragraph">
+        Angular (of een soortgelijk framework)
+      </li>
+    </ul>
+    <p class="nl-paragraph ggc-paragraph">
+      Indien je nog geen Angular applicatie hebt kun je die eenvoudig maken met
+      de
+      <a
+        href="https://v{{ angularVersion }}.angular.dev/installation"
+        target="_blank"
+        >installatiehandleiding
+        <span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
+      ></a>
+      van Angular zelf. De nieuwste versie van onze componenten werken met
+      Angular {{ angularVersion }}. Voor het maken van een eenvoudige
+      kaartapplicatie is geen geo-kennis benodigd.
+    </p>
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">
+      De eerste kaart, met <code>ggc-map</code>
+    </h2>
+    <p class="nl-paragraph ggc-paragraph">
+      Als eerste heb je de juiste dependencies nodig, installeer deze met:
+      <code>npm install @kadaster/ggc-map</code>
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      Plaats dan de volgende HTML, bijvoorbeeld in de <code>app.html</code>:
+    </p>
+    <pre><code
+      [highlight]="mapHtml"
+      language="html"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Je hebt daarna de juiste TypeScript imports nodig, en je moet aangeven
+      welke kaartlagen je wilt tonen. Gebruik daarvoor het volgende:
+    </p>
+    <pre><code
+      [highlight]="mapTypescript"
+      language="ts"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Je zou nu al een werkende kaart moeten zien die lijkt op de kaart
+      hieronder! De styling van de zoom-knoppen is iets anders.
+    </p>
+    <div style="height: 300px">
+      <ggc-map [webServices]="webServices"></ggc-map>
+    </div>
+    <p class="nl-paragraph ggc-paragraph">
+      Bekijk de <a href="#">voorbeelden van kaartlagen</a> als je meer wilt
+      weten over de verschillende mogelijkheden.
+    </p>
+  }
+
+  @if (currentStep < 6) {
+    <p class="nl-paragraph ggc-paragraph">
+      <button (click)="currentStep = currentStep + 1">
+        Ga naar het volgende hoofdstuk
+      </button>
+    </p>
+  }
 </div>
