@@ -210,6 +210,8 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.geoJsonLayerService.setLayers(this.viewer.dataSources);
     this.coreViewerService.setViewer(this.viewer);
     this.ready.emit();
+
+    this.viewer.scene.requestRender();
   }
 
   private async createViewer(): Promise<Viewer> {
@@ -246,7 +248,8 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       selectionIndicator: false,
       timeline: this.viewerOptions?.timeline ?? false,
       navigationHelpButton: false,
-      navigationInstructionsInitiallyVisible: false
+      navigationInstructionsInitiallyVisible: false,
+      requestRenderMode: false
     } as Viewer.ConstructorOptions);
   }
 

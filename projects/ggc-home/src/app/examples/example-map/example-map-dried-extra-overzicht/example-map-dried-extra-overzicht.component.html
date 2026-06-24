@@ -1,0 +1,43 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="map-container">
+      <div class="map-wrapper main-map">
+        <ggc-cesium-viewer
+          [viewerOptions]="viewerOptions"
+          [cameraOptions]="cameraOptions"
+          [hideLogo]="true"
+          (ready)="onCesiumReady()"
+          [webServices]="mapConfig"
+        ></ggc-cesium-viewer>
+      </div>
+      <div class="map-wrapper overview-map">
+        <ggc-map
+          [mapIndex]="mapIndexOverzicht"
+          [webServices]="mapConfigOverzicht"
+        ></ggc-map>
+      </div>
+    </div>
+    <!-- DOCS:END functionality -->
+  </div>
+</app-example-format>

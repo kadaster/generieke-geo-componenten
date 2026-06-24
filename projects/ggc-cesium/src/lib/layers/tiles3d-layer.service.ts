@@ -1,5 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import {
+  ArcGISTiledElevationTerrainProvider,
   Cesium3DTileFeature,
   Cesium3DTileset,
   Primitive,
@@ -68,9 +69,32 @@ export class Tiles3dLayerService extends BaseLayerService {
     const layerObject = this.layerMap.get(layer.layerId)!;
     if (!layerObject?.layerLoading) {
       layerObject.layerLoading = true;
-      const config = this.tilesetConfigs?.find((config) => {
+      let config = this.tilesetConfigs?.find((config) => {
         return config.layerId === layer.layerId;
       });
+
+      if (config) {
+        config.constructorOptions = {
+          ...config?.constructorOptions,
+          cullRequestsWhileMoving: false,
+          foveatedScreenSpaceError: false,
+          dynamicScreenSpaceError: false,
+          preloadWhenHidden: true,
+          maximumScreenSpaceError: 8
+        };
+      } else {
+        config = {
+          layerId: layer.layerId,
+          constructorOptions: {
+            cullRequestsWhileMoving: false,
+            foveatedScreenSpaceError: false,
+            dynamicScreenSpaceError: false,
+            preloadWhenHidden: true,
+            maximumScreenSpaceError: 8
+          }
+        };
+      }
+
       this.createTileset(url, config?.constructorOptions)
         .then((tileset) => {
           const layerObject = this.layerMap.get(layer.layerId)!;

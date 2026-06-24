@@ -51,6 +51,10 @@ export function zoomlevelToResolution(zoomlevel: number) {
   return 3440.64 / Math.pow(2, zoomlevel);
 }
 
+export function resolutionToZoomlevel(resolution: number) {
+  return Math.log2(3440.64 / resolution);
+}
+
 /**
  * Zet een kaartschaal om naar een resolutie.
  *

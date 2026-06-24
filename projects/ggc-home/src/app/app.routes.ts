@@ -59,6 +59,8 @@ import { Example3dSearchComponent } from "./examples/example-3d/example-3d-searc
 import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
 import { Example3dLayerWmtsComponent } from "./examples/example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
+import { ExampleMapExtraOverzichtComponent } from "./examples/example-map/example-map-extra-overzicht/example-map-extra-overzicht.component";
+import { ExampleMapDriedExtraOverzichtComponent } from "./examples/example-map/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.component";
 
 export const routes: Routes = [
   {
@@ -418,5 +420,17 @@ export const routes: Routes = [
     title: "Feature Info aangepast | GGC-Home",
     component: ExampleFeatureInfoCustomNamesValuesComponent,
     data: { label: "feature-info-custom-names-values" }
+  },
+  {
+    path: "map-extra-overzicht",
+    title: "Kaart met extra overzicht | GGC-Home",
+    component: ExampleMapExtraOverzichtComponent,
+    data: { label: "map-extra-overzicht" }
+  },
+  {
+    path: "map-dried-extra-overzicht",
+    title: "Kaart met extra overzicht 3D | GGC-Home",
+    component: ExampleMapDriedExtraOverzichtComponent,
+    data: { label: "map-dried-extra-overzicht" }
   }
 ];
