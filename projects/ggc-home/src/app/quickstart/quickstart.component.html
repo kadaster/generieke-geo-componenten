@@ -57,6 +57,7 @@
       </button>
     </li>
   </ol>
+  <hr />
   @if (currentStep === 1) {
     <img
       src="assets/quickstart/overzicht.png"
@@ -116,12 +117,101 @@
       <ggc-map [webServices]="webServices"></ggc-map>
     </div>
     <p class="nl-paragraph ggc-paragraph">
-      Bekijk de <a href="#">voorbeelden van kaartlagen</a> als je meer wilt
+      Bekijk de <button (click)="goToMapLayerVoorbeelden()">voorbeelden van kaartlagen</button> als je meer wilt
+      weten over de verschillende mogelijkheden.
+    </p>
+  }
+
+  @if (currentStep === 2) {
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">
+      Het tonen van de legenda, met <code>ggc-legend</code>
+    </h2>
+    <p class="nl-paragraph ggc-paragraph">
+      Voor de legenda is de volgende dependency nodig:
+      <code>npm install @kadaster/ggc-legend</code>
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de legenda naast de kaart geplaatst.
+    </p>
+    <pre><code
+      [highlight]="legendHtml"
+      language="html"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Ook hier is de juiste import nodig. Om de legenda op te halen moet de <code>legendUrl</code> van de <code>activeLegend</code> gevuld zijn in de kaart configuratie.
+    </p>
+    <pre><code
+      [highlight]="legendTypescript"
+      language="ts"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Nu zou de legenda zichtbaar moeten zijn:
+    </p>
+
+    <div style="display:flex; height:300px;">
+      <div style="width:250px; overflow-y:auto; background:#f3f3f3; padding:10px;">
+        <ggc-legend></ggc-legend>
+      </div>
+
+      <div style="flex:1;">
+        <ggc-map [webServices]="webServices"></ggc-map>
+      </div>
+    </div>
+
+    <p class="nl-paragraph ggc-paragraph">
+      Bekijk de <button (click)="goToLegendVoorbeelden()">voorbeelden van legenda's</button> als je meer wilt
+      weten over de verschillende mogelijkheden.
+    </p>
+  }
+
+  @if (currentStep === 3) {
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">
+      Zoeken met de <code>ggc-search-location</code>
+    </h2>
+    <p class="nl-paragraph ggc-paragraph">
+      Voor het zoekcomponent is de dependency nodig:
+      <code>npm install @kadaster/ggc-search-location</code>
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      Een belangrijk onderdeel voor de styling is dat er gebruik gemaakt wordt van <a href="https://getbootstrap.com/" target="_blank">Bootstrap<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
+    ></a> en <a href="https://fontawesome.com/" target="_blank">Font Awesome<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
+    ></a>. Deze zijn dus nodig voor het correct laten werken van dit onderdeel. Je kunt ze toevoegen door deze HTML toe te voegen aan bijvoorbeeld de <code>index.html</code>:
+    </p>
+    <pre><code
+      [highlight]="bootstrapFontawesomeHtml"
+      language="html"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de zoekbalk boven de kaart geplaatst.
+    </p>
+    <pre><code
+      [highlight]="searchLocationHtml"
+      language="html"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Ook hier is de juiste import nodig. Met de <code>searchLocationOptions</code> stellen we in dat je na het selecteren van een resultaat inzoomt op het resultaat en dat het gemarkeerd wordt.
+    </p>
+    <pre><code
+      [highlight]="searchLocationTypescript"
+      language="ts"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Nu staat de zoekbalk boven de kaart:
+    </p>
+
+    <ggc-search-location [searchLocationOptions]="searchLocationOptions"></ggc-search-location>
+    <div style="height:300px;">
+        <ggc-map [webServices]="webServices"></ggc-map>
+    </div>
+
+    <p class="nl-paragraph ggc-paragraph">
+      Bekijk de <button (click)="goToZoekenVoorbeelden()">voorbeelden van zoeken</button> als je meer wilt
       weten over de verschillende mogelijkheden.
     </p>
   }
 
   @if (currentStep < 6) {
+    <hr />
     <p class="nl-paragraph ggc-paragraph">
       <button (click)="currentStep = currentStep + 1">
         Ga naar het volgende hoofdstuk

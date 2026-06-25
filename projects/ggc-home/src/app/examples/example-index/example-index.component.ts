@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import {Component, inject, ViewEncapsulation} from "@angular/core";
 import { ExampleSearchLocationComponent } from "../example-search-location/example-search-location/example-search-location.component";
 import { ExampleSnappingBasicComponent } from "../example-snapping/example-snapping-basic/example-snapping-basic.component";
 import { ComponentInfo } from "../component-info.model";
@@ -45,6 +45,7 @@ import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "../example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+import {SessionStorageService} from "../../service/session-storage.service";
 
 interface GroupedCards {
   theme: string;
@@ -116,31 +117,25 @@ export class ExampleIndexComponent {
     new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
     new Example3dBasicComponent().componentInfo
   ];
-
-  private readonly selectedComponentsKey = "selectedComponents";
-  private readonly selectedTagsKey = "selectedTags";
-  private readonly selectedThemesKey = "selectedThemes";
-  private readonly searchTermKey = "searchTerm";
+  private readonly sessionStorageService = inject(SessionStorageService);
 
   constructor() {
-    const storedSelectedThemes = sessionStorage.getItem(this.selectedThemesKey);
+    const storedSelectedThemes = this.sessionStorageService.getSelectedThemes();
     if (storedSelectedThemes) {
       this.selectedThemes = new Set(JSON.parse(storedSelectedThemes));
     }
 
-    const storedSelectedComponents = sessionStorage.getItem(
-      this.selectedComponentsKey
-    );
+    const storedSelectedComponents = this.sessionStorageService.getSelectedComponents();
     if (storedSelectedComponents) {
       this.selectedComponents = new Set(JSON.parse(storedSelectedComponents));
     }
 
-    const storedSelectedTags = sessionStorage.getItem(this.selectedTagsKey);
+    const storedSelectedTags = this.sessionStorageService.getSelectedTags();
     if (storedSelectedTags) {
       this.selectedTags = new Set(JSON.parse(storedSelectedTags));
     }
 
-    const storedSearchTerm = sessionStorage.getItem(this.searchTermKey);
+    const storedSearchTerm = this.sessionStorageService.getSearchTerm();
     if (storedSearchTerm) {
       this.searchTerm = storedSearchTerm;
     }
@@ -199,7 +194,7 @@ export class ExampleIndexComponent {
 
   protected storeSearchTerm(value: string) {
     this.searchTerm = value;
-    sessionStorage.setItem("searchTerm", value);
+    this.sessionStorageService.setSearchTerm(value);
   }
 
   protected toggleTheme(theme: string): void {
@@ -209,10 +204,7 @@ export class ExampleIndexComponent {
       this.selectedThemes.add(theme);
     }
     this.selectedThemes = new Set(this.selectedThemes);
-    sessionStorage.setItem(
-      this.selectedThemesKey,
-      JSON.stringify(Array.from(this.selectedThemes))
-    );
+    this.sessionStorageService.setSelectedThemes(Array.from(this.selectedThemes));
   }
 
   protected toggleComponent(component: string): void {
@@ -222,10 +214,7 @@ export class ExampleIndexComponent {
       this.selectedComponents.add(component);
     }
     this.selectedComponents = new Set(this.selectedComponents);
-    sessionStorage.setItem(
-      this.selectedComponentsKey,
-      JSON.stringify(Array.from(this.selectedComponents))
-    );
+    this.sessionStorageService.setSelectedComponents(Array.from(this.selectedComponents));
   }
 
   protected toggleTag(tag: string): void {
@@ -235,10 +224,7 @@ export class ExampleIndexComponent {
       this.selectedTags.add(tag);
     }
     this.selectedTags = new Set(this.selectedTags);
-    sessionStorage.setItem(
-      this.selectedTagsKey,
-      JSON.stringify(Array.from(this.selectedTags))
-    );
+    this.sessionStorageService.setSelectedTags(Array.from(this.selectedTags));
   }
 
   protected resetFilters(): void {
@@ -246,22 +232,22 @@ export class ExampleIndexComponent {
     this.clearThemeFilter();
     this.clearTagFilter();
     this.searchTerm = "";
-    sessionStorage.removeItem(this.searchTermKey);
+    this.sessionStorageService.removeSearchTerm();
   }
 
   protected clearThemeFilter(): void {
     this.selectedThemes = new Set<string>();
-    sessionStorage.removeItem(this.selectedThemesKey);
+    this.sessionStorageService.removeSelectedThemes();
   }
 
   protected clearComponentFilter(): void {
     this.selectedComponents = new Set<string>();
-    sessionStorage.removeItem(this.selectedComponentsKey);
+    this.sessionStorageService.removeSelectedComponents()
   }
 
   protected clearTagFilter(): void {
     this.selectedTags = new Set<string>();
-    sessionStorage.removeItem(this.selectedTagsKey);
+    this.sessionStorageService.removeSelectedTags();
   }
 
   protected filteredCards(exclude?: string): ComponentInfo[] {
