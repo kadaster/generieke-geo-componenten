@@ -16,8 +16,17 @@ import {
 } from "@kadaster/ggc-models";
 
 /**
- * Service die gedelegeerde laagbewerkingen uitvoert op basis van het ServiceType.
  *
+ *  Service die als centrale entrypoint fungeert voor alle laag-gerelateerde acties
+ *  binnen de 3D viewer.
+ *
+ *  Deze service:
+ *  - Verdeelt acties naar de juiste concrete layer services (GeoJSON, 3D Tiles, WMTS);
+ *  - Houdt configuraties van alle geladen webservices bij;
+ *  - Combineert layer change events uit alle onderliggende services;
+ *  - Beheert zichtbaarheid van lagen;
+ *  - Emit legend events bij toevoegen/verwijderen van lagen;
+ *  - Biedt utility functies om layer metadata op te halen (titel, type, legend, enabled status).
  * Deze service bepaalt welke specifieke laagservice moet worden aangeroepen
  * voor het verversen of verwijderen van lagen.
  */
@@ -48,6 +57,11 @@ export class GgcSharedLayerService {
     });
   }
 
+  /**
+   * Laadt een lijst van webservices en initialiseert hun lagen.
+   *
+   * @param services Array van {@link Webservice}
+   */
   loadWebservices(services: Webservice[]) {
     for (const service of services) {
       this.layerConfigurations.push(service);
@@ -74,6 +88,11 @@ export class GgcSharedLayerService {
     });
   }
 
+  /**
+   * Geeft een observable die alle layer change events emit.
+   *
+   * @returns Observable met {@link CesiumLayerChangedEvent}
+   */
   getLayerChangedObservable(): Observable<CesiumLayerChangedEvent> {
     return merge(
       this.geoJsonLayerService.getLayerChangedObservable(),
@@ -83,14 +102,29 @@ export class GgcSharedLayerService {
     );
   }
 
+  /**
+   * Observable voor legend toegevoegd events.
+   *
+   * @returns Observable met {@link LegendAddedEvent}
+   */
   getLegendAddedObservable() {
     return this.legendAddedSubject.asObservable();
   }
 
+  /**
+   * Observable voor legend verwijderd events.
+   *
+   * @returns Observable met {@link LegendRemovedEvent}
+   */
   getLegendRemovedObservable() {
     return this.legendRemovedSubject.asObservable();
   }
 
+  /**
+   * Haalt alle actieve legendes op van zichtbaar gemaakte lagen.
+   *
+   * @returns Array van {@link LayerLegend}
+   */
   getCurrentActiveLegends(): LayerLegend[] {
     const result: LayerLegend[] = [];
     this.layerConfigurations.forEach((service) => {
@@ -104,10 +138,23 @@ export class GgcSharedLayerService {
     return result;
   }
 
+  /**
+   * Voegt een laag toe.
+   *
+   * @param type Type van de service ({@link Webservice3DType})
+   * @param layer Layer configuratie
+   */
   addLayer(type: Webservice3DType, layer: LayerConfig) {
-    this.determineLayerServiceFromType(type).addLayer(layer.url!, layer);
+    if (layer.url) {
+      this.determineLayerServiceFromType(type).addLayer(layer.url, layer);
+    }
   }
 
+  /**
+   * Verwijdert een laag op basis van layerId.
+   *
+   * @param layerId ID van de laag
+   */
   removeLayer(layerId: string): void {
     const service = this.determineLayerService(layerId);
     if (service) {
@@ -115,6 +162,13 @@ export class GgcSharedLayerService {
     }
   }
 
+  /**
+   * Toggle de zichtbaarheid van een laag.
+   * Een laag wordt verwijderd als deze niet meer zichtbaar is en opnieuw toegevoegd mocht deze weer zichtbaar zijn.
+   *
+   * @param layerId ID van de laag
+   * @returns `true` indien zichtbaar na togglen
+   */
   toggleVisibility(layerId: string): boolean {
     if (this.isVisible(layerId)) {
       this.removeLayer(layerId);
@@ -124,6 +178,12 @@ export class GgcSharedLayerService {
     return this.isVisible(layerId);
   }
 
+  /**
+   * Controleert of een laag zichtbaar is.
+   *
+   * @param layerId ID van de laag
+   * @returns `true` indien zichtbaar
+   */
   isVisible(layerId: string): boolean {
     return (
       this.wmtsLayerService.isVisible(layerId) ||
@@ -132,14 +192,33 @@ export class GgcSharedLayerService {
     );
   }
 
+  /**
+   * Haalt de titel van een laag op.
+   *
+   * @param layerId ID van de laag
+   * @returns Titel of undefined
+   */
   getTitle(layerId: string): string | undefined {
     return this.getLayerConfig(layerId)?.title;
   }
 
+  /**
+   * Haalt de enabled status van een laag op.
+   * Enabled werkt momenteel alleen met {@link cameraValuesShowFunction} op een {@link TilesetConfig}
+   *
+   * @param layerId ID van de laag
+   * @returns Boolean of undefined
+   */
   getEnabled(layerId: string): boolean | undefined {
     return this.determineLayerService(layerId)?.getEnabled(layerId);
   }
 
+  /**
+   * Bepaalt het type van een laag.
+   *
+   * @param layerId ID van de laag
+   * @returns {@link Webservice3DType} of undefined
+   */
   getTypeOfLayer(layerId: string): Webservice3DType | undefined {
     return this.layerConfigurations.find((service) => {
       return service.layers.some((layer) => {

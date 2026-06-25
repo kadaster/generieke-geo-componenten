@@ -18,6 +18,15 @@ import { Subject } from "rxjs";
 import { DrawEvent, SelectionConfig } from "../model/interfaces";
 import { CoreSelectionService } from "./core-selection.service";
 
+/**
+ * Service voor het tekenen van objecten (punten en SVG’s) in de Cesium viewer.
+ *
+ * Deze service:
+ * - Regelt gebruikersinteractie voor tekenen via muisklikken;
+ * - Ondersteunt meerdere teken-typen ({@link DrawingType});
+ * - Houdt bij welke entities zijn toegevoegd;
+ * - Emit {@link DrawEvent} events bij elke tekenactie;
+ */
 @Injectable({
   providedIn: "root"
 })
@@ -49,6 +58,14 @@ export class GgcDrawingService {
     });
   }
 
+  /**
+   * Start een tekenmodus voor een specifiek type.
+   *
+   * Tijdens tekenen wordt de LEFT_CLICK selectie tijdelijk uitgeschakeld
+   * om conflicten te voorkomen.
+   *
+   * @param type Type te tekenen object ({@link DrawingType})
+   */
   public startDraw(type: DrawingType) {
     // Verwijder de LEFT_CLICK inputAction uit de SelectionService, zodat deze niet conflicteert met het tekenen
     this.leftClickFromSelectionService = this.coreSelectionService.getSelection(
@@ -72,6 +89,9 @@ export class GgcDrawingService {
     );
   }
 
+  /**
+   * Stopt de tekenmodus en herstelt selectiegedrag.
+   */
   public stopDraw() {
     this.screenSpaceEventHandler?.removeInputAction(
       ScreenSpaceEventType.LEFT_CLICK
@@ -84,18 +104,37 @@ export class GgcDrawingService {
     }
   }
 
+  /**
+   * Verwijdert alle getekende entities uit de viewer.
+   */
   public removeAllDrawings() {
     this.drawEntityIds.forEach((id) => this.viewer?.entities.removeById(id));
   }
 
+  /**
+   * Zet custom tekenstijlen.
+   *
+   * @param drawStyles Map met stijlen per {@link DrawingType}
+   */
   public setDrawStyles(drawStyles: Map<DrawingType, PointGraphics | string>) {
     this.drawStyles = drawStyles;
   }
 
+  /**
+   * Geeft een observable voor draw events.
+   *
+   * @returns Observable met {@link DrawEvent}
+   */
   public getDrawEventObservable() {
     return this.drawEventSubject.asObservable();
   }
 
+  /**
+   * Voegt een tekening toe op een specifieke locatie.
+   *
+   * @param type Type te tekenen object
+   * @param earthPosition Cartesian3 positie in de Cesium scene
+   */
   public addDrawing(type: DrawingType, earthPosition: Cartesian3) {
     let drawnEntity;
     if (type === DrawingType.Point) {

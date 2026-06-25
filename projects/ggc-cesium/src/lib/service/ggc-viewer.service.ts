@@ -8,12 +8,28 @@ import {
 import { CameraValues } from "../model/interfaces";
 import { Cartesian3, Rectangle } from "@cesium/engine";
 
+/**
+ * Service met helper-functionaliteit rondom de Cesium viewer.
+ *
+ * Deze service biedt:
+ * - Toegang tot de huidige {@link CameraValues};
+ * - Berekeningen voor extent, center en kijkafstand;
+ * - Hulpfuncties voor het werken met GeoJSON extents.
+ *
+ * Wordt voornamelijk gebruikt door viewer-logica zoals camera positioning
+ * en "zoom-to-fit" functionaliteit.
+ */
 @Injectable({
   providedIn: "root"
 })
 export class GgcViewerService {
-  private coreViewerService = inject(CoreViewerService);
+  private readonly coreViewerService = inject(CoreViewerService);
 
+  /**
+   * Haalt de huidige camerawaarden op van de viewer.
+   *
+   * @returns De huidige {@link CameraValues} of `undefined` wanneer er nog geen viewer beschikbaar is
+   */
   getCurrentCameraValues(): CameraValues | undefined {
     const viewer = this.coreViewerService.getViewer();
     if (viewer) {
@@ -22,6 +38,12 @@ export class GgcViewerService {
     return undefined;
   }
 
+  /**
+   * Berekent het middelpunt van een gegeven extent.
+   *
+   * @param extent De {@link Rectangle} waarvoor het centrum berekend wordt
+   * @returns Het centrum als {@link Cartesian3}
+   */
   getCenter(extent: Rectangle): Cartesian3 {
     return Cartesian3.fromDegrees(
       (extent.west + extent.east) / 2,
@@ -29,6 +51,15 @@ export class GgcViewerService {
     );
   }
 
+  /**
+   * Berekent een geschikte kijkafstand voor een extent.
+   *
+   * De afstand is gebaseerd op de grootste dimensie (breedte/hoogte)
+   * en wordt begrensd door {@link MIN_VIEWDISTANCE} en {@link MAX_VIEWDISTANCE}.
+   *
+   * @param extent De {@link Rectangle} waarvoor de afstand berekend wordt
+   * @returns De berekende afstand in meters
+   */
   calculateDistance(extent: Rectangle): number {
     const left = Cartesian3.fromDegrees(
       extent.west,
@@ -54,6 +85,12 @@ export class GgcViewerService {
     );
   }
 
+  /**
+   * Berekent de bounding box (extent) van een GeoJSON object.
+   *
+   * @param geojson GeoJSON string
+   * @returns De berekende {@link Rectangle}
+   */
   getExtent(geojson: string): Rectangle {
     let extent = new Rectangle(90, 90, -90, -90);
     const json = JSON.parse(geojson);
@@ -78,10 +115,10 @@ export class GgcViewerService {
 
   private getNewExtent(extent1: Rectangle, extent2: Rectangle): Rectangle {
     return new Rectangle(
-      extent1.west < extent2.west ? extent1.west : extent2.west,
-      extent1.south < extent2.south ? extent1.south : extent2.south,
-      extent1.east > extent2.east ? extent1.east : extent2.east,
-      extent1.north > extent2.north ? extent1.north : extent2.north
+      Math.min(extent1.west, extent2.west),
+      Math.min(extent1.south, extent2.south),
+      Math.max(extent1.east, extent2.east),
+      Math.max(extent1.north, extent2.north)
     );
   }
 }

@@ -49,23 +49,59 @@ import { CoreSelectionService } from "../service/core-selection.service";
 import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 
 //@ts-ignore
-window.CESIUM_BASE_URL = "/assets/cesium/";
+globalThis.CESIUM_BASE_URL = "/assets/cesium/";
 
+/**
+ * 3D viewer component op basis van Cesium.
+ *
+ * Dit component is de 3D kaartviewer binnen GGC en is verantwoordelijk voor:
+ * - Initialiseren en configureren van de Cesium {@link Viewer};
+ * - Laden en beheren van verschillende laagtypes (3D tiles, WMTS, GeoJSON, webservices);
+ * - Afhandelen van camerabewegingen en emitten van {@link CameraValues};
+ * - Ondersteunen van externe camera-aansturing via {@link CameraOptions};
+ * - Instellen van licht, terrain en viewer opties;
+ * - Keyboard-interactie (arrow keys voor camera rotatie).
+ */
 @Component({
   selector: "ggc-cesium-viewer",
   templateUrl: "./ggc-viewer.component.html",
   styleUrls: ["./ggc-viewer.component.scss"]
 })
 export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Referentie naar het DOM element waarin de Cesium viewer wordt gerenderd.
+   */
   @ViewChild("cesiumViewer") cesiumViewer!: ElementRef;
 
+  /**
+   * Event dat wordt geëmit zodra de viewer volledig geïnitialiseerd is.
+   */
   @Output() ready: EventEmitter<null> = new EventEmitter<null>();
+
+  /**
+   * Event dat camerawaarden emit bij veranderingen.
+   */
   @Output() cameraEvent: EventEmitter<CameraValues> =
     new EventEmitter<CameraValues>();
+
+  /**
+   * Event dat wordt geëmit bij een WebGL context fout.
+   */
   @Output() webglErrorEvent: EventEmitter<Event> = new EventEmitter<Event>();
 
+  /**
+   * Configuratie voor de viewer, zoals terrain, UI instellingen en animatie.
+   */
   @Input() viewerOptions: ViewerOptions;
+
+  /**
+   * ARIA rol voor toegankelijkheid (default: "application").
+   */
   @Input() ariaRole = "application";
+
+  /**
+   * ARIA label voor toegankelijkheid (default: "viewer").
+   */
   @Input() ariaLabel = "viewer";
 
   protected cesiumElementId = "CesiumContainerId";
@@ -88,11 +124,19 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private _webServices: Webservice[];
   private isInitialized = false;
 
+  /**
+   * CSS display waarde voor het tonen/verbergen van het logo.
+   */
   @HostBinding("style.--displayLogo")
   get displayLogo(): string {
     return this.pHideLogo ? "none" : "block";
   }
 
+  /**
+   * Lijst met webservices die geladen moeten worden.
+   *
+   * @param webservices Array van {@link Webservice}
+   */
   @Input()
   set webServices(webservices: Webservice[]) {
     this._webServices = webservices;
@@ -101,21 +145,43 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Verbergt het logo indien `true`.
+   *
+   * @param hideLogo Flag om logo te tonen/verbergen
+   */
   @Input()
   set hideLogo(hideLogo: boolean) {
     this.pHideLogo = hideLogo;
   }
 
+  /**
+   * Camera configuratie voor het positioneren van de camera.
+   *
+   * @param cameraOptions {@link CameraOptions}
+   */
   @Input()
   set cameraOptions(cameraOptions: CameraOptions) {
     this.flyTo(cameraOptions);
   }
 
+  /**
+   * Configuraties voor GeoJSON lagen.
+   * Dit is aanvullend naast de opgegeven webServices.
+   *
+   * @param geojsonConfigs Array van {@link GeoJsonConfig}
+   */
   @Input()
   set geoJsonConfigs(geojsonConfigs: GeoJsonConfig[]) {
     this.geoJsonLayerService.setConfigs(geojsonConfigs);
   }
 
+  /**
+   * Configuraties voor 3D tilesets.
+   * Dit is aanvullend naast de opgegeven webServices.
+   *
+   * @param tilesetConfigs Array van {@link TilesetConfig}
+   */
   @Input()
   set tilesetConfigs(tilesetConfigs: TilesetConfig[]) {
     this.tiles3DService.setConfigs(tilesetConfigs);
@@ -314,6 +380,12 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Bepaalt het type camera opties.
+   *
+   * @param cameraOptions {@link CameraOptions}
+   * @returns {@link CameraOptionsType}
+   */
   public getOptionsType(cameraOptions: CameraOptions): CameraOptionsType {
     let type = CameraOptionsType.None;
     if (cameraOptions.hasOwnProperty("geojson")) {
@@ -326,10 +398,18 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     return type;
   }
 
+  /**
+   * Zet de focus op het viewer element.
+   */
   getFocus() {
     this.cesiumViewer.nativeElement.focus();
   }
 
+  /**
+   * Keyboard handler voor camera interactie met arrow keys.
+   *
+   * @param event Keyboard event
+   */
   onKeyDown(event: KeyboardEvent) {
     const key = event.key;
 

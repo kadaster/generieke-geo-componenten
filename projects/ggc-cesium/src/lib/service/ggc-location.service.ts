@@ -4,6 +4,17 @@ import { Cartesian3, Entity, HeightReference, Rectangle } from "@cesium/engine";
 import { cameraUtils } from "../utils/camera-utils";
 import { CameraOptions } from "../model/interfaces";
 
+/**
+ * Service voor locatie-gerelateerde functionaliteit binnen de Cesium viewer.
+ *
+ * Deze service biedt:
+ * - Functionaliteit om de camera naar een specifieke geografische locatie te bewegen;
+ * - Ondersteuning voor zoomen naar een bounding box;
+ * - Het plaatsen en verwijderen van een visuele marker op de kaart;
+ * - Configuratie van een custom marker (SVG).
+ *
+ * Wordt onder andere gebruikt door zoek- en geolocatiecomponenten.
+ */
 @Injectable({
   providedIn: "root"
 })
@@ -16,6 +27,15 @@ export class GgcLocationService {
     this.markerSvg = this.getSvg();
   }
 
+  /**
+   * Zoomt de viewer naar de huidige geografische locatie.
+   *
+   * Gebruikt een 'lookAtPosition' camera configuratie om de camera
+   * gericht naar de opgegeven coordinaten te bewegen.
+   *
+   * @param coordinates De geolocation coordinates (latitude/longitude)
+   * @returns Promise die resolved wanneer de animatie voltooid is
+   */
   async zoomToCurrentLocation(
     coordinates: GeolocationCoordinates
   ): Promise<void> {
@@ -31,6 +51,11 @@ export class GgcLocationService {
     }
   }
 
+  /**
+   * Zoomt de viewer naar een bounding box.
+   *
+   * @param bbox Array met [west, south, east, north] in graden
+   */
   zoomToBBox(bbox: number[]) {
     const viewer = this.coreViewerService.getViewer();
     if (!viewer) return;
@@ -44,6 +69,13 @@ export class GgcLocationService {
     });
   }
 
+  /**
+   * Plaatst een marker op de opgegeven locatie.
+   *
+   * Indien er al een marker bestaat, wordt deze eerst verwijderd.
+   *
+   * @param coordinates De geolocation coordinates
+   */
   addLocationMark(coordinates: GeolocationCoordinates): void {
     this.removeLocationMark();
     this.marked = new Entity({
@@ -59,6 +91,9 @@ export class GgcLocationService {
     this.coreViewerService.getViewer()?.entities.add(this.marked);
   }
 
+  /**
+   * Verwijdert de huidige locatie marker van de kaart.
+   */
   removeLocationMark(): void {
     if (this.marked !== undefined) {
       this.coreViewerService.getViewer()?.entities.remove(this.marked);
@@ -66,6 +101,11 @@ export class GgcLocationService {
     }
   }
 
+  /**
+   * Zet een custom SVG voor de locatie marker.
+   *
+   * @param markerSvg SVG string (bijv. data URL)
+   */
   public setMarkerSvg(markerSvg: string) {
     this.markerSvg = markerSvg;
   }
