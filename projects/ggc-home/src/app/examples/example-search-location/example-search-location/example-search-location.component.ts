@@ -1,10 +1,10 @@
-import { Component } from "@angular/core";
+import {Component, inject, OnInit} from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent
 } from "@kadaster/ggc-map";
 import {
-  GgcSearchLocationComponent,
+  GgcSearchLocationComponent, PdokLocationApiService, SearchCollection,
   SearchComponentEvent,
   SearchCurrentLocation,
   SearchCurrentLocationType,
@@ -15,6 +15,7 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import {take} from "rxjs/operators";
 
 @Component({
   selector: "app-example-search-location",
@@ -26,12 +27,12 @@ import { Tags } from "../../tags.enum";
   ],
   templateUrl: "./example-search-location.component.html"
 })
-export class ExampleSearchLocationComponent extends ExampleFormatComponent {
+export class ExampleSearchLocationComponent extends ExampleFormatComponent implements OnInit{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location",
     title: "Locatie zoeken",
-    introduction: "Zoek een adres, woonplaats of huidige locatie.",
+    introduction: "Zoek een adres, woonplaats of huidige locatie. Dit component maakt gebruik van de PDOK Locatie API. Voor dit voorbeeld wordt er gefilterd op adres, gemeente, woonplaats en provincie.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.SEARCH, Tags.LOCATION],
@@ -57,8 +58,37 @@ export class ExampleSearchLocationComponent extends ExampleFormatComponent {
     markResult: true
   } as SearchLocationOptions;
 
+  private readonly pdokLocationApiService = inject(PdokLocationApiService);
+
   constructor() {
     super();
+  }
+
+  ngOnInit() {
+    this.pdokLocationApiService.collectionsLoaded$
+      .pipe(take(1))
+      .subscribe((collectionsResult) => {
+        const kvnlCollections = new Map<string, number>([
+          ['adres', 0.1],
+          ['gemeentegebied', 1],
+          ['provinciegebied', 1],
+          ['woonplaats', 0.5]
+        ]);
+        this.pdokLocationApiService.setCustomCollections(
+          collectionsResult.collections
+            .filter((collection) =>
+              Array.from(kvnlCollections.keys()).includes(collection.id)
+            )
+            .map(
+              (collection) =>
+                ({
+                  id: collection.id,
+                  version: collection.version,
+                  relevance: kvnlCollections.get(collection.id) ?? 0.5
+                }) as SearchCollection
+            )
+        );
+      });
   }
 
   logSearchComponentEvents(searchComponentEvent: SearchComponentEvent) {
