@@ -36,8 +36,9 @@ export class Example3dDatasetSwitcherComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-dataset-switcher",
-    title: "3D kaart met dataset switcher",
-    introduction: "Weergave van een 3D kaart met een dataset-switcher",
+    title: "Dataset Wisselen (3D)",
+    introduction:
+      "Eén of meerdere kaartlagen verwisselen in een 3D kaart met een grafische knop.",
     components: [Components.GGC_DATASET_SWITCHER],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DRIED, Tags.DATASET, Tags.LAYER],

@@ -21,10 +21,18 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld zijn diverse kaartlagen toegevoegd aan de 3D kaart. Met
-      de dataset tree kunnen deze kaartlagen aan- en uitgezet worden. De
-      legenda's van de zichtbare lagen worden weergeven. Let op: de 3D gebouwen
-      heeft geen legenda gekoppeld.
+      De legenda wordt automatisch bijgewerkt als er kaartlagen in de
+      kaartcomponent (ggc-cesium-viewer) zichtbaar worden of verdwijnen. Als
+      kaartlagen worden aan/-uitgezet (met ggc-dataset-tree), dan wordt de
+      legenda ook automatisch bijgewerkt. De volgorde van de legenda's kan
+      ingesteld worden met de <code>legendIndex</code>. Default worden legenda's
+      bovenaan toegevoegd.
+    </p>
+    <p>
+      <strong>Let op:</strong> automatisch bijwerken van de legenda werkt alleen
+      als de kaartlagen zijn ingesteld met een
+      <a routerLink="/layer-json-config">JSON-configuratie</a>. De kaartlaag 3D
+      gebouwen heeft geen legenda.
     </p>
   </div>
 

@@ -34,8 +34,9 @@ export class Example3dDatasetTreeLegendComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-dataset-tree-legend",
-    title: "3D kaart met dataset tree en legenda",
-    introduction: "Weergave van een 3D kaart met een dataset-tree en legenda",
+    title: "Legenda automatisch bijwerken na kaartlaag keuze (3D)",
+    introduction:
+      "Toon de legenda van één of meer kaartlagen in de 3D kaart. Actieve kaartlagen worden automatisch zichtbaar in de legenda.",
     components: [Components.GGC_DATASET_TREE, Components.GGC_LEGEND],
     theme: [Themes.KAARTWEERGAVE_KIEZEN],
     tags: [Tags.DRIED, Tags.DATASET, Tags.LEGEND, Tags.LAYER],

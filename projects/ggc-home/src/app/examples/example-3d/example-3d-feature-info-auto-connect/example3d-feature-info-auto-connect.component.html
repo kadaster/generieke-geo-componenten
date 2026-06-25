@@ -18,17 +18,18 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld zijn features te selecteren en die worden automatisch
-      getoond in het feature-info component. Het feature-info component start
-      automatisch een selectie die werkt met een enkele klik en een blauwe
-      highlight.
+      Dit voorbeeld toont de gebouwen en terreinen van de 3D Basisvoorziening.
+      Na klikken in de kaart wordt de informatie opgehaald van beide kaartlagen.
+      De informatie van de gekozen objecten wordt getoond en de objecten worden
+      op de kaart blauw gemarkeerd.
     </p>
     <p>
-      Mocht je de selectie-instellingen willen aanpassen, dan moet je zelf een
-      selectie starten en autoStartSelect uitzetten. Zie hiervoor het andere 3d
-      voorbeeld met meerdere selecties.
+      Voor het handmatig aanpassen van de selectie instellingen, bekijk het
+      voorbeeld met
+      <a [routerLink]="['/example-3d-feature-info']"
+        >meerdere selecties op een 3D kaart</a
+      >.
     </p>
-    <p>Feature info werkt op zowel 3D tiles als op geojson lagen.</p>
   </div>
 
   <div page-functionality>

@@ -36,8 +36,9 @@ export class Example3dSearchComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-search",
-    title: "3D kaart met zoek component",
-    introduction: "3D kaart met een zoekfunctie en huidige locatie.",
+    title: "Locatie zoeken (3D)",
+    introduction:
+      "Zoek een adres, woonplaats of huidige locatie in een 3D kaart.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.DRIED, Tags.SEARCH, Tags.LOCATION],

@@ -25,8 +25,9 @@ export class Example3dLayerWmtsComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-wmts",
-    title: "3D Kaartlaag toevoegen: WMTS",
-    introduction: "Voeg een WMTS laag toe aan de 3D kaart.",
+    title: "Kaartlaag toevoegen: WMTS (3D, raster)",
+    introduction:
+      "Voeg een afbeelding als laag toe aan de 3D kaart met Web Map Tile Service (WMTS).",
     components: [Components.GGC_3D],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.DRIED],

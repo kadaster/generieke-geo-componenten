@@ -13,20 +13,27 @@ import {
 } from "@kadaster/ggc-cesium";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { HttpClient } from "@angular/common/http";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-example-3d-layer-3d-tiles",
   templateUrl: "./example3d-layer-3d-tiles.component.html",
   styleUrl: "./example3d-layer-3d-tiles.component.scss",
-  imports: [GgcViewerComponent, GgcControlsComponent, ExampleFormatComponent],
+  imports: [
+    GgcViewerComponent,
+    GgcControlsComponent,
+    ExampleFormatComponent,
+    RouterLink
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class Example3dLayer3dTilesComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-3d-tiles",
-    title: "3D Kaartlaag toevoegen: OGC API 3D Tiles",
-    introduction: "Voeg een 3D laag toe aan de kaart met OGC API 3D Tiles.",
+    title: "Kaartlaag toevoegen: OGC API 3D GeoVolumes",
+    introduction:
+      "Voeg een 3D laag toe aan de kaart met OGC API 3D GeoVolumes.",
     components: [Components.GGC_3D],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.DRIED, Tags.OGC_API],

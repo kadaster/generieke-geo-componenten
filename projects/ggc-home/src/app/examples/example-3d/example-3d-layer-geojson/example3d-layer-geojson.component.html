@@ -19,16 +19,28 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld zijn 2 geojson lagen toegevoegd bovenop de
-      achtergrondkaart. De rode lijnen zijn de gemeentelijnen, waarbij de rode
-      kleur is toegevoegd in de configuratie. De roze labels zijn BAG
-      terugmeldingen, waarbij ook de style is ingesteld in de configuratie. De
-      BGT meldingen zijn de rode pins. Deze rode pins is een SVG afbeelding die
-      is ingeladen via de geoJsonConfig die gekoppeld is via het layerId. Deze
-      entitiesFunction kan uiteraard worden uitgebreid met extra logica waardoor
-      verschillende SVGs gekoppeld kunnen worden aan specifieke properties van
-      het object.
-      <br />
+      In dit voorbeeld zijn de gemeentegrenzen, BAG en BGT terugmeldingen als
+      lagen toegevoegd aan de kaart. Deze kaartlagen worden in GeoJSON-formaat
+      door ggc-map opgevraagd bij een Web Feature Service (WFS).
+    </p>
+    <p>In dit voorbeeld zijn de drie kaartlagen als volgt ingesteld:</p>
+    <ul>
+      <li>
+        gemeentegrenzen: rode lijnen. Stijl ingesteld in de kaartconfiguratie
+        json.
+      </li>
+      <li>
+        BAG terugmeldingen: roze labels. Stijl ingesteld in de kaartconfiguratie
+        json.
+      </li>
+      <li>
+        BGT terugmeldingen: rode pins. SVG afbeeldingen ingeladen via de
+        geoJsonConfig, die gekoppeld is aan het layerId. De
+        <code>entitiesFunction</code> kan uitgebreid worden met extra logica, om
+        de SVG's te koppelen aan specifieke eigenschappen (properties) van de
+        objecten.
+      </li>
+    </ul>
   </div>
 
   <div page-functionality>

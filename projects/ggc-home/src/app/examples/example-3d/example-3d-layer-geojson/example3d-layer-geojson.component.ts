@@ -5,7 +5,6 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import {
   CameraOptions,
-  cameraOptionsTorentjeDenHaag,
   GeoJsonConfig,
   GgcControlsComponent,
   GgcViewerComponent,
@@ -32,8 +31,8 @@ export class Example3dLayerGeojsonComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-geojson",
-    title: "3D Kaartlaag toevoegen: Geojson",
-    introduction: "Voeg een Geojson laag toe aan de 3D kaart.",
+    title: "Kaartlaag toevoegen: JSON-format (GeoJSON, 3D)",
+    introduction: "Voeg een GeoJSON laag toe aan de 3D-kaart.",
     components: [Components.GGC_3D],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.DRIED],
@@ -88,7 +87,10 @@ export class Example3dLayerGeojsonComponent {
   public onCesiumReady() {
     // zoom to Torentje
     setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
+      this.cameraOptions = {
+        cameraPosition: { lat: 52.38277, lon: 4.64038, alt: 12776.57232 },
+        orientation: { heading: 2, pitch: -90, roll: 0 }
+      };
     });
   }
 }

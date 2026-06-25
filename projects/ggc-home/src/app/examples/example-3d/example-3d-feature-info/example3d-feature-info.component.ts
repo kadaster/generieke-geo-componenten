@@ -34,9 +34,9 @@ export class Example3dFeatureInfoComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-feature-info",
-    title: "3D kaart met feature info en meerdere selecties",
+    title: "Objectinformatie weergeven met meerdere selecties (3D)",
     introduction:
-      "3D kaart en een feature info weergave met meerdere selecties.",
+      "Toon informatie over geografische objecten op de 3D kaart met meerdere selecties (feature info).",
     components: [Components.GGC_FEATURE_INFO],
     theme: [Themes.INFORMATIE_OP_KAART],
     tags: [Tags.DRIED, Tags.OBJECTINFO],

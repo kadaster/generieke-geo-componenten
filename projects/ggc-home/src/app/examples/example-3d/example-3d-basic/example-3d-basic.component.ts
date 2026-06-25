@@ -25,7 +25,7 @@ export class Example3dBasicComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-basic",
-    title: "3D kaart",
+    title: "3D kaart tonen",
     introduction: "Toon een 3D kaart.",
     components: [Components.GGC_3D],
     theme: [Themes.KAARTLAGEN],
