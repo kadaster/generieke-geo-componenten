@@ -1,5 +1,5 @@
 {
-  "name": "@kadaster/ggc-cesium",
+  "name": "@kadaster/ggc-map-3d",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
@@ -14,7 +14,7 @@
     "@kadaster/ggc-models": "^3.0.0"
   },
   "publishConfig": {
-    "directory": "../../dist/ggc-cesium",
+    "directory": "../../dist/ggc-map-3d",
     "access": "public"
   },
   "repository": {

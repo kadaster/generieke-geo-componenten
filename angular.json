@@ -3,24 +3,24 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ggc-cesium": {
+    "ggc-map-3d": {
       "projectType": "library",
-      "root": "projects/ggc-cesium",
-      "sourceRoot": "projects/ggc-cesium/src",
+      "root": "projects/ggc-map-3d",
+      "sourceRoot": "projects/ggc-map-3d/src",
       "prefix": "ggc",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "options": {
-            "tsConfig": "projects/ggc-cesium/tsconfig.lib.json",
-            "project": "projects/ggc-cesium/ng-package.json"
+            "tsConfig": "projects/ggc-map-3d/tsconfig.lib.json",
+            "project": "projects/ggc-map-3d/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ggc-cesium/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ggc-map-3d/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ggc-cesium/tsconfig.lib.json"
+              "tsConfig": "projects/ggc-map-3d/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -37,8 +37,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/ggc-cesium/**/*.ts",
-              "projects/ggc-cesium/**/*.html"
+              "projects/ggc-map-3d/**/*.ts",
+              "projects/ggc-map-3d/**/*.html"
             ]
           }
         }

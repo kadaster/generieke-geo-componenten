@@ -9,7 +9,7 @@ import {
   GgcViewerComponent,
   ViewerOptions,
   Webservice
-} from "@kadaster/ggc-cesium";
+} from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { HttpClient } from "@angular/common/http";
 import { Tags } from "../../tags.enum";

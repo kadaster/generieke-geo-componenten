@@ -25,10 +25,10 @@ export class GgcDatasetTreeConnectService {
    */
   private loadCesiumModule(): Promise<CesiumModule> {
     this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-cesium"
+      /* @vite-ignore */ "@kadaster/ggc-map-3d"
     ).catch((e) => {
       console.debug(
-        `Autoconnect ggc-dataset-tree met ggc-cesium is niet gelukt: ${e}`,
+        `Autoconnect ggc-dataset-tree met ggc-map-3d is niet gelukt: ${e}`,
         e
       );
       throw e;
@@ -63,7 +63,7 @@ export class GgcDatasetTreeConnectService {
       return this.ggcCesiumSharedLayerService;
     } catch (e) {
       console.debug(
-        `Autoconnect ggc-dataset-tree met ggc-cesium is niet gelukt (GgcSharedLayerService): ${e}`,
+        `Autoconnect ggc-dataset-tree met ggc-map-3d is niet gelukt (GgcSharedLayerService): ${e}`,
         e
       );
       return undefined;

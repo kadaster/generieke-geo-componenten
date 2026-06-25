@@ -63,7 +63,7 @@ globalThis.CESIUM_BASE_URL = "/assets/cesium/";
  * - Keyboard-interactie (arrow keys voor camera rotatie).
  */
 @Component({
-  selector: "ggc-cesium-viewer",
+  selector: "ggc-map-3d-viewer",
   templateUrl: "./ggc-viewer.component.html",
   styleUrls: ["./ggc-viewer.component.scss"]
 })

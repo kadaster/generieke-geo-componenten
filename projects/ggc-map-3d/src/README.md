@@ -1,4 +1,4 @@
-# Generieke Geo Componenten - ggc-cesium
+# Generieke Geo Componenten - ggc-map-3d
 
 De Generieke Geo Componenten (GGC) helpen softwareontwikkelaars om snel een kaartviewer te ontwikkelen.
 

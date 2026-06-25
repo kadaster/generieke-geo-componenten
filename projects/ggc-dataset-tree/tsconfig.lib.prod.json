@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declarationMap": false,
     "paths": {
-      "@kadaster/ggc-cesium": [
+      "@kadaster/ggc-map-3d": [
         "projects/ggc-dataset-tree/src/typings/dataset-tree-shims.d.ts"
       ],
       "@kadaster/ggc-map": [

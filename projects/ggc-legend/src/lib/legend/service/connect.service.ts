@@ -25,7 +25,7 @@ export class GgcLegendConnectService {
    */
   private loadCesiumModule(): Promise<CesiumModule> {
     this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-cesium"
+      /* @vite-ignore */ "@kadaster/ggc-map-3d"
     ).catch((e) => {
       throw e;
     });

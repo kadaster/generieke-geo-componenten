@@ -20,7 +20,7 @@ import { NgClass } from "@angular/common";
  * - de camera terugzetten naar een standaard "look at" positie.
  */
 @Component({
-  selector: "ggc-cesium-controls",
+  selector: "ggc-map-3d-controls",
   templateUrl: "./ggc-controls.component.html",
   styleUrls: ["./ggc-controls.component.scss"],
   imports: [NgClass]

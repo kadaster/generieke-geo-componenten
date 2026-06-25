@@ -75,7 +75,7 @@ export class GgcFeatureInfoConnectService {
    */
   private loadCesiumModule(): Promise<GgcCesiumModule> {
     this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-cesium"
+      /* @vite-ignore */ "@kadaster/ggc-map-3d"
     ).catch((e) => {
       throw e;
     });

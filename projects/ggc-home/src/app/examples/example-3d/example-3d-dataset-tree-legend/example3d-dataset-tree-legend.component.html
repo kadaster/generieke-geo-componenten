@@ -22,7 +22,7 @@
     </p>
     <p>
       De legenda wordt automatisch bijgewerkt als er kaartlagen in de
-      kaartcomponent (ggc-cesium-viewer) zichtbaar worden of verdwijnen. Als
+      kaartcomponent (ggc-map-3d-viewer) zichtbaar worden of verdwijnen. Als
       kaartlagen worden aan/-uitgezet (met ggc-dataset-tree), dan wordt de
       legenda ook automatisch bijgewerkt. De volgorde van de legenda's kan
       ingesteld worden met de <code>legendIndex</code>. Default worden legenda's
@@ -41,9 +41,9 @@
     <div class="row">
       <div class="col-xl-3 col-md-4 col-sm-12">
         <div class="cesium-controls">
-          <span><b>Cesium controls</b></span>
+          <span><b>3D controls</b></span>
           <br />
-          <ggc-cesium-controls
+          <ggc-map-3d-controls
             [downIcon]="'fas fa-chevron-down'"
             [upIcon]="'fas fa-chevron-up'"
             [leftIcon]="'fas fa-chevron-left'"
@@ -51,7 +51,7 @@
             [minusIcon]="'fas fa-minus'"
             [plusIcon]="'fas fa-plus'"
             [defaultCameraPosition]="'far fa-eye'"
-          ></ggc-cesium-controls>
+          ></ggc-map-3d-controls>
         </div>
         <ggc-dataset-tree
           [viewerType]="viewerType"
@@ -63,12 +63,12 @@
       </div>
       <div class="col-xl-9 col-md-8 col-sm-12">
         <div class="map-container">
-          <ggc-cesium-viewer
+          <ggc-map-3d-viewer
             [viewerOptions]="viewerOptions"
             [cameraOptions]="cameraOptions"
             (ready)="onCesiumReady()"
             [webServices]="webService"
-          ></ggc-cesium-viewer>
+          ></ggc-map-3d-viewer>
         </div>
       </div>
     </div>

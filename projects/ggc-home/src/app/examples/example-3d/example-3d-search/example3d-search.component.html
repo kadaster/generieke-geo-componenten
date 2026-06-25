@@ -38,9 +38,9 @@
             [searchLocationOptions]="searchLocationOptions"
           ></ggc-search-location>
           <br />
-          <span><b>Cesium controls</b></span>
+          <span><b>3D controls</b></span>
           <br />
-          <ggc-cesium-controls
+          <ggc-map-3d-controls
             [downIcon]="'fas fa-chevron-down'"
             [upIcon]="'fas fa-chevron-up'"
             [leftIcon]="'fas fa-chevron-left'"
@@ -48,17 +48,17 @@
             [minusIcon]="'fas fa-minus'"
             [plusIcon]="'fas fa-plus'"
             [defaultCameraPosition]="'far fa-eye'"
-          ></ggc-cesium-controls>
+          ></ggc-map-3d-controls>
         </div>
       </div>
       <div class="col-xl-8 col-md-8 col-sm-12">
         <div class="map-container">
-          <ggc-cesium-viewer
+          <ggc-map-3d-viewer
             [viewerOptions]="viewerOptions"
             [cameraOptions]="cameraOptions"
             (ready)="onCesiumReady()"
             [webServices]="webService"
-          ></ggc-cesium-viewer>
+          ></ggc-map-3d-viewer>
         </div>
       </div>
     </div>

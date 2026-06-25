@@ -30,9 +30,7 @@ export class DatasetTreeMapConnectService {
   private layerServicePromise?: Promise<any>;
 
   private getGgcOLLayerService(): Promise<any> {
-    if (!this.layerServicePromise) {
-      this.layerServicePromise = this.connectService.getGgcOLLayerService();
-    }
+    this.layerServicePromise ??= this.connectService.getGgcOLLayerService();
     return this.layerServicePromise;
   }
 
@@ -60,7 +58,7 @@ export class DatasetTreeMapConnectService {
 
   /**
    * Returns de Observable die informatie geeft als layers worden geupdatet.
-   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-cesium) moet worden aangeroepen
+   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-map-3d) moet worden aangeroepen
    */
   async getLayerChangedObservable(
     viewerType: ViewerType
@@ -87,7 +85,7 @@ export class DatasetTreeMapConnectService {
   /**
    * Returns de Observable die informatie geeft als er wordt gezoomd in de kaart.
    * @param mapIndex - de naam van de Map waar de Observable informatie van teruggeeft.
-   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-cesium) moet worden aangeroepen
+   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-map-3d) moet worden aangeroepen
    */
   async getZoomendObservableForMap(
     mapIndex: string,
@@ -106,7 +104,7 @@ export class DatasetTreeMapConnectService {
    * Returns de title van de opgegeven layer.
    * @param layerId - de layerId van de layer.
    * @param mapIndex - de mapIndex van de layer.
-   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-cesium) moet worden aangeroepen
+   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-map-3d) moet worden aangeroepen
    */
   async getTitle(
     layerId: string,
@@ -125,7 +123,7 @@ export class DatasetTreeMapConnectService {
    * Returns de zichtbaarheid van de opgegeven layer.
    * @param layerId - de layerId van de layer.
    * @param mapIndex - de mapIndex van de layer.
-   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-cesium) moet worden aangeroepen
+   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-map-3d) moet worden aangeroepen
    */
   async isVisible(
     layerId: string,
@@ -144,7 +142,7 @@ export class DatasetTreeMapConnectService {
    * Wisselt/toggeld de zichtbaarheid van de opgegeven layer en returned de nieuwe waarde van de visibility.
    * @param layerId - de layerId van de layer.
    * @param mapIndex - de mapIndex van de layer.
-   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-cesium) moet worden aangeroepen
+   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-map-3d) moet worden aangeroepen
    */
 
   async toggleVisibility(
@@ -169,7 +167,7 @@ export class DatasetTreeMapConnectService {
    * Returns layer is enabled (actief) in de huidige resolutie
    * @param layerId - de layerId van de layer.
    * @param mapIndex - de mapIndex van de layer.
-   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-cesium) moet worden aangeroepen
+   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-map-3d) moet worden aangeroepen
    */
   async getEnabled(layerId: string, mapIndex: string, viewerType: ViewerType) {
     if (viewerType === ViewerType.DRIE_D) {
@@ -186,7 +184,7 @@ export class DatasetTreeMapConnectService {
    * Returns het type van de laag (WMS, WMTS etc.)
    * @param layerId - de layerId van de layer.
    * @param mapIndex - de mapIndex van de layer.
-   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-cesium) moet worden aangeroepen
+   * @param viewerType - geeft aan of een 2D service (ggc-map) of een 3D service (ggc-map-3d) moet worden aangeroepen
    */
   async getTypeOfLayer(
     layerId: string,

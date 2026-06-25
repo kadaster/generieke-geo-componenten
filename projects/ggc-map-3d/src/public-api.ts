@@ -1,5 +1,5 @@
 /*
- * Public API Surface of ggc-cesium
+ * Public API Surface of ggc-map-3d
  */
 
 export * from "./lib/controls/ggc-controls.component";
