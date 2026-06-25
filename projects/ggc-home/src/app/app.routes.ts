@@ -49,7 +49,6 @@ import { ExampleFeatureInfoAdvComponent } from "./examples/example-map/example-f
 import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-feature-info-tabs/example-feature-info-tabs.component";
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
-import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 import { Example3dDatasetTreeLegendComponent } from "./examples/example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component";
 import { Example3dLayerCameraOptionsComponent } from "./examples/example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component";
 import { Example3dDatasetSwitcherComponent } from "./examples/example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
@@ -59,6 +58,7 @@ import { Example3dSearchComponent } from "./examples/example-3d/example-3d-searc
 import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
 import { Example3dLayerWmtsComponent } from "./examples/example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
+import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 
 export const routes: Routes = [
   {

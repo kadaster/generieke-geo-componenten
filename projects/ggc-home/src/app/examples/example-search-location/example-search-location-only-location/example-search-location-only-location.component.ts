@@ -30,7 +30,8 @@ export class ExampleSearchLocationOnlyLocationComponent extends ExampleFormatCom
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-only-location",
     title: "Huidige locatie",
-    introduction: "Ga naar je huidige locatie.",
+    introduction:
+      "Hier wordt alleen de huidige locatie knop getoond. Het zoeken zelf is niet enabled. Ga naar je huidige locatie door op de locatie knop te drukken.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.LOCATION],
@@ -38,7 +39,7 @@ export class ExampleSearchLocationOnlyLocationComponent extends ExampleFormatCom
       "code/examples/example-search-location/example-search-location-only-location/example-search-location-only-location.png"
   } as ComponentInfo;
   urlComponentModule =
-    "example-search-location-only-location/example-search-location-only-location/example-search-location-only-location.component.ts";
+    "example-search-location/example-search-location-only-location/example-search-location-only-location.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
   // DOCS-SKIP:END
   searchLocationOptions = {
