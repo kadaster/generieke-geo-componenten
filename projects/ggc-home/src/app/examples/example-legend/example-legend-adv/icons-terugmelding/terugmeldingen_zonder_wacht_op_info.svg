@@ -5,6 +5,7 @@
     xmlns="http://www.w3.org/2000/svg"
 >
   <g aria-label="blauwe pin met een uitroepteken" id="legend-item-nieuw" role="img" transform="translate(3 5)">
+    <!-- icoon -->
     <g>
       <path
         d="M13.33 2c-3.03 0-5.87 1.18-8.01 3.32C3.18 7.46 2 10.31 2 13.33c0 1.52 0.83 5.49 6.38 15.07 1.83 3.16 3.68 6.06 4.95 8 1.27-1.94 3.11-4.82 4.94-7.98 5.57-9.59 6.40-13.57 6.40-15.09 0-3.03-1.18-5.87-3.32-8.01C19.21 3.18 16.36 2 13.33 2zm0-2C20.70 0 26.67 5.97 26.67 13.33 26.67 20.70 13.33 40 13.33 40S0 20.70 0 13.33C0 5.97 5.97 0 13.33 0z"
@@ -17,7 +18,7 @@
       />
     </g>
     <!-- text -->
-    <text fill="#1a1a1a" font-family="arial" font-size="16" x="35" y="25">Nieuwe melding</text>
+    <text fill="#1a1a1a" font-family="arial,sans-serif" font-size="16" x="35" y="25">Nieuwe melding</text>
   </g>
   <g aria-label="oranje pin met een vraagteken" id="legend-item-onderzoek" role="img" transform="translate(3 47)">
     <!-- icoon -->
@@ -32,7 +33,7 @@
         transform="translate(6.5 7.5)" />
     </g>
     <!-- text -->
-    <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Melding in onderzoek</text>
+    <text fill="#1a1a1a" font-family="arial,sans-serif" font-size="16" x="35" y="25">Melding in onderzoek</text>
   </g>
   <g aria-label="oranje pin met een pijl naar rechts" id="legend-item-doorgestuurd" role="img" transform="translate(3 89)">
     <!-- icoon -->
@@ -47,7 +48,7 @@
       />
     </g>
     <!-- text -->
-    <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Melding doorgestuurd</text>
+    <text fill="#1a1a1a" font-family="arial,sans-serif" font-size="16" x="35" y="25">Melding doorgestuurd</text>
   </g>
   <g aria-label="oranje pin met een vinkje" id="legend-item-ingepland" role="img" transform="translate(3 131)">
     <!-- icoon -->
@@ -61,7 +62,7 @@
         transform="translate(6 5.5)"/>
     </g>
     <!-- text -->
-    <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Goedgekeurd en ingepland</text>
+    <text fill="#1a1a1a" font-family="arial,sans-serif" font-size="16" x="35" y="25">Goedgekeurd en ingepland</text>
   </g>
   <g aria-label="groene pin met 2 vinkjes" id="legend-item-afgerond" role="img" transform="translate(3 173)">
     <!-- icoon -->
@@ -75,7 +76,7 @@
         transform="translate(6 7.5)"/>
     </g>
     <!-- text -->
-    <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Afgerond met aanpassing</text>
+    <text fill="#1a1a1a" font-family="arial,sans-serif" font-size="16" x="35" y="25">Afgerond met aanpassing</text>
   </g>
   <g aria-label="groene pin met een kruis" id="legend-item-afgewezen" role="img" transform="translate(3 215)">
     <!-- icoon -->
@@ -90,6 +91,6 @@
         transform="translate(6.5 3)" />
     </g>
     <!-- text -->
-    <text fill="#1a1a1a" font-family="sans-serif" font-size="16" x="35" y="25">Afgerond zonder aanpassing</text>
+    <text fill="#1a1a1a" font-family="arial,sans-serif" font-size="16" x="35" y="25">Afgerond zonder aanpassing</text>
   </g>
 </svg>
