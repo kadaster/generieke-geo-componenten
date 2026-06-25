@@ -276,6 +276,10 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.geoJsonLayerService.setLayers(this.viewer.dataSources);
     this.coreViewerService.setViewer(this.viewer);
     this.ready.emit();
+    this.requestRender();
+  }
+
+  private requestRender() {
     this.viewer.scene.requestRender();
   }
 

@@ -70,6 +70,7 @@ describe("ViewerComponent", () => {
         resolve(cesiumMock);
       })
     );
+    vi.spyOn(component as any, "requestRender").mockReturnValue({});
   });
 
   it("should create", async () => {

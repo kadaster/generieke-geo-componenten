@@ -127,7 +127,8 @@ describe("SharedLayerService", () => {
     const layer: LayerConfig = {
       layerId: "id1",
       visible: true,
-      layerName: "name"
+      layerName: "name",
+      url: "url"
     };
 
     service.addLayer(Webservice3DType.WMTS, layer);

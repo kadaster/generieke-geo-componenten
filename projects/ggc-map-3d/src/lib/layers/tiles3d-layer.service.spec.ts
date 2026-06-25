@@ -78,7 +78,13 @@ describe("Tiles3dLayerService", () => {
       ).toBeUndefined();
       expect(service["createTileset"]).toHaveBeenCalledWith(
         "3DTilesetLayer/url",
-        undefined
+        {
+          cullRequestsWhileMoving: false,
+          dynamicScreenSpaceError: false,
+          foveatedScreenSpaceError: false,
+          maximumScreenSpaceError: 8,
+          preloadWhenHidden: true
+        }
       );
     });
 
@@ -97,7 +103,13 @@ describe("Tiles3dLayerService", () => {
       ).toBeUndefined();
       expect(service["createTileset"]).toHaveBeenCalledWith(
         "3DTilesetLayer/url",
-        undefined
+        {
+          cullRequestsWhileMoving: false,
+          dynamicScreenSpaceError: false,
+          foveatedScreenSpaceError: false,
+          maximumScreenSpaceError: 8,
+          preloadWhenHidden: true
+        }
       );
     });
 
@@ -118,7 +130,13 @@ describe("Tiles3dLayerService", () => {
       expect(service["layerMap"].has(layerId)).toBe(true);
       expect(service["createTileset"]).toHaveBeenCalledWith(
         "3DTilesetLayer/url",
-        constructorOptions
+        {
+          cullRequestsWhileMoving: false,
+          dynamicScreenSpaceError: false,
+          foveatedScreenSpaceError: false,
+          maximumScreenSpaceError: 10,
+          preloadWhenHidden: true
+        }
       );
     });
 
@@ -140,7 +158,13 @@ describe("Tiles3dLayerService", () => {
       expect(service["layerMap"].has(layerId)).toBe(true);
       expect(service["createTileset"]).toHaveBeenCalledWith(
         "3DTilesetLayer/url",
-        undefined
+        {
+          cullRequestsWhileMoving: false,
+          dynamicScreenSpaceError: false,
+          foveatedScreenSpaceError: false,
+          maximumScreenSpaceError: 8,
+          preloadWhenHidden: true
+        }
       );
     });
 

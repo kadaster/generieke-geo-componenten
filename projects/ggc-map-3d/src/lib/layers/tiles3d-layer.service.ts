@@ -74,12 +74,12 @@ export class Tiles3dLayerService extends BaseLayerService {
 
       if (config) {
         config.constructorOptions = {
-          ...config?.constructorOptions,
           cullRequestsWhileMoving: false,
           foveatedScreenSpaceError: false,
           dynamicScreenSpaceError: false,
           preloadWhenHidden: true,
-          maximumScreenSpaceError: 8
+          maximumScreenSpaceError: 8,
+          ...config?.constructorOptions
         };
       } else {
         config = {
@@ -99,9 +99,7 @@ export class Tiles3dLayerService extends BaseLayerService {
           const layerObject = this.layerMap.get(layer.layerId)!;
           layerObject.layerLoading = undefined;
           layerObject.layer = tileset;
-          if (layerObject.showFromDataset === undefined) {
-            layerObject.showFromDataset = true;
-          }
+          layerObject.showFromDataset ??= true;
           const newLayer = (this.layers as PrimitiveCollection).add(tileset);
           this.layerIdToCesiumLayer.set(layer.layerId, newLayer);
           if (config?.cameraValuesShowFunction) {
@@ -136,7 +134,7 @@ export class Tiles3dLayerService extends BaseLayerService {
    * @returns De naam van de laag als string.
    */
   public getLayerName(feature: Cesium3DTileFeature | undefined): string {
-    if (feature == undefined || feature.tileset === undefined) {
+    if (feature?.tileset === undefined) {
       return "";
     }
     const tilesets = Array.from(this.layerMap.entries()).find((entry) => {
