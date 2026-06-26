@@ -68,7 +68,7 @@ export class GgcSharedLayerService {
       }
       this.layerChangedSubject.next({
         layerId: layerOptions.layerId,
-        eventTrigger: LayerChangedEventTrigger.LAYER_ADDED
+        eventTrigger: LayerChangedEventTrigger.LAYER_INITIALIZED
       });
       return updatedLayer;
     });

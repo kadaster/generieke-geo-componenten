@@ -85,6 +85,8 @@ export class GgcLayerService {
 
   /**
    * Observable voor layer change events.
+   * Emits een event als een layer geïnitialiseerd is, is toegevoegd aan de kaart of is weggehaald uit de kaart.
+   * Identiek aan de getLayerChangedObservable in GgcMapService.
    */
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
     return this.layerChangedSubject.asObservable();
@@ -501,6 +503,14 @@ export class GgcLayerService {
       } as AbstractConfigurableLayerOptions;
       if (updatedLayer.visible) {
         this.addLayer(updatedLayer, service.type);
+      }
+
+      if (layerOptions.layerId) {
+        this.emitLayerChanged(
+          layerOptions.layerId,
+          mapIndex,
+          LayerChangedEventTrigger.LAYER_INITIALIZED
+        );
       }
 
       return updatedLayer;
