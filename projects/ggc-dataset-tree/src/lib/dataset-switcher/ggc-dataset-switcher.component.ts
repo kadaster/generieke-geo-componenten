@@ -59,6 +59,13 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
   @Input() themes: Theme[] = [];
 
   /**
+   * De theme die actief is bij de initialisatie van de dataset switcher. Default wordt het eerste theme actief.
+   * Let op: De dataset switcher zet niet automatisch te lagen aan van het initiële thema,
+   * dit moet je zelf inregelen via de zichtbaarheid van de losse lagen in de layer configuratie
+   */
+  @Input() initialActiveTheme: string;
+
+  /**
    * Knoppen die in de UI getoond worden.
    *
    * De `name` van een knop moet overeenkomen met de {@link Theme.themeName} om selectie te laten werken.
@@ -102,15 +109,21 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     const themesChange = changes["themes"];
-    if (!themesChange) return;
+    if (themesChange) {
+      const previous: Theme[] = themesChange.previousValue ?? [];
+      const current: Theme[] = themesChange.currentValue ?? [];
 
-    const previous: Theme[] = themesChange.previousValue ?? [];
-    const current: Theme[] = themesChange.currentValue ?? [];
+      const becameAvailable = previous.length === 0 && current.length > 0;
+      if (!becameAvailable) return;
 
-    const becameAvailable = previous.length === 0 && current.length > 0;
-    if (!becameAvailable) return;
+      this.setInitialActiveTheme();
+      return;
+    }
 
-    setTimeout(() => void this.setInitialActiveTheme(current), 100);
+    const initialActiveThemeChange = changes["initialActiveTheme"];
+    if (initialActiveThemeChange) {
+      this.setInitialActiveTheme();
+    }
   }
 
   /**
@@ -223,42 +236,15 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * Als er een theme gevonden is:
    * - update {@link activeTheme};
    * - emit een {@link DatasetSwitcherEvent}.
-   *
-   * @param themes - De themes die net beschikbaar zijn gekomen.
    */
-  private async setInitialActiveTheme(themes: Theme[]): Promise<void> {
+  private async setInitialActiveTheme() {
+    const themes = this.themes;
+
     if (!themes.length) return;
 
-    const ggcOLLayerService =
-      (await this.datasetTreeConnectService.getGgcOLLayerService()) as
-        | GgcOlLayerServiceLike
-        | undefined;
-
-    let activeTheme: Theme | undefined;
-
-    if (ggcOLLayerService) {
-      activeTheme = themes.find((theme) =>
-        theme.datasets.some((dataset: Dataset) =>
-          dataset.services.some((service: DatasetTreeWebservice) =>
-            service.layers.some((layer: DatasetTreeLayer) =>
-              ggcOLLayerService.isVisible(layer.layerId, this.mapIndex)
-            )
-          )
-        )
-      );
-    }
-
-    if (!activeTheme) {
-      const firstButtonName = this.datasetSwitcherButtons?.[0]?.name;
-      if (firstButtonName) {
-        activeTheme = this.getThemeFromName(firstButtonName);
-        if (ggcOLLayerService && activeTheme) {
-          this.setVisibilityTheme(ggcOLLayerService, activeTheme, true);
-        }
-      }
-    }
-
-    if (!activeTheme) return;
+    const activeTheme = this.initialActiveTheme
+      ? (this.getThemeFromName(this.initialActiveTheme) ?? themes[0])
+      : themes[0];
 
     this.activeTheme = activeTheme;
     this.sendChangeEvent(activeTheme);

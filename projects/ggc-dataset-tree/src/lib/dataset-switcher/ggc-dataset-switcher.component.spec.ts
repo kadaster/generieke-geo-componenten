@@ -109,32 +109,23 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       await vi.runAllTimersAsync();
 
-      expect(spy).toHaveBeenCalledWith(themes);
+      expect(spy).toHaveBeenCalled();
     });
   });
 
   describe("initial active theme selection", () => {
     it("should pick the visible theme and emit event", async () => {
-      vi.useFakeTimers();
-      const themes = createThemesWithLayers();
-      component.themes = themes;
-
-      olLayerServiceMock.isVisible.mockImplementation(
-        (layerId: string) => layerId === "b-1"
-      );
+      component.themes = createThemesWithLayers();
+      component.initialActiveTheme = "Theme B";
 
       const emitted: DatasetSwitcherEvent[] = [];
       component.events.subscribe((e) => emitted.push(e));
 
-      component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
-
-      vi.advanceTimersByTime(100);
-      await vi.runAllTimersAsync();
-
-      expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
+      component.ngOnChanges({
+        initialActiveTheme: new SimpleChange("", "Theme B", false)
+      });
 
       expect(component["activeTheme"]?.themeName).toBe("Theme B");
-      expect(olLayerServiceMock.setVisibilityLayers).not.toHaveBeenCalled();
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme B");
@@ -156,13 +147,6 @@ describe("GgcDatasetSwitcherComponent", () => {
       await vi.runAllTimersAsync();
 
       expect(component["activeTheme"]?.themeName).toBe("Theme A");
-
-      expect(olLayerServiceMock.setVisibilityLayers).toHaveBeenCalledWith(
-        ["a-1"],
-        true,
-        component.mapIndex
-      );
-
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme A");
     });
