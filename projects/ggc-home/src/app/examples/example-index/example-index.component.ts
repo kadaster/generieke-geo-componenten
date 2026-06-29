@@ -1,4 +1,4 @@
-import {Component, inject, ViewEncapsulation} from "@angular/core";
+import { Component, inject, ViewEncapsulation } from "@angular/core";
 import { ExampleSearchLocationComponent } from "../example-search-location/example-search-location/example-search-location.component";
 import { ExampleSnappingBasicComponent } from "../example-snapping/example-snapping-basic/example-snapping-basic.component";
 import { ComponentInfo } from "../component-info.model";
@@ -45,7 +45,7 @@ import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "../example-search-location/example-search-location-only-location/example-search-location-only-location.component";
-import {SessionStorageService} from "../../service/session-storage.service";
+import { SessionStorageService } from "../../service/session-storage.service";
 
 interface GroupedCards {
   theme: string;
@@ -125,7 +125,8 @@ export class ExampleIndexComponent {
       this.selectedThemes = new Set(JSON.parse(storedSelectedThemes));
     }
 
-    const storedSelectedComponents = this.sessionStorageService.getSelectedComponents();
+    const storedSelectedComponents =
+      this.sessionStorageService.getSelectedComponents();
     if (storedSelectedComponents) {
       this.selectedComponents = new Set(JSON.parse(storedSelectedComponents));
     }
@@ -204,7 +205,9 @@ export class ExampleIndexComponent {
       this.selectedThemes.add(theme);
     }
     this.selectedThemes = new Set(this.selectedThemes);
-    this.sessionStorageService.setSelectedThemes(Array.from(this.selectedThemes));
+    this.sessionStorageService.setSelectedThemes(
+      Array.from(this.selectedThemes)
+    );
   }
 
   protected toggleComponent(component: string): void {
@@ -214,7 +217,9 @@ export class ExampleIndexComponent {
       this.selectedComponents.add(component);
     }
     this.selectedComponents = new Set(this.selectedComponents);
-    this.sessionStorageService.setSelectedComponents(Array.from(this.selectedComponents));
+    this.sessionStorageService.setSelectedComponents(
+      Array.from(this.selectedComponents)
+    );
   }
 
   protected toggleTag(tag: string): void {
@@ -242,7 +247,7 @@ export class ExampleIndexComponent {
 
   protected clearComponentFilter(): void {
     this.selectedComponents = new Set<string>();
-    this.sessionStorageService.removeSelectedComponents()
+    this.sessionStorageService.removeSelectedComponents();
   }
 
   protected clearTagFilter(): void {

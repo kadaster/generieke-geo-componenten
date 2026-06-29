@@ -1,11 +1,14 @@
-import {Component, inject, VERSION} from "@angular/core";
+import { Component, inject, OnInit, VERSION } from "@angular/core";
 import { Highlight } from "ngx-highlightjs";
-import {GgcDrawService, GgcMapComponent, Webservice} from "@kadaster/ggc-map";
+import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { NgClass } from "@angular/common";
-import {GgcLegendComponent} from "@kadaster/ggc-legend";
-import {SessionStorageService} from "../service/session-storage.service";
-import {Router} from "@angular/router";
-import {GgcSearchLocationComponent, SearchLocationOptions} from "@kadaster/ggc-search-location";
+import { GgcLegendComponent } from "@kadaster/ggc-legend";
+import { SessionStorageService } from "../service/session-storage.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import {
+  GgcSearchLocationComponent,
+  SearchLocationOptions
+} from "@kadaster/ggc-search-location";
 import {
   DatasetSwitcherButton,
   GgcDatasetSwitcherComponent,
@@ -14,21 +17,32 @@ import {
 } from "@kadaster/ggc-dataset-tree";
 import {
   GgcToolbarComponent,
-  GgcToolbarItemComponent, GgcToolbarItemDrawComponent,
+  GgcToolbarItemComponent,
+  GgcToolbarItemDrawComponent,
   GgcToolbarItemMeasureComponent,
   ToolbarItemComponentEvent
 } from "@kadaster/ggc-toolbar";
-import {DEFAULT_MAPINDEX} from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 @Component({
   selector: "app-quickstart",
-  imports: [Highlight, GgcMapComponent, NgClass, GgcLegendComponent, GgcSearchLocationComponent, GgcDatasetTreeComponent, GgcDatasetSwitcherComponent, GgcToolbarComponent, GgcToolbarItemComponent, GgcToolbarItemMeasureComponent, GgcToolbarItemDrawComponent],
+  imports: [
+    Highlight,
+    GgcMapComponent,
+    NgClass,
+    GgcLegendComponent,
+    GgcSearchLocationComponent,
+    GgcDatasetTreeComponent,
+    GgcDatasetSwitcherComponent,
+    GgcToolbarComponent,
+    GgcToolbarItemComponent,
+    GgcToolbarItemMeasureComponent,
+    GgcToolbarItemDrawComponent
+  ],
   templateUrl: "./quickstart.component.html",
   styleUrl: "./quickstart.component.scss"
 })
-export class QuickstartComponent {
-  private readonly sessionStorageService = inject(SessionStorageService);
-  private readonly router = inject(Router);
+export class QuickstartComponent implements OnInit {
   currentStep = 1;
   angularVersion = VERSION.major;
   mapHtml = `<div style="height: 100vh;">
@@ -470,7 +484,8 @@ export class App {
           layerId: "brtAchtergrondkaartStandaard",
           title: "BRT achtergrond kaart Standaard (WMTS)",
           activeLegend: {
-            "legendUrl": "https://service.pdok.nl/lv/bgt/wmts/v1_0/standaardvisualisatie/legend.png"
+            legendUrl:
+              "https://service.pdok.nl/lv/bgt/wmts/v1_0/standaardvisualisatie/legend.png"
           },
           layerName: "standaard",
           visible: true,
@@ -482,33 +497,33 @@ export class App {
 
   protected readonly webServicesDatasetTree = [
     {
-      "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
-      "type": "wmts",
-      "layers": [
+      url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+      type: "wmts",
+      layers: [
         {
-          "layerId": "brtAchtergrondkaartStandaard",
-          "title": "BRT achtergrond kaart Standaard (WMTS)",
-          "layerName": "standaard",
-          "visible": true,
-          "zIndex": -20
+          layerId: "brtAchtergrondkaartStandaard",
+          title: "BRT achtergrond kaart Standaard (WMTS)",
+          layerName: "standaard",
+          visible: true,
+          zIndex: -20
         }
       ]
     },
     {
-      "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
-      "type": "wms",
-      "layers": [
+      url: "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
+      type: "wms",
+      layers: [
         {
-          "layerId": "provincies",
-          "title": "Provincies",
-          "layerName": "provinciegebied",
-          "visible": false
+          layerId: "provincies",
+          title: "Provincies",
+          layerName: "provinciegebied",
+          visible: false
         },
         {
-          "layerId": "gemeenten",
-          "title": "Gemeenten",
-          "layerName": "gemeentegebied",
-          "visible": true
+          layerId: "gemeenten",
+          title: "Gemeenten",
+          layerName: "gemeentegebied",
+          visible: true
         }
       ]
     }
@@ -516,31 +531,26 @@ export class App {
 
   protected readonly datasetTreeConfig = [
     {
-      "themeName": "Achtergrond kaart",
-      "datasets": [
+      themeName: "Achtergrond kaart",
+      datasets: [
         {
-          "datasetName": "BRT Achtergrond",
-          "services": [
+          datasetName: "BRT Achtergrond",
+          services: [
             {
-              "layers": [
-                { "layerId": "brtAchtergrondkaartStandaard" }
-              ]
+              layers: [{ layerId: "brtAchtergrondkaartStandaard" }]
             }
           ]
         }
       ]
     },
     {
-      "themeName": "Een andere data verzameling",
-      "datasets": [
+      themeName: "Een andere data verzameling",
+      datasets: [
         {
-          "datasetName": "Bestuurlijke gebieden (wms)",
-          "services": [
+          datasetName: "Bestuurlijke gebieden (wms)",
+          services: [
             {
-              "layers": [
-                { "layerId": "provincies" },
-                { "layerId": "gemeenten" }
-              ]
+              layers: [{ layerId: "provincies" }, { layerId: "gemeenten" }]
             }
           ]
         }
@@ -550,30 +560,30 @@ export class App {
 
   protected readonly webServicesDatasetSwitcher = [
     {
-      "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
-      "type": "wmts",
-      "layers": [
+      url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+      type: "wmts",
+      layers: [
         {
-          "layerId": "brt-achtergrondkaart-standaard",
-          "title": "Standaard",
-          "layerName": "standaard",
-          "visible": true,
-          "zIndex": -10,
-          "minResolution": 0.21
+          layerId: "brt-achtergrondkaart-standaard",
+          title: "Standaard",
+          layerName: "standaard",
+          visible: true,
+          zIndex: -10,
+          minResolution: 0.21
         }
       ]
     },
     {
-      "url": "https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0",
-      "type": "wmts",
-      "layers": [
+      url: "https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0",
+      type: "wmts",
+      layers: [
         {
-          "layerId": "luchtfoto_actueel_orthohr",
-          "title": "Luchtfoto Actueel Ortho 8cm RGB",
-          "layerName": "Actueel_orthoHR",
-          "visible": false,
-          "zIndex": -10,
-          "minResolution": 0.0525
+          layerId: "luchtfoto_actueel_orthohr",
+          title: "Luchtfoto Actueel Ortho 8cm RGB",
+          layerName: "Actueel_orthoHR",
+          visible: false,
+          zIndex: -10,
+          minResolution: 0.0525
         }
       ]
     }
@@ -581,15 +591,15 @@ export class App {
 
   protected readonly datasetSwitcherConfig = [
     {
-      "themeName": "BRT-A standaard",
-      "datasets": [
+      themeName: "BRT-A standaard",
+      datasets: [
         {
-          "datasetName": "BRT Achtergrondkaart",
-          "services": [
+          datasetName: "BRT Achtergrondkaart",
+          services: [
             {
-              "layers": [
+              layers: [
                 {
-                  "layerId": "brt-achtergrondkaart-standaard"
+                  layerId: "brt-achtergrondkaart-standaard"
                 }
               ]
             }
@@ -598,15 +608,15 @@ export class App {
       ]
     },
     {
-      "themeName": "Luchtfoto",
-      "datasets": [
+      themeName: "Luchtfoto",
+      datasets: [
         {
-          "datasetName": "Luchtfoto",
-          "services": [
+          datasetName: "Luchtfoto",
+          services: [
             {
-              "layers": [
+              layers: [
                 {
-                  "layerId": "luchtfoto_actueel_orthohr"
+                  layerId: "luchtfoto_actueel_orthohr"
                 }
               ]
             }
@@ -616,57 +626,63 @@ export class App {
     }
   ] as Theme[];
 
-  datasetSwitcherButtons: DatasetSwitcherButton[] = [
+  protected datasetSwitcherButtons: DatasetSwitcherButton[] = [
     {
       name: "BRT-A standaard",
-      imageUrl:
-        "-"
+      imageUrl: "-"
     },
     {
       name: "Luchtfoto",
-      imageUrl:
-        "-"
+      imageUrl: "-"
     }
   ];
 
   protected measureActive = false;
   protected drawActive = false;
-
-  private readonly drawService = inject(GgcDrawService);
-
   protected readonly searchLocationOptions = {
     zoomToResult: true,
     markResult: true
   } as SearchLocationOptions;
 
+  private readonly sessionStorageService = inject(SessionStorageService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly drawService = inject(GgcDrawService);
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.currentStep = +params["step"] || 1;
+    });
+  }
+
   goToMapLayerVoorbeelden() {
     this.sessionStorageService.removeSessionStorage();
     this.sessionStorageService.setSelectedThemes(["Kaartlagen"]);
-    this.router.navigate(['/example-index']);
+    this.router.navigate(["/example-index"]);
   }
 
   goToLegendVoorbeelden() {
     this.sessionStorageService.removeSessionStorage();
     this.sessionStorageService.setSelectedThemes(["Legenda"]);
-    this.router.navigate(['/example-index']);
+    this.router.navigate(["/example-index"]);
   }
 
   goToZoekenVoorbeelden() {
     this.sessionStorageService.removeSessionStorage();
     this.sessionStorageService.setSelectedThemes(["Zoeken"]);
-    this.router.navigate(['/example-index']);
+    this.router.navigate(["/example-index"]);
   }
 
   goToDatasetVoorbeelden() {
     this.sessionStorageService.removeSessionStorage();
     this.sessionStorageService.setSelectedThemes(["Kaartweergave kiezen"]);
-    this.router.navigate(['/example-index']);
+    this.router.navigate(["/example-index"]);
   }
 
   goToToolbarVoorbeelden() {
     this.sessionStorageService.removeSessionStorage();
     this.sessionStorageService.setSelectedThemes(["Werkbalk"]);
-    this.router.navigate(['/example-index']);
+    this.router.navigate(["/example-index"]);
   }
 
   changeMeasureState(event: ToolbarItemComponentEvent) {
@@ -681,8 +697,18 @@ export class App {
     this.drawService.stopDraw(DEFAULT_MAPINDEX);
   }
 
+  navigeerNaarHoofdstuk(step: number) {
+    this.router.navigate([], {
+      queryParams: { step },
+      queryParamsHandling: "merge"
+    });
+  }
+
   volgendeHoofdstuk() {
-    this.currentStep += 1;
+    this.router.navigate([], {
+      queryParams: { step: this.currentStep + 1 },
+      queryParamsHandling: "merge"
+    });
 
     const h2Elements = document.querySelectorAll("h2");
     if (h2Elements.length >= 1) {
@@ -692,6 +718,5 @@ export class App {
       secondH2.focus();
       secondH2.scrollIntoView({ behavior: "smooth" });
     }
-
   }
 }

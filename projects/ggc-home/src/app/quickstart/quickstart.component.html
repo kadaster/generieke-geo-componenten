@@ -12,7 +12,7 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 1 ? 'selected' : ''"
     >
-      <button (click)="currentStep = 1">
+      <button (click)="navigeerNaarHoofdstuk(1)">
         De eerste kaart, met <code>ggc-map</code>
       </button>
     </li>
@@ -20,7 +20,7 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 2 ? 'selected' : ''"
     >
-      <button (click)="currentStep = 2">
+      <button (click)="navigeerNaarHoofdstuk(2)">
         Tonen van de legenda, met <code>ggc-legend</code>
       </button>
     </li>
@@ -28,7 +28,7 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 3 ? 'selected' : ''"
     >
-      <button (click)="currentStep = 3">
+      <button (click)="navigeerNaarHoofdstuk(3)">
         Zoeken met de <code>ggc-search-location</code>
       </button>
     </li>
@@ -36,7 +36,7 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 4 ? 'selected' : ''"
     >
-      <button (click)="currentStep = 4">
+      <button (click)="navigeerNaarHoofdstuk(4)">
         Kaartlagen aan- en uitvinken met de <code>ggc-dataset-tree</code>
       </button>
     </li>
@@ -44,7 +44,7 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 5 ? 'selected' : ''"
     >
-      <button (click)="currentStep = 5">
+      <button (click)="navigeerNaarHoofdstuk(5)">
         Wisselen tussen kaartlagen met de <code>ggc-dataset-switcher</code>
       </button>
     </li>
@@ -52,7 +52,7 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 6 ? 'selected' : ''"
     >
-      <button (click)="currentStep = 6">
+      <button (click)="navigeerNaarHoofdstuk(6)">
         Het maken van een toolbar met de <code>ggc-toolbar</code>
       </button>
     </li>
@@ -117,8 +117,11 @@
       <ggc-map [webServices]="webServices"></ggc-map>
     </div>
     <p class="nl-paragraph ggc-paragraph">
-      Bekijk de <button (click)="goToMapLayerVoorbeelden()">voorbeelden van kaartlagen</button> als je meer wilt
-      weten over de verschillende mogelijkheden.
+      Bekijk de
+      <button (click)="goToMapLayerVoorbeelden()">
+        voorbeelden van kaartlagen
+      </button>
+      als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
 
@@ -131,14 +134,17 @@
       <code>npm install @kadaster/ggc-legend</code>
     </p>
     <p class="nl-paragraph ggc-paragraph">
-      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de legenda naast de kaart geplaatst.
+      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de legenda
+      naast de kaart geplaatst.
     </p>
     <pre><code
       [highlight]="legendHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Ook hier is de juiste import nodig. Om de legenda op te halen moet de <code>legendUrl</code> van de <code>activeLegend</code> gevuld zijn in de kaart configuratie.
+      Ook hier is de juiste import nodig. Om de legenda op te halen moet de
+      <code>legendUrl</code> van de <code>activeLegend</code> gevuld zijn in de
+      kaart configuratie.
     </p>
     <pre><code
       [highlight]="legendTypescript"
@@ -148,19 +154,29 @@
       Nu zou de legenda zichtbaar moeten zijn:
     </p>
 
-    <div style="display:flex; height:300px;">
-      <div style="width:250px; overflow-y:auto; background:#f3f3f3; padding:10px;">
+    <div style="display: flex; height: 300px">
+      <div
+        style="
+          width: 250px;
+          overflow-y: auto;
+          background: #f3f3f3;
+          padding: 10px;
+        "
+      >
         <ggc-legend></ggc-legend>
       </div>
 
-      <div style="flex:1;">
+      <div style="flex: 1">
         <ggc-map [webServices]="webServices"></ggc-map>
       </div>
     </div>
 
     <p class="nl-paragraph ggc-paragraph">
-      Bekijk de <button (click)="goToLegendVoorbeelden()">voorbeelden van legenda's</button> als je meer wilt
-      weten over de verschillende mogelijkheden.
+      Bekijk de
+      <button (click)="goToLegendVoorbeelden()">
+        voorbeelden van legenda's
+      </button>
+      als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
 
@@ -173,23 +189,40 @@
       <code>npm install @kadaster/ggc-search-location</code>
     </p>
     <p class="nl-paragraph ggc-paragraph">
-      Een belangrijk onderdeel voor de styling is dat er gebruik gemaakt wordt van <a href="https://getbootstrap.com/" target="_blank">Bootstrap<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
-    ></a> en <a href="https://fontawesome.com/" target="_blank">Font Awesome<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
-    ></a>. Deze zijn dus nodig voor het correct laten werken van dit onderdeel. Je kunt ze toevoegen door deze HTML toe te voegen aan bijvoorbeeld de <code>index.html</code>:
+      Een belangrijk onderdeel voor de styling is dat er gebruik gemaakt wordt
+      van
+      <a href="https://getbootstrap.com/" target="_blank"
+        >Bootstrap<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span
+      ></a>
+      en
+      <a href="https://fontawesome.com/" target="_blank"
+        >Font Awesome<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span></a
+      >. Deze zijn dus nodig voor het correct laten werken van dit onderdeel. Je
+      kunt ze toevoegen door deze HTML toe te voegen aan bijvoorbeeld de
+      <code>index.html</code>:
     </p>
     <pre><code
       [highlight]="bootstrapFontawesomeHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de zoekbalk boven de kaart geplaatst.
+      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de
+      zoekbalk boven de kaart geplaatst.
     </p>
     <pre><code
       [highlight]="searchLocationHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Ook hier is de juiste import nodig. Met de <code>searchLocationOptions</code> stellen we in dat je na het selecteren van een resultaat inzoomt op het resultaat en dat het gemarkeerd wordt.
+      Ook hier is de juiste import nodig. Met de
+      <code>searchLocationOptions</code> stellen we in dat je na het selecteren
+      van een resultaat inzoomt op het resultaat en dat het gemarkeerd wordt.
     </p>
     <pre><code
       [highlight]="searchLocationTypescript"
@@ -199,14 +232,17 @@
       Nu staat de zoekbalk boven de kaart:
     </p>
 
-    <ggc-search-location [searchLocationOptions]="searchLocationOptions"></ggc-search-location>
-    <div style="height:300px;">
-        <ggc-map [webServices]="webServices"></ggc-map>
+    <ggc-search-location
+      [searchLocationOptions]="searchLocationOptions"
+    ></ggc-search-location>
+    <div style="height: 300px">
+      <ggc-map [webServices]="webServices"></ggc-map>
     </div>
 
     <p class="nl-paragraph ggc-paragraph">
-      Bekijk de <button (click)="goToZoekenVoorbeelden()">voorbeelden van zoeken</button> als je meer wilt
-      weten over de verschillende mogelijkheden.
+      Bekijk de
+      <button (click)="goToZoekenVoorbeelden()">voorbeelden van zoeken</button>
+      als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
 
@@ -219,23 +255,40 @@
       <code>npm install @kadaster/ggc-dataset-tree</code>
     </p>
     <p class="nl-paragraph ggc-paragraph">
-      Een belangrijk onderdeel voor de styling is dat er gebruik gemaakt wordt van <a href="https://getbootstrap.com/" target="_blank">Bootstrap<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
-    ></a> en <a href="https://fontawesome.com/" target="_blank">Font Awesome<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
-    ></a>. Deze zijn dus nodig voor het correct laten werken van dit onderdeel. Je kunt ze toevoegen door deze HTML toe te voegen aan bijvoorbeeld de <code>index.html</code>:
+      Een belangrijk onderdeel voor de styling is dat er gebruik gemaakt wordt
+      van
+      <a href="https://getbootstrap.com/" target="_blank"
+        >Bootstrap<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span
+      ></a>
+      en
+      <a href="https://fontawesome.com/" target="_blank"
+        >Font Awesome<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span></a
+      >. Deze zijn dus nodig voor het correct laten werken van dit onderdeel. Je
+      kunt ze toevoegen door deze HTML toe te voegen aan bijvoorbeeld de
+      <code>index.html</code>:
     </p>
     <pre><code
       [highlight]="bootstrapFontawesomeHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de dataset tree naast de kaart geplaatst.
+      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de dataset
+      tree naast de kaart geplaatst.
     </p>
     <pre><code
       [highlight]="datasetTreeHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Ook hier is de juiste import nodig. Met de <code>themes</code> geven we de configuratie mee voor de dataset tree. De kaartconfiguratie is nu ook aangepast met een aantal lagen die aan- en uitgezet kunnen worden.
+      Ook hier is de juiste import nodig. Met de <code>themes</code> geven we de
+      configuratie mee voor de dataset tree. De kaartconfiguratie is nu ook
+      aangepast met een aantal lagen die aan- en uitgezet kunnen worden.
     </p>
     <pre><code
       [highlight]="datasetTreeTypescript"
@@ -245,22 +298,32 @@
       Nu staat de dataset tree naast de kaart:
     </p>
 
-    <div style="display:flex; height:300px;">
-      <div style="width:250px; overflow-y:auto; background:#f3f3f3; padding:10px;">
+    <div style="display: flex; height: 300px">
+      <div
+        style="
+          width: 250px;
+          overflow-y: auto;
+          background: #f3f3f3;
+          padding: 10px;
+        "
+      >
         <ggc-dataset-tree
           [themes]="datasetTreeConfig"
           [expandTreeOnInit]="true"
         ></ggc-dataset-tree>
       </div>
 
-      <div style="flex:1;">
+      <div style="flex: 1">
         <ggc-map [webServices]="webServicesDatasetTree"></ggc-map>
       </div>
     </div>
 
     <p class="nl-paragraph ggc-paragraph">
-      Bekijk de <button (click)="goToDatasetVoorbeelden()">voorbeelden van de dataset tree</button> als je meer wilt
-      weten over de verschillende mogelijkheden.
+      Bekijk de
+      <button (click)="goToDatasetVoorbeelden()">
+        voorbeelden van de dataset tree
+      </button>
+      als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
 
@@ -273,30 +336,45 @@
       <code>npm install @kadaster/ggc-dataset-tree</code>
     </p>
     <p class="nl-paragraph ggc-paragraph">
-      Een belangrijk onderdeel voor de styling is dat er gebruik gemaakt wordt van <a href="https://getbootstrap.com/" target="_blank">Bootstrap<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
-    ></a> en <a href="https://fontawesome.com/" target="_blank">Font Awesome<span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
-    ></a>. Deze zijn dus nodig voor het correct laten werken van dit onderdeel. Je kunt ze toevoegen door deze HTML toe te voegen aan bijvoorbeeld de <code>index.html</code>:
+      Een belangrijk onderdeel voor de styling is dat er gebruik gemaakt wordt
+      van
+      <a href="https://getbootstrap.com/" target="_blank"
+        >Bootstrap<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span
+      ></a>
+      en
+      <a href="https://fontawesome.com/" target="_blank"
+        >Font Awesome<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span></a
+      >. Deze zijn dus nodig voor het correct laten werken van dit onderdeel. Je
+      kunt ze toevoegen door deze HTML toe te voegen aan bijvoorbeeld de
+      <code>index.html</code>:
     </p>
     <pre><code
       [highlight]="bootstrapFontawesomeHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de dataset switcher naast de kaart geplaatst.
+      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de dataset
+      switcher naast de kaart geplaatst.
     </p>
     <pre><code
       [highlight]="datasetSwitcherHtml"
       language="html"
     ></code></pre>
-    <p class="nl-paragraph ggc-paragraph">
-      Voeg dan ook de volgende SCSS toe:
-    </p>
+    <p class="nl-paragraph ggc-paragraph">Voeg dan ook de volgende CSS toe:</p>
     <pre><code
       [highlight]="datasetSwitcherScss"
       language="scss"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Ook hier is de juiste import nodig. Met de <code>themes</code> geven we de configuratie mee voor de dataset switcher. De kaartconfiguratie is nu ook aangepast zodat je kunt wisselen tussen twee kaartlagen.
+      Ook hier is de juiste import nodig. Met de <code>themes</code> geven we de
+      configuratie mee voor de dataset switcher. De kaartconfiguratie is nu ook
+      aangepast zodat je kunt wisselen tussen twee kaartlagen.
     </p>
     <pre><code
       [highlight]="datasetSwitcherTypescript"
@@ -306,22 +384,32 @@
       Nu staat de dataset switcher naast de kaart:
     </p>
 
-    <div style="display:flex; height:300px;">
-      <div style="width:250px; overflow-y:auto; background:#f3f3f3; padding:10px;">
+    <div style="display: flex; height: 300px">
+      <div
+        style="
+          width: 250px;
+          overflow-y: auto;
+          background: #f3f3f3;
+          padding: 10px;
+        "
+      >
         <ggc-dataset-switcher
           [themes]="datasetSwitcherConfig"
           [datasetSwitcherButtons]="datasetSwitcherButtons"
         ></ggc-dataset-switcher>
       </div>
 
-      <div style="flex:1;">
+      <div style="flex: 1">
         <ggc-map [webServices]="webServicesDatasetSwitcher"></ggc-map>
       </div>
     </div>
 
     <p class="nl-paragraph ggc-paragraph">
-      Bekijk de <button (click)="goToDatasetVoorbeelden()">voorbeelden van de dataset switcher</button> als je meer wilt
-      weten over de verschillende mogelijkheden.
+      Bekijk de
+      <button (click)="goToDatasetVoorbeelden()">
+        voorbeelden van de dataset switcher
+      </button>
+      als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
 
@@ -334,14 +422,17 @@
       <code>npm install @kadaster/ggc-toolbar</code>
     </p>
     <p class="nl-paragraph ggc-paragraph">
-      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de toolbar boven de kaart geplaatst.
+      Voeg dan de volgende HTML toe. In het voorbeeld hieronder wordt de toolbar
+      boven de kaart geplaatst.
     </p>
     <pre><code
       [highlight]="toolbarHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Ook hier is de juiste import nodig. Om de legenda op te halen moet de <code>legendUrl</code> van de <code>activeLegend</code> gevuld zijn in de kaart configuratie.
+      Ook hier is de juiste import nodig. Om de legenda op te halen moet de
+      <code>legendUrl</code> van de <code>activeLegend</code> gevuld zijn in de
+      kaart configuratie.
     </p>
     <pre><code
       [highlight]="toolbarTypescript"
@@ -352,29 +443,52 @@
     </p>
 
     <ggc-toolbar class="toolbar-position">
-      <ggc-toolbar-item icon="fas fa-ruler" (activeChanged)="changeMeasureState($event)" [title]="'Meten'">
+      <ggc-toolbar-item
+        icon="fas fa-ruler"
+        (activeChanged)="changeMeasureState($event)"
+        [title]="'Meten'"
+      >
         @if (measureActive) {
-          <ggc-toolbar-item-measure stopIcon="fas fa-mouse-pointer" measureLineIcon="fas fa-ruler-horizontal"
-                                    measurePolygonIcon="fas fa-ruler-combined" moveIcon="far fa-hand-paper" editIcon="fas fa-pencil-alt"
-                                    deleteIcon="fas fa-eraser"></ggc-toolbar-item-measure>
+          <ggc-toolbar-item-measure
+            stopIcon="fas fa-mouse-pointer"
+            measureLineIcon="fas fa-ruler-horizontal"
+            measurePolygonIcon="fas fa-ruler-combined"
+            moveIcon="far fa-hand-paper"
+            editIcon="fas fa-pencil-alt"
+            deleteIcon="fas fa-eraser"
+          ></ggc-toolbar-item-measure>
         }
       </ggc-toolbar-item>
-      <ggc-toolbar-item icon="fas fa-pencil-alt" (activeChanged)="changeDrawState($event)" [title]="'Tekenen'">
+      <ggc-toolbar-item
+        icon="fas fa-pencil-alt"
+        (activeChanged)="changeDrawState($event)"
+        [title]="'Tekenen'"
+      >
         @if (drawActive) {
-          <ggc-toolbar-item-draw stopIcon="fas fa-mouse-pointer" drawIcon="fas fa-circle"
-                                 drawLineIcon="fas fa-project-diagram" drawCircleIcon="far fa-dot-circle" drawRectangleIcon="far fa-square"
-                                 drawPolygonIcon="fas fa-draw-polygon" deleteIcon="fas fa-trash-alt" moveIcon="far fa-hand-paper"
-                                 editIcon="fas fa-pencil-alt"></ggc-toolbar-item-draw>
+          <ggc-toolbar-item-draw
+            stopIcon="fas fa-mouse-pointer"
+            drawIcon="fas fa-circle"
+            drawLineIcon="fas fa-project-diagram"
+            drawCircleIcon="far fa-dot-circle"
+            drawRectangleIcon="far fa-square"
+            drawPolygonIcon="fas fa-draw-polygon"
+            deleteIcon="fas fa-trash-alt"
+            moveIcon="far fa-hand-paper"
+            editIcon="fas fa-pencil-alt"
+          ></ggc-toolbar-item-draw>
         }
       </ggc-toolbar-item>
     </ggc-toolbar>
-    <div style="height:300px;">
-        <ggc-map [webServices]="webServices"></ggc-map>
+    <div style="height: 300px">
+      <ggc-map [webServices]="webServices"></ggc-map>
     </div>
 
     <p class="nl-paragraph ggc-paragraph">
-      Bekijk de <button (click)="goToToolbarVoorbeelden()">voorbeelden van een toolbar</button> als je meer wilt
-      weten over de verschillende mogelijkheden.
+      Bekijk de
+      <button (click)="goToToolbarVoorbeelden()">
+        voorbeelden van een toolbar
+      </button>
+      als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
 
