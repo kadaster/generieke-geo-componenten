@@ -13,7 +13,7 @@
       [ngClass]="currentStep === 1 ? 'selected' : ''"
     >
       <button (click)="navigeerNaarHoofdstuk(1)">
-        De eerste kaart, met <code>ggc-map</code>
+        Inleiding en benodigdheden
       </button>
     </li>
     <li
@@ -21,7 +21,7 @@
       [ngClass]="currentStep === 2 ? 'selected' : ''"
     >
       <button (click)="navigeerNaarHoofdstuk(2)">
-        Tonen van de legenda, met <code>ggc-legend</code>
+        De eerste kaart, met <code>ggc-map</code>
       </button>
     </li>
     <li
@@ -29,7 +29,7 @@
       [ngClass]="currentStep === 3 ? 'selected' : ''"
     >
       <button (click)="navigeerNaarHoofdstuk(3)">
-        Zoeken met de <code>ggc-search-location</code>
+        Tonen van de legenda, met <code>ggc-legend</code>
       </button>
     </li>
     <li
@@ -37,7 +37,7 @@
       [ngClass]="currentStep === 4 ? 'selected' : ''"
     >
       <button (click)="navigeerNaarHoofdstuk(4)">
-        Kaartlagen aan- en uitvinken met de <code>ggc-dataset-tree</code>
+        Zoeken met de <code>ggc-search-location</code>
       </button>
     </li>
     <li
@@ -45,7 +45,7 @@
       [ngClass]="currentStep === 5 ? 'selected' : ''"
     >
       <button (click)="navigeerNaarHoofdstuk(5)">
-        Wisselen tussen kaartlagen met de <code>ggc-dataset-switcher</code>
+        Kaartlagen aan- en uitvinken met de <code>ggc-dataset-tree</code>
       </button>
     </li>
     <li
@@ -53,14 +53,28 @@
       [ngClass]="currentStep === 6 ? 'selected' : ''"
     >
       <button (click)="navigeerNaarHoofdstuk(6)">
+        Wisselen tussen kaartlagen met de <code>ggc-dataset-switcher</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 7 ? 'selected' : ''"
+    >
+      <button (click)="navigeerNaarHoofdstuk(7)">
         Het maken van een toolbar met de <code>ggc-toolbar</code>
       </button>
     </li>
   </ol>
   <hr />
   @if (currentStep === 1) {
+    <p class="nl-paragraph ggc-paragraph">
+      We beginnen met het toevoegen van een kaartcomponent. Het koppelen van onze componenten gaat eenvoudig, de componenten zijn <i>Plug & Play</i>. Door het legenda component toe te voegen, en een link naar de legenda (per kaartlaag), wordt de koppeling automatisch gelegd. Als je inzoomt of een andere kaartlaag selecteert, verandert de legenda vanzelf mee zonder dat je daar zelf iets voor hoeft te programmeren.
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      Daarna kijken we naar het zoeken en het tonen van een locatie. Wisselen tussen kaartlagen of het aan- en uitzetten van kaartlagen kan op twee manieren: met behulp van de dataset-tree of de dataset-switcher. Tot slot maken we nog een voorbeeld met een toolbar, waarbij je kunt tekenen of meten op de kaart.
+    </p>
     <img
-      src="assets/quickstart/overzicht.png"
+      src="assets/quickstart.png"
       alt="Overzicht kaartviewer met de generieke geo componenten"
     />
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">Benodigdheden</h2>
@@ -87,6 +101,8 @@
       Angular {{ angularVersion }}. Voor het maken van een eenvoudige
       kaartapplicatie is geen geo-kennis benodigd.
     </p>
+  }
+  @if (currentStep === 2) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">
       De eerste kaart, met <code>ggc-map</code>
     </h2>
@@ -125,7 +141,7 @@
     </p>
   }
 
-  @if (currentStep === 2) {
+  @if (currentStep === 3) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">
       Het tonen van de legenda, met <code>ggc-legend</code>
     </h2>
@@ -180,7 +196,7 @@
     </p>
   }
 
-  @if (currentStep === 3) {
+  @if (currentStep === 4) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">
       Zoeken met de <code>ggc-search-location</code>
     </h2>
@@ -246,7 +262,7 @@
     </p>
   }
 
-  @if (currentStep === 4) {
+  @if (currentStep === 5) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">
       Kaartlagen aan- en uitvinken met de <code>ggc-dataset-tree</code>
     </h2>
@@ -327,7 +343,7 @@
     </p>
   }
 
-  @if (currentStep === 5) {
+  @if (currentStep === 6) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">
       Wisselen tussen kaartlagen met de <code>ggc-dataset-switcher</code>
     </h2>
@@ -413,7 +429,7 @@
     </p>
   }
 
-  @if (currentStep === 6) {
+  @if (currentStep === 7) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">
       Het maken van een toolbar met de <code>ggc-toolbar</code>
     </h2>
@@ -492,7 +508,7 @@
     </p>
   }
 
-  @if (currentStep < 6) {
+  @if (currentStep < 7) {
     <hr />
     <p class="nl-paragraph ggc-paragraph">
       <button (click)="volgendeHoofdstuk()">
