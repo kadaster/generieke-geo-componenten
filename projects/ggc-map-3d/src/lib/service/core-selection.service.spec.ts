@@ -606,7 +606,7 @@ describe("CoreSelectionService", () => {
   describe("getFeatureCollectionForCoordinateObservable", () => {
     it("should emit a mapped MapComponentEvent when selectIndex matches and feature is Cesium3DTileFeature", () => {
       const clickSubject = service["clickEvent"];
-      const feature = new Cesium3DTileFeature({} as any, 1);
+      const feature = new Cesium3DTileFeature();
 
       sharedLayerServiceSpy.getTitle.mockReturnValue("Layer title");
 
