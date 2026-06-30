@@ -5,10 +5,10 @@
     "layers": [
       {
         "layerId": "vectortile-brt",
-        "title": "BRT achtergrondkaart (standaard)",
+        "title": "BRT achtergrondkaart (type png)",
+        "zIndex": 0,
         "style": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox",
         "enableOverzoom": true,
-        "zIndex": -10,
         "legendIndex": 1,
         "activeLegend": {
           "name": "standaard__netherlandsrdnewquad",
@@ -23,27 +23,27 @@
     "layers": [
       {
         "layerId": "bgt-meldingen",
-        "title": "Terugmeldingen BGT",
+        "title": "Terugmeldingen BGT (type iconList)",
         "layerName": "bgtterugmeldingen",
         "activeLegend": [
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/nieuw.svg",
-            "text": "Nieuw",
+            "text": "Nieuwe melding",
             "iconDescription": "Blauwe pin met een uitroepteken"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/in_onderzoek.svg",
-            "text": "In onderzoek",
+            "text": "Melding in onderzoek",
             "iconDescription": "Oranje pin met een vraagteken"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/geparkeerd.svg",
-            "text": "Geparkeerd",
+            "text": "Melding wacht op informatie",
             "iconDescription": "Oranje pin met een pauzeteken"
           },
           {
             "imageUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/doorgestuurd.svg",
-            "text": "Doorgestuurd",
+            "text": "Melding doorgestuurd",
             "iconDescription": "Oranje pin met een pijl naar rechts"
           },
           {
@@ -63,6 +63,23 @@
           }
         ],
         "legendIndex": 2,
+        "zIndex": 10,
+        "maxResolution": 215.04
+      }
+    ]
+  },
+  {
+    "type": "wms",
+    "url": "https://service.pdok.nl/kadaster/bag-terugmeldingen/wms/v1_0",
+    "layers": [
+      {
+        "layerId": "bag-meldingen",
+        "title": "Terugmeldingen BAG (type svg)",
+        "layerName": "bagterugmeldingen",
+        "activeLegend": {
+          "legendUrl": "code/examples/example-legend/example-legend-adv/icons-terugmelding/terugmeldingen_met_wacht_op_info.svg"
+        },
+        "legendIndex": 3,
         "zIndex": 10,
         "maxResolution": 215.04
       }
