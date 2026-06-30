@@ -7,7 +7,8 @@ import { CoreOgcApiFeaturesService } from "./core-ogc-api-features.service";
 import { Feature } from "ol";
 import {
   provideHttpClient,
-  withInterceptorsFromDi
+  withInterceptorsFromDi,
+  withXhr
 } from "@angular/common/http";
 import { provideZoneChangeDetection } from "@angular/core";
 
@@ -20,7 +21,7 @@ describe("CoreOgcApiFeaturesService", () => {
       imports: [],
       providers: [
         CoreOgcApiFeaturesService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideZoneChangeDetection()
       ]

@@ -2,8 +2,8 @@
   "name": "@kadaster/ggc-cesium",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
     "@cesium/engine": "26.0.0",
     "@cesium/widgets": "16.0.0",
     "@kadaster/ggc-dataset-tree": "^3.0.0",

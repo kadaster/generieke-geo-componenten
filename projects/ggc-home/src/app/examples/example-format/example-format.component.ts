@@ -1,4 +1,10 @@
-import { Component, inject, Input, ViewEncapsulation } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { CodeFromUrlPipe } from "ngx-highlightjs/plus";
 import { Highlight } from "ngx-highlightjs";
@@ -19,6 +25,7 @@ import { ExtractImportsPipe } from "../../pipes/extract-imports.pipe";
     ExtractDocsSectionPipePipe,
     ExtractImportsPipe
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class ExampleFormatComponent {

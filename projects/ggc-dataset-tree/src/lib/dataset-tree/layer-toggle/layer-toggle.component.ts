@@ -5,7 +5,8 @@ import {
   OnInit,
   TemplateRef,
   OnDestroy,
-  signal
+  signal,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { DatasetTreeLayer } from "../../model/theme/dataset-tree-webservice.model";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
@@ -34,6 +35,7 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
   selector: "ggc-layer-toggle",
   imports: [NgClass, NgTemplateOutlet],
   templateUrl: "./layer-toggle.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./layer-toggle.component.scss"
 })
 export class LayerToggleComponent implements OnInit, OnDestroy {

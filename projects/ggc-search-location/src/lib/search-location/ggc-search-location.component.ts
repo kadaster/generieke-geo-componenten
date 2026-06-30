@@ -13,7 +13,8 @@ import {
   Signal,
   ViewChild,
   ViewChildren,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { SearchComponentElementIds } from "../model/search-component-element-ids.model";
@@ -58,6 +59,7 @@ const proj4 = (proj4x as any).default;
   templateUrl: "./ggc-search-location.component.html",
   encapsulation: ViewEncapsulation.None,
   styleUrls: ["./ggc-search-location.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, CdkListbox, CdkOption]
 })
 export class GgcSearchLocationComponent implements OnInit {
@@ -630,13 +632,12 @@ export class GgcSearchLocationComponent implements OnInit {
   /**
    * Reageert op selectie-events vanuit de CDK Listbox.
    */
-  handleCdkListboxEvent(
-    $event: ListboxValueChangeEvent<PdokLocationApiSearchFeature>
-  ) {
-    if ($event.value[0].id === "current-location") {
+  handleCdkListboxEvent($event: ListboxValueChangeEvent<unknown>) {
+    const value = $event.value as readonly PdokLocationApiSearchFeature[];
+    if (value[0].id === "current-location") {
       this.processCurrentLocation();
     } else {
-      this.processPdokLocationApiSearchFeatureResult($event.value[0]);
+      this.processPdokLocationApiSearchFeatureResult(value[0]);
     }
   }
 

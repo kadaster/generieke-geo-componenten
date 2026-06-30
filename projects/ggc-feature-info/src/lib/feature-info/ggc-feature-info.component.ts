@@ -11,7 +11,8 @@ import {
   TemplateRef,
   AfterViewInit,
   OnDestroy,
-  QueryList
+  QueryList,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -58,6 +59,7 @@ import { FeatureInfoEventService } from "../service/feature-info-event.service";
   selector: "ggc-feature-info",
   templateUrl: "./ggc-feature-info.component.html",
   styleUrls: ["./ggc-feature-info.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FeatureInfoDisplayComponent]
 })
 export class GgcFeatureInfoComponent
@@ -126,7 +128,7 @@ export class GgcFeatureInfoComponent
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
    */
   @Output() events = new EventEmitter<FeatureInfoComponentEvent>();
-  protected customHeaderValueTemplates: Map<string, TemplateRef<any> | null> =
+  protected customHeaderValueTemplates: Map<string, TemplateRef<any>> =
     new Map();
   protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
   protected hideEmptyFieldWithKeys: string[] = [];
@@ -173,8 +175,7 @@ export class GgcFeatureInfoComponent
   private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
 
   get customAttributeNamesAndValues():
-    | Map<string, CustomFeatureInfo>
-    | undefined {
+    Map<string, CustomFeatureInfo> | undefined {
     return this._customAttributeNamesAndValues;
   }
 
@@ -245,7 +246,7 @@ export class GgcFeatureInfoComponent
             this.customValueTemplates.set(templateKey, template.templateRef);
             break;
           case ValueTemplateDirectiveType.HIDE:
-            this.customHeaderValueTemplates.set(templateKey, null);
+            this.customHeaderValueTemplates.delete(templateKey);
             break;
           case ValueTemplateDirectiveType.HIDE_IF_EMPTY:
             if (!this.hideEmptyFieldWithKeys.includes(templateKey)) {

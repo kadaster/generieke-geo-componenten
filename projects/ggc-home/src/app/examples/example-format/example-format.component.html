@@ -232,7 +232,7 @@
                 </p>
                 @if (_pathCodeScss) {
                   <pre><code
-                    [highlight]="(_pathCodeScss | codeFromUrl | async)"
+                    [highlight]="(_pathCodeScss | codeFromUrl | async) ?? ''"
                     language="scss"
                   ></code></pre>
                 }
@@ -267,7 +267,7 @@
                   ></a>
                 </p>
                 <pre><code
-                  [highlight]="(_pathKaartConfig | codeFromUrl | async)"
+                  [highlight]="(_pathKaartConfig | codeFromUrl | async) ?? ''"
                   language="json"
                 ></code></pre>
               </div>
@@ -297,7 +297,7 @@
                 </p>
 
                 <pre><code
-                  [highlight]="(_pathExtraConfig | codeFromUrl | async)"
+                  [highlight]="(_pathExtraConfig | codeFromUrl | async) ?? ''"
                   language="json"
                 ></code></pre>
               </div>

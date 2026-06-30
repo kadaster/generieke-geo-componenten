@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import {
@@ -23,6 +28,7 @@ import { RouterLink } from "@angular/router";
     RouterLink
   ],
   templateUrl: "./example-dataset-tree-adv.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-dataset-tree-adv.component.scss"
 })
 export class ExampleDatasetTreeAdvComponent

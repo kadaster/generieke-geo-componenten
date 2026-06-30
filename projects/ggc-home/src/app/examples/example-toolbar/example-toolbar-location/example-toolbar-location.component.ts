@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import {
   FormatType,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -27,6 +32,7 @@ import { Tags } from "../../tags.enum";
     GgcToolbarItemComponent
   ],
   templateUrl: "./example-toolbar-location.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-toolbar-location.component.scss"
 })
 export class ExampleToolbarLocation

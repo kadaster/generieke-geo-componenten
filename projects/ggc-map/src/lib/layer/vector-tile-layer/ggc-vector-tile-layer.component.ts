@@ -5,7 +5,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges
+  SimpleChanges,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { applyStyle } from "ol-mapbox-style";
 import { getTopLeft } from "ol/extent";
@@ -32,6 +33,7 @@ import {
 
 @Component({
   selector: "ggc-vector-tile-layer",
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ""
 })
 /**

@@ -1,4 +1,9 @@
-import { Component, inject, Input } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { Camera, Ellipsoid, Matrix4, Transforms } from "@cesium/engine";
 import { CoreViewerService } from "../service/core-viewer.service";
 import { LookAtPosition } from "../model/interfaces";
@@ -15,6 +20,7 @@ import { NgClass } from "@angular/common";
   selector: "ggc-cesium-controls",
   templateUrl: "./ggc-controls.component.html",
   styleUrls: ["./ggc-controls.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass]
 })
 export class GgcControlsComponent {

@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import {
   GgcMapComponent,
   GgcMapDetailsContainerComponent,
@@ -6,9 +11,9 @@ import {
   GgcMousePositionComponent,
   GgcScaleDenominatorComponent,
   GgcScaleLineComponent,
-  GgcZoomLevelComponent
+  GgcZoomLevelComponent,
+  Webservice
 } from "@kadaster/ggc-map";
-import { Webservice } from "../../../../../../ggc-cesium/src/lib/model/interfaces";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -29,6 +34,7 @@ import { Tags } from "../../tags.enum";
     GgcMousePositionComponent,
     GgcMousePositionComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-map-zoom-scale-position.component.html"
 })
 export class ExampleMapZoomScalePositionComponent

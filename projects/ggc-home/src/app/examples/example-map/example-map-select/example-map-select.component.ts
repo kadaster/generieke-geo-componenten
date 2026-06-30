@@ -3,7 +3,8 @@ import {
   inject,
   OnInit,
   signal,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import {
   GgcMapComponent,
@@ -26,6 +27,7 @@ import Stroke from "ol/style/Stroke";
   selector: "app-example-map-select",
   imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
   templateUrl: "./example-map-select.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-map-select.component.scss"
 })
 export class ExampleMapSelectComponent

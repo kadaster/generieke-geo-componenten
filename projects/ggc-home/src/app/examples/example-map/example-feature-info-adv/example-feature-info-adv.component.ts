@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import {
@@ -22,6 +27,7 @@ import Stroke from "ol/style/Stroke";
     GgcMapComponent,
     FormsModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-feature-info-adv.component.html"
 })
 export class ExampleFeatureInfoAdvComponent

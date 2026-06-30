@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import {
@@ -22,6 +27,7 @@ import { Tags } from "../../tags.enum";
     ExampleFormatComponent
   ],
   templateUrl: "./example-dataset-tree-basic.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-dataset-tree-basic.component.scss"
 })
 export class ExampleDatasetTreeBasicComponent

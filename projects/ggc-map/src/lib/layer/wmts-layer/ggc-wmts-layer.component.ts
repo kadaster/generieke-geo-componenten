@@ -1,4 +1,11 @@
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
@@ -30,6 +37,7 @@ import {
  */
 @Component({
   selector: "ggc-wmts-layer",
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ""
 })
 export class GgcWmtsLayerComponent

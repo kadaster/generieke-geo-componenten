@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
@@ -9,6 +9,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-layer-geojson.component.html"
 })
 export class ExampleLayerGeojsonComponent

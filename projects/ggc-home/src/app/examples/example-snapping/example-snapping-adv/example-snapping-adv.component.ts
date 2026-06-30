@@ -1,4 +1,10 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GeojsonLayerOptions,
@@ -29,6 +35,7 @@ import { MapComponentDrawTypes } from "@kadaster/ggc-models";
     ReactiveFormsModule,
     FormsModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-snapping-adv.component.html"
 })
 export class ExampleSnappingAdvComponent

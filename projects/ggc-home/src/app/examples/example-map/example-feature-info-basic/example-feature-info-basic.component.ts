@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
@@ -10,6 +10,7 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "app-example-feature-info-basic",
   imports: [ExampleFormatComponent, GgcFeatureInfoComponent, GgcMapComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-feature-info-basic.component.html"
 })
 export class ExampleFeatureInfoBasicComponent

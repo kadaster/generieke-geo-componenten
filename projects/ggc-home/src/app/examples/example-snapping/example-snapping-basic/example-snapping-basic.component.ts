@@ -1,4 +1,10 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import {
   GeojsonLayerOptions,
   GgcDrawService,
@@ -25,6 +31,7 @@ import { MapComponentDrawTypes } from "@kadaster/ggc-models";
     ExampleFormatComponent,
     GgcGeojsonLayerComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-snapping-basic.component.html"
 })
 export class ExampleSnappingBasicComponent

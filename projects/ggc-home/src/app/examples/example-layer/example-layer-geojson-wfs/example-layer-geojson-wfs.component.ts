@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
@@ -13,6 +18,7 @@ import VectorLayer from "ol/layer/Vector";
 @Component({
   selector: "app-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-layer-geojson-wfs.component.html"
 })
 export class ExampleLayerGeojsonWfsComponent

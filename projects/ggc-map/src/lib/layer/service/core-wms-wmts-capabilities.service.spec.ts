@@ -1,7 +1,8 @@
 import {
   HttpClient,
   provideHttpClient,
-  withInterceptorsFromDi
+  withInterceptorsFromDi,
+  withXhr
 } from "@angular/common/http";
 import {
   HttpTestingController,
@@ -34,7 +35,7 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
         CoreMapService,
         GgcCrsConfigService,
         HttpClient,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideZoneChangeDetection()
       ]

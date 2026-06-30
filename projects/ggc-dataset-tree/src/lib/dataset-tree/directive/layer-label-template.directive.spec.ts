@@ -1,9 +1,10 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LayerLabelTemplateDirective as LayerLabelTemplateDirective } from "./layer-label-template.directive";
 
 @Component({
   imports: [LayerLabelTemplateDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ` <ng-template [ggcLayerLabelTemplate]="" let-key let-value="value">
     test directive
   </ng-template>`

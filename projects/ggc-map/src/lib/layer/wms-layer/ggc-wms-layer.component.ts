@@ -1,5 +1,12 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
@@ -38,6 +45,7 @@ import {
  */
 @Component({
   selector: "ggc-wms-layer",
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ""
 })
 export class GgcWmsLayerComponent
@@ -108,8 +116,7 @@ export class GgcWmsLayerComponent
     };
 
     const layerOptions:
-      | ImageLayerOptions<ImageSource>
-      | TileLayerOptions<TileSource> = {
+      ImageLayerOptions<ImageSource> | TileLayerOptions<TileSource> = {
       ...this.options?.layerOptions,
       ...this.layerOptions
     };

@@ -24,7 +24,8 @@
         [attr.id]="elementIds.searchInputId"
         [attr.aria-controls]="elementIds.suggestionListId"
         [attr.aria-label]="
-          searchLocationOptions?.labelText === undefined
+          $safeNavigationMigration(searchLocationOptions?.labelText) ===
+          undefined
             ? (this.searchLocationOptions?.placeholderTextAndAriaLabel ??
               'Voer locatie in')
             : null
@@ -109,7 +110,7 @@
         role="listbox"
         class="list-group list-group-ggc-search-suggestions"
         [tabindex]="0"
-        [id]="elementIds.suggestionListId"
+        [id]="elementIds.suggestionListId ?? ''"
         [attr.aria-labelledby]="
           suggestions.length > 0 ? elementIds.searchLabelId : undefined
         "

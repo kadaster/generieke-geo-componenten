@@ -6,7 +6,8 @@ import {
   inject,
   Input,
   Output,
-  TemplateRef
+  TemplateRef,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { GgcDatasetTreeModelCreateService } from "../../core/ggc-dataset-tree-model-create.service";
@@ -43,6 +44,7 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
 @Component({
   selector: "ggc-dataset-tree",
   templateUrl: "./ggc-dataset-tree.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ThemeSelectorComponent]
 })
 export class GgcDatasetTreeComponent implements AfterContentInit {
@@ -174,7 +176,7 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
    * Default is TWEE_D
    */
   @Input()
-  get viewerType(): string {
+  get viewerType(): ViewerType {
     return this._viewerType;
   }
 

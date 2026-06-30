@@ -5,7 +5,8 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { Theme } from "../model/theme/theme.model";
 import { DatasetSwitcherButton } from "./model/dataset-switcher-button.model";
@@ -48,6 +49,7 @@ type GgcOlLayerServiceLike = {
 @Component({
   selector: "ggc-dataset-switcher",
   templateUrl: "./ggc-dataset-switcher.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./ggc-dataset-switcher.component.css"]
 })
 export class GgcDatasetSwitcherComponent implements OnChanges {
@@ -163,8 +165,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
   private async processMap(theme: Theme): Promise<void> {
     const ggcOLLayerService =
       (await this.datasetTreeConnectService.getGgcOLLayerService()) as
-        | GgcOlLayerServiceLike
-        | undefined;
+        GgcOlLayerServiceLike | undefined;
 
     if (!ggcOLLayerService) return;
 
@@ -231,8 +232,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
 
     const ggcOLLayerService =
       (await this.datasetTreeConnectService.getGgcOLLayerService()) as
-        | GgcOlLayerServiceLike
-        | undefined;
+        GgcOlLayerServiceLike | undefined;
 
     let activeTheme: Theme | undefined;
 

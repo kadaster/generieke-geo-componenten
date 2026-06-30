@@ -1,4 +1,11 @@
-import { Component, inject, Input, OnInit, TemplateRef } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  OnInit,
+  TemplateRef,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { Theme } from "../../model/theme/theme.model";
 import { LayerSelectorComponent } from "../layer-selector/layer-selector.component";
 import { CommonModule } from "@angular/common";
@@ -21,6 +28,7 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
   selector: "ggc-theme-selector",
   templateUrl: "./theme-selector.component.html",
   styleUrls: ["./theme-selector.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LayerSelectorComponent, CommonModule]
 })
 export class ThemeSelectorComponent implements OnInit {
