@@ -56,7 +56,7 @@ Als je de docs van je nieuwe component of service niet terugziet: Kijk dan of de
 
 (Bij het generen van de documentatie wordt de tsdocs folder meegenomen in build van de GGC documentatie: zie `build-docs.sh`)
 
-## npm error na npm install met snapshot in GGC-Cesium
+## npm error na npm install met snapshot in ggc-map-3d
 
 In sommige gevallen geeft npm install de volgende error.
 `npm ERR! Cannot set properties of null (setting 'parent')`
@@ -64,8 +64,8 @@ In sommige gevallen geeft npm install de volgende error.
 De genoemde log geeft echter geen verdere (nuttige) info om de fout te vinden.
 Zoeken op google geeft de indicatie dat er ergens een peer-dependency niet opgelost kan worden.
 
-Specifiec voor de ggc-library krijg je dit als je een snapshot gebruikt voor GGC-cesium.
-Deze komt in confilct met de peerDependency op ggc-cesium in ggc-shared.
+Specifiec voor de ggc-library krijg je dit als je een snapshot gebruikt voor ggc-map-3d.
+Deze komt in confilct met de peerDependency op ggc-map-3d in ggc-shared.
 Het snapshot nummer wordt niet als hoger dan de gevraagde dependency herkend.
 
 Praktisch kan dit opgelost met `npm install --legacy-peer-deps`

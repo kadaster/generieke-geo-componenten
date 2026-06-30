@@ -1,0 +1,66 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld zijn het terrein en de gebouwen uit de 3D
+      Basisvoorziening als lagen toegevoegd aan de kaart. Deze kaartlagen worden
+      in MapBox Vector Tiles formaat opgevraagd bij een OGC API 3D GeoVolumes.
+      <br />
+      Naast de kaartconfiguratie zijn er ook nog andere opties te configureren
+      voor 3D GeoVolumes in de <code>TileSetConfig</code>. Zie hiervoor het
+      voorbeeld
+      <a [routerLink]="['/example-3d-layer-camera-options']"
+        >Zichtbaarheid kaartlaag instellen (3D)</a
+      >.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row">
+      <div class="col-xl-3 col-md-4 col-sm-12">
+        <div class="cesium-controls">
+          <span><b>3D controls</b></span>
+          <br />
+          <ggc-map-3d-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-map-3d-controls>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-12">
+        <div class="map-container">
+          <ggc-map-3d-viewer
+            [viewerOptions]="viewerOptions"
+            [cameraOptions]="cameraOptions"
+            [hideLogo]="hideLogo"
+            (ready)="onCesiumReady()"
+            [webServices]="webService"
+          ></ggc-map-3d-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DOCS:END functionality -->
+</app-example-format>
