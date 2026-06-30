@@ -13,4 +13,3 @@ export * from "./lib/service/ggc-viewer.service";
 export * from "./lib/service/ggc-location.service";
 export * from "./lib/layers/ggc-shared-layer.service";
 export * from "./lib/layers/base-layer.service";
-export * from "./lib/location/ggc-location.component";

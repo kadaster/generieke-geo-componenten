@@ -128,6 +128,7 @@ export class GgcLayerService {
    * en voegt hun zichtbare lagen toe aan de kaart.
    */
   loadWebservices(services: Webservice[], mapIndex: string) {
+    this.removeCurrentLayers(mapIndex);
     this.mapConfigurations.set(mapIndex, services);
     for (const service of services) {
       this.loadWebservice(service, mapIndex);
@@ -173,6 +174,33 @@ export class GgcLayerService {
     layerOptions: AbstractConfigurableLayerOptions,
     webserviceType: Webservice2DType
   ): string | undefined {
+    if (
+      layerOptions.persistent === true &&
+      layerOptions.layerId &&
+      layerOptions.mapIndex
+    ) {
+      const layer = this.mapService.getLayer(
+        layerOptions.layerId,
+        layerOptions.mapIndex
+      );
+      if (layer) {
+        layer.setVisible(true);
+        this.mapLayerComponents
+          .get(
+            this.buildLayerComponentKey(
+              layerOptions.mapIndex,
+              layerOptions.layerId
+            )
+          )
+          ?.enable();
+        this.emitLayerChanged(
+          layerOptions.layerId,
+          layerOptions.mapIndex ?? DEFAULT_MAPINDEX,
+          LayerChangedEventTrigger.LAYER_ADDED
+        );
+        return layerOptions.layerId;
+      }
+    }
     switch (webserviceType) {
       case Webservice2DType.GEOJSON:
         return this.addGeojsonLayer(layerOptions as GeojsonLayerOptions);
@@ -291,7 +319,11 @@ export class GgcLayerService {
   removeLayer(mapIndex: string, layerId: string) {
     const layer = this.mapService.getLayer(layerId, mapIndex);
     if (layer) {
-      this.mapService.getMap(mapIndex).removeLayer(layer);
+      if (layer.get("persistent") === true) {
+        layer.setVisible(false);
+      } else {
+        this.mapService.getMap(mapIndex).removeLayer(layer);
+      }
       this.mapLayerComponents
         .get(this.buildLayerComponentKey(mapIndex, layerId))
         ?.disable();
@@ -338,7 +370,7 @@ export class GgcLayerService {
    * Controleert of een laag zichtbaar is.
    */
   isVisible(layerId: string, mapIndex = DEFAULT_MAPINDEX): boolean {
-    return this.mapService.getLayer(layerId, mapIndex) !== undefined;
+    return this.mapService.getLayer(layerId, mapIndex)?.getVisible() ?? false;
   }
 
   /**
@@ -473,6 +505,19 @@ export class GgcLayerService {
 
       return updatedLayer;
     });
+  }
+
+  private removeCurrentLayers(mapIndex: string) {
+    const configuration = this.mapConfigurations.get(mapIndex);
+    if (configuration) {
+      configuration.forEach((service) => {
+        service.layers.forEach((layer) => {
+          if (layer.layerId) {
+            this.removeLayer(mapIndex, layer.layerId);
+          }
+        });
+      });
+    }
   }
 
   /**

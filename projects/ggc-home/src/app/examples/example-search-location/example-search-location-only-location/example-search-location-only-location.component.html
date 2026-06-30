@@ -1,0 +1,40 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
+        <div>
+          Locatie knop:
+          <ggc-search-location
+            (events)="logSearchComponentEvents($event)"
+            [searchLocationOptions]="searchLocationOptions"
+          ></ggc-search-location>
+        </div>
+        <div class="map-container">
+          <ggc-map></ggc-map>
+        </div>
+        <ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>
+      </div>
+    </div>
+  </div>
+</app-example-format>

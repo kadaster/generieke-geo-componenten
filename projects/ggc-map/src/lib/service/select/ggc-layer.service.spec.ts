@@ -125,7 +125,9 @@ describe("LayerService", () => {
   });
 
   it("should remove a layer", () => {
-    const mockLayer = {};
+    const mockLayer = {
+      get: vi.fn().mockReturnValue(undefined)
+    };
     const mockMap = {
       removeLayer: vi.fn()
     };

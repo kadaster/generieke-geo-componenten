@@ -2,6 +2,7 @@ import { SearchComponentElementIds } from "./search-component-element-ids.model"
 import { EventEmitter } from "@angular/core";
 import { SearchCurrentLocation } from "./search-current-location.model";
 import { PdokLocationApiSearchFeature } from "./pdok-location-api-collection.model";
+import { ViewerType } from "@kadaster/ggc-models";
 /**
  * Uitgebreide configuratie voor de SearchLocationComponent.
  */
@@ -14,6 +15,8 @@ export interface SearchLocationOptions {
   elementIds: SearchComponentElementIds;
   /** De bron/collectie naam verborgen moet worden in de suggestielijst. */
   hideCollectionId: boolean;
+  /** De mogelijkheid om de zoekfunctie niet te gebruiken. */
+  hideSearch: boolean;
   /** Een EventEmitter om van buitenaf een initieel resultaat in de component te zetten. */
   initialResult: EventEmitter<PdokLocationApiSearchFeature>;
   /** Een initiële zoekterm die bij het laden direct wordt uitgevoerd. */
@@ -36,4 +39,6 @@ export interface SearchLocationOptions {
   triggerSearch: boolean;
   /** De kaart automatisch moet zoomen naar het geselecteerde resultaat. */
   zoomToResult: boolean;
+  /** Voor welk ViewerType is dit SearchLocationComponent. */
+  viewerType: ViewerType;
 }

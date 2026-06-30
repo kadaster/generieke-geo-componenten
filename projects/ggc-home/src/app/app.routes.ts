@@ -49,6 +49,7 @@ import { ExampleFeatureInfoAdvComponent } from "./examples/example-map/example-f
 import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-feature-info-tabs/example-feature-info-tabs.component";
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
+import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 
 export const routes: Routes = [
   {
@@ -167,6 +168,12 @@ export const routes: Routes = [
     title: "Zoeken-woonplaats | GGC-Home",
     component: ExampleSearchLocationWoonplaatsComponent,
     data: { label: "search-location-woonplaats" }
+  },
+  {
+    path: "search-location-only-location",
+    title: "Huidige locatie | GGC-Home",
+    component: ExampleSearchLocationOnlyLocationComponent,
+    data: { label: "search-location-only-location" }
   },
   {
     path: "dataset-tree-basic",

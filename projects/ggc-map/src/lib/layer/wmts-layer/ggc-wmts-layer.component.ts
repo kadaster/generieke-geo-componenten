@@ -59,7 +59,7 @@ export class GgcWmtsLayerComponent
   /**
    * Injectie van de CoreWmsWmtsCapabilitiesService.
    */
-  private capabilitiesService = inject(CoreWmsWmtsCapabilitiesService);
+  private readonly capabilitiesService = inject(CoreWmsWmtsCapabilitiesService);
 
   /**
    * Angular lifecycle hook die wordt aangeroepen bij initialisatie van de component.
@@ -222,11 +222,35 @@ export class GgcWmtsLayerComponent
       this.capabilitiesSubscription.unsubscribe();
     }
 
-    // unsubscribe on singleclick
+    this.unsubscribeOnClickEvent();
+
+    super.ngOnDestroy();
+  }
+
+  enable() {
+    super.enable();
+    this.subscribeOnClickEvent();
+  }
+
+  disable() {
+    super.disable();
+    this.unsubscribeOnClickEvent();
+  }
+
+  private subscribeOnClickEvent() {
+    this.unsubscribeOnClickEvent();
+    if (this.options?.getFeatureInfoOnSingleclick === true) {
+      this.singleclick = this.mapEventsService
+        .getSingleclickObservableForMap(this.mapIndex)
+        .subscribe((evt) => {
+          this.getFeatureInfo(evt);
+        });
+    }
+  }
+
+  private unsubscribeOnClickEvent() {
     if (this.singleclick !== undefined) {
       this.singleclick.unsubscribe();
     }
-
-    super.ngOnDestroy();
   }
 }

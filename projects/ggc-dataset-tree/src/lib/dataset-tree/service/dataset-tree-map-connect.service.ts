@@ -152,15 +152,17 @@ export class DatasetTreeMapConnectService {
     mapIndex: string,
     viewerType: ViewerType
   ): Promise<boolean | undefined> {
-    if (viewerType === ViewerType.DRIE_D) {
-      return (
-        (await this.connectService.getGgcCesiumSharedLayerService()) as any
-      ).toggleVisibility(layerId);
+    switch (viewerType) {
+      case ViewerType.TWEE_D:
+        return (await this.getGgcOLLayerService()).toggleVisibility(
+          layerId,
+          mapIndex
+        );
+      case ViewerType.DRIE_D:
+        return (
+          (await this.connectService.getGgcCesiumSharedLayerService()) as any
+        ).toggleVisibility(layerId);
     }
-    return (await this.getGgcOLLayerService()).toggleVisibility(
-      layerId,
-      mapIndex
-    );
   }
 
   /**
