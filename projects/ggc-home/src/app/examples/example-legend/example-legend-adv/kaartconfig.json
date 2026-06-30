@@ -11,8 +11,7 @@
         "enableOverzoom": true,
         "legendIndex": 1,
         "activeLegend": {
-          "name": "standaard__netherlandsrdnewquad",
-          "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox"
+          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/legend.png"
         }
       }
     ]
