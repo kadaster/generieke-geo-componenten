@@ -69,26 +69,38 @@
   @if (currentStep === 1) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">Inleiding</h2>
     <p class="nl-paragraph ggc-paragraph">
-      We beginnen met het toevoegen van een kaartcomponent. Het koppelen van
-      de componenten gaat eenvoudig, want de componenten zijn <i>Plug & Play</i>.
-      Door het legenda component toe te voegen, en een link naar de legenda (per
-      kaartlaag), wordt de koppeling automatisch gelegd. Als je inzoomt of een
-      andere kaartlaag selecteert, dan verandert de legenda vanzelf mee zonder dat je daar zelf iets voor hoeft te programmeren.
+      We beginnen met het toevoegen van een kaartcomponent. Het koppelen van de
+      componenten gaat eenvoudig, want de componenten zijn <i>Plug & Play</i>.
+      De componenten werken dan samen, door de zoekcomponent toe te voegen wordt
+      een gekozen locatie dan ook zonder extra code getoond op de kaart. De
+      legenda wordt ook gekoppeld aan de kaart.
     </p>
     <p class="nl-paragraph ggc-paragraph">
-      Daarna kijken we naar het zoeken en het tonen van een locatie. Wisselen
-      tussen kaartlagen of het aan- en uitzetten van kaartlagen kan op twee
-      manieren: met behulp van de dataset-tree of de dataset-switcher. Tot slot
-      maken we nog een voorbeeld met een toolbar, waarbij je kunt tekenen of
+      De weergave van een kaart kan aangepast worden door:
+    </p>
+    <ul class="ggc-paragraph-list">
+      <li class="nl-paragraph ggc-paragraph">
+        kaartlagen aan of uit te zetten (dataset-tree), of
+      </li>
+      <li class="nl-paragraph ggc-paragraph">
+        kaartlagen te wisselen (dataset-switcher)
+      </li>
+    </ul>
+    <p class="nl-paragraph ggc-paragraph">
+      Met de toolbar kunnen handige functies aangeboden worden, zoals tekenen of
       meten op de kaart.
     </p>
     <img
       src="assets/quickstart.png"
       alt="Overzicht kaartviewer met de generieke geo componenten"
     />
-    <h2 class="nl-heading nl-heading--level-4 ggc-heading">Gewenste ervaring</h2>
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">
+      Gewenste ervaring
+    </h2>
     <p class="nl-paragraph ggc-paragraph">
-      De Generieke Geo Componenten zijn software componenten die je in een (web-)applicatie kunt gebruiken. Ervaring met de volgende technieken is gewenst:
+      De Generieke Geo Componenten zijn software componenten die je in een
+      (web-)applicatie kunt gebruiken. Ervaring met de volgende technieken is
+      gewenst:
     </p>
     <ul class="ggc-paragraph-list">
       <li class="nl-paragraph ggc-paragraph">HTML/CSS</li>
@@ -98,17 +110,17 @@
       </li>
     </ul>
     <p class="nl-paragraph ggc-paragraph">
-      Indien je nog geen Angular applicatie hebt, dan kun je die eenvoudig maken met
-      de
+      Indien je nog geen Angular applicatie hebt, dan kun je die eenvoudig maken
+      met de
       <a
         href="https://v{{ angularVersion }}.angular.dev/installation"
         target="_blank"
         >installatiehandleiding
         <span class="fa fa-external-link icon-suffix" aria-hidden="true"></span
       ></a>
-      van Angular zelf. De nieuwste versie van de componenten werken met
-      Angular {{ angularVersion }}. Voor het maken van een eenvoudige
-      kaartapplicatie is geen geo-kennis benodigd.
+      van Angular zelf. De nieuwste versie van de componenten werken met Angular
+      {{ angularVersion }}. Voor het maken van een eenvoudige kaartapplicatie is
+      geen geo-kennis benodigd.
     </p>
   }
   @if (currentStep === 2) {
@@ -120,7 +132,8 @@
       <code>npm install @kadaster/ggc-map</code>
     </p>
     <p class="nl-paragraph ggc-paragraph">
-      Plaats dan de volgende HTML in je project, bijvoorbeeld in de <code>app.html</code>:
+      Plaats dan de volgende HTML in je project, bijvoorbeeld in de
+      <code>app.html</code>:
     </p>
     <pre><code
       [highlight]="mapHtml"
@@ -227,7 +240,8 @@
           class="fa fa-external-link icon-suffix"
           aria-hidden="true"
         ></span></a
-      >. Deze zijn nodig voor een correcte werking van de zoekcomponent. Hiervoor kun je de volgende HTML toevoegen aan bijvoorbeeld de
+      >. Deze zijn nodig voor een correcte werking van de zoekcomponent.
+      Hiervoor kun je de volgende HTML toevoegen aan bijvoorbeeld de
       <code>index.html</code>:
     </p>
     <pre><code
@@ -244,7 +258,9 @@
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
       Ook hier is de juiste import nodig. Met de
-      <code>searchLocationOptions</code> stel je in dat na het selecteren van een resultaat wordt ingezoomd op dit resultaat en dat dit gemarkeerd wordt.
+      <code>searchLocationOptions</code> stel je in dat na het selecteren van
+      een resultaat wordt ingezoomd op dit resultaat en dat dit gemarkeerd
+      wordt.
     </p>
     <pre><code
       [highlight]="searchLocationTypescript"
@@ -290,7 +306,8 @@
           class="fa fa-external-link icon-suffix"
           aria-hidden="true"
         ></span></a
-      >. Deze zijn nodig voor een correcte werking van de dataset tree. Hiervoor kun je de volgende HTML toevoegen aan bijvoorbeeld de
+      >. Deze zijn nodig voor een correcte werking van de dataset tree. Hiervoor
+      kun je de volgende HTML toevoegen aan bijvoorbeeld de
       <code>index.html</code>:
     </p>
     <pre><code
@@ -369,7 +386,8 @@
           class="fa fa-external-link icon-suffix"
           aria-hidden="true"
         ></span></a
-      >. Deze zijn nodig voor een correcte werking van de dataset switcher. Hiervoor kun je de volgende HTML toevoegen aan bijvoorbeeld de
+      >. Deze zijn nodig voor een correcte werking van de dataset switcher.
+      Hiervoor kun je de volgende HTML toevoegen aan bijvoorbeeld de
       <code>index.html</code>:
     </p>
     <pre><code
