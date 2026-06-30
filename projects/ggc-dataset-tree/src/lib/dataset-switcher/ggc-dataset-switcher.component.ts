@@ -60,8 +60,8 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
 
   /**
    * De theme die actief is bij de initialisatie van de dataset switcher. Default wordt het eerste theme actief.
-   * Let op: De dataset switcher zet niet automatisch te lagen aan van het initiële thema,
-   * dit moet je zelf inregelen via de zichtbaarheid van de losse lagen in de layer configuratie
+   * Let op: De dataset switcher zet niet automatisch de lagen aan van het initiële thema,
+   * dit moet je zelf inregelen via de zichtbaarheid van de losse lagen in de layer configuratie.
    */
   @Input() initialActiveTheme: string;
 
