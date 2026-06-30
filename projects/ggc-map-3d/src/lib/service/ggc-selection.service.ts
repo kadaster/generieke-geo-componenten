@@ -1,7 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { ScreenSpaceEventType } from "@cesium/engine";
+import { Observable } from "rxjs";
 import { CoreSelectionService } from "./core-selection.service";
-import { SelectionConfig } from "../model/interfaces";
+import { MapComponentEvent } from "@kadaster/ggc-models";
+import { SelectionConfig, SelectionEvent } from "../model/interfaces";
 
 /**
  * Service voor selectiefunctionaliteit binnen de GGC Cesium viewer.
@@ -74,7 +76,7 @@ export class GgcSelectionService {
    *
    * @returns Observable met selectie klik-events vanuit de {@link CoreSelectionService}
    */
-  public getSelectionEventsObservable() {
+  public getSelectionEventsObservable(): Observable<SelectionEvent> {
     return this.coreSelectionService.getClickEventsObservable();
   }
 
@@ -82,7 +84,9 @@ export class GgcSelectionService {
    * Return een observable die mapEvents terug geeft met daarin een {@link FeatureCollectionForCoordinate}.
    * @param selectIndex De selectIndex waarvoor je events wilt ontvangen. Mocht deze niet opgegeven zijn, dan krijg je alle selectie events terug.
    */
-  public getFeatureCollectionForCoordinateObservable(selectIndex?: string) {
+  public getFeatureCollectionForCoordinateObservable(
+    selectIndex?: string
+  ): Observable<MapComponentEvent> {
     return this.coreSelectionService.getFeatureCollectionForCoordinateObservable(
       selectIndex
     );
