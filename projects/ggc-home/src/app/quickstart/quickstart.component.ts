@@ -65,11 +65,8 @@ export class App {
       "type": "wmts",
       "layers": [
         {
-          "layerId": "brtAchtergrondkaartStandaard",
-          "title": "BRT achtergrond kaart Standaard (WMTS)",
           "layerName": "standaard",
-          "visible": true,
-          "zIndex": 1
+          "visible": true
         }
       ]
     }] as Webservice[];
@@ -103,14 +100,12 @@ export class App {
       "type": "wmts",
       "layers": [
         {
-          "layerId": "brtAchtergrondkaartStandaard",
           "title": "BRT achtergrond kaart Standaard (WMTS)",
           "activeLegend": {
             "legendUrl": "https://service.pdok.nl/lv/bgt/wmts/v1_0/standaardvisualisatie/legend.png"
           },
           "layerName": "standaard",
-          "visible": true,
-          "zIndex": 1
+          "visible": true
         }
       ]
     }] as Webservice[];
@@ -139,11 +134,8 @@ export class App {
       "type": "wmts",
       "layers": [
         {
-          "layerId": "brtAchtergrondkaartStandaard",
-          "title": "BRT achtergrond kaart Standaard (WMTS)",
           "layerName": "standaard",
-          "visible": true,
-          "zIndex": 1
+          "visible": true
         }
       ]
     }] as Webservice[];
@@ -443,12 +435,8 @@ export class App {
       "type": "wmts",
       "layers": [
         {
-          "layerId": "brt-achtergrondkaart-standaard",
-          "title": "Standaard",
           "layerName": "standaard",
-          "visible": true,
-          "zIndex": -10,
-          "minResolution": 0.21
+          "visible": true
         }
       ]
     }
