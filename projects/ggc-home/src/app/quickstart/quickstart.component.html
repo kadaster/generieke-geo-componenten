@@ -64,6 +64,12 @@
         Toolbar maken met <code>ggc-toolbar</code>
       </button>
     </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 8 ? 'selected' : ''"
+    >
+      <button (click)="navigeerNaarHoofdstuk(8)">Afronding</button>
+    </li>
   </ol>
   <hr />
   @if (currentStep === 1) {
@@ -568,7 +574,39 @@
     </p>
   }
 
-  @if (currentStep < 7) {
+  @if (currentStep === 8) {
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">Afronding</h2>
+    <p class="nl-paragraph ggc-paragraph">
+      In deze quick start zijn de volgende Generieke Geo Componenten stapsgewijs
+      behandeld:
+    </p>
+    <ol class="ggc-paragraph-list">
+      <li class="nl-paragraph ggc-paragraph">Kaart</li>
+      <li class="nl-paragraph ggc-paragraph">Legenda</li>
+      <li class="nl-paragraph ggc-paragraph">Locatie zoeken</li>
+      <li class="nl-paragraph ggc-paragraph">Kaartlagen aan-/uitzetten</li>
+      <li class="nl-paragraph ggc-paragraph">Kaartlagen wisselen</li>
+      <li class="nl-paragraph ggc-paragraph">Toolbar</li>
+    </ol>
+    <img
+      src="assets/quickstart.png"
+      alt="Overzicht kaartviewer met de generieke geo componenten"
+    />
+    <p class="nl-paragraph ggc-paragraph">
+      Je kunt nu zelf aan de slag met de Generieke Geo Componenten en ze
+      combineren in je eigen Angular applicatie. Voor meer informatie en
+      voorbeelden kun je de
+      <a href="/tsdocs/" target="_blank"
+        >TSDocs<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span
+      ></a>
+      en <a href="/example-index">voorbeelden</a> raadplegen.
+    </p>
+  }
+
+  @if (currentStep < 8) {
     <hr />
     <p class="nl-paragraph ggc-paragraph">
       <button (click)="volgendeHoofdstuk()">
