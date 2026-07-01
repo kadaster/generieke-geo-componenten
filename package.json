@@ -55,7 +55,7 @@
     "build:ggc-toolbar": "ng build --project ggc-toolbar --configuration production",
     "build:ggc-home": "ng build --project ggc-home --configuration production",
     "build:all": "npm run build:ggc-models && npm run build:ggc-map-3d && npm run build:ggc-dataset-tree && npm run build:ggc-feature-info && npm run build:ggc-legend && npm run build:ggc-map && npm run build:ggc-search-location && npm run build:ggc-toolbar",
-    "check:ggc-map-3d": "npm run lint:ggc-map-3d && npm run test:cov:ggc-map-3d&& npm run build:ggc-map-3d",
+    "check:ggc-map-3d": "npm run lint:ggc-map-3d && npm run test:cov:ggc-map-3d && npm run build:ggc-map-3d",
     "check:ggc-dataset-tree": "npm run lint:ggc-dataset-tree && npm run test:cov:ggc-dataset-tree && npm run build:ggc-dataset-tree",
     "check:ggc-feature-info": "npm run lint:ggc-feature-info && npm run test:cov:ggc-feature-info && npm run build:ggc-feature-info",
     "check:ggc-home": "npm run lint:ggc-home",

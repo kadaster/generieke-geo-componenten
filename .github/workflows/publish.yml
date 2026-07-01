@@ -26,6 +26,10 @@ on:
         type: boolean
         description: Release ggc-map
         default: false
+      ggc_map_3d:
+        type: boolean
+        description: Release ggc-map-3d
+        default: false
       ggc_models:
         type: boolean
         description: Release ggc-models
@@ -72,6 +76,7 @@ jobs:
           GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
+          GGC_MAP_3D: ${{ github.event.inputs.ggc_map_3d }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
           GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
@@ -107,6 +112,10 @@ jobs:
             bump "ggc-map"
           fi
 
+          if [ "$GGC_MAP_3D" = "true" ]; then
+            bump "ggc-map-3d"
+          fi
+
           if [ "$GGC_MODELS" = "true" ]; then
             bump "ggc-models"
           fi
@@ -133,6 +142,7 @@ jobs:
           GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
+          GGC_MAP_3D: ${{ github.event.inputs.ggc_map_3d }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
           GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
@@ -172,6 +182,10 @@ jobs:
             tag "ggc-map"
           fi
 
+          if [ "$GGC_MAP_3D" = "true" ]; then
+            tag "ggc-map-3d"
+          fi
+
           if [ "$GGC_MODELS" = "true" ]; then
             tag "ggc-models"
           fi
@@ -198,6 +212,7 @@ jobs:
           GGC_FEATURE_INFO: ${{ github.event.inputs.ggc_feature_info }}
           GGC_LEGEND: ${{ github.event.inputs.ggc_legend }}
           GGC_MAP: ${{ github.event.inputs.ggc_map }}
+          GGC_MAP_3D: ${{ github.event.inputs.ggc_map_3d }}
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
           GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
@@ -247,6 +262,10 @@ jobs:
 
           if [ "$GGC_MAP" = "true" ]; then
             build_and_publish "ggc-map"
+          fi
+
+          if [ "$GGC_MAP_3D" = "true" ]; then
+            build_and_publish "ggc-map-3d"
           fi
 
           if [ "$GGC_MODELS" = "true" ]; then

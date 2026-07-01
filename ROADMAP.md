@@ -2,8 +2,6 @@
 
 De volgende verbeteringen/nieuwe functionaliteiten staan gepland:
 
-- Toevoegen Feature-info component (Q2-2026)
-- Toevoegen Cesium 3D kaart component (Q2-2026)
 - Gebruiken Vitest framework (Q2-2026)
 - Ondersteuning Zoneless (Q3-2026)
 - Toevoegen Conversion library (Q3/Q4-2026)
