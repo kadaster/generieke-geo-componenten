@@ -11,6 +11,7 @@ import {
 } from "@kadaster/ggc-search-location";
 import {
   DatasetSwitcherButton,
+  DatasetSwitcherEvent,
   GgcDatasetSwitcherComponent,
   GgcDatasetTreeComponent,
   Theme
@@ -296,9 +297,7 @@ export class App {
           "layerId": "brt-achtergrondkaart-standaard",
           "title": "Standaard",
           "layerName": "standaard",
-          "visible": true,
-          "zIndex": -10,
-          "minResolution": 0.21
+          "visible": true
         }
       ]
     },
@@ -310,9 +309,7 @@ export class App {
           "layerId": "luchtfoto_actueel_orthohr",
           "title": "Luchtfoto Actueel Ortho 8cm RGB",
           "layerName": "Actueel_orthoHR",
-          "visible": false,
-          "zIndex": -10,
-          "minResolution": 0.0525
+          "visible": false
         }
       ]
     }
@@ -555,9 +552,7 @@ export class App {
           layerId: "brt-achtergrondkaart-standaard",
           title: "Standaard",
           layerName: "standaard",
-          visible: true,
-          zIndex: -10,
-          minResolution: 0.21
+          visible: true
         }
       ]
     },
@@ -569,9 +564,7 @@ export class App {
           layerId: "luchtfoto_actueel_orthohr",
           title: "Luchtfoto Actueel Ortho 8cm RGB",
           layerName: "Actueel_orthoHR",
-          visible: false,
-          zIndex: -10,
-          minResolution: 0.0525
+          visible: false
         }
       ]
     }
@@ -706,5 +699,9 @@ export class App {
       secondH2.focus();
       secondH2.scrollIntoView({ behavior: "smooth" });
     }
+  }
+
+  logSwitchEvent(datasetSwitcherEvent: DatasetSwitcherEvent) {
+    console.log(datasetSwitcherEvent);
   }
 }
