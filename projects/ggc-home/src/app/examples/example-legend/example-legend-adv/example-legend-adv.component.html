@@ -1,6 +1,6 @@
 <app-example-format
-  [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
   [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
@@ -42,14 +42,16 @@
     <p>
       De achtergrondkaart is in dit voorbeeld vervangen door de OGC API tiles
       van de BRT achtergrond. De legenda is gebaseerd op de bijbehorende OGC API
-      Style.
+      Style. In dit voorbeeld zijn drie soorten legenda's opgenomen: een png
+      voor de BRT achtergrondkaart, een svg voor BAG terugmeldingen en een
+      iconList voor BGT terugmeldingen.
     </p>
   </div>
 
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-xl-2 col-md-3 col-sm-12">
+      <div class="col-xl-3 col-md-3 col-sm-12">
         <div>
           Alle legenda items:
           <br />
@@ -72,6 +74,7 @@
         <div class="legend-container">
           <b>Legenda</b>
           <ggc-legend
+            [alwaysEnableLegends]="alwaysEnableLegends()"
             [collapsable]="collapsable"
             [defaultExpanded]="false"
             [emptyLegendMessage]="emptyLegendMessage"
@@ -80,11 +83,10 @@
             [mapIndex]="mapIndex"
             [showEmptyLegendMessage]="showEmptyLegendMessage"
             [showLegendsName]="showLegendsName"
-            [alwaysEnableLegends]="alwaysEnableLegends()"
           ></ggc-legend>
         </div>
       </div>
-      <div class="col-xl-8 col-md-7 col-sm-12">
+      <div class="col-xl-7 col-md-7 col-sm-12">
         <div class="map-container">
           <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
         </div>

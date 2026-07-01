@@ -23,7 +23,7 @@ export interface SearchLocationOptions {
   initialSearchTerm: string;
   /** De tekst voor het label boven/naast het zoekveld. */
   labelText: string;
-  /** De index van de kaart in de MapService waarop acties (zoom/mark) moeten plaatsvinden. */
+  /** De index van de kaart in de MapService waarop acties (zoom/mark) moeten plaatsvinden. Alleen relevant voor 2D viewers */
   mapIndex: string;
   /** Het geselecteerde resultaat gemarkeerd moet worden op de kaart. */
   markResult: boolean;

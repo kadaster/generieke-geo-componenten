@@ -8,7 +8,7 @@ import {
   GgcScaleLineComponent,
   GgcZoomLevelComponent
 } from "@kadaster/ggc-map";
-import { Webservice } from "../../../../../../ggc-cesium/src/lib/model/interfaces";
+import { Webservice } from "../../../../../../ggc-map-3d/src/lib/model/interfaces";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";

@@ -1,0 +1,78 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld zijn de gemeentegrenzen, BAG en BGT terugmeldingen als
+      lagen toegevoegd aan de kaart. Deze kaartlagen worden in GeoJSON-formaat
+      door ggc-map opgevraagd bij een Web Feature Service (WFS).
+    </p>
+    <p>In dit voorbeeld zijn de drie kaartlagen als volgt ingesteld:</p>
+    <ul>
+      <li>
+        gemeentegrenzen: rode lijnen. Stijl ingesteld in de kaartconfiguratie
+        json.
+      </li>
+      <li>
+        BAG terugmeldingen: roze labels. Stijl ingesteld in de kaartconfiguratie
+        json.
+      </li>
+      <li>
+        BGT terugmeldingen: rode pins. SVG afbeeldingen ingeladen via de
+        geoJsonConfig, die gekoppeld is aan het layerId. De
+        <code>entitiesFunction</code> kan uitgebreid worden met extra logica, om
+        de SVG's te koppelen aan specifieke eigenschappen (properties) van de
+        objecten.
+      </li>
+    </ul>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row">
+      <div class="col-xl-3 col-md-4 col-sm-12">
+        <div class="cesium-controls">
+          <span><b>3D controls</b></span>
+          <br />
+          <ggc-map-3d-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-map-3d-controls>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-12">
+        <div class="map-container">
+          <ggc-map-3d-viewer
+            [viewerOptions]="viewerOptions"
+            [cameraOptions]="cameraOptions"
+            [hideLogo]="hideLogo"
+            (ready)="onCesiumReady()"
+            [webServices]="webService"
+            [geoJsonConfigs]="geoJsonConfigs"
+          ></ggc-map-3d-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DOCS:END functionality -->
+</app-example-format>

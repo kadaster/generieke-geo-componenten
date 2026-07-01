@@ -10,22 +10,13 @@ import {
 import { Theme } from "../model/theme/theme.model";
 import { DatasetSwitcherButton } from "./model/dataset-switcher-button.model";
 import { DatasetSwitcherEvent } from "./model/dataset-switcher-event.model";
-import { GgcDatasetTreeConnectService } from "../dataset-tree/service/connect.service";
 import { Dataset } from "../model/theme/dataset.model";
 import {
   DatasetTreeLayer,
   DatasetTreeWebservice
 } from "../model/theme/dataset-tree-webservice.model";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
-
-type GgcOlLayerServiceLike = {
-  setVisibilityLayers(
-    layerIds: string[],
-    visible: boolean,
-    mapIndex: string
-  ): void;
-  isVisible(layerId: string, mapIndex: string): boolean;
-};
+import { DEFAULT_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
+import { DatasetTreeMapConnectService } from "../dataset-tree/service/dataset-tree-map-connect.service";
 
 /**
  * Dataset-switcher component.
@@ -61,7 +52,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
   /**
    * Knoppen die in de UI getoond worden.
    *
-   * De `name` van een knop moet overeenkomen met de {@link Theme.themeName} om selectie te laten werken.
+   * De `name` van een knop moet overeenkomen met de {@link Theme} om selectie te laten werken.
    */
   @Input() datasetSwitcherButtons: DatasetSwitcherButton[];
 
@@ -69,6 +60,11 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * Identificeert de kaart/viewer waarop laag-zichtbaarheid wordt toegepast.
    */
   @Input() mapIndex = DEFAULT_MAPINDEX;
+
+  /**
+   * Geeft aan of deze dataset switcher werkt met een 2D of 3D viewer
+   */
+  @Input() viewerType = ViewerType.TWEE_D;
 
   /**
    * Event-stream voor consumers van dit component.
@@ -84,11 +80,8 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    */
   protected activeTheme?: Theme;
 
-  /**
-   * Connectie-service waarmee de OL layer service lazy geladen wordt.
-   */
-  private readonly datasetTreeConnectService = inject(
-    GgcDatasetTreeConnectService
+  private readonly datasetTreeMapConnectService = inject(
+    DatasetTreeMapConnectService
   );
 
   /**
@@ -160,26 +153,19 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    *
    * @param theme - The theme dat geactiveerd moet worden.
    */
-  private async processMap(theme: Theme): Promise<void> {
-    const ggcOLLayerService =
-      (await this.datasetTreeConnectService.getGgcOLLayerService()) as
-        | GgcOlLayerServiceLike
-        | undefined;
-
-    if (!ggcOLLayerService) return;
-
+  private async processMap(theme: Theme) {
     if (this.activeTheme) {
-      this.setVisibilityTheme(ggcOLLayerService, this.activeTheme, false);
+      await this.setVisibilityTheme(this.activeTheme, false);
     }
 
-    this.setVisibilityTheme(ggcOLLayerService, theme, true);
+    await this.setVisibilityTheme(theme, true);
     this.activeTheme = theme;
   }
 
   /**
    * Zoekt een theme op naam in {@link themes}.
    *
-   * @param name - De te zoeken theme-naam (verwacht match met {@link Theme.themeName}).
+   * @param name - De te zoeken theme-naam (verwacht match met {@link Theme}).
    * @returns Het gevonden {@link Theme}, of `undefined` als er geen match is.
    */
   private getThemeFromName(name: string): Theme | undefined {
@@ -192,22 +178,19 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * Het component loopt over `theme.datasets -> dataset.services -> service.layers`
    * en roept `setVisibilityLayers` aan met de verzamelde `layerId`s.
    *
-   * @param ggcOLLayerService - Service die kaartlagen kan (de)activeren.
    * @param theme - Theme waarvan de lagen aangepast moeten worden.
    * @param visible - Gewenste zichtbaarheid.
    */
-  private setVisibilityTheme(
-    ggcOLLayerService: any,
-    theme: Theme,
-    visible: boolean
-  ): void {
+  private async setVisibilityTheme(theme: Theme, visible: boolean) {
     theme.datasets.forEach((dataset: Dataset) =>
-      dataset.services.forEach((service: DatasetTreeWebservice) =>
-        ggcOLLayerService.setVisibilityLayers(
-          service.layers.map((layer: DatasetTreeLayer) => layer.layerId),
-          visible,
-          this.mapIndex
-        )
+      dataset.services.forEach(
+        async (service: DatasetTreeWebservice) =>
+          await this.datasetTreeMapConnectService.setVisibilityLayers(
+            service.layers.map((layer: DatasetTreeLayer) => layer.layerId),
+            visible,
+            this.viewerType,
+            this.mapIndex
+          )
       )
     );
   }
@@ -229,31 +212,14 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
   private async setInitialActiveTheme(themes: Theme[]): Promise<void> {
     if (!themes.length) return;
 
-    const ggcOLLayerService =
-      (await this.datasetTreeConnectService.getGgcOLLayerService()) as
-        | GgcOlLayerServiceLike
-        | undefined;
-
-    let activeTheme: Theme | undefined;
-
-    if (ggcOLLayerService) {
-      activeTheme = themes.find((theme) =>
-        theme.datasets.some((dataset: Dataset) =>
-          dataset.services.some((service: DatasetTreeWebservice) =>
-            service.layers.some((layer: DatasetTreeLayer) =>
-              ggcOLLayerService.isVisible(layer.layerId, this.mapIndex)
-            )
-          )
-        )
-      );
-    }
+    let activeTheme = await this.findFirstActiveTheme(themes);
 
     if (!activeTheme) {
       const firstButtonName = this.datasetSwitcherButtons?.[0]?.name;
       if (firstButtonName) {
         activeTheme = this.getThemeFromName(firstButtonName);
-        if (ggcOLLayerService && activeTheme) {
-          this.setVisibilityTheme(ggcOLLayerService, activeTheme, true);
+        if (activeTheme) {
+          await this.setVisibilityTheme(activeTheme, true);
         }
       }
     }
@@ -262,5 +228,28 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
 
     this.activeTheme = activeTheme;
     this.sendChangeEvent(activeTheme);
+  }
+
+  private async findFirstActiveTheme(
+    themes: Theme[]
+  ): Promise<Theme | undefined> {
+    for (const theme of themes) {
+      for (const dataset of theme.datasets) {
+        for (const service of dataset.services) {
+          for (const layer of service.layers) {
+            const visible = await this.datasetTreeMapConnectService.isVisible(
+              layer.layerId,
+              this.mapIndex,
+              this.viewerType
+            );
+
+            if (visible) {
+              return theme;
+            }
+          }
+        }
+      }
+    }
+    return undefined;
   }
 }

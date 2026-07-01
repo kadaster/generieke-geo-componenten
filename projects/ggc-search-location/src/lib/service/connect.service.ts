@@ -25,10 +25,10 @@ export class GgcSearchLocationConnectService {
    */
   private loadCesiumModule(): Promise<CesiumModule> {
     this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-cesium"
+      /* @vite-ignore */ "@kadaster/ggc-map-3d"
     ).catch((e) => {
       console.debug(
-        `Autoconnect ggc-dataset-tree met ggc-cesium is niet gelukt: ${e}`,
+        `Autoconnect ggc-dataset-tree met ggc-map-3d is niet gelukt: ${e}`,
         e
       );
       throw e;
@@ -60,7 +60,7 @@ export class GgcSearchLocationConnectService {
       return this.ggcCesiumLocationService;
     } catch (e) {
       console.debug(
-        `Autoconnect ggc-search-location met ggc-cesium is niet gelukt (GgcLocationService): ${e}`,
+        `Autoconnect ggc-search-location met ggc-map-3d is niet gelukt (GgcLocationService): ${e}`,
         e
       );
       return undefined;

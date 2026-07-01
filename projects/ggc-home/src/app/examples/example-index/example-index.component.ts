@@ -45,6 +45,15 @@ import { ExampleFeatureInfoTabsComponent } from "../example-map/example-feature-
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "../example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "../example-3d/example-3d-basic/example-3d-basic.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "../example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+import { Example3dDatasetTreeLegendComponent } from "../example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component";
+import { Example3dLayerCameraOptionsComponent } from "../example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component";
+import { Example3dDatasetSwitcherComponent } from "../example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
+import { Example3dFeatureInfoComponent } from "../example-3d/example-3d-feature-info/example3d-feature-info.component";
+import { Example3dFeatureInfoAutoConnectComponent } from "../example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
+import { Example3dSearchComponent } from "../example-3d/example-3d-search/example3d-search.component";
+import { Example3dLayer3dTilesComponent } from "../example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
+import { Example3dLayerWmtsComponent } from "../example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
+import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 import { SessionStorageService } from "../../service/session-storage.service";
 
 interface GroupedCards {
@@ -115,7 +124,16 @@ export class ExampleIndexComponent {
     new ExampleFeatureInfoBasicComponent().componentInfo,
     new ExampleFeatureInfoTabsComponent().componentInfo,
     new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
-    new Example3dBasicComponent().componentInfo
+    new Example3dBasicComponent().componentInfo,
+    new Example3dDatasetTreeLegendComponent().componentInfo,
+    new Example3dLayerCameraOptionsComponent().componentInfo,
+    new Example3dDatasetSwitcherComponent().componentInfo,
+    new Example3dFeatureInfoComponent().componentInfo,
+    new Example3dFeatureInfoAutoConnectComponent().componentInfo,
+    new Example3dSearchComponent().componentInfo,
+    new Example3dLayer3dTilesComponent().componentInfo,
+    new Example3dLayerWmtsComponent().componentInfo,
+    new Example3dLayerGeojsonComponent().componentInfo
   ];
   private readonly sessionStorageService = inject(SessionStorageService);
 

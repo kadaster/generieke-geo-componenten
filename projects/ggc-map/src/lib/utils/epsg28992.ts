@@ -42,6 +42,16 @@ export const epsg28992 = "EPSG:28992";
 export const matrixIds = resolutions.map((_, i) => `${epsg28992}:${i}`);
 
 /**
+ * Zet een resolutie voor EPSG:28992 om naar een zoomniveau.
+ *
+ * @param resolution resolutie voor EPSG:28992
+ * @returns Zoomniveau behorend bij het resolutie
+ */
+export function resolutionToZoomlevel(resolution: number) {
+  return Math.log2(3440.64 / resolution);
+}
+
+/**
  * Zet een zoomniveau om naar een resolutie voor EPSG:28992.
  *
  * @param zoomlevel Zoomniveau
