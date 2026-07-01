@@ -20,20 +20,49 @@ export default async function (plop: NodePlopAPI) {
     description: "Nieuw GGC-Home voorbeeld genereren",
     prompts: [
       {
-        type: "input",
-        name: "name",
-        message:
-          "Bestandsnaam (zonder 'example-' prefix, bv. 'feature-info-basic'):",
-        validate: (v) =>
-          /^[a-z0-9]+(-[a-z0-9]+)*$/.test(v) ||
-          "Gebruik alleen kleine letters, cijfers en koppeltekens"
-      },
-      {
         type: "list",
         name: "directory",
         message: "In welke directory hoort het voorbeeld:",
         choices: directoryChoices
       },
+      {
+        type: "input",
+        name: "customDirectory",
+        message:
+          "Geef de parent directory op (bijv. 'example-draw' voor submap. Let op: alle directories starten met 'example-'):",
+        when: (answers) => answers.directory === "Aangepaste map...",
+        validate: (v) => {
+          // Lege string is OK (betekent 'examples' root)
+          if (v.trim() === "") {
+            return true;
+          }
+          if (!/^[a-z0-9]+(-[a-z0-9]+)*(\/[a-z0-9]+(-[a-z0-9]+)*)*$/.test(v)) {
+            return "Gebruik alleen kleine letters, cijfers, koppeltekens en slashes";
+          }
+          return true;
+        },
+        filter: (v) => {
+          // Als leeg, gebruik 'examples' als root directory
+          if (!v || v.trim() === "") {
+            return "examples";
+          }
+          // Voeg 'examples/' toe als het niet al aanwezig is
+          if (!v.startsWith("examples/") && v !== "examples") {
+            return v.startsWith("/") ? `examples${v}` : `examples/${v}`;
+          }
+          return v;
+        }
+      },
+      {
+        type: "input",
+        name: "name",
+        message:
+          "Hoe heten de bestanden (zonder 'example-' prefix, bv. 'feature-info-basic'):",
+        validate: (v) =>
+          /^[a-z0-9]+(-[a-z0-9]+)*$/.test(v) ||
+          "Gebruik alleen kleine letters, cijfers en koppeltekens"
+      },
+
       {
         type: "list",
         name: "theme",
@@ -100,10 +129,15 @@ export default async function (plop: NodePlopAPI) {
             ? data.componentTags.join(", ")
             : "(geen)";
 
+          const actualDirectory =
+            data.directory === "Aangepaste map..."
+              ? data.customDirectory
+              : data.directory;
+
           return [
             "",
             "Dit gaat er gebeuren:",
-            `  Directory:           example-${data.name}`,
+            `  Directory:           ${actualDirectory}/example-${data.name}`,
             `  Titel:               ${data.title}`,
             `  Theme:               ${data.theme}`,
             `  Layout:              ${data.layout}`,
@@ -125,10 +159,16 @@ export default async function (plop: NodePlopAPI) {
         return [() => "Geannuleerd — er is niets aangemaakt."];
       }
 
-      const paths = buildExamplePaths(data.name, data.directory);
+      // Gebruik customDirectory als directory "Aangepaste map..." is
+      const actualDirectory =
+        data.directory === "Aangepaste map..."
+          ? data.customDirectory
+          : data.directory;
+
+      const paths = buildExamplePaths(data.name, actualDirectory);
       const component = buildComponentMetadata(data.name);
       const imports = resolveComponentImports(data.componentImports ?? []);
-      const metadata = buildExampleMetadata(data.directory, paths);
+      const metadata = buildExampleMetadata(actualDirectory, paths);
 
       Object.assign(data, {
         // Component metadata
@@ -138,7 +178,7 @@ export default async function (plop: NodePlopAPI) {
 
         // Paths
         exampleFolder: paths.folderName,
-        categoryFolder: data.directory,
+        categoryFolder: actualDirectory,
         examplesRoot: paths.examplesRootPath,
 
         // Imports
@@ -203,7 +243,7 @@ export default async function (plop: NodePlopAPI) {
           type: "modify",
           path: "src/app/app.routes.ts",
           pattern: /\/\/ PLOP:IMPORTROUTE/,
-          template: `import { ${component.className} } from "./${data.directory}/${paths.folderName}/${paths.folderName}.component";\n// PLOP:IMPORTROUTE`
+          template: `import { ${component.className} } from "./${actualDirectory}/${paths.folderName}/${paths.folderName}.component";\n// PLOP:IMPORTROUTE`
         }
       ];
 

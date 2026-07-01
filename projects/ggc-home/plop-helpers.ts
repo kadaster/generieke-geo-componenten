@@ -41,14 +41,36 @@ export interface ExampleMetadata {
 
 // COMPONENT IMPORT MAPPING
 export const componentImportMap = {
-  GGC_MAP: {
-    import: 'import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";',
-    ngImport: "GgcMapComponent"
+  GGC_CESIUM: {
+    import: 'import { GgcCesiumComponent } from "@kadaster/ggc-cesium";',
+    ngImport: "GgcCesiumComponent"
+  },
+  GGC_DATASET_TREE: {
+    import:
+      'import { GgcDatasetTreeComponent } from "@kadaster/ggc-dataset-tree";',
+    ngImport: "GgcDatasetTreeComponent"
   },
   GGC_FEATURE_INFO: {
     import:
       'import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";',
     ngImport: "GgcFeatureInfoComponent"
+  },
+  GGC_LEGEND: {
+    import: 'import { GgcLegendComponent } from "@kadaster/ggc-legend";',
+    ngImport: "GgcLegendComponent"
+  },
+  GGC_MAP: {
+    import: 'import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";',
+    ngImport: "GgcMapComponent"
+  },
+  GGC_SEARCH_LOCATION: {
+    import:
+      'import { GgcSearchLocationComponent } from "@kadaster/ggc-search-location";',
+    ngImport: "GgcSearchLocationComponent"
+  },
+  GGC_TOOLBAR: {
+    import: 'import { GgcToolbarComponent } from "@kadaster/ggc-toolbar";',
+    ngImport: "GgcToolbarComponent"
   }
 } as const;
 
