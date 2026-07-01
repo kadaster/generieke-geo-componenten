@@ -69,7 +69,13 @@
   @if (currentStep === 1) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">Inleiding</h2>
     <p class="nl-paragraph ggc-paragraph">
-      We beginnen met het toevoegen van een kaartcomponent. Het koppelen van andere componenten met de kaart gaat eenvoudig, want de componenten zijn <i>Plug & Play</i>. Dit betekent dat de componenten samenwerken, zonder dat daar extra code voor nodig is. Door bijvoorbeeld ook de zoekcomponent toe te voegen, wordt een gekozen locatie automatisch op de kaart getoond. En de legendacomponent toont automatisch de legenda van de zichtbare kaartlagen.
+      We beginnen met het toevoegen van een kaartcomponent. Het koppelen van
+      andere componenten met de kaart gaat eenvoudig, want de componenten zijn
+      <i>Plug & Play</i>. Dit betekent dat de componenten samenwerken, zonder
+      dat daar extra code voor nodig is. Door bijvoorbeeld ook de zoekcomponent
+      toe te voegen, wordt een gekozen locatie automatisch op de kaart getoond.
+      En de legendacomponent toont automatisch de legenda van de zichtbare
+      kaartlagen.
     </p>
     <p class="nl-paragraph ggc-paragraph">
       De weergave van een kaart kan aangepast worden door:
@@ -106,8 +112,7 @@
       </li>
     </ul>
     <p class="nl-paragraph ggc-paragraph">
-      Indien je nog geen Angular applicatie hebt, dan kun je die maken
-      met de
+      Indien je nog geen Angular applicatie hebt, dan kun je die maken met de
       <a
         href="https://v{{ angularVersion }}.angular.dev/installation"
         target="_blank"
@@ -136,8 +141,9 @@
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Je hebt daarna de juiste imports nodig, en je moet aangeven
-      welke kaartlagen je wilt tonen. Plaats daarvoor het volgende in het TypeScript bestand:
+      Je hebt daarna de juiste imports nodig, en je moet aangeven welke
+      kaartlagen je wilt tonen. Plaats daarvoor het volgende in het TypeScript
+      bestand:
     </p>
     <pre><code
       [highlight]="mapTypescript"
@@ -254,7 +260,9 @@
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
       Ook hier is de juiste import nodig. Met
-      <code>searchLocationOptions</code> wordt na het selecteren van een resultaat direct ingezoomd op dit resultaat en wordt het resultaat gemarkeerd.
+      <code>searchLocationOptions</code> wordt na het selecteren van een
+      resultaat direct ingezoomd op dit resultaat en wordt het resultaat
+      gemarkeerd.
     </p>
     <pre><code
       [highlight]="searchLocationTypescript"
@@ -454,17 +462,17 @@
     <p class="nl-paragraph ggc-paragraph">
       De styling maakt gebruik van
       <a href="https://getbootstrap.com/" target="_blank"
-      >Bootstrap<span
-        class="fa fa-external-link icon-suffix"
-        aria-hidden="true"
-      ></span
+        >Bootstrap<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span
       ></a>
       en
       <a href="https://fontawesome.com/" target="_blank"
-      >Font Awesome<span
-        class="fa fa-external-link icon-suffix"
-        aria-hidden="true"
-      ></span></a
+        >Font Awesome<span
+          class="fa fa-external-link icon-suffix"
+          aria-hidden="true"
+        ></span></a
       >. Deze zijn nodig voor een correcte werking van de dataset switcher.
       Hiervoor kun je de volgende HTML toevoegen aan bijvoorbeeld de
       <code>index.html</code>:
@@ -482,7 +490,8 @@
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
-      Ook hier is de juiste import nodig. Er is ook wat code nodig voor het open- en dichtklappen van de toolbar items.
+      Ook hier is de juiste import nodig. Er is ook wat code nodig voor het
+      open- en dichtklappen van de toolbar items.
     </p>
     <pre><code
       [highlight]="toolbarTypescript"
