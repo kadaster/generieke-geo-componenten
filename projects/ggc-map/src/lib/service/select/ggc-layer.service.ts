@@ -496,6 +496,7 @@ export class GgcLayerService {
       const updatedLayer = {
         ...layerOptions,
         url: service.url,
+        customHeaders: service.customHeaders,
         mapIndex: mapIndex,
         visible: layerOptions.visible ?? true
       } as AbstractConfigurableLayerOptions;
