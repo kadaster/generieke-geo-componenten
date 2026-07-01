@@ -13,10 +13,9 @@ import { Tags } from "{{{examplesRoot}}}../tags.enum";
 
 @Component({
   selector: "{{{selector}}}",
-  imports: [ExampleFormatComponent{{#each ngImports}}, {{{this}}}{{/each}}{{#if includeMap}}
-  , GgcMapComponent
-  {{/if}}],
-  templateUrl: "./{{{exampleFolder}}}.component.html"
+  imports: [ExampleFormatComponent{{#each ngImports}}, {{{this}}}{{/each}}],
+  templateUrl: "./{{{exampleFolder}}}.component.html"{{#if scss}},
+  styleUrl: "./{{{exampleFolder}}}.component.scss" {{/if}}
 })
 export class {{{className}}}
   extends ExampleFormatComponent
