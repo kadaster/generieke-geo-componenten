@@ -3,7 +3,6 @@ import {
   effect,
   inject,
   input,
-  Input,
   OnInit,
   signal,
   TemplateRef
@@ -13,7 +12,7 @@ import { LayerSelectorComponent } from "../layer-selector/layer-selector.compone
 import { CommonModule } from "@angular/common";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
-import { ViewerType } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
 import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
 
 /**
@@ -76,11 +75,11 @@ export class ThemeSelectorComponent implements OnInit {
   /**
    * Optioneel Angular template waarmee het standaard layer‑label kan worden overschreven (wordt doorgegeven aan alle datasets).
    */
-  @Input() layerLabelComponent?: TemplateRef<any>;
+  layerLabelComponent = input<TemplateRef<any> | undefined>(undefined);
   /**
    * Optioneel Angular template waarmee het standaard dataset‑label kan worden overschreven (wordt doorgegeven aan alle datasets).
    */
-  @Input() datasetLabelComponent?: TemplateRef<any>;
+  datasetLabelComponent = input<TemplateRef<any> | undefined>(undefined);
   /**
    * Wanneer true, dan wordt de dataset-tree bij initialisatie uitgeklapt weergegeven (wordt doorgegeven aan alle datasets).
    */
@@ -97,30 +96,32 @@ export class ThemeSelectorComponent implements OnInit {
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
    * optioneel kunt **overschrijven**.
    */
-  @Input() layerEnabledCallback: LayerEnabledCallback;
+  layerEnabledCallback = input<LayerEnabledCallback | null>(null);
   /**
    * Index van de kaart waarop deze layer wordt bijgehouden (wordt doorgegeven aan alle datasets).
    * Dit is dezelfde waarde als gebruikt binnen DatasetTreeEvents (mapIndex).
    */
-  @Input() mapIndex: string;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /**
    * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
    * Default is TWEE_D
    */
-  @Input() viewerType = ViewerType.TWEE_D;
+  viewerType = input<ViewerType>(ViewerType.TWEE_D);
+
   /**
    * Wanneer ingesteld op `true`, verwerkt de component de layerChangedEvents vanuit de GgcLayerService zelf als een layer veranderd van dezelfde mapIndex.
    * Dit gaat dan over de weergegeven titel van de laag en de weergegeven status of de laag aangezet, uitgezet of en/disabled is.
    * Bij `false` worden de events niet intern afgehandeld en zal dit zelf geprogrammeerd moeten worden.
    */
-  @Input() autoConnectLayerStatus = true;
+  autoConnectLayerStatus = input<boolean>(true);
+
   /**
    * Wanneer ingesteld op `true`, zal de dataset-tree automatisch lagen aan- of uitzetten in het 2D of 3D map component met dezelfde mapIndex als deze worden getoggled in de dataset-tree.
    * Bij `false` worden de kaartlagen niet automatisch aan- of uitgezet in de kaart en zal dit zelf geprogrammeerd moeten worden.
    * Hiervoor kan dan de output events worden gebruikt.
    */
-  @Input() autoConnectLayerToggle = true;
+  autoConnectLayerToggle = input<boolean>(true);
 
   private readonly _themes = signal<Theme[]>([]);
 
@@ -163,10 +164,10 @@ export class ThemeSelectorComponent implements OnInit {
   async ngOnInit() {
     (
       await this.datasetTreeMapConnectService.getLayerChangedObservable(
-        this.viewerType
+        this.viewerType()
       )
     )?.subscribe((event) => {
-      if (event.mapIndex == this.mapIndex) {
+      if (event.mapIndex == this.mapIndex()) {
         this.handleLayerChanged(event.layerId);
       }
     });
@@ -207,8 +208,8 @@ export class ThemeSelectorComponent implements OnInit {
       theme,
       await this.coreDatasetTreeService.countActiveDatasetsOfTheme(
         theme,
-        this.mapIndex,
-        this.viewerType
+        this.mapIndex(),
+        this.viewerType()
       )
     );
     this.totalLayerCount.set(

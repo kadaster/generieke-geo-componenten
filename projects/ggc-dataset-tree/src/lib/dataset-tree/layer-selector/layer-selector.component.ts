@@ -1,11 +1,11 @@
-import { Component, inject, Input, OnInit, TemplateRef } from "@angular/core";
+import { Component, inject, input, OnInit, TemplateRef } from "@angular/core";
 import { Dataset } from "../../model/theme/dataset.model";
 
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import { LayerToggleComponent } from "../layer-toggle/layer-toggle.component";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
-import { ViewerType } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
 import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
 
 /**
@@ -30,87 +30,103 @@ export class LayerSelectorComponent implements OnInit {
    * Identifier van het geselecteerde theme waarin deze datasets zich bevinden.
    * Wordt gebruikt voor label‑context, counters of styling op theme‑niveau.
    */
-  @Input() themeIndex: string;
+  themeIndex = input<string>("");
+
   /**
    * Lijst van datasets die onder dit theme vallen
    */
-  @Input() datasets: Dataset[] = [];
+  datasets = input<Dataset[]>([]);
+
   /**
    * Wanneer `true`, worden active/all counters toont bij elke dataset.
    */
-  @Input() showActiveCounters = true;
+  showActiveCounters = input<boolean>(true);
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de dataset ingeklapt is.
    */
-  @Input() iconCollapsed: string;
+  iconCollapsed = input<string>("");
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de dataset opengeklapt is.
    */
-  @Input() iconExpanded: string;
+  iconExpanded = input<string>("");
+
   /**
    * Geeft aan of het inklap/uitklap icon rechts uitgelijnd moet worden. Default is true.
    */
-  @Input() iconAlignRight: boolean;
+  iconAlignRight = input<boolean>(false);
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer disabled is (wordt doorgegeven aan alle layers).
    */
-  @Input() iconDisabled: string;
+  iconDisabled = input<string>("");
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer zichtbaar is (wordt doorgegeven aan alle layers).
    */
-  @Input() iconChecked: string;
+  iconChecked = input<string>("");
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer niet zichtbaar is (wordt doorgegeven aan alle layers).
    */
-  @Input() iconUnchecked: string;
+  iconUnchecked = input<string>("");
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt voor de info url, indien opgegeven.
    */
-  @Input() iconInfoUrl: string;
+  iconInfoUrl = input<string>("");
+
   /**
    * Wanneer true, dan wordt de dataset-tree als 1 lange lijst van layers weergegeven zonder theme/datasetnamen
    */
-  @Input() hideTree: boolean;
+  hideTree = input<boolean>(false);
+
   /**
    * Optioneel Angular template waarmee het standaard layer‑label kan worden overschreven (wordt doorgegeven aan alle layers).
    */
-  @Input() layerLabelComponent?: TemplateRef<any>;
+  layerLabelComponent = input<TemplateRef<any> | undefined>(undefined);
+
   /**
    * Optioneel Angular template waarmee het standaard dataset‑label kan worden overschreven.
    */
-  @Input() datasetLabelComponent?: TemplateRef<any>;
+  datasetLabelComponent = input<TemplateRef<any> | undefined>(undefined);
+
   /**
    * Wanneer true, dan wordt de dataset-tree bij initialisatie uitgeklapt weergegeven.
    */
-  @Input() expandTreeOnInit: boolean;
+  expandTreeOnInit = input<boolean>(false);
+
   /**
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
    * optioneel kunt **overschrijven**.
    */
-  @Input() layerEnabledCallback: LayerEnabledCallback;
+  layerEnabledCallback = input<LayerEnabledCallback | null>(null);
   /**
    * Index van de kaart waarop deze layer wordt bijgehouden (wordt doorgegeven aan alle layers).
    * Dit is dezelfde waarde als gebruikt binnen DatasetTreeEvents (mapIndex).
    */
-  @Input() mapIndex: string;
+
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
   /**
    * Wanneer ingesteld op `true`, verwerkt de component de layerChangedEvents vanuit de GgcLayerService zelf als een layer veranderd van dezelfde mapIndex.
    * Dit gaat dan over de weergegeven titel van de laag en de weergegeven status of de laag aangezet, uitgezet of en/disabled is.
    * Bij `false` worden de events niet intern afgehandeld en zal dit zelf geprogrammeerd moeten worden.
    */
-  @Input() autoConnectLayerStatus = true;
+  autoConnectLayerStatus = input<boolean>(true);
+
   /**
    * Wanneer ingesteld op `true`, zal de dataset-tree automatisch lagen aan- of uitzetten in het 2D of 3D map component met dezelfde mapIndex als deze worden getoggled in de dataset-tree.
    * Bij `false` worden de kaartlagen niet automatisch aan- of uitgezet in de kaart en zal dit zelf geprogrammeerd moeten worden.
    * Hiervoor kan dan de output events worden gebruikt.
    */
-  @Input() autoConnectLayerToggle = true;
+  autoConnectLayerToggle = input<boolean>(true);
 
   /**
    * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
    * Default is TWEE_D
    */
-  @Input() viewerType = ViewerType.TWEE_D;
+  viewerType = input<ViewerType>(ViewerType.TWEE_D);
 
   private readonly datasetTreeService = inject(CoreDatasetTreeService);
   private readonly datasetTreeMapConnectService = inject(
@@ -127,18 +143,15 @@ export class LayerSelectorComponent implements OnInit {
    */
 
   async ngOnInit() {
-    if (!this.datasets) {
-      this.datasets = [];
-    }
-    if (this.expandTreeOnInit) {
-      this.datasets.forEach((dataset) => (dataset.open = true));
+    if (this.expandTreeOnInit()) {
+      this.datasets().forEach((dataset) => (dataset.open = true));
     }
     (
       await this.datasetTreeMapConnectService.getLayerChangedObservable(
-        this.viewerType
+        this.viewerType()
       )
     )?.subscribe((event) => {
-      if (event.mapIndex == this.mapIndex) {
+      if (event.mapIndex == this.mapIndex()) {
         this.handleLayerChanged(event.layerId);
       }
     });
@@ -164,12 +177,12 @@ export class LayerSelectorComponent implements OnInit {
     const activeCount = this.activeLayerCount.get(dataset) ?? 0;
     const totalCount = this.totalLayerCount.get(dataset) ?? 0;
     const activeCountersString =
-      this.showActiveCounters && activeCount > 0 ? activeCount + "/" : "";
+      this.showActiveCounters() && activeCount > 0 ? activeCount + "/" : "";
     return "(" + activeCountersString + totalCount + ")";
   }
 
   private async handleLayerChanged(layerId: string) {
-    for (const dataset of this.datasets) {
+    for (const dataset of this.datasets()) {
       if (dataset.containsLayerId(layerId)) {
         await this.updateLayerCountOfDataset(dataset);
       }
@@ -177,7 +190,7 @@ export class LayerSelectorComponent implements OnInit {
   }
 
   private async updateAllLayerCounts() {
-    for (const dataset of this.datasets) {
+    for (const dataset of this.datasets()) {
       await this.updateLayerCountOfDataset(dataset);
     }
   }
@@ -187,8 +200,8 @@ export class LayerSelectorComponent implements OnInit {
       dataset,
       await this.datasetTreeService.countActiveLayersOfDataset(
         dataset,
-        this.mapIndex,
-        this.viewerType
+        this.mapIndex(),
+        this.viewerType()
       )
     );
     this.totalLayerCount.set(

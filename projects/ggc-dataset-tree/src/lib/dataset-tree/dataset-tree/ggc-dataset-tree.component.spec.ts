@@ -220,11 +220,20 @@ describe("DatasetTreeComponent", () => {
     });
 
     it("should have custom glyphicons", () => {
-      component.iconExpanded = "glyphicon-minus-sign";
-      component.iconCollapsed = "glyphicon-plus-sign";
-      component.iconInfoUrl = "glyphicon-custom-info-sign";
-      component.iconUnchecked = "glyphicon-custom-uncheck-sign";
-      component.iconChecked = "glyphicon-custom-check-sign";
+      fixture.componentRef.setInput("iconExpanded", "glyphicon-minus-sign");
+      fixture.componentRef.setInput("iconCollapsed", "glyphicon-plus-sign");
+      fixture.componentRef.setInput(
+        "iconInfoUrl",
+        "glyphicon-custom-info-sign"
+      );
+      fixture.componentRef.setInput(
+        "iconUnchecked",
+        "glyphicon-custom-uncheck-sign"
+      );
+      fixture.componentRef.setInput(
+        "iconChecked",
+        "glyphicon-custom-check-sign"
+      );
       fixture.componentRef.setInput("themes", createTreeForTest(2, true));
       fixture.detectChanges();
     });

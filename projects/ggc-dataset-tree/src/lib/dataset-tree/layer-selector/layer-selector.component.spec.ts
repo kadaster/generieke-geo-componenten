@@ -38,8 +38,11 @@ describe("LayerSelectorComponent", () => {
     fixture = TestBed.createComponent(LayerSelectorComponent);
     component = fixture.componentInstance;
 
-    component.hideTree = false;
-    component.iconInfoUrl = "glyphicon glyphicon-info-sign";
+    fixture.componentRef.setInput("hideTree", false);
+    fixture.componentRef.setInput(
+      "iconInfoUrl",
+      "glyphicon glyphicon-info-sign"
+    );
 
     fixture.detectChanges();
   });
@@ -50,7 +53,9 @@ describe("LayerSelectorComponent", () => {
 
   describe("infoUrl", () => {
     it("when there is an infoUrl available there should be an icon to view the url", async () => {
-      component.datasets = [new Dataset("myDataset", [service], "infourl")];
+      fixture.componentRef.setInput("datasets", [
+        new Dataset("myDataset", [service], "infourl")
+      ]);
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
       // expect(element).toBeTruthy();
@@ -60,7 +65,9 @@ describe("LayerSelectorComponent", () => {
     });
 
     it("when there is no infoUrl available (empty string) there should not be an icon to view the url", () => {
-      component.datasets = [new Dataset("myDataset", [service], "")];
+      fixture.componentRef.setInput("datasets", [
+        new Dataset("myDataset", [service], "")
+      ]);
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
       expect(element).toBeNull();
@@ -68,9 +75,9 @@ describe("LayerSelectorComponent", () => {
     });
 
     it("when there is no infoUrl available (null) there should not be an icon to view the url", () => {
-      component.datasets = [
+      fixture.componentRef.setInput("datasets", [
         new Dataset("myDataset", [service], null as unknown as string)
-      ];
+      ]);
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
       expect(element).toBeNull();
@@ -78,9 +85,9 @@ describe("LayerSelectorComponent", () => {
     });
 
     it("when there is no infoUrl available (undefined) there should not be an icon to view the url", () => {
-      component.datasets = [
-        new Dataset("myDataset", [service], undefined as unknown as string)
-      ];
+      fixture.componentRef.setInput("datasets", [
+        new Dataset("myDataset", [service], null as unknown as string)
+      ]);
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
       expect(element).toBeFalsy();
