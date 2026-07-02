@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from "@angular/core";
+import { Component, computed, inject, OnInit, signal } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent
@@ -31,7 +31,10 @@ import { take } from "rxjs/operators";
   ],
   templateUrl: "./example-search-location-adv.component.html"
 })
-export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent implements OnInit {
+export class ExampleSearchLocationAdvComponent
+  extends ExampleFormatComponent
+  implements OnInit
+{
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-adv",
