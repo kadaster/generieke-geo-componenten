@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  signal,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import {
   GgcDrawService,
@@ -27,7 +21,6 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "ggc-home-example-draw-center-draw",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-draw-center-draw.component.html"
 })
 export class ExampleDrawCenterDrawComponent

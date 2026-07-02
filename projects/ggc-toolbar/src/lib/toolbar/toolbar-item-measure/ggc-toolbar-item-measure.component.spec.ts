@@ -69,13 +69,13 @@ describe("ToolbarItemMeasureComponent", () => {
     expect(spans[5].nativeElement.className).toBe("fal fa-trash-alt");
   });
 
-  // it("should show custom button when overwritten", () => {
-  //   component.measureLineIcon = "fas fa-map-signs";
-  //   fixture.detectChanges();
-  //
-  //   const spans = debugElement.queryAll(By.css("button>span"));
-  //   expect(spans[1].nativeElement.className).toBe("fas fa-map-signs");
-  // });
+  it("should show custom button when overwritten", () => {
+    fixture.componentRef.setInput("measureLineIcon", "fas fa-map-signs");
+    fixture.detectChanges();
+
+    const spans = debugElement.queryAll(By.css("button>span"));
+    expect(spans[1].nativeElement.className).toBe("fas fa-map-signs");
+  });
 
   describe("events", () => {
     let event!: ToolbarItemMeasureComponentEvent;

@@ -9,8 +9,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild,
-  ChangeDetectionStrategy
+  ViewChild
 } from "@angular/core";
 import {
   Camera,
@@ -66,7 +65,6 @@ globalThis.CESIUM_BASE_URL = "/assets/cesium/";
 @Component({
   selector: "ggc-map-3d-viewer",
   templateUrl: "./ggc-viewer.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./ggc-viewer.component.scss"]
 })
 export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -33,7 +33,6 @@ import { RouterLink } from "@angular/router";
     RouterLink
   ],
   templateUrl: "./example-toolbar.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-toolbar.component.scss"
 })
 export class ExampleToolbar extends ExampleFormatComponent {

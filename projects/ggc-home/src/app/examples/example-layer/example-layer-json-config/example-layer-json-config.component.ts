@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcLayerService,
   GgcMapComponent,
@@ -23,7 +18,6 @@ import { Webservice } from "@kadaster/ggc-map-3d";
   selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
   templateUrl: "./example-layer-json-config.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-layer-json-config.component.scss"
 })
 export class ExampleLayerJsonConfig

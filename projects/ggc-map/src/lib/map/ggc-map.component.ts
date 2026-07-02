@@ -7,8 +7,7 @@ import {
   Input,
   OnDestroy,
   Output,
-  ViewChild,
-  ChangeDetectionStrategy
+  ViewChild
 } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import { EventsKey } from "ol/events";
@@ -76,7 +75,6 @@ import {
 @Component({
   selector: "ggc-map",
   templateUrl: "./ggc-map.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./ggc-map.component.scss"]
 })
 export class GgcMapComponent implements AfterViewInit, OnDestroy {

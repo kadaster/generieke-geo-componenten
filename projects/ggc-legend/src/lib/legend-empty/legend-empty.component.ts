@@ -4,7 +4,6 @@ import { Legend } from "../model/legend.model";
 @Component({
   selector: "ggc-legend-empty",
   imports: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./legend-empty.component.html"
 })
 export class LegendEmptyComponent {

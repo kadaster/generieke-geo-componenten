@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import {
@@ -28,7 +23,6 @@ import { FormsModule } from "@angular/forms";
     GgcFeatureInfoTabsComponent,
     FormsModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-feature-info-tabs.component.html"
 })
 export class ExampleFeatureInfoTabsComponent

@@ -5,8 +5,7 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges,
-  ChangeDetectionStrategy
+  SimpleChanges
 } from "@angular/core";
 import { Theme } from "../model/theme/theme.model";
 import { DatasetSwitcherButton } from "./model/dataset-switcher-button.model";
@@ -40,7 +39,6 @@ import { DatasetTreeMapConnectService } from "../dataset-tree/service/dataset-tr
 @Component({
   selector: "ggc-dataset-switcher",
   templateUrl: "./ggc-dataset-switcher.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./ggc-dataset-switcher.component.css"]
 })
 export class GgcDatasetSwitcherComponent implements OnChanges {

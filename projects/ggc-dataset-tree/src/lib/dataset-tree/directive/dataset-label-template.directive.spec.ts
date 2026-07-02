@@ -4,7 +4,6 @@ import { DatasetLabelTemplateDirective } from "./dataset-label-template.directiv
 
 @Component({
   imports: [DatasetLabelTemplateDirective],
-  changeDetection: ChangeDetectionStrategy.Eager,
   template: ` <ng-template
     [ggcDatasetLabelTemplate]=""
     let-key

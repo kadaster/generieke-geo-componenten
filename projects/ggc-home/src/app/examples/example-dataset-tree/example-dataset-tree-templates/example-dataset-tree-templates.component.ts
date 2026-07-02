@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import {
@@ -38,7 +33,6 @@ import { Tags } from "../../tags.enum";
     LayerLabelTemplateDirective
   ],
   templateUrl: "./example-dataset-tree-templates.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-dataset-tree-templates.component.scss"
 })
 export class ExampleDatasetTreeTemplatesComponent

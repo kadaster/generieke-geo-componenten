@@ -4,8 +4,7 @@ import {
   effect,
   inject,
   Input,
-  signal,
-  ChangeDetectionStrategy
+  signal
 } from "@angular/core";
 import { LegendUrl } from "@kadaster/ggc-models";
 import { HttpClient } from "@angular/common/http";
@@ -14,7 +13,6 @@ import DOMPurify from "dompurify";
 
 @Component({
   selector: "ggc-legend-url",
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./ggc-legend-url.component.html"
 })
 export class GgcLegendUrlComponent {

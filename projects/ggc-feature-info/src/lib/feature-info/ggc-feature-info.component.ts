@@ -11,8 +11,7 @@ import {
   TemplateRef,
   AfterViewInit,
   OnDestroy,
-  QueryList,
-  ChangeDetectionStrategy
+  QueryList
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -60,7 +59,6 @@ import { FeatureInfoEventService } from "../service/feature-info-event.service";
   selector: "ggc-feature-info",
   templateUrl: "./ggc-feature-info.component.html",
   styleUrls: ["./ggc-feature-info.component.css"],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FeatureInfoDisplayComponent]
 })
 export class GgcFeatureInfoComponent

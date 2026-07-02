@@ -1,6 +1,6 @@
 <ggc-theme-selector
-  [themes]="themes"
-  [showActiveCounters]="showActiveCounters"
+  [themes]="processedThemes()"
+  [showActiveCounters]="showActiveCounters()"
   [iconCollapsed]="iconCollapsed"
   [iconExpanded]="iconExpanded"
   [iconAlignRight]="iconAlignRight"
@@ -12,7 +12,7 @@
   [layerLabelComponent]="layerLabelComponent"
   [datasetLabelComponent]="datasetLabelComponent"
   [expandTreeOnInit]="expandTreeOnInit"
-  [showOnlyDatasets]="showOnlyDatasets"
+  [showOnlyDatasets]="showOnlyDatasets()"
   [layerEnabledCallback]="layerEnabledCallback"
   [mapIndex]="mapIndex"
   [viewerType]="viewerType"

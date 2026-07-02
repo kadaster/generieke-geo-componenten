@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  signal,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
@@ -17,7 +11,6 @@ import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-home-example-measure",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-measure.component.html"
 })
 export class ExampleMeasure extends ExampleFormatComponent implements OnInit {

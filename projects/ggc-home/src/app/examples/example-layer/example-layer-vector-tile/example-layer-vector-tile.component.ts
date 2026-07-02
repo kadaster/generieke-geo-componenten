@@ -10,7 +10,6 @@ import { Tags } from "../../tags.enum";
   selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-vector-tile.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-layer-vector-tile.component.scss"
 })
 export class ExampleLayerVectorTileComponent

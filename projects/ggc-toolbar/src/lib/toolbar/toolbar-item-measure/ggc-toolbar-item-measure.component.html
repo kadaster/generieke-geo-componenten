@@ -7,7 +7,7 @@
       title="Stop meten"
       (click)="stopMeasure()"
     >
-      <span [ngClass]="stopIcon" aria-hidden="true"></span>
+      <span [ngClass]="stopIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -19,7 +19,7 @@
       [ngClass]="{ active: activeMeasure === 'line' }"
       (click)="measureLine()"
     >
-      <span [ngClass]="measureLineIcon" aria-hidden="true"></span>
+      <span [ngClass]="measureLineIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -31,7 +31,7 @@
       [ngClass]="{ active: activeMeasure === 'polygon' }"
       (click)="measurePolygon()"
     >
-      <span [ngClass]="measurePolygonIcon" aria-hidden="true"></span>
+      <span [ngClass]="measurePolygonIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -43,7 +43,7 @@
       title="Meting verplaatsen"
       (click)="move()"
     >
-      <span [ngClass]="moveIcon" aria-hidden="true"></span>
+      <span [ngClass]="moveIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -55,7 +55,7 @@
       title="Meting bewerken"
       (click)="edit()"
     >
-      <span [ngClass]="editIcon" aria-hidden="true"></span>
+      <span [ngClass]="editIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -66,7 +66,7 @@
       title="Meting wissen"
       (click)="eraseMeasureLayer()"
     >
-      <span [ngClass]="deleteIcon" aria-hidden="true"></span>
+      <span [ngClass]="deleteIcon()" aria-hidden="true"></span>
     </button>
   </li>
 </ul>

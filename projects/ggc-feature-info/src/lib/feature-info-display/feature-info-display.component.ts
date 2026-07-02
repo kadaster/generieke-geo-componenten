@@ -1,6 +1,7 @@
 import {
   Component,
   inject,
+  input,
   Input,
   OnChanges,
   OnInit,
@@ -20,7 +21,7 @@ import { FeatureKeysPipe } from "../pipe/keys.pipe";
   imports: [NgTemplateOutlet, FeatureKeysPipe]
 })
 export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
-  @Input() type: FeatureInfoDisplayType = FeatureInfoDisplayType.TABLE;
+  type = input<FeatureInfoDisplayType>(FeatureInfoDisplayType.TABLE);
   @Input() currentFeature: { [key: string]: any };
   @Input() hideEmptyFields: boolean;
   @Input() headerValueTemplates: Map<string, TemplateRef<any>> = new Map();
@@ -31,7 +32,9 @@ export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
   protected objectKeys: string[];
   protected featureInfoDisplayTypeEnum = FeatureInfoDisplayType;
 
-  private featureInfoConfigService = inject(GgcFeatureInfoConfigService);
+  private readonly featureInfoConfigService = inject(
+    GgcFeatureInfoConfigService
+  );
 
   ngOnInit() {
     this.prepareForDisplay();

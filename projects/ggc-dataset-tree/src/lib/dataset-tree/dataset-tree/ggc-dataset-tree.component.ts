@@ -1,13 +1,14 @@
 import {
   AfterContentInit,
   Component,
+  computed,
   ContentChild,
   EventEmitter,
   inject,
+  input,
   Input,
   Output,
-  TemplateRef,
-  ChangeDetectionStrategy
+  TemplateRef
 } from "@angular/core";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { GgcDatasetTreeModelCreateService } from "../../core/ggc-dataset-tree-model-create.service";
@@ -44,14 +45,13 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
 @Component({
   selector: "ggc-dataset-tree",
   templateUrl: "./ggc-dataset-tree.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ThemeSelectorComponent]
 })
 export class GgcDatasetTreeComponent implements AfterContentInit {
   /**
    * Wanneer `true`, dan wordt het aantal actieve kaartlagen getoond bij elke dataset (wordt doorgegeven aan alle themes). Bij `false` wordt bij een thema alleen het aantal onderliggende datasets getoond.
    */
-  @Input() showActiveCounters = true;
+  showActiveCounters = input<boolean>(true);
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de dataset opengeklapt is (wordt doorgegeven aan alle themes).
    */
@@ -91,7 +91,7 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
   /**
    * Wanneer true, dan worden alle theme namen weggelaten in de tree en worden alleen datasets weergegeven (wordt doorgegeven aan alle themes).
    */
-  @Input() showOnlyDatasets = false;
+  showOnlyDatasets = input<boolean>(false);
   /**
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
    * optioneel kunt **overschrijven**.
@@ -132,20 +132,12 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
   @ContentChild(DatasetLabelTemplateDirective)
   private readonly datasetLabelTemplate: DatasetLabelTemplateDirective;
 
-  /**
-   * Ophalen van de huidige Theme‑array.
-   */
-  @Input({ required: true })
-  get themes(): Theme[] {
-    return this._themes;
-  }
+  themes = input.required<Theme[]>();
 
-  /**
-   * Setten van themes.
-   * @param themes - lijst van themes die geset moeten worden
-   */
-  set themes(themes: Theme[]) {
-    if (this.showOnlyDatasets) {
+  protected processedThemes = computed(() => {
+    let themes = this.themes();
+
+    if (this.showOnlyDatasets()) {
       themes = [
         new Theme(
           "",
@@ -153,8 +145,9 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
         )
       ];
     }
-    this._themes = this.modelCreateService.themeArrayFactory(themes);
-  }
+
+    return this.modelCreateService.themeArrayFactory(themes);
+  });
 
   /**
    * Index van de kaart waarop deze layer wordt bijgehouden (wordt doorgegeven aan alle themes).

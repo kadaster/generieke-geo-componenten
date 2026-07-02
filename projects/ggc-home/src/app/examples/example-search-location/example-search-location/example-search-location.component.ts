@@ -24,7 +24,6 @@ import { Tags } from "../../tags.enum";
     GgcSearchLocationComponent,
     ExampleFormatComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-search-location.component.html"
 })
 export class ExampleSearchLocationComponent extends ExampleFormatComponent {

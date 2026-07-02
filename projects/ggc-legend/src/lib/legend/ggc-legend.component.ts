@@ -5,8 +5,7 @@ import {
   Input,
   OnInit,
   Output,
-  signal,
-  ChangeDetectionStrategy
+  signal
 } from "@angular/core";
 import { Legend } from "../model/legend.model";
 import {
@@ -65,7 +64,6 @@ import { LayerLegendEnabledCallback } from "../model/layer-legend-enabled-callba
     LegendMapboxComponent,
     LegendEmptyComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./ggc-legend.component.css"]
 })
 export class GgcLegendComponent implements OnInit {

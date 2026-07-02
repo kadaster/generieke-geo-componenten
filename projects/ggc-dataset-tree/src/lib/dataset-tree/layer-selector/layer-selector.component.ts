@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  Input,
-  OnInit,
-  TemplateRef,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, Input, OnInit, TemplateRef } from "@angular/core";
 import { Dataset } from "../../model/theme/dataset.model";
 
 import { NgClass, NgTemplateOutlet } from "@angular/common";
@@ -30,7 +23,6 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
   selector: "ggc-layer-selector",
   templateUrl: "./layer-selector.component.html",
   styleUrls: ["./layer-selector.component.scss"],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, NgTemplateOutlet, LayerToggleComponent]
 })
 export class LayerSelectorComponent implements OnInit {

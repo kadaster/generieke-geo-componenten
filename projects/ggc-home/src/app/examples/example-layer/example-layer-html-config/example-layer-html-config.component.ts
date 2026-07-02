@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcCapabilitiesService,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -30,7 +25,6 @@ import { Tags } from "../../tags.enum";
     FormsModule
   ],
   templateUrl: "./example-layer-html-config.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-layer-html-config.component.scss"
 })
 export class ExampleLayerHtmlConfig implements OnInit {

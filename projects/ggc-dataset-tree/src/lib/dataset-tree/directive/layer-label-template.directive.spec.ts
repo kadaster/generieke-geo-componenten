@@ -4,7 +4,6 @@ import { LayerLabelTemplateDirective as LayerLabelTemplateDirective } from "./la
 
 @Component({
   imports: [LayerLabelTemplateDirective],
-  changeDetection: ChangeDetectionStrategy.Eager,
   template: ` <ng-template [ggcLayerLabelTemplate]="" let-key let-value="value">
     test directive
   </ng-template>`

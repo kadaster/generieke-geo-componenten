@@ -20,7 +20,6 @@ import { Themes } from "../../themes.enum";
     ExampleFormatComponent
   ],
   templateUrl: "./example-dataset-switcher-radio-buttons.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-dataset-switcher-radio-buttons.component.scss"
 })
 export class ExampleDatasetSwitcherRadioButtonsComponent

@@ -63,47 +63,47 @@ describe("ZoomLevelComponent", () => {
     expect(coreMapServiceSpy).toHaveBeenCalledTimes(1);
   });
 
-  // it("when zoom level is 9 getZoomLlevel() should return 9", () => {
-  //   const viewMock = {
-  //     getZoom(): number {
-  //       return 9;
-  //     }
-  //   } as View;
-  //
-  //   vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
-  //
-  //   component["getZoomLevel"]();
-  //   fixture.detectChanges();
-  //
-  //   expect(component["zoomLevel"]).toEqual(9);
-  //
-  //   const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
-  //
-  //   expect(zoomLevelElement).not.toBeNull();
-  //   expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual("9");
-  // });
+  it("when zoom level is 9 getZoomLlevel() should return 9", () => {
+    const viewMock = {
+      getZoom(): number {
+        return 9;
+      }
+    } as View;
 
-  // it("when zoom level is a decimal number getZoomLlevel() should return it rounded to 2 decimals ", () => {
-  //   const viewMock = {
-  //     getZoom(): number {
-  //       return 3.14159265359;
-  //     }
-  //   } as View;
-  //
-  //   vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
-  //
-  //   component["getZoomLevel"]();
-  //   fixture.detectChanges();
-  //
-  //   expect(component["zoomLevel"]).toEqual(3.14);
-  //
-  //   const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
-  //
-  //   expect(zoomLevelElement).not.toBeNull();
-  //   expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual(
-  //     "3.14"
-  //   );
-  // });
+    vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
+
+    component["getZoomLevel"]();
+    fixture.detectChanges();
+
+    expect(component["zoomLevel"]()).toEqual(9);
+
+    const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
+
+    expect(zoomLevelElement).not.toBeNull();
+    expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual("9");
+  });
+
+  it("when zoom level is a decimal number getZoomLlevel() should return it rounded to 2 decimals ", () => {
+    const viewMock = {
+      getZoom(): number {
+        return 3.14159265359;
+      }
+    } as View;
+
+    vi.spyOn(component["map"], "getView").mockReturnValue(viewMock);
+
+    component["getZoomLevel"]();
+    fixture.detectChanges();
+
+    expect(component["zoomLevel"]()).toEqual(3.14);
+
+    const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
+
+    expect(zoomLevelElement).not.toBeNull();
+    expect((zoomLevelElement as HTMLElement).textContent?.trim()).toEqual(
+      "3.14"
+    );
+  });
 
   it("when ngDestroy is called, unsubscribe should be executed, ", () => {
     component["zoomendSubscription"] = new Subscription();

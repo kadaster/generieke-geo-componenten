@@ -9,7 +9,6 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-layer-wms.component.html"
 })
 export class ExampleLayerWmsComponent

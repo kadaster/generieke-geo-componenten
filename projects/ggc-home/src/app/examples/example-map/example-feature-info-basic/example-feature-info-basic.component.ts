@@ -10,7 +10,6 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "ggc-home-example-feature-info-basic",
   imports: [ExampleFormatComponent, GgcFeatureInfoComponent, GgcMapComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-feature-info-basic.component.html"
 })
 export class ExampleFeatureInfoBasicComponent

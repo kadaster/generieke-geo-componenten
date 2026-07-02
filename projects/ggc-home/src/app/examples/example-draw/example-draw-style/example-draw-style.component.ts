@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  model,
-  OnInit,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, model, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
@@ -21,7 +15,6 @@ import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-home-example-draw-style",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule, RouterModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-draw-style.component.html"
 })
 export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {

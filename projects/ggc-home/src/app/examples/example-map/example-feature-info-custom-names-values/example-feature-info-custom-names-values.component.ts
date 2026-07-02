@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import {
@@ -19,7 +14,6 @@ import { Tags } from "../../tags.enum";
 @Component({
   selector: "ggc-home-example-feature-info-custom-names-values",
   imports: [ExampleFormatComponent, GgcFeatureInfoComponent, GgcMapComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-feature-info-custom-names-values.component.html"
 })
 export class ExampleFeatureInfoCustomNamesValuesComponent

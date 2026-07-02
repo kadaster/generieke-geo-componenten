@@ -1,4 +1,4 @@
-@switch (type) {
+@switch (type()) {
   @case (featureInfoDisplayTypeEnum.LIST) {
     <dl class="ggc-fi-list-item">
       @for (key of objectKeys | featureinfokeys; track key) {

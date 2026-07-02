@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 
 import { Router, RouterOutlet } from "@angular/router";
 import { MenuBarComponent } from "./menu-bar/menu-bar.component";
@@ -13,7 +8,6 @@ import { PiwikScriptLoaderService } from "./service/piwik-script-loader.service"
   selector: "ggc-home-root",
   imports: [RouterOutlet, MenuBarComponent],
   templateUrl: "./app.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./app.scss"
 })
 export class App {

@@ -71,13 +71,13 @@ describe("ToolbarItemDrawComponent", () => {
     expect(spans[8].nativeElement.className).toBe("fal fa-trash-alt");
   });
 
-  // it("should show custom button when overwritten", () => {
-  //   component.deleteIcon = "fas fa-eraser";
-  //   fixture.detectChanges();
-  //
-  //   const spans = debugElement.queryAll(By.css("button>span"));
-  //   expect(spans[8].nativeElement.className).toBe("fas fa-eraser");
-  // });
+  it("should show custom button when overwritten", () => {
+    fixture.componentRef.setInput("deleteIcon", "fas fa-eraser");
+    fixture.detectChanges();
+
+    const spans = debugElement.queryAll(By.css("button>span"));
+    expect(spans[8].nativeElement.className).toBe("fas fa-eraser");
+  });
 
   describe("events", () => {
     let event!: ToolbarItemDrawComponentEvent;

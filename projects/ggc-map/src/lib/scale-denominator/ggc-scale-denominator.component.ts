@@ -1,4 +1,11 @@
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal
+} from "@angular/core";
 import OlMap from "ol/Map";
 import { Subscription } from "rxjs";
 import { CoreMapEventsService } from "../map/service/core-map-events.service";
@@ -24,7 +31,7 @@ export class GgcScaleDenominatorComponent implements OnInit, OnDestroy {
    * berekend moet worden.
    */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
-  protected currentScaleDenominator: number | undefined;
+  protected currentScaleDenominator = signal<number | undefined>(undefined);
   private readonly coreMapService = inject(CoreMapService);
   private readonly mapEventsService = inject(CoreMapEventsService);
   private readonly INCHES_PER_METER = 39.37;
@@ -68,11 +75,11 @@ export class GgcScaleDenominatorComponent implements OnInit, OnDestroy {
     const resolution = this.map.getView().getResolution();
     // schaalgetal = resolutie (m/pixel) * inches/m * pixels/inch
     if (resolution) {
-      this.currentScaleDenominator = Math.round(
-        resolution * this.INCHES_PER_METER * this.POINTS_PER_INCH
+      this.currentScaleDenominator.set(
+        Math.round(resolution * this.INCHES_PER_METER * this.POINTS_PER_INCH)
       );
     } else {
-      this.currentScaleDenominator = undefined;
+      this.currentScaleDenominator.set(undefined);
     }
   }
 

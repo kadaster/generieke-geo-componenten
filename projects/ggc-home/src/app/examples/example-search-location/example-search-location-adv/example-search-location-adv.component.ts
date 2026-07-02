@@ -1,9 +1,4 @@
-import {
-  Component,
-  computed,
-  signal,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, computed, signal } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent
@@ -31,7 +26,6 @@ import { Tags } from "../../tags.enum";
     ExampleFormatComponent,
     ReactiveFormsModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-search-location-adv.component.html"
 })
 export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {

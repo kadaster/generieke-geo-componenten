@@ -13,8 +13,7 @@ import {
   Signal,
   ViewChild,
   ViewChildren,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
+  ViewEncapsulation
 } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { SearchComponentElementIds } from "../model/search-component-element-ids.model";
@@ -59,7 +58,6 @@ const proj4 = (proj4x as any).default;
   templateUrl: "./ggc-search-location.component.html",
   encapsulation: ViewEncapsulation.None,
   styleUrls: ["./ggc-search-location.component.scss"],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, CdkListbox, CdkOption]
 })
 export class GgcSearchLocationComponent implements OnInit {

@@ -1,6 +1,6 @@
-@if (themes !== null) {
-  @if (hideTree && child) {
-    @for (theme of themes; track theme; let themeIndex = $index) {
+@if (themes() !== null) {
+  @if (hideTree() && child()) {
+    @for (theme of themes(); track theme; let themeIndex = $index) {
       <ng-container
         *ngTemplateOutlet="
           themeRow;
@@ -14,8 +14,8 @@
       [ngClass]="{ 'ggc-dt-theme': !hideTree, 'ggc-dt-theme--flat': hideTree }"
     >
       <tbody>
-        @for (theme of themes; track theme; let themeIndex = $index) {
-          @if (!hideTree && !(showOnlyDatasets && !child)) {
+        @for (theme of themes(); track theme; let themeIndex = $index) {
+          @if (!hideTree() && !(showOnlyDatasets() && !child())) {
             <tr
               class="ggc-dt-btn-ts-collapse"
               [ngClass]="{
@@ -26,15 +26,15 @@
               (keydown.enter)="theme.open = !theme.open"
               tabindex="0"
             >
-              @if (!iconAlignRight) {
+              @if (!iconAlignRight()) {
                 <td class="w-1">
                   @if (theme.open) {
                     <span
-                      class="ggc-dt-expanded icons {{ iconExpanded }}"
+                      class="ggc-dt-expanded icons {{ iconExpanded() }}"
                     ></span>
                   } @else {
                     <span
-                      class="ggc-dt-collapsed icons {{ iconCollapsed }}"
+                      class="ggc-dt-collapsed icons {{ iconCollapsed() }}"
                     ></span>
                   }
                 </td>
@@ -42,22 +42,22 @@
               <td [ngClass]="{ 'ggc-dt-btn-ls-active': theme.open }">
                 {{ theme.themeName }} {{ generateCountString(theme) }}
               </td>
-              @if (iconAlignRight) {
+              @if (iconAlignRight()) {
                 <td class="w-1 text-end">
                   @if (theme.open) {
                     <span
-                      class="ggc-dt-expanded icons {{ iconExpanded }}"
+                      class="ggc-dt-expanded icons {{ iconExpanded() }}"
                     ></span>
                   } @else {
                     <span
-                      class="ggc-dt-collapsed icons {{ iconCollapsed }}"
+                      class="ggc-dt-collapsed icons {{ iconCollapsed() }}"
                     ></span>
                   }
                 </td>
               }
             </tr>
           }
-          @if (theme.open || hideTree || (showOnlyDatasets && !child)) {
+          @if (theme.open || hideTree() || (showOnlyDatasets() && !child())) {
             <ng-container
               *ngTemplateOutlet="
                 themeRow;
@@ -73,22 +73,22 @@
 <ng-template #themeRow let-theme="theme" let-themeIndex="themeIndex">
   @if (theme.themes !== undefined && theme.themes.length > 0) {
     <tr>
-      <td [attr.colspan]="hideTree ? 1 : 2">
+      <td [attr.colspan]="hideTree() ? 1 : 2">
         <ggc-theme-selector
           [themes]="theme.themes"
           [themeNameIndex]="createNewIndex(themeIndex)"
-          [showActiveCounters]="showActiveCounters"
-          [iconCollapsed]="iconCollapsed"
-          [iconExpanded]="iconExpanded"
-          [iconAlignRight]="iconAlignRight"
-          [iconDisabled]="iconDisabled"
-          [iconChecked]="iconChecked"
-          [iconUnchecked]="iconUnchecked"
-          [iconInfoUrl]="iconInfoUrl"
-          [hideTree]="hideTree"
+          [showActiveCounters]="showActiveCounters()"
+          [iconCollapsed]="iconCollapsed()"
+          [iconExpanded]="iconExpanded()"
+          [iconAlignRight]="iconAlignRight()"
+          [iconDisabled]="iconDisabled()"
+          [iconChecked]="iconChecked()"
+          [iconUnchecked]="iconUnchecked()"
+          [iconInfoUrl]="iconInfoUrl()"
+          [hideTree]="hideTree()"
           [layerLabelComponent]="layerLabelComponent"
           [datasetLabelComponent]="datasetLabelComponent"
-          [expandTreeOnInit]="expandTreeOnInit"
+          [expandTreeOnInit]="expandTreeOnInit()"
           [child]="true"
           [layerEnabledCallback]="layerEnabledCallback"
           [mapIndex]="mapIndex"
@@ -101,22 +101,22 @@
   }
   @if (theme.datasets !== undefined && theme.datasets.length > 0) {
     <tr>
-      <td [attr.colspan]="hideTree || (showOnlyDatasets && !child) ? 1 : 2">
+      <td [attr.colspan]="hideTree() || (showOnlyDatasets() && !child) ? 1 : 2">
         <ggc-layer-selector
           [themeIndex]="createNewIndex(themeIndex)"
           [datasets]="theme.datasets"
-          [showActiveCounters]="showActiveCounters"
-          [iconCollapsed]="iconCollapsed"
-          [iconExpanded]="iconExpanded"
-          [iconAlignRight]="iconAlignRight"
-          [iconDisabled]="iconDisabled"
-          [iconChecked]="iconChecked"
-          [iconUnchecked]="iconUnchecked"
-          [iconInfoUrl]="iconInfoUrl"
-          [hideTree]="hideTree"
+          [showActiveCounters]="showActiveCounters()"
+          [iconCollapsed]="iconCollapsed()"
+          [iconExpanded]="iconExpanded()"
+          [iconAlignRight]="iconAlignRight()"
+          [iconDisabled]="iconDisabled()"
+          [iconChecked]="iconChecked()"
+          [iconUnchecked]="iconUnchecked()"
+          [iconInfoUrl]="iconInfoUrl()"
+          [hideTree]="hideTree()"
           [layerLabelComponent]="layerLabelComponent"
           [datasetLabelComponent]="datasetLabelComponent"
-          [expandTreeOnInit]="expandTreeOnInit"
+          [expandTreeOnInit]="expandTreeOnInit()"
           [layerEnabledCallback]="layerEnabledCallback"
           [mapIndex]="mapIndex"
           [viewerType]="viewerType"

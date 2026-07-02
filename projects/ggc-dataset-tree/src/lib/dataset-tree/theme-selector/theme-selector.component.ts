@@ -1,10 +1,12 @@
 import {
   Component,
+  effect,
   inject,
+  input,
   Input,
   OnInit,
-  TemplateRef,
-  ChangeDetectionStrategy
+  signal,
+  TemplateRef
 } from "@angular/core";
 import { Theme } from "../../model/theme/theme.model";
 import { LayerSelectorComponent } from "../layer-selector/layer-selector.component";
@@ -28,50 +30,49 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
   selector: "ggc-theme-selector",
   templateUrl: "./theme-selector.component.html",
   styleUrls: ["./theme-selector.component.scss"],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LayerSelectorComponent, CommonModule]
 })
 export class ThemeSelectorComponent implements OnInit {
   /**
    * Unieke index die gelijk is aan de themeIndex binnen de boomstructuur van de json. Wordt gebruikt om child themes te indexeren.
    */
-  @Input() themeNameIndex = "";
+  themeNameIndex = input<string>("");
   /**
    * Wanneer `true`, worden active/all counters toont bij elke dataset (wordt doorgegeven aan alle datasets).
    */
-  @Input() showActiveCounters = true;
+  showActiveCounters = input<boolean>(true);
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de dataset ingeklapt is (wordt doorgegeven aan alle datasets).
    */
-  @Input() iconCollapsed: string;
+  iconCollapsed = input<string>("");
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de dataset opengeklapt is (wordt doorgegeven aan alle datasets).
    */
-  @Input() iconExpanded: string;
+  iconExpanded = input<string>("");
   /**
    * Geeft aan of het inklap/uitklap icon rechts uitgelijnd moet worden. Default is true (wordt doorgegeven aan alle datasets).
    */
-  @Input() iconAlignRight: boolean;
+  iconAlignRight = input<boolean>(false);
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer disabled is (wordt doorgegeven aan alle datasets).
    */
-  @Input() iconDisabled: string;
+  iconDisabled = input<string>("");
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer zichtbaar is (wordt doorgegeven aan alle datasets).
    */
-  @Input() iconChecked: string;
+  iconChecked = input<string>("");
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer niet zichtbaar is (wordt doorgegeven aan alle datasets).
    */
-  @Input() iconUnchecked: string;
+  iconUnchecked = input<string>("");
   /**
    * CSS‑class naam van het icoon dat getoond wordt voor de info url, indien opgegeven (wordt doorgegeven aan alle datasets).
    */
-  @Input() iconInfoUrl: string;
+  iconInfoUrl = input<string>("");
   /**
    * Wanneer true, dan wordt de dataset-tree als 1 lange lijst van layers weergegeven zonder theme/datasetnamen (wordt doorgegeven aan alle datasets)
    */
-  @Input() hideTree: boolean;
+  hideTree = input<boolean>(false);
   /**
    * Optioneel Angular template waarmee het standaard layer‑label kan worden overschreven (wordt doorgegeven aan alle datasets).
    */
@@ -83,15 +84,15 @@ export class ThemeSelectorComponent implements OnInit {
   /**
    * Wanneer true, dan wordt de dataset-tree bij initialisatie uitgeklapt weergegeven (wordt doorgegeven aan alle datasets).
    */
-  @Input() expandTreeOnInit: boolean;
+  expandTreeOnInit = input<boolean>(false);
   /**
    * Wanneer true, dan worden alle theme namen weggelaten in de tree en worden alleen datasets weergegeven
    */
-  @Input() showOnlyDatasets: boolean;
+  showOnlyDatasets = input<boolean>(false);
   /**
    * Marker voor child‑themes binnen de recursieve boomstructuur.
    */
-  @Input() child = false;
+  child = input<boolean>(false);
   /**
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
    * optioneel kunt **overschrijven**.
@@ -121,7 +122,7 @@ export class ThemeSelectorComponent implements OnInit {
    */
   @Input() autoConnectLayerToggle = true;
 
-  private _themes: Theme[];
+  private readonly _themes = signal<Theme[]>([]);
 
   private readonly coreDatasetTreeService = inject(CoreDatasetTreeService);
   private readonly datasetTreeMapConnectService = inject(
@@ -131,23 +132,20 @@ export class ThemeSelectorComponent implements OnInit {
   private readonly totalLayerCount: Map<Theme, number> = new Map();
   private readonly activeLayerCount: Map<Theme, number> = new Map();
 
-  /**
-   * Geeft de huidige lijst van themes terug.
-   */
-  get themes(): Theme[] {
-    return this._themes;
-  }
+  themes = input<Theme[]>([]);
 
-  /**
-   * Setter voor themes.
-   */
-  @Input()
-  set themes(themes: Theme[]) {
-    this._themes = themes;
-    if (this.expandTreeOnInit) {
-      this.expandThemes();
-    }
-    this.updateAllLayerCounts();
+  constructor() {
+    effect(() => {
+      const themes = this.themes();
+
+      this._themes.set(themes);
+
+      if (this.expandTreeOnInit()) {
+        this.expandThemes();
+      }
+
+      this.updateAllLayerCounts();
+    });
   }
 
   /**
@@ -155,7 +153,7 @@ export class ThemeSelectorComponent implements OnInit {
    * @param themeIndex - de index van de theme
    */
   createNewIndex(themeIndex: number): string {
-    return `${this.themeNameIndex}-${themeIndex}`;
+    return `${this.themeNameIndex()}-${themeIndex}`;
   }
 
   /**
@@ -182,16 +180,16 @@ export class ThemeSelectorComponent implements OnInit {
     const activeCount = this.activeLayerCount.get(theme) ?? 0;
     const totalCount = this.totalLayerCount.get(theme) ?? 0;
     const activeCountersString =
-      this.showActiveCounters && activeCount > 0 ? activeCount + "/" : "";
+      this.showActiveCounters() && activeCount > 0 ? activeCount + "/" : "";
     return "(" + activeCountersString + totalCount + ")";
   }
 
   private expandThemes() {
-    this._themes.forEach((theme) => (theme.open = true));
+    this._themes().forEach((theme) => (theme.open = true));
   }
 
   private async handleLayerChanged(layerId: string) {
-    for (const theme of this._themes) {
+    for (const theme of this._themes()) {
       if (theme.containsLayerId(layerId)) {
         await this.updateLayerCountOfTheme(theme);
       }
@@ -199,7 +197,7 @@ export class ThemeSelectorComponent implements OnInit {
   }
 
   private async updateAllLayerCounts() {
-    for (const theme of this._themes) {
+    for (const theme of this._themes()) {
       await this.updateLayerCountOfTheme(theme);
     }
   }

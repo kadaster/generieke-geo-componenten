@@ -1,8 +1,4 @@
-import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ExampleSearchLocationComponent } from "../example-search-location/example-search-location/example-search-location.component";
 import { ExampleSnappingBasicComponent } from "../example-snapping/example-snapping-basic/example-snapping-basic.component";
 import { ComponentInfo } from "../component-info.model";
@@ -69,7 +65,6 @@ interface GroupedCards {
   templateUrl: "./example-index.component.html",
   styleUrl: "./example-index.component.scss",
   imports: [RouterLink, SortPipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class ExampleIndexComponent {

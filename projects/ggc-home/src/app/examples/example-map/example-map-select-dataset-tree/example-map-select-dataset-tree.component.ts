@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  AfterViewInit,
-  ChangeDetectionStrategy
-} from "@angular/core";
+import { Component, inject, OnInit, AfterViewInit } from "@angular/core";
 import {
   GgcMapComponent,
   GgcSelectionService,
@@ -39,7 +33,6 @@ import Stroke from "ol/style/Stroke";
     RouterLink
   ],
   templateUrl: "./example-map-select-dataset-tree.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./example-map-select-dataset-tree.component.scss"
 })
 export class ExampleMapSelectDatasetTreeComponent
