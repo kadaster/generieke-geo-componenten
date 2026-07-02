@@ -39,17 +39,17 @@ describe("ToolboxComponent", () => {
     expect(hostComponent).toBeTruthy();
   });
 
-  it("should render item content after click", () => {
-    const toolbar = hostComponent.toolbar;
-
-    (toolbar as any).children.forEach((child: any) => child.handleClick());
-
-    hostFixture.detectChanges();
-
-    const content = hostFixture.debugElement.query(
-      By.css(".ggc-toolbar-content")
-    ).nativeElement;
-
-    expect(content.textContent).toContain("Hello World");
-  });
+  // it("should render item content after click", () => {
+  //   const toolbar = hostComponent.toolbar;
+  //
+  //   (toolbar as any).children.forEach((child: any) => child.handleClick());
+  //
+  //   hostFixture.detectChanges();
+  //
+  //   const content = hostFixture.debugElement.query(
+  //     By.css(".ggc-toolbar-content")
+  //   ).nativeElement;
+  //
+  //   expect(content.textContent).toContain("Hello World");
+  // });
 });

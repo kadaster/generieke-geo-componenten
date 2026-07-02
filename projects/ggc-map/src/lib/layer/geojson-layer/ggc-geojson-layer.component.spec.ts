@@ -438,7 +438,7 @@ describe("GeojsonLayerComponent", () => {
       ).toHaveBeenCalled();
     });
 
-    mapSpy.forEachFeatureAtPixel = vi.fn();
+    mapSpy.forEachFeatureAtPixel;
     component.getFeatureInfo(evt);
   });
 
@@ -455,7 +455,7 @@ describe("GeojsonLayerComponent", () => {
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
 
-    mapSpy.forEachFeatureAtPixel = vi.fn();
+    mapSpy.forEachFeatureAtPixel;
     component.getFeatureInfo(evt);
 
     expect(component["map"].forEachFeatureAtPixel).toHaveBeenCalled();

@@ -10,27 +10,14 @@ import {
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoKeyValue } from "./feature-info-key-value";
 import { FeatureInfoDisplayType } from "./feature-info-display-type";
-import {
-  NgSwitch,
-  NgSwitchCase,
-  NgFor,
-  NgIf,
-  NgTemplateOutlet
-} from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import { FeatureKeysPipe } from "../pipe/keys.pipe";
 
 @Component({
   selector: "ggc-feature-info-display",
   templateUrl: "./feature-info-display.component.html",
   styleUrls: ["./feature-info-display.component.css"],
-  imports: [
-    NgSwitch,
-    NgSwitchCase,
-    NgFor,
-    NgIf,
-    NgTemplateOutlet,
-    FeatureKeysPipe
-  ]
+  imports: [NgTemplateOutlet, FeatureKeysPipe]
 })
 export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
   @Input() type: FeatureInfoDisplayType = FeatureInfoDisplayType.TABLE;

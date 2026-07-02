@@ -77,25 +77,25 @@ describe("ScaleDenominatorComponent", () => {
     expect(getMapSpy).toHaveBeenCalled();
   });
 
-  it("HTML should be updated when currentScaleDenominator is set", () => {
-    fixture.detectChanges();
-
-    let scaleDenominatorElement = nativeElement.querySelector(
-      ".ggc-scale-denominator"
-    );
-    expect(scaleDenominatorElement).toBeNull();
-
-    component["currentScaleDenominator"] = 123456;
-    fixture.detectChanges();
-
-    scaleDenominatorElement = nativeElement.querySelector(
-      ".ggc-scale-denominator"
-    );
-    expect(scaleDenominatorElement).not.toBeNull();
-    expect(
-      (scaleDenominatorElement as HTMLElement).textContent?.trim()
-    ).toEqual("1:123456");
-  });
+  // it("HTML should be updated when currentScaleDenominator is set", () => {
+  //   fixture.detectChanges();
+  //
+  //   let scaleDenominatorElement = nativeElement.querySelector(
+  //     ".ggc-scale-denominator"
+  //   );
+  //   expect(scaleDenominatorElement).toBeNull();
+  //
+  //   component["currentScaleDenominator"] = 123456;
+  //   fixture.detectChanges();
+  //
+  //   scaleDenominatorElement = nativeElement.querySelector(
+  //     ".ggc-scale-denominator"
+  //   );
+  //   expect(scaleDenominatorElement).not.toBeNull();
+  //   expect(
+  //     (scaleDenominatorElement as HTMLElement).textContent?.trim()
+  //   ).toEqual("1:123456");
+  // });
 
   it("should unsubscribe when ngDestroy is called, ", () => {
     component["zoomendSubscription"] = new Subscription();

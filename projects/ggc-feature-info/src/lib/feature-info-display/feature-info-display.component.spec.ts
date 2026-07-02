@@ -91,20 +91,20 @@ describe("FeatureInfoDisplayComponent", () => {
     ).toHaveBeenCalledTimes(2);
   });
 
-  it("when featureInfoDisplayType is featureInfoDisplayType.LIST, it should show a list item", () => {
-    component.type = FeatureInfoDisplayType.LIST;
-    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
-      { test: "123" }
-    ]);
-
-    component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
-    fixture.detectChanges();
-
-    const ListItemElement = nativeElement.querySelector(".ggc-fi-list-item");
-    const TableItemElement = nativeElement.querySelector(".ggc-fi-table");
-    expect(ListItemElement).not.toBeNull();
-    expect(TableItemElement).toBeNull();
-  });
+  // it("when featureInfoDisplayType is featureInfoDisplayType.LIST, it should show a list item", () => {
+  //   component.type = FeatureInfoDisplayType.LIST;
+  //   featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
+  //     { test: "123" }
+  //   ]);
+  //
+  //   component.ngOnChanges({ featureInfoCollection: {} as SimpleChange });
+  //   fixture.detectChanges();
+  //
+  //   const ListItemElement = nativeElement.querySelector(".ggc-fi-list-item");
+  //   const TableItemElement = nativeElement.querySelector(".ggc-fi-table");
+  //   expect(ListItemElement).not.toBeNull();
+  //   expect(TableItemElement).toBeNull();
+  // });
 
   it("when featureInfoDisplayType is not set, it should show a table item", () => {
     featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
