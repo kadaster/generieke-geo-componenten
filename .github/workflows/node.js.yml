@@ -65,7 +65,7 @@ jobs:
       matrix:
         step:
           [
-            ggc-cesium,
+            ggc-map-3d,
             ggc-dataset-tree,
             ggc-feature-info,
             ggc-legend,
@@ -95,7 +95,7 @@ jobs:
       matrix:
         step:
           [
-            ggc-cesium,
+            ggc-map-3d,
             ggc-dataset-tree,
             ggc-feature-info,
             ggc-legend,

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declarationMap": false,
     "paths": {
-      "@kadaster/ggc-cesium": [
+      "@kadaster/ggc-map-3d": [
         "projects/ggc-legend/src/typings/legend-shims.d.ts"
       ],
       "@kadaster/ggc-map": [

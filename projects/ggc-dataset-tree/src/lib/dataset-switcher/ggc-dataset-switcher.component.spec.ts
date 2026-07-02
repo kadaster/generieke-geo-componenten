@@ -1,8 +1,7 @@
-import type { Mock, MockedObject } from "vitest";
+import type { MockedObject } from "vitest";
 import { SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { GgcDatasetTreeConnectService } from "../dataset-tree/service/connect.service";
 import { Dataset } from "../model/theme/dataset.model";
 import {
   DatasetTreeLayer,
@@ -12,37 +11,27 @@ import { Theme } from "../model/theme/theme.model";
 import { GgcDatasetSwitcherComponent } from "./ggc-dataset-switcher.component";
 import { DatasetSwitcherButton } from "./model/dataset-switcher-button.model";
 import { DatasetSwitcherEvent } from "./model/dataset-switcher-event.model";
+import { DatasetTreeMapConnectService } from "../dataset-tree/service/dataset-tree-map-connect.service";
+import { ViewerType } from "@kadaster/ggc-models";
 
 describe("GgcDatasetSwitcherComponent", () => {
   let component: GgcDatasetSwitcherComponent;
   let fixture: ComponentFixture<GgcDatasetSwitcherComponent>;
 
-  let olLayerServiceMock: {
-    setVisibilityLayers: Mock;
-    isVisible: Mock;
-  };
-
-  let connectServiceMock: MockedObject<GgcDatasetTreeConnectService>;
+  let datasetTreeMapConnectServiceSpy: MockedObject<DatasetTreeMapConnectService>;
 
   beforeEach(() => {
-    olLayerServiceMock = {
-      setVisibilityLayers: vi.fn(),
-      isVisible: vi.fn()
-    };
-
-    connectServiceMock = {
-      getGgcOLLayerService: vi
-        .fn()
-        .mockName("GgcDatasetTreeConnectService.getGgcOLLayerService")
-        .mockResolvedValue(olLayerServiceMock)
-    } as MockedObject<GgcDatasetTreeConnectService>;
+    datasetTreeMapConnectServiceSpy = {
+      isVisible: vi.fn(),
+      setVisibilityLayers: vi.fn()
+    } as MockedObject<DatasetTreeMapConnectService>;
 
     TestBed.configureTestingModule({
       imports: [GgcDatasetSwitcherComponent],
       providers: [
         {
-          provide: GgcDatasetTreeConnectService,
-          useValue: connectServiceMock
+          provide: DatasetTreeMapConnectService,
+          useValue: datasetTreeMapConnectServiceSpy
         }
       ]
     }).compileComponents();
@@ -119,8 +108,10 @@ describe("GgcDatasetSwitcherComponent", () => {
       const themes = createThemesWithLayers();
       component.themes = themes;
 
-      olLayerServiceMock.isVisible.mockImplementation(
-        (layerId: string) => layerId === "b-1"
+      datasetTreeMapConnectServiceSpy.isVisible.mockImplementation(
+        (layerId: string) => {
+          return Promise.resolve(layerId === "b-1");
+        }
       );
 
       const emitted: DatasetSwitcherEvent[] = [];
@@ -131,10 +122,12 @@ describe("GgcDatasetSwitcherComponent", () => {
       vi.advanceTimersByTime(100);
       await vi.runAllTimersAsync();
 
-      expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
+      expect(datasetTreeMapConnectServiceSpy.isVisible).toHaveBeenCalled();
 
       expect(component["activeTheme"]?.themeName).toBe("Theme B");
-      expect(olLayerServiceMock.setVisibilityLayers).not.toHaveBeenCalled();
+      expect(
+        datasetTreeMapConnectServiceSpy.setVisibilityLayers
+      ).not.toHaveBeenCalled();
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme B");
@@ -145,7 +138,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       const themes = createThemesWithLayers();
       component.themes = themes;
 
-      olLayerServiceMock.isVisible.mockReturnValue(false);
+      datasetTreeMapConnectServiceSpy.isVisible.mockResolvedValue(false);
 
       const emitted: DatasetSwitcherEvent[] = [];
       component.events.subscribe((e) => emitted.push(e));
@@ -157,9 +150,12 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       expect(component["activeTheme"]?.themeName).toBe("Theme A");
 
-      expect(olLayerServiceMock.setVisibilityLayers).toHaveBeenCalledWith(
+      expect(
+        datasetTreeMapConnectServiceSpy.setVisibilityLayers
+      ).toHaveBeenCalledWith(
         ["a-1"],
         true,
+        ViewerType.TWEE_D,
         component.mapIndex
       );
 
@@ -175,7 +171,6 @@ describe("GgcDatasetSwitcherComponent", () => {
       component.handleChangeEvent({ target: {} } as any);
 
       expect(emitSpy).not.toHaveBeenCalled();
-      expect(connectServiceMock.getGgcOLLayerService).not.toHaveBeenCalled();
     });
 
     it("should ignore unknown theme", () => {
@@ -200,16 +195,20 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       await vi.runAllTimersAsync();
 
-      expect(connectServiceMock.getGgcOLLayerService).toHaveBeenCalled();
-
-      expect(olLayerServiceMock.setVisibilityLayers).toHaveBeenCalledWith(
+      expect(
+        datasetTreeMapConnectServiceSpy.setVisibilityLayers
+      ).toHaveBeenCalledWith(
         ["a-1"],
         false,
+        ViewerType.TWEE_D,
         component.mapIndex
       );
-      expect(olLayerServiceMock.setVisibilityLayers).toHaveBeenCalledWith(
+      expect(
+        datasetTreeMapConnectServiceSpy.setVisibilityLayers
+      ).toHaveBeenCalledWith(
         ["b-1"],
         true,
+        ViewerType.TWEE_D,
         component.mapIndex
       );
 

@@ -5,11 +5,11 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "dompurify": "^3.4.11",
-    "@kadaster/ggc-cesium": "*",
+    "@kadaster/ggc-map-3d": "*",
     "@kadaster/ggc-map": "^3.0.0"
   },
   "peerDependenciesMeta": {
-    "@kadaster/ggc-cesium": {
+    "@kadaster/ggc-map-3d": {
       "optional": true
     },
     "@kadaster/ggc-map": {

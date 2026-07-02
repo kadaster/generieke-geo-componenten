@@ -267,7 +267,7 @@ export class GgcSearchLocationComponent implements OnInit {
             this.searchLocationOptions?.searchCurrentLocation?.type ===
               SearchCurrentLocationType.SELECT)
         ) {
-          if (this.listOptions && this.listOptions.get(0)) {
+          if (this.listOptions?.get(0)) {
             this.setFocusOnTopSuggestion();
           }
         }
@@ -299,7 +299,7 @@ export class GgcSearchLocationComponent implements OnInit {
       case "ArrowUp":
         // Go from the top list option to the text box
         // If the last element has the focus, the focus went from the top to the bottom, therefore the text box should get focus
-        if (this.listOptions && this.listOptions.last!.isActive()) {
+        if (this.listOptions?.last.isActive()) {
           this.setFocusOnInputTextbox();
         }
         break;
@@ -522,15 +522,34 @@ export class GgcSearchLocationComponent implements OnInit {
                 latitude: coordinates[1]
               } as GeolocationCoordinates);
             } else if (feature.bbox) {
-              //todo TMS-10913
+              cesiumLocationService.zoomToBBox(
+                this.transformBoundingBox(feature.bbox)
+              );
             } else if (feature.geometry) {
-              //todo TMS-10913
+              const coordinates = proj4(
+                "EPSG:28992",
+                "EPSG:4326",
+                (feature.geometry as any).coordinates
+              );
+              cesiumLocationService.zoomToCurrentLocation({
+                longitude: coordinates[0],
+                latitude: coordinates[1]
+              } as GeolocationCoordinates);
             }
           }
           break;
         }
       }
     }
+  }
+
+  private transformBoundingBox(bbox: number[]) {
+    const [minX, minY, maxX, maxY] = bbox;
+
+    const southwest = proj4("EPSG:28992", "EPSG:4326", [minX, minY]);
+    const northeast = proj4("EPSG:28992", "EPSG:4326", [maxX, maxY]);
+
+    return [southwest[0], southwest[1], northeast[0], northeast[1]];
   }
 
   /**
@@ -583,8 +602,24 @@ export class GgcSearchLocationComponent implements OnInit {
                 longitude: coordinates[0],
                 latitude: coordinates[1]
               } as GeolocationCoordinates);
-            } else if (feature?.properties?.href) {
-              //todo TMS-10913
+            } else if (feature.bbox) {
+              const bbox = this.transformBoundingBox(feature.bbox);
+              const middleLon = (bbox[0] + bbox[2]) / 2;
+              const middleLan = (bbox[1] + bbox[3]) / 2;
+              cesiumLocationService.addLocationMark({
+                longitude: middleLon,
+                latitude: middleLan
+              } as GeolocationCoordinates);
+            } else if (feature.geometry) {
+              const coordinates = proj4(
+                "EPSG:28992",
+                "EPSG:4326",
+                (feature.geometry as any).coordinates
+              );
+              cesiumLocationService.addLocationMark({
+                longitude: coordinates[0],
+                latitude: coordinates[1]
+              } as GeolocationCoordinates);
             }
           }
           break;

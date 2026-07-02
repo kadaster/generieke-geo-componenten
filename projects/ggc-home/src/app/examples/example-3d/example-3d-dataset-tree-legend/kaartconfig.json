@@ -1,0 +1,63 @@
+[
+  {
+    "type": "3Dtiles",
+    "url": "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/gebouwen/3dtiles",
+    "layers": [
+      {
+        "active": true,
+        "layerId": "3d-buildings",
+        "title": "3D gebouwen"
+      }
+    ]
+  },
+  {
+    "type": "wmts",
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "layers": [
+      {
+        "title": "Achtergrondkaart Grijs",
+        "layerName": "grijs",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/legend.png"
+        },
+        "layerId": "wmts-brt-grijs"
+      }
+    ]
+  },
+  {
+    "type": "wmts",
+    "url": "https://service.pdok.nl/kadaster/kadastralekaart/wmts/v5_0?",
+    "layers": [
+      {
+        "title": "Kadestrale kaart",
+        "layerName": "Kadastralekaart",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/kadaster/kadastralekaart/wmts/v5_0/Kadastralekaart/legend.png"
+        },
+        "layerId": "wmts-kad",
+        "zIndex": 2,
+        "visible": false
+      }
+    ]
+  },
+  {
+    "type": "geojson",
+    "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wfs/v1_0?request=GetFeature&service=WFS&version=2.0.0&TYPENAMES=Gemeentegebied&outputFormat=json&srsname=urn:ogc:def:crs:EPSG::4326",
+    "layers": [
+      {
+        "layerName": "Gemeentes",
+        "title": "Gemeentes",
+        "layerId": "gemeentes",
+        "activeLegend": {
+          "legendUrl": "code/examples/example-3d/example-3d-dataset-tree-legend/Gemeentegebied_rood.png"
+        },
+        "visible": false,
+        "loadOptions": {
+          "stroke": "#FF0000",
+          "fill": "rgba(0,0,0,0)",
+          "clampToGround": false
+        }
+      }
+    ]
+  }
+]

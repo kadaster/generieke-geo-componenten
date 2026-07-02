@@ -48,7 +48,7 @@ export class ExampleFeatureInfoTabsComponent
       "code/examples/example-map/example-feature-info-tabs/example-feature-info-tabs.png"
   } as ComponentInfo;
   urlComponentModule =
-    "example-map/example-feature-info-tabs/example-feature-info-adv.component.ts";
+    "example-map/example-feature-info-tabs/example-feature-info-tabs.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/feature-info_public-api.GgcFeatureInfo.html`;
   // DOCS-SKIP:END
   mapIndex = "featureInfoTabs";

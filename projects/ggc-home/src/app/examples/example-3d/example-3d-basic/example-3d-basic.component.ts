@@ -2,7 +2,6 @@ import { Component, inject, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
-import { Tags } from "../../tags.enum";
 import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
@@ -10,9 +9,10 @@ import {
   GgcViewerComponent,
   ViewerOptions,
   Webservice
-} from "@kadaster/ggc-cesium";
+} from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { HttpClient } from "@angular/common/http";
+import { Tags } from "../../tags.enum";
 
 @Component({
   selector: "ggc-home-example-3d-basic",
@@ -25,11 +25,11 @@ export class Example3dBasicComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-basic",
-    title: "Kaartlaag toevoegen: OGC API 3D Tiles",
-    introduction: "Voeg een 3D laag toe aan de kaart met OGC API 3D Tiles.",
+    title: "3D kaart tonen",
+    introduction: "Toon een 3D kaart.",
     components: [Components.GGC_3D],
     theme: [Themes.KAARTLAGEN],
-    tags: [Tags.LAYER],
+    tags: [Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-basic/example-3d-basic.png"
   } as ComponentInfo;

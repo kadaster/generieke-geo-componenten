@@ -1,0 +1,76 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathExtraConfig]="'example-3d/example-3d-layer-camera-options/treeconfig.json'"
+  [extraConfigLabel]="`DatasetTree Configuration (json)`"
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>Dit voorbeeld toont de gebouwen van de 3D Basisvoorziening.</p>
+    <p>
+      Instelmogelijkheden voor camera opties met <code>tilesetConfig</code>:
+    </p>
+    <ul>
+      <li>
+        kaartlaag aan- of uitzetten bij specifieke camera-hoeken, in dit
+        voorbeeld tussen 100 en 500 graden
+        (<code>cameraValuesShowFunction</code>)
+      </li>
+    </ul>
+    <p>
+      De ggc-dataset-tree zet de kaartlaag automatisch aan/uit als de kaartlaag
+      zichtbaar of onzichtbaar wordt.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row">
+      <div class="col-xl-3 col-md-4 col-sm-12">
+        <div class="cesium-controls">
+          <span><b>3D controls</b></span>
+          <br />
+          <ggc-map-3d-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-map-3d-controls>
+        </div>
+        <ggc-dataset-tree
+          [viewerType]="viewerType"
+          [expandTreeOnInit]="true"
+          [themes]="datasetTreeConfig"
+        ></ggc-dataset-tree>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-12">
+        <div class="map-container">
+          <ggc-map-3d-viewer
+            [viewerOptions]="viewerOptions"
+            [cameraOptions]="cameraOptions"
+            (ready)="onCesiumReady()"
+            [webServices]="webService"
+            [tilesetConfigs]="tilesetConfigs"
+          ></ggc-map-3d-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DOCS:END functionality -->
+</app-example-format>
