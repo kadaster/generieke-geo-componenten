@@ -92,9 +92,7 @@ export class GgcToolbarItemDrawComponent {
   private drawServicePromise?: Promise<any>;
 
   private getDrawService(): Promise<any> {
-    if (!this.drawServicePromise) {
-      this.drawServicePromise = this.connectService.getDrawService();
-    }
+    this.drawServicePromise ??= this.connectService.getDrawService();
     return this.drawServicePromise;
   }
 

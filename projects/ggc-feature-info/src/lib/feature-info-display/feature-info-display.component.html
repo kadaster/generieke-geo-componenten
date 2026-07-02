@@ -1,12 +1,8 @@
-<ng-container [ngSwitch]="type">
-  <ng-container *ngSwitchCase="featureInfoDisplayTypeEnum.LIST">
+@switch (type) {
+  @case (featureInfoDisplayTypeEnum.LIST) {
     <dl class="ggc-fi-list-item">
-      <ng-container *ngFor="let key of objectKeys | featureinfokeys">
-        <ng-container
-          *ngIf="
-            !headerValueTemplates.has(key) || headerValueTemplates.get(key)
-          "
-        >
+      @for (key of objectKeys | featureinfokeys; track key) {
+        @if (!headerValueTemplates.has(key) || headerValueTemplates.get(key)) {
           <dt class="ggc-fi-list-title">
             <ng-container
               [ngTemplateOutlet]="
@@ -39,11 +35,12 @@
               displayFeature[key]
             }}</ng-template>
           </dd>
-        </ng-container>
-      </ng-container>
+        }
+      }
     </dl>
-  </ng-container>
-  <ng-container *ngSwitchCase="featureInfoDisplayTypeEnum.TABLE">
+  }
+
+  @case (featureInfoDisplayTypeEnum.TABLE) {
     <table class="ggc-fi-table table">
       <caption class="sr-only visually-hidden">
         Presentatie van feature data in tabelvorm
@@ -55,12 +52,10 @@
         </tr>
       </thead>
       <tbody class="ggc-fi-tbody">
-        <ng-container *ngFor="let key of objectKeys | featureinfokeys">
-          <ng-container
-            *ngIf="
-              !headerValueTemplates.has(key) || headerValueTemplates.get(key)
-            "
-          >
+        @for (key of objectKeys | featureinfokeys; track key) {
+          @if (
+            !headerValueTemplates.has(key) || headerValueTemplates.get(key)
+          ) {
             <tr>
               <td>
                 <ng-container
@@ -96,9 +91,9 @@
                 }}</ng-template>
               </td>
             </tr>
-          </ng-container>
-        </ng-container>
+          }
+        }
       </tbody>
     </table>
-  </ng-container>
-</ng-container>
+  }
+}
