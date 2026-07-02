@@ -24,7 +24,7 @@ import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 
 @Component({
-  selector: "app-example-map-select",
+  selector: "ggc-home-example-map-select",
   imports: [GgcMapComponent, ExampleFormatComponent, FormsModule, RouterLink],
   templateUrl: "./example-map-select-wms.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -15,7 +15,7 @@ import { HttpClient } from "@angular/common/http";
 import { ExtractImportsPipe } from "../../pipes/extract-imports.pipe";
 
 @Component({
-  selector: "app-example-format",
+  selector: "ggc-home-example-format",
   templateUrl: "./example-format.component.html",
   styleUrl: "./example-format.component.scss",
   imports: [

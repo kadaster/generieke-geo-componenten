@@ -6,7 +6,7 @@ import { githubReleasesUrl, githubUrl, tsdocsUrl } from "../constants/urls";
 import { EventTrackerService } from "../service/event-tracker.service";
 
 @Component({
-  selector: "app-menu-bar",
+  selector: "ggc-home-menu-bar",
   imports: [Menu, MenuBar, MenuContent, MenuItem, CdkConnectedOverlay],
   templateUrl: "./menu-bar.component.html",
   styleUrl: "./menu-bar.component.scss"
@@ -46,7 +46,7 @@ export class MenuBarComponent {
   }
 
   selectMenuItem() {
-    debugger;
+    //
   }
 
   openVoorbeelden() {

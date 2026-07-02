@@ -13,7 +13,7 @@ import { Tags } from "../../tags.enum";
 import { Themes } from "../../themes.enum";
 
 @Component({
-  selector: "app-dataset-switcher",
+  selector: "ggc-home-dataset-switcher",
   imports: [
     GgcDatasetSwitcherComponent,
     GgcMapComponent,

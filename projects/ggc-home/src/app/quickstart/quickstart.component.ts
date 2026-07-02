@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
-  selector: "app-quickstart",
+  selector: "ggc-home-quickstart",
   imports: [],
   templateUrl: "./quickstart.component.html",
   styleUrl: "./quickstart.component.scss"

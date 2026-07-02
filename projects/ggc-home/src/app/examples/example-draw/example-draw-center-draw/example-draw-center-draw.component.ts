@@ -25,7 +25,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-draw-center-draw",
+  selector: "ggc-home-example-draw-center-draw",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-draw-center-draw.component.html"

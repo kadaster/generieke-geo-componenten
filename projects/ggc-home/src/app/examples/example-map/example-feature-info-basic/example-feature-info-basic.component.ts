@@ -8,7 +8,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-feature-info-basic",
+  selector: "ggc-home-example-feature-info-basic",
   imports: [ExampleFormatComponent, GgcFeatureInfoComponent, GgcMapComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-feature-info-basic.component.html"

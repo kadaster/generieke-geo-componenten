@@ -20,7 +20,7 @@ import { Tags } from "../../tags.enum";
 import { FormsModule } from "@angular/forms";
 
 @Component({
-  selector: "app-example-feature-info-tabs",
+  selector: "ggc-home-example-feature-info-tabs",
   imports: [
     ExampleFormatComponent,
     GgcFeatureInfoComponent,

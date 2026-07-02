@@ -265,7 +265,7 @@ describe("VectorTileLayerComponent", () => {
       ).toHaveBeenCalled();
     });
 
-    mapSpy.forEachFeatureAtPixel;
+    mapSpy.forEachFeatureAtPixel = vi.fn();
     component.getFeatureInfo(evt);
   });
 
@@ -281,7 +281,7 @@ describe("VectorTileLayerComponent", () => {
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
 
-    mapSpy.forEachFeatureAtPixel;
+    mapSpy.forEachFeatureAtPixel = vi.fn();
     component.getFeatureInfo(evt);
 
     expect(component["map"].forEachFeatureAtPixel).toHaveBeenCalled();

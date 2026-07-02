@@ -12,6 +12,8 @@ import {
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideHttpClient } from "@angular/common/http";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 TestBed.configureTestingModule({
   providers: [
     provideHttpClient(), // Required for HttpClient itself

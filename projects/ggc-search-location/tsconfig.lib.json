@@ -9,8 +9,7 @@
     "inlineSources": true,
     "types": []
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["**/*.spec.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {
       "checks": {

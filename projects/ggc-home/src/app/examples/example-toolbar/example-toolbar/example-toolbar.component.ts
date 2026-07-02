@@ -21,7 +21,7 @@ import { Tags } from "../../tags.enum";
 import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: "app-example-toolbar",
+  selector: "ggc-home-example-toolbar",
   imports: [
     GgcLayerBrtAchtergrondkaartComponent,
     GgcMapComponent,

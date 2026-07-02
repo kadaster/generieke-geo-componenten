@@ -15,7 +15,7 @@ import { ExampleFormatComponent } from "../../example-format/example-format.comp
 import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: "app-example-3d-basic",
+  selector: "ggc-home-example-3d-basic",
   templateUrl: "./example-3d-basic.component.html",
   styleUrl: "./example-3d-basic.component.scss",
   imports: [GgcViewerComponent, GgcControlsComponent, ExampleFormatComponent],

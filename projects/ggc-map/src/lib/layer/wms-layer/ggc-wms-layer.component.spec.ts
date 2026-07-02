@@ -93,7 +93,7 @@ describe("WmsLayerComponent", () => {
     addLayer(layer) {
       resultLayer = layer as ImageLayer<ImageSource>;
     },
-    removeLayer(_) {
+    removeLayer(_item) {
       return;
     },
     getView() {

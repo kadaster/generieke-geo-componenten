@@ -25,7 +25,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-dataset-tree-layer-enabled-callback",
+  selector: "ggc-home-example-dataset-tree-layer-enabled-callback",
   imports: [
     GgcMapComponent,
     GgcDatasetTreeComponent,

@@ -26,7 +26,7 @@ import { Tags } from "../../tags.enum";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-snapping-adv",
+  selector: "ggc-home-example-snapping-adv",
   imports: [
     ExampleFormatComponent,
     GgcGeojsonLayerComponent,

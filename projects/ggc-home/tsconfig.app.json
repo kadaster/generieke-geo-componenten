@@ -30,7 +30,7 @@
       "@kadaster/ggc-shared/*": ["projects/ggc-shared/*/public-api.ts"]
     }
   },
-  "include": ["src/**/*.ts", "polyfills.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "polyfills.ts"],
   "exclude": ["src/**/*.spec.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {

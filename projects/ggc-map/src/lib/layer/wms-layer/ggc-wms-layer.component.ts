@@ -226,10 +226,10 @@ export class GgcWmsLayerComponent
   public setStyle(style: string, layerName: string): void {
     const currentParams = this.wmsSource.getParams();
     const currentLayers = Object.entries(currentParams)
-      .filter(([key, item]) => key.toLowerCase() === "layers")
+      .filter(([key]) => key.toLowerCase() === "layers")
       .map((items) => items[1])[0];
     const currentStyles = Object.entries(currentParams)
-      .filter(([key, item]) => key.toLowerCase() === "styles")
+      .filter(([key]) => key.toLowerCase() === "styles")
       .map((items) => items[1])[0];
 
     if (typeof currentLayers === "string") {

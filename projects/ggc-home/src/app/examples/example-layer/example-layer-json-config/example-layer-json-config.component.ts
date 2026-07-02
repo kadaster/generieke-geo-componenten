@@ -19,7 +19,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
   templateUrl: "./example-layer-json-config.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -13,6 +13,8 @@ import {
 } from "@cesium/engine";
 import { GeoJsonConfig, GeoJsonLayerConfig } from "../model/interfaces";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 describe("GeoJsonLayerService", () => {
   let service: GeoJsonLayerService;
 

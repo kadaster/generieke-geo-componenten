@@ -8,7 +8,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-legend-zoom",
+  selector: "ggc-home-example-legend-zoom",
   imports: [ExampleFormatComponent, GgcMapComponent, GgcLegendComponent],
   templateUrl: "./example-legend-zoom.component.html",
   styleUrl: "./example-legend-zoom.component.scss"

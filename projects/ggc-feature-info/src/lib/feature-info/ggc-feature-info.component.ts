@@ -171,7 +171,6 @@ export class GgcFeatureInfoComponent
     this.handleFeatureInfoChanges();
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
 
   get customAttributeNamesAndValues():

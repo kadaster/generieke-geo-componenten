@@ -49,6 +49,7 @@ import { GgcViewerService } from "../service/ggc-viewer.service";
 import { CoreSelectionService } from "../service/core-selection.service";
 import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-ignore
 window.CESIUM_BASE_URL = "/assets/cesium/";
 
@@ -316,11 +317,11 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public getOptionsType(cameraOptions: CameraOptions): CameraOptionsType {
     let type = CameraOptionsType.None;
-    if (cameraOptions.hasOwnProperty("geojson")) {
+    if (Object.hasOwn(cameraOptions, "geojson")) {
       type = CameraOptionsType.LookAtObject;
-    } else if (cameraOptions.hasOwnProperty("cameraPosition")) {
+    } else if (Object.hasOwn(cameraOptions, "cameraPosition")) {
       type = CameraOptionsType.CameraPosition;
-    } else if (cameraOptions.hasOwnProperty("lookAtPosition")) {
+    } else if (Object.hasOwn(cameraOptions, "lookAtPosition")) {
       type = CameraOptionsType.LookAtPosition;
     }
     return type;

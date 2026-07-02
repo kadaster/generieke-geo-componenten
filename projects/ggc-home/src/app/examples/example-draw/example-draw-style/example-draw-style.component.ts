@@ -19,7 +19,7 @@ import { Tags } from "../../tags.enum";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-draw-style",
+  selector: "ggc-home-example-draw-style",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule, RouterModule],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-draw-style.component.html"

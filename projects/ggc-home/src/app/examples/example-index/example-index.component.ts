@@ -56,7 +56,7 @@ interface GroupedCards {
 }
 
 @Component({
-  selector: "app-example-index",
+  selector: "ggc-home-example-index",
   templateUrl: "./example-index.component.html",
   styleUrl: "./example-index.component.scss",
   imports: [RouterLink, SortPipe],

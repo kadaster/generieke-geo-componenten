@@ -5,5 +5,5 @@
     "types": ["vitest/globals", "node"],
     "lib": ["dom", "es2018", "esNext"]
   },
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

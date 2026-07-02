@@ -22,6 +22,8 @@ import { Tiles3dLayerService } from "../layers/tiles3d-layer.service";
 import { GeoJsonLayerService } from "../layers/geojson-layer.service";
 import { vi } from "vitest";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 describe("CoreSelectionService", () => {
   let service: CoreSelectionService;
   let coreViewerServiceSpy: MockedObject<CoreViewerService>;

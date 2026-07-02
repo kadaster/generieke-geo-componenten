@@ -18,7 +18,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-search-location-woonplaats",
+  selector: "ggc-home-example-search-location-woonplaats",
   imports: [
     GgcLayerBrtAchtergrondkaartComponent,
     GgcMapComponent,

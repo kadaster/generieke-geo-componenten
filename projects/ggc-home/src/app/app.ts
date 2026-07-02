@@ -10,7 +10,7 @@ import { MenuBarComponent } from "./menu-bar/menu-bar.component";
 import { PiwikScriptLoaderService } from "./service/piwik-script-loader.service";
 
 @Component({
-  selector: "app-root",
+  selector: "ggc-home-root",
   imports: [RouterOutlet, MenuBarComponent],
   templateUrl: "./app.html",
   changeDetection: ChangeDetectionStrategy.Eager,

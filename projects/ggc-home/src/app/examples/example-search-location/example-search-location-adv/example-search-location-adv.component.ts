@@ -22,7 +22,7 @@ import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-search-location-adv",
+  selector: "ggc-home-example-search-location-adv",
   imports: [
     FormsModule,
     GgcLayerBrtAchtergrondkaartComponent,

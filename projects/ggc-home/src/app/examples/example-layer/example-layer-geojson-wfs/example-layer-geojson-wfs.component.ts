@@ -16,7 +16,7 @@ import { Tags } from "../../tags.enum";
 import VectorLayer from "ol/layer/Vector";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-layer-geojson-wfs.component.html"

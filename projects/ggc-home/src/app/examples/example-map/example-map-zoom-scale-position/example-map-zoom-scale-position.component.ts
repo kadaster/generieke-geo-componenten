@@ -21,7 +21,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-map-zoom-scale-position",
+  selector: "ggc-home-example-map-zoom-scale-position",
   imports: [
     GgcMapComponent,
     GgcScaleLineComponent,

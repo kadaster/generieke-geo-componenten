@@ -16,7 +16,7 @@ import { MapComponentDrawTypes, Webservice2DType } from "@kadaster/ggc-models";
 import Fill from "ol/style/Fill";
 
 @Component({
-  selector: "app-example-draw-tracing",
+  selector: "ggc-home-example-draw-tracing",
   imports: [ExampleFormatComponent, GgcMapComponent],
   templateUrl: "./example-draw-tracing.component.html"
 })

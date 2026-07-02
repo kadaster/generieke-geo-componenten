@@ -20,7 +20,7 @@ import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 
 @Component({
-  selector: "app-example-feature-info-adv",
+  selector: "ggc-home-example-feature-info-adv",
   imports: [
     ExampleFormatComponent,
     GgcFeatureInfoComponent,

@@ -12,7 +12,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./example-layer-image.component.html"
