@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from "@angular/core";
+import {Component, computed, inject, OnInit, signal} from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent
@@ -31,13 +31,13 @@ import { take } from "rxjs/operators";
   ],
   templateUrl: "./example-search-location-adv.component.html"
 })
-export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
+export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent implements OnInit {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-adv",
     title: "Locatie zoeken (uitgebreid)",
     introduction:
-      "Zoek een adres, woonplaats of huidige locatie. Dit component maakt gebruik van de PDOK Locatie API. Voor dit voorbeeld wordt er gefilterd op adres, gemeente, woonplaats en provincie.",
+      "Zoek een adres, woonplaats of huidige locatie met de PDOK Locatie API.",
     components: [Components.GGC_SEARCH_LOCATION],
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:

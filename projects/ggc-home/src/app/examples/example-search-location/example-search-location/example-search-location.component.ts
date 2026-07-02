@@ -38,7 +38,7 @@ export class ExampleSearchLocationComponent
     route: "/search-location",
     title: "Locatie zoeken",
     introduction:
-      "Zoek een adres, woonplaats of huidige locatie. Dit component maakt gebruik van de PDOK Locatie API. Voor dit voorbeeld wordt er gefilterd op adres, gemeente, woonplaats en provincie.",
+      "Zoek een adres, woonplaats of huidige locatie met de PDOK Locatie API.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.SEARCH, Tags.LOCATION],
