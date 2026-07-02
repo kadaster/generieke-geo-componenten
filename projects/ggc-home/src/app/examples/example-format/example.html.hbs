@@ -18,7 +18,12 @@
 
   <div page-introduction>
     <p>\{{ componentInfo.introduction }}</p>
-    <!-- TODO: vul hier eventuele extra introductietekst/instructies in -->
+    <p>In dit voorbeeld ..</p>
+    <p>Instelmogelijkheden voor ..:</p>
+    <ul>
+      <li>Instelmogelijkheid (<code>parameter</code>)</li>
+      <li>Instelmogelijkheid (<code>parameter</code>)</li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -30,11 +35,14 @@
           <ggc-map [webServices]="mapConfig"></ggc-map>
         </div>
         {{/if}}
+        {{#unless includeMap}}
+          <!-- TODO: Plaats hier de html code van dit voorbeeld. Dit wordt zichtbaar in de HTML Code tab onderin het voorbeeld. -->
+        {{/unless}}
       {{/if}}
       {{#if (eq layout "two-column")}}
       <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
         <fieldset class="ggc-fieldset">
-          <legend>TODO: Zet hier wat knopjes neer</legend>
+          <legend>Bediening</legend>
           <!-- TODO: vul hier de specifieke bediening van dit voorbeeld in -->
         </fieldset>
       </div>
@@ -49,7 +57,7 @@
       {{#if (eq layout "three-column")}}
       <div class="col-xl-3 col-md-3 col-sm-12">
         <fieldset class="ggc-fieldset">
-          <legend>TODO: Zet hier wat knopjes neer</legend>
+          <legend>Bediening</legend>
           <!-- TODO: vul hier de specifieke bediening van dit voorbeeld in -->
         </fieldset>
       </div>
@@ -61,27 +69,13 @@
         {{/if}}
       </div>
         <div class="col-xl-2 col-md-2 col-sm-12">
-          <!-- TODO: vul hier het infopaneel van dit voorbeeld in -->
+          <fieldset class="ggc-fieldset">
+            <legend>Aanvullenden bediening</legend>
+            <!-- TODO: vul hier de aanvullende bediening van dit voorbeeld in -->
+          </fieldset>
         </div>
       {{/if}}
       <!-- DOCS:END functionality -->
-
-      {{#if advancedButton}}
-      <div class="col-xl-2 col-md-2 col-sm-12">
-        <div class="row options-toggle">
-          <h6 id="extraOptionsLabel">Extra opties</h6>
-          <label class="switch">
-            <input
-              (change)="goToPage('{{toggleRoute}}')"
-              aria-labelledby="extraOptionsLabel"
-              type="checkbox"
-              {{~#if isAdvancedVariant}} checked{{/if}}
-            />
-            <span class="slider round"></span>
-          </label>
-        </div>
-      </div>
-      {{/if}}
     </div>
   </div>
 </app-example-format>

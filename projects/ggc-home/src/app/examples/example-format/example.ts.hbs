@@ -3,9 +3,6 @@ import { ExampleFormatComponent } from "{{{examplesRoot}}}../example-format/exam
 {{#each componentImports}}
 {{{this}}}
 {{/each}}
-{{#if kaartConfig}}
-import { Webservice } from "@kadaster/ggc-map";
-{{/if}}
 import { ComponentInfo } from "{{{examplesRoot}}}../component-info.model";
 import { Components } from "{{{examplesRoot}}}../components.enum";
 import { Themes } from "{{{examplesRoot}}}../themes.enum";
@@ -25,7 +22,7 @@ export class {{{className}}}
   readonly componentInfo: ComponentInfo = {
     route: "{{{componentInfoRoute}}}",
     title: "{{{title}}}",
-    introduction: "Vertel hier wat interessants.",
+    introduction: "Subtitel voor dit voorbeeld",
     components: [{{#each componentTags}}Components.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
     theme: [Themes.{{{theme}}}],
     tags: [{{#each tags}}Tags.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
@@ -54,12 +51,6 @@ export class {{{className}}}
     {{/if}}
     // TODO: vul hier eventuele initialisatielogica voor dit voorbeeld in
   }
-
-  {{#if advancedButton}}
-  goToAdvanced(): void {
-    this.goToPage("{{{toggleRoute}}}");
-  }
-  {{/if}}
 
   // TODO: vul hier de methodes voor de specifieke bediening van dit voorbeeld in
 }

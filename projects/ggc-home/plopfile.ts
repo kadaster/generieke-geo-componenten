@@ -1,4 +1,5 @@
 import type { NodePlopAPI } from "plop";
+// @ts-ignore
 import {
   buildExamplePaths,
   buildComponentMetadata,
@@ -6,6 +7,7 @@ import {
   buildExampleMetadata,
   componentImportMap
 } from "./plop-helpers.ts";
+// @ts-ignore
 import {
   directoryChoices,
   componentTagChoices,
@@ -73,7 +75,7 @@ export default async function (plop: NodePlopAPI) {
         type: "input",
         name: "title",
         message:
-          "Titel van voorbeeld (zichtbaar op index-card en op voorbeeldpagina):"
+          "Titel van voorbeeld (zichtbaar op index-card en op voorbeeldpagina. Voorbeelden: Objectinformatie weergeven, Kaartlaag toevoegen, Dataset wisselen):"
       },
       {
         type: "list",
@@ -115,7 +117,7 @@ export default async function (plop: NodePlopAPI) {
       {
         type: "confirm",
         name: "includeMap",
-        message: "Wil je een kaart toevoegen:"
+        message: "Wil je een kaart met kaartconfiguratie toevoegen:"
       },
       {
         type: "confirm",
@@ -167,7 +169,14 @@ export default async function (plop: NodePlopAPI) {
 
       const paths = buildExamplePaths(data.name, actualDirectory);
       const component = buildComponentMetadata(data.name);
-      const imports = resolveComponentImports(data.componentImports ?? []);
+
+      // Auto-import ggc-map als includeMap true is en nog niet geïmporteerd
+      const componentImports = data.componentImports ?? [];
+      if (data.includeMap && !componentImports.includes("ggc-map")) {
+        componentImports.push("GGC_MAP");
+      }
+
+      const imports = resolveComponentImports(componentImports);
       const metadata = buildExampleMetadata(actualDirectory, paths);
 
       Object.assign(data, {
@@ -206,10 +215,11 @@ export default async function (plop: NodePlopAPI) {
           path: `${paths.absoluteDir}/${paths.typescriptTemplate}`,
           templateFile: `${TEMPLATE_BASE}/example.ts.hbs`
         },
+
         {
           type: "add",
-          path: `${paths.absoluteDir}/kaartconfig.json`,
-          templateFile: `${TEMPLATE_BASE}/kaartconfig.json.hbs`
+          path: `${paths.absoluteDir}/example-{{name}}.png`,
+          templateFile: `${TEMPLATE_BASE}/example-placeholder.png`
         },
 
         // Update example index
@@ -246,6 +256,14 @@ export default async function (plop: NodePlopAPI) {
           template: `import { ${component.className} } from "./${actualDirectory}/${paths.folderName}/${paths.folderName}.component";\n// PLOP:IMPORTROUTE`
         }
       ];
+
+      if (data.includeMap) {
+        actions.push({
+          type: "add",
+          path: `${paths.absoluteDir}/kaartconfig.json`,
+          templateFile: `${TEMPLATE_BASE}/kaartconfig.json.hbs`
+        });
+      }
 
       if (data.scss) {
         actions.push({
