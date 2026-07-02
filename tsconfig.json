@@ -33,7 +33,7 @@
   "files": ["src/test/setup-tests.ts"],
   "references": [
     {
-      "path": "./projects/ggc-cesium/tsconfig.lib.json"
+      "path": "./projects/ggc-map-3d/tsconfig.lib.json"
     },
     {
       "path": "./projects/ggc-dataset-tree/tsconfig.lib.json"

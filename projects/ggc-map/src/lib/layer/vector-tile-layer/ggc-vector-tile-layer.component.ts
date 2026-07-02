@@ -31,8 +31,6 @@ import {
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 @Component({
   selector: "ggc-vector-tile-layer",
   changeDetection: ChangeDetectionStrategy.Eager,

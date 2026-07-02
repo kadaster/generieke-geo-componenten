@@ -28,8 +28,6 @@ import {
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 describe("CoreSelectionService", () => {
   let service: CoreSelectionService;
   let coreViewerServiceSpy: MockedObject<CoreViewerService>;

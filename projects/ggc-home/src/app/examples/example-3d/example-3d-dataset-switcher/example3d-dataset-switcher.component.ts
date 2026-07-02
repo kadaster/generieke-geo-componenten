@@ -21,7 +21,7 @@ import {
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-3d-dataset-switcher",
+  selector: "ggc-example-3d-dataset-switcher",
   templateUrl: "./example3d-dataset-switcher.component.html",
   styleUrl: "./example3d-dataset-switcher.component.scss",
   imports: [

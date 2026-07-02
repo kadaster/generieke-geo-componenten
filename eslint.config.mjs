@@ -66,7 +66,10 @@ export default defineConfig([
       ],
       "@typescript-eslint/no-empty-function": "warn",
       "@typescript-eslint/no-inferrable-types": "warn",
-      "@typescript-eslint/prefer-as-const": "warn"
+      "@typescript-eslint/prefer-as-const": "warn",
+      "@typescript-eslint/no-unsafe-function-type": "warn",
+      "@typescript-eslint/no-unused-expressions": "warn",
+      "@typescript-eslint/ban-ts-comment": "warn"
     }
   },
 

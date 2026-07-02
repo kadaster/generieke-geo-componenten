@@ -49,7 +49,6 @@ import { GgcViewerService } from "../service/ggc-viewer.service";
 import { CoreSelectionService } from "../service/core-selection.service";
 import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-ignore
 globalThis.CESIUM_BASE_URL = "/assets/cesium/";
 

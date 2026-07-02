@@ -19,7 +19,7 @@ import { ViewerType } from "@kadaster/ggc-models";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-3d-feature-info",
+  selector: "ggc-example-3d-feature-info",
   templateUrl: "./example3d-feature-info.component.html",
   styleUrl: "./example3d-feature-info.component.scss",
   imports: [

@@ -31,8 +31,6 @@ import {
 import { CenterBase } from "../center-interaction/center-base";
 import BaseLayer from "ol/layer/Base";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 describe("CoreDrawService", () => {
   const mapIndex = "TEST_MAP";
   const layerName = "TestLayer";
