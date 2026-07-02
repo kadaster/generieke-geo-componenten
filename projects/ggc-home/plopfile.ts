@@ -231,7 +231,7 @@ export default async function (plop: NodePlopAPI) {
           type: "modify",
           path: "src/app/app.routes.ts",
           pattern: /\/\/ PLOP:ROUTE/,
-          template: `  {
+          template: `{
     path: "${data.name}",
     title: "${data.route} | GGC-Home",
     component: ${component.className},

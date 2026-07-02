@@ -127,8 +127,11 @@ export function buildExampleMetadata(
   directory: string,
   paths: ExamplePaths
 ): ExampleMetadata {
+  console.log(directory);
+  console.log(paths.folderName);
+  console.log(paths.folderName, ".component.ts");
   return {
-    imagePath: `code/examples/${directory}/${paths.folderName}/${paths.folderName}.png`,
+    imagePath: `code/${directory}/${paths.folderName}/${paths.folderName}.png`,
     componentModulePath: `${directory}/${paths.folderName}/${paths.folderName}.component.ts`
   };
 }
