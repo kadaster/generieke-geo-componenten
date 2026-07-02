@@ -7,20 +7,8 @@ import angularTemplateParser from "@angular-eslint/template-parser";
 
 export default defineConfig([
   globalIgnores(["projects/**/node_modules/**"]),
-
-  // -----------------------
-  // JS baseline
-  // -----------------------
   js.configs.recommended,
-
-  // -----------------------
-  // TypeScript
-  // -----------------------
   ...tseslint.configs.recommended,
-
-  // -----------------------
-  // Angular TS files
-  // -----------------------
   {
     files: ["**/*.ts"],
 
@@ -28,7 +16,6 @@ export default defineConfig([
       "@angular-eslint": angular,
       "@angular-eslint/template": angularTemplate
     },
-
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -36,7 +23,6 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname
       }
     },
-
     rules: {
       "@angular-eslint/component-selector": [
         "error",
@@ -46,7 +32,6 @@ export default defineConfig([
           type: "element"
         }
       ],
-
       "@angular-eslint/directive-selector": [
         "error",
         {
@@ -55,7 +40,6 @@ export default defineConfig([
           type: "attribute"
         }
       ],
-
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
@@ -72,21 +56,14 @@ export default defineConfig([
       "@typescript-eslint/ban-ts-comment": "warn"
     }
   },
-
-  // -----------------------
-  // Angular HTML templates
-  // -----------------------
   {
     files: ["**/*.html"],
-
     plugins: {
       "@angular-eslint/template": angularTemplate
     },
-
     languageOptions: {
       parser: angularTemplateParser
     },
-
     rules: {
       "@angular-eslint/template/alt-text": "warn",
       "@angular-eslint/template/click-events-have-key-events": "warn",
