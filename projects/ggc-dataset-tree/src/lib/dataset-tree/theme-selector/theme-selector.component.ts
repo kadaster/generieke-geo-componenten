@@ -138,7 +138,7 @@ export class ThemeSelectorComponent {
     DatasetTreeMapConnectService
   );
 
-  readonly layerCounts = signal(new Map<Theme, LayerCounts>());
+  private readonly layerCounts = signal(new Map<Theme, LayerCounts>());
 
   constructor() {
     effect(() => {
@@ -171,7 +171,7 @@ export class ThemeSelectorComponent {
     return `${this.themeNameIndex()}-${themeIndex}`;
   }
 
-  readonly countStrings = computed(() => {
+  private readonly countStrings = computed(() => {
     const counts = this.layerCounts();
 
     return new Map(

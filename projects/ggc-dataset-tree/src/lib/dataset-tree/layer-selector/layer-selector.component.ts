@@ -145,7 +145,7 @@ export class LayerSelectorComponent {
     DatasetTreeMapConnectService
   );
 
-  readonly layerCounts = signal(new Map<Dataset, LayerCounts>());
+  private readonly layerCounts = signal(new Map<Dataset, LayerCounts>());
 
   constructor() {
     effect(() => {
@@ -183,7 +183,7 @@ export class LayerSelectorComponent {
     }
   }
 
-  readonly countStrings = computed(() => {
+  private readonly countStrings = computed(() => {
     const counts = this.layerCounts();
 
     return new Map(

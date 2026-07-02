@@ -164,6 +164,8 @@ export class GgcFeatureInfoComponent
 
   private _featureInfoCollection: FeatureInfoCollection | undefined;
 
+  private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
+
   get featureInfoCollection(): FeatureInfoCollection | undefined {
     return this._featureInfoCollection;
   }
@@ -177,8 +179,6 @@ export class GgcFeatureInfoComponent
     this._featureInfoCollection = value;
     this.handleFeatureInfoChanges();
   }
-
-  private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
 
   get customAttributeNamesAndValues():
     Map<string, CustomFeatureInfo> | undefined {

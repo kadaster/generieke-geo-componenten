@@ -130,16 +130,11 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
   protected layerLabelComponent?: TemplateRef<any>;
   protected datasetLabelComponent?: TemplateRef<any>;
 
-  private readonly datasetTreeService = inject(CoreDatasetTreeService);
-  private readonly modelCreateService = inject(
-    GgcDatasetTreeModelCreateService
+  protected readonly effectiveMapIndex = computed(() =>
+    this.viewerType() === ViewerType.DRIE_D
+      ? DEFAULT_CESIUM_MAPINDEX
+      : this.mapIndex()
   );
-
-  @ContentChild(LayerLabelTemplateDirective)
-  private readonly layerLabelTemplate: LayerLabelTemplateDirective;
-
-  @ContentChild(DatasetLabelTemplateDirective)
-  private readonly datasetLabelTemplate: DatasetLabelTemplateDirective;
 
   protected processedThemes = computed(() => {
     let themes = this.themes();
@@ -156,11 +151,16 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
     return this.modelCreateService.themeArrayFactory(themes);
   });
 
-  protected readonly effectiveMapIndex = computed(() =>
-    this.viewerType() === ViewerType.DRIE_D
-      ? DEFAULT_CESIUM_MAPINDEX
-      : this.mapIndex()
+  private readonly datasetTreeService = inject(CoreDatasetTreeService);
+  private readonly modelCreateService = inject(
+    GgcDatasetTreeModelCreateService
   );
+
+  @ContentChild(LayerLabelTemplateDirective)
+  private readonly layerLabelTemplate: LayerLabelTemplateDirective;
+
+  @ContentChild(DatasetLabelTemplateDirective)
+  private readonly datasetLabelTemplate: DatasetLabelTemplateDirective;
 
   constructor() {
     this.datasetTreeService
