@@ -58,10 +58,10 @@ describe("LayerSelectorComponent", () => {
       ]);
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css(".info"));
-      // expect(element).toBeTruthy();
-      // expect(element.nativeElement.getAttribute("class")).toEqual(
-      //   "ggc-dt-info glyphicon glyphicon-info-sign info"
-      // );
+      expect(element).toBeTruthy();
+      expect(element.nativeElement.getAttribute("class")).toEqual(
+        "ggc-dt-info glyphicon glyphicon-info-sign info"
+      );
     });
 
     it("when there is no infoUrl available (empty string) there should not be an icon to view the url", () => {

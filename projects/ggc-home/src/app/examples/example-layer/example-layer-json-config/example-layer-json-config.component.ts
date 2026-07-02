@@ -12,7 +12,6 @@ import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import { Webservice } from "@kadaster/ggc-map-3d";
 
 @Component({
   selector: "ggc-home-example-search-location",

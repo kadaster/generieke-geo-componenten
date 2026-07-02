@@ -1,9 +1,9 @@
 import {
   Component,
+  computed,
   effect,
   inject,
   input,
-  OnInit,
   signal,
   TemplateRef
 } from "@angular/core";
@@ -14,6 +14,11 @@ import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
 import { DEFAULT_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
 import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
+
+type LayerCounts = {
+  active: number;
+  total: number;
+};
 
 /**
  * Component dat binnen het dataset‑structuurcomponent verantwoordelijk is voor
@@ -31,7 +36,7 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
   styleUrls: ["./theme-selector.component.scss"],
   imports: [LayerSelectorComponent, CommonModule]
 })
-export class ThemeSelectorComponent implements OnInit {
+export class ThemeSelectorComponent {
   /**
    * Unieke index die gelijk is aan de themeIndex binnen de boomstructuur van de json. Wordt gebruikt om child themes te indexeren.
    */
@@ -123,98 +128,117 @@ export class ThemeSelectorComponent implements OnInit {
    */
   autoConnectLayerToggle = input<boolean>(true);
 
-  private readonly _themes = signal<Theme[]>([]);
+  /**
+   * Geeft de huidige lijst van themes terug.
+   */
+  themes = input<Theme[]>([]);
 
   private readonly coreDatasetTreeService = inject(CoreDatasetTreeService);
   private readonly datasetTreeMapConnectService = inject(
     DatasetTreeMapConnectService
   );
 
-  private readonly totalLayerCount: Map<Theme, number> = new Map();
-  private readonly activeLayerCount: Map<Theme, number> = new Map();
-
-  themes = input<Theme[]>([]);
+  readonly layerCounts = signal(new Map<Theme, LayerCounts>());
 
   constructor() {
     effect(() => {
-      const themes = this.themes();
-
-      this._themes.set(themes);
-
       if (this.expandTreeOnInit()) {
         this.expandThemes();
       }
 
-      this.updateAllLayerCounts();
+      void this.refreshAllLayerCounts();
+    });
+
+    effect(async (onCleanup) => {
+      const observable =
+        await this.datasetTreeMapConnectService.getLayerChangedObservable(
+          this.viewerType()
+        );
+
+      const subscription = observable?.subscribe(async (event) => {
+        if (event.mapIndex !== this.mapIndex()) {
+          return;
+        }
+
+        await this.refreshThemeContainingLayer(event.layerId);
+      });
+
+      onCleanup(() => subscription?.unsubscribe());
     });
   }
 
-  /**
-   * Genereert een nieuw indexpad voor child themes.
-   * @param themeIndex - de index van de theme
-   */
   createNewIndex(themeIndex: number): string {
     return `${this.themeNameIndex()}-${themeIndex}`;
   }
 
-  /**
-   * Angular lifecycle hook — initialiseert open‑states:
-   * - Wanneer `expandTreeOnInit === true`, worden alle themes geopend.
-   */
-  async ngOnInit() {
-    (
-      await this.datasetTreeMapConnectService.getLayerChangedObservable(
-        this.viewerType()
-      )
-    )?.subscribe((event) => {
-      if (event.mapIndex == this.mapIndex()) {
-        this.handleLayerChanged(event.layerId);
-      }
-    });
+  readonly countStrings = computed(() => {
+    const counts = this.layerCounts();
+
+    return new Map(
+      this.themes().map((theme) => {
+        const count = counts.get(theme);
+
+        const active = count?.active ?? 0;
+        const total = count?.total ?? 0;
+
+        const text = `(${
+          this.showActiveCounters() && active > 0 ? `${active}/` : ""
+        }${total})`;
+
+        return [theme, text];
+      })
+    );
+  });
+
+  protected generateCountString(theme: Theme): string {
+    return this.countStrings().get(theme) ?? "(0)";
   }
 
-  protected getActiveLayerCount(theme: Theme) {
-    return this.activeLayerCount.get(theme) ?? 0;
+  protected getActiveLayerCount(theme: Theme): number {
+    return this.layerCounts().get(theme)?.active ?? 0;
   }
 
-  protected generateCountString(theme: Theme) {
-    const activeCount = this.activeLayerCount.get(theme) ?? 0;
-    const totalCount = this.totalLayerCount.get(theme) ?? 0;
-    const activeCountersString =
-      this.showActiveCounters() && activeCount > 0 ? activeCount + "/" : "";
-    return "(" + activeCountersString + totalCount + ")";
+  private expandThemes(): void {
+    this.themes().forEach((theme) => (theme.open = true));
   }
 
-  private expandThemes() {
-    this._themes().forEach((theme) => (theme.open = true));
-  }
-
-  private async handleLayerChanged(layerId: string) {
-    for (const theme of this._themes()) {
+  private async refreshThemeContainingLayer(layerId: string): Promise<void> {
+    for (const theme of this.themes()) {
       if (theme.containsLayerId(layerId)) {
-        await this.updateLayerCountOfTheme(theme);
+        await this.refreshTheme(theme);
       }
     }
   }
 
-  private async updateAllLayerCounts() {
-    for (const theme of this._themes()) {
-      await this.updateLayerCountOfTheme(theme);
+  private async refreshAllLayerCounts(): Promise<void> {
+    const map = new Map<Theme, LayerCounts>();
+
+    for (const theme of this.themes()) {
+      map.set(theme, {
+        active: await this.coreDatasetTreeService.countActiveDatasetsOfTheme(
+          theme,
+          this.mapIndex(),
+          this.viewerType()
+        ),
+        total: this.coreDatasetTreeService.countAllDatasetsOfTheme(theme)
+      });
     }
+
+    this.layerCounts.set(map);
   }
 
-  private async updateLayerCountOfTheme(theme: Theme) {
-    this.activeLayerCount.set(
-      theme,
-      await this.coreDatasetTreeService.countActiveDatasetsOfTheme(
+  private async refreshTheme(theme: Theme): Promise<void> {
+    const map = new Map(this.layerCounts());
+
+    map.set(theme, {
+      active: await this.coreDatasetTreeService.countActiveDatasetsOfTheme(
         theme,
         this.mapIndex(),
         this.viewerType()
-      )
-    );
-    this.totalLayerCount.set(
-      theme,
-      this.coreDatasetTreeService.countAllDatasetsOfTheme(theme)
-    );
+      ),
+      total: this.coreDatasetTreeService.countAllDatasetsOfTheme(theme)
+    });
+
+    this.layerCounts.set(map);
   }
 }

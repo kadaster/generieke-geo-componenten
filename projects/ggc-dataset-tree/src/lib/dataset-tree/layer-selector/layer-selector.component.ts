@@ -1,4 +1,12 @@
-import { Component, inject, input, OnInit, TemplateRef } from "@angular/core";
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  TemplateRef
+} from "@angular/core";
 import { Dataset } from "../../model/theme/dataset.model";
 
 import { NgClass, NgTemplateOutlet } from "@angular/common";
@@ -7,6 +15,11 @@ import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
 import { DEFAULT_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
 import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
+
+type LayerCounts = {
+  active: number;
+  total: number;
+};
 
 /**
  * Component dat binnen het dataset‑structuurcomponent verantwoordelijk is voor
@@ -25,7 +38,7 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
   styleUrls: ["./layer-selector.component.scss"],
   imports: [NgClass, NgTemplateOutlet, LayerToggleComponent]
 })
-export class LayerSelectorComponent implements OnInit {
+export class LayerSelectorComponent {
   /**
    * Identifier van het geselecteerde theme waarin deze datasets zich bevinden.
    * Wordt gebruikt voor label‑context, counters of styling op theme‑niveau.
@@ -127,86 +140,113 @@ export class LayerSelectorComponent implements OnInit {
    * Default is TWEE_D
    */
   viewerType = input<ViewerType>(ViewerType.TWEE_D);
-
   private readonly datasetTreeService = inject(CoreDatasetTreeService);
   private readonly datasetTreeMapConnectService = inject(
     DatasetTreeMapConnectService
   );
 
-  private readonly totalLayerCount: Map<Dataset, number> = new Map();
-  private readonly activeLayerCount: Map<Dataset, number> = new Map();
+  readonly layerCounts = signal(new Map<Dataset, LayerCounts>());
 
-  /**
-   * Angular lifecycle hook — initialiseert dataset‑configuraties:
-   * - Zorgt dat `datasets` nooit `undefined` is
-   * - Wanneer `expandTreeOnInit === true`, worden alle datasets geopend
-   */
-
-  async ngOnInit() {
-    if (this.expandTreeOnInit()) {
-      this.datasets().forEach((dataset) => (dataset.open = true));
-    }
-    (
-      await this.datasetTreeMapConnectService.getLayerChangedObservable(
-        this.viewerType()
-      )
-    )?.subscribe((event) => {
-      if (event.mapIndex == this.mapIndex()) {
-        this.handleLayerChanged(event.layerId);
+  constructor() {
+    effect(() => {
+      if (this.expandTreeOnInit()) {
+        this.datasets().forEach((dataset) => (dataset.open = true));
       }
+
+      void this.refreshAllLayerCounts();
     });
-    await this.updateAllLayerCounts();
+
+    effect(async (onCleanup) => {
+      const observable =
+        await this.datasetTreeMapConnectService.getLayerChangedObservable(
+          this.viewerType()
+        );
+
+      const subscription = observable?.subscribe(async (event) => {
+        if (event.mapIndex !== this.mapIndex()) {
+          return;
+        }
+
+        await this.refreshDatasetContainingLayer(event.layerId);
+      });
+
+      onCleanup(() => subscription?.unsubscribe());
+    });
   }
 
   /**
-   * Toggle het open- of dichtklappen van een dataset
-   * @param event - event dat binnenkomt
-   * @param dataset - de dataset die getoggled is
+   * Toggle het open- of dichtklappen van een dataset.
    */
-  toggleCollapse(event: any, dataset: Dataset) {
+  toggleCollapse(event: Event, dataset: Dataset): void {
     if ((event.target as HTMLElement).tagName !== "A") {
       dataset.open = !dataset.open;
     }
   }
 
-  protected getActiveLayerCount(dataset: Dataset) {
-    return this.activeLayerCount.get(dataset) ?? 0;
+  readonly countStrings = computed(() => {
+    const counts = this.layerCounts();
+
+    return new Map(
+      this.datasets().map((dataset) => {
+        const count = counts.get(dataset);
+
+        const active = count?.active ?? 0;
+        const total = count?.total ?? 0;
+
+        const text = `(${
+          this.showActiveCounters() && active > 0 ? `${active}/` : ""
+        }${total})`;
+
+        return [dataset, text];
+      })
+    );
+  });
+
+  protected generateCountString(dataset: Dataset): string {
+    return this.countStrings().get(dataset) ?? "(0)";
   }
 
-  protected generateCountString(dataset: Dataset) {
-    const activeCount = this.activeLayerCount.get(dataset) ?? 0;
-    const totalCount = this.totalLayerCount.get(dataset) ?? 0;
-    const activeCountersString =
-      this.showActiveCounters() && activeCount > 0 ? activeCount + "/" : "";
-    return "(" + activeCountersString + totalCount + ")";
+  protected getActiveLayerCount(dataset: Dataset): number {
+    return this.layerCounts().get(dataset)?.active ?? 0;
   }
 
-  private async handleLayerChanged(layerId: string) {
+  private async refreshDatasetContainingLayer(layerId: string): Promise<void> {
     for (const dataset of this.datasets()) {
       if (dataset.containsLayerId(layerId)) {
-        await this.updateLayerCountOfDataset(dataset);
+        await this.refreshDataset(dataset);
       }
     }
   }
 
-  private async updateAllLayerCounts() {
+  private async refreshAllLayerCounts(): Promise<void> {
+    const map = new Map<Dataset, LayerCounts>();
+
     for (const dataset of this.datasets()) {
-      await this.updateLayerCountOfDataset(dataset);
+      map.set(dataset, {
+        active: await this.datasetTreeService.countActiveLayersOfDataset(
+          dataset,
+          this.mapIndex(),
+          this.viewerType()
+        ),
+        total: this.datasetTreeService.countAllLayersOfDataset(dataset)
+      });
     }
+
+    this.layerCounts.set(map);
   }
 
-  private async updateLayerCountOfDataset(dataset: Dataset) {
-    this.activeLayerCount.set(
-      dataset,
-      await this.datasetTreeService.countActiveLayersOfDataset(
+  private async refreshDataset(dataset: Dataset): Promise<void> {
+    const map = new Map(this.layerCounts());
+
+    map.set(dataset, {
+      active: await this.datasetTreeService.countActiveLayersOfDataset(
         dataset,
         this.mapIndex(),
         this.viewerType()
-      )
-    );
-    this.totalLayerCount.set(
-      dataset,
-      this.datasetTreeService.countAllLayersOfDataset(dataset)
-    );
+      ),
+      total: this.datasetTreeService.countAllLayersOfDataset(dataset)
+    });
+
+    this.layerCounts.set(map);
   }
 }

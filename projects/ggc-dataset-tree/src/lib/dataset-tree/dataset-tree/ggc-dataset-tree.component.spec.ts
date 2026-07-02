@@ -124,31 +124,31 @@ describe("DatasetTreeComponent", () => {
             "tr.ggc-dt-btn-ts-collapse td:nth-child(1)"
           );
         expect(themeTrWithCounter.length).toBe(6);
-        // expect(themeTrWithCounter[0].textContent?.trim()).toBe(
-        //   "ThemeNiveau 1 (1/1)"
-        // );
-        // expect(themeTrWithCounter[1].textContent?.trim()).toBe(
-        //   "ThemeNiveau 2 (1/1)"
-        // );
-        // expect(themeTrWithCounter[2].textContent?.trim()).toBe(
-        //   "ThemeNiveau 3 (1/1)"
-        // );
-        // expect(themeTrWithCounter[3].textContent?.trim()).toBe(
-        //   "ThemeNiveau 4 (1/1)"
-        // );
-        // expect(themeTrWithCounter[4].textContent?.trim()).toBe(
-        //   "ThemeNiveau 5 (1/1)"
-        // );
-        // expect(themeTrWithCounter[5].textContent?.trim()).toBe(
-        //   "LaatsteTheme (1/1)"
-        // );
+        expect(themeTrWithCounter[0].textContent?.trim()).toBe(
+          "ThemeNiveau 1 (1/1)"
+        );
+        expect(themeTrWithCounter[1].textContent?.trim()).toBe(
+          "ThemeNiveau 2 (1/1)"
+        );
+        expect(themeTrWithCounter[2].textContent?.trim()).toBe(
+          "ThemeNiveau 3 (1/1)"
+        );
+        expect(themeTrWithCounter[3].textContent?.trim()).toBe(
+          "ThemeNiveau 4 (1/1)"
+        );
+        expect(themeTrWithCounter[4].textContent?.trim()).toBe(
+          "ThemeNiveau 5 (1/1)"
+        );
+        expect(themeTrWithCounter[5].textContent?.trim()).toBe(
+          "LaatsteTheme (1/1)"
+        );
 
         const datasetButtons: NodeListOf<HTMLButtonElement> =
           nativeElement.querySelectorAll("tr.ggc-dt-btn-ls-collapse");
         expect(datasetButtons.length).toBe(1);
-        // expect(datasetButtons[0].textContent?.trim()).toContain(
-        //   "testDataset (1/2)"
-        // );
+        expect(datasetButtons[0].textContent?.trim()).toContain(
+          "testDataset (1/2)"
+        );
       }
     );
 
@@ -176,12 +176,12 @@ describe("DatasetTreeComponent", () => {
             "tr.ggc-dt-btn-ts-collapse td:nth-child(1)"
           );
         expect(themeButtons.length).toBe(6);
-        // expect(themeButtons[0].textContent?.trim()).toBe("ThemeNiveau 1 (1)");
-        // expect(themeButtons[1].textContent?.trim()).toBe("ThemeNiveau 2 (1)");
-        // expect(themeButtons[2].textContent?.trim()).toBe("ThemeNiveau 3 (1)");
-        // expect(themeButtons[3].textContent?.trim()).toBe("ThemeNiveau 4 (1)");
-        // expect(themeButtons[4].textContent?.trim()).toBe("ThemeNiveau 5 (1)");
-        // expect(themeButtons[5].textContent?.trim()).toBe("LaatsteTheme (1)");
+        expect(themeButtons[0].textContent?.trim()).toBe("ThemeNiveau 1 (1)");
+        expect(themeButtons[1].textContent?.trim()).toBe("ThemeNiveau 2 (1)");
+        expect(themeButtons[2].textContent?.trim()).toBe("ThemeNiveau 3 (1)");
+        expect(themeButtons[3].textContent?.trim()).toBe("ThemeNiveau 4 (1)");
+        expect(themeButtons[4].textContent?.trim()).toBe("ThemeNiveau 5 (1)");
+        expect(themeButtons[5].textContent?.trim()).toBe("LaatsteTheme (1)");
 
         const datasetButtons: NodeListOf<HTMLButtonElement> =
           nativeElement.querySelectorAll(
