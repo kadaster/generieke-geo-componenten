@@ -4,13 +4,13 @@
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
-    "@kadaster/ggc-cesium": "*",
+    "@kadaster/ggc-map-3d": "*",
     "@kadaster/ggc-map": "^3.0.0",
     "bootstrap": ">=4.3.1 <6.0.0",
     "popper.js": "^1.16.1"
   },
   "peerDependenciesMeta": {
-    "@kadaster/ggc-cesium": {
+    "@kadaster/ggc-map-3d": {
       "optional": true
     },
     "@kadaster/ggc-map": {

@@ -1,0 +1,20 @@
+[
+  {
+    "themeName": "datasets",
+    "datasets": [
+      {
+        "datasetName": "3D gebouwen",
+        "infoUrl": "",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "3d-buildings"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

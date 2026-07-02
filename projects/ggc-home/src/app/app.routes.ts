@@ -49,6 +49,15 @@ import { ExampleFeatureInfoAdvComponent } from "./examples/example-map/example-f
 import { ExampleFeatureInfoTabsComponent } from "./examples/example-map/example-feature-info-tabs/example-feature-info-tabs.component";
 import { ExampleFeatureInfoCustomNamesValuesComponent } from "./examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component";
 import { Example3dBasicComponent } from "./examples/example-3d/example-3d-basic/example-3d-basic.component";
+import { Example3dDatasetTreeLegendComponent } from "./examples/example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component";
+import { Example3dLayerCameraOptionsComponent } from "./examples/example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component";
+import { Example3dDatasetSwitcherComponent } from "./examples/example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component";
+import { Example3dFeatureInfoComponent } from "./examples/example-3d/example-3d-feature-info/example3d-feature-info.component";
+import { Example3dFeatureInfoAutoConnectComponent } from "./examples/example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component";
+import { Example3dSearchComponent } from "./examples/example-3d/example-3d-search/example3d-search.component";
+import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
+import { Example3dLayerWmtsComponent } from "./examples/example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
+import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 // PLOP:IMPORTROUTE
 
@@ -136,9 +145,63 @@ export const routes: Routes = [
   },
   {
     path: "example-3d-basic",
-    title: "Layer-3D | GGC-Home",
+    title: "3D kaart | GGC-Home",
     component: Example3dBasicComponent,
     data: { label: "example-3d-basic" }
+  },
+  {
+    path: "example-3d-dataset-tree-legend",
+    title: "3D kaart met dataset-tree en legenda | GGC-Home",
+    component: Example3dDatasetTreeLegendComponent,
+    data: { label: "example-3d-dataset-tree-legend" }
+  },
+  {
+    path: "example-3d-layer-camera-options",
+    title: "Layer-3D met eigen camera opties | GGC-Home",
+    component: Example3dLayerCameraOptionsComponent,
+    data: { label: "example-3d-layer-camera-options" }
+  },
+  {
+    path: "example-3d-dataset-switcher",
+    title: "3D kaart met dataset switcher | GGC-Home",
+    component: Example3dDatasetSwitcherComponent,
+    data: { label: "example-3d-dataset-switcher" }
+  },
+  {
+    path: "example-3d-feature-info",
+    title: "3D kaart met feature info component | GGC-Home",
+    component: Example3dFeatureInfoComponent,
+    data: { label: "example-3d-feature-info" }
+  },
+  {
+    path: "example-3d-feature-info-auto-connect",
+    title: "3D kaart met feature info component (autoconnect) | GGC-Home",
+    component: Example3dFeatureInfoAutoConnectComponent,
+    data: { label: "example-3d-feature-info-auto-connect" }
+  },
+  {
+    path: "example-3d-search",
+    title: "3D kaart met zoek component | GGC-Home",
+    component: Example3dSearchComponent,
+    data: { label: "example-3d-search" }
+  },
+  {
+    path: "example-3d-layer-3d-tiles",
+    title: "3D kaart met een 3D layer | GGC-Home",
+    component: Example3dLayer3dTilesComponent,
+    data: { label: "example-3d-layer-3d-tiles" }
+  },
+  {
+    path: "example-3d-layer-wmts",
+    title: "3D kaart met een WMTS layer | GGC-Home",
+    component: Example3dLayerWmtsComponent,
+    data: { label: "example-3d-layer-wmts" }
+  },
+  {
+    path: "example-3d-layer-geojson",
+    title: "3D kaart met een Geojson layer | GGC-Home",
+    component: Example3dLayerGeojsonComponent,
+    data: { label: "example-3d-layer-geojson" }
   },
   {
     path: "snapping-basic",
