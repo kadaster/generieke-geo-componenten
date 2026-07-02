@@ -93,7 +93,7 @@ export class GgcDatasetTreeModelCreateService {
   public serviceFactory(service: DatasetTreeWebservice): DatasetTreeWebservice {
     const layers: DatasetTreeLayer[] = [];
     for (const layer of service.layers) {
-      const newLayer = this.layerFactory(layer as DatasetTreeLayer);
+      const newLayer = this.layerFactory(layer);
       layers.push(newLayer);
     }
     return new DatasetTreeWebservice(layers);
