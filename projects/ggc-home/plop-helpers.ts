@@ -41,8 +41,8 @@ export interface ExampleMetadata {
 
 // COMPONENT IMPORT MAPPING
 export const componentImportMap = {
-  GGC_CESIUM: {
-    import: 'import { GgcCesiumComponent } from "@kadaster/ggc-cesium";',
+  GGC_MAP_3D: {
+    import: 'import { GgcCesiumComponent } from "@kadaster/ggc-map-3d";',
     ngImport: "GgcCesiumComponent"
   },
   GGC_DATASET_TREE: {
@@ -127,11 +127,9 @@ export function buildExampleMetadata(
   directory: string,
   paths: ExamplePaths
 ): ExampleMetadata {
-  console.log(directory);
-  console.log(paths.folderName);
-  console.log(paths.folderName, ".component.ts");
+  const relativePath = paths.absoluteDir.replace("src/app/examples/", "");
   return {
-    imagePath: `code/${directory}/${paths.folderName}/${paths.folderName}.png`,
-    componentModulePath: `${directory}/${paths.folderName}/${paths.folderName}.component.ts`
+    imagePath: `code/examples/${relativePath}/${paths.folderName}.png`,
+    componentModulePath: `${relativePath}/${paths.folderName}.component.ts`
   };
 }
