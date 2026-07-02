@@ -37,6 +37,7 @@ import {
   MapComponentEventTypes,
   ViewerType
 } from "@kadaster/ggc-models";
+import { declusterFeatures } from "@kadaster/ggc-map";
 import { Subscription } from "rxjs";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
 
@@ -356,7 +357,16 @@ export class GgcFeatureInfoComponent
   protected handleFeatureInfoEvent(event: FeatureInfoComponentEvent): void {
     // bijv. tab gewijzigd, data vernieuwen, etc.
     if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
-      this.featureInfoCollection = event.value;
+      const features: Feature[] = event.value.features ?? [];
+      const hasClusteredFeatures = features.some(
+        (f) => (f.get("features")?.length ?? 0) > 1
+      );
+      this.featureInfoCollection = new FeatureInfoCollection(
+        undefined,
+        hasClusteredFeatures ? declusterFeatures(features) : features,
+        event.value.layerTitle,
+        event.value.layerId
+      );
     }
   }
 
@@ -473,7 +483,15 @@ export class GgcFeatureInfoComponent
 
             this.featureInfoCollection = new FeatureInfoCollection(
               undefined,
-              collections.flatMap((layer) => layer.features ?? []),
+              collections.flatMap((layer) => {
+                const features = layer.features ?? [];
+                const hasClusteredFeatures = features.some(
+                  (f) => (f.get("features")?.length ?? 0) > 1
+                );
+                return hasClusteredFeatures
+                  ? declusterFeatures(features)
+                  : features;
+              }),
               collections
                 .map((layer) => layer.layerTitle)
                 .filter((value) => value && value.trim().length > 0)
