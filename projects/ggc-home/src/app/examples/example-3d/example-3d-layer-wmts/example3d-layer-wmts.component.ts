@@ -33,7 +33,7 @@ export class Example3dLayerWmtsComponent {
     tags: [Tags.LAYER, Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-wmts/example-3d-layer-wmts.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-layer-wmts/example3d-layer-wmts.component.ts";

@@ -31,7 +31,7 @@ export class ExampleFeatureInfoCustomNamesValuesComponent
     tags: [Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-map/example-feature-info-custom-names-values/example-feature-info-custom-names-values.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/feature-info_public-api.GgcFeatureInfo.html`;

@@ -48,7 +48,7 @@ export class ExampleMapSelectHoverClickComponent
     tags: [Tags.SELECT],
     imageLocation:
       "code/examples/example-map/example-map-select-hover-click/example-select.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-map/example-map-select-hover-click/example-map-select-hover-click.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GgcSelectService.html`;

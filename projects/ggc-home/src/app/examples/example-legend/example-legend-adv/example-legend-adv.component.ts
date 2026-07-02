@@ -31,7 +31,7 @@ export class ExampleLegendAdvComponent
     tags: [Tags.LEGEND],
     imageLocation:
       "code/examples/example-legend/example-legend-basic/example-legend-basic.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-legend/example-legend-adv/example-legend-adv.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;

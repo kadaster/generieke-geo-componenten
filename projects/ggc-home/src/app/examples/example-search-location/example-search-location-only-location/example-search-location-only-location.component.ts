@@ -37,7 +37,7 @@ export class ExampleSearchLocationOnlyLocationComponent extends ExampleFormatCom
     tags: [Tags.LOCATION],
     imageLocation:
       "code/examples/example-search-location/example-search-location-only-location/example-search-location-only-location.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-search-location/example-search-location-only-location/example-search-location-only-location.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;

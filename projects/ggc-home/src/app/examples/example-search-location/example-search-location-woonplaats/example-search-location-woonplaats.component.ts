@@ -42,7 +42,7 @@ export class ExampleSearchLocationWoonplaatsComponent
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
