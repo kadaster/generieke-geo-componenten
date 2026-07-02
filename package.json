@@ -68,7 +68,7 @@
     "version": "npm run build:all",
     "tsdocs:generate": "typedoc --options typedoc.json",
     "generate-readme-files": "node scripts/generate-readme-files.js",
-    "plop:ggc-home": "cd projects/ggc-home && plop --plopfile plopfile.ts"
+    "plop:ggc-home-example": "cd projects/ggc-home && plop --plopfile plopfile.ts"
   },
   "private": true,
   "dependencies": {

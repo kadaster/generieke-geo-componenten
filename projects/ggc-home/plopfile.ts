@@ -80,13 +80,13 @@ export default async function (plop: NodePlopAPI) {
       {
         type: "list",
         name: "layout",
-        message: "Layout van de pagina:",
+        message: "Hoeveel kolommen wil je op de pagina:",
         choices: layoutChoices
       },
       {
         type: "checkbox",
         name: "componentImports",
-        message: "Welke componenten moeten worden geimporteerd?:",
+        message: "Welke componenten moeten worden geimporteerd:",
         choices: Object.keys(componentImportMap)
       },
       {
