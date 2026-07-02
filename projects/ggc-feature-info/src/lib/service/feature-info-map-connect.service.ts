@@ -7,7 +7,7 @@ import {
   ViewerType
 } from "@kadaster/ggc-models";
 import { GgcFeatureInfoConnectService } from "./connect.service";
-import { Color, ScreenSpaceEventType } from "@cesium/engine";
+//import { Color, ScreenSpaceEventType } from "@cesium/engine";
 
 @Injectable({
   providedIn: "root"
@@ -91,11 +91,17 @@ export class FeatureInfoMapConnectService {
         .getCesiumSelectionService()
         .then((selectionService: any) => {
           selectionService?.addSelection({
-            eventType: ScreenSpaceEventType.LEFT_CLICK,
-            highlightColor: Color.BLUE
+            /*eventType: ScreenSpaceEventType.LEFT_CLICK,
+            highlightColor: Color.BLUE*/
           });
         });
     }
+  }
+
+  isLayerClustered(layerId: string): Promise<boolean | undefined> {
+    return this.connectService.getMapService().then((mapService: any) => {
+      return mapService.getLayer(layerId)?.isClustered() ?? undefined;
+    });
   }
 
   /**

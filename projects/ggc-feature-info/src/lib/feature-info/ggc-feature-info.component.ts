@@ -357,16 +357,33 @@ export class GgcFeatureInfoComponent
   protected handleFeatureInfoEvent(event: FeatureInfoComponentEvent): void {
     // bijv. tab gewijzigd, data vernieuwen, etc.
     if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
+      console.log(event);
+
       const features: Feature[] = event.value.features ?? [];
       const hasClusteredFeatures = features.some(
         (f) => (f.get("features")?.length ?? 0) > 1
       );
+      this.featureInfoMapConnectService
+        .isLayerClustered(event.value.layerId)
+        .then((clusteredLayer) => {
+          //if (clusteredLayer) {
+          console.log(clusteredLayer);
+          this.featureInfoCollection = new FeatureInfoCollection(
+            undefined,
+            clusteredLayer ? declusterFeatures(features) : features,
+            event.value.layerTitle,
+            event.value.layerId
+          );
+          // }
+        });
+
+      /*      console.log(hasClusteredFeatures);
       this.featureInfoCollection = new FeatureInfoCollection(
         undefined,
         hasClusteredFeatures ? declusterFeatures(features) : features,
         event.value.layerTitle,
         event.value.layerId
-      );
+      );*/
     }
   }
 

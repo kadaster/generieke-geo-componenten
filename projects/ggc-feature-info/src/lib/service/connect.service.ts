@@ -45,7 +45,7 @@ export class GgcFeatureInfoConnectService {
   }
 
   async getCesiumSelectionService(): Promise<unknown> {
-    try {
+    /*try {
       if (!this.cesiumSelectionService) {
         const module = await this.loadCesiumModule();
         this.cesiumSelectionService = this.injector.get(
@@ -55,7 +55,8 @@ export class GgcFeatureInfoConnectService {
       return this.cesiumSelectionService;
     } catch (e) {
       return undefined;
-    }
+    }*/
+    return undefined;
   }
 
   /**
@@ -73,12 +74,12 @@ export class GgcFeatureInfoConnectService {
   /**
    * Lazy load Map module (once)
    */
-  private loadCesiumModule(): Promise<GgcCesiumModule> {
+  /*private loadCesiumModule(): Promise<GgcCesiumModule> {
     this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-map-3d"
+      /!* @vite-ignore *!/ "@kadaster/ggc-map-3d"
     ).catch((e) => {
       throw e;
     });
     return this.cesiumModulePromise;
-  }
+  }*/
 }
