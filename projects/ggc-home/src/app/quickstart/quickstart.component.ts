@@ -66,7 +66,7 @@ export class App {
       "type": "wmts",
       "layers": [
         {
-          "layerName": "standaard",
+          "layerName": "standaard", // De naam van de laag uit de service, komt ook terug in de events (voor developer)
           "visible": true
         }
       ]
@@ -101,7 +101,7 @@ export class App {
       "type": "wmts",
       "layers": [
         {
-          "title": "BRT achtergrond kaart Standaard (WMTS)",
+          "title": "BRT achtergrond kaart Standaard (WMTS)", // Weergavenaam (voor de eindgebruiker)
           "activeLegend": {
             "legendUrl": "https://service.pdok.nl/lv/bgt/wmts/v1_0/standaardvisualisatie/legend.png"
           },
@@ -367,11 +367,13 @@ export class App {
 }`;
 
   toolbarHtml = `  <ggc-toolbar class="toolbar-position">
+    <!-- knop in de toolbar -->
     <ggc-toolbar-item
       icon="fas fa-ruler"
       (activeChanged)="changeMeasureState($event)"
       [title]="'Meten'"
     >
+      <!-- submenu voor het toolbar item -->
       @if (measureActive) {
         <ggc-toolbar-item-measure
           stopIcon="fas fa-mouse-pointer"
