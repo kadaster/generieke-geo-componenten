@@ -45,6 +45,7 @@ export class ExampleSnappingAdvComponent
     introduction:
       "Bij het tekenen sluiten lijnen automatisch aan op andere geografische objecten.",
     components: [Components.GGC_MAP],
+    theme: [],
     tags: [Tags.SNAP, Tags.DRAW],
     imageLocation:
       "code/examples/example-snapping/example-snapping-basic/example-snapping-basic.png"

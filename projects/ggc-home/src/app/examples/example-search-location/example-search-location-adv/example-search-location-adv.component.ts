@@ -35,6 +35,7 @@ export class ExampleSearchLocationAdvComponent extends ExampleFormatComponent {
     title: "Locatie zoeken (uitgebreid)",
     introduction: "Zoek een adres, woonplaats of huidige locatie.",
     components: [Components.GGC_SEARCH_LOCATION],
+    theme: [],
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location-only-location.png"

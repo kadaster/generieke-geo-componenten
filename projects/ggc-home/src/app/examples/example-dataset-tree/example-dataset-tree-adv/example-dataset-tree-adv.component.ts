@@ -35,6 +35,7 @@ export class ExampleDatasetTreeAdvComponent
     title: "Kaartlagen aan-/uitzetten (uitgebreid)",
     introduction: "Zet kaartlagen aan of uit in een lijst met meer niveau's.",
     components: [Components.GGC_DATASET_TREE],
+    theme: [],
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-dataset-tree-basic/example-dataset-tree-basic.png"

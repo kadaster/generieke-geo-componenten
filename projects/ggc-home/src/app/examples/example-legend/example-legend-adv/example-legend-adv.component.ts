@@ -28,6 +28,7 @@ export class ExampleLegendAdvComponent
     title: "Legenda weergeven (uitgebreid)",
     introduction: "Toon de legenda van één of meer kaartlagen.",
     components: [Components.GGC_LEGEND],
+    theme: [],
     tags: [Tags.LEGEND],
     imageLocation:
       "code/examples/example-legend/example-legend-basic/example-legend-basic.png"
