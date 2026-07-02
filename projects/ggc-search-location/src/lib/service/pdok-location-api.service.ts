@@ -28,10 +28,10 @@ import { AdditionalSuggestion } from "../model/additional-suggestion.model";
   providedIn: "root"
 })
 export class PdokLocationApiService {
-  readonly collectionsLoaded$ = this.collectionsLoadedSubject.asObservable();
-
-  private readonly collectionsLoadedSubject =
+  readonly collectionsLoadedSubject =
     new ReplaySubject<PdokLocationApiResult>(1);
+
+  readonly collectionsLoaded$ = this.collectionsLoadedSubject.asObservable();
 
   private readonly httpClient = inject(HttpClient);
   private readonly additionalSuggestionSourceService = inject(
