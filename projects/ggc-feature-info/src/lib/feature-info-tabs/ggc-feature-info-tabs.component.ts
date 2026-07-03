@@ -29,6 +29,9 @@ import {
 import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
 import { Subscription } from "rxjs";
+import { declusterFeatures } from "@kadaster/ggc-map";
+import Feature from "ol/Feature";
+import Geometry from "ol/geom/Geometry";
 
 /**
  * Component voor het weergeven van feature-informatie in tabbladen.
@@ -178,11 +181,51 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private onDataUpdate(): void {
-    // create copy of featureInfoCollectionArray and check empty tabs
-    this.featureInfoCollectionArrayInternal = this.featureInfoCollectionArray
-      ? [...this.featureInfoCollectionArray]
-      : [];
+    this.featureInfoCollectionArrayInternal = (
+      this.featureInfoCollectionArray ?? []
+    ).map((collection) => {
+      const features = collection.features;
+
+      const hasClusteredFeatures = this.hasClusteredFeatures(features);
+
+      return new FeatureInfoCollection(
+        collection.layerName,
+        hasClusteredFeatures
+          ? declusterFeatures(features as Feature<Geometry>[])
+          : features,
+        collection.layerTitle,
+        collection.layerId
+      );
+    });
+    this.setTabs();
+  }
+
+  private hasClusteredFeatures(
+    features: FeatureInfoCollection["features"]
+  ): features is Feature<Geometry>[] {
+    return (
+      features.every((feature) => this.isOpenLayersFeature(feature)) &&
+      features.some((feature) => {
+        if (!this.isOpenLayersFeature(feature)) {
+          return false;
+        }
+        const clustered = feature.get("features");
+        return Array.isArray(clustered) && clustered.length > 1;
+      })
+    );
+  }
+
+  private isOpenLayersFeature(feature: unknown): feature is Feature<Geometry> {
+    return (
+      typeof feature === "object" &&
+      feature !== null &&
+      typeof (feature as { get?: unknown }).get === "function"
+    );
+  }
+
+  private setTabs() {
     this.checkShowEmptyTabs();
+
     if (this.featureInfoCollectionArrayInternal.length === 0) {
       const event = new FeatureInfoComponentEvent(
         FeatureInfoComponentEventType.SELECTEDTAB,
