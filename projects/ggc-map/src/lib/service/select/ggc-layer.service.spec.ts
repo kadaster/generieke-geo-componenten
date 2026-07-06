@@ -214,24 +214,29 @@ describe("LayerService", () => {
     }
 
     it.each([
-      { visible: true, shouldAdd: true },
-      { visible: undefined, shouldAdd: true },
-      { visible: false, shouldAdd: false }
-    ])("should handle visibility correctly", ({ visible, shouldAdd }) => {
-      const webservice = createWebservice({ visible });
+      { visible: true, persistent: undefined, shouldAdd: true },
+      { visible: undefined, persistent: undefined, shouldAdd: true },
+      { visible: false, persistent: undefined, shouldAdd: false },
+      { visible: true, persistent: true, shouldAdd: true },
+      { visible: false, persistent: true, shouldAdd: true }
+    ])(
+      "should handle visibility correctly",
+      ({ visible, persistent, shouldAdd }) => {
+        const webservice = createWebservice({ visible, persistent });
 
-      const addLayerSpy = vi
-        .spyOn(service, "addLayer")
-        .mockReturnValue("layer1");
+        const addLayerSpy = vi
+          .spyOn(service, "addLayer")
+          .mockReturnValue("layer1");
 
-      service.loadWebservices([webservice as any], MAP_INDEX);
+        service.loadWebservices([webservice as any], MAP_INDEX);
 
-      if (shouldAdd) {
-        expect(addLayerSpy).toHaveBeenCalledTimes(1);
-      } else {
-        expect(addLayerSpy).not.toHaveBeenCalled();
+        if (shouldAdd) {
+          expect(addLayerSpy).toHaveBeenCalledTimes(1);
+        } else {
+          expect(addLayerSpy).not.toHaveBeenCalled();
+        }
       }
-    });
+    );
 
     it("should set extra properties on layers", () => {
       const webservice = createWebservice();

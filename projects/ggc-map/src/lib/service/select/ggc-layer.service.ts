@@ -501,7 +501,7 @@ export class GgcLayerService {
         mapIndex: mapIndex,
         visible: layerOptions.visible ?? true
       } as AbstractConfigurableLayerOptions;
-      if (updatedLayer.visible) {
+      if (updatedLayer.visible || updatedLayer.persistent) {
         this.addLayer(updatedLayer, service.type);
       }
 
