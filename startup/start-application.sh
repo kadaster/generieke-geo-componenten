@@ -20,5 +20,8 @@ envsubst '\$ENV_PIWIK_SCRIPT' < $mainFileName > /tmp/main.tmp
 # move modified files to original location
 mv /tmp/main.tmp "${mainFileName}"
 
+# static content read-only maken
+chmod -R a=rX /etc/nginx/html/
+
 # run nginx
 nginx -g 'daemon off;'
