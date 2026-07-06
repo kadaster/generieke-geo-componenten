@@ -34,7 +34,8 @@ import {
   FeatureCollectionForLayer,
   GGC_FEATURE_LAYERID,
   MapComponentEvent,
-  MapComponentEventTypes
+  MapComponentEventTypes,
+  ViewerType
 } from "@kadaster/ggc-models";
 import { Subscription } from "rxjs";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
@@ -63,7 +64,10 @@ import { FeatureInfoEventService } from "../service/feature-info-event.service";
 export class GgcFeatureInfoComponent
   implements AfterContentInit, OnInit, AfterViewInit, OnDestroy
 {
-  /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden */
+  /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden
+   * Een 3D viewer maakt geen gebruikt van een mapIndex, dus die kan dan worden leeggelaten.
+   * Wel kan een 3D viewer gebruik maken van een selectIndex, netzoals een 2D viewer.
+   * */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
 
   /** Unieke naam/index van de selectie index waarvoor Feature Info getoond moet worden, indien opgegeven.
@@ -121,6 +125,11 @@ export class GgcFeatureInfoComponent
    * Met deze optie kan de afnemer zelf de select interactie starten met de gewenste parameters.
    */
   @Input() autoStartSelect = true;
+  /**
+   * Geeft aan of dit feature info component gebruikt wordt voor 2D of 3D kaart.
+   */
+  @Input() viewerType = ViewerType.TWEE_D;
+
   /**
    * EventEmitter voor het versturen van component-gerelateerde events.
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
@@ -219,7 +228,8 @@ export class GgcFeatureInfoComponent
     if (this.autoConnect && this.autoStartSelect) {
       this.featureInfoMapConnectService.startSelect(
         { style: null } as any,
-        this.mapIndex
+        this.mapIndex,
+        this.viewerType
       );
     }
   }
@@ -376,7 +386,11 @@ export class GgcFeatureInfoComponent
    * @param feature Feature dat gehighlight moet worden
    */
   private highlightFeature(feature: object | undefined): void {
-    this.featureInfoMapConnectService.showHighlight(feature, this.mapIndex);
+    this.featureInfoMapConnectService.showHighlight(
+      feature,
+      this.mapIndex,
+      this.viewerType
+    );
   }
 
   /**
@@ -430,7 +444,7 @@ export class GgcFeatureInfoComponent
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
     // featureInfoCollection gezet via de tabs (hasTabs = true
     this.featureInfoMapConnectService
-      .getObservableForMapSelection(mapIndex, selectIndex)
+      .getObservableForMapSelection(this.viewerType, mapIndex, selectIndex)
       .then((mapSelectionEvent) => {
         if (this.hasTabs) {
           return;
@@ -449,7 +463,10 @@ export class GgcFeatureInfoComponent
               event.value.featureCollectionForLayers;
 
             if (!collections || collections.length === 0) {
-              this.featureInfoMapConnectService.clearHighlightLayer(mapIndex);
+              this.featureInfoMapConnectService.clearHighlightLayer(
+                this.viewerType,
+                mapIndex
+              );
               this.featureInfoCollection = undefined;
               return;
             }

@@ -1,0 +1,59 @@
+[
+  {
+    "themeName": "datasets",
+    "datasets": [
+      {
+        "datasetName": "3D gebouwen",
+        "infoUrl": "",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "3d-buildings"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "datasetName": "Achtergrondkaart",
+        "infoUrl": "",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "wmts-brt-grijs"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "datasetName": "Kadastralekaart",
+        "infoUrl": "",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "wmts-kad"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "datasetName": "Bestuurlijkegebieden",
+        "infoUrl": "",
+        "services": [
+          {
+            "layers": [
+              {
+                "layerId": "gemeentes"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
