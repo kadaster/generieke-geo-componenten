@@ -1,0 +1,76 @@
+/* Importeer het Highlight.js thema: */
+@import url("//cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css");
+
+img {
+  max-width: 100%;
+}
+
+.quickstart-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 2rem;
+}
+
+.ggc-paragraph-list {
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.selected {
+  font-weight: bold;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+.ggc-paragraph-list li {
+  margin-bottom: 0.25rem;
+}
+
+pre {
+  border: 1px solid #dcdfe6;
+  padding: 16px;
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+
+button {
+  background: none;
+  border: none;
+  color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+ggc-dataset-switcher ::ng-deep .ggc-ds-switcher-label {
+  display: block;
+  border-radius: 5px;
+  border: solid 2px black;
+  margin-left: 2.5rem;
+}
+
+ggc-dataset-switcher ::ng-deep .ggc-ds-switcher-label-img {
+  display: none;
+}
+
+ggc-dataset-switcher ::ng-deep .ggc-ds-switcher-radio-button {
+  top: unset;
+  width: 24px;
+  height: 24px;
+  margin-top: 16px;
+}
+
+ggc-dataset-switcher ::ng-deep .ggc-ds-switcher-radio-button:first-child {
+  margin-top: 26px;
+}
+
+ggc-dataset-switcher ::ng-deep .ggc-ds-switcher-label-txt {
+  font-size: 1rem;
+}
