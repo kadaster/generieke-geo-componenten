@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "tslib": "^2.3.0",
-    "@kadaster/ggc-models": "^3.0.0"
+    "@kadaster/ggc-models": "^3.0.1"
   },
   "publishConfig": {
     "directory": "../../dist/ggc-map-3d",
