@@ -292,6 +292,13 @@ export class CoreSelectionService {
       }
 
       const layerId = layer.get("ggc-layer-id");
+      const getFeatureInfoOnSingleClick = layer.get(
+        "ggc-get-feature-info-on-singleclick"
+      );
+
+      if (!getFeatureInfoOnSingleClick) {
+        return false;
+      }
 
       if (layerId !== undefined) {
         feature.set(GGC_FEATURE_LAYERID, layerId);

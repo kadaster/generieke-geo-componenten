@@ -40,7 +40,9 @@ export class GgcMapService {
   private readonly coreMapService = inject(CoreMapService);
 
   /**
-   * Geeft een observable die notificaties uitstuurt wanneer lagen wijzigen.
+   * Observable voor layer change events.
+   * Emits een event als een layer geïnitialiseerd is, is toegevoegd aan de kaart of is weggehaald uit de kaart.
+   * Identiek aan de getLayerChangedObservable in GgcLayerService.
    *
    * @returns Observable met {@link LayerChangedEvent}
    */

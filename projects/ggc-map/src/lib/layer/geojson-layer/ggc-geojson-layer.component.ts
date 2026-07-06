@@ -230,6 +230,11 @@ export class GgcGeojsonLayerComponent
     vectorSource.addFeatures(features);
   }
 
+  protected handleSingleClick(event: MapBrowserEvent) {
+    super.handleSingleClick(event);
+    // don't call getFeatureInfo, as that is already solved in the selectService
+  }
+
   /**
    * Verwerkt een klik op de kaart en haalt relevante features op.
    * Stuurt een MapComponentEvent met de gevonden features.

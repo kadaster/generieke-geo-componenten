@@ -104,4 +104,43 @@ describe("AbstractBaseLayerComponent", () => {
       expect(getMapSpy).toHaveBeenCalled();
     });
   });
+
+  describe("persistent / visible behaviour", () => {
+    it.each([
+      { visible: true, expected: true },
+      { visible: false, expected: false },
+      { visible: undefined, expected: true }
+    ])(
+      "when persistent=true and visible=$visible, setVisible should be called with $expected",
+      ({ visible, expected }) => {
+        const setVisibleSpy = vi.fn();
+
+        const layerMock = {
+          set: vi.fn(),
+          setVisible: setVisibleSpy
+        } as unknown as Layer;
+
+        const mapMock = {
+          addLayer: vi.fn(),
+          removeLayer: vi.fn()
+        } as unknown as OlMap;
+
+        vi.spyOn(coreMapService, "getMap").mockReturnValue(mapMock);
+
+        component["options"] = {
+          mapIndex: "map",
+          layerId: "test-layer",
+          persistent: true,
+          visible
+        };
+
+        component.ngOnInit();
+
+        component.setTestLayer(layerMock);
+
+        expect(layerMock.set).toHaveBeenCalledWith("persistent", true);
+        expect(setVisibleSpy).toHaveBeenCalledWith(expected);
+      }
+    );
+  });
 });

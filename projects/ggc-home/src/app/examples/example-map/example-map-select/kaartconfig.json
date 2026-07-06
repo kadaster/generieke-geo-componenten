@@ -18,7 +18,8 @@
       {
         "layerId": "provincies",
         "title": "Provincies",
-        "zIndex": 20
+        "zIndex": 20,
+        "getFeatureInfoOnSingleclick": true
       }
     ]
   }

@@ -118,6 +118,7 @@ export interface AbstractClickableLayerOptions extends AbstractConfigurableLayer
    * waardoor er informatie door middel van een 'GetFeatureInfo' request wordt opgehaald.
    * De FeatureInfo is ook afhankelijk van de ingestelde [minResolution] en
    * [maxResolution] of deze beschikbaar is.
+   * Let op: om op een kaartlaag te kunnen selecteren, moet getFeatureInfoOnSingleclick op true gezet worden.
    */
   getFeatureInfoOnSingleclick?: boolean;
 
