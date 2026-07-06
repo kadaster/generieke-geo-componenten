@@ -37,7 +37,4 @@ USER ggc-home
 
 EXPOSE 8080
 
-# static content read-only maken
-RUN chmod -R a=rX /etc/nginx/html/
-
 ENTRYPOINT ["/var/appdata/run/start-application.sh"]
