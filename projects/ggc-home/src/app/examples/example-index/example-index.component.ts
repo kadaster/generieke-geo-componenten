@@ -7,7 +7,6 @@ import { ExampleDatasetTreeBasicComponent } from "../example-dataset-tree/exampl
 import { ExampleDatasetTreeTemplatesComponent } from "../example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component";
 import { ExampleDatasetSwitcherBasicComponent } from "../example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component";
 import { ExampleDatasetTreeLayerEnabledCallback } from "../example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component";
-import { ExampleSearchLocationWoonplaatsComponent } from "../example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component";
 import { ExampleLegendZoomComponent } from "../example-legend/example-legend-zoom/example-legend-zoom.component";
 import { ExampleLegendDatasetTreeComponent } from "../example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component";
 import { ExampleDatasetTreeBasicListComponent } from "../example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component";
@@ -93,7 +92,6 @@ export class ExampleIndexComponent {
     new ExampleDrawEditBasicComponent().componentInfo,
     new ExampleDrawCenterEditBasicComponent().componentInfo,
     new ExampleDrawTracingComponent().componentInfo,
-    new ExampleSearchLocationWoonplaatsComponent().componentInfo,
     new ExampleSnappingBasicComponent().componentInfo,
     new ExampleDatasetSwitcherBasicComponent().componentInfo,
     new ExampleDatasetSwitcherRadioButtonsComponent().componentInfo,
