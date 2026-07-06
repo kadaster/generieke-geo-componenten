@@ -8,6 +8,8 @@ WORKDIR /etc/nginx/html
 USER root
 RUN adduser --home /etc/ggc-home --disabled-password --gecos "" ggc-home
 
+COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
+
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY startup/start-application.sh /var/appdata/run/start-application.sh
 
@@ -27,15 +29,13 @@ RUN mkdir -p /var/log/nginx && \
 
 # Permissions adjustments
 RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ /tmp && \
-    chmod +x /var/appdata/run/start-application.sh && \
     chmod -R u+rwX,g+rX /tmp && \
+    chmod +x /var/appdata/run/start-application.sh && \
     chmod -R u+rwX,g+rX /var/cache/nginx
 
 USER ggc-home
 
 EXPOSE 8080
-
-COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
 
 # static content read-only maken
 RUN chmod -R a=rX /etc/nginx/html/
