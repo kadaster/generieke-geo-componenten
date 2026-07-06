@@ -172,7 +172,7 @@ export default async function (plop: NodePlopAPI) {
 
       // Auto-import ggc-map als includeMap true is en nog niet geïmporteerd
       const componentImports = data.componentImports ?? [];
-      if (data.includeMap && !componentImports.includes("ggc-map")) {
+      if (data.includeMap && !componentImports.includes("GGC_MAP")) {
         componentImports.push("GGC_MAP");
       }
 
