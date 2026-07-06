@@ -29,6 +29,7 @@ RUN mkdir -p /var/log/nginx && \
 
 # Permissions adjustments
 RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ /tmp && \
+    chmod -R u+rwX,g+rX /etc/nginx/html/ && \
     chmod +x /var/appdata/run/start-application.sh && \
     chmod -R u+rwX,g+rX /tmp && \
     chmod -R u+rwX,g+rX /var/cache/nginx
