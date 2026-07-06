@@ -656,9 +656,15 @@ export class App {
     this.router.navigate(["/example-index"]);
   }
 
-  goToDatasetVoorbeelden() {
+  goToDatasetTreeVoorbeelden() {
     this.sessionStorageService.removeSessionStorage();
-    this.sessionStorageService.setSelectedThemes(["Kaartweergave kiezen"]);
+    this.sessionStorageService.setSelectedComponents(["ggc-dataset-tree"]);
+    this.router.navigate(["/example-index"]);
+  }
+
+  goToDatasetSwitcherVoorbeelden() {
+    this.sessionStorageService.removeSessionStorage();
+    this.sessionStorageService.setSelectedComponents(["ggc-dataset-switcher"]);
     this.router.navigate(["/example-index"]);
   }
 
