@@ -31,10 +31,7 @@ export class SessionStorageService {
   }
 
   setSelected2D3D(selected2D3D: string[]) {
-    sessionStorage.setItem(
-      this.selected2D3DKey,
-      JSON.stringify(selected2D3D)
-    );
+    sessionStorage.setItem(this.selected2D3DKey, JSON.stringify(selected2D3D));
   }
 
   setSelectedComponents(selectedComponents: string[]) {

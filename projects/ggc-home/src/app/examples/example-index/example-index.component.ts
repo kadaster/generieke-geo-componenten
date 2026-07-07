@@ -227,9 +227,7 @@ export class ExampleIndexComponent {
       this.selected2D3D.add(item);
     }
     this.selected2D3D = new Set(this.selected2D3D);
-    this.sessionStorageService.setSelected2D3D(
-    Array.from(this.selected2D3D)
-    );
+    this.sessionStorageService.setSelected2D3D(Array.from(this.selected2D3D));
   }
 
   protected toggleTheme(theme: string): void {
@@ -276,7 +274,8 @@ export class ExampleIndexComponent {
 
   protected clear2D3DFilter(): void {
     this.selected2D3D = new Set<string>();
-    this.sessionStorageService.removeSelected2D3D();  }
+    this.sessionStorageService.removeSelected2D3D();
+  }
 
   protected clearThemeFilter(): void {
     this.selectedThemes = new Set<string>();
