@@ -40,7 +40,9 @@ describe("ToolboxComponent", () => {
   });
 
   it("should render item content after click", () => {
-    const items = hostFixture.debugElement.queryAll(By.directive(GgcToolbarItemComponent));
+    const items = hostFixture.debugElement.queryAll(
+      By.directive(GgcToolbarItemComponent)
+    );
 
     items[0].componentInstance.handleClick();
     hostFixture.detectChanges();

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, QueryList, TemplateRef} from "@angular/core";
+import { ChangeDetectorRef, QueryList, TemplateRef } from "@angular/core";
 import {
   AfterViewInit,
   Component,

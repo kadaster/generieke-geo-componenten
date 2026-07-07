@@ -1,4 +1,4 @@
-import {Component, inject, ChangeDetectionStrategy, signal} from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import {
   GgcDrawService,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -53,7 +53,7 @@ export class ExampleToolbar extends ExampleFormatComponent {
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-toolbar_src_public-api.GgcToolbarComponent.html`;
   // DOCS-SKIP:END
   protected measureActive = signal(false);
-  protected drawActive =  signal(false);
+  protected drawActive = signal(false);
 
   private readonly mapService = inject(GgcMapService);
   private readonly drawService = inject(GgcDrawService);
