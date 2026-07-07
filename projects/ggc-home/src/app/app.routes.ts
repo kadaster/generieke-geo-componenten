@@ -10,7 +10,6 @@ import { ExampleLegendZoomComponent } from "./examples/example-legend/example-le
 import { ExampleLegendDatasetTreeComponent } from "./examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component";
 import { ExampleDatasetTreeTemplatesComponent } from "./examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component";
 import { ExampleDatasetSwitcherBasicComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component";
-import { ExampleSearchLocationWoonplaatsComponent } from "./examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component";
 import { ExampleDatasetTreeLayerEnabledCallback } from "./examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component";
 import { GgcHomeComponent } from "./ggc-home/ggc-home.component";
 import { ExampleSearchLocationAdvComponent } from "./examples/example-search-location/example-search-location-adv/example-search-location-adv.component";
@@ -226,12 +225,6 @@ export const routes: Routes = [
     title: "Zoeken-uitgebreid | GGC-Home",
     component: ExampleSearchLocationAdvComponent,
     data: { label: "search-location-adv" }
-  },
-  {
-    path: "search-location-woonplaats",
-    title: "Zoeken-woonplaats | GGC-Home",
-    component: ExampleSearchLocationWoonplaatsComponent,
-    data: { label: "search-location-woonplaats" }
   },
   {
     path: "search-location-only-location",

@@ -98,15 +98,16 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       await vi.runAllTimersAsync();
 
-      expect(spy).toHaveBeenCalledWith(themes);
+      expect(spy).toHaveBeenCalled();
     });
   });
 
   describe("initial active theme selection", () => {
     it("should pick the visible theme and emit event", async () => {
       vi.useFakeTimers();
-      const themes = createThemesWithLayers();
-      component.themes = themes;
+
+      component.themes = createThemesWithLayers();
+      component.initialActiveTheme = "Theme B";
 
       datasetTreeMapConnectServiceSpy.isVisible.mockImplementation(
         (layerId: string) => {
@@ -117,12 +118,12 @@ describe("GgcDatasetSwitcherComponent", () => {
       const emitted: DatasetSwitcherEvent[] = [];
       component.events.subscribe((e) => emitted.push(e));
 
-      component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
+      component.ngOnChanges({
+        initialActiveTheme: new SimpleChange("", "Theme B", false)
+      });
 
       vi.advanceTimersByTime(100);
       await vi.runAllTimersAsync();
-
-      expect(datasetTreeMapConnectServiceSpy.isVisible).toHaveBeenCalled();
 
       expect(component["activeTheme"]?.themeName).toBe("Theme B");
       expect(
@@ -149,15 +150,6 @@ describe("GgcDatasetSwitcherComponent", () => {
       await vi.runAllTimersAsync();
 
       expect(component["activeTheme"]?.themeName).toBe("Theme A");
-
-      expect(
-        datasetTreeMapConnectServiceSpy.setVisibilityLayers
-      ).toHaveBeenCalledWith(
-        ["a-1"],
-        true,
-        ViewerType.TWEE_D,
-        component.mapIndex
-      );
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme A");

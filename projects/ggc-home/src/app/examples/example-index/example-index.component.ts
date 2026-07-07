@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, inject, ViewEncapsulation } from "@angular/core";
 import { ExampleSearchLocationComponent } from "../example-search-location/example-search-location/example-search-location.component";
 import { ExampleSnappingBasicComponent } from "../example-snapping/example-snapping-basic/example-snapping-basic.component";
 import { ComponentInfo } from "../component-info.model";
@@ -7,7 +7,6 @@ import { ExampleDatasetTreeBasicComponent } from "../example-dataset-tree/exampl
 import { ExampleDatasetTreeTemplatesComponent } from "../example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component";
 import { ExampleDatasetSwitcherBasicComponent } from "../example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component";
 import { ExampleDatasetTreeLayerEnabledCallback } from "../example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component";
-import { ExampleSearchLocationWoonplaatsComponent } from "../example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component";
 import { ExampleLegendZoomComponent } from "../example-legend/example-legend-zoom/example-legend-zoom.component";
 import { ExampleLegendDatasetTreeComponent } from "../example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component";
 import { ExampleDatasetTreeBasicListComponent } from "../example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component";
@@ -54,6 +53,7 @@ import { Example3dSearchComponent } from "../example-3d/example-3d-search/exampl
 import { Example3dLayer3dTilesComponent } from "../example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
 import { Example3dLayerWmtsComponent } from "../example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
+import { SessionStorageService } from "../../service/session-storage.service";
 // PLOP:IMPORT
 
 interface GroupedCards {
@@ -70,6 +70,7 @@ interface GroupedCards {
 })
 export class ExampleIndexComponent {
   protected searchTerm = "";
+  protected selected2D3D = new Set<string>();
   protected selectedThemes = new Set<string>();
   protected themeOrder = [
     Themes.KAARTLAGEN,
@@ -83,6 +84,7 @@ export class ExampleIndexComponent {
   ];
   protected selectedComponents = new Set<string>();
   protected selectedTags = new Set<string>();
+  protected available2D3D: Tags[] = [Tags.TWEED, Tags.DRIED];
   protected cards: ComponentInfo[] = [
     new ExampleSearchLocationComponent().componentInfo,
     new ExampleSearchLocationOnlyLocationComponent().componentInfo,
@@ -94,7 +96,6 @@ export class ExampleIndexComponent {
     new ExampleDrawEditBasicComponent().componentInfo,
     new ExampleDrawCenterEditBasicComponent().componentInfo,
     new ExampleDrawTracingComponent().componentInfo,
-    new ExampleSearchLocationWoonplaatsComponent().componentInfo,
     new ExampleSnappingBasicComponent().componentInfo,
     new ExampleDatasetSwitcherBasicComponent().componentInfo,
     new ExampleDatasetSwitcherRadioButtonsComponent().componentInfo,
@@ -136,30 +137,31 @@ export class ExampleIndexComponent {
     new Example3dLayerGeojsonComponent().componentInfo
   ];
 
-  private readonly selectedComponentsKey = "selectedComponents";
-  private readonly selectedTagsKey = "selectedTags";
-  private readonly selectedThemesKey = "selectedThemes";
-  private readonly searchTermKey = "searchTerm";
+  private readonly sessionStorageService = inject(SessionStorageService);
 
   constructor() {
-    const storedSelectedThemes = sessionStorage.getItem(this.selectedThemesKey);
+    const storedSelected2D3D = this.sessionStorageService.getSelected2D3D();
+    if (storedSelected2D3D) {
+      this.selected2D3D = new Set(JSON.parse(storedSelected2D3D));
+    }
+
+    const storedSelectedThemes = this.sessionStorageService.getSelectedThemes();
     if (storedSelectedThemes) {
       this.selectedThemes = new Set(JSON.parse(storedSelectedThemes));
     }
 
-    const storedSelectedComponents = sessionStorage.getItem(
-      this.selectedComponentsKey
-    );
+    const storedSelectedComponents =
+      this.sessionStorageService.getSelectedComponents();
     if (storedSelectedComponents) {
       this.selectedComponents = new Set(JSON.parse(storedSelectedComponents));
     }
 
-    const storedSelectedTags = sessionStorage.getItem(this.selectedTagsKey);
+    const storedSelectedTags = this.sessionStorageService.getSelectedTags();
     if (storedSelectedTags) {
       this.selectedTags = new Set(JSON.parse(storedSelectedTags));
     }
 
-    const storedSearchTerm = sessionStorage.getItem(this.searchTermKey);
+    const storedSearchTerm = this.sessionStorageService.getSearchTerm();
     if (storedSearchTerm) {
       this.searchTerm = storedSearchTerm;
     }
@@ -218,7 +220,17 @@ export class ExampleIndexComponent {
 
   protected storeSearchTerm(value: string) {
     this.searchTerm = value;
-    sessionStorage.setItem("searchTerm", value);
+    this.sessionStorageService.setSearchTerm(value);
+  }
+
+  protected toggle2D3D(item: string): void {
+    if (this.selected2D3D.has(item)) {
+      this.selected2D3D.delete(item);
+    } else {
+      this.selected2D3D.add(item);
+    }
+    this.selected2D3D = new Set(this.selected2D3D);
+    this.sessionStorageService.setSelected2D3D(Array.from(this.selected2D3D));
   }
 
   protected toggleTheme(theme: string): void {
@@ -228,9 +240,8 @@ export class ExampleIndexComponent {
       this.selectedThemes.add(theme);
     }
     this.selectedThemes = new Set(this.selectedThemes);
-    sessionStorage.setItem(
-      this.selectedThemesKey,
-      JSON.stringify(Array.from(this.selectedThemes))
+    this.sessionStorageService.setSelectedThemes(
+      Array.from(this.selectedThemes)
     );
   }
 
@@ -241,9 +252,8 @@ export class ExampleIndexComponent {
       this.selectedComponents.add(component);
     }
     this.selectedComponents = new Set(this.selectedComponents);
-    sessionStorage.setItem(
-      this.selectedComponentsKey,
-      JSON.stringify(Array.from(this.selectedComponents))
+    this.sessionStorageService.setSelectedComponents(
+      Array.from(this.selectedComponents)
     );
   }
 
@@ -254,33 +264,36 @@ export class ExampleIndexComponent {
       this.selectedTags.add(tag);
     }
     this.selectedTags = new Set(this.selectedTags);
-    sessionStorage.setItem(
-      this.selectedTagsKey,
-      JSON.stringify(Array.from(this.selectedTags))
-    );
+    this.sessionStorageService.setSelectedTags(Array.from(this.selectedTags));
   }
 
   protected resetFilters(): void {
+    this.clear2D3DFilter();
     this.clearComponentFilter();
     this.clearThemeFilter();
     this.clearTagFilter();
     this.searchTerm = "";
-    sessionStorage.removeItem(this.searchTermKey);
+    this.sessionStorageService.removeSearchTerm();
+  }
+
+  protected clear2D3DFilter(): void {
+    this.selected2D3D = new Set<string>();
+    this.sessionStorageService.removeSelected2D3D();
   }
 
   protected clearThemeFilter(): void {
     this.selectedThemes = new Set<string>();
-    sessionStorage.removeItem(this.selectedThemesKey);
+    this.sessionStorageService.removeSelectedThemes();
   }
 
   protected clearComponentFilter(): void {
     this.selectedComponents = new Set<string>();
-    sessionStorage.removeItem(this.selectedComponentsKey);
+    this.sessionStorageService.removeSelectedComponents();
   }
 
   protected clearTagFilter(): void {
     this.selectedTags = new Set<string>();
-    sessionStorage.removeItem(this.selectedTagsKey);
+    this.sessionStorageService.removeSelectedTags();
   }
 
   protected filteredCards(exclude?: string): ComponentInfo[] {
@@ -288,6 +301,9 @@ export class ExampleIndexComponent {
 
     return this.cards.filter((card) => {
       const matchesText = !q || this.cardMatchesQuery(card, q);
+      const matches2D3D =
+        this.cardMatchesSelected(card.tags, this.selected2D3D) ||
+        exclude === "2d3d";
       const matchesThemes =
         this.cardMatchesSelected(card.theme, this.selectedThemes) ||
         exclude === "theme";
@@ -297,8 +313,22 @@ export class ExampleIndexComponent {
       const matchesTags =
         this.cardMatchesSelected(card.tags, this.selectedTags) ||
         exclude === "tag";
-      return matchesText && matchesThemes && matchesComponents && matchesTags;
+      return (
+        matchesText &&
+        matches2D3D &&
+        matchesThemes &&
+        matchesComponents &&
+        matchesTags
+      );
     });
+  }
+
+  protected count2D3D(item: Tags) {
+    return this.filteredCards("2d3d").filter(
+      (card) =>
+        (item === Tags.TWEED && !card.tags.includes(item)) ||
+        (item === Tags.DRIED && card.tags.includes(item))
+    ).length;
   }
 
   protected countThemes(theme: Themes) {
@@ -331,7 +361,11 @@ export class ExampleIndexComponent {
     const cardTagSet = new Set(availableItems.map((t) => t.toLowerCase()));
 
     for (const t of selectedItems) {
-      if (cardTagSet.has(t.toLowerCase())) {
+      // Indien selectedItem = Tags.TWEED dan alle items zonder tag DRIED tonen
+      if (
+        cardTagSet.has(t.toLowerCase()) ||
+        (t === Tags.TWEED && !cardTagSet.has(Tags.DRIED))
+      ) {
         return true;
       }
     }

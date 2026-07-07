@@ -45,7 +45,8 @@
       {
         "layerId": "provincies",
         "title": "Provincies (WFS)",
-        "visible": true
+        "visible": true,
+        "getFeatureInfoOnSingleclick": true
       }
     ]
   },
@@ -58,7 +59,8 @@
         "title": "Buurten Apeldoorn (OGC Features)",
         "visible": false,
         "limit": 1000,
-        "maxFeatures": 5000
+        "maxFeatures": 5000,
+        "getFeatureInfoOnSingleclick": true
       }
     ]
   },
@@ -72,7 +74,8 @@
         "style": "https://api.pdok.nl/kadaster/bag/ogc/v2/styles/bag_standaardvisualisatie__netherlandsrdnewquad?f=mapbox",
         "maxResolution": 0.84,
         "visible": false,
-        "enableOverzoom": true
+        "enableOverzoom": true,
+        "getFeatureInfoOnSingleclick": true
       }
     ]
   }

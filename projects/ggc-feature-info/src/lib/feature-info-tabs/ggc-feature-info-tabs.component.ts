@@ -63,7 +63,7 @@ export class GgcFeatureInfoTabsComponent
    * Verzameling van features en metadata die weergegeven moeten worden.
    * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
    */
-  featureInfoCollectionArray: FeatureInfoCollection[];
+  @Input() featureInfoCollectionArray: FeatureInfoCollection[];
   /**
    * Bepaalt of tabbladen zonder inhoud zichtbaar moeten zijn.
    *
