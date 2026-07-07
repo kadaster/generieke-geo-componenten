@@ -118,7 +118,6 @@ export class ExampleIndexComponent {
     new ExampleMapSelectHoverClickComponent().componentInfo,
     new ExampleMapSelectWmsComponent().componentInfo,
     new ExampleMapSelectDatasetTreeComponent().componentInfo,
-    new ExampleMapZoomScalePositionComponent().componentInfo,
     new ExampleFeatureInfoBasicComponent().componentInfo,
     new ExampleFeatureInfoTabsComponent().componentInfo,
     new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
