@@ -267,6 +267,7 @@ export class ExampleIndexComponent {
   }
 
   protected resetFilters(): void {
+    this.clear2D3DFilter();
     this.clearComponentFilter();
     this.clearThemeFilter();
     this.clearTagFilter();
