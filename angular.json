@@ -25,9 +25,27 @@
               {
                 "glob": "**/*",
                 "input": "projects/ggc-foss4g/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@cesium/engine/Source/Assets",
+                "output": "/assets/cesium/Assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@cesium/engine/Build/Workers",
+                "output": "/assets/cesium/Workers"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@cesium/engine/Source/Widget",
+                "output": "/assets/cesium/Widget"
               }
             ],
-            "styles": ["projects/ggc-foss4g/src/styles.scss", "node_modules/@fortawesome/fontawesome-free/css/all.min.css"]
+            "styles": [
+              "projects/ggc-foss4g/src/styles.scss",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+            ]
           },
           "configurations": {
             "production": {
