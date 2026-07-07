@@ -54,6 +54,7 @@ import { Example3dLayer3dTilesComponent } from "../example-3d/example-3d-layer-3
 import { Example3dLayerWmtsComponent } from "../example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 import { SessionStorageService } from "../../service/session-storage.service";
+// PLOP:IMPORT
 
 interface GroupedCards {
   theme: string;
@@ -120,7 +121,6 @@ export class ExampleIndexComponent {
     new ExampleMapSelectHoverClickComponent().componentInfo,
     new ExampleMapSelectWmsComponent().componentInfo,
     new ExampleMapSelectDatasetTreeComponent().componentInfo,
-    new ExampleMapZoomScalePositionComponent().componentInfo,
     new ExampleFeatureInfoBasicComponent().componentInfo,
     new ExampleFeatureInfoTabsComponent().componentInfo,
     new ExampleFeatureInfoCustomNamesValuesComponent().componentInfo,
@@ -133,6 +133,7 @@ export class ExampleIndexComponent {
     new Example3dSearchComponent().componentInfo,
     new Example3dLayer3dTilesComponent().componentInfo,
     new Example3dLayerWmtsComponent().componentInfo,
+    // PLOP:CARD
     new Example3dLayerGeojsonComponent().componentInfo
   ];
 
