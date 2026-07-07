@@ -3,7 +3,6 @@ import {
   EventEmitter,
   inject,
   input,
-  Input,
   Output
 } from "@angular/core";
 import {

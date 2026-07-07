@@ -8,7 +8,7 @@
       >
     }
     <div class="input-group" aria-haspopup="listbox">
-      @if (loadCurrentLocation) {
+      @if (loadCurrentLocation()) {
         <div class="form-control">
           <span class="font-italic">Locatie laden</span>
           @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
@@ -20,7 +20,6 @@
         </div>
       }
       <input
-        #input
         [attr.id]="elementIds.searchInputId"
         [attr.aria-controls]="elementIds.suggestionListId"
         [attr.aria-label]="
@@ -34,12 +33,12 @@
         (keyup.enter)="searchOnEnter()"
         (paste)="onPaste($event)"
         (focus)="onInputFocus()"
-        [value]="inputValue"
+        [value]="inputValue()"
         class="form-control"
         role="combobox"
         [attr.aria-expanded]="
-          showSuggestions ||
-          (showCurrentLocation &&
+          showSuggestions() ||
+          (showCurrentLocation() &&
             searchLocationOptions?.searchCurrentLocation?.type ===
               searchCurrentLocationTypes.SELECT)
             ? 'true'
@@ -51,10 +50,10 @@
             'Voer locatie in'
         }}"
         autocomplete="off"
-        [style.display]="loadCurrentLocation ? 'none' : 'block'"
+        [style.display]="loadCurrentLocation() ? 'none' : 'block'"
       />
       <div class="input-group-append">
-        @if (inputValue && inputValue.length > 0) {
+        @if (inputValue() && inputValue().length > 0) {
           <button
             aria-label="Zoekterm wissen"
             id="clear"
@@ -75,7 +74,7 @@
             class="btn btn-form"
             type="button"
           >
-            @if (loadCurrentLocation) {
+            @if (loadCurrentLocation()) {
               @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
                 <span
                   [ngClass]="
@@ -103,7 +102,7 @@
         </button>
       </div>
     </div>
-    @if (showSuggestions || showCurrentLocation) {
+    @if (showSuggestions() || showCurrentLocation()) {
       <ul
         cdkListbox
         cdkListboxUseActiveDescendant="true"
@@ -112,14 +111,14 @@
         [tabindex]="0"
         [id]="elementIds.suggestionListId ?? ''"
         [attr.aria-labelledby]="
-          suggestions.length > 0 ? elementIds.searchLabelId : undefined
+          suggestions().length > 0 ? elementIds.searchLabelId : undefined
         "
         (cdkListboxValueChange)="handleCdkListboxEvent($event)"
         (keydown)="onListKeydown($event)"
         (keyup)="onListKeyup($event)"
       >
         @if (
-          showCurrentLocation &&
+          showCurrentLocation() &&
           searchLocationOptions?.searchCurrentLocation?.type ===
             searchCurrentLocationTypes.SELECT
         ) {
@@ -146,8 +145,8 @@
             }}
           </li>
         }
-        @if (showSuggestions) {
-          @for (suggestion of suggestions; track suggestion; let idx = $index) {
+        @if (showSuggestions()) {
+          @for (suggestion of suggestions(); track suggestion; let idx = $index) {
             <li
               class="list-group-item px-2"
               role="option"
@@ -177,8 +176,7 @@
             </li>
           }
         }
-
-        @if (noSuggestionsFound) {
+        @if (noSuggestionsFound()) {
           <li class="list-group-item">Geen resultaat gevonden</li>
         }
       </ul>
@@ -191,7 +189,7 @@
     class="btn btn-form"
     type="button"
   >
-    @if (loadCurrentLocation) {
+    @if (loadCurrentLocation()) {
       @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
         <span
           [ngClass]="searchLocationOptions.searchCurrentLocation.loadIcon"
