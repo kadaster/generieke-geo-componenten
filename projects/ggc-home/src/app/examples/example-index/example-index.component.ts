@@ -69,6 +69,7 @@ interface GroupedCards {
 })
 export class ExampleIndexComponent {
   protected searchTerm = "";
+  protected selected2D3D = new Set<string>();
   protected selectedThemes = new Set<string>();
   protected themeOrder = [
     Themes.KAARTLAGEN,
@@ -82,6 +83,7 @@ export class ExampleIndexComponent {
   ];
   protected selectedComponents = new Set<string>();
   protected selectedTags = new Set<string>();
+  protected available2D3D: Tags[] = [Tags.TWEED, Tags.DRIED];
   protected cards: ComponentInfo[] = [
     new ExampleSearchLocationComponent().componentInfo,
     new ExampleSearchLocationOnlyLocationComponent().componentInfo,
@@ -133,9 +135,15 @@ export class ExampleIndexComponent {
     new Example3dLayerWmtsComponent().componentInfo,
     new Example3dLayerGeojsonComponent().componentInfo
   ];
+
   private readonly sessionStorageService = inject(SessionStorageService);
 
   constructor() {
+    const storedSelected2D3D = this.sessionStorageService.getSelected2D3D();
+    if (storedSelected2D3D) {
+      this.selected2D3D = new Set(JSON.parse(storedSelected2D3D));
+    }
+
     const storedSelectedThemes = this.sessionStorageService.getSelectedThemes();
     if (storedSelectedThemes) {
       this.selectedThemes = new Set(JSON.parse(storedSelectedThemes));
@@ -214,6 +222,16 @@ export class ExampleIndexComponent {
     this.sessionStorageService.setSearchTerm(value);
   }
 
+  protected toggle2D3D(item: string): void {
+    if (this.selected2D3D.has(item)) {
+      this.selected2D3D.delete(item);
+    } else {
+      this.selected2D3D.add(item);
+    }
+    this.selected2D3D = new Set(this.selected2D3D);
+    this.sessionStorageService.setSelected2D3D(Array.from(this.selected2D3D));
+  }
+
   protected toggleTheme(theme: string): void {
     if (this.selectedThemes.has(theme)) {
       this.selectedThemes.delete(theme);
@@ -249,11 +267,17 @@ export class ExampleIndexComponent {
   }
 
   protected resetFilters(): void {
+    this.clear2D3DFilter();
     this.clearComponentFilter();
     this.clearThemeFilter();
     this.clearTagFilter();
     this.searchTerm = "";
     this.sessionStorageService.removeSearchTerm();
+  }
+
+  protected clear2D3DFilter(): void {
+    this.selected2D3D = new Set<string>();
+    this.sessionStorageService.removeSelected2D3D();
   }
 
   protected clearThemeFilter(): void {
@@ -276,6 +300,9 @@ export class ExampleIndexComponent {
 
     return this.cards.filter((card) => {
       const matchesText = !q || this.cardMatchesQuery(card, q);
+      const matches2D3D =
+        this.cardMatchesSelected(card.tags, this.selected2D3D) ||
+        exclude === "2d3d";
       const matchesThemes =
         this.cardMatchesSelected(card.theme, this.selectedThemes) ||
         exclude === "theme";
@@ -285,8 +312,22 @@ export class ExampleIndexComponent {
       const matchesTags =
         this.cardMatchesSelected(card.tags, this.selectedTags) ||
         exclude === "tag";
-      return matchesText && matchesThemes && matchesComponents && matchesTags;
+      return (
+        matchesText &&
+        matches2D3D &&
+        matchesThemes &&
+        matchesComponents &&
+        matchesTags
+      );
     });
+  }
+
+  protected count2D3D(item: Tags) {
+    return this.filteredCards("2d3d").filter(
+      (card) =>
+        (item === Tags.TWEED && !card.tags.includes(item)) ||
+        (item === Tags.DRIED && card.tags.includes(item))
+    ).length;
   }
 
   protected countThemes(theme: Themes) {
@@ -319,7 +360,11 @@ export class ExampleIndexComponent {
     const cardTagSet = new Set(availableItems.map((t) => t.toLowerCase()));
 
     for (const t of selectedItems) {
-      if (cardTagSet.has(t.toLowerCase())) {
+      // Indien selectedItem = Tags.TWEED dan alle items zonder tag DRIED tonen
+      if (
+        cardTagSet.has(t.toLowerCase()) ||
+        (t === Tags.TWEED && !cardTagSet.has(Tags.DRIED))
+      ) {
         return true;
       }
     }
