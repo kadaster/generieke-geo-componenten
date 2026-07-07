@@ -99,6 +99,7 @@
       <li class="nl-paragraph ggc-paragraph">Kaartlagen aan-/uitzetten</li>
       <li class="nl-paragraph ggc-paragraph">Kaartlagen wisselen</li>
       <li class="nl-paragraph ggc-paragraph">Toolbar</li>
+      <li class="nl-paragraph ggc-paragraph">3D kaart</li>
     </ol>
     <p class="nl-paragraph ggc-paragraph">
       Om de voorbeelden eenvoudig te houden, worden de functionaliteiten apart
@@ -174,6 +175,11 @@
         voorbeelden van kaartlagen
       </button>
       als je meer wilt weten over de verschillende mogelijkheden.
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      Aan het eind van de quick start laten we zien hoe je een
+      <button (click)="navigeerNaarHoofdstuk(8)">3D kaart</button>
+      toevoegt aan jouw applicatie.
     </p>
   }
 
@@ -590,11 +596,36 @@
       <code>npm install @kadaster/ggc-map-3d</code>
     </p>
     <p class="nl-paragraph ggc-paragraph">
+      CesiumJS wordt gebruikt voor de 3D viewer. Om Cesium te kunnen gebruiken
+      zijn er een aantal scripts nodig. In de <code>angular.json</code> moet je
+      daarom twee wijzigingen aanbrengen. Voeg in de
+      <code>angular.json </code>onder
+      <code
+        >projects/&lt;naam_van_het_project&gt;/architect/build/options/assets</code
+      >
+      de volgende regels toe:
+    </p>
+    <pre><code
+      [highlight]="cesiumAngularAssets"
+      language="json"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Voeg in de <code>angular.json </code>onder
+      <code
+        >projects/&lt;naam_van_het_project&gt;/architect/build/options/styles</code
+      >
+      de volgende style toe:
+    </p>
+    <pre><code
+      [highlight]="cesiumAngularStyles"
+      language="json"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
       Plaats dan de volgende HTML in je project, bijvoorbeeld in de
       <code>app.html</code>:
     </p>
     <pre><code
-      [highlight]="mapHtml"
+      [highlight]="map3DHtml"
       language="html"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
@@ -603,20 +634,26 @@
       bestand:
     </p>
     <pre><code
-      [highlight]="mapTypescript"
+      [highlight]="map3DTypescript"
       language="ts"
     ></code></pre>
     <p class="nl-paragraph ggc-paragraph">
       Je zou nu al een werkende kaart moeten zien die lijkt op de kaart
-      hieronder! (De zoom-knoppen in het voorbeeld hebben een andere styling)
+      hieronder!
     </p>
     <div style="height: 300px; margin: 10px 0">
-      <ggc-map [webServices]="webServices"></ggc-map>
+      <ggc-map-3d-viewer
+        [viewerOptions]="viewerOptions"
+        [cameraOptions]="cameraOptions"
+        [hideLogo]="true"
+        (ready)="onCesiumReady()"
+        [webServices]="webServices3D"
+      ></ggc-map-3d-viewer>
     </div>
     <p class="nl-paragraph ggc-paragraph">
       Bekijk de
-      <button (click)="goToMapLayerVoorbeelden()">
-        voorbeelden van kaartlagen
+      <button (click)="goTo3DMapVoorbeelden()">
+        voorbeelden met 3D kaarten
       </button>
       als je meer wilt weten over de verschillende mogelijkheden.
     </p>
@@ -635,6 +672,7 @@
       <li class="nl-paragraph ggc-paragraph">Kaartlagen aan-/uitzetten</li>
       <li class="nl-paragraph ggc-paragraph">Kaartlagen wisselen</li>
       <li class="nl-paragraph ggc-paragraph">Toolbar</li>
+      <li class="nl-paragraph ggc-paragraph">3D kaart</li>
     </ol>
     <img
       src="assets/quickstart.png"
