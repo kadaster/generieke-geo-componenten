@@ -67,7 +67,8 @@
     "check:all": "npm run check:ggc-models && npm run check:ggc-map-3d && npm run check:ggc-dataset-tree && npm run check:ggc-feature-info && npm run check:ggc-legend && npm run check:ggc-map && npm run check:ggc-search-location && npm run check:ggc-toolbar",
     "version": "npm run build:all",
     "tsdocs:generate": "typedoc --options typedoc.json",
-    "generate-readme-files": "node scripts/generate-readme-files.js"
+    "generate-readme-files": "node scripts/generate-readme-files.js",
+    "plop:ggc-home-example": "cd projects/ggc-home && plop --plopfile plopfile.ts"
   },
   "private": true,
   "dependencies": {
@@ -128,6 +129,7 @@
     "ngx-highlightjs": "^14.0.1",
     "ol": "^10.7.0",
     "ol-mapbox-style": "^13.2.0",
+    "plop": "^4.0.5",
     "popper.js": "^1.16.1",
     "prettier": "^3.6.2",
     "proj4": "^2.20.2",

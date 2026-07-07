@@ -238,6 +238,36 @@ export class GgcGeojsonLayerComponent
   }
 
   /**
+   * Update de URL van de vectorbron en forceert een refresh.
+   *
+   * @param url - De nieuwe GeoJSON URL.
+   */
+  private updateUrl(url: string) {
+    const vectorSource = this.olLayer.getSource();
+    vectorSource.setUrl(url);
+    vectorSource.refresh();
+  }
+
+  /**
+   * Update de features van de vectorbron.
+   *
+   * @param features - De nieuwe lijst van Feature objecten.
+   */
+  private updateFeatures(features: Feature<Geometry>[]) {
+    let vectorSource = this.olLayer.getSource();
+    if (vectorSource instanceof Cluster) {
+      vectorSource = vectorSource.getSource();
+    }
+    vectorSource.clear();
+    vectorSource.addFeatures(features);
+  }
+
+  protected handleSingleClick(event: MapBrowserEvent) {
+    super.handleSingleClick(event);
+    // don't call getFeatureInfo, as that is already solved in the selectService
+  }
+
+  /**
    * Verwerkt een klik op de kaart en haalt relevante features op.
    * Stuurt een MapComponentEvent met de gevonden features.
    *
@@ -274,38 +304,6 @@ export class GgcGeojsonLayerComponent
   }
 
   /**
-   * Opruimen van resources bij het vernietigen van de component.
-   */
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-  }
-
-  /**
-   * Update de URL van de vectorbron en forceert een refresh.
-   *
-   * @param url - De nieuwe GeoJSON URL.
-   */
-  private updateUrl(url: string) {
-    const vectorSource = this.olLayer.getSource();
-    vectorSource.setUrl(url);
-    vectorSource.refresh();
-  }
-
-  /**
-   * Update de features van de vectorbron.
-   *
-   * @param features - De nieuwe lijst van Feature objecten.
-   */
-  private updateFeatures(features: Feature<Geometry>[]) {
-    let vectorSource = this.olLayer.getSource();
-    if (vectorSource instanceof Cluster) {
-      vectorSource = vectorSource.getSource();
-    }
-    vectorSource.clear();
-    vectorSource.addFeatures(features);
-  }
-
-  /**
    * Beperkt het aantal gevonden features bij een klik.
    *
    * @param feature - Het gevonden FeatureLike object.
@@ -325,5 +323,12 @@ export class GgcGeojsonLayerComponent
    */
   private decideLayerCandidate(layerCandidate: BaseLayer) {
     return this.olLayer === layerCandidate;
+  }
+
+  /**
+   * Opruimen van resources bij het vernietigen van de component.
+   */
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
   }
 }

@@ -12,12 +12,15 @@ import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
 import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
+import { LayerChangedEventTrigger } from "@kadaster/ggc-models/src/lib/models/layer-changed-event.model";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
   // let mapServiceSpy: MockedObject<GgcMapService>;
   let capSpy: MockedObject<CoreWmsWmtsCapabilitiesService>;
   let coreMapServiceSpy: MockedObject<CoreMapService>;
+
+  const MAP_INDEX = "testMap";
 
   beforeEach(() => {
     coreMapServiceSpy = {
@@ -193,6 +196,95 @@ describe("LayerService", () => {
         legendIndex: undefined
       }
     ]);
+  });
+
+  describe("loadWebservices", () => {
+    function createWebservice(layerOverrides: any = {}) {
+      return {
+        url: "http://test-url",
+        type: Webservice2DType.WMS,
+        title: "testService",
+        layers: [
+          {
+            layerId: "layer1",
+            ...layerOverrides
+          }
+        ]
+      };
+    }
+
+    it.each([
+      { visible: true, persistent: undefined, shouldAdd: true },
+      { visible: undefined, persistent: undefined, shouldAdd: true },
+      { visible: false, persistent: undefined, shouldAdd: false },
+      { visible: true, persistent: true, shouldAdd: true },
+      { visible: false, persistent: true, shouldAdd: true }
+    ])(
+      "should handle visibility correctly",
+      ({ visible, persistent, shouldAdd }) => {
+        const webservice = createWebservice({ visible, persistent });
+
+        const addLayerSpy = vi
+          .spyOn(service, "addLayer")
+          .mockReturnValue("layer1");
+
+        service.loadWebservices([webservice as any], MAP_INDEX);
+
+        if (shouldAdd) {
+          expect(addLayerSpy).toHaveBeenCalledTimes(1);
+        } else {
+          expect(addLayerSpy).not.toHaveBeenCalled();
+        }
+      }
+    );
+
+    it("should set extra properties on layers", () => {
+      const webservice = createWebservice();
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      const layer = webservice.layers[0];
+
+      expect(layer.url).toBe("http://test-url");
+      expect(layer.mapIndex).toBe(MAP_INDEX);
+      expect(layer.visible).toBe(true); // default applied
+    });
+
+    it("should preserve explicit visible=false", () => {
+      const webservice = createWebservice({ visible: false });
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      const layer = webservice.layers[0];
+
+      expect(layer.visible).toBe(false);
+    });
+
+    it("should emit LAYER_INITIALIZED for every layer", () => {
+      const webservice = {
+        url: "url",
+        type: Webservice2DType.WMS,
+        layers: [{ layerId: "l1" }, { layerId: "l2", visible: false }]
+      };
+
+      const emitSpy = vi.spyOn(service as any, "emitLayerChanged");
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      expect(emitSpy).toHaveBeenCalledWith(
+        "l1",
+        MAP_INDEX,
+        LayerChangedEventTrigger.LAYER_INITIALIZED
+      );
+
+      expect(emitSpy).toHaveBeenCalledWith(
+        "l2",
+        MAP_INDEX,
+        LayerChangedEventTrigger.LAYER_INITIALIZED
+      );
+
+      expect(emitSpy).toHaveBeenCalledTimes(2);
+    });
   });
 
   function isUUID(str: string): boolean {

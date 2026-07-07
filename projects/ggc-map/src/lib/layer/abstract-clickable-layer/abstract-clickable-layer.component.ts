@@ -21,6 +21,46 @@ export class AbstractClickableLayerComponent<T>
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
+    this.unsubscribeOnClickEvent();
+  }
+
+  enable() {
+    super.enable();
+    this.subscribeOnClickEvent();
+  }
+
+  disable() {
+    super.disable();
+    this.unsubscribeOnClickEvent();
+  }
+
+  protected setLayer(layer: any) {
+    super.setLayer(layer);
+    this.olLayer.set(
+      "ggc-get-feature-info-on-singleclick",
+      this.options?.getFeatureInfoOnSingleclick
+    );
+  }
+
+  private subscribeOnClickEvent() {
+    this.unsubscribeOnClickEvent();
+    if (this.options?.getFeatureInfoOnSingleclick === true) {
+      this.singleclick = this.mapEventsService
+        .getSingleclickObservableForMap(this.mapIndex)
+        .subscribe((evt) => {
+          this.handleSingleClick(evt);
+        });
+    }
+  }
+
+  private unsubscribeOnClickEvent() {
+    if (this.singleclick !== undefined) {
+      this.singleclick.unsubscribe();
+    }
+  }
+
+  protected handleSingleClick(_event: MapBrowserEvent): void {
+    // stubbed method
   }
 
   protected getFeatureInfo(_event: MapBrowserEvent): void {

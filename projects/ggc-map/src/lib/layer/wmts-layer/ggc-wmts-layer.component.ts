@@ -140,6 +140,11 @@ export class GgcWmtsLayerComponent
       });
   }
 
+  protected handleSingleClick(event: MapBrowserEvent) {
+    super.handleSingleClick(event);
+    this.getFeatureInfo(event);
+  }
+
   /**
    * Verwerkt een klik op de kaart en haalt feature info op via WMTS indien beschikbaar.
    *
@@ -221,36 +226,6 @@ export class GgcWmtsLayerComponent
     if (this.capabilitiesSubscription !== undefined) {
       this.capabilitiesSubscription.unsubscribe();
     }
-
-    this.unsubscribeOnClickEvent();
-
     super.ngOnDestroy();
-  }
-
-  enable() {
-    super.enable();
-    this.subscribeOnClickEvent();
-  }
-
-  disable() {
-    super.disable();
-    this.unsubscribeOnClickEvent();
-  }
-
-  private subscribeOnClickEvent() {
-    this.unsubscribeOnClickEvent();
-    if (this.options?.getFeatureInfoOnSingleclick === true) {
-      this.singleclick = this.mapEventsService
-        .getSingleclickObservableForMap(this.mapIndex)
-        .subscribe((evt) => {
-          this.getFeatureInfo(evt);
-        });
-    }
-  }
-
-  private unsubscribeOnClickEvent() {
-    if (this.singleclick !== undefined) {
-      this.singleclick.unsubscribe();
-    }
   }
 }
