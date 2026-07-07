@@ -855,6 +855,10 @@ export class App {
       queryParams: { step },
       queryParamsHandling: "merge"
     });
+
+    if (step === 8) {
+      this.onCesiumReady();
+    }
   }
 
   volgendeHoofdstuk() {
