@@ -83,7 +83,7 @@ export class ExampleIndexComponent {
   ];
   protected selectedComponents = new Set<string>();
   protected selectedTags = new Set<string>();
-  protected available2D3D: Tags[] = [Tags.TWEED, Tags.DRIED]
+  protected available2D3D: Tags[] = [Tags.TWEED, Tags.DRIED];
   protected cards: ComponentInfo[] = [
     new ExampleSearchLocationComponent().componentInfo,
     new ExampleSearchLocationOnlyLocationComponent().componentInfo,
