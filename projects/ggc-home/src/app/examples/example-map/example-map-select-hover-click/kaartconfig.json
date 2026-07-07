@@ -7,6 +7,7 @@
         "layerId": "brtAchtergrondkaartStandaard",
         "title": "BRT achtergrond kaart Standaard (WMTS)",
         "layerName": "standaard",
+        "getFeatureInfoOnSingleclick": true,
         "zIndex": -20
       }
     ]
@@ -18,7 +19,8 @@
       {
         "layerId": "gemeentes",
         "title": "Gemeentes",
-        "zIndex": 20
+        "zIndex": 20,
+        "getFeatureInfoOnSingleclick": true
       }
     ]
   }

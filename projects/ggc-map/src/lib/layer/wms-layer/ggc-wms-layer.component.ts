@@ -132,6 +132,11 @@ export class GgcWmsLayerComponent
     }
   }
 
+  protected handleSingleClick(event: MapBrowserEvent) {
+    super.handleSingleClick(event);
+    this.getFeatureInfo(event);
+  }
+
   /**
    * Voert een `GetFeatureInfo` request uit op basis van een klik op de kaart.
    * @param evt Het MapBrowserEvent met kliklocatie.
@@ -195,12 +200,6 @@ export class GgcWmsLayerComponent
     }
   }
 
-  /** Verwijdert de laag en voert opruimacties uit. */
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-    this.unsubscribeOnClickEvent();
-  }
-
   /**
    * Past meerdere stijlen toe op de WMS-laag.
    * @param styles Een array van stijlstrings.
@@ -247,33 +246,6 @@ export class GgcWmsLayerComponent
       }
       this.wmsSource.updateParams({ STYLES: newStyles });
       this.updateLocalSourceOptionsFromWmsSource();
-    }
-  }
-
-  enable() {
-    super.enable();
-    this.subscribeOnClickEvent();
-  }
-
-  disable() {
-    super.disable();
-    this.unsubscribeOnClickEvent();
-  }
-
-  private subscribeOnClickEvent() {
-    this.unsubscribeOnClickEvent();
-    if (this.options?.getFeatureInfoOnSingleclick === true) {
-      this.singleclick = this.mapEventsService
-        .getSingleclickObservableForMap(this.mapIndex)
-        .subscribe((evt) => {
-          this.getFeatureInfo(evt);
-        });
-    }
-  }
-
-  private unsubscribeOnClickEvent() {
-    if (this.singleclick !== undefined) {
-      this.singleclick.unsubscribe();
     }
   }
 

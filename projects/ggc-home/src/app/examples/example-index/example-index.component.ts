@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, inject, ViewEncapsulation } from "@angular/core";
 import { ExampleSearchLocationComponent } from "../example-search-location/example-search-location/example-search-location.component";
 import { ExampleSnappingBasicComponent } from "../example-snapping/example-snapping-basic/example-snapping-basic.component";
 import { ComponentInfo } from "../component-info.model";
@@ -7,7 +7,6 @@ import { ExampleDatasetTreeBasicComponent } from "../example-dataset-tree/exampl
 import { ExampleDatasetTreeTemplatesComponent } from "../example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component";
 import { ExampleDatasetSwitcherBasicComponent } from "../example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component";
 import { ExampleDatasetTreeLayerEnabledCallback } from "../example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component";
-import { ExampleSearchLocationWoonplaatsComponent } from "../example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component";
 import { ExampleLegendZoomComponent } from "../example-legend/example-legend-zoom/example-legend-zoom.component";
 import { ExampleLegendDatasetTreeComponent } from "../example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component";
 import { ExampleDatasetTreeBasicListComponent } from "../example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component";
@@ -54,6 +53,7 @@ import { Example3dSearchComponent } from "../example-3d/example-3d-search/exampl
 import { Example3dLayer3dTilesComponent } from "../example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
 import { Example3dLayerWmtsComponent } from "../example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
+import { SessionStorageService } from "../../service/session-storage.service";
 
 interface GroupedCards {
   theme: string;
@@ -93,7 +93,6 @@ export class ExampleIndexComponent {
     new ExampleDrawEditBasicComponent().componentInfo,
     new ExampleDrawCenterEditBasicComponent().componentInfo,
     new ExampleDrawTracingComponent().componentInfo,
-    new ExampleSearchLocationWoonplaatsComponent().componentInfo,
     new ExampleSnappingBasicComponent().componentInfo,
     new ExampleDatasetSwitcherBasicComponent().componentInfo,
     new ExampleDatasetSwitcherRadioButtonsComponent().componentInfo,
@@ -134,31 +133,26 @@ export class ExampleIndexComponent {
     new Example3dLayerWmtsComponent().componentInfo,
     new Example3dLayerGeojsonComponent().componentInfo
   ];
-
-  private readonly selectedComponentsKey = "selectedComponents";
-  private readonly selectedTagsKey = "selectedTags";
-  private readonly selectedThemesKey = "selectedThemes";
-  private readonly searchTermKey = "searchTerm";
+  private readonly sessionStorageService = inject(SessionStorageService);
 
   constructor() {
-    const storedSelectedThemes = sessionStorage.getItem(this.selectedThemesKey);
+    const storedSelectedThemes = this.sessionStorageService.getSelectedThemes();
     if (storedSelectedThemes) {
       this.selectedThemes = new Set(JSON.parse(storedSelectedThemes));
     }
 
-    const storedSelectedComponents = sessionStorage.getItem(
-      this.selectedComponentsKey
-    );
+    const storedSelectedComponents =
+      this.sessionStorageService.getSelectedComponents();
     if (storedSelectedComponents) {
       this.selectedComponents = new Set(JSON.parse(storedSelectedComponents));
     }
 
-    const storedSelectedTags = sessionStorage.getItem(this.selectedTagsKey);
+    const storedSelectedTags = this.sessionStorageService.getSelectedTags();
     if (storedSelectedTags) {
       this.selectedTags = new Set(JSON.parse(storedSelectedTags));
     }
 
-    const storedSearchTerm = sessionStorage.getItem(this.searchTermKey);
+    const storedSearchTerm = this.sessionStorageService.getSearchTerm();
     if (storedSearchTerm) {
       this.searchTerm = storedSearchTerm;
     }
@@ -231,7 +225,7 @@ export class ExampleIndexComponent {
 
   protected storeSearchTerm(value: string) {
     this.searchTerm = value;
-    sessionStorage.setItem("searchTerm", value);
+    this.sessionStorageService.setSearchTerm(value);
   }
 
   protected toggleTheme(theme: string): void {
@@ -241,9 +235,8 @@ export class ExampleIndexComponent {
       this.selectedThemes.add(theme);
     }
     this.selectedThemes = new Set(this.selectedThemes);
-    sessionStorage.setItem(
-      this.selectedThemesKey,
-      JSON.stringify(Array.from(this.selectedThemes))
+    this.sessionStorageService.setSelectedThemes(
+      Array.from(this.selectedThemes)
     );
   }
 
@@ -254,9 +247,8 @@ export class ExampleIndexComponent {
       this.selectedComponents.add(component);
     }
     this.selectedComponents = new Set(this.selectedComponents);
-    sessionStorage.setItem(
-      this.selectedComponentsKey,
-      JSON.stringify(Array.from(this.selectedComponents))
+    this.sessionStorageService.setSelectedComponents(
+      Array.from(this.selectedComponents)
     );
   }
 
@@ -267,10 +259,7 @@ export class ExampleIndexComponent {
       this.selectedTags.add(tag);
     }
     this.selectedTags = new Set(this.selectedTags);
-    sessionStorage.setItem(
-      this.selectedTagsKey,
-      JSON.stringify(Array.from(this.selectedTags))
-    );
+    this.sessionStorageService.setSelectedTags(Array.from(this.selectedTags));
   }
 
   protected resetFilters(): void {
@@ -278,22 +267,22 @@ export class ExampleIndexComponent {
     this.clearThemeFilter();
     this.clearTagFilter();
     this.searchTerm = "";
-    sessionStorage.removeItem(this.searchTermKey);
+    this.sessionStorageService.removeSearchTerm();
   }
 
   protected clearThemeFilter(): void {
     this.selectedThemes = new Set<string>();
-    sessionStorage.removeItem(this.selectedThemesKey);
+    this.sessionStorageService.removeSelectedThemes();
   }
 
   protected clearComponentFilter(): void {
     this.selectedComponents = new Set<string>();
-    sessionStorage.removeItem(this.selectedComponentsKey);
+    this.sessionStorageService.removeSelectedComponents();
   }
 
   protected clearTagFilter(): void {
     this.selectedTags = new Set<string>();
-    sessionStorage.removeItem(this.selectedTagsKey);
+    this.sessionStorageService.removeSelectedTags();
   }
 
   protected filteredCards(exclude?: string): ComponentInfo[] {

@@ -32,6 +32,17 @@
       <code>themeName</code> uit de <code>datasetSwitcherConfig</code>. Deze
       naam wordt ook gebruikt bij het tonen van de knop.
     </p>
+    <p>Instelmogelijkheden voor de dataset switcher:</p>
+    <ul>
+      <li>
+        Actieve thema opgeven (<code>initialActiveTheme</code>). Het initieel
+        actieve thema zal niet via de dataset switcher de bijbehorende lagen
+        zichtbaar maken, dat moet in de kaartconfiguratie worden ingesteld door
+        <code>visible</code> op true te zetten. Als van theme wordt gewisseld,
+        wordt de zichtbaarheid van de bijbehorende kaartlagen wel automatisch
+        afgehandeld.
+      </li>
+    </ul>
   </div>
 
   <div page-functionality>
@@ -40,6 +51,7 @@
       (events)="logSwitchEvent($event)"
       [themes]="datasetSwitcherConfig"
       [datasetSwitcherButtons]="datasetSwitcherButtons"
+      [initialActiveTheme]="'BRT-A Water'"
     ></ggc-dataset-switcher>
     <div class="map-container">
       <ggc-map [webServices]="mapConfig"></ggc-map>
