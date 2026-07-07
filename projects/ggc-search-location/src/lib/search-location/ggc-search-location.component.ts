@@ -366,7 +366,6 @@ export class GgcSearchLocationComponent implements OnInit {
   processSuggestionsResult(
     response: PdokLocationApiSearchResponse | null
   ): void {
-    console.log('processSuggestionsResult', response);
     this.resetSuggestionsAndResult(false);
     if (response && response.numberReturned > -1) {
       this.showSuggestions.set(true);

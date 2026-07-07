@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  input,
-  Output
-} from "@angular/core";
+import { Component, EventEmitter, inject, input, Output } from "@angular/core";
 import {
   ToolbarItemDrawComponentEvent,
   ToolbarItemDrawType
