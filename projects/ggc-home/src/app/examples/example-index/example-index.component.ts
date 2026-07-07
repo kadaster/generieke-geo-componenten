@@ -136,10 +136,8 @@ export class ExampleIndexComponent {
   ];
   private readonly sessionStorageService = inject(SessionStorageService);
 
-  private readonly selected2D3DKey = "selected2D3D";
-
   constructor() {
-    const storedSelected2D3D = sessionStorage.getItem(this.selected2D3DKey);
+    const storedSelected2D3D = this.sessionStorageService.getSelected2D3D();
     if (storedSelected2D3D) {
       this.selected2D3D = new Set(JSON.parse(storedSelected2D3D));
     }
@@ -229,9 +227,8 @@ export class ExampleIndexComponent {
       this.selected2D3D.add(item);
     }
     this.selected2D3D = new Set(this.selected2D3D);
-    sessionStorage.setItem(
-      this.selected2D3DKey,
-      JSON.stringify(Array.from(this.selected2D3D))
+    this.sessionStorageService.setSelected2D3D(
+    Array.from(this.selected2D3D)
     );
   }
 
@@ -279,8 +276,7 @@ export class ExampleIndexComponent {
 
   protected clear2D3DFilter(): void {
     this.selected2D3D = new Set<string>();
-    sessionStorage.removeItem(this.selected2D3DKey);
-  }
+    this.sessionStorageService.removeSelected2D3D();  }
 
   protected clearThemeFilter(): void {
     this.selectedThemes = new Set<string>();
