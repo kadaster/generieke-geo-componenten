@@ -10,7 +10,7 @@ export class FeatureCollectionForLayer {
    * @deprecated
    * Naam van de laag waartoe de features behoren.
    */
-  layerName: string;
+  layerName?: string;
   /**
    * LayerId van de laag waartoe de features behoren.
    */

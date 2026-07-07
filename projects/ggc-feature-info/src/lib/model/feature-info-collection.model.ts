@@ -26,7 +26,7 @@ export class FeatureInfoCollection {
     /**
      * De weergavetitel van de laag van deze featureInfoCollection.
      */
-    public layerTitle: string,
+    public layerTitle: string | undefined,
     /**
      * De layerId waarbij de featureInfoCollection hoort
      */

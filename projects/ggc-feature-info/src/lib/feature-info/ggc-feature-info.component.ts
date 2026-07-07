@@ -21,7 +21,7 @@ import {
 } from "../directive/value-template.directive";
 import { FeatureInfoDisplayType } from "../feature-info-display/feature-info-display-type";
 import { CustomFeatureInfo } from "../model/custom-feature-info.model";
-import { FeatureInfoCollection } from "../model/feature-info-collection.model";
+
 import {
   FeatureInfoComponentEvent,
   FeatureInfoComponentEventType
@@ -37,9 +37,13 @@ import {
   MapComponentEventTypes,
   ViewerType
 } from "@kadaster/ggc-models";
-import { declusterFeatures } from "@kadaster/ggc-map";
+import {
+  declusterFeatures,
+  featureCollectionForLayerHasCluster
+} from "@kadaster/ggc-map";
 import { Subscription } from "rxjs";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
+import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 
 /**
  * Het `FeatureInfoComponent` toont feature-informatie afkomstig uit kaartlagen
@@ -267,6 +271,7 @@ export class GgcFeatureInfoComponent
       });
     });
   }
+
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -357,33 +362,17 @@ export class GgcFeatureInfoComponent
   protected handleFeatureInfoEvent(event: FeatureInfoComponentEvent): void {
     // bijv. tab gewijzigd, data vernieuwen, etc.
     if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
-      console.log(event);
-
-      const features: Feature[] = event.value.features ?? [];
-      const hasClusteredFeatures = features.some(
-        (f) => (f.get("features")?.length ?? 0) > 1
-      );
-      this.featureInfoMapConnectService
-        .isLayerClustered(event.value.layerId)
-        .then((clusteredLayer) => {
-          //if (clusteredLayer) {
-          console.log(clusteredLayer);
-          this.featureInfoCollection = new FeatureInfoCollection(
-            undefined,
-            clusteredLayer ? declusterFeatures(features) : features,
-            event.value.layerTitle,
-            event.value.layerId
-          );
-          // }
-        });
-
-      /*      console.log(hasClusteredFeatures);
-      this.featureInfoCollection = new FeatureInfoCollection(
-        undefined,
-        hasClusteredFeatures ? declusterFeatures(features) : features,
-        event.value.layerTitle,
-        event.value.layerId
-      );*/
+      const collection: FeatureCollectionForLayer = event.value;
+      if (collection) {
+        this.featureInfoCollection = new FeatureInfoCollection(
+          undefined,
+          featureCollectionForLayerHasCluster(collection)
+            ? declusterFeatures(collection.features)
+            : collection.features,
+          collection.layerTitle,
+          collection.layerId
+        );
+      }
     }
   }
 
@@ -476,7 +465,6 @@ export class GgcFeatureInfoComponent
         if (this.hasTabs) {
           return;
         }
-
         this.subscriptionSelection = mapSelectionEvent.subscribe(
           (event: MapComponentEvent) => {
             if (
@@ -497,29 +485,30 @@ export class GgcFeatureInfoComponent
               this.featureInfoCollection = undefined;
               return;
             }
-
-            this.featureInfoCollection = new FeatureInfoCollection(
-              undefined,
-              collections.flatMap((layer) => {
-                const features = layer.features ?? [];
-                const hasClusteredFeatures = features.some(
-                  (f) => (f.get("features")?.length ?? 0) > 1
-                );
-                return hasClusteredFeatures
-                  ? declusterFeatures(features)
-                  : features;
-              }),
-              collections
-                .map((layer) => layer.layerTitle)
-                .filter((value) => value && value.trim().length > 0)
-                .join(", "),
-              collections
-                .map((layer) => layer.layerId)
-                .filter((value) => value && value.trim().length > 0)
-                .join(", ")
-            );
+            this.createNewFeatureCollection(collections);
           }
         );
       });
+  }
+
+  private createNewFeatureCollection(
+    collections: FeatureCollectionForLayer[]
+  ): void {
+    this.featureInfoCollection = new FeatureInfoCollection(
+      undefined,
+      collections.flatMap((feature) =>
+        featureCollectionForLayerHasCluster(feature)
+          ? declusterFeatures(feature.features)
+          : (feature.features ?? [])
+      ),
+      collections
+        .map((layer) => layer.layerTitle)
+        .filter((value) => value && value.trim().length > 0)
+        .join(", "),
+      collections
+        .map((layer) => layer.layerId)
+        .filter((value) => value && value.trim().length > 0)
+        .join(", ")
+    );
   }
 }
