@@ -37,6 +37,41 @@
         </div>
         <div class="mt-2 d-flex flex-column gap-2">
           <fieldset class="row justify-content-between">
+            <legend class="col-auto fw-bold py-1">2D/3D</legend>
+            <span id="thema-filter-hint" class="visually-hidden">
+              Als geen 2D/3D item geselecteerd is, worden alle resultaten
+              getoond.
+            </span>
+            @if (selected2D3D.size > 0) {
+              <div class="col-auto fw-bold">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="clear2D3DFilter()"
+                >
+                  Reset 2D/3D
+                </button>
+              </div>
+            }
+            @for (tag of available2D3D; track tag) {
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [id]="'item-' + tag"
+                  [checked]="selected2D3D.has(tag)"
+                  (change)="toggle2D3D(tag)"
+                />
+                <label class="form-check-label" [for]="'item-' + tag">
+                  <span>{{ tag }}</span>
+                  <span class="text-muted ms-1">({{ count2D3D(tag) }})</span>
+                </label>
+              </div>
+            }
+          </fieldset>
+        </div>
+        <div class="mt-2 d-flex flex-column gap-2">
+          <fieldset class="row justify-content-between">
             <legend class="col-auto fw-bold py-1">Thema's</legend>
             <span id="thema-filter-hint" class="visually-hidden">
               Als geen thema geselecteerd is, worden alle resultaten getoond.
