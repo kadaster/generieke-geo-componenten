@@ -26,7 +26,7 @@
     "@kadaster/ggc-feature-info": "^3.0.0",
     "@kadaster/ggc-legend": "^3.0.0",
     "@kadaster/ggc-map": "^3.0.0",
-    "@kadaster/ggc-map-3d": "^3.0.1",
+    "@kadaster/ggc-map-3d": "^3.0.0",
     "@kadaster/ggc-search-location": "^3.0.0",
     "@kadaster/ggc-toolbar": "^3.0.0",
     "@piwikpro/ngx-piwik-pro": "^2.5.0",
