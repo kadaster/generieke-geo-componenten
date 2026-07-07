@@ -1,4 +1,4 @@
-import type { QueryList, TemplateRef } from "@angular/core";
+import {ChangeDetectorRef, QueryList, TemplateRef} from "@angular/core";
 import {
   AfterViewInit,
   Component,
@@ -53,6 +53,7 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
   private map: Map;
   private readonly connectService = inject(GgcToolbarConnectService);
   private readonly toolbarService = inject(GgcToolbarService);
+  private cdr = inject(ChangeDetectorRef);
 
   /**
    * Constructor registreert een listener op de actieve toolbar-item observable.
@@ -90,6 +91,7 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
         if (event.active) {
           this.toolbarContentTemplate =
             event.toolbarItemComponent.toolbarItemTemplate;
+          this.cdr.detectChanges();
           this.inactivateOtherChildren(event.toolbarItemComponent);
           this.toolbarService.setActiveToolbarItem(
             event.toolbarItemComponent.activeId

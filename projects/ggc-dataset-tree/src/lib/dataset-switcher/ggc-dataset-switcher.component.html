@@ -11,7 +11,7 @@
       name="ggc-ds-switcher-radio-buttons"
       value="{{ button.name }}"
       id="{{ button.name }}"
-      [checked]="button.name === activeTheme?.themeName"
+      [checked]="button.name === activeTheme()?.themeName"
     />
     <label class="ggc-ds-switcher-label" for="{{ button.name }}">
       <img

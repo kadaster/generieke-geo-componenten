@@ -45,10 +45,6 @@ export class MenuBarComponent {
     }
   }
 
-  selectMenuItem() {
-    //
-  }
-
   openVoorbeelden() {
     this.eventTrackerService.trackEvent("voorbeelden");
     this.router.navigate(["/example-index"]);
