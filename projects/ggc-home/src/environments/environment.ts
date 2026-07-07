@@ -3,5 +3,5 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  piwikScript: "piwik-script-test.js"
+  piwikScript: "piwik-script-prod.js"
 };
