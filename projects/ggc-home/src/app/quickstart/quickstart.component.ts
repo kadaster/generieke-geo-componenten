@@ -462,6 +462,39 @@ export class App {
   bootstrapFontawesomeHtml = `<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">`;
 
+  map3DHtml = `<div style="height: 100vh;">
+  <ggc-map-3d-viewer
+    [viewerOptions]="viewerOptions"
+    [cameraOptions]="cameraOptions"
+    [hideLogo]="true"
+    (ready)="onCesiumReady()"
+    [webServices]="webServices"
+  ></ggc-map-3d-viewer>
+</div>`;
+  map3DTypescript = `import { Component } from '@angular/core';
+import { GgcMapComponent, Webservice } from '@kadaster/ggc-map';
+
+@Component({
+  selector: 'app-root',
+  imports: [GgcMapComponent],
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
+})
+export class App {
+  protected readonly webServices = [
+    {
+      "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+      "type": "wmts",
+      "layers": [
+        {
+          "layerName": "standaard", // De naam van de laag uit de service, komt ook terug in de events (voor developer)
+          "visible": true
+        }
+      ]
+    }] as Webservice[];
+}
+`;
+
   protected readonly webServices = [
     {
       url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",

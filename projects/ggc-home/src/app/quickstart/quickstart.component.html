@@ -68,7 +68,15 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 8 ? 'selected' : ''"
     >
-      <button (click)="navigeerNaarHoofdstuk(8)">Afronding</button>
+      <button (click)="navigeerNaarHoofdstuk(8)">
+        3D kaart tonen met <code>ggc-map-3d</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 9 ? 'selected' : ''"
+    >
+      <button (click)="navigeerNaarHoofdstuk(9)">Afronding</button>
     </li>
   </ol>
   <hr />
@@ -573,8 +581,48 @@
       als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
-
   @if (currentStep === 8) {
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">
+      3D kaart tonen met <code>ggc-map-3d</code>
+    </h2>
+    <p class="nl-paragraph ggc-paragraph">
+      Als eerste heb je de juiste dependencies nodig, installeer deze met:
+      <code>npm install @kadaster/ggc-map-3d</code>
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      Plaats dan de volgende HTML in je project, bijvoorbeeld in de
+      <code>app.html</code>:
+    </p>
+    <pre><code
+      [highlight]="mapHtml"
+      language="html"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Je hebt daarna de juiste imports nodig, en je moet aangeven welke
+      kaartlagen je wilt tonen. Plaats daarvoor het volgende in het TypeScript
+      bestand:
+    </p>
+    <pre><code
+      [highlight]="mapTypescript"
+      language="ts"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Je zou nu al een werkende kaart moeten zien die lijkt op de kaart
+      hieronder! (De zoom-knoppen in het voorbeeld hebben een andere styling)
+    </p>
+    <div style="height: 300px; margin: 10px 0">
+      <ggc-map [webServices]="webServices"></ggc-map>
+    </div>
+    <p class="nl-paragraph ggc-paragraph">
+      Bekijk de
+      <button (click)="goToMapLayerVoorbeelden()">
+        voorbeelden van kaartlagen
+      </button>
+      als je meer wilt weten over de verschillende mogelijkheden.
+    </p>
+  }
+
+  @if (currentStep === 9) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">Afronding</h2>
     <p class="nl-paragraph ggc-paragraph">
       In deze quick start zijn de volgende Generieke Geo Componenten stapsgewijs
@@ -606,7 +654,7 @@
     </p>
   }
 
-  @if (currentStep < 8) {
+  @if (currentStep < 9) {
     <hr />
     <p class="nl-paragraph ggc-paragraph">
       <button (click)="volgendeHoofdstuk()">
