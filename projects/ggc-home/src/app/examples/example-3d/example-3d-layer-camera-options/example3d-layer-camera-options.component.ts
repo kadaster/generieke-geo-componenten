@@ -41,7 +41,7 @@ export class Example3dLayerCameraOptionsComponent {
     tags: [Tags.LAYER, Tags.DATASET, Tags.OGC_API, Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-camera-options/example-3d-layer-camera-options.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-layer-camera-options/example3d-layer-camera-options.component.ts";

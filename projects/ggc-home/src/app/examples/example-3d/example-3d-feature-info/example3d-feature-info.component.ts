@@ -42,7 +42,7 @@ export class Example3dFeatureInfoComponent {
     tags: [Tags.DRIED, Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-3d/example-3d-feature-info/example-3d-feature-info.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-feature-info/example3d-feature-info.component.ts";

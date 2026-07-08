@@ -69,14 +69,11 @@ export class DatasetTreeMapConnectService {
       )
         .getLayerChangedObservable()
         .pipe(
-          map(
-            (event: CesiumLayerChangedEvent) =>
-              ({
-                layerId: event.layerId,
-                mapIndex: DEFAULT_CESIUM_MAPINDEX,
-                eventTrigger: event.eventTrigger
-              }) as LayerChangedEvent
-          )
+          map((event: CesiumLayerChangedEvent) => ({
+            layerId: event.layerId,
+            mapIndex: DEFAULT_CESIUM_MAPINDEX,
+            eventTrigger: event.eventTrigger
+          }))
         );
     }
     return (await this.getGgcOLLayerService()).getLayerChangedObservable();

@@ -30,7 +30,7 @@ export class ExampleLayerGeojsonWfsComponent
     tags: [Tags.LAYER],
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-layer/example-layer-geojson-wfs/example-layer-geojson-wfs.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;

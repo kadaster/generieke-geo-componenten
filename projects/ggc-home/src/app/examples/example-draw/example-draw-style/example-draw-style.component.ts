@@ -28,7 +28,7 @@ export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {
     tags: [Tags.DRAW, Tags.STYLE],
     imageLocation:
       "code/examples/example-draw/example-draw-style/example-draw-style.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-draw/example-draw-style/example-draw-style.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

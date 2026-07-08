@@ -28,7 +28,7 @@ export class ExampleMeasureOwnStyleLabel
     tags: [Tags.MEASURE, Tags.STYLE],
     imageLocation:
       "code/examples/example-measure/example-measure-own-style-label/example-measure-own-style-label.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-measure/example-measure-own-style-label/example-measure-own-style-label.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

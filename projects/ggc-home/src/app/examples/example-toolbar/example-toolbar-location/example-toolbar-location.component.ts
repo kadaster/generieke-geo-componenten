@@ -44,7 +44,7 @@ export class ExampleToolbarLocation
     tags: [Tags.TOOLBAR, Tags.LOCATION, Tags.CONTROLS],
     imageLocation:
       "code/examples/example-toolbar/example-toolbar-location/example-toolbar-location.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-toolbar/example-toolbar-location/example-toolbar-location.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-toolbar_src_public-api.GgcToolbarComponent.html`;

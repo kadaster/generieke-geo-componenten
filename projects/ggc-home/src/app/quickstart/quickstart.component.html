@@ -68,7 +68,15 @@
       class="nl-paragraph ggc-paragraph"
       [ngClass]="currentStep === 8 ? 'selected' : ''"
     >
-      <button (click)="navigeerNaarHoofdstuk(8)">Afronding</button>
+      <button (click)="navigeerNaarHoofdstuk(8)">
+        3D kaart tonen met <code>ggc-map-3d</code>
+      </button>
+    </li>
+    <li
+      class="nl-paragraph ggc-paragraph"
+      [ngClass]="currentStep === 9 ? 'selected' : ''"
+    >
+      <button (click)="navigeerNaarHoofdstuk(9)">Afronding</button>
     </li>
   </ol>
   <hr />
@@ -91,6 +99,7 @@
       <li class="nl-paragraph ggc-paragraph">Kaartlagen aan-/uitzetten</li>
       <li class="nl-paragraph ggc-paragraph">Kaartlagen wisselen</li>
       <li class="nl-paragraph ggc-paragraph">Toolbar</li>
+      <li class="nl-paragraph ggc-paragraph">3D kaart</li>
     </ol>
     <p class="nl-paragraph ggc-paragraph">
       Om de voorbeelden eenvoudig te houden, worden de functionaliteiten apart
@@ -166,6 +175,11 @@
         voorbeelden van kaartlagen
       </button>
       als je meer wilt weten over de verschillende mogelijkheden.
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      Aan het eind van de quick start laten we zien hoe je een
+      <button (click)="navigeerNaarHoofdstuk(8)">3D kaart</button>
+      toevoegt aan jouw applicatie.
     </p>
   }
 
@@ -573,8 +587,79 @@
       als je meer wilt weten over de verschillende mogelijkheden.
     </p>
   }
-
   @if (currentStep === 8) {
+    <h2 class="nl-heading nl-heading--level-4 ggc-heading">
+      3D kaart tonen met <code>ggc-map-3d</code>
+    </h2>
+    <p class="nl-paragraph ggc-paragraph">
+      Als eerste heb je de juiste dependencies nodig, installeer deze met:
+      <code>npm install @kadaster/ggc-map-3d</code>
+    </p>
+    <p class="nl-paragraph ggc-paragraph">
+      CesiumJS wordt gebruikt voor de 3D viewer. Om Cesium te kunnen gebruiken
+      zijn er een aantal scripts nodig. In de <code>angular.json</code> moet je
+      daarom twee wijzigingen aanbrengen. Voeg in de
+      <code>angular.json </code>onder
+      <code
+        >projects/&lt;naam_van_het_project&gt;/architect/build/options/assets</code
+      >
+      de volgende regels toe:
+    </p>
+    <pre><code
+      [highlight]="cesiumAngularAssets"
+      language="json"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Voeg in de <code>angular.json </code>onder
+      <code
+        >projects/&lt;naam_van_het_project&gt;/architect/build/options/styles</code
+      >
+      de volgende style toe:
+    </p>
+    <pre><code
+      [highlight]="cesiumAngularStyles"
+      language="json"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Plaats dan de volgende HTML in je project, bijvoorbeeld in de
+      <code>app.html</code>:
+    </p>
+    <pre><code
+      [highlight]="map3DHtml"
+      language="html"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Je hebt daarna de juiste imports nodig, en je moet aangeven welke
+      kaartlagen je wilt tonen. Plaats daarvoor het volgende in het TypeScript
+      bestand:
+    </p>
+    <pre><code
+      [highlight]="map3DTypescript"
+      language="ts"
+    ></code></pre>
+    <p class="nl-paragraph ggc-paragraph">
+      Je zou nu al een werkende kaart moeten zien die lijkt op de kaart
+      hieronder!
+    </p>
+    <div style="height: 300px; margin: 10px 0">
+      <ggc-map-3d-viewer
+        [viewerOptions]="viewerOptions"
+        [cameraOptions]="cameraOptions"
+        [hideLogo]="true"
+        (ready)="onCesiumReady()"
+        [webServices]="webServices3D"
+      ></ggc-map-3d-viewer>
+    </div>
+    <p class="nl-paragraph ggc-paragraph">
+      Bekijk de
+      <button (click)="goTo3DMapVoorbeelden()">
+        voorbeelden met 3D kaarten
+      </button>
+      als je meer wilt weten over de verschillende mogelijkheden.
+    </p>
+  }
+
+  @if (currentStep === 9) {
     <h2 class="nl-heading nl-heading--level-4 ggc-heading">Afronding</h2>
     <p class="nl-paragraph ggc-paragraph">
       In deze quick start zijn de volgende Generieke Geo Componenten stapsgewijs
@@ -587,6 +672,7 @@
       <li class="nl-paragraph ggc-paragraph">Kaartlagen aan-/uitzetten</li>
       <li class="nl-paragraph ggc-paragraph">Kaartlagen wisselen</li>
       <li class="nl-paragraph ggc-paragraph">Toolbar</li>
+      <li class="nl-paragraph ggc-paragraph">3D kaart</li>
     </ol>
     <img
       src="assets/quickstart.png"
@@ -606,7 +692,7 @@
     </p>
   }
 
-  @if (currentStep < 8) {
+  @if (currentStep < 9) {
     <hr />
     <p class="nl-paragraph ggc-paragraph">
       <button (click)="volgendeHoofdstuk()">

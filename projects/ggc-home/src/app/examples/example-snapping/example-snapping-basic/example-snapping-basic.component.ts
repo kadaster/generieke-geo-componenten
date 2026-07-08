@@ -45,7 +45,7 @@ export class ExampleSnappingBasicComponent
     tags: [Tags.SNAP, Tags.DRAW],
     imageLocation:
       "code/examples/example-snapping/example-snapping-basic/example-snapping-basic.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-snapping/example-snapping-basic/example-snapping-basic.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

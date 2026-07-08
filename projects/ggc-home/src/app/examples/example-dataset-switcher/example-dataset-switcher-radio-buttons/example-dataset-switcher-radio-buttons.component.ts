@@ -36,7 +36,7 @@ export class ExampleDatasetSwitcherRadioButtonsComponent
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-dataset-switcher/example-dataset-switcher-radio-buttons/example-dataset-switcher-radio-buttons.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetSwitcherComponent.html`;

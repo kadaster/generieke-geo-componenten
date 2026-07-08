@@ -26,7 +26,7 @@ export class ExampleLayerWmtsComponent
     tags: [Tags.LAYER],
     imageLocation:
       "code/examples/example-layer/example-layer-wmts/example-layer-wmts.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-layer/example-layer-wmts/example-layer-wmts.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.WmtsLayerOptions.html`;

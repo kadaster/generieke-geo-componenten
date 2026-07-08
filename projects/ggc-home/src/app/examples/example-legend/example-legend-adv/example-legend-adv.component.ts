@@ -28,10 +28,11 @@ export class ExampleLegendAdvComponent
     title: "Legenda weergeven (uitgebreid)",
     introduction: "Toon de legenda van één of meer kaartlagen.",
     components: [Components.GGC_LEGEND],
+    theme: [],
     tags: [Tags.LEGEND],
     imageLocation:
       "code/examples/example-legend/example-legend-basic/example-legend-basic.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-legend/example-legend-adv/example-legend-adv.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;

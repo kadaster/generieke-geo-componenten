@@ -4,10 +4,15 @@ import { Injectable } from "@angular/core";
   providedIn: "root"
 })
 export class SessionStorageService {
+  private readonly selected2D3DKey = "selected2D3D";
   private readonly selectedComponentsKey = "selectedComponents";
   private readonly selectedTagsKey = "selectedTags";
   private readonly selectedThemesKey = "selectedThemes";
   private readonly searchTermKey = "searchTerm";
+
+  getSelected2D3D() {
+    return sessionStorage.getItem(this.selected2D3DKey);
+  }
 
   getSelectedComponents() {
     return sessionStorage.getItem(this.selectedComponentsKey);
@@ -23,6 +28,10 @@ export class SessionStorageService {
 
   getSearchTerm() {
     return sessionStorage.getItem(this.searchTermKey);
+  }
+
+  setSelected2D3D(selected2D3D: string[]) {
+    sessionStorage.setItem(this.selected2D3DKey, JSON.stringify(selected2D3D));
   }
 
   setSelectedComponents(selectedComponents: string[]) {
@@ -47,6 +56,10 @@ export class SessionStorageService {
     sessionStorage.setItem(this.searchTermKey, searchTerm);
   }
 
+  removeSelected2D3D() {
+    sessionStorage.removeItem(this.selected2D3DKey);
+  }
+
   removeSelectedComponents() {
     sessionStorage.removeItem(this.selectedComponentsKey);
   }
@@ -64,6 +77,7 @@ export class SessionStorageService {
   }
 
   removeSessionStorage() {
+    this.removeSelected2D3D();
     this.removeSelectedComponents();
     this.removeSelectedTags();
     this.removeSelectedThemes();

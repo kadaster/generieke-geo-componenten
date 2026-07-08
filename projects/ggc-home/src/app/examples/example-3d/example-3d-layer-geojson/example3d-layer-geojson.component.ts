@@ -38,7 +38,7 @@ export class Example3dLayerGeojsonComponent {
     tags: [Tags.LAYER, Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-geojson/example-3d-layer-geojson.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-layer-geojson/example3d-layer-geojson.component.ts";

@@ -36,7 +36,7 @@ export class ExampleLegendDatasetTreeComponent
     tags: [Tags.LEGEND, Tags.DATASET],
     imageLocation:
       "code/examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;

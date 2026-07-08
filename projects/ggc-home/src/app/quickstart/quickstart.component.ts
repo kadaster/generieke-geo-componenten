@@ -24,6 +24,12 @@ import {
   ToolbarItemComponentEvent
 } from "@kadaster/ggc-toolbar";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import {
+  CameraOptions,
+  cameraOptionsTorentjeDenHaag,
+  GgcViewerComponent,
+  ViewerOptions
+} from "@kadaster/ggc-map-3d";
 
 @Component({
   selector: "ggc-home-quickstart",
@@ -38,7 +44,8 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
     GgcToolbarComponent,
     GgcToolbarItemComponent,
     GgcToolbarItemMeasureComponent,
-    GgcToolbarItemDrawComponent
+    GgcToolbarItemDrawComponent,
+    GgcViewerComponent
   ],
   templateUrl: "./quickstart.component.html",
   styleUrl: "./quickstart.component.scss"
@@ -462,6 +469,107 @@ export class App {
   bootstrapFontawesomeHtml = `<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">`;
 
+  map3DHtml = `<div style="height: 100vh;">
+  <ggc-map-3d-viewer
+    [viewerOptions]="viewerOptions"
+    [cameraOptions]="cameraOptions"
+    [hideLogo]="true"
+    (ready)="onCesiumReady()"
+    [webServices]="webServices"
+  ></ggc-map-3d-viewer>
+</div>`;
+  map3DTypescript = `import { Component } from '@angular/core';
+import {
+  CameraOptions,
+  cameraOptionsTorentjeDenHaag,
+  GgcViewerComponent,
+  ViewerOptions,
+  Webservice
+} from "@kadaster/ggc-map-3d";
+
+@Component({
+  selector: 'app-root',
+  imports: [GgcViewerComponent],
+  templateUrl: './app.html',
+  styleUrl: './app.css'
+})
+export class App {
+  protected cameraOptions!: CameraOptions;
+  protected readonly webServices = [
+    {
+      "type": "3Dtiles",
+      "url": "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/gebouwen/3dtiles",
+      "layers": [
+        {
+          "title": "3D gebouwen",
+          "layerId": "3d-buildings",
+          "legendUrl": "",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "type": "3Dtiles",
+      "url": "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/terreinen/3dtiles",
+      "layers": [
+        {
+          "title": "3D terrein",
+          "layerId": "3d-terrain",
+          "legendUrl": "",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "type": "wmts",
+      "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+      "layers": [
+        {
+          "title": "Achtergrondkaart Grijs",
+          "layerId": "wmts-brt-grijs",
+          "layerName": "grijs",
+          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/legend.png",
+          "visible": true
+        }
+      ]
+    }] as Webservice[];
+
+  protected viewerOptions: ViewerOptions = {
+    elementId: "cesium-basic",
+    terrainModelUrl:
+      "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1/collections/digitaalterreinmodel/quantized-mesh",
+    directionalLightOptions: {
+      direction: "cameraDirection",
+      intensity: 2.5
+    }
+  };
+  public onCesiumReady() {
+    // zoom to Torentje
+    setTimeout(() => {
+      this.cameraOptions = cameraOptionsTorentjeDenHaag;
+    });
+  }
+}
+`;
+
+  cesiumAngularAssets = `{
+  "glob": "**/*",
+  "input": "node_modules/@cesium/engine/Source/Assets",
+  "output": "/assets/cesium/Assets"
+},
+{
+  "glob": "**/*",
+  "input": "node_modules/@cesium/engine/Build/Workers",
+  "output": "/assets/cesium/Workers"
+},
+{
+  "glob": "**/*",
+  "input": "node_modules/@cesium/engine/Source/Widget",
+  "output": "/assets/cesium/Widget"
+}`;
+
+  cesiumAngularStyles = `"@cesium/widgets/Source/widgets.css"`;
+
   protected readonly webServices = [
     {
       url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
@@ -627,6 +735,56 @@ export class App {
     markResult: true
   } as SearchLocationOptions;
 
+  protected cameraOptions!: CameraOptions;
+  protected readonly webServices3D = [
+    {
+      type: "3Dtiles",
+      url: "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/gebouwen/3dtiles",
+      layers: [
+        {
+          title: "3D gebouwen",
+          layerId: "3d-buildings",
+          legendUrl: "",
+          visible: true
+        }
+      ]
+    },
+    {
+      type: "3Dtiles",
+      url: "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/terreinen/3dtiles",
+      layers: [
+        {
+          title: "3D terrein",
+          layerId: "3d-terrain",
+          legendUrl: "",
+          visible: true
+        }
+      ]
+    },
+    {
+      type: "wmts",
+      url: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+      layers: [
+        {
+          title: "Achtergrondkaart Grijs",
+          layerId: "wmts-brt-grijs",
+          layerName: "grijs",
+          visible: true
+        }
+      ]
+    }
+  ] as Webservice[];
+
+  protected viewerOptions: ViewerOptions = {
+    elementId: "cesium-basic",
+    terrainModelUrl:
+      "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1/collections/digitaalterreinmodel/quantized-mesh",
+    directionalLightOptions: {
+      direction: "cameraDirection",
+      intensity: 2.5
+    }
+  };
+
   private readonly sessionStorageService = inject(SessionStorageService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -674,6 +832,12 @@ export class App {
     this.router.navigate(["/example-index"]);
   }
 
+  goTo3DMapVoorbeelden() {
+    this.sessionStorageService.removeSessionStorage();
+    this.sessionStorageService.setSelected2D3D(["3d"]);
+    this.router.navigate(["/example-index"]);
+  }
+
   changeMeasureState(event: ToolbarItemComponentEvent) {
     this.measureActive = event.active;
     this.drawActive = false;
@@ -711,5 +875,12 @@ export class App {
 
   logSwitchEvent(datasetSwitcherEvent: DatasetSwitcherEvent) {
     console.log(datasetSwitcherEvent);
+  }
+
+  onCesiumReady() {
+    // zoom to Torentje
+    setTimeout(() => {
+      this.cameraOptions = cameraOptionsTorentjeDenHaag;
+    });
   }
 }

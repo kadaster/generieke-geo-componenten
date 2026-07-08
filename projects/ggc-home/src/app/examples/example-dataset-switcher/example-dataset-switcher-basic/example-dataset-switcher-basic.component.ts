@@ -36,7 +36,7 @@ export class ExampleDatasetSwitcherBasicComponent
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetSwitcherComponent.html`;

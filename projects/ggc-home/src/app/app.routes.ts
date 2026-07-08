@@ -58,6 +58,7 @@ import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d
 import { Example3dLayerWmtsComponent } from "./examples/example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+// PLOP:IMPORTROUTE
 
 export const routes: Routes = [
   {
@@ -406,6 +407,7 @@ export const routes: Routes = [
     component: ExampleFeatureInfoTabsComponent,
     data: { label: "example-feature-info-tabs" }
   },
+  // PLOP:ROUTE
   {
     path: "feature-info-custom-names-values",
     title: "Feature Info aangepast | GGC-Home",

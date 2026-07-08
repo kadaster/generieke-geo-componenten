@@ -25,7 +25,7 @@ export class ExampleMeasure extends ExampleFormatComponent implements OnInit {
     tags: [Tags.MEASURE],
     imageLocation:
       "code/examples/example-measure/example-measure/example-measure.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-measure/example-measure/example-measure.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

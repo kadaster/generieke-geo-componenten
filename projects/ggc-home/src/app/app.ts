@@ -20,14 +20,12 @@ export class App {
   }
 
   focusContent(): void {
-    switch (this.router.url) {
-      case "/example-index":
-        (
-          document.querySelector(".col-md-9 a:nth-child(1)") as HTMLElement
-        )?.focus();
-        break;
-      default:
-        document.getElementById("main-content")?.focus();
+    if (this.router.url === "/example-index") {
+      (
+        document.querySelector(".col-md-9 a:nth-child(1)") as HTMLElement
+      )?.focus();
+    } else {
+      document.getElementById("main-content")?.focus();
     }
   }
 }

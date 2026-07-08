@@ -39,7 +39,7 @@ export class Example3dLayer3dTilesComponent {
     tags: [Tags.LAYER, Tags.DRIED, Tags.OGC_API],
     imageLocation:
       "code/examples/example-3d/example-3d-layer-3d-tiles/example-3d-layer-3d-tiles.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component.ts";

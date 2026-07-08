@@ -38,7 +38,7 @@ export class ExampleDatasetTreeBasicComponent
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-basic/example-dataset-tree-basic.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-dataset-tree/example-dataset-tree-basic/example-dataset-tree-basic.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetTreeComponent.html`;

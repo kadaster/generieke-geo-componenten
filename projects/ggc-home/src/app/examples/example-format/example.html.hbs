@@ -1,0 +1,81 @@
+<app-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  {{#if kaartConfig}}
+  pathKaartConfig="{{categoryFolder}}/{{exampleFolder}}/kaartconfig.json"
+  {{/if}}
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">\{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>\{{ componentInfo.introduction }}</p>
+    <p>In dit voorbeeld ..</p>
+    <p>Instelmogelijkheden voor ..:</p>
+    <ul>
+      <li>Instelmogelijkheid (<code>parameter</code>)</li>
+      <li>Instelmogelijkheid (<code>parameter</code>)</li>
+    </ul>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      {{#if (eq layout "one-column")}}
+        {{#if includeMap}}
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig"></ggc-map>
+        </div>
+        {{/if}}
+        {{#unless includeMap}}
+          <!-- TODO: Plaats hier de html code van dit voorbeeld. Dit wordt zichtbaar in de HTML Code tab onderin het voorbeeld. -->
+        {{/unless}}
+      {{/if}}
+      {{#if (eq layout "two-column")}}
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+        <fieldset class="ggc-fieldset">
+          <legend>Bediening</legend>
+          <!-- TODO: vul hier de specifieke bediening van dit voorbeeld in -->
+        </fieldset>
+      </div>
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
+        {{#if includeMap}}
+          <div class="map-container">
+            <ggc-map [webServices]="mapConfig"></ggc-map>
+          </div>
+        {{/if}}
+      </div>
+      {{/if}}
+      {{#if (eq layout "three-column")}}
+      <div class="col-xl-3 col-md-3 col-sm-12">
+        <fieldset class="ggc-fieldset">
+          <legend>Bediening</legend>
+          <!-- TODO: vul hier de specifieke bediening van dit voorbeeld in -->
+        </fieldset>
+      </div>
+      <div class="col-xl-7 col-md-6 col-sm-12">
+        {{#if includeMap}}
+          <div class="map-container">
+            <ggc-map [webServices]="mapConfig"></ggc-map>
+          </div>
+        {{/if}}
+      </div>
+        <div class="col-xl-2 col-md-2 col-sm-12">
+          <fieldset class="ggc-fieldset">
+            <legend>Aanvullenden bediening</legend>
+            <!-- TODO: vul hier de aanvullende bediening van dit voorbeeld in -->
+          </fieldset>
+        </div>
+      {{/if}}
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</app-example-format>

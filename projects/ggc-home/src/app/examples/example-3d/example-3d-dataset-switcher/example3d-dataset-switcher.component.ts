@@ -44,7 +44,7 @@ export class Example3dDatasetSwitcherComponent {
     tags: [Tags.DRIED, Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-3d/example-3d-dataset-switcher/example-3d-dataset-switcher.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-dataset-switcher/example3d-dataset-switcher.component.ts";

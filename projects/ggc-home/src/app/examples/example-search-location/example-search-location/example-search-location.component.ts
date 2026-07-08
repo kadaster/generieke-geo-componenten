@@ -44,7 +44,7 @@ export class ExampleSearchLocationComponent
     tags: [Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-search-location/example-search-location/example-search-location.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-search-location/example-search-location/example-search-location.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;

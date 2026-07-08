@@ -43,7 +43,7 @@ export class ExampleMapSelectWmsComponent
     tags: [Tags.SELECT],
     imageLocation:
       "code/examples/example-map/example-map-select-wms/example-map-select-wms.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-map/example-map-select-wms/example-map-select-wms.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GgcSelectService.html`;

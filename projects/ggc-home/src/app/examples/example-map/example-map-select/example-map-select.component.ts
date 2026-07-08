@@ -42,7 +42,7 @@ export class ExampleMapSelectComponent
     tags: [Tags.SELECT],
     imageLocation:
       "code/examples/example-map/example-map-select/example-select.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-map/example-map-select/example-map-select.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GgcSelectService.html`;

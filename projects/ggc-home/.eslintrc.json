@@ -1,6 +1,6 @@
 {
   "extends": "../../.eslintrc.json",
-  "ignorePatterns": ["!**/*"],
+  "ignorePatterns": ["!**/*", "plop*.ts"],
   "overrides": [
     {
       "files": ["*.ts"],

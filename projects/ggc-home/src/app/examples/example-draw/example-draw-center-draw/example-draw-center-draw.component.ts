@@ -37,7 +37,7 @@ export class ExampleDrawCenterDrawComponent
     tags: [Tags.DRAW, Tags.KEYBOARD],
     imageLocation:
       "code/examples/example-draw/example-draw-center-draw/example-draw-center-draw.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-draw/example-draw-center-draw/example-draw-center-draw.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

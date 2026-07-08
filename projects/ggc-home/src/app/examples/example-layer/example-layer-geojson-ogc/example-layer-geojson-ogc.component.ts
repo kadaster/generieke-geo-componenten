@@ -26,7 +26,7 @@ export class ExampleLayerGeojsonOgcComponent
     tags: [Tags.LAYER, Tags.OGC_API],
     imageLocation:
       "code/examples/example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;
