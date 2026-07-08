@@ -485,7 +485,7 @@ import {
   GgcViewerComponent,
   ViewerOptions,
   Webservice
-} from "@kadaster/ggc-map-3d";
+} from '@kadaster/ggc-map-3d';
 
 @Component({
   selector: 'app-root',
@@ -495,7 +495,8 @@ import {
 })
 export class App {
   protected cameraOptions!: CameraOptions;
-  protected readonly webServices = [
+  protected webServices: Webservice[] = [];
+  private readonly initialWebServices = [
     {
       "type": "3Dtiles",
       "url": "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/gebouwen/3dtiles",
@@ -503,8 +504,7 @@ export class App {
         {
           "title": "3D gebouwen",
           "layerId": "3d-buildings",
-          "legendUrl": "",
-          "visible": true
+          "legendUrl": ""
         }
       ]
     },
@@ -515,8 +515,7 @@ export class App {
         {
           "title": "3D terrein",
           "layerId": "3d-terrain",
-          "legendUrl": "",
-          "visible": true
+          "legendUrl": ""
         }
       ]
     },
@@ -528,8 +527,7 @@ export class App {
           "title": "Achtergrondkaart Grijs",
           "layerId": "wmts-brt-grijs",
           "layerName": "grijs",
-          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/legend.png",
-          "visible": true
+          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/legend.png"
         }
       ]
     }] as Webservice[];
@@ -543,11 +541,10 @@ export class App {
       intensity: 2.5
     }
   };
+
   public onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
-    });
+    this.webServices = this.initialWebServices;
+    this.cameraOptions = cameraOptionsTorentjeDenHaag;
   }
 }
 `;
