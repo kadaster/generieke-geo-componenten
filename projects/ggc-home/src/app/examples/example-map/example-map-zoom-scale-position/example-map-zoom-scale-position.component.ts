@@ -46,7 +46,7 @@ export class ExampleMapZoomScalePositionComponent
     tags: [Tags.SCALE, Tags.ZOOM, Tags.LOCATION],
     imageLocation:
       "code/examples/example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-map/example-map-zoom-scale-position/example-map-zoom-scale-position.component.ts";

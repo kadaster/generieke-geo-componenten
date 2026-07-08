@@ -27,10 +27,11 @@ export class ExampleDrawAdvComponent
     introduction:
       "Teken lijnen, punten, vlakken, rechthoeken en cirkels met de muis.",
     components: [Components.GGC_MAP],
+    theme: [],
     tags: [Tags.DRAW],
     imageLocation:
       "code/examples/example-draw/example-draw-basic/example-draw-basic.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-draw/example-draw-adv/example-draw-adv.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

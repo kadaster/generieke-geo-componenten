@@ -54,7 +54,7 @@ export class ExampleMapSelectDatasetTreeComponent
     tags: [Tags.SELECT, Tags.DATASET],
     imageLocation:
       "code/examples/example-map/example-map-select-dataset-tree/example-select.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-map/example-map-select-dataset-tree/example-map-select-dataset-tree.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GgcSelectService.html`;

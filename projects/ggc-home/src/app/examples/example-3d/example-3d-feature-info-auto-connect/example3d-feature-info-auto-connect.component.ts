@@ -42,7 +42,7 @@ export class Example3dFeatureInfoAutoConnectComponent {
     tags: [Tags.DRIED, Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-3d/example-3d-feature-info-auto-connect/example-3d-feature-info-auto-connect.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-feature-info-auto-connect/example3d-feature-info-auto-connect.component.ts";

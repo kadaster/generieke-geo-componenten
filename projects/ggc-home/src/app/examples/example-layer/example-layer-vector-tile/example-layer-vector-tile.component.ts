@@ -27,7 +27,7 @@ export class ExampleLayerVectorTileComponent
     tags: [Tags.OGC_API, Tags.LAYER],
     imageLocation:
       "code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-layer/example-layer-vector-tile/example-layer-vector-tile.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.VectorTileLayerOptions.html`;

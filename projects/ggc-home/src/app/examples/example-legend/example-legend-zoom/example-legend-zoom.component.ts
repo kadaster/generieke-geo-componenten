@@ -27,7 +27,7 @@ export class ExampleLegendZoomComponent
     tags: [Tags.LEGEND, Tags.ZOOM],
     imageLocation:
       "code/examples/example-legend/example-legend-zoom/example-legend-zoom.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-legend/example-legend-zoom/example-legend-zoom.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;

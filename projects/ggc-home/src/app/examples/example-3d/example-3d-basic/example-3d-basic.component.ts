@@ -32,7 +32,7 @@ export class Example3dBasicComponent {
     tags: [Tags.DRIED],
     imageLocation:
       "code/examples/example-3d/example-3d-basic/example-3d-basic.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-basic/example-3d-basic.component.ts";
