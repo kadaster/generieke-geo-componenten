@@ -384,6 +384,7 @@ export class GgcLegendComponent implements OnInit {
       for (const legend of this._legends()) {
         legend.expanded = datasetLegendToggle.expanded;
       }
+      this._legends.update(legends => [...legends]);
     }
   }
 
@@ -442,5 +443,6 @@ export class GgcLegendComponent implements OnInit {
           );
       }
     }
+    this._legends.update(legends => [...legends]);
   }
 }
