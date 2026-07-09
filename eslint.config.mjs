@@ -12,6 +12,11 @@ export default defineConfig([
   ...tseslint.configs.recommended,
   {
     files: ["**/*.ts"],
+    ignores:[
+      "projects/**/plopfile.ts",
+      "projects/**/plop-config.ts",
+      "projects/**/plop-helpers.ts",
+    ],
 
     plugins: {
       "@angular-eslint": angular,
