@@ -733,7 +733,8 @@ export class App {
   } as SearchLocationOptions;
 
   protected cameraOptions!: CameraOptions;
-  protected readonly webServices3D = [
+  protected webServices3D: Webservice[] = [];
+  protected readonly initialWebServices3D = [
     {
       type: "3Dtiles",
       url: "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/gebouwen/3dtiles",
@@ -852,10 +853,6 @@ export class App {
       queryParams: { step },
       queryParamsHandling: "merge"
     });
-
-    if (step === 8) {
-      this.onCesiumReady();
-    }
   }
 
   volgendeHoofdstuk() {
@@ -879,9 +876,7 @@ export class App {
   }
 
   onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
-    });
+    this.webServices3D = this.initialWebServices3D;
+    this.cameraOptions = cameraOptionsTorentjeDenHaag;
   }
 }
