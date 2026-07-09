@@ -471,6 +471,20 @@ export class GgcLayerService {
   }
 
   /**
+   * Haalt de complete configuratie van een mapIndex op.
+   *
+   * De configuratie bevat metadata zoals:
+   * - titel
+   * - legendainformatie
+   * - resolutie‑instellingen
+   */
+  getLayerConfigs(
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Webservice[] | undefined {
+    return this.mapConfigurations.get(mapIndex);
+  }
+
+  /**
    * Haalt de configuratie van een laag op.
    *
    * De configuratie bevat metadata zoals:
@@ -480,7 +494,7 @@ export class GgcLayerService {
    */
   getLayerConfig(
     layerId: string,
-    mapIndex: string
+    mapIndex: string = DEFAULT_MAPINDEX
   ): AbstractConfigurableLayerOptions | undefined {
     return this.mapConfigurations
       .get(mapIndex)
