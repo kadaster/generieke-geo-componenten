@@ -47,7 +47,7 @@ describe("FeatureInfoComponent, no testbed", () => {
 
     it("goToPreviousFeature should decrease currentFeatureIndex by one", () => {
       component.goToPreviousFeature();
-      expect(component["currentFeatureIndex"]).toEqual(-1);
+      expect(component["currentFeatureIndex"]()).toEqual(-1);
       expect(component["displayFeaturesProperties"]).toBeUndefined();
       expect(
         featureInfoConfigSpy.filterAndSortAttributes
@@ -59,7 +59,7 @@ describe("FeatureInfoComponent, no testbed", () => {
 
     it("goToNextFeature should increase currentFeatureIndex by one", () => {
       component.goToNextFeature();
-      expect(component["currentFeatureIndex"]).toEqual(-1);
+      expect(component["currentFeatureIndex"]()).toEqual(-1);
       expect(component["displayFeaturesProperties"]).toBeUndefined();
       expect(
         featureInfoConfigSpy.filterAndSortAttributes
@@ -86,8 +86,8 @@ describe("FeatureInfoComponent, no testbed", () => {
 
     it("goToPreviousFeature should not change currentFeature and currentFeatureIndex", () => {
       component.goToPreviousFeature();
-      expect(component["currentFeatureIndex"]).toEqual(0);
-      expect(component["currentFeature"]).toEqual(feature1);
+      expect(component["currentFeatureIndex"]()).toEqual(0);
+      expect(component["currentFeature"]()).toEqual(feature1);
       const displayFeatures = component["displayFeaturesProperties"];
       expect(displayFeatures).toBeDefined();
       expect(displayFeatures?.length).toBe(1);
@@ -101,8 +101,8 @@ describe("FeatureInfoComponent, no testbed", () => {
 
     it("goToNextFeature should increase currentFeatureIndex by one", () => {
       component.goToNextFeature();
-      expect(component["currentFeatureIndex"]).toEqual(0);
-      expect(component["currentFeature"]).toEqual(feature1);
+      expect(component["currentFeatureIndex"]()).toEqual(0);
+      expect(component["currentFeature"]()).toEqual(feature1);
       const displayFeatures = component["displayFeaturesProperties"];
       expect(displayFeatures).toBeDefined();
       expect(displayFeatures?.length).toBe(1);
@@ -139,7 +139,7 @@ describe("FeatureInfoComponent, no testbed", () => {
         layerTitle: "titel",
         layerId: "id"
       };
-      component["currentFeatureIndex"] = 1;
+      component["currentFeatureIndex"].set(1);
     });
 
     it("displayFeatures length should be 3", () => {
@@ -169,8 +169,8 @@ describe("FeatureInfoComponent, no testbed", () => {
 
     it("after goToNextFeature should emit nextFeature", () => {
       component.goToNextFeature();
-      expect(component["currentFeatureIndex"]).toEqual(2);
-      expect(component["currentFeature"]).toEqual(feature3);
+      expect(component["currentFeatureIndex"]()).toEqual(2);
+      expect(component["currentFeature"]()).toEqual(feature3);
       // check if is has emitted the value
       expect(event).toBeTruthy();
       expect(event.value).toEqual(feature3);
@@ -178,8 +178,8 @@ describe("FeatureInfoComponent, no testbed", () => {
 
     it("after goToPreviousFeature should emit previousFeature", () => {
       component.goToPreviousFeature();
-      expect(component["currentFeatureIndex"]).toEqual(0);
-      expect(component["currentFeature"]).toEqual(feature1);
+      expect(component["currentFeatureIndex"]()).toEqual(0);
+      expect(component["currentFeature"]()).toEqual(feature1);
       // check if is has emitted the value
       expect(event).toBeTruthy();
       expect(event.value).toEqual(feature1);
@@ -199,7 +199,7 @@ describe("FeatureInfoComponent, no testbed", () => {
         layerId: "id"
       };
       featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
-      component["currentFeatureIndex"] = 1;
+      component["currentFeatureIndex"].set(1);
 
       component.featureInfoCollection = undefined;
     });

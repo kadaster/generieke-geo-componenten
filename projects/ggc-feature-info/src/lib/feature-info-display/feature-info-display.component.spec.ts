@@ -46,7 +46,7 @@ describe("FeatureInfoDisplayComponent", () => {
 
   describe("prepareForDisplay()", () => {
     it("when prepareForDisplay() is called and currentFeature is an object with one key, objectKeys should have one key", () => {
-      component.currentFeature = { dit: "is de key" };
+      fixture.componentRef.setInput("currentFeature", { dit: "is de key" });
 
       component.prepareForDisplay();
 
@@ -65,7 +65,7 @@ describe("FeatureInfoDisplayComponent", () => {
     const prepareForDisplaySpy = vi.spyOn(component, "prepareForDisplay");
 
     const currentFeature = { bronhoudernaam: "Bergen" };
-    component.currentFeature = currentFeature;
+    fixture.componentRef.setInput("currentFeature", currentFeature);
 
     component.ngOnChanges({
       currentFeature: new SimpleChange(null, currentFeature, false)
@@ -77,7 +77,7 @@ describe("FeatureInfoDisplayComponent", () => {
 
   it("when prepareForDisplay() is called, it should call checkForCustomValues() in the FeatureInfoConfigService", () => {
     const currentFeature = { bronhoudernaam: "Bergen" };
-    component.currentFeature = currentFeature;
+    fixture.componentRef.setInput("currentFeature", currentFeature);
 
     component.prepareForDisplay();
 

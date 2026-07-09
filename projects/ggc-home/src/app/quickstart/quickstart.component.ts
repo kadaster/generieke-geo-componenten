@@ -28,7 +28,8 @@ import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
   GgcViewerComponent,
-  ViewerOptions
+  ViewerOptions,
+  Webservice as Webservice3D
 } from "@kadaster/ggc-map-3d";
 
 @Component({
@@ -773,7 +774,7 @@ export class App {
         }
       ]
     }
-  ] as Webservice[];
+  ] as Webservice3D[];
 
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-basic",

@@ -46,9 +46,9 @@ describe("FeatureInfoTabsComponent", () => {
     fixture.detectChanges();
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
-    expect(component["selectedTab"]).toBeUndefined();
-    expect(component["selectedTabFeatureInfo"]).toBeUndefined();
-    expect(component["lastSelectedTabOnClick"]).toBeUndefined();
+    expect(component["selectedTab"]()).toBeUndefined();
+    expect(component["selectedTabFeatureInfo"]()).toBeUndefined();
+    expect(component["lastSelectedTabOnClick"]()).toBeUndefined();
     expect(sortFilterServiceSpy).not.toHaveBeenCalled();
   });
 
@@ -70,10 +70,10 @@ describe("FeatureInfoTabsComponent", () => {
     });
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
-    expect(component["featureInfoCollectionArrayInternal"].length).toBe(1);
-    expect(component["selectedTab"]).toBe("id");
-    expect(component["selectedTabFeatureInfo"]).toBeDefined();
-    expect(component["lastSelectedTabOnClick"]).toBeUndefined();
+    expect(component["featureInfoCollectionArrayInternal"]().length).toBe(1);
+    expect(component["selectedTab"]()).toBe("id");
+    expect(component["selectedTabFeatureInfo"]()).toBeDefined();
+    expect(component["lastSelectedTabOnClick"]()).toBeUndefined();
     expect(sortFilterServiceSpy).toHaveBeenCalled();
   });
 
@@ -94,8 +94,8 @@ describe("FeatureInfoTabsComponent", () => {
       featureInfoCollectionArray: {} as SimpleChange
     });
 
-    expect(component["featureInfoCollectionArrayInternal"].length).toBe(1);
-    expect(component["featureInfoCollectionArrayInternal"][0].layerName).toBe(
+    expect(component["featureInfoCollectionArrayInternal"]().length).toBe(1);
+    expect(component["featureInfoCollectionArrayInternal"]()[0].layerName).toBe(
       "Not empty"
     );
   });
@@ -118,12 +118,12 @@ describe("FeatureInfoTabsComponent", () => {
       featureInfoCollectionArray: {} as SimpleChange
     });
 
-    expect(component["featureInfoCollectionArrayInternal"].length).toBe(2);
+    expect(component["featureInfoCollectionArrayInternal"]().length).toBe(2);
   });
 
   it("if lastSelectedTabOnClick is set, it should set it as active tab", () => {
     const activeTabName = "Clicked";
-    component["lastSelectedTabOnClick"] = activeTabName;
+    component["lastSelectedTabOnClick"].set(activeTabName);
     let receivedEvent: FeatureInfoComponentEvent =
       {} as FeatureInfoComponentEvent;
     component.events.subscribe(
@@ -149,13 +149,13 @@ describe("FeatureInfoTabsComponent", () => {
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
     expect(receivedEvent.value.layerTitle).toBe("titelNaam1");
     expect(receivedEvent.value.layerId).toBe("idNaam1");
-    expect(component["selectedTab"]).toBe("idNaam1");
-    expect(component["selectedTabFeatureInfo"]).toBeDefined();
-    expect(component["lastSelectedTabOnClick"]).toBe(activeTabName);
+    expect(component["selectedTab"]()).toBe("idNaam1");
+    expect(component["selectedTabFeatureInfo"]()).toBeDefined();
+    expect(component["lastSelectedTabOnClick"]()).toBe(activeTabName);
   });
 
   it("if lastSelectedTabOnClick is set and is not present in tabFeatureInfo, it should set the first tab as active tab", () => {
-    component["lastSelectedTabOnClick"] = "Clicked";
+    component["lastSelectedTabOnClick"].set("Clicked");
     let receivedEvent: FeatureInfoComponentEvent =
       {} as FeatureInfoComponentEvent;
     component.events.subscribe(
@@ -175,8 +175,8 @@ describe("FeatureInfoTabsComponent", () => {
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
     expect(receivedEvent.value.layerName).toBe("Tab1");
-    expect(component["selectedTab"]).toBe("id1");
-    expect(component["selectedTabFeatureInfo"]).toBeDefined();
+    expect(component["selectedTab"]()).toBe("id1");
+    expect(component["selectedTabFeatureInfo"]()).toBeDefined();
   });
 
   it("onTabClicked should set lastSelectedTabOnClick and call setActiveTab", () => {
@@ -200,9 +200,9 @@ describe("FeatureInfoTabsComponent", () => {
     component.onTabClicked(tabName);
 
     expect(receivedEvent.type).toBe(FeatureInfoComponentEventType.SELECTEDTAB);
-    expect(component["featureInfoCollectionArrayInternal"].length).toBe(2);
-    expect(component["selectedTab"]).toBe("ida");
-    expect(component["selectedTabFeatureInfo"]).toBeDefined();
-    expect(component["lastSelectedTabOnClick"]).toBe(tabName);
+    expect(component["featureInfoCollectionArrayInternal"]().length).toBe(2);
+    expect(component["selectedTab"]()).toBe("ida");
+    expect(component["selectedTabFeatureInfo"]()).toBeDefined();
+    expect(component["lastSelectedTabOnClick"]()).toBe(tabName);
   });
 });

@@ -11,7 +11,8 @@ import {
   TemplateRef,
   AfterViewInit,
   OnDestroy,
-  QueryList
+  QueryList,
+  signal
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -141,8 +142,8 @@ export class GgcFeatureInfoComponent
   protected hideEmptyFieldWithKeys: string[] = [];
   protected displayFeaturesProperties: object[] | undefined;
   protected pagerIsHidden: boolean;
-  protected currentFeatureIndex = 0;
-  protected currentFeature: object | null;
+  protected currentFeatureIndex = signal(0);
+  protected currentFeature = signal<object | null>(null);
   protected emptyInfo = "Geen informatie beschikbaar";
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
@@ -276,7 +277,7 @@ export class GgcFeatureInfoComponent
   /** Navigeer naar de vorige feature. */
   goToPreviousFeature(): void {
     if (this.hasPreviousFeature()) {
-      this.currentFeatureIndex--;
+      this.currentFeatureIndex.set(this.currentFeatureIndex() - 1);
       this.setCurrentFeature();
     }
   }
@@ -284,7 +285,7 @@ export class GgcFeatureInfoComponent
   /** Navigeer naar de volgende feature. */
   goToNextFeature(): void {
     if (this.hasNextFeature()) {
-      this.currentFeatureIndex++;
+      this.currentFeatureIndex.set(this.currentFeatureIndex() + 1);
       this.setCurrentFeature();
     }
   }
@@ -295,7 +296,7 @@ export class GgcFeatureInfoComponent
       ? this.displayFeaturesProperties.length
       : -1;
     if (length > 0) {
-      return this.currentFeatureIndex < length - 1;
+      return this.currentFeatureIndex() < length - 1;
     }
     return false;
   }
@@ -306,7 +307,7 @@ export class GgcFeatureInfoComponent
       this.displayFeaturesProperties &&
       this.displayFeaturesProperties.length > 1
     ) {
-      return this.currentFeatureIndex > 0;
+      return this.currentFeatureIndex() > 0;
     }
     return false;
   }
@@ -363,11 +364,13 @@ export class GgcFeatureInfoComponent
    * Wordt aangeroepen bij navigatie of initiële selectie.
    */
   private setCurrentFeature(): void {
-    this.currentFeature = this.displayFeaturesProperties
-      ? this.displayFeaturesProperties[this.currentFeatureIndex]
-      : null;
+    this.currentFeature.set(
+      this.displayFeaturesProperties
+        ? this.displayFeaturesProperties[this.currentFeatureIndex()]
+        : null
+    );
     const featureForEvent = this.featureInfoCollection
-      ? this.featureInfoCollection.features[this.currentFeatureIndex]
+      ? this.featureInfoCollection.features[this.currentFeatureIndex()]
       : undefined;
     const featureInfoComponentEvent = new FeatureInfoComponentEvent(
       FeatureInfoComponentEventType.SELECTEDOBJECT,
@@ -418,11 +421,11 @@ export class GgcFeatureInfoComponent
       this.displayFeaturesProperties &&
       this.displayFeaturesProperties.length > 0
     ) {
-      this.currentFeatureIndex = 0;
+      this.currentFeatureIndex.set(0);
       this.setCurrentFeature();
     } else {
-      this.currentFeatureIndex = -1;
-      this.currentFeature = null;
+      this.currentFeatureIndex.set(-1);
+      this.currentFeature.set(null);
       this.events.next(
         new FeatureInfoComponentEvent(
           FeatureInfoComponentEventType.SELECTEDOBJECT,

@@ -2,12 +2,12 @@
   @case (featureInfoDisplayTypeEnum.LIST) {
     <dl class="ggc-fi-list-item">
       @for (key of objectKeys | featureinfokeys; track key) {
-        @if (!headerValueTemplates.has(key) || headerValueTemplates.get(key)) {
+        @if (!headerValueTemplates().has(key) || headerValueTemplates().get(key)) {
           <dt class="ggc-fi-list-title">
             <ng-container
               [ngTemplateOutlet]="
-                headerValueTemplates.get(key)
-                  ? headerValueTemplates.get(key)
+                headerValueTemplates().get(key)
+                  ? headerValueTemplates().get(key)
                   : defaultValueTemplateHeaderList
               "
               [ngTemplateOutletContext]="{
@@ -21,8 +21,8 @@
           <dd class="ggc-fi-list-content">
             <ng-container
               [ngTemplateOutlet]="
-                contentValueTemplates.get(key)
-                  ? contentValueTemplates.get(key)
+                contentValueTemplates().get(key)
+                  ? contentValueTemplates().get(key)
                   : defaultValueTemplateList
               "
               [ngTemplateOutletContext]="{
@@ -53,14 +53,14 @@
       <tbody class="ggc-fi-tbody">
         @for (key of objectKeys | featureinfokeys; track key) {
           @if (
-            !headerValueTemplates.has(key) || headerValueTemplates.get(key)
+            !headerValueTemplates().has(key) || headerValueTemplates().get(key)
           ) {
             <tr>
               <td>
                 <ng-container
                   [ngTemplateOutlet]="
-                    headerValueTemplates.has(key)
-                      ? headerValueTemplates.get(key)
+                    headerValueTemplates().has(key)
+                      ? headerValueTemplates().get(key)
                       : defaultValueTemplateHeaderTable
                   "
                   [ngTemplateOutletContext]="{
@@ -77,8 +77,8 @@
                 <ng-container
                   class="ggc-fi-list-content"
                   [ngTemplateOutlet]="
-                    contentValueTemplates.get(key)
-                      ? contentValueTemplates.get(key)
+                    contentValueTemplates().get(key)
+                      ? contentValueTemplates().get(key)
                       : defaultValueTemplateTable
                   "
                   [ngTemplateOutletContext]="{

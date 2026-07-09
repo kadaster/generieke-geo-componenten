@@ -2,7 +2,6 @@ import {
   Component,
   inject,
   input,
-  Input,
   OnChanges,
   OnInit,
   SimpleChanges,
@@ -22,11 +21,11 @@ import { FeatureKeysPipe } from "../pipe/keys.pipe";
 })
 export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
   type = input<FeatureInfoDisplayType>(FeatureInfoDisplayType.TABLE);
-  @Input() currentFeature: { [key: string]: any };
-  @Input() hideEmptyFields: boolean;
-  @Input() headerValueTemplates: Map<string, TemplateRef<any>> = new Map();
-  @Input() contentValueTemplates: Map<string, TemplateRef<any>> = new Map();
-  @Input() hideEmptyFieldWithKeys: string[] = [];
+  currentFeature = input<{ [key: string]: any } | null>(null);
+  hideEmptyFields = input<boolean>(false);
+  headerValueTemplates = input<Map<string, TemplateRef<any>>>(new Map());
+  contentValueTemplates = input<Map<string, TemplateRef<any>>>(new Map());
+  hideEmptyFieldWithKeys = input<string[]>([]);
 
   protected displayFeature: { [key: string]: any };
   protected objectKeys: string[];
@@ -64,12 +63,12 @@ export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
 
   prepareForDisplay() {
     this.objectKeys = FeatureInfoKeyValue.objectKeys(
-      this.currentFeature,
-      this.hideEmptyFields,
-      this.hideEmptyFieldWithKeys
+      this.currentFeature() as { [key: string]: any },
+      this.hideEmptyFields(),
+      this.hideEmptyFieldWithKeys()
     );
     this.displayFeature = this.featureInfoConfigService.checkForCustomValues(
-      this.currentFeature,
+      this.currentFeature() as { [key: string]: any },
       this.objectKeys
     );
   }
