@@ -15,7 +15,6 @@ import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
-  // let mapServiceSpy: MockedObject<GgcMapService>;
   let capSpy: MockedObject<CoreWmsWmtsCapabilitiesService>;
   let coreMapServiceSpy: MockedObject<CoreMapService>;
 
@@ -193,6 +192,30 @@ describe("LayerService", () => {
         legendIndex: undefined
       }
     ]);
+  });
+
+  it("should return layer configs for given mapIndex", () => {
+    const config = [
+      {
+        url: "test-url",
+        type: Webservice2DType.WMS,
+        layers: [{ layerId: "layer-1", title: "Layer 1" }]
+      }
+    ];
+
+    service["mapConfigurations"].set("testMap", config as any);
+    const result = service.getLayerConfigs("testMap");
+    expect(result).toEqual(config);
+  });
+
+  it("should reload a layer by removing and adding it again", () => {
+    const removeSpy = vi.spyOn(service, "removeLayer");
+    const addSpy = vi.spyOn(service as any, "addLayerFromMapConfig");
+
+    service.reloadLayer("layer-1", "testMap");
+
+    expect(removeSpy).toHaveBeenCalledWith("testMap", "layer-1");
+    expect(addSpy).toHaveBeenCalledWith("layer-1", "testMap");
   });
 
   function isUUID(str: string): boolean {
