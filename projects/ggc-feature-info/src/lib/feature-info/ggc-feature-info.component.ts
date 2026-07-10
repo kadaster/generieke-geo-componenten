@@ -37,10 +37,7 @@ import {
   MapComponentEventTypes,
   ViewerType
 } from "@kadaster/ggc-models";
-import {
-  declusterFeatures,
-  featureCollectionForLayerHasCluster
-} from "@kadaster/ggc-map";
+import { declusterFeatures } from "@kadaster/ggc-map";
 import { Subscription } from "rxjs";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
@@ -503,7 +500,7 @@ export class GgcFeatureInfoComponent
     this.featureInfoCollection = new FeatureInfoCollection(
       undefined,
       collections.flatMap((feature) =>
-        featureCollectionForLayerHasCluster(feature)
+        this.featureCollectionIsClustered(feature)
           ? declusterFeatures(feature.features)
           : (feature.features ?? [])
       ),
