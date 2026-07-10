@@ -366,7 +366,7 @@ export class GgcFeatureInfoComponent
       if (collection) {
         this.featureInfoCollection = new FeatureInfoCollection(
           undefined,
-          featureCollectionForLayerHasCluster(collection)
+          this.featureCollectionIsClustered(collection)
             ? declusterFeatures(collection.features)
             : collection.features,
           collection.layerTitle,
@@ -374,6 +374,12 @@ export class GgcFeatureInfoComponent
         );
       }
     }
+  }
+
+  private featureCollectionIsClustered(
+    featureinfo: FeatureCollectionForLayer
+  ): boolean {
+    return featureinfo.features.some((feature) => feature.get("features"));
   }
 
   /**
