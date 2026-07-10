@@ -16,9 +16,7 @@ import { FeatureCollectionForLayer } from "@kadaster/ggc-models";
 export const featureCollectionForLayerHasCluster = (
   featureinfo: FeatureCollectionForLayer
 ): boolean => {
-  return featureinfo.features.some(
-    (feature) => feature.get("features") && feature.get("features").length > 1
-  );
+  return featureinfo.features.some((feature) => feature.get("features"));
 };
 
 /**
