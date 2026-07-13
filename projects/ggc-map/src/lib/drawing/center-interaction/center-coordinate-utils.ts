@@ -211,3 +211,45 @@ export function getClosestSegmentCoordinate(
   });
   return closestFeatureCoordinate;
 }
+
+/**
+ * Return the coordinates of the line where the last coordinate is removed
+ * @param line the line
+ */
+export function getLineWithoutLastCoord(line: LineString): Coordinate[] {
+  const coords = [...line.getCoordinates()];
+  const index = coords.length - 1;
+  coords.splice(index, 1);
+  return coords;
+}
+
+/**
+ * Return the coordinates of the polygon where the second-to-last coordinate is removed
+ * @param polygon
+ */
+export function getPolygonWithoutSecondToLastCoord(
+  polygon: Polygon
+): Coordinate[] {
+  const rings = [...polygon.getCoordinates()];
+  if (!rings || rings.length === 0) {
+    return [];
+  }
+  const outerRing = [...rings[0]];
+  const length = outerRing.length;
+  /*
+    Wanneer de polygon getekend wordt vult deze de coördinaten[] met 3 punten.
+    Daarnaast is er ook nog het punt waar de pointer staat op de kaart.
+    Om alleen de gezette punten terug te geven worden de laatste 2 punten verwijderd.
+   */
+  if (length <= 4) {
+    outerRing.splice(-2);
+    return outerRing.splice(-2);
+  }
+  /*
+   Als je 3 punten hebt geplaatst is er een geldige polygon en kan de tekening ook worden afgerond,
+   Hier verwijderen we alleen het voorlaatste punt (dit is de positie van de pointer op de kaart).
+  */
+  const index = outerRing.length - 2;
+  outerRing.splice(index, 1);
+  return outerRing;
+}
