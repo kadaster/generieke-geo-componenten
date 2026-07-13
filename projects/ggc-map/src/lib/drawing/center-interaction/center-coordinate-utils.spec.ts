@@ -15,7 +15,9 @@ import {
   calculateDistanceOfCoordinates,
   coordinatesAreEqual,
   getClosestVertex,
-  getClosestSegmentCoordinate
+  getClosestSegmentCoordinate,
+  getLineWithoutLastCoord,
+  getPolygonWithoutSecondToLastCoord
 } from "./center-coordinate-utils";
 
 describe("center-coordinate-utils", () => {
@@ -260,6 +262,58 @@ describe("center-coordinate-utils", () => {
 
       const result = getClosestSegmentCoordinate([f1, f2], [4, 5]);
       expect(result?.coordinate).toEqual([4, 0]);
+    });
+  });
+
+  describe("getLineWithoutLastCoord", () => {
+    it("returns all line coordinates except the last", () => {
+      const line = new LineString([
+        [0, 0],
+        [5, 5],
+        [10, 10]
+      ]);
+
+      expect(getLineWithoutLastCoord(line)).toEqual([
+        [0, 0],
+        [5, 5]
+      ]);
+    });
+  });
+
+  describe("getPolygonWithoutSecondToLastCoord", () => {
+    it("returns first two coordinates when ring length is 4 or less", () => {
+      const polygon = new Polygon([
+        [
+          [5, 0],
+          [10, 0],
+          [10, 10],
+          [0, 0]
+        ]
+      ]);
+
+      expect(getPolygonWithoutSecondToLastCoord(polygon)).toEqual([
+        [5, 0],
+        [10, 0]
+      ]);
+    });
+
+    it("removes only second-to-last coordinate when ring length is more than 4", () => {
+      const polygon = new Polygon([
+        [
+          [5, 0],
+          [10, 0],
+          [10, 10],
+          [0, 10],
+          [0, 0]
+        ]
+      ]);
+
+      expect(getPolygonWithoutSecondToLastCoord(polygon)).toEqual([
+        [5, 0],
+        [10, 0],
+        [10, 10],
+        [0, 0]
+      ]);
     });
   });
 });
