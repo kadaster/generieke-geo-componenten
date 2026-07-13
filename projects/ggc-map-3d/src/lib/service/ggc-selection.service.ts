@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { ScreenSpaceEventType } from "@cesium/engine";
+import { Color, ScreenSpaceEventType } from "@cesium/engine";
 import { Observable } from "rxjs";
 import { CoreSelectionService } from "./core-selection.service";
 import { MapComponentEvent } from "@kadaster/ggc-models";
@@ -35,8 +35,13 @@ export class GgcSelectionService {
    *
    * @param selection De {@link SelectionConfig} die toegevoegd moet worden
    */
-  public addSelection(selection: SelectionConfig) {
-    this.coreSelectionService.addSelection(selection);
+  public addSelection(selection?: SelectionConfig) {
+    this.coreSelectionService.addSelection(
+      selection ?? {
+        eventType: ScreenSpaceEventType.LEFT_CLICK,
+        highlightColor: Color.BLUE
+      }
+    );
   }
 
   /**
