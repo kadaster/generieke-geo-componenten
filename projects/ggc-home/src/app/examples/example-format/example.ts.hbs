@@ -1,0 +1,56 @@
+import { Component, OnInit } from "@angular/core";
+import { ExampleFormatComponent } from "{{{examplesRoot}}}../example-format/example-format.component";
+{{#each componentImports}}
+{{{this}}}
+{{/each}}
+import { ComponentInfo } from "{{{examplesRoot}}}../component-info.model";
+import { Components } from "{{{examplesRoot}}}../components.enum";
+import { Themes } from "{{{examplesRoot}}}../themes.enum";
+import { Tags } from "{{{examplesRoot}}}../tags.enum";
+
+@Component({
+  selector: "{{{selector}}}",
+  imports: [ExampleFormatComponent{{#each ngImports}}, {{{this}}}{{/each}}],
+  templateUrl: "./{{{exampleFolder}}}.component.html"{{#if scss}},
+  styleUrl: "./{{{exampleFolder}}}.component.scss" {{/if}}
+})
+export class {{{className}}}
+  extends ExampleFormatComponent
+  implements OnInit
+{
+  // DOCS-SKIP:START
+  readonly componentInfo: ComponentInfo = {
+    route: "{{{componentInfoRoute}}}",
+    title: "{{{title}}}",
+    introduction: "Subtitel voor dit voorbeeld",
+    components: [{{#each componentTags}}Components.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
+    theme: [Themes.{{{theme}}}],
+    tags: [{{#each tags}}Tags.{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}],
+    imageLocation:
+      "{{{imageLocation}}}"
+  } as ComponentInfo;
+  urlComponentModule =
+    "{{{urlComponentModule}}}";
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/{{{tsDocsClass}}}.html`;
+  // DOCS-SKIP:END
+
+  {{#if mapIndex}}
+  mapIndex = "{{{exampleFolder}}}";
+  {{/if}}
+  {{#if includeMap}}
+  mapConfig: Webservice[];
+  {{/if}}
+
+  ngOnInit() {
+    {{#if includeMap}}
+    this.httpClient
+      .get("code/{{{categoryFolder}}}/{{{exampleFolder}}}/kaartconfig.json")
+      .subscribe((data) => {
+        this.mapConfig = data as Webservice[];
+      });
+    {{/if}}
+    // TODO: vul hier eventuele initialisatielogica voor dit voorbeeld in
+  }
+
+  // TODO: vul hier de methodes voor de specifieke bediening van dit voorbeeld in
+}

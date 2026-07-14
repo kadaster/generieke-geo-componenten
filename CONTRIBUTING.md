@@ -36,6 +36,29 @@ Een nieuwe feature moet natuurlijk wel passen binnen het generieke karakter van 
 
 Documentatie kan altijd beter! Pull requests voor verbeteringen aan de documentatie zijn zeer welkom.
 
+### Voorbeelden toevoegen aan GGC-Home
+
+Wil je een nieuw voorbeeld toevoegen aan GGC-Home? Gebruik dan de PlopJS generator om automatisch de benodigde bestanden te genereren:
+
+```bash
+npm run plop:ggc-home-example
+```
+
+De generator doorloopt de volgende stappen:
+1. **Directory**: Kies in welke categorie het voorbeeld hoort (of maak een nieuwe aan)
+2. **Naam**: Geef de bestandsnaam op (zonder `example-` prefix)
+3. **Thema**: Kies het thema/categorie voor filtering
+4. **Titel**: Zichtbare titel op de index-pagina en voorbeeldpagina
+5. **Layout**: Hoeveel kolommen wil je op de pagina
+6. **Component imports**: Selecteer welke GGC-componenten geïmporteerd moeten worden
+7. **Component tags**: Kies de component tag(s) voor het voorbeeld
+8. **Tags**: Voeg optionele tags toe voor filtering
+9. **Route titel**: Korte titel voor het browsertabblad
+10. **SCSS**: Wil je een stylesheet toevoegen
+11. **Kaart**: Wil je een kaart met kaartconfiguratie toevoegen
+
+De generator maakt automatisch de HTML, TypeScript, en optionele SCSS bestanden aan, en update de routing en index-component. Je hoeft alleen nog de inhoud van het voorbeeld in te vullen en de afbeelding te vervangen.
+
 ### Code bijdragen
 
 Wil je code bijdragen? Volg dan onderstaand proces.

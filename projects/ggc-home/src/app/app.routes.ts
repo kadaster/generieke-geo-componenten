@@ -10,7 +10,6 @@ import { ExampleLegendZoomComponent } from "./examples/example-legend/example-le
 import { ExampleLegendDatasetTreeComponent } from "./examples/example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component";
 import { ExampleDatasetTreeTemplatesComponent } from "./examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component";
 import { ExampleDatasetSwitcherBasicComponent } from "./examples/example-dataset-switcher/example-dataset-switcher-basic/example-dataset-switcher-basic.component";
-import { ExampleSearchLocationWoonplaatsComponent } from "./examples/example-search-location/example-search-location-woonplaats/example-search-location-woonplaats.component";
 import { ExampleDatasetTreeLayerEnabledCallback } from "./examples/example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component";
 import { GgcHomeComponent } from "./ggc-home/ggc-home.component";
 import { ExampleSearchLocationAdvComponent } from "./examples/example-search-location/example-search-location-adv/example-search-location-adv.component";
@@ -59,6 +58,7 @@ import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d
 import { Example3dLayerWmtsComponent } from "./examples/example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+// PLOP:IMPORTROUTE
 
 export const routes: Routes = [
   {
@@ -225,12 +225,6 @@ export const routes: Routes = [
     title: "Zoeken-uitgebreid | GGC-Home",
     component: ExampleSearchLocationAdvComponent,
     data: { label: "search-location-adv" }
-  },
-  {
-    path: "search-location-woonplaats",
-    title: "Zoeken-woonplaats | GGC-Home",
-    component: ExampleSearchLocationWoonplaatsComponent,
-    data: { label: "search-location-woonplaats" }
   },
   {
     path: "search-location-only-location",
@@ -413,6 +407,7 @@ export const routes: Routes = [
     component: ExampleFeatureInfoTabsComponent,
     data: { label: "example-feature-info-tabs" }
   },
+  // PLOP:ROUTE
   {
     path: "feature-info-custom-names-values",
     title: "Feature Info aangepast | GGC-Home",

@@ -88,12 +88,14 @@ describe("ViewerComponent", () => {
     expect(cesiumMock.camera!.flyTo).not.toHaveBeenCalled();
   });
 
-  it("should not call flyTo when cameraOptions is set before cesium is ready", async () => {
+  it("should call flyTo after cesium is ready when cameraOptions is set before init", async () => {
     component.cameraOptions = { cameraPosition: { lon: 10, lat: 10 } };
 
     fixture.detectChanges();
+    await Promise.resolve();
+    await Promise.resolve();
 
-    expect(cesiumMock.camera!.flyTo).not.toHaveBeenCalled();
+    expect(cesiumMock.camera!.flyTo).toHaveBeenCalledTimes(1);
   });
 
   describe("directionalLightOptions", () => {

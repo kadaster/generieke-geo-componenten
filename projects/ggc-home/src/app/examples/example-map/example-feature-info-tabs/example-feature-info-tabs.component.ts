@@ -40,7 +40,7 @@ export class ExampleFeatureInfoTabsComponent
     tags: [Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-map/example-feature-info-tabs/example-feature-info-tabs.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-map/example-feature-info-tabs/example-feature-info-tabs.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/feature-info_public-api.GgcFeatureInfo.html`;

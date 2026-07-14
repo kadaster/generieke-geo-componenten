@@ -28,7 +28,8 @@
         "title": "Luchtfoto Actueel Ortho 8cm RGB (WMS)",
         "visible": false,
         "layerName": "Actueel_orthoHR",
-        "zIndex": -20
+        "zIndex": -20,
+        "persistent": true
       }
     ]
   },

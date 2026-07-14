@@ -23,6 +23,8 @@ import { SelectOptions } from "../../model/select-options";
  * Selecties op **WMS/WMTS‑kaartlagen** worden ook ondersteund, maar kennen
  * functionele beperkingen (zie hieronder).
  *
+ * Let op: kaartlagen moeten de optie getFeatureInfoOnSingleclick op true hebben staan om er selecties op te kunnen uitvoeren.
+ *
  * ## Selectiemodi voor WFS en OGC kaartlagen
  *
  * Voor WFS‑ en OGC‑kaartlagen zijn de volgende selectiemodi beschikbaar:
@@ -47,7 +49,6 @@ import { SelectOptions } from "../../model/select-options";
  *
  * Voor WMS/WMTS‑selecties gelden de volgende vereisten en beperkingen:
  *
- * - De kaartlaag moet de property `getFeatureInfoOnSingleclick` op `true` hebben.
  * - Selecties werken alleen via **singleclick** in:
  *   - single select modus
  *   - multi select modus
@@ -80,6 +81,7 @@ export class GgcSelectionService {
    * @deprecated
    * Zet de selectiemodus van de kaart op **single select**.
    * Hierbij kan steeds slechts één object tegelijk geselecteerd worden.
+   * Alle kaartlagen die de optie getFeatureInfoOnSingleclick aan hebben staan kunnen geselecteerd worden.
    *
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
    * de selectiemodus wordt ingesteld.
@@ -92,6 +94,7 @@ export class GgcSelectionService {
    * @deprecated
    * Zet de selectiemodus van de kaart op **multi select**.
    * Hierbij kunnen meerdere objecten tegelijk geselecteerd worden.
+   * Alle kaartlagen die de optie getFeatureInfoOnSingleclick aan hebben staan kunnen geselecteerd worden.
    *
    * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX) waarvoor
    * de selectiemodus wordt ingesteld.
@@ -102,6 +105,7 @@ export class GgcSelectionService {
 
   /**
    * Start een selectie‑interactie op de kaart.
+   * Alle kaartlagen die de optie getFeatureInfoOnSingleclick aan hebben staan kunnen geselecteerd worden; via de layerIds optie kan hier nog verder op gefilterd worden.
    *
    * @param options Configuratie voor de selectie, zoals selectiemodus
    * en aanvullende selectie‑opties.

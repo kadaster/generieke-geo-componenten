@@ -39,7 +39,7 @@ export class ExampleDrawCenterEditBasicComponent
     tags: [Tags.DRAW, Tags.MODIFY],
     imageLocation:
       "code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

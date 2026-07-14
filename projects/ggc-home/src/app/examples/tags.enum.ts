@@ -2,6 +2,7 @@ export enum Tags {
   CONTROLS = "controls",
   DATASET = "dataset",
   DRAW = "draw",
+  TWEED = "2d",
   DRIED = "3d",
   HIGHLIGHT = "highlight",
   IMPORT = "import",
