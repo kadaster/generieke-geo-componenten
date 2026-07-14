@@ -47,7 +47,7 @@ export class ExampleToolbar extends ExampleFormatComponent {
     tags: [Tags.TOOLBAR, Tags.CONTROLS],
     imageLocation:
       "code/examples/example-toolbar/example-toolbar/example-toolbar.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-toolbar/example-toolbar/example-toolbar.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-toolbar_src_public-api.GgcToolbarComponent.html`;

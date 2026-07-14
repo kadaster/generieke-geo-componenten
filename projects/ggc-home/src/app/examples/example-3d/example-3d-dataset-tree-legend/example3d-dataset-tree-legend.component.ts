@@ -42,7 +42,7 @@ export class Example3dDatasetTreeLegendComponent {
     tags: [Tags.DRIED, Tags.DATASET, Tags.LEGEND, Tags.LAYER],
     imageLocation:
       "code/examples/example-3d/example-3d-dataset-tree-legend/example-3d-dataset-tree-legend.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-dataset-tree-legend/example3d-dataset-tree-legend.component.ts";

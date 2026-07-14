@@ -304,6 +304,13 @@ export class GgcGeojsonLayerComponent
   }
 
   /**
+   * Opruimen van resources bij het vernietigen van de component.
+   */
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+  }
+
+  /**
    * Beperkt het aantal gevonden features bij een klik.
    *
    * @param feature - Het gevonden FeatureLike object.
@@ -323,12 +330,5 @@ export class GgcGeojsonLayerComponent
    */
   private decideLayerCandidate(layerCandidate: BaseLayer) {
     return this.olLayer === layerCandidate;
-  }
-
-  /**
-   * Opruimen van resources bij het vernietigen van de component.
-   */
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
   }
 }

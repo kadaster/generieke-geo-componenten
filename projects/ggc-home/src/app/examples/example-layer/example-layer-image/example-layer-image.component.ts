@@ -25,7 +25,7 @@ export class ExampleLayerImageComponent
     tags: [Tags.LAYER],
     imageLocation:
       "code/examples/example-layer/example-layer-image/example-layer-image.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-layer/example-layer-image/example-layer-image.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.ImageLayerOptions.html`;

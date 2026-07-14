@@ -35,7 +35,7 @@ export class ExampleDrawTracingComponent
     tags: [Tags.DRAW, Tags.TRACE],
     imageLocation:
       "code/examples/example-draw/example-draw-tracing/example-draw-tracing.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-draw/example-draw-tracing/example-draw-tracing.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;

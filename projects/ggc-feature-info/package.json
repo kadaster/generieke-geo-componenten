@@ -1,14 +1,14 @@
 {
   "name": "@kadaster/ggc-feature-info",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
-    "@kadaster/ggc-map-3d": "*",
     "bootstrap": ">=4.3.1 <6.0.0",
     "ol": "^10.7.0",
     "popper.js": "^1.16.1",
-    "@kadaster/ggc-map": "^3.0.0"
+    "@kadaster/ggc-map": "^3.0.0",
+    "@kadaster/ggc-map-3d": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "@kadaster/ggc-map-3d": {

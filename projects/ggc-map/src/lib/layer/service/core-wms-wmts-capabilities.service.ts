@@ -17,10 +17,12 @@ import { Capabilities } from "../model/capabilities.model";
   providedIn: "root"
 })
 export class CoreWmsWmtsCapabilitiesService {
-  private httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
 
-  private capabilitiesMap: Map<string, Observable<Record<string, any>>> =
-    new Map();
+  private readonly capabilitiesMap: Map<
+    string,
+    Observable<Record<string, any>>
+  > = new Map();
 
   /**
    * Haalt capabilities op voor een gegeven URL en service type.

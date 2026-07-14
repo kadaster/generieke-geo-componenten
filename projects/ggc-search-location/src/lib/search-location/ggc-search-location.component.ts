@@ -370,7 +370,14 @@ export class GgcSearchLocationComponent implements OnInit {
     if (response && response.numberReturned > -1) {
       this.showSuggestions = true;
       this.onInputFocus();
-      this.suggestions = response.features;
+      if (this.searchLocationOptions?.numberOfSuggestions === undefined) {
+        this.suggestions = response.features;
+      } else {
+        this.suggestions = response.features.slice(
+          0,
+          this.searchLocationOptions.numberOfSuggestions
+        );
+      }
       if (response.numberReturned > 0) {
         this.noSuggestionsFound = false;
         this.checkAndSearchInitialSearchterm();

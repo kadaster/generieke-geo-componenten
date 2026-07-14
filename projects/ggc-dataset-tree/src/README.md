@@ -42,17 +42,17 @@ De 1e button zal standaard geactiveerd worden.
 
 De Generieke Geo Componenten (GGC) helpen softwareontwikkelaars om snel een kaartviewer te ontwikkelen.
 
-Deze Angular front-end componenten kunnen in de eigen applicatie geïnstalleerd worden. Hiermee kan de kracht van OpenLayers kaartpresentatie snel en eenvoudig geïmplementeerd worden, gecombineerd met:
+Deze front-end componenten, gemaakt met Angular/TypeScript, kunnen in de eigen Angular-applicatie geïnstalleerd worden. Hiermee kan de kracht van OpenLayers kaartpresentatie snel en eenvoudig geïmplementeerd worden, gecombineerd met:
 
 - zoeken op de kaart
 - legenda
 - kaartweergave kiezen
 - toolbar met tekenen, meten en bewerken op de kaart
+- presenteren van object-informatie
+- 3D kaartpresentatie (met Cesium)
 
 Binnenkort komen ook extra componenten beschikbaar voor:
 
-- presenteren van object-informatie
-- 3D kaartpresentatie (met Cesium)
 - printen
 - bestandsconversie
 
@@ -70,6 +70,14 @@ De Generieke Geo Componenten bieden de volgende voordelen:
 - Light-weight, door alleen componenten te laden die nodig zijn
 
 De componenten kunnen afzonderlijk óf in samenwerking gebruikt worden. Hierdoor kun je zelf bepalen welke interactie wenselijk is in de applicatie.
+
+## Internationalisatie
+
+De Generieke Geo Componenten ondersteunen de Nederlandse standaarden:
+* Nederlandse taal
+* Rijksdriehoekscoördinaten:
+  * ggc-map ondersteunt coördinatenreferentiesysteem "RD New" (EPSG:28992)
+  * ggc-map-3d ondersteunt coördinatenreferentiesysteem "RD New" (EPSG:28992) en "WGS 84" (EPSG:4326)
 
 ## Lijst van componenten
 

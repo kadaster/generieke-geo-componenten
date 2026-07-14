@@ -339,6 +339,18 @@ export class GgcLayerService {
   }
 
   /**
+   * Reload the provided layer; it will remove and add the layer.
+   * Useful if there are known changes in the data of the url.
+   * Note: a persistent layer cannot be reloaded
+   * @param layerId The layerId to reload
+   * @param mapIndex The mapIndex of the layer
+   */
+  reloadLayer(layerId: string, mapIndex = DEFAULT_MAPINDEX) {
+    this.removeLayer(mapIndex, layerId);
+    this.addLayerFromMapConfig(layerId, mapIndex);
+  }
+
+  /**
    * Vraagt een laag op van de kaart.
    */
   getLayer(
@@ -473,6 +485,20 @@ export class GgcLayerService {
   }
 
   /**
+   * Haalt de complete configuratie van een mapIndex op.
+   *
+   * De configuratie bevat metadata zoals:
+   * - titel
+   * - legendainformatie
+   * - resolutie‑instellingen
+   */
+  getLayerConfigs(
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Webservice[] | undefined {
+    return this.mapConfigurations.get(mapIndex);
+  }
+
+  /**
    * Haalt de configuratie van een laag op.
    *
    * De configuratie bevat metadata zoals:
@@ -482,7 +508,7 @@ export class GgcLayerService {
    */
   getLayerConfig(
     layerId: string,
-    mapIndex: string
+    mapIndex: string = DEFAULT_MAPINDEX
   ): AbstractConfigurableLayerOptions | undefined {
     return this.mapConfigurations
       .get(mapIndex)

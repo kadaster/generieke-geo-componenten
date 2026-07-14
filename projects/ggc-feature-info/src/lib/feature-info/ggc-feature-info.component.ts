@@ -37,10 +37,7 @@ import {
   MapComponentEventTypes,
   ViewerType
 } from "@kadaster/ggc-models";
-import {
-  declusterFeatures,
-  featureCollectionForLayerHasCluster
-} from "@kadaster/ggc-map";
+import { declusterFeatures } from "@kadaster/ggc-map";
 import { Subscription } from "rxjs";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
@@ -366,7 +363,7 @@ export class GgcFeatureInfoComponent
       if (collection) {
         this.featureInfoCollection = new FeatureInfoCollection(
           undefined,
-          featureCollectionForLayerHasCluster(collection)
+          this.featureCollectionIsClustered(collection)
             ? declusterFeatures(collection.features)
             : collection.features,
           collection.layerTitle,
@@ -374,6 +371,14 @@ export class GgcFeatureInfoComponent
         );
       }
     }
+  }
+
+  private featureCollectionIsClustered(
+    featureinfo: FeatureCollectionForLayer
+  ): boolean {
+    return featureinfo.features.some((feature) => {
+      return typeof feature?.get === "function" && feature.get("features");
+    });
   }
 
   /**
@@ -497,7 +502,7 @@ export class GgcFeatureInfoComponent
     this.featureInfoCollection = new FeatureInfoCollection(
       undefined,
       collections.flatMap((feature) =>
-        featureCollectionForLayerHasCluster(feature)
+        this.featureCollectionIsClustered(feature)
           ? declusterFeatures(feature.features)
           : (feature.features ?? [])
       ),

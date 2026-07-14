@@ -50,7 +50,7 @@ export class ExampleDatasetTreeTemplatesComponent
     tags: [Tags.DATASET, Tags.LAYER],
     imageLocation:
       "code/examples/example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.png"
-  } as ComponentInfo;
+  };
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetTreeComponent.html`;
   urlComponentModule =
     "example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts";

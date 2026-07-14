@@ -38,7 +38,7 @@ export class ExampleFeatureInfoAdvComponent
     tags: [Tags.OBJECTINFO],
     imageLocation:
       "code/examples/example-map/example-feature-info-adv/example-feature-info-adv.png"
-  } as ComponentInfo;
+  };
   urlComponentModule =
     "example-map/example-feature-info-adv/example-feature-info-adv.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/feature-info_public-api.GgcFeatureInfo.html`;

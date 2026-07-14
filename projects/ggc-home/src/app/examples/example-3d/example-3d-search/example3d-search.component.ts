@@ -44,7 +44,7 @@ export class Example3dSearchComponent {
     tags: [Tags.DRIED, Tags.SEARCH, Tags.LOCATION],
     imageLocation:
       "code/examples/example-3d/example-3d-search/example-3d-search.png"
-  } as ComponentInfo;
+  };
 
   urlComponentModule =
     "example-3d/example-3d-search/example3d-search.component.ts";
