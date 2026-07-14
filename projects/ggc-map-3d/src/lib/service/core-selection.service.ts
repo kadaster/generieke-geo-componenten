@@ -29,6 +29,10 @@ import {
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
 import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
+import {
+  cesium3DTileFeatureToGenericFeatures,
+  cesiumGeoJsonFeatureToGenericFeatures
+} from "../utils/feature-utils";
 
 export type ScreenSpaceEvent =
   | ScreenSpaceEventHandler.MotionEvent
@@ -146,11 +150,9 @@ export class CoreSelectionService {
 
           let features: object[] = [];
           if (event.feature instanceof Cesium3DTileFeature) {
-            features = this.cesium3DTileFeatureToGenericFeatures(event.feature);
+            features = cesium3DTileFeatureToGenericFeatures(event.feature);
           } else if (event.feature instanceof Entity) {
-            features = this.cesiumGeoJsonFeatureToGenericFeatures(
-              event.feature
-            );
+            features = cesiumGeoJsonFeatureToGenericFeatures(event.feature);
           }
 
           featureCollectionForCoordinate.featureCollectionForLayers.push({
@@ -433,32 +435,5 @@ export class CoreSelectionService {
     this.lastClickedEntity = undefined;
     this.isSilhouetteActivated = false;
     this.highlightMap = new Map<ScreenSpaceEventType, PostProcessStage>();
-  }
-
-  private cesium3DTileFeatureToGenericFeatures(
-    feature: Cesium3DTileFeature | undefined
-  ) {
-    const properties: object[] = [];
-    if (feature !== undefined) {
-      const obj: { [x: string]: string } = {};
-      feature.getPropertyIds().forEach((id: string) => {
-        obj[id] = feature.getProperty(id);
-      });
-      properties.push(obj);
-    }
-    return properties;
-  }
-
-  private cesiumGeoJsonFeatureToGenericFeatures(entity: Entity | undefined) {
-    const properties: object[] = [];
-    if (entity?.properties !== undefined) {
-      const obj: { [x: string]: string } = {};
-      entity?.properties.propertyNames.forEach((id: string) => {
-        obj[id] =
-          entity.properties === undefined ? "" : entity.properties[id]._value;
-      });
-      properties.push(obj);
-    }
-    return properties;
   }
 }
