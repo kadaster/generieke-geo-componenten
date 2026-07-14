@@ -376,7 +376,9 @@ export class GgcFeatureInfoComponent
   private featureCollectionIsClustered(
     featureinfo: FeatureCollectionForLayer
   ): boolean {
-    return featureinfo.features.some((feature) => feature.get("features"));
+    return featureinfo.features.some((feature) => {
+      return typeof feature?.get === "function" && feature.get("features");
+    });
   }
 
   /**

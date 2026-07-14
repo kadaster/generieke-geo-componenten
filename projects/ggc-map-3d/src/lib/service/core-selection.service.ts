@@ -13,7 +13,7 @@ import {
   ScreenSpaceEventType
 } from "@cesium/engine";
 import { Viewer } from "@cesium/widgets";
-import { filter, map, Observable, Subject } from "rxjs";
+import { filter, map, Observable, ReplaySubject } from "rxjs";
 import { Tiles3dLayerService } from "../layers/tiles3d-layer.service";
 import {
   SelectionConfig,
@@ -55,8 +55,8 @@ export class CoreSelectionService {
   private readonly coreViewerService = inject(CoreViewerService);
   private readonly sharedLayerService = inject(GgcSharedLayerService);
   private selections: SelectionConfig[] = [];
-  private readonly clickEvent: Subject<SelectionEvent> =
-    new Subject<SelectionEvent>();
+  private readonly clickEvent: ReplaySubject<SelectionEvent> =
+    new ReplaySubject<SelectionEvent>(1);
 
   constructor() {
     this.coreViewerService.getViewerObservable().subscribe((viewer) => {
@@ -141,10 +141,8 @@ export class CoreSelectionService {
         const featureCollectionForCoordinate =
           new FeatureCollectionForCoordinate();
 
-        if (event.layerName) {
-          // The provided layerName is already a layerId
-          const layerId = event.layerName;
-          const layerTitle = this.sharedLayerService.getTitle(layerId);
+        if (event.layerId) {
+          const layerTitle = this.sharedLayerService.getTitle(event.layerId);
 
           let features: object[] = [];
           if (event.feature instanceof Cesium3DTileFeature) {
@@ -157,7 +155,7 @@ export class CoreSelectionService {
 
           featureCollectionForCoordinate.featureCollectionForLayers.push({
             layerName: "",
-            layerId: layerId,
+            layerId: event.layerId,
             layerTitle: layerTitle,
             features: features as any
           });
@@ -189,7 +187,7 @@ export class CoreSelectionService {
     ) {
       // Als het gaat om een GeoJSON feature (Entity), gebruik dan de originele entitiesFunction voor de styling
       const entitiesFunction = this.geoJsonLayerService.getEntitiesFunction(
-        this.geoJsonLayerService.getLayerName(this.lastClickedEntity)
+        this.geoJsonLayerService.getLayerId(this.lastClickedEntity)
       );
       entitiesFunction?.(this.lastClickedEntity);
       this.lastClickedEntity = undefined;
@@ -266,9 +264,13 @@ export class CoreSelectionService {
       feature: pickedFeature,
       layerName:
         pickedFeature instanceof Cesium3DTileFeature
-          ? this.tiles3DService.getLayerName(pickedFeature)
-          : this.geoJsonLayerService.getLayerName(pickedFeature),
-      selectIndex: selection.selectIndex
+          ? this.tiles3DService.getLayerId(pickedFeature)
+          : this.geoJsonLayerService.getLayerId(pickedFeature),
+      selectIndex: selection.selectIndex,
+      layerId:
+        pickedFeature instanceof Cesium3DTileFeature
+          ? this.tiles3DService.getLayerId(pickedFeature)
+          : this.geoJsonLayerService.getLayerId(pickedFeature)
     });
   }
 
@@ -315,7 +317,7 @@ export class CoreSelectionService {
     if (type == ScreenSpaceEventType.LEFT_CLICK) {
       const entitiesHighlightFunction =
         this.geoJsonLayerService.getEntitiesHighlightFunction(
-          this.geoJsonLayerService.getLayerName(entity)
+          this.geoJsonLayerService.getLayerId(entity)
         );
       entitiesHighlightFunction?.(entity);
       this.lastClickedEntity = entity;
