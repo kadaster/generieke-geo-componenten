@@ -240,9 +240,15 @@ export class GgcSearchLocationComponent implements OnInit {
     this.searchTerm$.next(this.inputValue);
     this.resetSuggestionsAndResult();
     if (this.searchLocationOptions?.markResult) {
-      ((await this.connectService.getMapService()) as any)?.clearHighlightLayer(
-        this.searchLocationOptions?.mapIndex
-      );
+      if (this.viewerType() === ViewerType.TWEE_D) {
+        (
+          (await this.connectService.getMapService()) as any
+        )?.clearHighlightLayer(this.searchLocationOptions?.mapIndex);
+      } else {
+        (
+          (await this.connectService.getGgcLocationService()) as any
+        )?.removeLocationMark();
+      }
     }
   }
 
@@ -715,7 +721,7 @@ export class GgcSearchLocationComponent implements OnInit {
     this.noSuggestionsFound = false;
     this.result = SearchComponentEventTypes.SEARCH_LOCATION_RESULT;
     this.searchLocationService
-      .getLocationEventsObservable()
+      .getLocationEventsObservable(this.searchLocationOptions.mapIndex)
       .pipe(first())
       .subscribe((event: number[]) => {
         this.inputValue = "Uw locatie";
@@ -746,7 +752,10 @@ export class GgcSearchLocationComponent implements OnInit {
       });
 
     this.loadCurrentLocation = true;
-    this.searchLocationService.getLocation(false);
+    this.searchLocationService.getLocation(
+      false,
+      this.searchLocationOptions?.mapIndex
+    );
   }
 
   private async loadFormatType() {

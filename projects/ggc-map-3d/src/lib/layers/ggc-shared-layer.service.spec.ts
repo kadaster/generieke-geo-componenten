@@ -150,6 +150,18 @@ describe("SharedLayerService", () => {
     expect(tiles3dServiceSpy.removeLayer).toHaveBeenCalledWith("id1");
   });
 
+  it("should reload a layer by removing and re-adding it", () => {
+    const layerId = "id1";
+
+    const removeSpy = vi.spyOn(service, "removeLayer");
+    const addSpy = vi.spyOn(service as any, "addLayerFromLayersConfig");
+
+    service.reloadLayer(layerId);
+
+    expect(removeSpy).toHaveBeenCalledWith(layerId);
+    expect(addSpy).toHaveBeenCalledWith(layerId);
+  });
+
   it("should return true if any service reports visible", () => {
     wmtsServiceSpy.isVisible.mockReturnValue(false);
     geoJsonServiceSpy.isVisible.mockReturnValue(true);
