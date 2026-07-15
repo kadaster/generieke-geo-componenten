@@ -178,6 +178,16 @@ export class GgcSharedLayerService {
   }
 
   /**
+   * Reload the provided layer; it will remove and add the layer.
+   * Useful if there are known changes in the data of the url.
+   * @param layerId The layerId to reload
+   */
+  reloadLayer(layerId: string) {
+    this.removeLayer(layerId);
+    this.addLayerFromLayersConfig(layerId);
+  }
+
+  /**
    * Toggle de zichtbaarheid van een laag.
    * Een laag wordt verwijderd als deze niet meer zichtbaar is en opnieuw toegevoegd mocht deze weer zichtbaar zijn.
    *
