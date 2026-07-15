@@ -82,6 +82,7 @@ De Generieke Geo Componenten ondersteunen de Nederlandse standaarden:
 ## Lijst van componenten
 
 - [@kadaster/ggc-dataset-tree](https://www.npmjs.com/package/@kadaster/ggc-dataset-tree)
+- [@kadaster/ggc-feature-info](https://www.npmjs.com/package/@kadaster/ggc-feature-info)
 - [@kadaster/ggc-legend](https://www.npmjs.com/package/@kadaster/ggc-legend)
 - [@kadaster/ggc-map](https://www.npmjs.com/package/@kadaster/ggc-map)
 - [@kadaster/ggc-map-3d](https://www.npmjs.com/package/@kadaster/ggc-map-3d)
