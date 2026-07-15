@@ -443,6 +443,16 @@ export class GgcLayerService {
   }
 
   /**
+   * Bepaalt of een laag momenteel *visible* en *enabled* is op basis van zichtbaarheid van een laag en resolutie.
+   */
+
+  isVisibleAndEnabled(layerId: string, mapIndex = DEFAULT_MAPINDEX) {
+    return (
+      this.isVisible(layerId, mapIndex) && this.getEnabled(layerId, mapIndex)
+    );
+  }
+
+  /**
    * Zet de zichtbaarheid van meerdere lagen tegelijkertijd.
    *
    * Per laag wordt gecontroleerd of:
