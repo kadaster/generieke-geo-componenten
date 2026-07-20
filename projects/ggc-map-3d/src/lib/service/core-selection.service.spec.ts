@@ -623,7 +623,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: "layer1",
+        layerId: "layer1",
         feature,
         selectIndex: "index1"
       } as any);
@@ -653,7 +653,7 @@ describe("CoreSelectionService", () => {
       });
 
       clickSubject.next({
-        layerName: "layer1",
+        layerId: "layer1",
         feature: undefined,
         selectIndex: "different"
       } as any);
@@ -673,7 +673,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: "layer1",
+        layerId: "layer1",
         feature: undefined,
         selectIndex: "other-index"
       } as any);
@@ -700,7 +700,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: "layer2",
+        layerId: "layer2",
         feature: entity,
         selectIndex: "index1"
       } as any);
@@ -723,7 +723,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: undefined,
+        layerId: undefined,
         feature: undefined,
         selectIndex: "index1"
       } as any);

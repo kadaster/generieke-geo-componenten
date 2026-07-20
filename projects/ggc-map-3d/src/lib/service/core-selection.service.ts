@@ -150,9 +150,11 @@ export class CoreSelectionService {
 
           let features: object[] = [];
           if (event.feature instanceof Cesium3DTileFeature) {
-            features = cesium3DTileFeatureToGenericFeatures(event.feature);
+            features = this.cesium3DTileFeatureToGenericFeatures(event.feature);
           } else if (event.feature instanceof Entity) {
-            features = cesiumGeoJsonFeatureToGenericFeatures(event.feature);
+            features = this.cesiumGeoJsonFeatureToGenericFeatures(
+              event.feature
+            );
           }
 
           featureCollectionForCoordinate.featureCollectionForLayers.push({
@@ -173,6 +175,16 @@ export class CoreSelectionService {
         );
       })
     );
+  }
+
+  private cesium3DTileFeatureToGenericFeatures(
+    feature: Cesium3DTileFeature
+  ): object[] {
+    return cesium3DTileFeatureToGenericFeatures(feature);
+  }
+
+  private cesiumGeoJsonFeatureToGenericFeatures(feature: Entity): object[] {
+    return cesiumGeoJsonFeatureToGenericFeatures(feature);
   }
 
   private clearHighlight(type: ScreenSpaceEventType) {
