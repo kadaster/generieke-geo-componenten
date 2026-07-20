@@ -1,9 +1,11 @@
 import { CenterModify, CenterModifyOptions } from "./center-modify";
+import { FeatureCoordinateResult } from "./center-base";
 import VectorSource from "ol/source/Vector";
 import OlMap from "ol/Map";
 import View from "ol/View";
 import Feature from "ol/Feature";
 import { LineString, Point, Polygon } from "ol/geom";
+import GeometryCollection from "ol/geom/GeometryCollection";
 import Projection from "ol/proj/Projection";
 
 describe("CenterModify", () => {
@@ -416,6 +418,93 @@ describe("CenterModify", () => {
         const coords = polygon.getCoordinates()[0];
         expect(coords[0]).toEqual(coords[coords.length - 1]);
         expect(coords.some((c) => c[0] === 150 && c[1] === 200)).toBe(false);
+      });
+    });
+
+    describe("getSketchCoordinates", () => {
+      it("returns point coordinates when sketch geometry is Point", () => {
+        const centerModify = new CenterModify(centerModifyOptions);
+        centerModify["sketchFeature"] = new Feature(new Point([10, 20]));
+
+        expect(centerModify.getSketchCoordinates()).toEqual([[10, 20]]);
+      });
+
+      it("returns line coordinates without the last coordinate for LineString sketches", () => {
+        const centerModify = new CenterModify(centerModifyOptions);
+        centerModify["sketchFeature"] = new Feature(
+          new LineString([
+            [0, 0],
+            [10, 10],
+            [20, 20]
+          ])
+        );
+
+        expect(centerModify.getSketchCoordinates()).toEqual([
+          [0, 0],
+          [10, 10]
+        ]);
+      });
+
+      it("returns polygon coordinates without second-to-last coordinate for Polygon sketches", () => {
+        const centerModify = new CenterModify(centerModifyOptions);
+        centerModify["sketchFeature"] = new Feature(
+          new Polygon([
+            [
+              [0, 0],
+              [10, 0],
+              [10, 10],
+              [0, 10],
+              [0, 0]
+            ]
+          ])
+        );
+
+        expect(centerModify.getSketchCoordinates()).toEqual([
+          [0, 0],
+          [10, 0],
+          [10, 10],
+          [0, 0]
+        ]);
+      });
+
+      it("returns highlighted feature coordinates when there is no sketch geometry", () => {
+        const centerModify = new CenterModify(centerModifyOptions);
+        const highlightedFeature = new Feature(
+          new LineString([
+            [5, 5],
+            [15, 15]
+          ])
+        );
+        centerModify["centerPoint"] = new Point([100, 100]);
+        centerModify["sketchFeature"] = undefined;
+        centerModify["getClosestFeatureCoordinate"] = () =>
+          ({
+            feature: highlightedFeature,
+            coordinate: [5, 5]
+          }) as FeatureCoordinateResult;
+
+        expect(centerModify.getSketchCoordinates()).toEqual([
+          [5, 5],
+          [15, 15]
+        ]);
+      });
+
+      it("returns an empty array and warns for unknown sketch geometry types", () => {
+        const centerModify = new CenterModify(centerModifyOptions);
+        centerModify["sketchFeature"] = new Feature(new GeometryCollection([]));
+        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+        expect(centerModify.getSketchCoordinates()).toEqual([]);
+        expect(warnSpy).toHaveBeenCalledWith("Unknown geometry type");
+      });
+
+      it("returns an empty array when there is no sketch and no highlighted feature", () => {
+        const centerModify = new CenterModify(centerModifyOptions);
+        centerModify["centerPoint"] = new Point([100, 100]);
+        centerModify["sketchFeature"] = undefined;
+        centerModify["getClosestFeatureCoordinate"] = () => undefined;
+
+        expect(centerModify.getSketchCoordinates()).toEqual([]);
       });
     });
   });

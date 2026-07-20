@@ -9,6 +9,10 @@ import { GeometryType } from "ol/render/webgl/MixedGeometryBatch";
 import { StyleLike } from "ol/style/Style";
 import { Coordinate } from "ol/coordinate";
 import { CenterBase } from "./center-base";
+import {
+  getLineWithoutLastCoord,
+  getPolygonWithoutSecondToLastCoord
+} from "./center-coordinate-utils";
 
 export interface CenterDrawOptions extends Options {
   crossHairStyle?: StyleLike;
@@ -203,45 +207,13 @@ export class CenterDraw extends CenterBase {
       case "Point":
         return [(sketchGeometry as Point).getCoordinates()];
       case "LineString":
-        return this.getWithoutLastCoord(sketchGeometry as LineString);
+        return getLineWithoutLastCoord(sketchGeometry as LineString);
       case "Polygon":
-        return this.getWithoutSecondToLastCoord(sketchGeometry as Polygon);
+        return getPolygonWithoutSecondToLastCoord(sketchGeometry as Polygon);
       default:
         console.warn("Unknown geometry type");
         return [];
     }
-  }
-
-  private getWithoutLastCoord(line: LineString): Coordinate[] {
-    const coords = [...line.getCoordinates()];
-    const index = coords.length - 1;
-    coords.splice(index, 1);
-    return coords;
-  }
-
-  private getWithoutSecondToLastCoord(polygon: Polygon): Coordinate[] {
-    const rings = [...polygon.getCoordinates()];
-    if (!rings || rings.length === 0) {
-      return [];
-    }
-    const outerRing = [...rings[0]];
-    const length = outerRing.length;
-    /*
-      Wanneer de polygon getekend wordt vult deze de coördinaten[] met 3 punten.
-      Daarnaast is er ook nog het punt waar de pointer staat op de kaart.
-      Om alleen de gezette punten terug te geven worden de laatste 2 punten verwijderd.
-     */
-    if (length <= 4) {
-      outerRing.splice(-2);
-      return outerRing.splice(-2);
-    }
-    /*
-     Als je 3 punten hebt geplaatst is er een geldige polygon en kan de tekening ook worden afgerond,
-     Hier verwijderen we alleen het voorlaatste punt (dit is de positie van de pointer op de kaart).
-    */
-    const index = outerRing.length - 2;
-    outerRing.splice(index, 1);
-    return outerRing;
   }
 
   private abortDrawing() {
