@@ -102,16 +102,16 @@
         </button>
       </div>
     </div>
-    @if (showSuggestions() || showCurrentLocation()) {
+    @if (hasFocusableSuggestions()) {
       <ul
         cdkListbox
         cdkListboxUseActiveDescendant="true"
         role="listbox"
         class="list-group list-group-ggc-search-suggestions"
-        [tabindex]="0"
+        [attr.tabindex]="hasFocusableSuggestions() ? '0' : '-1'"
         [id]="elementIds.suggestionListId ?? ''"
         [attr.aria-labelledby]="
-          suggestions().length > 0 ? elementIds.searchLabelId : undefined
+          suggestionsLength() > 0 ? elementIds.searchLabelId : undefined
         "
         (cdkListboxValueChange)="handleCdkListboxEvent($event)"
         (keydown)="onListKeydown($event)"

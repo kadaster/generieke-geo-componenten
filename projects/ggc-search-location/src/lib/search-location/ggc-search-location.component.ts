@@ -88,6 +88,19 @@ export class GgcSearchLocationComponent implements OnInit {
   protected readonly hasLocation: Signal<boolean> = computed(
     () => this.searchLocationOptions?.searchCurrentLocation !== undefined
   );
+  protected readonly suggestionsLength: Signal<number> = computed(
+    () => this.suggestions().length
+  );
+  protected readonly hasFocusableSuggestions: Signal<boolean> = computed(() => {
+    return (
+      this.showSuggestions() &&
+      (this.suggestionsLength() > 0 ||
+        (this.showCurrentLocation() &&
+          this.searchLocationOptions?.searchCurrentLocation?.type ===
+            SearchCurrentLocationType.SELECT) ||
+        this.noSuggestionsFound())
+    );
+  });
 
   @ViewChildren(CdkOption, {})
   private readonly listOptions: QueryList<
@@ -428,7 +441,7 @@ export class GgcSearchLocationComponent implements OnInit {
           this.result
         )
       );
-    } else if (this.suggestions().length > 0) {
+    } else if (this.suggestionsLength() > 0) {
       this.processPdokLocationApiSearchFeatureResult(this.suggestions()[0]);
     } else {
       this.events.emit(
@@ -441,7 +454,7 @@ export class GgcSearchLocationComponent implements OnInit {
   }
 
   private checkAndSearchInitialSearchterm() {
-    if (this.hasInitialSearchterm && this.suggestions().length === 1) {
+    if (this.hasInitialSearchterm && this.suggestionsLength() === 1) {
       this.processPdokLocationApiSearchFeatureResult(this.suggestions()[0]);
     }
   }
