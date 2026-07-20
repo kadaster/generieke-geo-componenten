@@ -721,7 +721,7 @@ export class GgcSearchLocationComponent implements OnInit {
     this.noSuggestionsFound = false;
     this.result = SearchComponentEventTypes.SEARCH_LOCATION_RESULT;
     this.searchLocationService
-      .getLocationEventsObservable(this.searchLocationOptions.mapIndex)
+      .getLocationEventsObservable(this.searchLocationOptions?.mapIndex)
       .pipe(first())
       .subscribe((event: number[]) => {
         this.inputValue = "Uw locatie";
