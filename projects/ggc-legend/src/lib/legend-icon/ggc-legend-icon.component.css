@@ -2,6 +2,10 @@
   margin: 3px;
 }
 
+.ggc-dl-iconlist-image {
+  margin: 2px 0;
+}
+
 .ggc-dl-iconlist-text {
   margin-left: 10px;
   display: inline-block;
