@@ -111,7 +111,9 @@
         [tabindex]="0"
         [id]="elementIds.suggestionListId"
         [attr.aria-labelledby]="
-          suggestions.length > 0 ? elementIds.searchLabelId : undefined
+          searchLocationOptions?.labelText
+            ? elementIds.searchLabelId
+            : undefined
         "
         (cdkListboxValueChange)="handleCdkListboxEvent($event)"
         (keydown)="onListKeydown($event)"
@@ -154,11 +156,17 @@
               tabindex="0"
               [attr.id]="elementIds.suggestionListId + '-' + idx"
               [attr.aria-live]="idx === 0 ? 'polite' : 'off'"
+              [attr.aria-labelledby]="
+                elementIds.suggestionListId + '-label-' + idx
+              "
               (keydown)="onListKeydown($event)"
               (keyup)="onListKeyup($event)"
               [cdkOption]="suggestion"
             >
-              <span [innerHTML]="suggestion.properties.highlight"></span>
+              <span
+                [attr.id]="elementIds.suggestionListId + '-label-' + idx"
+                [innerHTML]="suggestion.properties.highlight"
+              ></span>
               @if (
                 searchLocationOptions?.hideCollectionId !== true &&
                 suggestion.properties?.collection_id

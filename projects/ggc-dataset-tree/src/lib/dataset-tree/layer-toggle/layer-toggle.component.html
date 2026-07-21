@@ -1,12 +1,12 @@
 <ng-container>
   <div
-    class="ggc-dt-layer ggc-dt-layer-btn"
-    [ngClass]="{ 'ggc-dt-layer-disabled': !enabled() }"
-    role="checkbox"
-    [attr.aria-checked]="visible()"
     (click)="toggleVisibility()"
     (keydown.space)="$event.preventDefault(); toggleVisibility()"
-    tabindex="0"
+    [attr.aria-checked]="visible()"
+    [attr.tabindex]="enabled() ? '0' : null"
+    [ngClass]="{ 'ggc-dt-layer-disabled': !enabled() }"
+    class="ggc-dt-layer ggc-dt-layer-btn"
+    role="checkbox"
   >
     @if (!enabled()) {
       <span class="{{ iconDisabled }}"></span>
@@ -17,12 +17,12 @@
     }
     <span class="ggc-dt-ls-layer-title">
       <ng-container
-        [ngTemplateOutlet]="
-          layerLabelComponent ? layerLabelComponent : defaultValueLayerTemplate
-        "
         [ngTemplateOutletContext]="{
           layer: layer
         }"
+        [ngTemplateOutlet]="
+          layerLabelComponent ? layerLabelComponent : defaultValueLayerTemplate
+        "
       ></ng-container>
       <ng-template #defaultValueLayerTemplate>{{ title() }}</ng-template>
     </span>

@@ -3,7 +3,16 @@
 {
   "extends": "./tsconfig.lib.json",
   "compilerOptions": {
-    "declarationMap": false
+    "declarationMap": false,
+    "paths": {
+      "@kadaster/ggc-map-3d": [
+        "projects/ggc-search-location/src/typings/search-location-shims.d.ts"
+      ],
+      "@kadaster/ggc-map": [
+        "projects/ggc-search-location/src/typings/search-location-shims.d.ts"
+      ],
+      "@kadaster/ggc-models": ["dist/ggc-models"]
+    }
   },
   "angularCompilerOptions": {
     "compilationMode": "partial"

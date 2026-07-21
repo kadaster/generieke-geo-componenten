@@ -180,6 +180,11 @@ export interface SelectionEvent {
    * Selectie index van de selectie indien opgegeven.
    */
   selectIndex?: string;
+
+  /**
+   * layerId van de bijbehorende laag
+   */
+  layerId?: string;
 }
 
 /**

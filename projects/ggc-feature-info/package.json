@@ -11,10 +11,10 @@
     "@kadaster/ggc-map-3d": "^3.0.0"
   },
   "peerDependenciesMeta": {
-    "@kadaster/ggc-map": {
+    "@kadaster/ggc-map-3d": {
       "optional": true
     },
-    "@kadaster/ggc-map-3d": {
+    "@kadaster/ggc-map": {
       "optional": true
     }
   },

@@ -34,7 +34,7 @@ import {
   providedIn: "root"
 })
 export class GgcSharedLayerService {
-  private readonly layerConfigurations: Webservice[] = [];
+  private layerConfigurations: Webservice[] = [];
 
   private readonly geoJsonLayerService = inject(GeoJsonLayerService);
   private readonly tiles3dLayerService = inject(Tiles3dLayerService);
@@ -63,6 +63,8 @@ export class GgcSharedLayerService {
    * @param services Array van {@link Webservice}
    */
   loadWebservices(services: Webservice[]) {
+    this.removeCurrentLayers();
+    this.layerConfigurations = [];
     for (const service of services) {
       this.layerConfigurations.push(service);
       this.loadWebservice(service);
@@ -86,6 +88,19 @@ export class GgcSharedLayerService {
       });
       return updatedLayer;
     });
+  }
+
+  private removeCurrentLayers() {
+    const configuration = this.layerConfigurations;
+    if (configuration) {
+      configuration.forEach((service) => {
+        service.layers.forEach((layer) => {
+          if (layer.layerId) {
+            this.removeLayer(layer.layerId);
+          }
+        });
+      });
+    }
   }
 
   /**
@@ -160,6 +175,16 @@ export class GgcSharedLayerService {
     if (service) {
       service.removeLayer(layerId);
     }
+  }
+
+  /**
+   * Reload the provided layer; it will remove and add the layer.
+   * Useful if there are known changes in the data of the url.
+   * @param layerId The layerId to reload
+   */
+  reloadLayer(layerId: string) {
+    this.removeLayer(layerId);
+    this.addLayerFromLayersConfig(layerId);
   }
 
   /**

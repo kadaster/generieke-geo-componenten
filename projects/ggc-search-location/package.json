@@ -11,10 +11,10 @@
     "proj4": "^2.8.0"
   },
   "peerDependenciesMeta": {
-    "@kadaster/ggc-map": {
+    "@kadaster/ggc-map-3d": {
       "optional": true
     },
-    "@kadaster/ggc-map-3d": {
+    "@kadaster/ggc-map": {
       "optional": true
     },
     "ol": {

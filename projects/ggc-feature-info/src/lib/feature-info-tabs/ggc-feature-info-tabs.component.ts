@@ -183,6 +183,7 @@ export class GgcFeatureInfoTabsComponent
       ? [...this.featureInfoCollectionArray]
       : [];
     this.checkShowEmptyTabs();
+
     if (this.featureInfoCollectionArrayInternal.length === 0) {
       const event = new FeatureInfoComponentEvent(
         FeatureInfoComponentEventType.SELECTEDTAB,

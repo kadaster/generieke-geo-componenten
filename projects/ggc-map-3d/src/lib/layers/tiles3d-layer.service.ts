@@ -133,7 +133,7 @@ export class Tiles3dLayerService extends BaseLayerService {
    * @param feature - Een Cesium3DTileFeature object.
    * @returns De naam van de laag als string.
    */
-  public getLayerName(feature: Cesium3DTileFeature | undefined): string {
+  public getLayerId(feature: Cesium3DTileFeature | undefined): string {
     if (feature?.tileset === undefined) {
       return "";
     }

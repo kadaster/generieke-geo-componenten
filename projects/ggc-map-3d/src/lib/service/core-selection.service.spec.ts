@@ -45,7 +45,7 @@ describe("CoreSelectionService", () => {
     } as MockedObject<CoreViewerService>;
 
     tiles3dLayerServiceSpy = {
-      getLayerName: vi.fn().mockName("Tiles3dLayerService.getLayerName")
+      getLayerId: vi.fn().mockName("Tiles3dLayerService.getLayerName")
     } as MockedObject<Tiles3dLayerService>;
 
     sharedLayerServiceSpy = {
@@ -53,7 +53,7 @@ describe("CoreSelectionService", () => {
     } as MockedObject<GgcSharedLayerService>;
 
     geoJsonLayerServiceSpy = {
-      getLayerName: vi.fn().mockName("GeoJsonLayerService.getLayerName"),
+      getLayerId: vi.fn().mockName("GeoJsonLayerService.getLayerName"),
       getEntitiesFunction: vi
         .fn()
         .mockName("GeoJsonLayerService.getEntitiesFunction"),
@@ -199,7 +199,7 @@ describe("CoreSelectionService", () => {
         .mockImplementation(() => {
           /* empty */
         });
-      tiles3dLayerServiceSpy.getLayerName.mockReturnValue("layer1");
+      tiles3dLayerServiceSpy.getLayerId.mockReturnValue("layer1");
 
       service.getClickEventsObservable().subscribe((evt: SelectionEvent) => {
         expect(evt.layerName).toBe("layer1");
@@ -234,7 +234,7 @@ describe("CoreSelectionService", () => {
         //@ts-ignore
         "updateLastClickedEntity"
       );
-      geoJsonLayerServiceSpy.getLayerName.mockReturnValue("layer1");
+      geoJsonLayerServiceSpy.getLayerId.mockReturnValue("layer1");
 
       service.getClickEventsObservable().subscribe((evt: SelectionEvent) => {
         expect(evt.layerName).toBe("layer1");
@@ -623,7 +623,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: "layer1",
+        layerId: "layer1",
         feature,
         selectIndex: "index1"
       } as any);
@@ -653,7 +653,7 @@ describe("CoreSelectionService", () => {
       });
 
       clickSubject.next({
-        layerName: "layer1",
+        layerId: "layer1",
         feature: undefined,
         selectIndex: "different"
       } as any);
@@ -673,7 +673,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: "layer1",
+        layerId: "layer1",
         feature: undefined,
         selectIndex: "other-index"
       } as any);
@@ -700,7 +700,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: "layer2",
+        layerId: "layer2",
         feature: entity,
         selectIndex: "index1"
       } as any);
@@ -723,7 +723,7 @@ describe("CoreSelectionService", () => {
         });
 
       clickSubject.next({
-        layerName: undefined,
+        layerId: undefined,
         feature: undefined,
         selectIndex: "index1"
       } as any);
