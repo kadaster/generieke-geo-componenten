@@ -194,7 +194,7 @@ describe("Tiles3dLayerService", () => {
 
     describe("on getLayerName", () => {
       it("should return empty string when feature is undefined", () => {
-        const emptyLayerName = service.getLayerName(undefined);
+        const emptyLayerName = service.getLayerId(undefined);
 
         expect(emptyLayerName).toEqual("");
       });
@@ -216,7 +216,7 @@ describe("Tiles3dLayerService", () => {
           } as Cesium3DTileset
         } as Cesium3DTileFeature;
 
-        const layerName = service.getLayerName(mockFeature);
+        const layerName = service.getLayerId(mockFeature);
 
         expect(layerName).toEqual("layerNameTwo");
       });

@@ -22,7 +22,7 @@ import {
 } from "../directive/value-template.directive";
 import { FeatureInfoDisplayType } from "../feature-info-display/feature-info-display-type";
 import { CustomFeatureInfo } from "../model/custom-feature-info.model";
-import { FeatureInfoCollection } from "../model/feature-info-collection.model";
+
 import {
   FeatureInfoComponentEvent,
   FeatureInfoComponentEventType
@@ -38,8 +38,10 @@ import {
   MapComponentEventTypes,
   ViewerType
 } from "@kadaster/ggc-models";
+import { declusterFeatures } from "@kadaster/ggc-map";
 import { Subscription } from "rxjs";
 import { FeatureInfoEventService } from "../service/feature-info-event.service";
+import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 
 /**
  * Het `FeatureInfoComponent` toont feature-informatie afkomstig uit kaartlagen
@@ -265,6 +267,7 @@ export class GgcFeatureInfoComponent
       });
     });
   }
+
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -355,8 +358,26 @@ export class GgcFeatureInfoComponent
   protected handleFeatureInfoEvent(event: FeatureInfoComponentEvent): void {
     // bijv. tab gewijzigd, data vernieuwen, etc.
     if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
-      this.featureInfoCollection = event.value;
+      const collection: FeatureCollectionForLayer = event.value;
+      if (collection) {
+        this.featureInfoCollection = new FeatureInfoCollection(
+          undefined,
+          this.featureCollectionIsClustered(collection)
+            ? declusterFeatures(collection.features)
+            : collection.features,
+          collection.layerTitle,
+          collection.layerId
+        );
+      }
     }
+  }
+
+  private featureCollectionIsClustered(
+    featureinfo: FeatureCollectionForLayer
+  ): boolean {
+    return featureinfo.features.some((feature) => {
+      return typeof feature?.get === "function" && feature.get("features");
+    });
   }
 
   /**
@@ -450,7 +471,6 @@ export class GgcFeatureInfoComponent
         if (this.hasTabs) {
           return;
         }
-
         this.subscriptionSelection = mapSelectionEvent.subscribe(
           (event: MapComponentEvent) => {
             if (
@@ -471,21 +491,30 @@ export class GgcFeatureInfoComponent
               this.featureInfoCollection = undefined;
               return;
             }
-
-            this.featureInfoCollection = new FeatureInfoCollection(
-              undefined,
-              collections.flatMap((layer) => layer.features ?? []),
-              collections
-                .map((layer) => layer.layerTitle)
-                .filter((value) => value && value.trim().length > 0)
-                .join(", "),
-              collections
-                .map((layer) => layer.layerId)
-                .filter((value) => value && value.trim().length > 0)
-                .join(", ")
-            );
+            this.createNewFeatureCollection(collections);
           }
         );
       });
+  }
+
+  private createNewFeatureCollection(
+    collections: FeatureCollectionForLayer[]
+  ): void {
+    this.featureInfoCollection = new FeatureInfoCollection(
+      undefined,
+      collections.flatMap((feature) =>
+        this.featureCollectionIsClustered(feature)
+          ? declusterFeatures(feature.features)
+          : (feature.features ?? [])
+      ),
+      collections
+        .map((layer) => layer.layerTitle)
+        .filter((value) => value && value.trim().length > 0)
+        .join(", "),
+      collections
+        .map((layer) => layer.layerId)
+        .filter((value) => value && value.trim().length > 0)
+        .join(", ")
+    );
   }
 }

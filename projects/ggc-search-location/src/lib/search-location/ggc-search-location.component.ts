@@ -253,9 +253,15 @@ export class GgcSearchLocationComponent implements OnInit {
     this.searchTerm$.next(this.inputValue());
     this.resetSuggestionsAndResult();
     if (this.searchLocationOptions?.markResult) {
-      ((await this.connectService.getMapService()) as any)?.clearHighlightLayer(
-        this.searchLocationOptions?.mapIndex
-      );
+      if (this.viewerType() === ViewerType.TWEE_D) {
+        (
+          (await this.connectService.getMapService()) as any
+        )?.clearHighlightLayer(this.searchLocationOptions?.mapIndex);
+      } else {
+        (
+          (await this.connectService.getGgcLocationService()) as any
+        )?.removeLocationMark();
+      }
     }
   }
 
@@ -383,7 +389,14 @@ export class GgcSearchLocationComponent implements OnInit {
     if (response && response.numberReturned > -1) {
       this.showSuggestions.set(true);
       this.onInputFocus();
-      this.suggestions.set(response.features);
+      if (this.searchLocationOptions?.numberOfSuggestions === undefined) {
+        this.suggestions.set(response.features);
+      } else {
+        this.suggestions.set(response.features.slice(
+          0,
+          this.searchLocationOptions.numberOfSuggestions
+        ));
+      }
       if (response.numberReturned > 0) {
         this.noSuggestionsFound.set(false);
         this.checkAndSearchInitialSearchterm();
@@ -720,7 +733,7 @@ export class GgcSearchLocationComponent implements OnInit {
     this.noSuggestionsFound.set(false);
     this.result = SearchComponentEventTypes.SEARCH_LOCATION_RESULT;
     this.searchLocationService
-      .getLocationEventsObservable()
+      .getLocationEventsObservable(this.searchLocationOptions?.mapIndex)
       .pipe(first())
       .subscribe((event: number[]) => {
         this.inputValue.set("Uw locatie");
@@ -751,8 +764,10 @@ export class GgcSearchLocationComponent implements OnInit {
       });
 
     this.loadCurrentLocation.set(true);
-    this.searchLocationService.getLocation(false);
-  }
+    this.searchLocationService.getLocation(
+      false,
+      this.searchLocationOptions?.mapIndex
+    );  }
 
   private async loadFormatType() {
     if (!this.formatTypeCache) {

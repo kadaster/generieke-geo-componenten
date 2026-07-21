@@ -82,8 +82,7 @@ export class GeoJsonLayerService extends BaseLayerService {
       ...loadOptions
     }).then((dataSource) => {
       for (const entity of dataSource.entities.values) {
-        //title
-        entity.name = layer.title;
+        entity.name = layer.layerId;
         if (config?.entitiesFunction !== undefined) {
           config.entitiesFunction(entity);
         }
@@ -109,7 +108,7 @@ export class GeoJsonLayerService extends BaseLayerService {
    * @param entity - Een Cesium Entity.
    * @returns De id (name in entity van cesium) van de laag of een lege string.
    */
-  public getLayerName(entity: Entity | undefined): string {
+  public getLayerId(entity: Entity | undefined): string {
     return entity?.name ?? "";
   }
 

@@ -19,6 +19,8 @@ import {
   getClosestVertex,
   getCoordinatesOfFeature,
   getCoordinatesOfFeatureWithMiddlePoints,
+  getLineWithoutLastCoord,
+  getPolygonWithoutSecondToLastCoord,
   intersectsCoordinate,
   isCoordinateInFeature
 } from "./center-coordinate-utils";
@@ -192,6 +194,39 @@ export class CenterModify extends CenterBase {
     }
     this.placeSelectedPoint();
     this.getNewHightlightedFeature();
+  }
+
+  /*
+   * Geeft de Geometry die getekend wordt terug,
+   * zonder de huidige positie van de cursor.
+   */
+  getSketchCoordinates() {
+    const sketchGeometry = this.sketchFeature?.getGeometry();
+    if (sketchGeometry) {
+      switch (sketchGeometry.getType()) {
+        case "Point":
+          return [(sketchGeometry as Point).getCoordinates()];
+        case "LineString":
+          return getLineWithoutLastCoord(sketchGeometry as LineString);
+        case "Polygon":
+          return getPolygonWithoutSecondToLastCoord(sketchGeometry as Polygon);
+        default:
+          console.warn("Unknown geometry type");
+          return [];
+      }
+    }
+    // if no current sketch geometry, return the highlighted feature
+    const highlightedFeature = this.getClosestFeatureCoordinate(
+      this.targetSource.getFeatures(),
+      this.centerPoint.getCoordinates(),
+      this.pixelTolerance
+    )?.feature;
+
+    if (highlightedFeature) {
+      return getCoordinatesOfFeature(highlightedFeature) ?? [];
+    }
+
+    return [];
   }
 
   cleanup() {

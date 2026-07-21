@@ -14,6 +14,9 @@ export interface Webservice {
   /** URL van de service */
   url: string;
 
+  /** extra http headers zoals bijvoorbeeld een API-key bij het opvragen van een webservice */
+  customHeaders?: [string, string][];
+
   /** Kaartlagen die van de service opgehaald worden */
   layers: AbstractConfigurableLayerOptions[];
 }

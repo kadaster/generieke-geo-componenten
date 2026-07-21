@@ -116,6 +116,7 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private viewer!: Viewer;
   private terrainProvider: TerrainProvider;
   private camera: Camera | undefined;
+  private lastCameraOptions: CameraOptions | undefined;
   private readonly previousCameraValues = new BehaviorSubject<CameraValues>(
     {} as CameraValues
   );
@@ -162,6 +163,7 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @Input()
   set cameraOptions(cameraOptions: CameraOptions) {
+    this.lastCameraOptions = cameraOptions;
     this.flyTo(cameraOptions);
   }
 
@@ -201,13 +203,12 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.viewerOptions?.elementId) {
       this.cesiumElementId = this.viewerOptions.elementId;
     }
-    this.loadWebservices();
   }
 
   ngAfterViewInit(): void {
     this.initViewer().then(() => {
       this.init();
-      this.flyTo(this.cameraOptions);
+      this.flyTo(this.lastCameraOptions);
       this.setCameraLogger();
       this.loadWebservices();
       this.isInitialized = true;
@@ -348,7 +349,7 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private async flyTo(cameraOptions: CameraOptions) {
+  private async flyTo(cameraOptions: CameraOptions | undefined) {
     if (!this.viewer?.camera || cameraOptions === undefined) {
       return;
     }

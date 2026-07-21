@@ -170,7 +170,7 @@ describe("CoreDrawService", () => {
     const centerDraw = new CenterDraw({
       type: "LineString"
     });
-    service["drawInteractions"].set(mapIndex, centerDraw);
+    service["activeCenterInteraction"] = centerDraw;
     vi.spyOn(coreMapService, "checkMapIndex").mockReturnValue(true);
     vi.spyOn(centerDraw, "getSketchCoordinates").mockImplementation((() => {
       /* empty */

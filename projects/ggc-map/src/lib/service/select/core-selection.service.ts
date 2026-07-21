@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
-import { Observable, Subject } from "rxjs";
+import { Observable, ReplaySubject } from "rxjs";
 import { SelectOptions } from "../../model/select-options";
 import { GgcMapService } from "../../map/service/ggc-map.service";
 import { Select } from "ol/interaction";
@@ -48,8 +48,8 @@ export class CoreSelectionService {
     "Er is iets mis gegaan in de CoreSelectionService: het coordinaat van de kaartlaag komt" +
     " niet overeen met het verwachte coordinaat van het klik-event in de kaart.";
 
-  private readonly subjectSelectEvents: Subject<MapComponentEvent> =
-    new Subject();
+  private readonly subjectSelectEvents: ReplaySubject<MapComponentEvent> =
+    new ReplaySubject<MapComponentEvent>(1);
 
   private readonly activeSelectInteractions: Map<
     string,

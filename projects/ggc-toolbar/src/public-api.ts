@@ -10,3 +10,4 @@ export * from "./lib/toolbar/toolbar-item-draw/ggc-toolbar-item-draw.component";
 export * from "./lib/toolbar/toolbar-item-measure/ggc-toolbar-item-measure.component";
 export * from "./lib/toolbar/toolbar-item/ggc-toolbar-item.component";
 export * from "./lib/toolbar/toolbar/ggc-toolbar.component";
+export * from "./lib/service/ggc-toolbar.service";

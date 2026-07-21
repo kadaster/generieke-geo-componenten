@@ -8,6 +8,7 @@ export * from "./lib/viewer/ggc-viewer.component";
 export * from "./lib/model/interfaces";
 export * from "./lib/utils/defaults";
 export * from "./lib/model/enums";
+export * from "./lib/utils/feature-utils";
 export * from "./lib/service/ggc-drawing.service";
 export * from "./lib/service/ggc-viewer.service";
 export * from "./lib/service/ggc-location.service";

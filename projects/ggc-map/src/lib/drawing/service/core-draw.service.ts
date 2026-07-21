@@ -198,9 +198,17 @@ export class CoreDrawService {
   getSketchCoordinates(mapIndex: string): Coordinate[] | undefined {
     const mapIndexExists = this.coreMapService.checkMapIndex(mapIndex);
     if (mapIndexExists) {
-      const drawInteraction = this.drawInteractions.get(mapIndex);
-      if (drawInteraction && drawInteraction instanceof CenterDraw) {
-        return drawInteraction.getSketchCoordinates();
+      const currentCenterInteraction = this.activeCenterInteraction;
+
+      if (!currentCenterInteraction) {
+        return undefined;
+      }
+
+      if (
+        currentCenterInteraction instanceof CenterDraw ||
+        currentCenterInteraction instanceof CenterModify
+      ) {
+        return currentCenterInteraction.getSketchCoordinates();
       }
     } else {
       return;

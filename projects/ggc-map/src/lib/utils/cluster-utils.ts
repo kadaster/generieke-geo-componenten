@@ -1,6 +1,6 @@
 import { Geometry } from "ol/geom";
 import Feature from "ol/Feature";
-import { FeatureCollectionForLayer } from "../service/select/selection-state.model";
+import { FeatureCollectionForLayer } from "@kadaster/ggc-models";
 
 /**
  * Controleert of een featurecollectie voor een laag één of meerdere

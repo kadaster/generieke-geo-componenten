@@ -10,7 +10,7 @@
   >
     @for (info of featureInfoCollectionArrayInternal(); track info) {
       <button
-        [id]="'tab-' + info.layerTitle"
+        [id]="'tab-' + info.layerId"
         role="tab"
         [attr.aria-controls]="'tabpanel-' + info.layerTitle"
         [attr.aria-selected]="info.layerId === selectedTab()"

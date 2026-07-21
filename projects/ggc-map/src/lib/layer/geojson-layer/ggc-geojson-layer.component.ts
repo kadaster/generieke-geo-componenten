@@ -23,6 +23,8 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import { Extent } from "ol/extent";
+import Projection from "ol/proj/Projection";
 
 /**
  * Door `<ggc-geojson-layer></ggc-geojson-layer>` op te nemen in de HTML kunnen
@@ -109,7 +111,38 @@ export class GgcGeojsonLayerComponent
     }
 
     this.vectorSource = new VectorSource(options);
+    // voeg een eigen loader toe ipv de OL loader om customheaders te kunnen meegeven
+    if (this.options?.customHeaders) {
+      this.vectorSource.setLoader(
+        (extent: Extent, resolution: number, projection: Projection) => {
+          if (!this.options?.url) {
+            throw new Error("GeoJson options.url is verplicht");
+          }
+          if (!this.options.customHeaders) {
+            throw new Error("GeoJson options.customHeaders is verplicht");
+          }
+          fetch(new URL(this.options.url), {
+            headers: this.options.customHeaders
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+              }
+              return response.json();
+            })
+            .then((data) => {
+              const features = this.geoJsonFormat.readFeatures(data, {
+                featureProjection: projection
+              });
 
+              this.vectorSource.addFeatures(features);
+            })
+            .catch((error) => {
+              console.error("GeoJSON load error", error);
+            });
+        }
+      );
+    }
     const layerOptions: Options<
       Feature<Geometry>,
       VectorSource<Feature<Geometry>>
@@ -137,7 +170,6 @@ export class GgcGeojsonLayerComponent
     }
 
     this.setLayer(new VectorLayer(layerOptions));
-
     // OGC API Features inladen na setten van Vectorlaag
     if (isOgcApiUrl) {
       (async () => {
@@ -272,6 +304,13 @@ export class GgcGeojsonLayerComponent
   }
 
   /**
+   * Opruimen van resources bij het vernietigen van de component.
+   */
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+  }
+
+  /**
    * Beperkt het aantal gevonden features bij een klik.
    *
    * @param feature - Het gevonden FeatureLike object.
@@ -291,12 +330,5 @@ export class GgcGeojsonLayerComponent
    */
   private decideLayerCandidate(layerCandidate: BaseLayer) {
     return this.olLayer === layerCandidate;
-  }
-
-  /**
-   * Opruimen van resources bij het vernietigen van de component.
-   */
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
   }
 }
