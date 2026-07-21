@@ -392,10 +392,12 @@ export class GgcSearchLocationComponent implements OnInit {
       if (this.searchLocationOptions?.numberOfSuggestions === undefined) {
         this.suggestions.set(response.features);
       } else {
-        this.suggestions.set(response.features.slice(
-          0,
-          this.searchLocationOptions.numberOfSuggestions
-        ));
+        this.suggestions.set(
+          response.features.slice(
+            0,
+            this.searchLocationOptions.numberOfSuggestions
+          )
+        );
       }
       if (response.numberReturned > 0) {
         this.noSuggestionsFound.set(false);
@@ -767,7 +769,8 @@ export class GgcSearchLocationComponent implements OnInit {
     this.searchLocationService.getLocation(
       false,
       this.searchLocationOptions?.mapIndex
-    );  }
+    );
+  }
 
   private async loadFormatType() {
     if (!this.formatTypeCache) {

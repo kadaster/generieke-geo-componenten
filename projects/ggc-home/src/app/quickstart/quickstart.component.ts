@@ -734,7 +734,7 @@ export class App {
   } as SearchLocationOptions;
 
   protected cameraOptions!: CameraOptions;
-  protected webServices3D: Webservice[] = [];
+  protected webServices3D: Webservice3D[] = [];
   protected readonly initialWebServices3D = [
     {
       type: "3Dtiles",
