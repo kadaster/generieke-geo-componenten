@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { Component, EventEmitter, inject, input, Output } from "@angular/core";
 import {
   ToolbarItemMeasureComponentEvent,
   ToolbarItemMeasureType
@@ -44,28 +44,28 @@ import { from } from "rxjs";
 })
 export class GgcToolbarItemMeasureComponent {
   /** Naam van de kaart waarop gemeten wordt. */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /** Naam van de laag waarin metingen worden opgeslagen. */
-  @Input() layer = "measuring";
+  layer = input<string>("measuring");
 
   /** Icoon voor de 'stop meten' knop. */
-  @Input() stopIcon = "fal fa-mouse-pointer";
+  stopIcon = input<string>("fal fa-mouse-pointer");
 
   /** Icoon voor de 'lijn meten' knop. */
-  @Input() measureLineIcon = "fal fa-ruler-horizontal";
+  measureLineIcon = input<string>("fal fa-ruler-horizontal");
 
   /** Icoon voor de 'polygon meten' knop. */
-  @Input() measurePolygonIcon = "fal fa-ruler-combined";
+  measurePolygonIcon = input<string>("fal fa-ruler-combined");
 
   /** Icoon voor de 'meetlaag wissen' knop. */
-  @Input() deleteIcon = "fal fa-trash-alt";
+  deleteIcon = input<string>("fal fa-trash-alt");
 
   /** Icoon voor de 'meting verplaatsen' knop. */
-  @Input() moveIcon = "fal fa-hand-paper";
+  moveIcon = input<string>("fal fa-hand-paper");
 
   /** Icoon voor de 'meting bewerken' knop. */
-  @Input() editIcon = "fal fa-pencil-alt";
+  editIcon = input<string>("fal fa-pencil-alt");
 
   /**
    * Event dat wordt verstuurd wanneer een meetactie wordt uitgevoerd.
@@ -99,10 +99,10 @@ export class GgcToolbarItemMeasureComponent {
         this.resetActive();
         this.activeMeasure = "line";
         drawService.startDraw(
-          this.layer,
+          this.layer(),
           MapComponentDrawTypes.LINESTRING,
           { showTotalLength: true },
-          this.mapIndex
+          this.mapIndex()
         );
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.LINE
@@ -120,10 +120,10 @@ export class GgcToolbarItemMeasureComponent {
         this.resetActive();
         this.activeMeasure = "polygon";
         drawService.startDraw(
-          this.layer,
+          this.layer(),
           MapComponentDrawTypes.POLYGON,
           { showArea: true },
-          this.mapIndex
+          this.mapIndex()
         );
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.POLYGON
@@ -139,7 +139,7 @@ export class GgcToolbarItemMeasureComponent {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
         this.resetActive();
-        drawService.stopDraw(this.mapIndex);
+        drawService.stopDraw(this.mapIndex());
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.STOP
         });
@@ -154,7 +154,7 @@ export class GgcToolbarItemMeasureComponent {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
         this.activeMeasure = "move";
-        drawService.startMove(this.layer, this.mapIndex);
+        drawService.startMove(this.layer(), this.mapIndex());
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.MOVE
         });
@@ -169,7 +169,7 @@ export class GgcToolbarItemMeasureComponent {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
         this.activeMeasure = "edit";
-        drawService.startModify(this.layer, this.mapIndex);
+        drawService.startModify(this.layer(), this.mapIndex());
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.EDIT
         });
@@ -184,7 +184,7 @@ export class GgcToolbarItemMeasureComponent {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
         this.resetActive();
-        drawService.clearLayer(this.layer, this.mapIndex);
+        drawService.clearLayer(this.layer(), this.mapIndex());
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.CLEAR
         });

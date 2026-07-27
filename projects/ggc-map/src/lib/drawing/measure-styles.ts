@@ -113,8 +113,7 @@ export const styleLengthLabelFunction = (
   measureStyle: Style
 ): Style => {
   const geom: LineString | Polygon = feature.getGeometry() as
-    | LineString
-    | Polygon;
+    LineString | Polygon;
   let coord: Coordinate = geom.getLastCoordinate();
   let labelText: string;
   if (geom.getType() === "Polygon") {

@@ -1,4 +1,4 @@
-@if (currentFeature) {
+@if (currentFeature()) {
   @if (!pagerIsHidden) {
     <nav aria-label="Navigatie door objecten">
       <ul class="pagination ggc-fi-pager">
@@ -14,7 +14,7 @@
           </button>
         </li>
         <li class="ggc-fi-pager-value">
-          {{ currentFeatureIndex + 1 }} van
+          {{ currentFeatureIndex() + 1 }} van
           {{
             displayFeaturesProperties ? displayFeaturesProperties.length : ""
           }}
@@ -36,13 +36,13 @@
   <ggc-feature-info-display
     [type]="featureInfoDisplayType"
     [hideEmptyFields]="hideEmptyFields"
-    [currentFeature]="currentFeature"
+    [currentFeature]="currentFeature()"
     [headerValueTemplates]="customHeaderValueTemplates"
     [contentValueTemplates]="customValueTemplates"
     [hideEmptyFieldWithKeys]="hideEmptyFieldWithKeys"
   ></ggc-feature-info-display>
 }
-@if (showEmptyMessage && !currentFeature) {
+@if (showEmptyMessage && !currentFeature()) {
   <span class="ggc-fi-empty">{{ emptyInfo }}</span>
 }
 <ng-content></ng-content>

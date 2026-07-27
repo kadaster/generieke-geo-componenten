@@ -30,7 +30,7 @@ describe("ThemeSelectorComponent", () => {
     );
     fixture = TestBed.createComponent(ThemeSelectorComponent);
     component = fixture.componentInstance;
-    component.themes = [];
+    fixture.componentRef.setInput("themes", []);
     fixture.detectChanges();
   });
 

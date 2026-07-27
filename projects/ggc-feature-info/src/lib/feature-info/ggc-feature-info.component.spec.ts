@@ -260,7 +260,7 @@ describe("FeatureInfoWrapperComponent", () => {
     expect(component).toBeDefined();
     expect(component["templates"].length).toBe(5);
     expect(component["customValueTemplates"].size).toBe(3);
-    expect(component["customHeaderValueTemplates"].size).toBe(4);
+    expect(component["customHeaderValueTemplates"].size).toBe(3);
     expect(component["customValueTemplates"].get("status")).toBeDefined();
     expect(component["customValueTemplates"].get("bronhoudernaam")).toEqual(
       component["customValueTemplates"].get("bronhoudercode")
@@ -276,7 +276,7 @@ describe("FeatureInfoWrapperComponent", () => {
     ).toBeDefined();
     expect(
       component["customHeaderValueTemplates"].get("waarde4")
-    ).toBeDefined();
+    ).not.toBeDefined();
     expect(component["customHeaderValueTemplates"].get("waarde1")).not.toEqual(
       component["customHeaderValueTemplates"].get("waarde2")
     );

@@ -125,7 +125,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       vi.advanceTimersByTime(100);
       await vi.runAllTimersAsync();
 
-      expect(component["activeTheme"]?.themeName).toBe("Theme B");
+      expect(component["activeTheme"]()?.themeName).toBe("Theme B");
       expect(
         datasetTreeMapConnectServiceSpy.setVisibilityLayers
       ).not.toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       vi.advanceTimersByTime(100);
       await vi.runAllTimersAsync();
 
-      expect(component["activeTheme"]?.themeName).toBe("Theme A");
+      expect(component["activeTheme"]()?.themeName).toBe("Theme A");
 
       expect(emitted.length).toBe(1);
       expect(emitted[0].value.themeName).toBe("Theme A");
@@ -179,7 +179,7 @@ describe("GgcDatasetSwitcherComponent", () => {
 
       const themes = createThemesWithLayers();
       component.themes = themes;
-      component["activeTheme"] = themes[0];
+      component["activeTheme"].set(themes[0]);
 
       const emitSpy = vi.spyOn(component.events, "emit");
 
@@ -205,7 +205,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       );
 
       expect(emitSpy).toHaveBeenCalled();
-      expect(component["activeTheme"]?.themeName).toBe("Theme B");
+      expect(component["activeTheme"]()?.themeName).toBe("Theme B");
     });
   });
 
@@ -222,7 +222,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       ];
 
       localComponent.themes = createThemesWithLayers();
-      localComponent["activeTheme"] = localComponent.themes[0];
+      localComponent["activeTheme"].set(localComponent.themes[0]);
 
       localFixture.detectChanges();
       vi.advanceTimersByTime(100);

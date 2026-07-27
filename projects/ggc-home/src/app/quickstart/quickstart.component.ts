@@ -28,11 +28,12 @@ import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
   GgcViewerComponent,
-  ViewerOptions
+  ViewerOptions,
+  Webservice as Webservice3D
 } from "@kadaster/ggc-map-3d";
 
 @Component({
-  selector: "app-quickstart",
+  selector: "ggc-home-quickstart",
   imports: [
     Highlight,
     GgcMapComponent,
@@ -733,7 +734,7 @@ export class App {
   } as SearchLocationOptions;
 
   protected cameraOptions!: CameraOptions;
-  protected webServices3D: Webservice[] = [];
+  protected webServices3D: Webservice3D[] = [];
   protected readonly initialWebServices3D = [
     {
       type: "3Dtiles",
@@ -771,7 +772,7 @@ export class App {
         }
       ]
     }
-  ] as Webservice[];
+  ] as Webservice3D[];
 
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-basic",

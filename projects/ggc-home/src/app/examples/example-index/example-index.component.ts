@@ -62,7 +62,7 @@ interface GroupedCards {
 }
 
 @Component({
-  selector: "app-example-index",
+  selector: "ggc-home-example-index",
   templateUrl: "./example-index.component.html",
   styleUrl: "./example-index.component.scss",
   imports: [RouterLink, SortPipe],
@@ -167,39 +167,53 @@ export class ExampleIndexComponent {
     }
   }
 
-  protected get availableThemes(): string[] {
-    const set = new Set<string>();
+  protected get availableThemes(): Themes[] {
+    const set = new Set<Themes>();
     for (const card of this.cards) {
-      for (const tag of (card as any)?.theme ?? []) {
-        set.add(tag);
+      for (const theme of card.theme ?? []) {
+        set.add(theme);
       }
     }
 
-    return this.sortArrayWithFixedOrder(Array.from(set), this.themeOrder);
+    return this.sortArrayWithFixedOrder(Array.from(set), this.themeOrder).map(
+      (theme) => theme as Themes
+    );
   }
 
-  protected get availableComponents(): string[] {
-    const set = new Set<string>();
+  protected get availableComponents(): Components[] {
+    const set = new Set<Components>();
+
     for (const card of this.cards) {
-      for (const component of (card as any)?.components ?? []) {
-        set.add(component.toLocaleLowerCase());
+      for (const component of card.components ?? []) {
+        set.add(component);
       }
     }
 
     const fixedOrder = [Components.GGC_MAP];
-    return this.sortArrayWithFixedOrder(Array.from(set), fixedOrder);
+    return this.sortArrayWithFixedOrder(Array.from(set), fixedOrder).map(
+      (component) => component as Components
+    );
   }
 
-  protected get availableTags(): string[] {
-    const set = new Set<string>();
+  protected get availableTags(): Tags[] {
+    const set = new Set<Tags>();
+
     for (const card of this.cards) {
-      for (const tag of (card as any)?.tags ?? []) {
-        set.add(tag.toLocaleLowerCase());
+      for (const tag of card.tags ?? []) {
+        set.add(tag);
       }
     }
 
-    const fixedOrder = [Tags.DATASET, Tags.LAYER, Tags.LEGEND, Tags.SEARCH];
-    return this.sortArrayWithFixedOrder(Array.from(set), fixedOrder);
+    const fixedOrder: Tags[] = [
+      Tags.CONTROLS,
+      Tags.DATASET,
+      Tags.LEGEND,
+      Tags.SEARCH
+    ];
+
+    return this.sortArrayWithFixedOrder([...set], fixedOrder).map(
+      (tag) => tag as Tags
+    );
   }
 
   protected get groupedCards(): GroupedCards[] {

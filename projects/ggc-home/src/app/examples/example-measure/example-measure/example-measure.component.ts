@@ -9,7 +9,7 @@ import { Tags } from "../../tags.enum";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-measure",
+  selector: "ggc-home-example-measure",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule],
   templateUrl: "./example-measure.component.html"
 })

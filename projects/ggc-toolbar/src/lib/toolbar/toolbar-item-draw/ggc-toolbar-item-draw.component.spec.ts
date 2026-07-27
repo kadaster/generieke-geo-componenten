@@ -72,7 +72,7 @@ describe("ToolbarItemDrawComponent", () => {
   });
 
   it("should show custom button when overwritten", () => {
-    component.deleteIcon = "fas fa-eraser";
+    fixture.componentRef.setInput("deleteIcon", "fas fa-eraser");
     fixture.detectChanges();
 
     const spans = debugElement.queryAll(By.css("button>span"));

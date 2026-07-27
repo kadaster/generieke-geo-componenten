@@ -15,7 +15,7 @@ import { ExampleFormatComponent } from "../../example-format/example-format.comp
 import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: "app-example-3d-layer-wmts",
+  selector: "ggc-example-3d-layer-wmts",
   templateUrl: "./example3d-layer-wmts.component.html",
   styleUrl: "./example3d-layer-wmts.component.scss",
   imports: [GgcViewerComponent, GgcControlsComponent, ExampleFormatComponent],

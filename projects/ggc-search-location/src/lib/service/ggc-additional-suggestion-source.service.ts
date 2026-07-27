@@ -20,7 +20,7 @@ export class GgcAdditionalSuggestionSourceService {
    * @param _ - De zoekterm waarop gefilterd moet worden.
    * @returns Een Observable met een array van {@link AdditionalSuggestion} objecten.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   search(_: string): Observable<AdditionalSuggestion[]> {
     return of([]);
   }

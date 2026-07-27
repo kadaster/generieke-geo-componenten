@@ -2,7 +2,8 @@ import { Component, inject, OnInit } from "@angular/core";
 import {
   GgcLayerService,
   GgcMapComponent,
-  GgcMapService
+  GgcMapService,
+  Webservice
 } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
@@ -11,10 +12,9 @@ import { FormsModule } from "@angular/forms";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import { Webservice } from "@kadaster/ggc-map-3d";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent, FormsModule],
   templateUrl: "./example-layer-json-config.component.html",
   styleUrl: "./example-layer-json-config.component.scss"

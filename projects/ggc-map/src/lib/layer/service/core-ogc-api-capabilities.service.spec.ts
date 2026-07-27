@@ -9,7 +9,7 @@ import {
   OGCAPIStyle,
   OGCAPITile
 } from "./core-ogc-api-capabilities.service";
-import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClient, withXhr } from "@angular/common/http";
 import { provideZoneChangeDetection } from "@angular/core";
 
 describe("CoreOgcApiCapabilitiesService", () => {
@@ -56,7 +56,7 @@ describe("CoreOgcApiCapabilitiesService", () => {
       imports: [],
       providers: [
         CoreOgcApiCapabilitiesService,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideZoneChangeDetection()
       ]

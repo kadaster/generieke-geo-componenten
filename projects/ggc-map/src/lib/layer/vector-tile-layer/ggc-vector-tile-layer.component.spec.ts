@@ -19,7 +19,8 @@ import { featureData, getFoundFeatures } from "../mock/feature.mock";
 import { resolutions } from "../../utils/epsg28992";
 import {
   provideHttpClient,
-  withInterceptorsFromDi
+  withInterceptorsFromDi,
+  withXhr
 } from "@angular/common/http";
 import {
   HttpTestingController,
@@ -51,7 +52,7 @@ describe("VectorTileLayerComponent", () => {
         GgcCrsConfigService,
         CoreMapEventsService,
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
     }).compileComponents();

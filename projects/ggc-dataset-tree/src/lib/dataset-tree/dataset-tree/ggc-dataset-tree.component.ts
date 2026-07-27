@@ -1,11 +1,11 @@
 import {
   AfterContentInit,
   Component,
+  computed,
   ContentChild,
-  EventEmitter,
   inject,
-  Input,
-  Output,
+  input,
+  output,
   TemplateRef
 } from "@angular/core";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
@@ -49,101 +49,97 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
   /**
    * Wanneer `true`, dan wordt het aantal actieve kaartlagen getoond bij elke dataset (wordt doorgegeven aan alle themes). Bij `false` wordt bij een thema alleen het aantal onderliggende datasets getoond.
    */
-  @Input() showActiveCounters = true;
+  showActiveCounters = input<boolean>(true);
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de dataset opengeklapt is (wordt doorgegeven aan alle themes).
    */
-  @Input() iconExpanded = "fas fa-angle-left";
+  iconExpanded = input<string>("fas fa-angle-left");
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de dataset ingeklapt is (wordt doorgegeven aan alle themes).
    */
-  @Input() iconCollapsed = "fas fa-angle-right";
+  iconCollapsed = input<string>("fas fa-angle-right");
   /**
    * Geeft aan of het inklap/uitklap icon rechts uitgelijnd moet worden. Default is true (wordt doorgegeven aan alle themes).
    */
-  @Input() iconAlignRight = true;
+  iconAlignRight = input<boolean>(true);
   /**
    * Wanneer true, dan wordt de dataset-tree als 1 lange lijst van layers weergegeven zonder theme/datasetnamen (wordt doorgegeven aan alle themes)
    */
-  @Input() hideTree = false;
+  hideTree = input<boolean>(false);
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer disabled is (wordt doorgegeven aan alle themes).
    */
-  @Input() iconDisabled = "fas fa-square icon";
+  iconDisabled = input<string>("fas fa-square icon");
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer niet zichtbaar is (wordt doorgegeven aan alle themes).
    */
-  @Input() iconUnchecked = "far fa-square";
+  iconUnchecked = input<string>("far fa-square");
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer zichtbaar is (wordt doorgegeven aan alle themes).
    */
-  @Input() iconChecked = "far fa-check-square";
+  iconChecked = input<string>("far fa-check-square");
   /**
    * CSS‑class naam van het icoon dat getoond wordt voor de info url, indien opgegeven (wordt doorgegeven aan alle themes).
    */
-  @Input() iconInfoUrl = "fas fa-info-circle";
+  iconInfoUrl = input<string>("fas fa-info-circle");
   /**
    * Wanneer true, dan wordt de dataset-tree bij initialisatie uitgeklapt weergegeven (wordt doorgegeven aan alle themes).
    */
-  @Input() expandTreeOnInit = false;
+  expandTreeOnInit = input<boolean>(false);
   /**
    * Wanneer true, dan worden alle theme namen weggelaten in de tree en worden alleen datasets weergegeven (wordt doorgegeven aan alle themes).
    */
-  @Input() showOnlyDatasets = false;
+  showOnlyDatasets = input<boolean>(false);
   /**
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
    * optioneel kunt **overschrijven**.
    */
-  @Input() layerEnabledCallback: LayerEnabledCallback;
+  layerEnabledCallback = input<LayerEnabledCallback | null>(null);
   /**
    * Wanneer ingesteld op `true`, verwerkt de component de layerChangedEvents vanuit de GgcLayerService zelf als een layer veranderd van dezelfde mapIndex.
    * Dit gaat dan over de weergegeven titel van de laag en de weergegeven status of de laag aangezet, uitgezet of en/disabled is.
    * Bij `false` worden de events niet intern afgehandeld en zal dit zelf geprogrammeerd moeten worden.
    */
-  @Input() autoConnectLayerStatus = true;
+  autoConnectLayerStatus = input<boolean>(true);
   /**
    * Wanneer ingesteld op `true`, zal de dataset-tree automatisch lagen aan- of uitzetten in het 2D of 3D map component met dezelfde mapIndex als deze worden getoggled in de dataset-tree.
    * Bij `false` worden de kaartlagen niet automatisch aan- of uitgezet in de kaart en zal dit zelf geprogrammeerd moeten worden.
    * Hiervoor kan dan de output events worden gebruikt.
    */
-  @Input() autoConnectLayerToggle = true;
+  autoConnectLayerToggle = input<boolean>(true);
 
   /**
    * Output stream voor alle DatasetTreeEvents (layer activated/deactivated).
    */
-  @Output() events: EventEmitter<DatasetTreeEvent> = new EventEmitter<any>();
+  events = output<DatasetTreeEvent>();
+
+  themes = input.required<Theme[]>();
+
+  /**
+   * Index van de kaart waarop deze layer wordt bijgehouden (wordt doorgegeven aan alle themes).
+   * Dit is dezelfde waarde als gebruikt binnen DatasetTreeEvents (mapIndex).
+   */
+  mapIndex = input(DEFAULT_MAPINDEX);
+
+  /**
+   * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
+   * Default is TWEE_D
+   */
+  viewerType = input(ViewerType.TWEE_D);
 
   protected layerLabelComponent?: TemplateRef<any>;
   protected datasetLabelComponent?: TemplateRef<any>;
 
-  private readonly datasetTreeService = inject(CoreDatasetTreeService);
-  private readonly modelCreateService = inject(
-    GgcDatasetTreeModelCreateService
+  protected readonly effectiveMapIndex = computed(() =>
+    this.viewerType() === ViewerType.DRIE_D
+      ? DEFAULT_CESIUM_MAPINDEX
+      : this.mapIndex()
   );
-  private _themes: Theme[];
-  private _mapIndex = DEFAULT_MAPINDEX;
-  private _viewerType: ViewerType = ViewerType.TWEE_D;
 
-  @ContentChild(LayerLabelTemplateDirective)
-  private readonly layerLabelTemplate: LayerLabelTemplateDirective;
+  protected processedThemes = computed(() => {
+    let themes = this.themes();
 
-  @ContentChild(DatasetLabelTemplateDirective)
-  private readonly datasetLabelTemplate: DatasetLabelTemplateDirective;
-
-  /**
-   * Ophalen van de huidige Theme‑array.
-   */
-  @Input({ required: true })
-  get themes(): Theme[] {
-    return this._themes;
-  }
-
-  /**
-   * Setten van themes.
-   * @param themes - lijst van themes die geset moeten worden
-   */
-  set themes(themes: Theme[]) {
-    if (this.showOnlyDatasets) {
+    if (this.showOnlyDatasets()) {
       themes = [
         new Theme(
           "",
@@ -151,39 +147,20 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
         )
       ];
     }
-    this._themes = this.modelCreateService.themeArrayFactory(themes);
-  }
 
-  /**
-   * Index van de kaart waarop deze layer wordt bijgehouden (wordt doorgegeven aan alle themes).
-   * Dit is dezelfde waarde als gebruikt binnen DatasetTreeEvents (mapIndex).
-   */
-  @Input()
-  get mapIndex(): string {
-    return this._mapIndex;
-  }
+    return this.modelCreateService.themeArrayFactory(themes);
+  });
 
-  set mapIndex(mapIndex: string) {
-    if (this.viewerType === ViewerType.TWEE_D) {
-      this._mapIndex = mapIndex;
-    }
-  }
+  private readonly datasetTreeService = inject(CoreDatasetTreeService);
+  private readonly modelCreateService = inject(
+    GgcDatasetTreeModelCreateService
+  );
 
-  /**
-   * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
-   * Default is TWEE_D
-   */
-  @Input()
-  get viewerType(): string {
-    return this._viewerType;
-  }
+  @ContentChild(LayerLabelTemplateDirective)
+  private readonly layerLabelTemplate: LayerLabelTemplateDirective;
 
-  set viewerType(viewerType: ViewerType) {
-    this._viewerType = viewerType;
-    if (this.viewerType === ViewerType.DRIE_D) {
-      this._mapIndex = DEFAULT_CESIUM_MAPINDEX;
-    }
-  }
+  @ContentChild(DatasetLabelTemplateDirective)
+  private readonly datasetLabelTemplate: DatasetLabelTemplateDirective;
 
   constructor() {
     this.datasetTreeService

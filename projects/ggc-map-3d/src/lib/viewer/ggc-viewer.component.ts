@@ -393,11 +393,11 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   public getOptionsType(cameraOptions: CameraOptions): CameraOptionsType {
     let type = CameraOptionsType.None;
-    if (cameraOptions.hasOwnProperty("geojson")) {
+    if (Object.hasOwn(cameraOptions, "geojson")) {
       type = CameraOptionsType.LookAtObject;
-    } else if (cameraOptions.hasOwnProperty("cameraPosition")) {
+    } else if (Object.hasOwn(cameraOptions, "cameraPosition")) {
       type = CameraOptionsType.CameraPosition;
-    } else if (cameraOptions.hasOwnProperty("lookAtPosition")) {
+    } else if (Object.hasOwn(cameraOptions, "lookAtPosition")) {
       type = CameraOptionsType.LookAtPosition;
     }
     return type;

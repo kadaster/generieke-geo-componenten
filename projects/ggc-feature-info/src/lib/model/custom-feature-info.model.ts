@@ -25,8 +25,7 @@ export class CustomFeatureInfo {
   }
 
   getCustomAttributeValueFunction():
-    | ((valueToBeChanged: string | number) => any)
-    | undefined {
+    ((valueToBeChanged: string | number) => any) | undefined {
     return this.customFeatureInfoOptions.customAttributeValueFunction;
   }
 }

@@ -18,7 +18,7 @@ import { Tags } from "../../tags.enum";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-snapping-basic",
+  selector: "ggc-home-example-snapping-basic",
   imports: [
     GgcLayerBrtAchtergrondkaartComponent,
     GgcMapComponent,

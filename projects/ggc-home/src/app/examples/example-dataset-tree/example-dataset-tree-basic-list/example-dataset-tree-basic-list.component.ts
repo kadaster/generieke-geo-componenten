@@ -14,7 +14,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-dataset-tree-basic",
+  selector: "ggc-home-example-dataset-tree-basic",
   imports: [
     GgcMapComponent,
     GgcDatasetTreeComponent,

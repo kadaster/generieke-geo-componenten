@@ -11,7 +11,8 @@ import {
   TemplateRef,
   AfterViewInit,
   OnDestroy,
-  QueryList
+  QueryList,
+  signal
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -137,14 +138,14 @@ export class GgcFeatureInfoComponent
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
    */
   @Output() events = new EventEmitter<FeatureInfoComponentEvent>();
-  protected customHeaderValueTemplates: Map<string, TemplateRef<any> | null> =
+  protected customHeaderValueTemplates: Map<string, TemplateRef<any>> =
     new Map();
   protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
   protected hideEmptyFieldWithKeys: string[] = [];
   protected displayFeaturesProperties: object[] | undefined;
   protected pagerIsHidden: boolean;
-  protected currentFeatureIndex = 0;
-  protected currentFeature: object | null;
+  protected currentFeatureIndex = signal(0);
+  protected currentFeature = signal<object | null>(null);
   protected emptyInfo = "Geen informatie beschikbaar";
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
@@ -166,6 +167,8 @@ export class GgcFeatureInfoComponent
 
   private _featureInfoCollection: FeatureInfoCollection | undefined;
 
+  private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
+
   get featureInfoCollection(): FeatureInfoCollection | undefined {
     return this._featureInfoCollection;
   }
@@ -180,12 +183,8 @@ export class GgcFeatureInfoComponent
     this.handleFeatureInfoChanges();
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
-
   get customAttributeNamesAndValues():
-    | Map<string, CustomFeatureInfo>
-    | undefined {
+    Map<string, CustomFeatureInfo> | undefined {
     return this._customAttributeNamesAndValues;
   }
 
@@ -257,7 +256,7 @@ export class GgcFeatureInfoComponent
             this.customValueTemplates.set(templateKey, template.templateRef);
             break;
           case ValueTemplateDirectiveType.HIDE:
-            this.customHeaderValueTemplates.set(templateKey, null);
+            this.customHeaderValueTemplates.delete(templateKey);
             break;
           case ValueTemplateDirectiveType.HIDE_IF_EMPTY:
             if (!this.hideEmptyFieldWithKeys.includes(templateKey)) {
@@ -281,7 +280,7 @@ export class GgcFeatureInfoComponent
   /** Navigeer naar de vorige feature. */
   goToPreviousFeature(): void {
     if (this.hasPreviousFeature()) {
-      this.currentFeatureIndex--;
+      this.currentFeatureIndex.set(this.currentFeatureIndex() - 1);
       this.setCurrentFeature();
     }
   }
@@ -289,7 +288,7 @@ export class GgcFeatureInfoComponent
   /** Navigeer naar de volgende feature. */
   goToNextFeature(): void {
     if (this.hasNextFeature()) {
-      this.currentFeatureIndex++;
+      this.currentFeatureIndex.set(this.currentFeatureIndex() + 1);
       this.setCurrentFeature();
     }
   }
@@ -300,7 +299,7 @@ export class GgcFeatureInfoComponent
       ? this.displayFeaturesProperties.length
       : -1;
     if (length > 0) {
-      return this.currentFeatureIndex < length - 1;
+      return this.currentFeatureIndex() < length - 1;
     }
     return false;
   }
@@ -311,7 +310,7 @@ export class GgcFeatureInfoComponent
       this.displayFeaturesProperties &&
       this.displayFeaturesProperties.length > 1
     ) {
-      return this.currentFeatureIndex > 0;
+      return this.currentFeatureIndex() > 0;
     }
     return false;
   }
@@ -386,11 +385,13 @@ export class GgcFeatureInfoComponent
    * Wordt aangeroepen bij navigatie of initiële selectie.
    */
   private setCurrentFeature(): void {
-    this.currentFeature = this.displayFeaturesProperties
-      ? this.displayFeaturesProperties[this.currentFeatureIndex]
-      : null;
+    this.currentFeature.set(
+      this.displayFeaturesProperties
+        ? this.displayFeaturesProperties[this.currentFeatureIndex()]
+        : null
+    );
     const featureForEvent = this.featureInfoCollection
-      ? this.featureInfoCollection.features[this.currentFeatureIndex]
+      ? this.featureInfoCollection.features[this.currentFeatureIndex()]
       : undefined;
     const featureInfoComponentEvent = new FeatureInfoComponentEvent(
       FeatureInfoComponentEventType.SELECTEDOBJECT,
@@ -441,11 +442,11 @@ export class GgcFeatureInfoComponent
       this.displayFeaturesProperties &&
       this.displayFeaturesProperties.length > 0
     ) {
-      this.currentFeatureIndex = 0;
+      this.currentFeatureIndex.set(0);
       this.setCurrentFeature();
     } else {
-      this.currentFeatureIndex = -1;
-      this.currentFeature = null;
+      this.currentFeatureIndex.set(-1);
+      this.currentFeature.set(null);
       this.events.next(
         new FeatureInfoComponentEvent(
           FeatureInfoComponentEventType.SELECTEDOBJECT,

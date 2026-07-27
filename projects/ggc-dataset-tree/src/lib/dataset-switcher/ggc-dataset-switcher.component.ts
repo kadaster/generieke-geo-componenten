@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   Output,
+  signal,
   SimpleChanges
 } from "@angular/core";
 import { Theme } from "../model/theme/theme.model";
@@ -85,7 +86,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * - de radio button checked-state te bepalen;
    * - het vorige theme “uit” te zetten bij wissel.
    */
-  protected activeTheme?: Theme;
+  protected activeTheme = signal<Theme | undefined>(undefined);
 
   private readonly datasetTreeMapConnectService = inject(
     DatasetTreeMapConnectService
@@ -167,12 +168,12 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * @param theme - The theme dat geactiveerd moet worden.
    */
   private async processMap(theme: Theme) {
-    if (this.activeTheme) {
-      await this.setVisibilityTheme(this.activeTheme, false);
+    if (this.activeTheme()) {
+      await this.setVisibilityTheme(this.activeTheme() as Theme, false);
     }
 
     await this.setVisibilityTheme(theme, true);
-    this.activeTheme = theme;
+    this.activeTheme.set(theme);
   }
 
   /**
@@ -229,7 +230,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
       ? (this.getThemeFromName(this.initialActiveTheme) ?? themes[0])
       : themes[0];
 
-    this.activeTheme = activeTheme;
+    this.activeTheme.set(activeTheme);
     this.sendChangeEvent(activeTheme);
   }
 

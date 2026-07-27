@@ -18,8 +18,6 @@ describe("DatasetTreeComponent", () => {
   let fixture: ComponentFixture<GgcDatasetTreeComponent>;
   let nativeElement: HTMLElement;
 
-  let testRecursionTree = [];
-
   function createTreeForTest(niveau: number, open = false): Theme[] {
     let i;
     const themeArray: Theme[] = [];
@@ -82,7 +80,7 @@ describe("DatasetTreeComponent", () => {
 
     fixture = TestBed.createComponent(GgcDatasetTreeComponent);
     component = fixture.componentInstance;
-    component.themes = [];
+    fixture.componentRef.setInput("themes", []);
     nativeElement = fixture.nativeElement;
     fixture.detectChanges();
   });
@@ -98,8 +96,9 @@ describe("DatasetTreeComponent", () => {
     });
 
     it("with 1 theme, the themeName should not be present", () => {
-      component.themes = [new Theme("Dataset verzameling een", [], [], true)];
-
+      fixture.componentRef.setInput("themes", [
+        new Theme("Dataset verzameling een", [], [], true)
+      ]);
       fixture.detectChanges();
 
       expect(nativeElement.querySelectorAll("tr").length).toBe(1);
@@ -112,7 +111,7 @@ describe("DatasetTreeComponent", () => {
       "with multiple other themes inside an other theme, " +
         "it should find the themeName (up to 5 layers) and datasetName in deeper layers ",
       async () => {
-        component.themes = createTreeForTest(5, true);
+        fixture.componentRef.setInput("themes", createTreeForTest(5, true));
 
         // Making sure all child components are stable and all promises are handled
         fixture.detectChanges();
@@ -158,10 +157,9 @@ describe("DatasetTreeComponent", () => {
         "it should find the themeName and datasetName in deeper layers and should not show count of active dataset",
       async () => {
         vi.useFakeTimers();
-        testRecursionTree = createTreeForTest(5, true);
 
-        component.showActiveCounters = false;
-        component.themes = testRecursionTree;
+        fixture.componentRef.setInput("showActiveCounters", false);
+        fixture.componentRef.setInput("themes", createTreeForTest(5, true));
 
         fixture.detectChanges();
         // Making sure all child components are stable and all promises are handled
@@ -195,9 +193,7 @@ describe("DatasetTreeComponent", () => {
     );
 
     it("should have default font awesome icons", () => {
-      testRecursionTree = createTreeForTest(2, true);
-
-      component.themes = testRecursionTree;
+      fixture.componentRef.setInput("themes", createTreeForTest(2, true));
 
       fixture.detectChanges();
 
@@ -224,15 +220,21 @@ describe("DatasetTreeComponent", () => {
     });
 
     it("should have custom glyphicons", () => {
-      testRecursionTree = createTreeForTest(2);
-
-      component.iconExpanded = "glyphicon-minus-sign";
-      component.iconCollapsed = "glyphicon-plus-sign";
-      component.iconInfoUrl = "glyphicon-custom-info-sign";
-      component.iconUnchecked = "glyphicon-custom-uncheck-sign";
-      component.iconChecked = "glyphicon-custom-check-sign";
-      component.themes = testRecursionTree;
-
+      fixture.componentRef.setInput("iconExpanded", "glyphicon-minus-sign");
+      fixture.componentRef.setInput("iconCollapsed", "glyphicon-plus-sign");
+      fixture.componentRef.setInput(
+        "iconInfoUrl",
+        "glyphicon-custom-info-sign"
+      );
+      fixture.componentRef.setInput(
+        "iconUnchecked",
+        "glyphicon-custom-uncheck-sign"
+      );
+      fixture.componentRef.setInput(
+        "iconChecked",
+        "glyphicon-custom-check-sign"
+      );
+      fixture.componentRef.setInput("themes", createTreeForTest(2, true));
       fixture.detectChanges();
     });
   });

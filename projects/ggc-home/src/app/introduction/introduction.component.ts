@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
-  selector: "app-introduction",
+  selector: "ggc-home-introduction",
   imports: [],
   templateUrl: "./introduction.component.html",
   styleUrl: "./introduction.component.scss"

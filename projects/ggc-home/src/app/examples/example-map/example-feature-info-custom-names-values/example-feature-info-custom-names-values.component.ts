@@ -12,7 +12,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-feature-info-custom-names-values",
+  selector: "ggc-home-example-feature-info-custom-names-values",
   imports: [ExampleFormatComponent, GgcFeatureInfoComponent, GgcMapComponent],
   templateUrl: "./example-feature-info-custom-names-values.component.html"
 })

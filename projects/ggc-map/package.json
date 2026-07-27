@@ -2,8 +2,8 @@
   "name": "@kadaster/ggc-map",
   "version": "3.2.0",
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
     "ol": "^10.7.0"
   },
   "optionalDependencies": {

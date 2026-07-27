@@ -1,18 +1,18 @@
 import {
   Component,
   inject,
-  Input,
   OnInit,
   TemplateRef,
   OnDestroy,
-  signal
+  signal,
+  input
 } from "@angular/core";
 import { DatasetTreeLayer } from "../../model/theme/dataset-tree-webservice.model";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
 import { Subscription } from "rxjs";
-import { ViewerType } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
 import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
 
 /**
@@ -41,30 +41,34 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
    * Index van de kaart waarop deze layer wordt bijgehouden.
    * Dit is dezelfde waarde als gebruikt binnen DatasetTreeEvents (mapIndex).
    */
-  @Input() mapIndex: string;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /**
    * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
    * Default is TWEE_D
    */
-  @Input() viewerType = ViewerType.TWEE_D;
+  viewerType = input<ViewerType>(ViewerType.TWEE_D);
 
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer disabled is.
    */
-  @Input() iconDisabled: string;
+  iconDisabled = input<string>("");
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer zichtbaar is.
    */
-  @Input() iconChecked: string;
+  iconChecked = input<string>("");
+
   /**
    * CSS‑class naam van het icoon dat getoond wordt wanneer de layer niet zichtbaar is.
    */
-  @Input() iconUnchecked: string;
+  iconUnchecked = input<string>("");
+
   /**
    * Optioneel Angular template waarmee het standaard layer‑label kan worden overschreven.
    */
-  @Input() layerLabelComponent?: TemplateRef<any>;
+  layerLabelComponent = input<TemplateRef<any> | undefined>(undefined);
+
   /**
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
    * optioneel kunt **overschrijven**.
@@ -103,19 +107,31 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
    * @param args.isEnabled - De door de dataset-tree berekende enabled-status.
    * @returns `boolean` om te overschrijven, of `void` om niet te overschrijven.
    */
-  @Input() layerEnabledCallback: LayerEnabledCallback;
+  layerEnabledCallback = input<LayerEnabledCallback | null>(null);
+
   /**
    * Wanneer ingesteld op `true`, verwerkt de component de layerChangedEvents vanuit de GgcLayerService zelf als een layer veranderd van dezelfde mapIndex.
    * Dit gaat dan over de weergegeven titel van de laag en de weergegeven status of de laag aangezet, uitgezet of en/disabled is.
    * Bij `false` worden de events niet intern afgehandeld en zal dit zelf geprogrammeerd moeten worden.
    */
-  @Input() autoConnectLayerStatus = true;
+  autoConnectLayerStatus = input<boolean>(true);
+
   /**
    * Wanneer ingesteld op `true`, zal de dataset-tree automatisch lagen aan- of uitzetten in het 2D of 3D map component met dezelfde mapIndex als deze worden getoggled in de dataset-tree.
    * Bij `false` worden de kaartlagen niet automatisch aan- of uitgezet in de kaart en zal dit zelf geprogrammeerd moeten worden.
    * Hiervoor kan dan de output events worden gebruikt.
    */
-  @Input() autoConnectLayerToggle = true;
+  autoConnectLayerToggle = input<boolean>(true);
+
+  /**
+   * DatasetTreeLayer object zoals opgebouwd via het dataset‑structuurcomponent.
+   * Wordt gebruikt voor:
+   * - opslaan layerId (referentie naar kaartlaag)
+   * - ophalen van titel
+   * - ophalen van visibility
+   * - zetten van visibility
+   */
+  layer = input<DatasetTreeLayer | undefined>(undefined);
 
   protected title = signal("");
   protected visible = signal(true);
@@ -126,27 +142,9 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
     DatasetTreeMapConnectService
   );
 
-  private _layer: DatasetTreeLayer;
   private zoomendSubscription: Subscription;
   private layerChangedSubscription: Subscription;
   private triggerSubscription: Subscription;
-
-  /**
-   * DatasetTreeLayer object zoals opgebouwd via het dataset‑structuurcomponent.
-   * Wordt gebruikt voor:
-   * - opslaan layerId (referentie naar kaartlaag)
-   * - ophalen van titel
-   * - ophalen van visibility
-   * - zetten van visibility
-   */
-  @Input()
-  set layer(layer: DatasetTreeLayer) {
-    this._layer = layer;
-  }
-
-  get layer() {
-    return this._layer;
-  }
 
   /**
    * Angular lifecycle hook — initialiseert het component:
@@ -169,14 +167,14 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   }
 
   private async subscribeToZoomend() {
-    if (!this.autoConnectLayerStatus) {
+    if (!this.autoConnectLayerStatus()) {
       return;
     }
 
     this.zoomendSubscription = (
       await this.datasetTreeMapConnectService.getZoomendObservableForMap(
-        this.mapIndex,
-        this.viewerType
+        this.mapIndex(),
+        this.viewerType()
       )
     ).subscribe(async () => {
       await this.updateEnabled();
@@ -184,18 +182,18 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   }
 
   private async subscribeToLayerChanged() {
-    if (!this.autoConnectLayerStatus) {
+    if (!this.autoConnectLayerStatus()) {
       return;
     }
 
     this.layerChangedSubscription = (
       await this.datasetTreeMapConnectService.getLayerChangedObservable(
-        this.viewerType
+        this.viewerType()
       )
     ).subscribe(async (event) => {
       if (
-        event.layerId == this._layer.layerId &&
-        event.mapIndex == this.mapIndex
+        event.layerId == this.layer()?.layerId &&
+        event.mapIndex == this.mapIndex()
       ) {
         await this.updateTitleAndVisibility();
         await this.updateEnabled();
@@ -206,22 +204,22 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   private async updateEnabled() {
     let computedEnabled = this.enabled();
 
-    if (this.autoConnectLayerStatus) {
+    if (this.autoConnectLayerStatus()) {
       computedEnabled =
         (await this.datasetTreeMapConnectService.getEnabled(
-          this._layer.layerId,
-          this.mapIndex,
-          this.viewerType
+          this.layer()?.layerId ?? "",
+          this.mapIndex(),
+          this.viewerType()
         )) ?? true;
     }
 
     let finalEnabled = computedEnabled;
 
-    if (this.layerEnabledCallback) {
-      const override = await this.layerEnabledCallback({
-        layer: this._layer,
-        mapIndex: this.mapIndex,
-        viewerType: this.viewerType,
+    if (this.layerEnabledCallback() && this.layer()) {
+      const override = await this.layerEnabledCallback()?.({
+        layer: this.layer() ?? ({} as DatasetTreeLayer),
+        mapIndex: this.mapIndex(),
+        viewerType: this.viewerType(),
         isEnabled: computedEnabled
       });
 
@@ -234,31 +232,31 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   }
 
   private async updateTitleAndVisibility() {
-    if (!this.autoConnectLayerStatus) {
+    if (!this.autoConnectLayerStatus()) {
       return;
     }
 
     const newTitle =
       (await this.datasetTreeMapConnectService.getTitle(
-        this._layer.layerId,
-        this.mapIndex,
-        this.viewerType
+        this.layer()?.layerId ?? "",
+        this.mapIndex(),
+        this.viewerType()
       )) ?? this.title();
     this.title.set(newTitle);
     const newVisible =
       (await this.datasetTreeMapConnectService.isVisible(
-        this._layer.layerId,
-        this.mapIndex,
-        this.viewerType
+        this.layer()?.layerId ?? "",
+        this.mapIndex(),
+        this.viewerType()
       )) ?? this.visible();
     this.visible.set(newVisible);
   }
 
   private async subscribeToTrigger() {
     this.triggerSubscription = this.datasetTreeMapConnectService
-      .getTriggerObservable(this.mapIndex)
+      .getTriggerObservable(this.mapIndex())
       .subscribe(async (mapIndex) => {
-        if (mapIndex == this.mapIndex) {
+        if (mapIndex == this.mapIndex()) {
           await this.updateEnabled();
           await this.updateTitleAndVisibility();
         }
@@ -272,12 +270,12 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
   public async toggleVisibility() {
     if (this.enabled()) {
       let updatedVisibility;
-      if (this.autoConnectLayerToggle) {
+      if (this.autoConnectLayerToggle()) {
         updatedVisibility =
           await this.datasetTreeMapConnectService.toggleVisibility(
-            this._layer.layerId,
-            this.mapIndex,
-            this.viewerType
+            this.layer()?.layerId ?? "",
+            this.mapIndex(),
+            this.viewerType()
           );
       } else {
         updatedVisibility = !this.visible();
@@ -286,8 +284,8 @@ export class LayerToggleComponent implements OnInit, OnDestroy {
       if (updatedVisibility != undefined) {
         this.visible.set(updatedVisibility);
         this.datasetTreeService.emitDatasetTreeEvent(
-          this._layer.layerId,
-          this.mapIndex,
+          this.layer()?.layerId ?? "",
+          this.mapIndex(),
           updatedVisibility
         );
       }

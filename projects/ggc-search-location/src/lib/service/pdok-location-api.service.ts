@@ -28,10 +28,10 @@ import { AdditionalSuggestion } from "../model/additional-suggestion.model";
   providedIn: "root"
 })
 export class PdokLocationApiService {
-  private readonly collectionsLoadedSubject =
-    new ReplaySubject<PdokLocationApiResult>(1);
+  readonly collectionsLoadedSubject = new ReplaySubject<PdokLocationApiResult>(
+    1
+  );
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   readonly collectionsLoaded$ = this.collectionsLoadedSubject.asObservable();
 
   private readonly httpClient = inject(HttpClient);

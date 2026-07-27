@@ -20,7 +20,7 @@ import {
 } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-draw-center-edit-basic",
+  selector: "ggc-home-example-draw-center-edit-basic",
   imports: [ExampleFormatComponent, GgcMapComponent],
   templateUrl: "./example-draw-center-edit-basic.component.html"
 })

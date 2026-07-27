@@ -7,7 +7,7 @@
       title="Stop tekenen"
       (click)="stopDrawing()"
     >
-      <span [ngClass]="stopIcon" aria-hidden="true"></span>
+      <span [ngClass]="stopIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -19,7 +19,7 @@
       title="Punt tekenen"
       (click)="draw('Point')"
     >
-      <span [ngClass]="drawIcon" aria-hidden="true"></span>
+      <span [ngClass]="drawIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -31,7 +31,7 @@
       title="Lijn tekenen"
       (click)="draw('Line')"
     >
-      <span [ngClass]="drawLineIcon" aria-hidden="true"></span>
+      <span [ngClass]="drawLineIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -43,7 +43,7 @@
       title="Cirkel tekenen"
       (click)="draw('Circle')"
     >
-      <span [ngClass]="drawCircleIcon" aria-hidden="true"></span>
+      <span [ngClass]="drawCircleIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -55,7 +55,7 @@
       title="Rechthoek tekenen"
       (click)="draw('Rectangle')"
     >
-      <span [ngClass]="drawRectangleIcon" aria-hidden="true"></span>
+      <span [ngClass]="drawRectangleIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -67,7 +67,7 @@
       title="Vlak tekenen"
       (click)="draw('Polygon')"
     >
-      <span [ngClass]="drawPolygonIcon" aria-hidden="true"></span>
+      <span [ngClass]="drawPolygonIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -79,7 +79,7 @@
       title="Tekening verplaatsen"
       (click)="move()"
     >
-      <span [ngClass]="moveIcon" aria-hidden="true"></span>
+      <span [ngClass]="moveIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -91,7 +91,7 @@
       title="Tekening bewerken"
       (click)="edit()"
     >
-      <span [ngClass]="editIcon" aria-hidden="true"></span>
+      <span [ngClass]="editIcon()" aria-hidden="true"></span>
     </button>
   </li>
   <li class="card-tools-btn-list-item">
@@ -102,7 +102,7 @@
       title="Tekening wissen"
       (click)="eraseDrawLayer()"
     >
-      <span [ngClass]="deleteIcon" aria-hidden="true"></span>
+      <span [ngClass]="deleteIcon()" aria-hidden="true"></span>
     </button>
   </li>
 </ul>

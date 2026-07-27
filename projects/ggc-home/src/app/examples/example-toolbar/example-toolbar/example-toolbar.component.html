@@ -1,4 +1,4 @@
-<app-example-format
+<ggc-home-example-format
   [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
   [urlTSDocs]="tsDocsUrl"
@@ -28,7 +28,7 @@
           (activeChanged)="changeMeasureState($event)"
           [title]="'Meten'"
         >
-          @if (measureActive) {
+          @if (measureActive()) {
             <ggc-toolbar-item-measure
               stopIcon="fas fa-mouse-pointer"
               measureLineIcon="fas fa-ruler-horizontal"
@@ -44,7 +44,7 @@
           (activeChanged)="changeDrawState($event)"
           [title]="'Tekenen'"
         >
-          @if (drawActive) {
+          @if (drawActive()) {
             <ggc-toolbar-item-draw
               stopIcon="fas fa-mouse-pointer"
               drawIcon="fas fa-circle"
@@ -80,4 +80,4 @@
       <a routerLink="/toolbar-location">Toolbar uitbreiden</a>.
     </p>
   </div>
-</app-example-format>
+</ggc-home-example-format>

@@ -1,4 +1,11 @@
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal
+} from "@angular/core";
 import OlMap from "ol/Map";
 import { Subscription } from "rxjs";
 import { CoreMapEventsService } from "../map/service/core-map-events.service";
@@ -22,7 +29,7 @@ export class GgcZoomLevelComponent implements OnInit, OnDestroy {
    * wordt weergegeven.
    */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
-  protected zoomLevel: number | undefined;
+  protected zoomLevel = signal<number | undefined>(undefined);
   private map: OlMap;
   private zoomendSubscription: Subscription;
   private readonly coreMapService = inject(CoreMapService);
@@ -51,9 +58,9 @@ export class GgcZoomLevelComponent implements OnInit, OnDestroy {
   private getZoomLevel(): void {
     const zoomLevel = this.map.getView().getZoom();
     if (zoomLevel) {
-      this.zoomLevel = Math.round(zoomLevel * 100) / 100;
+      this.zoomLevel.set(Math.round(zoomLevel * 100) / 100);
     } else {
-      this.zoomLevel = undefined;
+      this.zoomLevel.set(undefined);
     }
   }
 

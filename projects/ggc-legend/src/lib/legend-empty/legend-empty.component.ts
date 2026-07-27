@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { Legend } from "../model/legend.model";
 
 @Component({

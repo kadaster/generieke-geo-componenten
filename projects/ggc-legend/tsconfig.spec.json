@@ -5,5 +5,5 @@
     "experimentalDecorators": true,
     "types": ["vitest/globals", "node"]
   },
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

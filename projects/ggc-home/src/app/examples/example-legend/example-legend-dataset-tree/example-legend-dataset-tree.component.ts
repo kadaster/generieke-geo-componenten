@@ -10,7 +10,7 @@ import { Tags } from "../../tags.enum";
 import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: "app-example-legend-dataset-tree",
+  selector: "ggc-home-example-legend-dataset-tree",
   imports: [
     ExampleFormatComponent,
     GgcMapComponent,

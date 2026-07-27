@@ -75,7 +75,7 @@ describe("ZoomLevelComponent", () => {
     component["getZoomLevel"]();
     fixture.detectChanges();
 
-    expect(component["zoomLevel"]).toEqual(9);
+    expect(component["zoomLevel"]()).toEqual(9);
 
     const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
 
@@ -95,7 +95,7 @@ describe("ZoomLevelComponent", () => {
     component["getZoomLevel"]();
     fixture.detectChanges();
 
-    expect(component["zoomLevel"]).toEqual(3.14);
+    expect(component["zoomLevel"]()).toEqual(3.14);
 
     const zoomLevelElement = nativeElement.querySelector(".ggc-zoom-level");
 

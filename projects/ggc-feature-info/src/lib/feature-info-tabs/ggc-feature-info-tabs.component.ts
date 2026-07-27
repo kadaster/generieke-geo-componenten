@@ -8,6 +8,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
   TemplateRef,
   OnDestroy
@@ -129,20 +130,26 @@ export class GgcFeatureInfoTabsComponent
     new EventEmitter<FeatureInfoComponentEvent>();
   protected tabComponent?: TemplateRef<any>;
 
-  protected featureInfoCollectionArrayInternal: FeatureInfoCollection[];
-  protected selectedTab: string;
+  protected featureInfoCollectionArrayInternal = signal<
+    FeatureInfoCollection[]
+  >([]);
+  protected selectedTab = signal<string | undefined>(undefined);
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
   @ContentChild(ValueTemplateDirective, { descendants: false })
   private readonly tabTemplate: ValueTemplateDirective;
-  private selectedTabFeatureInfo: FeatureInfoCollection | undefined;
-  private lastSelectedTabOnClick: string;
+  private readonly selectedTabFeatureInfo = signal<
+    FeatureInfoCollection | undefined
+  >(undefined);
+  private readonly lastSelectedTabOnClick = signal<string | undefined>(
+    undefined
+  );
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
   private readonly eventService = inject(FeatureInfoEventService);
-  private readonly subscriptionSelection: Subscription;
+  private subscriptionSelection: Subscription;
 
   ngAfterContentInit(): void {
     if (this.tabTemplate) {
@@ -173,18 +180,19 @@ export class GgcFeatureInfoTabsComponent
    * @param tab the new active tab
    */
   onTabClicked(tab: string): void {
-    this.lastSelectedTabOnClick = tab;
+    this.lastSelectedTabOnClick.set(tab);
     this.setActiveTab(tab);
   }
 
   private onDataUpdate(): void {
     // create copy of featureInfoCollectionArray and check empty tabs
-    this.featureInfoCollectionArrayInternal = this.featureInfoCollectionArray
-      ? [...this.featureInfoCollectionArray]
-      : [];
+    this.featureInfoCollectionArrayInternal.set(
+      this.featureInfoCollectionArray
+        ? [...this.featureInfoCollectionArray]
+        : []
+    );
     this.checkShowEmptyTabs();
-
-    if (this.featureInfoCollectionArrayInternal.length === 0) {
+    if (this.featureInfoCollectionArrayInternal().length === 0) {
       const event = new FeatureInfoComponentEvent(
         FeatureInfoComponentEventType.SELECTEDTAB,
         "Het huidige weergegeven tabblad.",
@@ -198,25 +206,27 @@ export class GgcFeatureInfoTabsComponent
       this.events.emit(event);
     } else {
       this.featureInfoConfigService.sortTabs(
-        this.featureInfoCollectionArrayInternal
+        this.featureInfoCollectionArrayInternal()
       );
-      this.setActiveTab(this.lastSelectedTabOnClick);
+      this.setActiveTab(this.lastSelectedTabOnClick() as string);
     }
   }
 
   private setActiveTab(layerId: string): void {
-    let idx = this.featureInfoCollectionArrayInternal.findIndex(
+    let idx = this.featureInfoCollectionArrayInternal().findIndex(
       (tabFeatureInfo) => tabFeatureInfo.layerId === layerId
     );
     if (idx === -1) {
       idx = 0;
     }
-    this.selectedTabFeatureInfo = this.featureInfoCollectionArrayInternal[idx];
-    this.selectedTab = this.selectedTabFeatureInfo.layerId;
+    this.selectedTabFeatureInfo.set(
+      this.featureInfoCollectionArrayInternal()[idx]
+    );
+    this.selectedTab.set(this.selectedTabFeatureInfo()?.layerId);
     const event = new FeatureInfoComponentEvent(
       FeatureInfoComponentEventType.SELECTEDTAB,
       "Het huidige weergegeven tabblad.",
-      this.selectedTabFeatureInfo
+      this.selectedTabFeatureInfo()
     );
     this.eventService.emit(event);
     this.events.emit(event);
@@ -224,29 +234,32 @@ export class GgcFeatureInfoTabsComponent
 
   private checkShowEmptyTabs(): void {
     if (!this.showEmptyTabs) {
-      this.featureInfoCollectionArrayInternal =
-        this.featureInfoCollectionArrayInternal.filter(
+      this.featureInfoCollectionArrayInternal.set(
+        this.featureInfoCollectionArrayInternal().filter(
           (tabFeatureInfo: FeatureInfoCollection) => {
             return tabFeatureInfo.features.length > 0;
           }
-        );
+        )
+      );
     }
   }
 
   private subscribeToMapSelection(mapIndex: string) {
     this.featureInfoMapConnectService
       .getObservableForMapSelection(this.viewerType, mapIndex, this.selectIndex)
-      .then((s) =>
-        s.subscribe((event: MapComponentEvent) => {
-          if (
-            event.type ===
-            MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-          ) {
-            this.featureInfoCollectionArray =
-              event.value.featureCollectionForLayers;
-            this.onDataUpdate();
+      .then((observable) => {
+        this.subscriptionSelection = observable.subscribe(
+          (event: MapComponentEvent) => {
+            if (
+              event.type ===
+              MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+            ) {
+              this.featureInfoCollectionArray =
+                event.value.featureCollectionForLayers;
+              this.onDataUpdate();
+            }
           }
-        })
-      );
+        );
+      });
   }
 }

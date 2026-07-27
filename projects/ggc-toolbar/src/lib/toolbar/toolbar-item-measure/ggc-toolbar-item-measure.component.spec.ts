@@ -70,7 +70,7 @@ describe("ToolbarItemMeasureComponent", () => {
   });
 
   it("should show custom button when overwritten", () => {
-    component.measureLineIcon = "fas fa-map-signs";
+    fixture.componentRef.setInput("measureLineIcon", "fas fa-map-signs");
     fixture.detectChanges();
 
     const spans = debugElement.queryAll(By.css("button>span"));

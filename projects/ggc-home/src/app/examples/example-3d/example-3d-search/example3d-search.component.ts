@@ -21,7 +21,7 @@ import {
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-3d-search",
+  selector: "ggc-example-3d-search",
   templateUrl: "./example3d-search.component.html",
   styleUrl: "./example3d-search.component.scss",
   imports: [

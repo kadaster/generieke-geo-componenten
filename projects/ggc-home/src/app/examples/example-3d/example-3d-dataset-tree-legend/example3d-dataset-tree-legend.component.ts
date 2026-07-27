@@ -18,7 +18,7 @@ import { GgcLegendComponent } from "@kadaster/ggc-legend";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-3d-dataset-tree-legend",
+  selector: "ggc-example-3d-dataset-tree-legend",
   templateUrl: "./example3d-dataset-tree-legend.component.html",
   styleUrl: "./example3d-dataset-tree-legend.component.scss",
   imports: [

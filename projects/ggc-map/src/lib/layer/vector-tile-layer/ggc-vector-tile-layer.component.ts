@@ -220,7 +220,7 @@ export class GgcVectorTileLayerComponent
       const url = tileUrl.split("/{z}/{y}/{x}")[0] + "?f=tilejson";
       const json = await this.getJsonFromUrl(url);
       return json.maxzoom ?? undefined;
-    } catch (e) {
+    } catch (_e) {
       console.error(`Could not get the json from the tile url ${tileUrl}`);
       return undefined;
     }
@@ -276,7 +276,7 @@ export class GgcVectorTileLayerComponent
       return await firstValueFrom(response$);
     } catch (e) {
       console.error(`Could not fetch JSON from ${url}`);
-      throw new Error(`Could not fetch JSON from ${url}`);
+      throw new Error(`Could not fetch JSON from ${url}`, { cause: e });
     }
   }
 

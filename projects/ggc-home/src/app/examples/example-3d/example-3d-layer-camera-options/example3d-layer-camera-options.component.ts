@@ -19,7 +19,7 @@ import { ViewerType } from "@kadaster/ggc-models";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 
 @Component({
-  selector: "app-example-3d-layer-camera-options",
+  selector: "ggc-example-3d-layer-camera-options",
   templateUrl: "./example3d-layer-camera-options.component.html",
   styleUrl: "./example3d-layer-camera-options.component.scss",
   imports: [

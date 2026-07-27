@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
@@ -7,7 +7,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-search-location",
   imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-geojson.component.html"
 })

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "baseUrl": "./",
+    "ignoreDeprecations": "6.0",
     "outDir": "./dist/out-tsc",
     "esModuleInterop": true,
     "sourceMap": true,
@@ -32,10 +33,34 @@
   "files": ["src/test/setup-tests.ts"],
   "references": [
     {
+      "path": "./projects/ggc-map-3d/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ggc-dataset-tree/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ggc-feature-info/tsconfig.lib.json"
+    },
+    {
       "path": "./projects/ggc-home/tsconfig.app.json"
     },
     {
       "path": "./projects/ggc-home/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ggc-legend/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ggc-map/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ggc-models/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ggc-search-location/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ggc-toolbar/tsconfig.lib.json"
     }
   ]
 }

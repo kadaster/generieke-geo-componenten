@@ -18,7 +18,7 @@ import { Tags } from "../../tags.enum";
 import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: "app-example-3d-feature-info-auto-connect",
+  selector: "ggc-example-3d-feature-info-auto-connect",
   templateUrl: "./example3d-feature-info-auto-connect.component.html",
   styleUrl: "./example3d-feature-info-auto-connect.component.scss",
   imports: [

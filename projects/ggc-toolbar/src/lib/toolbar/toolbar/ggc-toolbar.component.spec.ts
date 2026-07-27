@@ -40,16 +40,18 @@ describe("ToolboxComponent", () => {
   });
 
   it("should render item content after click", () => {
-    const toolbar = hostComponent.toolbar;
+    const items = hostFixture.debugElement.queryAll(
+      By.directive(GgcToolbarItemComponent)
+    );
 
-    (toolbar as any).children.forEach((child: any) => child.handleClick());
-
+    items[0].componentInstance.handleClick();
     hostFixture.detectChanges();
 
     const content = hostFixture.debugElement.query(
       By.css(".ggc-toolbar-content")
-    ).nativeElement;
+    );
 
-    expect(content.textContent).toContain("Hello World");
+    expect(content).not.toBeNull();
+    expect(content.nativeElement.textContent).toContain("Hello World");
   });
 });

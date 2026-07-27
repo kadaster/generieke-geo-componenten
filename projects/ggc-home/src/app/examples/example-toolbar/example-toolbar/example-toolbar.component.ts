@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import {
   GgcDrawService,
   GgcLayerBrtAchtergrondkaartComponent,
@@ -21,7 +21,7 @@ import { Tags } from "../../tags.enum";
 import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: "app-example-toolbar",
+  selector: "ggc-home-example-toolbar",
   imports: [
     GgcLayerBrtAchtergrondkaartComponent,
     GgcMapComponent,
@@ -52,8 +52,8 @@ export class ExampleToolbar extends ExampleFormatComponent {
     "example-toolbar/example-toolbar/example-toolbar.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-toolbar_src_public-api.GgcToolbarComponent.html`;
   // DOCS-SKIP:END
-  protected measureActive = false;
-  protected drawActive = false;
+  protected measureActive = signal(false);
+  protected drawActive = signal(false);
 
   private readonly mapService = inject(GgcMapService);
   private readonly drawService = inject(GgcDrawService);
@@ -63,8 +63,8 @@ export class ExampleToolbar extends ExampleFormatComponent {
   }
 
   changeMeasureState(event: ToolbarItemComponentEvent) {
-    this.measureActive = event.active;
-    this.drawActive = false;
+    this.measureActive.set(event.active);
+    this.drawActive.set(false);
     this.drawService.stopDraw(DEFAULT_MAPINDEX);
   }
 
@@ -73,8 +73,8 @@ export class ExampleToolbar extends ExampleFormatComponent {
   }
 
   changeDrawState(event: ToolbarItemComponentEvent) {
-    this.drawActive = event.active;
-    this.measureActive = false;
+    this.drawActive.set(event.active);
+    this.measureActive.set(false);
     this.drawService.stopDraw(DEFAULT_MAPINDEX);
   }
 }

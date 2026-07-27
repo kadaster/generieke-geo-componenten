@@ -1,14 +1,14 @@
-@switch (type) {
+@switch (type()) {
   @case (featureInfoDisplayTypeEnum.LIST) {
     <dl class="ggc-fi-list-item">
       @for (key of objectKeys | featureinfokeys; track key) {
-        @if (!headerValueTemplates.has(key) || headerValueTemplates.get(key)) {
+        @if (!headerValueTemplates().has(key) || headerValueTemplates().get(key)) {
           <dt class="ggc-fi-list-title">
             <ng-container
               [ngTemplateOutlet]="
-                headerValueTemplates.get(key)
-                  ? headerValueTemplates.get(key)
-                  : defaultValueTemplateHeader
+                headerValueTemplates().get(key)
+                  ? headerValueTemplates().get(key)
+                  : defaultValueTemplateHeaderList
               "
               [ngTemplateOutletContext]="{
                 $implicit: key,
@@ -16,14 +16,14 @@
                 properties: displayFeature
               }"
             ></ng-container>
-            <ng-template #defaultValueTemplateHeader>{{ key }}</ng-template>
+            <ng-template #defaultValueTemplateHeaderList>{{ key }}</ng-template>
           </dt>
           <dd class="ggc-fi-list-content">
             <ng-container
               [ngTemplateOutlet]="
-                contentValueTemplates.get(key)
-                  ? contentValueTemplates.get(key)
-                  : defaultValueTemplate
+                contentValueTemplates().get(key)
+                  ? contentValueTemplates().get(key)
+                  : defaultValueTemplateList
               "
               [ngTemplateOutletContext]="{
                 $implicit: key,
@@ -31,7 +31,7 @@
                 properties: displayFeature
               }"
             ></ng-container>
-            <ng-template #defaultValueTemplate>{{
+            <ng-template #defaultValueTemplateList>{{
               displayFeature[key]
             }}</ng-template>
           </dd>
@@ -39,7 +39,6 @@
       }
     </dl>
   }
-
   @case (featureInfoDisplayTypeEnum.TABLE) {
     <table class="ggc-fi-table table">
       <caption class="sr-only visually-hidden">
@@ -54,15 +53,15 @@
       <tbody class="ggc-fi-tbody">
         @for (key of objectKeys | featureinfokeys; track key) {
           @if (
-            !headerValueTemplates.has(key) || headerValueTemplates.get(key)
+            !headerValueTemplates().has(key) || headerValueTemplates().get(key)
           ) {
             <tr>
               <td>
                 <ng-container
                   [ngTemplateOutlet]="
-                    headerValueTemplates.has(key)
-                      ? headerValueTemplates.get(key)
-                      : defaultValueTemplateHeader
+                    headerValueTemplates().has(key)
+                      ? headerValueTemplates().get(key)
+                      : defaultValueTemplateHeaderTable
                   "
                   [ngTemplateOutletContext]="{
                     $implicit: key,
@@ -70,15 +69,17 @@
                     properties: displayFeature
                   }"
                 ></ng-container>
-                <ng-template #defaultValueTemplateHeader>{{ key }}</ng-template>
+                <ng-template #defaultValueTemplateHeaderTable>{{
+                  key
+                }}</ng-template>
               </td>
               <td>
                 <ng-container
                   class="ggc-fi-list-content"
                   [ngTemplateOutlet]="
-                    contentValueTemplates.get(key)
-                      ? contentValueTemplates.get(key)
-                      : defaultValueTemplate
+                    contentValueTemplates().get(key)
+                      ? contentValueTemplates().get(key)
+                      : defaultValueTemplateTable
                   "
                   [ngTemplateOutletContext]="{
                     $implicit: key,
@@ -86,7 +87,7 @@
                     properties: displayFeature
                   }"
                 ></ng-container>
-                <ng-template #defaultValueTemplate>{{
+                <ng-template #defaultValueTemplateTable>{{
                   displayFeature[key]
                 }}</ng-template>
               </td>

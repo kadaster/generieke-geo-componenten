@@ -1,7 +1,8 @@
 import type { MockedObject, MockInstance } from "vitest";
 import {
   provideHttpClient,
-  withInterceptorsFromDi
+  withInterceptorsFromDi,
+  withXhr
 } from "@angular/common/http";
 import {
   HttpTestingController,
@@ -67,7 +68,7 @@ describe("WmsLayerComponent", () => {
         CoreMapEventsService,
         CoreSelectionService,
         { provide: CoreWmsWmtsCapabilitiesService, useValue: capSpy },
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
     }).compileComponents();
@@ -92,7 +93,7 @@ describe("WmsLayerComponent", () => {
     addLayer(layer) {
       resultLayer = layer as ImageLayer<ImageSource>;
     },
-    removeLayer(_) {
+    removeLayer(_item) {
       return;
     },
     getView() {

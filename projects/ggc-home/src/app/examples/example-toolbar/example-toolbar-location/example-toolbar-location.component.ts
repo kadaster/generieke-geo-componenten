@@ -18,7 +18,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-toolbar-location",
+  selector: "ggc-home-example-toolbar-location",
   imports: [
     GgcLayerBrtAchtergrondkaartComponent,
     GgcMapComponent,

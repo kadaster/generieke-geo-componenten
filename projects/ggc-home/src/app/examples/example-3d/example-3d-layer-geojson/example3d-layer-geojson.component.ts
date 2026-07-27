@@ -21,7 +21,7 @@ import {
 } from "@cesium/engine";
 
 @Component({
-  selector: "app-example-3d-layer-geojson",
+  selector: "ggc-example-3d-layer-geojson",
   templateUrl: "./example3d-layer-geojson.component.html",
   styleUrl: "./example3d-layer-geojson.component.scss",
   imports: [GgcViewerComponent, GgcControlsComponent, ExampleFormatComponent],

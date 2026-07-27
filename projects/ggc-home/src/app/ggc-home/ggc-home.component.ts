@@ -14,7 +14,7 @@ import { Router } from "@angular/router";
 import { EventTrackerService } from "../service/event-tracker.service";
 
 @Component({
-  selector: "app-ggc-home",
+  selector: "ggc-home",
   templateUrl: "./ggc-home.component.html",
   styleUrl: "./ggc-home.component.scss",
   imports: [GgcMapComponent, GgcLayerBrtAchtergrondkaartComponent],

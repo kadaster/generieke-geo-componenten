@@ -2,8 +2,8 @@
   "name": "@kadaster/ggc-legend",
   "version": "3.0.3",
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
     "dompurify": "^3.4.11",
     "@kadaster/ggc-map-3d": "*",
     "@kadaster/ggc-map": "^3.0.0"

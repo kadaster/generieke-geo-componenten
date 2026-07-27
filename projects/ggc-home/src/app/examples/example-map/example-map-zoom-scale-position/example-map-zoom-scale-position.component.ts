@@ -6,9 +6,9 @@ import {
   GgcMousePositionComponent,
   GgcScaleDenominatorComponent,
   GgcScaleLineComponent,
-  GgcZoomLevelComponent
+  GgcZoomLevelComponent,
+  Webservice
 } from "@kadaster/ggc-map";
-import { Webservice } from "../../../../../../ggc-map-3d/src/lib/model/interfaces";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -16,7 +16,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-map-zoom-scale-position",
+  selector: "ggc-home-example-map-zoom-scale-position",
   imports: [
     GgcMapComponent,
     GgcScaleLineComponent,

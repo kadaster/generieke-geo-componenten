@@ -90,8 +90,8 @@ describe("LayerToggleComponent", () => {
 
     fixture = TestBed.createComponent(LayerToggleComponent);
     component = fixture.componentInstance;
-    component.layer = { layerId: "id" };
-    component.mapIndex = "mapIndex";
+    fixture.componentRef.setInput("layer", { layerId: "id" });
+    fixture.componentRef.setInput("mapIndex", "mapIndex");
     component["enabled"].set(true);
     fixture.detectChanges();
   });
@@ -178,7 +178,7 @@ describe("LayerToggleComponent", () => {
     datasetTreeMapConnectServiceSpy.getEnabled.mockReturnValue(
       Promise.resolve(false)
     );
-    component.layerEnabledCallback = undefined as any;
+    fixture.componentRef.setInput("layerEnabledCallback", undefined);
 
     component["enabled"].set(true);
 
@@ -194,14 +194,14 @@ describe("LayerToggleComponent", () => {
 
     const cb = vi.fn().mockResolvedValue(false);
 
-    component.layerEnabledCallback = cb as any;
+    fixture.componentRef.setInput("layerEnabledCallback", cb as any);
 
     await (component as any).updateEnabled();
 
     expect(cb).toHaveBeenCalledWith({
-      layer: component.layer,
+      layer: component.layer(),
       mapIndex: "mapIndex",
-      viewerType: component.viewerType,
+      viewerType: component.viewerType(),
       isEnabled: true
     });
     expect(component["enabled"]()).toBe(false);
@@ -212,7 +212,10 @@ describe("LayerToggleComponent", () => {
       Promise.resolve(false)
     );
 
-    component.layerEnabledCallback = (async () => "nope") as any;
+    fixture.componentRef.setInput(
+      "layerEnabledCallback",
+      (async () => "nope") as any
+    );
 
     await (component as any).updateEnabled();
 

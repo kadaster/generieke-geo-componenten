@@ -23,7 +23,7 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-dataset-tree-templates",
+  selector: "ggc-home-example-dataset-tree-templates",
   imports: [
     GgcMapComponent,
     GgcDatasetTreeComponent,

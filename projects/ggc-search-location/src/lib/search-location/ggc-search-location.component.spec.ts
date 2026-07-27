@@ -105,7 +105,7 @@ describe("GgcSearchLocationComponent", () => {
         initialSearchTerm: "Amsterdam"
       } as SearchLocationOptions;
       fixture.detectChanges();
-      expect(component["inputValue"]).toBe("Amsterdam");
+      expect(component["inputValue"]()).toBe("Amsterdam");
     });
   });
 
@@ -116,11 +116,11 @@ describe("GgcSearchLocationComponent", () => {
       };
     });
     it("moet de zoekterm wissen bij Escape", async () => {
-      component["inputValue"] = "Utrecht";
+      component["inputValue"].set("Utrecht");
       const event = new KeyboardEvent("keyup", { key: "Escape" });
       component.onInputUp(event);
       await Promise.resolve();
-      expect(component["inputValue"]).toBe("");
+      expect(component["inputValue"]()).toBe("");
     });
 
     it("moet suggesties zoeken bij normale invoer", async () => {
@@ -144,8 +144,8 @@ describe("GgcSearchLocationComponent", () => {
         type: "FeatureCollection"
       } as PdokLocationApiSearchResponse;
       component.processSuggestionsResult(mockResponse);
-      expect(component["showSuggestions"]).toBe(true);
-      expect(component["suggestions"].length).toBe(1);
+      expect(component["showSuggestions"]()).toBe(true);
+      expect(component["suggestions"]().length).toBe(1);
     });
 
     it("moet noSuggestionsFound op true zetten als er 0 resultaten zijn", () => {
@@ -157,7 +157,7 @@ describe("GgcSearchLocationComponent", () => {
         type: "FeatureCollection"
       };
       component.processSuggestionsResult(mockResponse);
-      expect(component["noSuggestionsFound"]).toBe(true);
+      expect(component["noSuggestionsFound"]()).toBe(true);
     });
   });
 
@@ -193,7 +193,7 @@ describe("GgcSearchLocationComponent", () => {
       expect(mapServiceMock.clearHighlightLayer).toHaveBeenCalledWith(
         "test-map"
       );
-      expect(component["inputValue"]).toBe("");
+      expect(component["inputValue"]()).toBe("");
     });
   });
 
@@ -229,7 +229,7 @@ describe("GgcSearchLocationComponent", () => {
       );
 
       component.processCurrentLocation();
-      expect(component["loadCurrentLocation"]).toBe(true);
+      expect(component["loadCurrentLocation"]()).toBe(true);
     });
   });
 });

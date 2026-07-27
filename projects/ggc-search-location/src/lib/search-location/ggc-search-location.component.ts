@@ -10,6 +10,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  signal,
   Signal,
   ViewChild,
   ViewChildren,
@@ -69,15 +70,15 @@ export class GgcSearchLocationComponent implements OnInit {
     new EventEmitter<any>();
 
   protected elementIds: SearchComponentElementIds;
-  protected inputValue = "";
+  protected inputValue = signal("");
   protected clsSearchButton: string;
   protected clsClearButton: string;
-  protected suggestions: Array<PdokLocationApiSearchFeature> = [];
-  protected showSuggestions = false;
-  protected showCurrentLocation = false;
-  protected loadCurrentLocation = false;
-  protected inputCurrentLocation = false;
-  protected noSuggestionsFound = false;
+  protected suggestions = signal<Array<PdokLocationApiSearchFeature>>([]);
+  protected showSuggestions = signal(false);
+  protected showCurrentLocation = signal(false);
+  protected loadCurrentLocation = signal(false);
+  protected inputCurrentLocation = signal(false);
+  protected noSuggestionsFound = signal(false);
   protected collectionIdTranslations: Map<string, string>;
   protected readonly searchCurrentLocationTypes = SearchCurrentLocationType;
 
@@ -87,6 +88,19 @@ export class GgcSearchLocationComponent implements OnInit {
   protected readonly hasLocation: Signal<boolean> = computed(
     () => this.searchLocationOptions?.searchCurrentLocation !== undefined
   );
+  protected readonly suggestionsLength: Signal<number> = computed(
+    () => this.suggestions().length
+  );
+  protected readonly hasFocusableSuggestions: Signal<boolean> = computed(() => {
+    return (
+      this.showSuggestions() &&
+      (this.suggestionsLength() > 0 ||
+        (this.showCurrentLocation() &&
+          this.searchLocationOptions?.searchCurrentLocation?.type ===
+            SearchCurrentLocationType.SELECT) ||
+        this.noSuggestionsFound())
+    );
+  });
 
   @ViewChildren(CdkOption, {})
   private readonly listOptions: QueryList<
@@ -100,7 +114,6 @@ export class GgcSearchLocationComponent implements OnInit {
   private readonly searchLocationService = inject(GgcSearchLocationService);
   private readonly connectService = inject(GgcSearchLocationConnectService);
   private readonly elRef = inject(ElementRef);
-  private _searchTerm: string;
   private _classSearchButton = "fas fa-search";
   private _classClearButton = "fas fa-times";
   private hasInitialSearchterm = false;
@@ -124,12 +137,12 @@ export class GgcSearchLocationComponent implements OnInit {
 
   /** De huidige zoekterm in het inputveld. */
   get searchTerm(): string {
-    return this._searchTerm;
+    return this.inputValue();
   }
 
   @Input()
   set searchTerm(value: string) {
-    this._searchTerm = this.inputValue = value.trim();
+    this.inputValue.set(value.trim());
   }
 
   /** De CSS-klasse voor de zoek-icoon/knop. */
@@ -192,7 +205,7 @@ export class GgcSearchLocationComponent implements OnInit {
       this.searchLocationOptions.initialResult.subscribe(
         (value: PdokLocationApiSearchFeature) => {
           if (value.properties.display_name) {
-            this.inputValue = value.properties.display_name;
+            this.inputValue.set(value.properties.display_name);
             this.result = value;
           }
         }
@@ -203,7 +216,7 @@ export class GgcSearchLocationComponent implements OnInit {
       const trimmed = this.searchLocationOptions.initialSearchTerm.trim();
       if (trimmed) {
         this.hasInitialSearchterm = true;
-        this.inputValue = trimmed;
+        this.inputValue.set(trimmed);
         this.searchTerm$.next(trimmed);
       }
     }
@@ -214,7 +227,7 @@ export class GgcSearchLocationComponent implements OnInit {
         this.searchLocationOptions.triggerSearch)
     ) {
       this.hasInitialSearchterm = true;
-      this.searchTerm$.next(this._searchTerm);
+      this.searchTerm$.next(this.inputValue());
     }
 
     if (this.searchLocationOptions?.hideCollectionId !== true) {
@@ -235,9 +248,9 @@ export class GgcSearchLocationComponent implements OnInit {
    * Maakt het zoekveld leeg en verwijdert eventuele highlights van de kaart.
    */
   async clearSearchTerm() {
-    this.inputValue = "";
-    this.inputCurrentLocation = false;
-    this.searchTerm$.next(this.inputValue);
+    this.inputValue.set("");
+    this.inputCurrentLocation.set(false);
+    this.searchTerm$.next(this.inputValue());
     this.resetSuggestionsAndResult();
     if (this.searchLocationOptions?.markResult) {
       if (this.viewerType() === ViewerType.TWEE_D) {
@@ -266,8 +279,8 @@ export class GgcSearchLocationComponent implements OnInit {
       case "ArrowDown":
         // Go from the text box to the top list option
         if (
-          this.suggestions.length > 0 ||
-          (this.showCurrentLocation &&
+          this.suggestions().length > 0 ||
+          (this.showCurrentLocation() &&
             this.searchLocationOptions?.searchCurrentLocation?.type ===
               SearchCurrentLocationType.SELECT)
         ) {
@@ -374,21 +387,23 @@ export class GgcSearchLocationComponent implements OnInit {
   ): void {
     this.resetSuggestionsAndResult(false);
     if (response && response.numberReturned > -1) {
-      this.showSuggestions = true;
+      this.showSuggestions.set(true);
       this.onInputFocus();
       if (this.searchLocationOptions?.numberOfSuggestions === undefined) {
-        this.suggestions = response.features;
+        this.suggestions.set(response.features);
       } else {
-        this.suggestions = response.features.slice(
-          0,
-          this.searchLocationOptions.numberOfSuggestions
+        this.suggestions.set(
+          response.features.slice(
+            0,
+            this.searchLocationOptions.numberOfSuggestions
+          )
         );
       }
       if (response.numberReturned > 0) {
-        this.noSuggestionsFound = false;
+        this.noSuggestionsFound.set(false);
         this.checkAndSearchInitialSearchterm();
       } else {
-        this.noSuggestionsFound = true;
+        this.noSuggestionsFound.set(true);
       }
       if (this.hasInitialSearchterm) {
         this.hasInitialSearchterm = false;
@@ -409,12 +424,12 @@ export class GgcSearchLocationComponent implements OnInit {
         )
       );
     }
-    this.suggestions = [];
-    this.noSuggestionsFound = false;
+    this.suggestions.set([]);
+    this.noSuggestionsFound.set(false);
     this.result = undefined;
-    this.showSuggestions = false;
+    this.showSuggestions.set(false);
     if (resetLocation) {
-      this.showCurrentLocation = false;
+      this.showCurrentLocation.set(false);
     }
   }
 
@@ -424,14 +439,14 @@ export class GgcSearchLocationComponent implements OnInit {
    */
   searchForSuggestions(value: string) {
     this.searchTerm$.next(value);
-    this.inputValue = value;
+    this.inputValue.set(value);
   }
 
   /**
    * Voert de definitieve zoekopdracht uit wanneer op Enter wordt gedrukt.
    */
   searchOnEnter() {
-    if (this.inputCurrentLocation) {
+    if (this.inputCurrentLocation()) {
       this.processCurrentLocation();
     } else if (this.result) {
       this.events.emit(
@@ -441,8 +456,8 @@ export class GgcSearchLocationComponent implements OnInit {
           this.result
         )
       );
-    } else if (this.suggestions.length > 0) {
-      this.processPdokLocationApiSearchFeatureResult(this.suggestions[0]);
+    } else if (this.suggestionsLength() > 0) {
+      this.processPdokLocationApiSearchFeatureResult(this.suggestions()[0]);
     } else {
       this.events.emit(
         new SearchComponentEvent(
@@ -454,8 +469,8 @@ export class GgcSearchLocationComponent implements OnInit {
   }
 
   private checkAndSearchInitialSearchterm() {
-    if (this.hasInitialSearchterm && this.suggestions.length === 1) {
-      this.processPdokLocationApiSearchFeatureResult(this.suggestions[0]);
+    if (this.hasInitialSearchterm && this.suggestionsLength() === 1) {
+      this.processPdokLocationApiSearchFeatureResult(this.suggestions()[0]);
     }
   }
 
@@ -466,8 +481,8 @@ export class GgcSearchLocationComponent implements OnInit {
   private async processPdokLocationApiSearchFeatureResult(
     feature: PdokLocationApiSearchFeature
   ): Promise<void> {
-    this.inputValue = feature.properties.display_name;
-    this.inputCurrentLocation = false;
+    this.inputValue.set(feature.properties.display_name);
+    this.inputCurrentLocation.set(false);
     this.result = { ...feature };
     this.events.emit(
       new SearchComponentEvent(
@@ -476,8 +491,8 @@ export class GgcSearchLocationComponent implements OnInit {
         this.result
       )
     );
-    this.showSuggestions = false;
-    this.showCurrentLocation = false;
+    this.showSuggestions.set(false);
+    this.showCurrentLocation.set(false);
     this.processZoomToResult(feature);
     this.processMarkResult(feature);
   }
@@ -678,13 +693,12 @@ export class GgcSearchLocationComponent implements OnInit {
   /**
    * Reageert op selectie-events vanuit de CDK Listbox.
    */
-  handleCdkListboxEvent(
-    $event: ListboxValueChangeEvent<PdokLocationApiSearchFeature>
-  ) {
-    if ($event.value[0].id === "current-location") {
+  handleCdkListboxEvent($event: ListboxValueChangeEvent<unknown>) {
+    const value = $event.value as readonly PdokLocationApiSearchFeature[];
+    if (value[0].id === "current-location") {
       this.processCurrentLocation();
     } else {
-      this.processPdokLocationApiSearchFeatureResult($event.value[0]);
+      this.processPdokLocationApiSearchFeatureResult(value[0]);
     }
   }
 
@@ -692,9 +706,9 @@ export class GgcSearchLocationComponent implements OnInit {
    * Toont suggesties zodra het inputveld de focus krijgt.
    */
   onInputFocus() {
-    this.showSuggestions = true;
+    this.showSuggestions.set(true);
     if (this.searchLocationOptions?.searchCurrentLocation) {
-      this.showCurrentLocation = true;
+      this.showCurrentLocation.set(true);
     }
   }
 
@@ -705,10 +719,10 @@ export class GgcSearchLocationComponent implements OnInit {
   closeShowCurrentLocationOnPageClickEvent(event: Event) {
     if (
       !this.elRef.nativeElement.contains(event.target) &&
-      (this.showSuggestions || this.showCurrentLocation)
+      (this.showSuggestions() || this.showCurrentLocation())
     ) {
-      this.showSuggestions = false;
-      this.showCurrentLocation = false;
+      this.showSuggestions.set(false);
+      this.showCurrentLocation.set(false);
     }
   }
 
@@ -716,18 +730,18 @@ export class GgcSearchLocationComponent implements OnInit {
    * Start het proces om de huidige geografische locatie van de gebruiker te bepalen.
    */
   processCurrentLocation(): void {
-    this.showCurrentLocation = false;
-    this.showSuggestions = false;
-    this.noSuggestionsFound = false;
+    this.showCurrentLocation.set(false);
+    this.showSuggestions.set(false);
+    this.noSuggestionsFound.set(false);
     this.result = SearchComponentEventTypes.SEARCH_LOCATION_RESULT;
     this.searchLocationService
       .getLocationEventsObservable(this.searchLocationOptions?.mapIndex)
       .pipe(first())
       .subscribe((event: number[]) => {
-        this.inputValue = "Uw locatie";
-        this.inputCurrentLocation = true;
-        this.loadCurrentLocation = false;
-        this.showCurrentLocation = false;
+        this.inputValue.set("Uw locatie");
+        this.inputCurrentLocation.set(true);
+        this.loadCurrentLocation.set(false);
+        this.showCurrentLocation.set(false);
         this.events.emit(
           new SearchComponentEvent(
             SearchComponentEventTypes.SEARCH_LOCATION_RESULT,
@@ -751,7 +765,7 @@ export class GgcSearchLocationComponent implements OnInit {
         );
       });
 
-    this.loadCurrentLocation = true;
+    this.loadCurrentLocation.set(true);
     this.searchLocationService.getLocation(
       false,
       this.searchLocationOptions?.mapIndex

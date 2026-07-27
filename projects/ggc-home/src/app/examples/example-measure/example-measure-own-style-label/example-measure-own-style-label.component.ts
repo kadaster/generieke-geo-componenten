@@ -10,7 +10,7 @@ import { Tags } from "../../tags.enum";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-measure-own-style-label",
+  selector: "ggc-home-example-measure-own-style-label",
   imports: [ExampleFormatComponent, GgcMapComponent, FormsModule],
   templateUrl: "./example-measure-own-style-label.component.html"
 })

@@ -16,7 +16,7 @@ import { HttpClient } from "@angular/common/http";
 import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: "app-example-3d-layer-3d-tiles",
+  selector: "ggc-example-3d-layer-3d-tiles",
   templateUrl: "./example3d-layer-3d-tiles.component.html",
   styleUrl: "./example3d-layer-3d-tiles.component.scss",
   imports: [

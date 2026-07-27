@@ -8,7 +8,7 @@ import { Components } from "../../components.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-legend-adv",
+  selector: "ggc-home-example-legend-adv",
   imports: [
     ExampleFormatComponent,
     GgcMapComponent,

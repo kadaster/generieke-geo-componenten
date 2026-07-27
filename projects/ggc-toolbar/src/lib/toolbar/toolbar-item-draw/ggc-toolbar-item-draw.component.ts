@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { Component, EventEmitter, inject, input, Output } from "@angular/core";
 import {
   ToolbarItemDrawComponentEvent,
   ToolbarItemDrawType
@@ -47,37 +47,37 @@ type DrawType = "Point" | "Line" | "Circle" | "Rectangle" | "Polygon";
 })
 export class GgcToolbarItemDrawComponent {
   /** Naam van de kaart waarop getekend wordt. */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /** Naam van de laag waarin getekend wordt. */
-  @Input() layer = "drawing";
+  layer = input<string>("measuring");
 
   /** Icoon voor de 'stop tekenen' knop. */
-  @Input() stopIcon = "fal fa-mouse-pointer";
+  stopIcon = input<string>("fal fa-mouse-pointer");
 
   /** Icoon voor de 'punt tekenen' knop. */
-  @Input() drawIcon = "fas fa-circle";
+  drawIcon = input<string>("fas fa-circle");
 
   /** Icoon voor de 'lijn tekenen' knop. */
-  @Input() drawLineIcon = "fal fa-project-diagram";
+  drawLineIcon = input<string>("fal fa-project-diagram");
 
   /** Icoon voor de 'cirkel tekenen' knop. */
-  @Input() drawCircleIcon = "fal fa-dot-circle";
+  drawCircleIcon = input<string>("fal fa-dot-circle");
 
   /** Icoon voor de 'rechthoek tekenen' knop. */
-  @Input() drawRectangleIcon = "fal fa-vector-square";
+  drawRectangleIcon = input<string>("fal fa-vector-square");
 
   /** Icoon voor de 'polygon tekenen' knop. */
-  @Input() drawPolygonIcon = "fal fa-draw-polygon";
+  drawPolygonIcon = input<string>("fal fa-draw-polygon");
 
   /** Icoon voor de 'tekenlaag wissen' knop. */
-  @Input() deleteIcon = "fal fa-trash-alt";
+  deleteIcon = input<string>("fal fa-trash-alt");
 
   /** Icoon voor de 'tekening verplaatsen' knop. */
-  @Input() moveIcon = "fal fa-hand-paper";
+  moveIcon = input<string>("fal fa-hand-paper");
 
   /** Icoon voor de 'tekening bewerken' knop. */
-  @Input() editIcon = "fal fa-pencil-alt";
+  editIcon = input<string>("fal fa-pencil-alt");
 
   /**
    * Event dat wordt verstuurd wanneer een tekenactie wordt uitgevoerd.
@@ -104,10 +104,10 @@ export class GgcToolbarItemDrawComponent {
     from(this.getDrawService()).subscribe((service) => {
       this.activeDraw = type;
       service.startDraw(
-        this.layer,
+        this.layer(),
         this.getMapComponentDrawType(type),
         {},
-        this.mapIndex
+        this.mapIndex()
       );
       this.drawItemClicked.emit({
         toolbarItemName: this.getToolbarItemDrawType(type)
@@ -122,7 +122,7 @@ export class GgcToolbarItemDrawComponent {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
         this.activeDraw = "move";
-        service.startMove(this.layer, this.mapIndex);
+        service.startMove(this.layer(), this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.MOVE
         });
@@ -137,7 +137,7 @@ export class GgcToolbarItemDrawComponent {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
         this.activeDraw = "edit";
-        service.startModify(this.layer, this.mapIndex);
+        service.startModify(this.layer(), this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.EDIT
         });
@@ -152,7 +152,7 @@ export class GgcToolbarItemDrawComponent {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
         this.activeDraw = undefined;
-        service.stopDraw(this.mapIndex);
+        service.stopDraw(this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.STOP
         });
@@ -167,7 +167,7 @@ export class GgcToolbarItemDrawComponent {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
         this.activeDraw = undefined;
-        service.clearLayer(this.layer, this.mapIndex);
+        service.clearLayer(this.layer(), this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.CLEAR
         });

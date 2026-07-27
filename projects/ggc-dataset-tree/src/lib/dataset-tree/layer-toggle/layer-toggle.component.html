@@ -9,19 +9,19 @@
     role="checkbox"
   >
     @if (!enabled()) {
-      <span class="{{ iconDisabled }}"></span>
+      <span class="{{ iconDisabled() }}"></span>
     } @else if (!visible()) {
-      <span class="ggc-dt-ls-layer-unchecked {{ iconUnchecked }}"></span>
+      <span class="ggc-dt-ls-layer-unchecked {{ iconUnchecked() }}"></span>
     } @else {
-      <span class="ggc-dt-ls-layer-checked {{ iconChecked }}"></span>
+      <span class="ggc-dt-ls-layer-checked {{ iconChecked() }}"></span>
     }
     <span class="ggc-dt-ls-layer-title">
       <ng-container
         [ngTemplateOutletContext]="{
-          layer: layer
+          layer: layer()
         }"
         [ngTemplateOutlet]="
-          layerLabelComponent ? layerLabelComponent : defaultValueLayerTemplate
+          layerLabelComponent() ? layerLabelComponent() : defaultValueLayerTemplate
         "
       ></ng-container>
       <ng-template #defaultValueLayerTemplate>{{ title() }}</ng-template>

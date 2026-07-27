@@ -8,7 +8,7 @@ import { Tags } from "../../tags.enum";
 import { MapComponentDrawTypes } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-draw-basic",
+  selector: "ggc-home-example-draw-basic",
   imports: [ExampleFormatComponent, GgcMapComponent],
   templateUrl: "./example-draw-basic.component.html"
 })

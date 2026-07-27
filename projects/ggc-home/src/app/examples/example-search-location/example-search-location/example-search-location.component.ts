@@ -20,7 +20,7 @@ import { Tags } from "../../tags.enum";
 import { take } from "rxjs/operators";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-search-location",
   imports: [
     GgcLayerBrtAchtergrondkaartComponent,
     GgcMapComponent,

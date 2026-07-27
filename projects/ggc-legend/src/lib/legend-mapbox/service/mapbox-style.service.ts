@@ -72,7 +72,6 @@ export class MapboxStyleService {
     for (const layer of style.layers) {
       let props: IProperties = extractPropertiesFromFilter({}, layer.filter);
       const title = layer["source-layer"];
-      let hasPattern = false;
       let pattern: Pattern | undefined = undefined;
       switch (layer.type) {
         case LayerType.Fill: {
@@ -96,7 +95,7 @@ export class MapboxStyleService {
           break;
         }
       }
-      hasPattern = this.handlePattern(pattern, legendItems, layer);
+      const hasPattern = this.handlePattern(pattern, legendItems, layer);
       if (!hasPattern) {
         props = this.addTextLabels(layer, props);
         if (addLayerName && !legendItems.some((e) => e.title === title)) {

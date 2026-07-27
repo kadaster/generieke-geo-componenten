@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
-  selector: "app-downloads-npm",
+  selector: "ggc-home-downloads-npm",
   imports: [],
   templateUrl: "./downloads-npm.component.html",
   styleUrl: "./downloads-npm.component.scss"

@@ -1,5 +1,4 @@
 import type { NodePlopAPI } from "plop";
-// @ts-ignore
 import {
   buildExamplePaths,
   buildComponentMetadata,
@@ -7,7 +6,6 @@ import {
   buildExampleMetadata,
   componentImportMap
 } from "./plop-helpers.ts";
-// @ts-ignore
 import {
   directoryChoices,
   componentTagChoices,

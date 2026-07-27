@@ -1,11 +1,11 @@
 import type { MockedObject } from "vitest";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { AbstractClickableLayerComponent } from "./abstract-clickable-layer.component";
 
-@Component({ template: "" })
+@Component({ changeDetection: ChangeDetectionStrategy.Eager, template: "" })
 class TestLayerComponent extends AbstractClickableLayerComponent<any> {}
 
 describe("AbstractClickableLayerComponent", () => {

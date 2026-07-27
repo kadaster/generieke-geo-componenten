@@ -18,7 +18,7 @@ export enum EditType {
 }
 
 @Component({
-  selector: "app-example-draw-edit-basic",
+  selector: "ggc-home-example-draw-edit-basic",
   imports: [ExampleFormatComponent, GgcMapComponent],
   templateUrl: "./example-draw-edit-basic.component.html"
 })

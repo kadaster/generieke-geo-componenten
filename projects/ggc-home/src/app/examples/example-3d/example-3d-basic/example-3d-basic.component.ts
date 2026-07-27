@@ -15,7 +15,7 @@ import { HttpClient } from "@angular/common/http";
 import { Tags } from "../../tags.enum";
 
 @Component({
-  selector: "app-example-3d-basic",
+  selector: "ggc-home-example-3d-basic",
   templateUrl: "./example-3d-basic.component.html",
   styleUrl: "./example-3d-basic.component.scss",
   imports: [GgcViewerComponent, GgcControlsComponent, ExampleFormatComponent],
