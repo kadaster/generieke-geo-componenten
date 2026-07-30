@@ -13,20 +13,153 @@
     <title>Toegankelijkheidsverklaring GGC Home - Kadaster</title>
     <base href="/" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="../src/styles.scss" />
+    <style>
+      @font-face {
+        font-family: "Open Sans", "Arial", sans-serif;
+        src: url(assets/fonts/OpenSans/OpenSans-Regular.ttf);
+        font-weight: normal;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      .link a {
+        text-decoration: none;
+      }
+
+      .link a:hover {
+        text-decoration: underline;
+      }
+
+      .navbar-kadaster .navbar-brand img.img-responsive {
+        height: 3.5rem;
+        padding-right: 25px;
+        padding-left: 20px;
+      }
+
+      .navbar-kadaster {
+        border-bottom: 1px solid #04357d;
+        padding: 12px 0;
+        margin-top: 1rem;
+      }
+
+      .navbar-header {
+        height: 55px;
+      }
+
+      .navbar-brand {
+        float: left;
+        padding: 0 0;
+        height: 50px;
+      }
+
+      .navbar-text {
+        float: right;
+        margin: 0;
+      }
+
+      .navbar-header h1 {
+        color: #00387d;
+        line-height: 65px;
+        font-family: "Open Sans", Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        padding-left: 1.5rem;
+      }
+
+      h1 {
+        color: #00387d;
+      }
+
+      h2 {
+        color: #00387d;
+        margin-bottom: 10px;
+      }
+
+      h3,
+      h4 {
+        color: #008296;
+        margin: 10px 0;
+      }
+
+      pre {
+        margin-top: 0;
+      }
+
+      p {
+        margin: 10px 0;
+        line-height: 140%;
+      }
+
+      ul {
+        margin-top: 8px;
+      }
+
+      li {
+        line-height: 140%;
+      }
+
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-family: "OpenSans", arial, sans-serif;
+      }
+
+      code {
+        font-size: 16px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+      }
+
+      .info-message {
+        flex: 1 1 auto;
+        margin-bottom: 50px;
+
+        @media only screen and (max-width: 1232px) {
+          max-width: 75%;
+        }
+        @media only screen and (min-width: 1233px) {
+          max-width: 50%;
+        }
+        @media screen and (min-width: 1360px) {
+          max-width: 35%;
+        }
+      }
+
+      .button {
+        background-color: #396396;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+      }
+
+      .break-word {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: none;
+      }
+    </style>
   </head>
   <body>
-    <nav class="ggc-nav-bar">
-      <ul class="ggc-nav-bar__list ggc-nav-bar__list">
-        <li class="ggc-nav-bar__item ggc-nav-bar__heading" id="heading">
-          <a class="nl-link ggc-link ggc-nav-bar__link" href="/">
-            <span> GGC Home </span>
+    <nav class="navbar-kadaster">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a href="/" title="GGC Home" class="navbar-brand">
+            <h1 class="navbar-text">GGC Home</h1>
           </a>
-        </li>
-      </ul>
+        </div>
+      </div>
     </nav>
-    <main>
-      <div class="utrecht-page-body__content">
+    <div class="container" role="main">
+      <div class="info-message break-word">
         <h1>Toegankelijkheid</h1>
         <p>
           De informatie van het Kadaster is voor iedereen beschikbaar. Daarom
@@ -109,6 +242,6 @@
           >.
         </p>
       </div>
-    </main>
+    </div>
   </body>
 </html>
