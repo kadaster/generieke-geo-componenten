@@ -20,6 +20,7 @@ import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abs
 import { GeojsonLayerOptions } from "../model/geojson-layer.model";
 import { CoreOgcApiFeaturesService } from "../service/core-ogc-api-features.service";
 import {
+  LayerChangedEventTrigger,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -136,6 +137,11 @@ export class GgcGeojsonLayerComponent
               });
 
               this.vectorSource.addFeatures(features);
+              this.coreMapService.emitLayerChangedEvent(
+                this.getLayerId(),
+                this.mapIndex,
+                LayerChangedEventTrigger.LAYER_LOADED
+              );
             })
             .catch((error) => {
               console.error("GeoJSON load error", error);
@@ -186,6 +192,11 @@ export class GgcGeojsonLayerComponent
           options.features = features;
 
           this.vectorSource.addFeatures(features);
+          this.coreMapService.emitLayerChangedEvent(
+            this.getLayerId(),
+            this.mapIndex,
+            LayerChangedEventTrigger.LAYER_LOADED
+          );
         } catch (e) {
           console.error("Fout bij ophalen OGC API features: ", e);
         }
