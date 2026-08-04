@@ -1,6 +1,6 @@
 {
   "name": "@kadaster/ggc-dataset-tree",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
