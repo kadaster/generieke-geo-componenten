@@ -75,7 +75,7 @@ export class GgcGeojsonLayerComponent
 
   private vectorSource: VectorSource<Feature<Geometry>>;
   private clusterSource: Cluster<Feature>;
-  private readonly foundFeatures: Array<Feature<Geometry>> = [];
+  private foundFeatures: Array<Feature<Geometry>> = [];
   private geoJsonFormat: GeoJSON;
   private readonly ggcOgcApiFeaturesService: CoreOgcApiFeaturesService = inject(
     CoreOgcApiFeaturesService

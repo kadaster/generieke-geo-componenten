@@ -272,7 +272,11 @@ export class CoreSelectionService {
     this.setFeatureInSelection(pickedFeature, selection, movement);
   }
 
-  private setFeatureInSelection(feature: Cesium3DTileFeature | Entity | undefined, selection: SelectionConfig, movement?: ScreenSpaceEvent) {
+  private setFeatureInSelection(
+    feature: Cesium3DTileFeature | Entity | undefined,
+    selection: SelectionConfig,
+    movement?: ScreenSpaceEvent
+  ) {
     this.clearHighlight(selection.eventType);
     if (feature !== undefined && feature instanceof Cesium3DTileFeature) {
       this.setHighlightOnFeature(
@@ -287,7 +291,9 @@ export class CoreSelectionService {
     this.clickEvent.next({
       selectionEventType: SelectionEventType.SELECTIONSERVICE_SELECTIONUPDATED,
       type: selection.eventType,
-      location: movement ? this.getPositionString(selection.eventType, movement) : undefined,
+      location: movement
+        ? this.getPositionString(selection.eventType, movement)
+        : undefined,
       feature: feature,
       layerName:
         feature instanceof Cesium3DTileFeature
