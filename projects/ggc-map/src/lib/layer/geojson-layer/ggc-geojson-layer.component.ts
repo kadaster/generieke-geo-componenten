@@ -75,7 +75,7 @@ export class GgcGeojsonLayerComponent
 
   private vectorSource: VectorSource<Feature<Geometry>>;
   private clusterSource: Cluster<Feature>;
-  private foundFeatures: Array<Feature<Geometry>> = [];
+  private readonly foundFeatures: Array<Feature<Geometry>> = [];
   private geoJsonFormat: GeoJSON;
   private readonly ggcOgcApiFeaturesService: CoreOgcApiFeaturesService = inject(
     CoreOgcApiFeaturesService
@@ -93,16 +93,15 @@ export class GgcGeojsonLayerComponent
       featureProjection: this.rdNewConfig.projectionCode
     });
 
-    const isOgcApiUrl =
-      this.options?.url?.includes("/collections/") &&
-      this.options?.url?.includes("/items");
-
     // basis opties
     const options: Record<string, any> = {
       format: this.geoJsonFormat
     };
 
-    // Options assignen voordat vectorSource wordt geinitialiseerd
+    const isOgcApiUrl =
+      this.options?.url?.includes("/collections/") &&
+      this.options?.url?.includes("/items");
+
     if (!isOgcApiUrl) {
       Object.assign(options, {
         ...this.options?.sourceOptions,
@@ -111,44 +110,6 @@ export class GgcGeojsonLayerComponent
       });
     }
 
-    this.vectorSource = new VectorSource(options);
-    // voeg een eigen loader toe ipv de OL loader om customheaders te kunnen meegeven
-    if (this.options?.customHeaders) {
-      this.vectorSource.setLoader(
-        (extent: Extent, resolution: number, projection: Projection) => {
-          if (!this.options?.url) {
-            throw new Error("GeoJson options.url is verplicht");
-          }
-          if (!this.options.customHeaders) {
-            throw new Error("GeoJson options.customHeaders is verplicht");
-          }
-          fetch(new URL(this.options.url), {
-            headers: this.options.customHeaders
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(`HTTP error ${response.status}`);
-              }
-              return response.json();
-            })
-            .then((data) => {
-              const features = this.geoJsonFormat.readFeatures(data, {
-                featureProjection: projection
-              });
-
-              this.vectorSource.addFeatures(features);
-              this.coreMapService.emitLayerChangedEvent(
-                this.getLayerId(),
-                this.mapIndex,
-                LayerChangedEventTrigger.LAYER_LOADED
-              );
-            })
-            .catch((error) => {
-              console.error("GeoJSON load error", error);
-            });
-        }
-      );
-    }
     const layerOptions: Options<
       Feature<Geometry>,
       VectorSource<Feature<Geometry>>
@@ -158,49 +119,14 @@ export class GgcGeojsonLayerComponent
       ...(this.options?.styleLike && { style: this.options?.styleLike })
     };
 
-    if (
-      this.options?.clusterDistance !== undefined ||
-      this.options?.sourceClusterOptions !== undefined
-    ) {
-      this.clusterSource = new Cluster({
-        ...this.options?.sourceClusterOptions,
-        ...(this.options?.clusterDistance && {
-          distance: this.options?.clusterDistance
-        }),
-        ...(this.attributions && { attributions: this.attributions }),
-        source: this.vectorSource
-      });
-      layerOptions.source = this.clusterSource;
-    } else {
-      layerOptions.source = this.vectorSource;
-    }
-
+    this.vectorSource = new VectorSource(options);
+    this.setVectorSource(layerOptions);
     this.setLayer(new VectorLayer(layerOptions));
-    // OGC API Features inladen na setten van Vectorlaag
+
     if (isOgcApiUrl) {
-      (async () => {
-        const limit = this.options?.limit;
-        const maxFeatures = this.options?.maxFeatures;
-        try {
-          const features =
-            await this.ggcOgcApiFeaturesService.fetchAllOgcApiFeatures(
-              this.options!.url!,
-              limit,
-              maxFeatures
-            );
-
-          options.features = features;
-
-          this.vectorSource.addFeatures(features);
-          this.coreMapService.emitLayerChangedEvent(
-            this.getLayerId(),
-            this.mapIndex,
-            LayerChangedEventTrigger.LAYER_LOADED
-          );
-        } catch (e) {
-          console.error("Fout bij ophalen OGC API features: ", e);
-        }
-      })();
+      this.loadOgcApiFeatures(options);
+    } else {
+      this.loadGeojsonFeatures();
     }
   }
 
@@ -246,6 +172,86 @@ export class GgcGeojsonLayerComponent
         this.updateFeatures(changes.options.currentValue.features);
       }
     }
+  }
+
+  private loadGeojsonFeatures() {
+    // Andere lagen laden wij zelf in, zodat wij altijd een feature loaded event kunnen throwen
+    this.vectorSource.setLoader(
+      (extent: Extent, resolution: number, projection: Projection) => {
+        if (!this.options?.url) {
+          throw new Error("GeoJson options.url is verplicht");
+        }
+        fetch(new URL(this.options.url), {
+          headers: this.options.customHeaders ?? []
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const features = this.geoJsonFormat.readFeatures(data, {
+              featureProjection: projection
+            });
+
+            this.vectorSource.addFeatures(features);
+            this.emitLayerLoadedEvent();
+          })
+          .catch((error) => {
+            console.error("GeoJSON load error", error);
+          });
+      }
+    );
+  }
+
+  private loadOgcApiFeatures(options: Record<string, any>) {
+    (async () => {
+      const limit = this.options?.limit;
+      const maxFeatures = this.options?.maxFeatures;
+      try {
+        const features =
+          await this.ggcOgcApiFeaturesService.fetchAllOgcApiFeatures(
+            this.options!.url!,
+            limit,
+            maxFeatures
+          );
+        options.features = features;
+        this.vectorSource.addFeatures(features);
+        this.emitLayerLoadedEvent();
+      } catch (e) {
+        console.error("Fout bij ophalen OGC API features: ", e);
+      }
+    })();
+  }
+
+  private setVectorSource(
+    layerOptions: Options<Feature<Geometry>, VectorSource<Feature<Geometry>>>
+  ) {
+    if (
+      this.options?.clusterDistance !== undefined ||
+      this.options?.sourceClusterOptions !== undefined
+    ) {
+      this.clusterSource = new Cluster({
+        ...this.options?.sourceClusterOptions,
+        ...(this.options?.clusterDistance && {
+          distance: this.options?.clusterDistance
+        }),
+        ...(this.attributions && { attributions: this.attributions }),
+        source: this.vectorSource
+      });
+      layerOptions.source = this.clusterSource;
+    } else {
+      layerOptions.source = this.vectorSource;
+    }
+  }
+
+  private emitLayerLoadedEvent() {
+    this.coreMapService.emitLayerChangedEvent(
+      this.getLayerId(),
+      this.mapIndex,
+      LayerChangedEventTrigger.LAYER_LOADED
+    );
   }
 
   /**
