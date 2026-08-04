@@ -102,6 +102,14 @@ export class GeoJsonLayerService extends BaseLayerService {
     return this.layerIdToCesiumLayer.get(layerId)?.show;
   }
 
+  public getGeoJsonFeatures(layerId: string): Entity[] {
+    const layer = this.layerIdToCesiumLayer.get(layerId);
+    if (!(layer instanceof GeoJsonDataSource)) {
+      return [];
+    }
+    return layer.entities?.values ?? [];
+  }
+
   /**
    * Geeft de naam van de laag terug op basis van een Entity.
    *

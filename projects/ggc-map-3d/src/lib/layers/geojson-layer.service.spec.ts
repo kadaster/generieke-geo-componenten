@@ -195,4 +195,22 @@ describe("GeoJsonLayerService", () => {
     mock.show = false;
     expect(service.getEnabled(layerId)).toBe(false);
   });
+
+  describe("getGeoJsonFeatures", () => {
+    it("should return all entities when the layer is a GeoJsonDataSource", () => {
+      const layerId = "geojson-layer";
+      const geoJsonDataSource = new GeoJsonDataSource("geojson");
+      const featureA = new Entity({ id: "feature-a" });
+      const featureB = new Entity({ id: "feature-b" });
+      geoJsonDataSource.entities.add(featureA);
+      geoJsonDataSource.entities.add(featureB);
+      service["layerIdToCesiumLayer"].set(layerId, geoJsonDataSource);
+
+      expect(service.getGeoJsonFeatures(layerId)).toEqual([featureA, featureB]);
+    });
+
+    it("should return an empty list when no layer is found", () => {
+      expect(service.getGeoJsonFeatures("missing-layer")).toEqual([]);
+    });
+  });
 });

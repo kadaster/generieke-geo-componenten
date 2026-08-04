@@ -1,8 +1,16 @@
 import { inject, Injectable } from "@angular/core";
-import { Color, ScreenSpaceEventType } from "@cesium/engine";
+import {
+  Cesium3DTileFeature,
+  Color,
+  Entity,
+  ScreenSpaceEventType
+} from "@cesium/engine";
 import { Observable } from "rxjs";
 import { CoreSelectionService } from "./core-selection.service";
-import { MapComponentEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_CESIUM_MAPINDEX,
+  MapComponentEvent
+} from "@kadaster/ggc-models";
 import { SelectionConfig, SelectionEvent } from "../model/interfaces";
 
 /**
@@ -58,6 +66,20 @@ export class GgcSelectionService {
    */
   public clearAllSelections() {
     this.coreSelectionService.clearAllSelections();
+  }
+
+  /**
+   * Overschrijft de bestaande selectie met de meegegeven features.
+   *
+   * @param feature Het nieuwe feature dat geselecteerd wordt.
+   * @param selectIndex Optionele selectIndex (default: DEFAULT_CESIUM_MAPINDEX) waarop
+   * de selectie wordt overschreven.
+   */
+  setSelection(
+    feature: Cesium3DTileFeature | Entity,
+    selectIndex: string = DEFAULT_CESIUM_MAPINDEX
+  ) {
+    this.coreSelectionService.setSelection(feature, selectIndex);
   }
 
   /**
