@@ -13,6 +13,7 @@
       @for (dataset of datasets(); track dataset; let datasetIndex = $index) {
         <tr
           class="ggc-dt-btn-ls-collapse"
+          id="btn{{ themeIndex() }}-ls{{ datasetIndex }}"
           (click)="toggleCollapse($event, dataset)"
           (keydown.enter)="toggleCollapse($event, dataset)"
           tabindex="0"
@@ -98,7 +99,9 @@
   <tr>
     <td [attr.colspan]="hideTree() ? 1 : 3">
       <div
-        [attr.aria-labelledby]="'#btn' + themeIndex + '-ls' + datasetIndex"
+        [attr.aria-labelledby]="
+          !hideTree() ? 'btn' + themeIndex() + '-ls' + datasetIndex : null
+        "
         id="th{{ themeIndex() }}-ls{{ datasetIndex }}"
         class="ggc-dt-layer-container"
       >
