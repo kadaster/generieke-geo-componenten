@@ -1,12 +1,12 @@
 {
   "name": "@kadaster/ggc-toolbar",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0"
   },
   "dependencies": {
-    "@kadaster/ggc-models": "^3.0.0",
+    "@kadaster/ggc-models": "^4.0.0",
     "tslib": "^2.3.0"
   },
   "publishConfig": {
