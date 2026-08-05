@@ -181,9 +181,14 @@ export class GgcGeojsonLayerComponent
         if (!this.options?.url) {
           throw new Error("GeoJson options.url is verplicht");
         }
-        fetch(new URL(this.options.url), {
-          headers: this.options.customHeaders ?? []
-        })
+
+        const fetchPromise = this.options.customHeaders
+          ? fetch(new URL(this.options.url), {
+              headers: this.options.customHeaders
+            })
+          : fetch(this.options.url);
+
+        fetchPromise
           .then((response) => {
             if (!response.ok) {
               throw new Error(`HTTP error ${response.status}`);

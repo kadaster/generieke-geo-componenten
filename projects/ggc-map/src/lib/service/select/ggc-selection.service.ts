@@ -182,12 +182,15 @@ export class GgcSelectionService {
    * @param features De nieuwe OpenLayers features die geselecteerd worden.
    * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarop
    * de selectie wordt overschreven.
+   * @param layerId De layerId waaraan de selectie moet worden toegevoegd.
+   * Als leeggelaten, dan wordt een leeg layerId gebruikt, maar dan kan het zijn dat andere componenten niet correct reageren.
    */
   setSelection(
     features: Feature<Geometry>[],
-    selectIndex: string = DEFAULT_MAPINDEX
+    selectIndex: string = DEFAULT_MAPINDEX,
+    layerId: string = ""
   ) {
-    this.coreSelectionService.setSelection(features, selectIndex);
+    this.coreSelectionService.setSelection(features, selectIndex, layerId);
   }
 
   /**
