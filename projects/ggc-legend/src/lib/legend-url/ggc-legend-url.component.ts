@@ -50,7 +50,8 @@ export class GgcLegendUrlComponent {
 
       this.httpClient.get(url, { responseType: "text" }).subscribe((svg) => {
         const clean = DOMPurify.sanitize(svg, {
-          USE_PROFILES: { svg: true, svgFilters: true }
+          USE_PROFILES: { svg: true, svgFilters: true },
+          ADD_ATTR: ["role"]
         });
         this.svgContent.set(
           this.sanitizer.bypassSecurityTrustHtml(clean) as any

@@ -40,9 +40,14 @@
 }
 <div
   class="ggc-fi-tab-content"
-  [attr.id]="'tabpanel-' + selectedTab"
+  [attr.id]="'tabpanel-' + selectedTab()"
   role="tabpanel"
-  [attr.aria-labelledby]="'tab-' + selectedTab"
+  [attr.aria-labelledby]="
+    featureInfoCollectionArrayInternal() &&
+    featureInfoCollectionArrayInternal().length > 0
+      ? 'tab-' + selectedTab()
+      : null
+  "
   tabIndex="0"
 >
   <ng-content></ng-content>
