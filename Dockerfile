@@ -8,7 +8,10 @@ WORKDIR /etc/nginx/html
 USER root
 RUN adduser --home /etc/ggc-home --disabled-password --gecos "" ggc-home
 
+# Copy compiled Application sources
 COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
+COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/assets/toegankelijkheid.html /etc/nginx/html/
+
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY startup/start-application.sh /var/appdata/run/start-application.sh

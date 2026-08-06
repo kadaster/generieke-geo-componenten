@@ -16,8 +16,11 @@ if (!testBed.platform) {
 }
 
 afterEach(() => {
-  // clear de history van de mocks na elke test.
-  vi.clearAllMocks();
+  // Herstel alle mocks/spies na elke test naar hun originele implementatie
+  // (in plaats van enkel de call-history te wissen). Dit voorkomt dat een
+  // vi.spyOn(...) uit de ene test (zonder mockRestore) de volgende test of
+  // een ander spec-bestand beinvloedt.
+  vi.restoreAllMocks();
 });
 
 globalThis.ResizeObserver = class {

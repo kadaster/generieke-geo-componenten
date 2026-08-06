@@ -1,12 +1,12 @@
 {
   "name": "@kadaster/ggc-search-location",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/cdk": "^22.0.0",
-    "@kadaster/ggc-map": "^3.0.0",
-    "@kadaster/ggc-map-3d": "^3.0.0",
+    "@kadaster/ggc-map": "^4.0.0",
+    "@kadaster/ggc-map-3d": "^4.0.0",
     "ol": "^10.7.0",
     "proj4": "^2.8.0"
   },
@@ -22,7 +22,7 @@
     }
   },
   "dependencies": {
-    "@kadaster/ggc-models": "^3.0.0",
+    "@kadaster/ggc-models": "^4.0.0",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

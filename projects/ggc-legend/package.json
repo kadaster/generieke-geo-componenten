@@ -1,12 +1,12 @@
 {
   "name": "@kadaster/ggc-legend",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "dompurify": "^3.4.11",
-    "@kadaster/ggc-map-3d": "*",
-    "@kadaster/ggc-map": "^3.0.0"
+    "@kadaster/ggc-map-3d": "^4.0.0",
+    "@kadaster/ggc-map": "^4.0.0"
   },
   "peerDependenciesMeta": {
     "@kadaster/ggc-map-3d": {
@@ -17,7 +17,7 @@
     }
   },
   "dependencies": {
-    "@kadaster/ggc-models": "^3.0.0",
+    "@kadaster/ggc-models": "^4.0.0",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

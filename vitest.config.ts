@@ -17,6 +17,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    // De Angular CLI vitest-runner zet isolate standaard op false (Karma-gedrag),
+    // waardoor alle spec-files dezelfde modulecontext delen. Dat laat gedeelde
+    // singletons (bv. cameraUtils) en spies tussen tests/bestanden lekken.
+    // Expliciet forceren naar true geeft elk spec-bestand een eigen context.
+    isolate: true,
     setupFiles: ["src/test/setup-tests.ts"],
     coverage: {
       provider: "istanbul",
