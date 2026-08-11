@@ -31,10 +31,10 @@ import { GgcLegendMapConnectService } from "./service/legend-map-connect.service
 import { LayerLegendEnabledCallback } from "../model/layer-legend-enabled-callback.model";
 
 /**
- * Het dataset legenda component toont de legenda van kaartlagen
+ * Het ggc-legend component toont de legenda van kaartlagen.
  * Het component ondersteunt verschillende legenda-types zoals iconenlijsten,
- * URL's naar legenda plaatjes en (mapbox) vector tile stijlen.
- * Door <ggc-legend></ggc-legend> op te nemen in de HTML kan de
+ * URL's naar legenda plaatjes en (mapbox) vector tile stijlen. Voor de verschillende types, zie ({@link LegendType})
+ * Door `<ggc-legend></ggc-legend>` op te nemen in de HTML kan de
  * legenda worden gebruikt.
  *
  * @example
@@ -49,8 +49,44 @@ import { LayerLegendEnabledCallback } from "../model/layer-legend-enabled-callba
  * </ggc-legend>
  * ```
  * De verplichte variabele legends is een array van te tonen legenda's.
- * Een datasetLegend kan van verschillende types zijn, zie hiervoor het dataset-
- * legend model ({@link Legend})
+ *
+ * @remarks
+ * Standaard (`autoConnect = true`) verbindt het component zich automatisch met de
+ * kaart (`ggc-map`/`ggc-map-3d`) met dezelfde `mapIndex`, en wordt `legends` intern gevuld
+ * en bijgehouden op basis van de actieve kaartlagen. Handmatig een waarde toekennen aan
+ * `legends` is dan niet nodig.
+ *
+ * Wil je de legenda's zelf samenstellen (bijvoorbeeld los van een kaart), zet dan
+ * `autoConnect = false` en geef zelf een `Legend[]` mee, bijvoorbeeld:
+ * ```ts
+ * const legends: Legend[] = [
+ *   {
+ *     name: "Terugmeldingen",
+ *     expanded: true,
+ *     layerLegends: [
+ *       {
+ *         layerId: "terugmeldingen",
+ *         legend: {
+ *           legendUrl:
+ *             "https://service.pdok.nl/brt/terugmeldingen/wms/v1_0/legend/brtterugmeldingen/brtterugmeldingen:terugmeldingen.png"
+ *         }
+ *       }
+ *     ]
+ *   },
+ *   {
+ *     name: "Status",
+ *     layerLegends: [
+ *       {
+ *         layerId: "status",
+ *         legend: [
+ *           { imageUrl: "assets/icons/nieuw.svg", iconDescription: "Nieuw", text: "nieuw" },
+ *           { imageUrl: "assets/icons/afgerond.svg", iconDescription: "Afgerond", text: "afgerond" }
+ *         ]
+ *       }
+ *     ]
+ *   }
+ * ];
+ * ```
  *
  */
 
@@ -170,6 +206,16 @@ export class GgcLegendComponent implements OnInit {
 
   /**
    * De mapIndex die hoort bij deze legend. Deze legenda reageert automatisch op events van de maps met dezelfde mapIndex.
+   *
+   * @remarks
+   * Zorg dat de `mapIndex` overeenkomt met de `mapIndex` van de bijbehorende `ggc-map`,
+   * anders vindt dit component niet de juiste kaart. Heb je maar één kaart in je applicatie,
+   * dan hoef je geen `mapIndex` in te stellen: de default (`DEFAULT_MAPINDEX`) wordt dan altijd gebruikt.
+   * `ggc-map-3d` maakt geen gebruik van een mapIndex.
+   *
+   * Let op: als meerdere `<ggc-legend>`-componenten dezelfde `mapIndex` hebben, worden ze
+   * bij het aanroepen van `GgcLegendService.collapseAllLegends`/`expandAllLegends` allemaal
+   * tegelijk in- of uitgeklapt.
    */
   @Input()
   get mapIndex(): string {
