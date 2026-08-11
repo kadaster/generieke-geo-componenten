@@ -113,7 +113,8 @@ describe("GgcSelectionService", () => {
 
       expect(coreSelectionServiceSpy.setSelection).toHaveBeenCalledWith(
         features,
-        "map-3"
+        "map-3",
+        ""
       );
     });
   });
@@ -126,7 +127,8 @@ describe("GgcSelectionService", () => {
 
       expect(coreSelectionServiceSpy.setSelection).toHaveBeenCalledWith(
         features,
-        "map-4"
+        "map-4",
+        ""
       );
     });
   });

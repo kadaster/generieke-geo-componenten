@@ -1,4 +1,5 @@
 import { inject, Injectable } from "@angular/core";
+import { Entity } from "@cesium/engine";
 import { GeoJsonLayerService } from "./geojson-layer.service";
 import { Tiles3dLayerService } from "./tiles3d-layer.service";
 import { WmtsLayerService } from "./wmts-layer.service";
@@ -236,6 +237,10 @@ export class GgcSharedLayerService {
    */
   getEnabled(layerId: string): boolean | undefined {
     return this.determineLayerService(layerId)?.getEnabled(layerId);
+  }
+
+  public getGeoJsonFeatures(layerId: string): Entity[] {
+    return this.geoJsonLayerService.getGeoJsonFeatures(layerId);
   }
 
   /**
