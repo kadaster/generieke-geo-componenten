@@ -193,13 +193,19 @@ export class CoreSelectionService {
     }
   }
 
-  setSelection(features: Feature<Geometry>[], selectIndex: string) {
+  setSelection(
+    features: Feature<Geometry>[],
+    selectIndex: string,
+    layerId: string
+  ) {
     const select = this.getActiveSelectInteraction(selectIndex)?.select;
     if (select) {
       select.clearSelection();
       for (const feature of features) {
-        select.selectFeature(feature);
+        feature.set(GGC_FEATURE_LAYERID, layerId);
+        select.getFeatures().push(feature);
       }
+      this.emitSelectionUpdatedEvent(selectIndex, select.getFeatures());
     }
   }
 

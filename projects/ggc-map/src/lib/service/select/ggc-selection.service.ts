@@ -192,7 +192,7 @@ export class GgcSelectionService {
   setSelection(
     features: Feature<Geometry>[],
     selectIndex: string = DEFAULT_MAPINDEX,
-    layerId = ""
+    layerId: string = ""
   ) {
     this.coreSelectionService.setSelection(features, selectIndex, layerId);
   }

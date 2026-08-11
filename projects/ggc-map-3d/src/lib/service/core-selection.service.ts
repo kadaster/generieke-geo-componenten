@@ -177,6 +177,18 @@ export class CoreSelectionService {
     );
   }
 
+  setSelection(
+    feature: Cesium3DTileFeature | Entity,
+    selectIndex: string = DEFAULT_CESIUM_MAPINDEX
+  ) {
+    const selectionConfig = this.selections.find(
+      (sel) => sel.selectIndex === selectIndex
+    );
+    if (selectionConfig) {
+      this.setFeatureInSelection(feature, selectionConfig);
+    }
+  }
+
   private cesium3DTileFeatureToGenericFeatures(
     feature: Cesium3DTileFeature
   ): object[] {
@@ -257,34 +269,41 @@ export class CoreSelectionService {
     selection: SelectionConfig
   ) {
     const pickedFeature = this.getFeature(selection.eventType, movement);
+    this.setFeatureInSelection(pickedFeature, selection, movement);
+  }
+
+  private setFeatureInSelection(
+    feature: Cesium3DTileFeature | Entity | undefined,
+    selection: SelectionConfig,
+    movement?: ScreenSpaceEvent
+  ) {
     this.clearHighlight(selection.eventType);
-    if (
-      pickedFeature !== undefined &&
-      pickedFeature instanceof Cesium3DTileFeature
-    ) {
+    if (feature !== undefined && feature instanceof Cesium3DTileFeature) {
       this.setHighlightOnFeature(
-        pickedFeature,
+        feature,
         selection.eventType,
         selection.highlightColor
       );
     }
-    if (pickedFeature !== undefined && pickedFeature instanceof Entity) {
-      this.updateLastClickedEntity(pickedFeature, selection.eventType);
+    if (feature !== undefined && feature instanceof Entity) {
+      this.updateLastClickedEntity(feature, selection.eventType);
     }
     this.clickEvent.next({
       selectionEventType: SelectionEventType.SELECTIONSERVICE_SELECTIONUPDATED,
       type: selection.eventType,
-      location: this.getPositionString(selection.eventType, movement),
-      feature: pickedFeature,
+      location: movement
+        ? this.getPositionString(selection.eventType, movement)
+        : undefined,
+      feature: feature,
       layerName:
-        pickedFeature instanceof Cesium3DTileFeature
-          ? this.tiles3DService.getLayerId(pickedFeature)
-          : this.geoJsonLayerService.getLayerId(pickedFeature),
+        feature instanceof Cesium3DTileFeature
+          ? this.tiles3DService.getLayerId(feature)
+          : this.geoJsonLayerService.getLayerId(feature),
       selectIndex: selection.selectIndex,
       layerId:
-        pickedFeature instanceof Cesium3DTileFeature
-          ? this.tiles3DService.getLayerId(pickedFeature)
-          : this.geoJsonLayerService.getLayerId(pickedFeature)
+        feature instanceof Cesium3DTileFeature
+          ? this.tiles3DService.getLayerId(feature)
+          : this.geoJsonLayerService.getLayerId(feature)
     });
   }
 
