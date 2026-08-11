@@ -363,6 +363,7 @@ export class GgcMapService {
   }
 
   /**
+   * @deprecated
    * Geeft de geometrie of – indien niet aanwezig – het centroïde
    * uit een PDOK zoekresultaat.
    *
@@ -379,6 +380,7 @@ export class GgcMapService {
   }
 
   /**
+   * @deprecated
    * Haalt het eerste {@link SearchResultDoc} object uit een event.
    *
    * @param evt Event met PDOK zoekresultaten

@@ -222,7 +222,7 @@ describe("CoreSelectionService", () => {
     const feature1 = new Feature();
     const feature2 = new Feature();
 
-    service.setSelection([feature1, feature2], MAP_INDEX);
+    service.setSelection([feature1, feature2], MAP_INDEX, "");
 
     const selection = service.getCurrentSelection(MAP_INDEX);
     expect(selection.length).toBe(2);
