@@ -12,7 +12,7 @@ on:
           - major
       npm_dist_tag:
         type: string
-        description: npm dist-tag (e.g. latest, v3...)
+        description: npm dist-tag (e.g. latest or release-vX (release-v3) for patches on older major versions)
         default: latest
       ggc_dataset_tree:
         type: boolean
