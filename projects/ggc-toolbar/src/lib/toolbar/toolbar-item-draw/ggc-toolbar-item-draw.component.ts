@@ -36,9 +36,6 @@ import { from } from "rxjs";
  * </ggc-toolbar-item-draw>
  * ```
  */
-
-type DrawType = "Point" | "Line" | "Circle" | "Rectangle" | "Polygon";
-
 @Component({
   selector: "ggc-toolbar-item-draw",
   templateUrl: "./ggc-toolbar-item-draw.component.html",
@@ -49,34 +46,34 @@ export class GgcToolbarItemDrawComponent {
   /** Naam van de kaart waarop getekend wordt. */
   mapIndex = input<string>(DEFAULT_MAPINDEX);
 
-  /** Naam van de laag waarin getekend wordt. */
-  layer = input<string>("measuring");
+  /** Naam van de laag waarin getekend wordt. Default "drawing". */
+  layer = input<string>("drawing");
 
-  /** Icoon voor de 'stop tekenen' knop. */
+  /** Icoon voor de 'stop tekenen' knop. Default "fal fa-mouse-pointer". */
   stopIcon = input<string>("fal fa-mouse-pointer");
 
-  /** Icoon voor de 'punt tekenen' knop. */
+  /** Icoon voor de 'punt tekenen' knop. Default "fas fa-circle". */
   drawIcon = input<string>("fas fa-circle");
 
-  /** Icoon voor de 'lijn tekenen' knop. */
+  /** Icoon voor de 'lijn tekenen' knop. Default "fal fa-project-diagram". */
   drawLineIcon = input<string>("fal fa-project-diagram");
 
-  /** Icoon voor de 'cirkel tekenen' knop. */
+  /** Icoon voor de 'cirkel tekenen' knop. Default "fal fa-dot-circle". */
   drawCircleIcon = input<string>("fal fa-dot-circle");
 
-  /** Icoon voor de 'rechthoek tekenen' knop. */
+  /** Icoon voor de 'rechthoek tekenen' knop. Default "fal fa-vector-square". */
   drawRectangleIcon = input<string>("fal fa-vector-square");
 
-  /** Icoon voor de 'polygon tekenen' knop. */
+  /** Icoon voor de 'polygon tekenen' knop. Default "fal fa-draw-polygon". */
   drawPolygonIcon = input<string>("fal fa-draw-polygon");
 
-  /** Icoon voor de 'tekenlaag wissen' knop. */
+  /** Icoon voor de 'tekenlaag wissen' knop. Default "fal fa-trash-alt". */
   deleteIcon = input<string>("fal fa-trash-alt");
 
-  /** Icoon voor de 'tekening verplaatsen' knop. */
+  /** Icoon voor de 'tekening verplaatsen' knop. Default "fal fa-hand-paper". */
   moveIcon = input<string>("fal fa-hand-paper");
 
-  /** Icoon voor de 'tekening bewerken' knop. */
+  /** Icoon voor de 'tekening bewerken' knop. Default "fal fa-pencil-alt". */
   editIcon = input<string>("fal fa-pencil-alt");
 
   /**
@@ -205,3 +202,5 @@ export class GgcToolbarItemDrawComponent {
     }
   }
 }
+
+type DrawType = "Point" | "Line" | "Circle" | "Rectangle" | "Polygon";

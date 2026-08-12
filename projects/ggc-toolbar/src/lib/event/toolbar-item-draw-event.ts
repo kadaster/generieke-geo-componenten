@@ -2,6 +2,9 @@
  * Enum die de verschillende tekenacties beschrijft die beschikbaar zijn in het `ToolbarItemDrawComponent`.
  *
  * Deze waarden worden gebruikt om aan te geven welke actie is uitgevoerd, bijvoorbeeld bij het versturen van een `drawItemClicked` event.
+ *
+ * @remarks
+ * De volgorde van de buttons in het component is vast en kan niet worden aangepast.
  */
 export enum ToolbarItemDrawType {
   /** Stop met tekenen. */
@@ -35,7 +38,8 @@ export enum ToolbarItemDrawType {
 /**
  * Eventklasse die wordt gebruikt door `ToolbarItemDrawComponent` om aan te geven welke tekenactie is uitgevoerd.
  *
- * Dit event wordt verstuurd via de `drawItemClicked` output en bevat het type actie via `toolbarItemName`.
+ * Dit event wordt verstuurd via de `drawItemClicked` output en bevat het element `toolbarItemName` met een waarde van
+ * `ToolbarItemDrawType`.
  */
 export class ToolbarItemDrawComponentEvent {
   /**

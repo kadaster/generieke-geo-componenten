@@ -46,25 +46,25 @@ export class GgcToolbarItemMeasureComponent {
   /** Naam van de kaart waarop gemeten wordt. */
   mapIndex = input<string>(DEFAULT_MAPINDEX);
 
-  /** Naam van de laag waarin metingen worden opgeslagen. */
+  /** Naam van de laag waarin metingen worden opgeslagen. Default "measuring". */
   layer = input<string>("measuring");
 
-  /** Icoon voor de 'stop meten' knop. */
+  /** Icoon voor de 'stop meten' knop. Default "fal fa-mouse-pointer". */
   stopIcon = input<string>("fal fa-mouse-pointer");
 
-  /** Icoon voor de 'lijn meten' knop. */
+  /** Icoon voor de 'lijn meten' knop. Default "fal fa-ruler-horizontal". */
   measureLineIcon = input<string>("fal fa-ruler-horizontal");
 
-  /** Icoon voor de 'polygon meten' knop. */
+  /** Icoon voor de 'polygon meten' knop. Default "fal fa-ruler-combined". */
   measurePolygonIcon = input<string>("fal fa-ruler-combined");
 
-  /** Icoon voor de 'meetlaag wissen' knop. */
+  /** Icoon voor de 'meetlaag wissen' knop. Default "fal fa-trash-alt". */
   deleteIcon = input<string>("fal fa-trash-alt");
 
-  /** Icoon voor de 'meting verplaatsen' knop. */
+  /** Icoon voor de 'meting verplaatsen' knop. Default "fal fa-hand-paper". */
   moveIcon = input<string>("fal fa-hand-paper");
 
-  /** Icoon voor de 'meting bewerken' knop. */
+  /** Icoon voor de 'meting bewerken' knop. Default "fal fa-pencil-alt". */
   editIcon = input<string>("fal fa-pencil-alt");
 
   /**
