@@ -11,7 +11,8 @@ import {
   TemplateRef,
   AfterViewInit,
   OnDestroy,
-  QueryList
+  QueryList,
+  signal
 } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -92,12 +93,6 @@ export class GgcFeatureInfoComponent
     FeatureInfoDisplayType.TABLE;
 
   /**
-   * Verberg de paginering als er slechts één feature is.
-   * Default: `false`.
-   */
-  @Input() hidePagerWithOneFeature = false;
-
-  /**
    * Tekst voor de knop om naar de vorige feature te gaan.
    * Default: `"<"`.
    */
@@ -142,7 +137,7 @@ export class GgcFeatureInfoComponent
   protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
   protected hideEmptyFieldWithKeys: string[] = [];
   protected displayFeaturesProperties: object[] | undefined;
-  protected pagerIsHidden: boolean;
+  protected pagerIsHidden = signal(false);
   protected currentFeatureIndex = 0;
   protected currentFeature: object | null;
   protected emptyInfo = "Geen informatie beschikbaar";
@@ -153,6 +148,8 @@ export class GgcFeatureInfoComponent
   private subscription: Subscription;
   private subscriptionSelection: Subscription;
   private readonly eventService = inject(FeatureInfoEventService);
+  private _featureInfoCollection: FeatureInfoCollection | undefined;
+  private _hidePagerWithOneFeature = false;
   @ContentChildren(ValueTemplateDirective)
   private readonly templates: QueryList<ValueTemplateDirective>;
   private readonly featureInfoConfigService = inject(
@@ -163,8 +160,6 @@ export class GgcFeatureInfoComponent
    * Wordt gebruikt om in de DOM te zoeken naar GGC webcomponents.
    */
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-  private _featureInfoCollection: FeatureInfoCollection | undefined;
 
   get featureInfoCollection(): FeatureInfoCollection | undefined {
     return this._featureInfoCollection;
@@ -200,6 +195,16 @@ export class GgcFeatureInfoComponent
   ) {
     this._customAttributeNamesAndValues = value;
     this.handleFeatureInfoChanges();
+  }
+
+  @Input()
+  set hidePagerWithOneFeature(value: boolean) {
+    this._hidePagerWithOneFeature = value;
+    this.handleFeatureInfoChanges();
+  }
+
+  get hidePagerWithOneFeature(): boolean {
+    return this._hidePagerWithOneFeature;
   }
 
   /**
@@ -347,7 +352,8 @@ export class GgcFeatureInfoComponent
   hidePager(): boolean {
     return (
       this.hidePagerWithOneFeature &&
-      this.displayFeaturesProperties?.length === 1
+      (this.displayFeaturesProperties == undefined ||
+        this.displayFeaturesProperties.length === 1)
     );
   }
 
@@ -454,8 +460,7 @@ export class GgcFeatureInfoComponent
         )
       );
     }
-
-    this.pagerIsHidden = this.hidePager();
+    this.pagerIsHidden.set(this.hidePager());
   }
 
   private subscribeToMapSelection(
