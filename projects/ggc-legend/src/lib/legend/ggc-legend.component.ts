@@ -33,7 +33,7 @@ import { LayerLegendEnabledCallback } from "../model/layer-legend-enabled-callba
 /**
  * Het ggc-legend component toont de legenda van kaartlagen.
  * Het component ondersteunt verschillende legenda-types zoals iconenlijsten,
- * URL's naar legenda plaatjes en (mapbox) vector tile stijlen. Voor de verschillende types, zie ({@link LegendType})
+ * URL's naar legenda plaatjes en (mapbox) vector tile stijlen. Voor de verschillende types, zie {@link LegendType}.
  * Door `<ggc-legend></ggc-legend>` op te nemen in de HTML kan de
  * legenda worden gebruikt.
  *

@@ -28,8 +28,9 @@ export interface SortFilterConfigOptions {
 
   /**
    * Wanneer `true`, worden attributen die niet in `attributeOrder` staan verborgen.
+   * Alleen van toepassing in combinatie met `attributeOrder`.
    *
-   * @defaultValue false (tenzij expliciet gezet via de class default)
+   * @defaultValue true
    */
   hideUnorderedAttributes?: boolean;
 

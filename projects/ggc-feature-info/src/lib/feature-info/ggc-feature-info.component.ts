@@ -48,7 +48,7 @@ import { FeatureInfoCollection } from "../model/feature-info-collection.model";
  * zoals WMTS, WMS en GeoJSON via GetFeatureInfo requests.
  *
  * Ondersteunt weergave in lijst of tabelvorm, paginering, custom templates,
- * en configuratie van attributen via `FeatureInfoConfigService`.
+ * en configuratie van attributen via `GgcFeatureInfoConfigService`.
  *
  * @example
  * <ggc-feature-info
@@ -57,6 +57,18 @@ import { FeatureInfoCollection } from "../model/feature-info-collection.model";
  *   [customAttributeNamesAndValues]="customFeatureInfoMap"
  *   (events)="handleEvent($event)">
  * </ggc-feature-info>
+ *
+ * @remarks
+ * Dit component kan op zichzelf worden gebruikt, of binnen `ggc-feature-info-tabs` om
+ * tabbladenfunctionaliteit toe te voegen, zie {@link GgcFeatureInfoTabsComponent}.
+ *
+ * Let op: het wijzigen of verbergen van het `geometry`-veld via
+ * `customAttributeNamesAndValues` kan gevolgen hebben voor andere
+ * functionaliteit wanneer dit component samen met het generieke
+ * kaartcomponent wordt gebruikt. OpenLayers verwacht specifiek een
+ * `geometry`-veld om een feature aan de highlight-laag toe te kunnen voegen
+ * (bijvoorbeeld via `addFeaturesToHighlightLayer()`); zonder dit veld kan het
+ * feature niet op de kaart worden weergegeven.
  */
 @Component({
   selector: "ggc-feature-info",
