@@ -96,7 +96,17 @@ export class GgcFeatureInfoComponent
    * Verberg de paginering als er slechts één feature is.
    * Default: `false`.
    */
-  @Input() hidePagerWithOneFeature = false;
+  private _hidePagerWithOneFeature = false;
+
+  @Input()
+  set hidePagerWithOneFeature(value: boolean) {
+    this._hidePagerWithOneFeature = value;
+    this.handleFeatureInfoChanges();
+  }
+
+  get hidePagerWithOneFeature(): boolean {
+    return this._hidePagerWithOneFeature;
+  }
 
   /**
    * Tekst voor de knop om naar de vorige feature te gaan.
@@ -143,7 +153,7 @@ export class GgcFeatureInfoComponent
   protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
   protected hideEmptyFieldWithKeys: string[] = [];
   protected displayFeaturesProperties: object[] | undefined;
-  protected pagerIsHidden: boolean;
+  protected pagerIsHidden = signal(false);
   protected currentFeatureIndex = signal(0);
   protected currentFeature = signal<object | null>(null);
   protected emptyInfo = "Geen informatie beschikbaar";
@@ -346,7 +356,8 @@ export class GgcFeatureInfoComponent
   hidePager(): boolean {
     return (
       this.hidePagerWithOneFeature &&
-      this.displayFeaturesProperties?.length === 1
+      (this.displayFeaturesProperties == undefined ||
+        this.displayFeaturesProperties.length === 1)
     );
   }
 
@@ -456,7 +467,7 @@ export class GgcFeatureInfoComponent
       );
     }
 
-    this.pagerIsHidden = this.hidePager();
+    this.pagerIsHidden.set(this.hidePager());
   }
 
   private subscribeToMapSelection(
