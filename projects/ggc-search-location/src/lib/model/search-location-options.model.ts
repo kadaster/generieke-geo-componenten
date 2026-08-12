@@ -15,7 +15,7 @@ export interface SearchLocationOptions {
   elementIds: SearchComponentElementIds;
   /** De bron/collectie naam verborgen moet worden in de suggestielijst. */
   hideCollectionId: boolean;
-  /** De mogelijkheid om de zoekfunctie niet te gebruiken. */
+  /** De mogelijkheid om de zoekfunctie niet te gebruiken. Wanneer true, wordt alleen de huidige-locatie knop weergegeven. */
   hideSearch: boolean;
   /** Een EventEmitter om van buitenaf een initieel resultaat in de component te zetten. */
   initialResult: EventEmitter<PdokLocationApiSearchFeature>;
