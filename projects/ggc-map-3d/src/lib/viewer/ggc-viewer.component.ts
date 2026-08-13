@@ -61,6 +61,30 @@ globalThis.CESIUM_BASE_URL = "/assets/cesium/";
  * - Ondersteunen van externe camera-aansturing via {@link CameraOptions};
  * - Instellen van licht, terrain en viewer opties;
  * - Keyboard-interactie (arrow keys voor camera rotatie).
+ *
+ * @example
+ * kaartConfig = [
+ *     {
+ *       "url": "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1_0/collections/terreinen/3dtiles",
+ *       "type": "3Dtiles",
+ *       "layers": [
+ *         {
+ *           "title": "3D terrein",
+ *           "layerId": "3d-terrain",
+ *           "legendUrl": ""
+ *         }
+ *       ]
+ *     }
+ * ];
+ *
+ * <div style="height: 500px">
+ *   <ggc-map-3d-viewer
+ *      [viewerOptions]="viewerOptions"
+ *      [cameraOptions]="cameraOptions"
+ *      (ready)="onCesiumReady()"
+ *      [webServices]="webService"
+ *   ></ggc-map-3d-viewer>
+ * </div>
  */
 @Component({
   selector: "ggc-map-3d-viewer",

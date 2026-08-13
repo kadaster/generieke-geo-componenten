@@ -83,7 +83,8 @@ export class GgcSelectionService {
   }
 
   /**
-   * Verwijdert (destroy) een selectie voor een specifiek event type.
+   * Verwijdert (destroy) een selectie voor een specifiek event type. Er wordt niet meer geluisterd
+   * naar het `ScreenSpaceEventType`.
    *
    * @param eventType Het {@link ScreenSpaceEventType} waarvoor de selectie verwijderd moet worden
    */
