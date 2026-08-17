@@ -194,8 +194,7 @@ export class GgcFeatureInfoComponent
   }
 
   get customAttributeNamesAndValues():
-    | Map<string, CustomFeatureInfo>
-    | undefined {
+    Map<string, CustomFeatureInfo> | undefined {
     return this._customAttributeNamesAndValues;
   }
 
