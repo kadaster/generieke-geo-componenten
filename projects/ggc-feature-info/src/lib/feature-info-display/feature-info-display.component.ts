@@ -43,21 +43,25 @@ export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
     if (changes.currentFeature && !changes.currentFeature.firstChange) {
       this.prepareForDisplay();
     }
+
+    const doc = globalThis.document;
+    if (!doc) {
+      return;
+    }
+
     setTimeout(() => {
-      document
-        .querySelectorAll("table.ggc-fi-table tr")
-        .forEach(function (row) {
-          (row as HTMLElement).style.display = "";
-          const tds = row.querySelectorAll("td");
-          if (tds.length > 0) {
-            const allEmpty = Array.from(tds).every(
-              (td) => td?.textContent?.trim()?.length === 0
-            );
-            if (allEmpty) {
-              (row as HTMLElement).style.display = "none";
-            }
+      doc.querySelectorAll("table.ggc-fi-table tr").forEach(function (row) {
+        (row as HTMLElement).style.display = "";
+        const tds = row.querySelectorAll("td");
+        if (tds.length > 0) {
+          const allEmpty = Array.from(tds).every(
+            (td) => td?.textContent?.trim()?.length === 0
+          );
+          if (allEmpty) {
+            (row as HTMLElement).style.display = "none";
           }
-        });
+        }
+      });
     }, 50);
   }
 
