@@ -50,9 +50,9 @@ export interface StyleLikeMap {
   drawingDrawStyle?: StyleLike;
   /** Stijl voor de geometrie na het afronden van de tekening. */
   finishDrawStyle?: StyleLike;
-  /** Stijlfunctie voor een ongeldige geometrie na het afronden van de tekening. */
+  /** Stijlfunctie voor een ongeldige geometrie na het afronden van de tekening. Zie {@link ValidationFunction} voor validatie. */
   invalidFinishDrawStyle?: StyleFunction;
-  /** Stijl voor een ongeldige geometrie tijdens het tekenen. */
+  /** Stijl voor een ongeldige geometrie tijdens het tekenen. Zie {@link ValidationFunction} voor validatie. */
   invalidDrawStyle?: StyleLike;
   /** Stijl voor het oppervlaktelabel. Bestaat standaard uit een `textStyle` en een `imageStyle` voor de achtergrond. */
   areaLabelStyle?: Style;
