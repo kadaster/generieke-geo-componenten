@@ -221,8 +221,10 @@ jobs:
           GGC_MODELS: ${{ github.event.inputs.ggc_models }}
           GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
+          NPM_DIST_TAG: ${{ github.event.inputs.npm_dist_tag }}
         run: |
           set -e
+          DIST_TAG="${NPM_DIST_TAG:-latest}"
 
           build_and_publish() {
             PROJECT=$1
@@ -246,7 +248,7 @@ jobs:
               echo "⚠️ $PACKAGE_NAME@$PACKAGE_VERSION already exists on npm. Skipping."
             else
               # workaround voor https://github.com/actions/setup-node/issues/1440
-              NODE_AUTH_TOKEN="" npm publish --tag "$NPM_DIST_TAG"
+              NODE_AUTH_TOKEN="" npm publish --tag "$DIST_TAG"
               echo "✅ Published $PACKAGE_NAME@$PACKAGE_VERSION"
             fi
 
