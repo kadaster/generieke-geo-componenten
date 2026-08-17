@@ -93,22 +93,6 @@ export class GgcFeatureInfoComponent
     FeatureInfoDisplayType.TABLE;
 
   /**
-   * Verberg de paginering als er slechts één feature is.
-   * Default: `false`.
-   */
-  private _hidePagerWithOneFeature = false;
-
-  @Input()
-  set hidePagerWithOneFeature(value: boolean) {
-    this._hidePagerWithOneFeature = value;
-    this.handleFeatureInfoChanges();
-  }
-
-  get hidePagerWithOneFeature(): boolean {
-    return this._hidePagerWithOneFeature;
-  }
-
-  /**
    * Tekst voor de knop om naar de vorige feature te gaan.
    * Default: `"<"`.
    */
@@ -179,6 +163,22 @@ export class GgcFeatureInfoComponent
 
   private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
 
+  /**
+   * Verberg de paginering als er slechts één feature is.
+   * Default: `false`.
+   */
+  private _hidePagerWithOneFeature = false;
+
+  @Input()
+  set hidePagerWithOneFeature(value: boolean) {
+    this._hidePagerWithOneFeature = value;
+    this.handleFeatureInfoChanges();
+  }
+
+  get hidePagerWithOneFeature(): boolean {
+    return this._hidePagerWithOneFeature;
+  }
+
   get featureInfoCollection(): FeatureInfoCollection | undefined {
     return this._featureInfoCollection;
   }
@@ -194,7 +194,8 @@ export class GgcFeatureInfoComponent
   }
 
   get customAttributeNamesAndValues():
-    Map<string, CustomFeatureInfo> | undefined {
+    | Map<string, CustomFeatureInfo>
+    | undefined {
     return this._customAttributeNamesAndValues;
   }
 

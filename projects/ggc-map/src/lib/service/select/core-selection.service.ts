@@ -259,7 +259,8 @@ export class CoreSelectionService {
       const select = this.getActiveSelectInteraction(selectIndex)?.select;
       if (select) {
         const filterLayerIds = select.get(this.GGC_LAYER_IDS) as
-          string[] | undefined;
+          | string[]
+          | undefined;
         // Only add features that are within the filtered layerIds of the select interaction
         if (!filterLayerIds || filterLayerIds.includes(layerId)) {
           this.handleNewFeaturesForSelection(features, selectIndex, layerId);
@@ -491,7 +492,7 @@ export class CoreSelectionService {
   private buildFeatureCollectionForCoordinateFromFeatures(
     features: Collection<Feature>,
     mapIndex: string,
-    coordinate: number[] | undefined
+    coordinate?: number[]
   ) {
     const layerFeatureMap = this.buildLayerFeatureMap(features);
     const result = new FeatureCollectionForCoordinate(coordinate);
