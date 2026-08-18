@@ -18,6 +18,8 @@ import {
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
 import { CoreMapService } from "../../map/service/core-map.service";
+import { SelectEvent } from "ol/interaction/Select";
+import MapBrowserEvent from "ol/MapBrowserEvent";
 
 /**
  * Interne representatie van een actieve select‑interactie.
@@ -328,14 +330,14 @@ export class CoreSelectionService {
       return;
     }
 
-    const clickEvent = () => {
+    const clickEvent = (event: MapBrowserEvent) => {
       this.emitEvent(
         new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_MAPCLICKED,
           mapIndex,
           CoreSelectionService.messageMapClicked,
           undefined,
-          undefined,
+          event.coordinate,
           selectIndex
         )
       );
@@ -343,13 +345,15 @@ export class CoreSelectionService {
     map.on("singleclick", clickEvent);
     this.activeMapClickEventsKeys.set(selectIndex, clickEvent);
 
-    const selectionUpdatedEvent = () => {
+    const selectionUpdatedEvent = (selectEvent: SelectEvent) => {
       const features =
         this.getActiveSelectInteraction(selectIndex)?.select.getFeatures();
 
       if (!features) {
         return;
       }
+
+      const clickedCoordinate = selectEvent?.mapBrowserEvent?.coordinate;
 
       const map = this.ggcMapService.getMap(mapIndex);
       const layers = map.getLayers();
@@ -359,7 +363,7 @@ export class CoreSelectionService {
       }
 
       this.updateSelectionLayer(features, mapIndex, selectIndex);
-      this.emitSelectionUpdatedEvent(selectIndex, features);
+      this.emitSelectionUpdatedEvent(selectIndex, features, clickedCoordinate);
     };
 
     select.on("select", selectionUpdatedEvent);
@@ -372,7 +376,8 @@ export class CoreSelectionService {
 
   private emitSelectionUpdatedEvent(
     selectIndex: string,
-    features: Collection<Feature>
+    features: Collection<Feature>,
+    coordinate?: number[]
   ) {
     const mapIndex = this.getMapIndexFromSelectIndex(selectIndex);
 
@@ -388,7 +393,8 @@ export class CoreSelectionService {
         undefined,
         this.buildFeatureCollectionForCoordinateFromFeatures(
           features,
-          mapIndex
+          mapIndex,
+          coordinate
         ),
         selectIndex
       )
@@ -484,10 +490,11 @@ export class CoreSelectionService {
 
   private buildFeatureCollectionForCoordinateFromFeatures(
     features: Collection<Feature>,
-    mapIndex: string
+    mapIndex: string,
+    coordinate?: number[]
   ) {
     const layerFeatureMap = this.buildLayerFeatureMap(features);
-    const result = new FeatureCollectionForCoordinate();
+    const result = new FeatureCollectionForCoordinate(coordinate);
 
     layerFeatureMap.forEach((features, layerId) => {
       const layerCollection: FeatureCollectionForLayer = {
