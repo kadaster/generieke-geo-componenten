@@ -10,13 +10,13 @@ export interface SnapOptions {
   pixelTolerance?: number;
 
   /**
-   * Vectorlagen op de kaart waarnaar gesnapt kan worden.
+   * LayerId's van vectorlagen op de kaart waarnaar gesnapt kan worden.
    * Alleen vectorlagen worden ondersteund (bijv. GeoJSON); rasterlagen zoals WMS/WMTS niet.
    */
   snapLayers?: string[];
 
   /**
-   * Tekenlagen waarnaar gesnapt kan worden.
+   * LayerId's van tekenlagen waarnaar gesnapt kan worden.
    */
   snapDrawLayers?: string[];
 
