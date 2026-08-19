@@ -1,5 +1,5 @@
 /**
- * Het type van het event dat de dataset-tree emit als een laag wordt geactiveerd of gedeactiveerd in de dataset-tree
+ * Het type van het event dat de dataset-tree emit als een laag wordt geactiveerd of gedeactiveerd in de dataset-tree.
  */
 export class DatasetTreeEvent {
   /**

@@ -25,12 +25,20 @@ import { GgcToolbarConnectService } from "../../service/connect.service";
  * - Interactie met `ToolbarService` om actieve status te beheren
  * - Gebruik van een specifieke kaart via `mapIndex`
  *
+ * ### Sub-componenten
+ * De `ggc-toolbar` kan de volgende child-components bevatten:
+ * - `ggc-toolbar-item`: Standaard toolbar-knop met optionele content.
+ * - `ggc-toolbar-item-draw`: Voorgeconfigureerde tekenacties (tekenen, bewerken, verplaatsen, wissen).
+ * - `ggc-toolbar-item-measure`: Voorgeconfigureerde meetacties (meten, bewerken, verplaatsen, wissen).
+ *
  * @example
+ * ```html
  * <ggc-toolbar [mapIndex]="'mijnKaart'">
  *   <ggc-toolbar-item [icon]="'fa-icon'" [label]="'Zoeken'">
  *     <app-zoek-component></app-zoek-component>
  *   </ggc-toolbar-item>
  * </ggc-toolbar>
+ * ```
  */
 @Component({
   selector: "ggc-toolbar",

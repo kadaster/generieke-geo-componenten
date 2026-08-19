@@ -8,7 +8,7 @@ import { Legend } from "../model/legend.model";
 })
 export class LegendEmptyComponent {
   /**
-   * Als true, dan wordt de emptyLegendMessage weergegeven als er een legenda is.
+   * Als true, dan wordt de emptyLegendMessage weergegeven als er geen legenda beschikbaar is.
    */
   @Input() showEmptyLegendMessage: boolean;
   /**

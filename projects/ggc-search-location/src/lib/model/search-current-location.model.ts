@@ -4,11 +4,11 @@
 export interface SearchCurrentLocation {
   /** Bepaalt of de locatieknop in de lijst (select) of als aparte knop (button) verschijnt. */
   type: SearchCurrentLocationType;
-  /** Het icoon dat getoond wordt (bijv. FontAwesome klasse). */
+  /** Het icoon dat getoond wordt (bijv. FontAwesome klasse). Standaard niet weergegeven als niet ingesteld. */
   icon: string;
-  /** Het icoon dat getoond wordt terwijl de locatie geladen wordt. */
+  /** Het icoon dat getoond wordt terwijl de locatie geladen wordt. Standaard niet weergegeven als niet ingesteld. */
   loadIcon: string;
-  /** De tekst bij de locatieoptie (bijv. "Gebruik mijn huidige locatie"). */
+  /** De tekst bij de locatieoptie. Standaard: "Gebruik mijn locatie". */
   label: string;
   /** De gevonden coördinaten teruggestuurd moeten worden via events. */
   returnLocation: boolean;

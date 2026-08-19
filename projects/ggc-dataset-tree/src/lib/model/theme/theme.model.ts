@@ -1,7 +1,7 @@
 import { Dataset } from "./dataset.model";
 
 /**
- * Een Theme is het hoogste niveau in de recursieve dataset-tree, waaronder {@link Dataset} hangt
+ * Een Theme is het hoogste niveau in de recursieve dataset-tree, waaronder {@link Dataset} hangt.
  */
 export class Theme {
   /**

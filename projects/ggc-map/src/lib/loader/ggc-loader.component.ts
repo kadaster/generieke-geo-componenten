@@ -8,7 +8,7 @@ import { CoreMapEventsService } from "../map/service/core-map-events.service";
  *
  * De loader luistert naar loading-events van {@link CoreMapEventsService}
  * en wordt automatisch bijgewerkt zodra de kaart start of stopt
- * met laden.
+ * met laden. De laadindicator wacht tot alle kaartlagen op de kaart geladen zijn.
  *
  * @example
  * <ggc-loader [mapIndex]="'default'"></ggc-loader>
@@ -25,7 +25,7 @@ export class GgcLoaderComponent implements OnDestroy {
    */
   protected isLoading = false;
 
-  private mapEventsService = inject(CoreMapEventsService);
+  private readonly mapEventsService = inject(CoreMapEventsService);
   private loadEvents$: Subscription;
   private _mapIndex: string;
 

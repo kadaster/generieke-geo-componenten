@@ -52,6 +52,11 @@ const proj4 = (proj4x as any).default;
  * Dit component biedt een zoekveld met automatische suggesties, ondersteuning voor
  * Rijksdriehoekscoördinaten (RD) en integratie met de eigen browserlocatie.
  * Geselecteerde resultaten kunnen automatisch worden getoond en gemarkeerd op een gekoppelde kaart.
+ *
+ * @remarks
+ * Het component ondersteunt twee modi:
+ * 1. **Zoeken met huidige locatie**: de zoekbalk met optioneel een huidige-locatie knop/optie.
+ * 2. **Alleen huidige locatie**: de huidige-locatie knop zonder zoekbalk (met `hideSearch = true`).
  */
 @Component({
   selector: "ggc-search-location",

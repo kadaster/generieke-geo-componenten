@@ -4,6 +4,8 @@ import { Component } from "@angular/core";
  * Containercomponent voor het tonen van detailinformatie
  * gerelateerd aan de kaart.
  *
+ * Met deze container kunnen ggc-scale-line, ggc-zoom-level, ggc-scale-denominator en ggc-mouse-position buiten de kaart worden getoond.
+ *
  * Deze component fungeert als structurele wrapper en bevat
  * zelf geen logica. De inhoud wordt bepaald door de bijbehorende
  * template en eventueel ingesloten child‑componenten.

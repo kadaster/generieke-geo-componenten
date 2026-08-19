@@ -3,6 +3,10 @@ import { CustomFeatureInfo } from "../model/custom-feature-info.model";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 import { SortFilterConfig } from "../model/sort-filter-config.model";
 
+/**
+ * Service voor het configureren van sorteer-, filter- en custom weergave-instellingen
+ * van feature info attributen en tabs.
+ */
 @Injectable({
   providedIn: "root"
 })

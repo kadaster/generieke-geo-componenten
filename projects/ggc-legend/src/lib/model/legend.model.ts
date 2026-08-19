@@ -7,7 +7,10 @@ export type Legend = {
   /** Naam van de dataset. */
   name: string;
 
-  /** Geeft aan of de legenda standaard uitgeklapt is. */
+  /**
+   * Geeft aan of de legenda standaard uitgeklapt is.
+   * @remarks Zonder waarde wordt de default van `GgcLegendComponent.defaultExpanded` gebruikt.
+   */
   expanded?: boolean;
 
   /** Lijst van legenda-items per dataset. */

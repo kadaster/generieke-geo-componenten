@@ -25,6 +25,17 @@ import { CenterModifyOptions } from "../center-interaction/center-modify";
  *
  * Deze service biedt methoden voor het starten, stoppen en configureren van
  * teken-, bewerk- en verplaatsingsinteracties, en het beheren van tekenlagen en features.
+ *
+ * @remarks
+ * Standaard worden de `drawOptions` alleen toegepast op nieuwe tekeningen.
+ * Door het aanroepen van de `resetDrawStyle` methode worden de meetlabels voor alle tekeningen op de meegegeven laag direct gewijzigd in de meegegeven `drawOptions`.
+ * Dit is mogelijk voor de opties `showSegmentLength`, `showTotalLength`, `showArea`, `areaM2ToTextFunction` en `validators`.
+ *
+ * Ten behoeve van de printfunctionaliteit van de meet- en tekenlagen worden bij het
+ * beëindigen van het meten en tekenen (incl. wijzigen) aan de properties van de features
+ * in de geometrie de volgende waarden toegevoegd:
+ * - `areaOrLength`, dit is de gemeten waarde
+ * - `measurement`, dit is het type meting met als opties: `area`, `length` of `none`
  */
 @Injectable({
   providedIn: "root"
@@ -203,6 +214,14 @@ export class GgcDrawService {
   /**
    * Geeft een `Observable` terug met bewerkingsinteractie-events voor de opgegeven kaart.
    *
+   * @remarks
+   * De `Observable` emit `ModifyInteractionEvent`-objecten met de volgende properties:
+   * - `type` (`ModifyInteractionEventTypes`): het type bewerkingsevent, `modifyend` of `moveend`.
+   * - `mapIndex` (`string`): de naam van de kaart waarop het event heeft plaatsgevonden.
+   * - `message` (`string`): een beschrijving van het event.
+   * - `event` (`ModifyEvent`): het bijbehorende modify-event van OpenLayers.
+   * - `valid` (`boolean`): het resultaat van de ingestelde validatie(s). Zie ook validaties op getekende objecten.
+   *
    * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
    * @returns `Observable` van `ModifyInteractionEvent`.
    */
@@ -328,6 +347,8 @@ export class GgcDrawService {
 
   /**
    * Start het verplaatsen van objecten op de opgegeven laag.
+   *
+   * @remarks het verplaatsen van een object verbreekt eventuele verbindingen (gemaakt door snappen) met andere objecten.
    *
    * @param layerName - Naam van de laag waarop verplaatst wordt.
    * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.

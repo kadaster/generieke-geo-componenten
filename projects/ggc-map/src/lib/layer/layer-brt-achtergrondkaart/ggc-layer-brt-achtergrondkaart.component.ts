@@ -7,6 +7,7 @@ import { AbstractBaseLayerComponent } from "../abstract-base-layer/abstract-base
 /**
  * Door `<ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>` op te
  * nemen in de HTML wordt de brt achtergrondkaart toegevoegd aan de kaart.
+ * De brt achtergrondkaart is alleen zichtbaar op zoomniveau 0 t/m 14.
  *
  * @example
  * <ggc-layer-brt-achtergrondkaart [mapIndex]="'kaart1'"></ggc-layer-brt-achtergrondkaart>

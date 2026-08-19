@@ -41,8 +41,7 @@ import {
  * `<ggc-map></ggc-map>` toont een 2D kaart waar verschillende lagen aan toegevoegd
  * kunnen worden.
  *
- * Let op: om de kaarten te tonen, moet het `ggc-map` element een specifieke
- * hoogte meekrijgen vanuit CSS, zoals in het voorbeeld hieronder.
+ * @remarks
  *
  * Dit component vormt het hart van de GGC kaartarchitectuur en is
  *  verantwoordelijk voor:
@@ -50,6 +49,9 @@ import {
  *   - koppelen van kaart‑events aan GGC‑events
  *   - laden van webservices en lagen
  *   - selectie, tekenen en loading‑status
+ *
+ * Let op: om de kaarten te tonen, moet het `ggc-map` element een specifieke
+ * hoogte meekrijgen vanuit CSS, zoals in het voorbeeld hieronder.
  *
  * @example
  * kaartConfig = [
@@ -78,7 +80,7 @@ import {
   styleUrls: ["./ggc-map.component.scss"]
 })
 export class GgcMapComponent implements AfterViewInit, OnDestroy {
-  /** Unieke naam/index van de kaart */
+  /** Unieke naam/index van de kaart (default: DEFAULT_MAPINDEX) */
   @Input() mapIndex: string = DEFAULT_MAPINDEX;
 
   /** tabIndex t.b.v. toetsenbordnavigatie */
@@ -87,7 +89,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   /** ARIA role voor accessibility */
   @Input() ariaRole = "application";
 
-  /** ARIA label voor screenreaders */
+  /** ARIA label voor screenreaders (default: "viewer") */
   @Input() ariaLabel = "viewer";
 
   /**
@@ -137,8 +139,9 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * minZoomlevel van de kaart
-   * Waarde wordt geclamped binnen CRS‑limieten.
+   * minZoomlevel van de kaart (geldige waarde: 0-25)
+   * Waarde wordt geclamped binnen CRS‑limieten (0-25).
+   * Wanneer minZoomlevel > maxZoomlevel wordt UNSUCCESSFUL event gestuurd.
    */
   @Input()
   set minZoomlevel(value: number) {
@@ -153,8 +156,9 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Maximum zoomlevel van de kaart.
-   * Waarde wordt geclamped binnen CRS‑limieten.
+   * Maximum zoomlevel van de kaart (geldige waarde: 1-25)
+   * Waarde wordt geclamped binnen CRS‑limieten (1-25).
+   * Wanneer minZoomlevel > maxZoomlevel wordt UNSUCCESSFUL event gestuurd.
    */
   @Input()
   set maxZoomlevel(value: number) {

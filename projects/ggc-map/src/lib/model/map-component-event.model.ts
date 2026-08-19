@@ -1,7 +1,7 @@
 import { Coordinate } from "ol/coordinate";
 
 /**
- * @deprecated verhuisd naar models
+ * @deprecated Verhuisd naar @kadaster/ggc-models
  * Mogelijke types voor kaartevents.
  *
  * Deze enum wordt gebruikt in {@link MapComponentEvent} om het type
@@ -44,7 +44,7 @@ export enum MapComponentEventTypes {
 }
 
 /**
- * @deprecated verhuisd naar models
+ * @deprecated Verhuisd naar @kadaster/ggc-models
  * Standaard event-object voor communicatie vanuit kaartcomponenten
  * en kaartservices.
  *
@@ -72,7 +72,7 @@ export class MapComponentEvent {
 }
 
 /**
- * @deprecated
+ * @deprecated Verhuisd naar @kadaster/ggc-models, zie {@link: MapComponentEventTypes}
  * Beschrijft de huidige status van een kaartview.
  *
  * Wordt gebruikt om de centrering en het zoomniveau van een kaart

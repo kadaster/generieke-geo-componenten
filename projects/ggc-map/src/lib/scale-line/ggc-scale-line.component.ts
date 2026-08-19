@@ -26,13 +26,12 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   templateUrl: "./ggc-scale-line.component.html",
   styleUrls: ["./ggc-scale-line.component.css"]
 })
-
-/**
- * Optionele injectie van de MapDetailsContainer.
- * Indien aanwezig wordt de ScaleLine daarin gerenderd
- * in plaats van in de standaard kaartoverlay.
- */
 export class GgcScaleLineComponent implements OnInit, OnDestroy {
+  /**
+   * Optionele injectie van de MapDetailsContainer.
+   * Indien aanwezig wordt de ScaleLine daarin gerenderd
+   * in plaats van in de standaard kaartoverlay.
+   */
   mapDetailsContainer = inject(GgcMapDetailsContainerComponent, {
     optional: true
   });
@@ -45,7 +44,7 @@ export class GgcScaleLineComponent implements OnInit, OnDestroy {
 
   /**
    * Eenheden waarin de schaal wordt weergegeven.
-   * Standaard: metrisch.
+   * Standaard: metric. Overige mogelijke waarden: degrees, imperial, nautical, us.
    */
   @Input() units: Units = "metric";
 

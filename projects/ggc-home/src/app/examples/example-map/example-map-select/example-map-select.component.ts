@@ -73,6 +73,7 @@ export class ExampleMapSelectComponent
         this.mapConfig = data as Webservice[];
       });
     this.selectService.getObservable(this.mapIndex).subscribe((mapEvent) => {
+      console.log("mapEvent", mapEvent);
       if (
         mapEvent.mapIndex == this.mapIndex &&
         mapEvent.type === "selectionServiceSelectionUpdated"

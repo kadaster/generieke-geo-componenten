@@ -30,6 +30,15 @@ import { NgClass } from "@angular/common";
  *   <div>Inhoud die onder de toolbar verschijnt</div>
  * </ggc-toolbar-item>
  * ```
+ *
+ * ### Voorbeeld met clickCallback (geen content)
+ * ```html
+ * <ggc-toolbar-item
+ *   [icon]="'fas fa-copy'"
+ *   [title]="'Link kopiëren'"
+ *   [clickCallback]="copyLink.bind(this)">
+ * </ggc-toolbar-item>
+ * ```
  */
 @Component({
   selector: "ggc-toolbar-item",

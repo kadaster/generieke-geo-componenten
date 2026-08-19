@@ -37,15 +37,15 @@ export interface DrawOptions {
    */
   showSegmentLength?: boolean;
   /**
-   * Toont de totale lengte van alle segmenten samen tijdens en na het tekenen.
+   * Toont de totale lengte van alle segmenten samen tijdens en na het tekenen. Styling via GgcDrawService.setDrawStyle().
    */
   showTotalLength?: boolean;
   /**
-   * Toont de oppervlakte van het polygoon tijdens en na het tekenen.
+   * Toont de oppervlakte van het polygoon tijdens en na het tekenen. Styling via GgcDrawService.setDrawStyle().
    */
   showArea?: boolean;
   /**
-   * Overschrijft de standaardweergave van oppervlaktelabels bij het tekenen van polygonen.
+   * Overschrijft de standaardweergave van oppervlaktelabels bij het tekenen van polygonen. Styling via GgcDrawService.setDrawStyle().
    *
    * @param area - Oppervlakte in m².
    * @returns Weer te geven tekst voor het oppervlaktelabel.

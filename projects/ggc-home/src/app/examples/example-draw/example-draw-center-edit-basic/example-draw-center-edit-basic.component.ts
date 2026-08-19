@@ -36,7 +36,7 @@ export class ExampleDrawCenterEditBasicComponent
       "Bewerk lijnen, punten, vlakken en rechthoeken met vingers (mobiele device) of toetsenbord.",
     components: [Components.GGC_MAP],
     theme: [Themes.TEKENEN],
-    tags: [Tags.DRAW, Tags.MODIFY],
+    tags: [Tags.DRAW, Tags.MODIFY, Tags.KEYBOARD],
     imageLocation:
       "code/examples/example-draw/example-draw-center-edit-basic/example-draw-center-edit-basic.png"
   };

@@ -42,6 +42,12 @@ export class GgcSnapService {
   /**
    * Geeft een `Observable` terug met uitgebreide snap-events voor de opgegeven kaart.
    *
+   * @remarks
+   * Het event is van het type `SnapExtendedEvent` met de volgende properties:
+   * - `action` (`snap` of `unsnap`): betreft het een snap of unsnap event.
+   * - `snappedTo` (`vertex` of `line` of `undefined`): is gesnapt aan het (hoek)punt (`vertex`) of een lijn (`line`). Is `undefined` bij unsnap.
+   * - `snapEvent` (`SnapEvent`): het originele `SnapEvent` gegeven door OpenLayers.
+   *
    * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
    * @returns `Observable` van snap-events.
    */
