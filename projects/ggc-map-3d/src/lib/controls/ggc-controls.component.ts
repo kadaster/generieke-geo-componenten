@@ -14,10 +14,13 @@ import { NgClass } from "@angular/common";
 /**
  * Component dat standaard camerabedieningsknoppen aanbiedt voor de Cesium viewer.
  *
+ * @remarks
  * Met dit component kan de gebruiker:
  * - vooruit en achteruit bewegen;
  * - de camera roteren (links, rechts, omhoog, omlaag);
  * - de camera terugzetten naar een standaard "look at" positie.
+ *
+ * Voor de iconen wordt gebruik gemaakt van Fontawesome 6 iconen.
  */
 @Component({
   selector: "ggc-map-3d-controls",

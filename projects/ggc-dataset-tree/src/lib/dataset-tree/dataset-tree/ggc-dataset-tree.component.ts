@@ -39,6 +39,15 @@ import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
  * - ondersteunt **custom label templates** voor datasets en layers via content projection (`ContentChild`) van
  *   `LayerLabelTemplateDirective` en `DatasetLabelTemplateDirective`;
  * - ondersteunt `showOnlyDatasets`, waarbij alle themes worden samengevoegd tot één vlakke lijst datasets.
+ *
+ * @example
+ * ```html
+ * <ggc-dataset-tree
+ *   [themes]="myThemes"
+ *   [currentMapResolution]="mapResolution"
+ *   (events)="handleEvent($event)">
+ * </ggc-dataset-tree>
+ * ```
  */
 @Component({
   selector: "ggc-dataset-tree",
@@ -109,21 +118,21 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
   autoConnectLayerToggle = input<boolean>(true);
 
   /**
-   * Output stream voor alle DatasetTreeEvents (layer activated/deactivated).
+   * Output stream voor alle DatasetTreeEvents (`layerActivated` / `layerDeactivated`).
    */
   events = output<DatasetTreeEvent>();
 
   themes = input.required<Theme[]>();
 
   /**
-   * Index van de kaart waarop deze layer wordt bijgehouden (wordt doorgegeven aan alle themes).
+   * Index van de kaart waarop deze tree wordt bijgehouden.
    * Dit is dezelfde waarde als gebruikt binnen DatasetTreeEvents (mapIndex).
+   * Voor `viewerType = DRIE_D` wordt intern de Cesium-mapindex gebruikt.
    */
   mapIndex = input(DEFAULT_MAPINDEX);
 
   /**
-   * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
-   * Default is TWEE_D
+   * Type kaartviewer waarmee de dataset-tree interacteert, `TWEE_D` (ol) of `DRIE_D` (cesium).
    */
   viewerType = input(ViewerType.TWEE_D);
 

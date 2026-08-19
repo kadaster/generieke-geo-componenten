@@ -42,7 +42,7 @@ export class ThemeSelectorComponent {
    */
   themeNameIndex = input<string>("");
   /**
-   * Wanneer `true`, worden active/all counters toont bij elke dataset (wordt doorgegeven aan alle datasets).
+   * Wanneer `true`, worden active/all counters getoond bij elke dataset (wordt doorgegeven aan alle datasets).
    */
   showActiveCounters = input<boolean>(true);
   /**
@@ -74,7 +74,7 @@ export class ThemeSelectorComponent {
    */
   iconInfoUrl = input<string>("");
   /**
-   * Wanneer true, dan wordt de dataset-tree als 1 lange lijst van layers weergegeven zonder theme/datasetnamen (wordt doorgegeven aan alle datasets)
+   * Wanneer `true`, wordt de dataset-tree als één lange lijst van layers weergegeven zonder theme- of datasetnamen (wordt doorgegeven aan alle datasets).
    */
   hideTree = input<boolean>(false);
   /**
@@ -86,11 +86,11 @@ export class ThemeSelectorComponent {
    */
   datasetLabelComponent = input<TemplateRef<any> | undefined>(undefined);
   /**
-   * Wanneer true, dan wordt de dataset-tree bij initialisatie uitgeklapt weergegeven (wordt doorgegeven aan alle datasets).
+   * Wanneer true, wordt de dataset-tree bij initialisatie uitgeklapt weergegeven (wordt doorgegeven aan alle datasets).
    */
   expandTreeOnInit = input<boolean>(false);
   /**
-   * Wanneer true, dan worden alle theme namen weggelaten in de tree en worden alleen datasets weergegeven
+   * Wanneer true, worden alle theme namen weggelaten in de tree en worden alleen datasets weergegeven
    */
   showOnlyDatasets = input<boolean>(false);
   /**
@@ -98,19 +98,18 @@ export class ThemeSelectorComponent {
    */
   child = input<boolean>(false);
   /**
-   * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
-   * optioneel kunt **overschrijven**.
+   * Callback waarmee je de door de dataset-tree berekende enabled-status van een layer optioneel kunt overschrijven.
    */
   layerEnabledCallback = input<LayerEnabledCallback | null>(null);
   /**
-   * Index van de kaart waarop deze layer wordt bijgehouden (wordt doorgegeven aan alle datasets).
-   * Dit is dezelfde waarde als gebruikt binnen DatasetTreeEvents (mapIndex).
+   * Index van de kaart waarop deze tree wordt bijgehouden.
+   * Dit is dezelfde waarde als gebruikt binnen `DatasetTreeEvent.mapIndex`.
    */
   mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /**
-   * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
-   * Default is TWEE_D
+   * Type kaartviewer waarmee de dataset-tree interacteert, `TWEE_D` (ol) of `DRIE_D` (cesium).
+   * Default is TWEE_D.
    */
   viewerType = input<ViewerType>(ViewerType.TWEE_D);
 
@@ -122,9 +121,9 @@ export class ThemeSelectorComponent {
   autoConnectLayerStatus = input<boolean>(true);
 
   /**
-   * Wanneer ingesteld op `true`, zal de dataset-tree automatisch lagen aan- of uitzetten in het 2D of 3D map component met dezelfde mapIndex als deze worden getoggled in de dataset-tree.
+   * Wanneer `true`, zet de dataset-tree automatisch lagen aan- of uit in de gekoppelde kaartcomponent.
    * Bij `false` worden de kaartlagen niet automatisch aan- of uitgezet in de kaart en zal dit zelf geprogrammeerd moeten worden.
-   * Hiervoor kan dan de output events worden gebruikt.
+   * Hiervoor kunnen de output events worden gebruikt.
    */
   autoConnectLayerToggle = input<boolean>(true);
 

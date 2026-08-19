@@ -40,6 +40,31 @@ import { Subscription } from "rxjs";
  *
  * Binnen deze tags kan worden gespecificeerd hoe de tabbladen worden gevuld
  * en welke content per tabblad wordt weergegeven.
+ *
+ * Initieel wordt het eerste tabblad geselecteerd. Daarna onthoudt de component
+ * welk tabblad als laatste door de gebruiker is geselecteerd: bij nieuwe data
+ * wordt dit tabblad opnieuw geselecteerd, en als dat tabblad niet meer aanwezig
+ * is in de nieuwe data, wordt weer het eerste tabblad geselecteerd.
+ *
+ * Via een `<ng-template [ggcTemplateKey]>` kan een custom component als label
+ * voor het tabblad gebruikt worden. In het template zijn de variabelen
+ * `layerTitle` (de weergavenaam van de tab) en `active` (of de tab actief is)
+ * beschikbaar.
+ *
+ * @example
+ * <ggc-feature-info-tabs
+ *   [featureInfoCollectionArray]="featureInfoCollectionArray"
+ *   (events)="handleTabEvent($event)"
+ * >
+ *   <ng-template [ggcTemplateKey]="" let-value="layerTitle" let-active="active">
+ *     <app-feature-info-tabs [tab]="value" [active]="active"></app-feature-info-tabs>
+ *   </ng-template>
+ *   <ggc-feature-info
+ *     (events)="handleEvent($event)"
+ *     [featureInfoCollection]="featureCollectionFromSelectedTab"
+ *   >
+ *   </ggc-feature-info>
+ * </ggc-feature-info-tabs>
  */
 @Component({
   selector: "ggc-feature-info-tabs",

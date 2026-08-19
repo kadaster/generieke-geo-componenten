@@ -2,6 +2,9 @@
  * Enum die de verschillende meetacties beschrijft die beschikbaar zijn in het `ToolbarItemMeasureComponent`.
  *
  * Deze waarden worden gebruikt om aan te geven welke actie is uitgevoerd, bijvoorbeeld bij het versturen van een `measureItemClicked` event.
+ *
+ * @remarks
+ * De volgorde van de buttons in het component is vast en kan niet worden aangepast.
  */
 export enum ToolbarItemMeasureType {
   /** Bewerk bestaande metingen. */
@@ -26,7 +29,8 @@ export enum ToolbarItemMeasureType {
 /**
  * Eventklasse die wordt gebruikt door `ToolbarItemMeasureComponent` om aan te geven welke meetactie is uitgevoerd.
  *
- * Dit event wordt verstuurd via de `measureItemClicked` output en bevat het type actie via `toolbarItemName`.
+ * Dit event wordt verstuurd via de `measureItemClicked` output en bevat het element `toolbarItemName` met een waarde van
+ * `ToolbarItemMeasureType`
  */
 export class ToolbarItemMeasureComponentEvent {
   /**

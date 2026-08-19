@@ -20,13 +20,6 @@ import { CoordinateFormatPipe } from "../pipes/coordinate-format.pipe";
 import { epsg28992 } from "../utils/epsg28992";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
-@Component({
-  selector: "ggc-mouse-position",
-  templateUrl: "./ggc-mouse-position.component.html",
-  styleUrls: ["./ggc-mouse-position.component.css"],
-  standalone: true
-})
-
 /**
  * Component dat de actuele muispositie op een OpenLayers‑kaart weergeeft.
  *
@@ -35,6 +28,12 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
  * - string- of callback‑gebaseerde formattering
  * - optionele weergave binnen een MapDetailsContainer
  */
+@Component({
+  selector: "ggc-mouse-position",
+  templateUrl: "./ggc-mouse-position.component.html",
+  styleUrls: ["./ggc-mouse-position.component.css"],
+  standalone: true
+})
 export class GgcMousePositionComponent implements OnInit, OnDestroy {
   /**
    * Optionele injectie van de MapDetailsContainer.
@@ -53,7 +52,8 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   /** Placeholder tekst wanneer geen coördinaat beschikbaar is */
   @Input() placeholder = " ";
 
-  /** Doelprojectie waarin de coördinaten worden getoond */
+  /** Doelprojectie waarin de coördinaten worden getoond.
+   * Er kan een alternatieve projectie worden opgegeven, hiervoor dien je deze projectie en RD-new te registreren met proj4. */
   @Input() projection = epsg28992;
 
   private readonly coreMapService = inject(CoreMapService);
@@ -70,7 +70,10 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   @ViewChild("ggcMousePosition", { static: true })
   private readonly ggcMousePosition: ElementRef;
 
-  /** Geeft het huidige ingestelde coördinaatformaat terug */
+  /** Geeft het huidige ingestelde coördinaatformaat terug
+   * Standaard is dit RD: x = {x} m; y = {y} m, waarbij {x} en {y} worden vervangen met de coördinaten.
+   * Naast een string accepteert format ook een callback functie ((coordinate:Coordinate) => string).
+   * */
   get format(): string | CoordinateFormat {
     return this._format;
   }

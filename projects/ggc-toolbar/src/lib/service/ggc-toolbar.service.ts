@@ -1,6 +1,11 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
+/**
+ * Service voor het beheren van de actieve toolbar-item.
+ *
+ * `GgcToolbarService` houdt de status van het huidige actieve toolbar-item bij.
+ */
 @Injectable({
   providedIn: "root"
 })

@@ -138,6 +138,11 @@ export interface SelectionConfig {
 
   /**
    * Kleur voor highlight van selectie.
+   *
+   * @remarks De opgegeven kleur wordt vermenigvuldigd bij de al aanwezige
+   * kleur van een feature, dus rood x rood, groen x groen en blauw x blauw.
+   * Dat betekent dat bij een kleurloze feature de gekozen kleur wordt weergegeven,
+   * maar bij een feature met een basiskleur, de weergegeven kleur altijd donkerder zal uitvallen.
    */
   highlightColor?: Color;
 
@@ -388,6 +393,8 @@ export type cameraValuesShowFunction = (cameraValues: CameraValues) => boolean;
 
 /**
  * Configuratie voor de Cesium viewer.
+ *
+ * @remarks Voor de timeline en animation widgets is de `@cesium/widgets/Source/widgets.css` nodig.
  */
 export interface ViewerOptions {
   /**

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Component } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent
@@ -31,7 +31,7 @@ export class ExampleSearchLocationOnlyLocationComponent extends ExampleFormatCom
     route: "/search-location-only-location",
     title: "Huidige locatie",
     introduction:
-      "Hier wordt alleen de huidige locatie knop getoond. Het zoeken zelf is niet enabled. Ga naar je huidige locatie door op de locatie knop te drukken.",
+      "Hier wordt alleen de huidige locatie knop getoond, zonder een zoekbalk. Ga naar je huidige locatie door op de locatie knop te drukken.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.LOCATION],
