@@ -27,14 +27,12 @@ export class GgcToolbarConnectService {
    * Zorgt dat de module slechts één keer geladen wordt.
    */
   private loadMapModule(): Promise<GgcMapModule> {
-    this.modulePromise ??= import(/* @vite-ignore */ "@kadaster/ggc-map").catch(
-      (e) => {
-        console.debug(
-          `Autoconnect ggc-toolbar met ggc-map is niet gelukt: ${e}`
-        );
-        throw e;
-      }
-    );
+    // Dynamisch laden werkt alleen met de naam van de import in een variabele:
+    const map2D = "@kadaster/ggc-map";
+    this.modulePromise ??= import(/* @vite-ignore */ map2D).catch((e) => {
+      console.debug(`Autoconnect ggc-toolbar met ggc-map is niet gelukt: ${e}`);
+      throw e;
+    });
     return this.modulePromise;
   }
 

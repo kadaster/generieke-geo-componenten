@@ -24,9 +24,9 @@ export class GgcSearchLocationConnectService {
    * Lazy load Cesium module (once)
    */
   private loadCesiumModule(): Promise<CesiumModule> {
-    this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-map-3d"
-    ).catch((e) => {
+    // Dynamisch laden werkt alleen met de naam van de import in een variabele:
+    const map3D = "@kadaster/ggc-map-3d";
+    this.cesiumModulePromise ??= import(/* @vite-ignore */ map3D).catch((e) => {
       console.debug(
         `Autoconnect ggc-dataset-tree met ggc-map-3d is niet gelukt: ${e}`,
         e
@@ -37,9 +37,9 @@ export class GgcSearchLocationConnectService {
   }
 
   private loadMapModule(): Promise<GgcMapModule> {
-    this.mapModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-map"
-    ).catch((e) => {
+    // Dynamisch laden werkt alleen met de naam van de import in een variabele:
+    const map2D = "@kadaster/ggc-map";
+    this.mapModulePromise ??= import(/* @vite-ignore */ map2D).catch((e) => {
       console.debug(
         `Autoconnect ggc-search-location met ggc-map is niet gelukt: ${e}`,
         e
