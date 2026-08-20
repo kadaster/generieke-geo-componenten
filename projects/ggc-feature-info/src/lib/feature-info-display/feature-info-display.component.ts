@@ -23,7 +23,8 @@ export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
   @Input() type: FeatureInfoDisplayType = FeatureInfoDisplayType.TABLE;
   @Input() currentFeature: { [key: string]: any };
   @Input() hideEmptyFields: boolean;
-  @Input() headerValueTemplates: Map<string, TemplateRef<any>> = new Map();
+  @Input() headerValueTemplates: Map<string, TemplateRef<any> | null> =
+    new Map();
   @Input() contentValueTemplates: Map<string, TemplateRef<any>> = new Map();
   @Input() hideEmptyFieldWithKeys: string[] = [];
 
