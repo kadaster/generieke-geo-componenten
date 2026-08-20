@@ -131,10 +131,12 @@ input[type="text"] {
 /* The switch - the box around the slider */
 .switch {
   position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 17px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
   margin-left: 6px;
+  white-space: normal;
 }
 
 /* Hide default HTML checkbox */
@@ -146,12 +148,11 @@ input[type="text"] {
 
 /* The slider */
 .slider {
-  position: absolute;
+  position: relative;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 17px;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background-color: #ccc;
   -webkit-transition: 0.4s;
   transition: 0.4s;
