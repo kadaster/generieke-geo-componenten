@@ -1,0 +1,25 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "zIndex": -20
+      }
+    ]
+  },
+  {
+    "type": "geojson",
+    "url": "https://api.pdok.nl/kadaster/bag-terugmeldingen/ogc/v1/collections/bagterugmeldingen/items?crs=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F28992&limit=1000&f=json",
+    "layers": [
+      {
+        "layerId": "terugmeldingen-bag",
+        "title": "BAG Terugmeldingen",
+        "getFeatureInfoOnSingleclick": true
+      }
+    ]
+  }
+]

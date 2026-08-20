@@ -1,0 +1,68 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  [pathExtraConfig]="'example-search-location/example-search-location-alternative-search/alternative-suggest.service.ts'"
+  [extraConfigLabel]="`AlternativeSuggestService`"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld kan je naast de PDOK Locatie API ook zoeken in een eigen
+      collectie, die de BAG terugmeldingnummers bevat. Door te zoeken op
+      "BAG..." met een meldingsnummer erachter, krijg je resultaten van de
+      terugmeldingen die overeenkomen met het opgegeven meldingsnummer.
+      <br />
+      Om een eigen collectie te gebruiken, moet je het volgende doen:
+    </p>
+    <ol>
+      <li>
+        Maak een eigen service aan die de search functie implementeerd, zie
+        hiervoor GgcAdditionalSuggestionSourceService. Wij hebben hiervoor een
+        AlternativeSuggestService gemaakt.
+      </li>
+      <li>Provide deze service als GgcAdditionalSuggestionSourceService</li>
+      <li>
+        Vang SearchComponentEvents af om resultaten van je eigen collectie te
+        behandelen. In dit geval zoomen wij in naar het coordinaat van de
+        gezochte melding.
+      </li>
+    </ol>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
+        <div>
+          <ggc-search-location
+            (events)="handleSearchComponentEvent($event)"
+            [searchLocationOptions]="searchLocationOptions"
+          ></ggc-search-location>
+        </div>
+        <div class="map-container">
+          <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+        <ggc-feature-info
+          [mapIndex]="mapIndex"
+          [hidePagerWithOneFeature]="true"
+        ></ggc-feature-info>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>
