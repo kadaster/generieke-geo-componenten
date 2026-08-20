@@ -1,0 +1,80 @@
+<ggc-home-example-format
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Op basis van een ng-template is het mogelijk om eigen HTML te gebruiken
+      voor velden in de het feature-info component. In dit voorbeeld kan je klikken op de BAG panden voor informatie. Via de ggcTemplateKey en het templateType is in te stellen welk gedrag je wilt veranderen met de HTML templates. In dit voorbeeld hebben wij het onderstaande toegepast:
+    </p>
+      <ul>
+        <li>CONTENT: Hiermee kan je de de HTML van de waarde aanpassen. In dit voorbeeld wordt het rdf-seealso veld weergegeven als een url.</li>
+        <li>HEADER: Hiermee kan je de naam/header aanpassen. In dit voorbeeld hebben wij de naam "aantal_verblijfsobjecten" veranderd naar "aantal verblijfsobjecten".</li>
+        <li>HIDE: Hiermee kan je velden verborgen maken, maar nog wel gebruiken in andere feature-info velden. In dit voorbeeld hebben wij external_fid verborgen.</li>
+        <li>HIDE_IF_EMPTY: Hiermee kan je velden verborgen maken als deze leeg zijn. In dit voorbeeld hebben wij bouwjaar verborgen als deze leeg is.</li>
+      </ul>
+  </div>
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-5 col-md-4 col-sm-5">
+        <div class="feature-info-container">
+          <b>Feature Info</b>
+          <br />
+          <ggc-feature-info
+            [mapIndex]="mapIndex"
+            [hidePagerWithOneFeature]="true"
+          >
+            <ng-template
+              [ggcTemplateKey]="'rdf_seealso'"
+              [templateType]="types.CONTENT"
+              let-value="value"
+            >
+              <a [href]="value">{{ value }}</a>
+            </ng-template>
+            <ng-template
+              [ggcTemplateKey]="'external_fid'"
+              [templateType]="types.HIDE"
+            >
+            </ng-template>
+            <ng-template
+              [ggcTemplateKey]="'aantal_verblijfsobjecten'"
+              [templateType]="types.HEADER"
+            >
+              aantal verblijfsobjecten
+            </ng-template>
+            <ng-template
+              [ggcTemplateKey]="'bouwjaar'"
+              [templateType]="types.HIDE_IF_EMPTY"
+            >
+            </ng-template>
+          </ggc-feature-info>
+        </div>
+      </div>
+      <div class="col-xl-7 col-md-6 col-sm-5">
+        <div class="map-container">
+          <ggc-map
+            [mapIndex]="mapIndex"
+            [webServices]="mapConfig"
+            [minZoomlevel]="13"
+            [maxZoomlevel]="13"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>

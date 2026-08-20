@@ -1,0 +1,32 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "title": "BRT achtergrond kaart Standaard (WMTS)",
+        "layerName": "standaard",
+        "activeLegend": {
+          "legendUrl": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/legend.png"
+        },
+        "visible": true,
+        "zIndex": -10
+      }
+    ]
+  },
+  {
+    "type": "vector",
+    "url": "https://api.pdok.nl/kadaster/bag/ogc/v2/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "layers": [
+      {
+        "layerId": "bagVector",
+        "title": "BAG (vector tiles)",
+        "style": "https://api.pdok.nl/kadaster/bag/ogc/v2/styles/bag_standaardvisualisatie__netherlandsrdnewquad?f=mapbox",
+        "maxResolution": 0.84,
+        "enableOverzoom": true,
+        "getFeatureInfoOnSingleclick": true
+      }
+    ]
+  }
+]

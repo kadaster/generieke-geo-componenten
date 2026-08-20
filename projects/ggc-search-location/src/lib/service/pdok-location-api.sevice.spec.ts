@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import {
   HttpTestingController,
@@ -61,6 +61,32 @@ describe("PdokLocationApiService", () => {
     expect(service).toBeTruthy();
     const collections = service.getCollections();
     expect(collections).toEqual(mockPdokLocationApiResult);
+  });
+
+  it("moet custom collecties behouden als die al gezet zijn voordat collecties laden", () => {
+    const serviceWithPendingCollectionsRequest = TestBed.runInInjectionContext(
+      () => new PdokLocationApiService()
+    );
+
+    const customCollections = [
+      {
+        id: "perceel",
+        version: 2,
+        relevance: 0.9
+      }
+    ];
+
+    serviceWithPendingCollectionsRequest.setCustomCollections(
+      customCollections
+    );
+
+    const collectionsReq = httpMock.expectOne((r) =>
+      r.url.endsWith("collections?f=json")
+    );
+    collectionsReq.flush(mockPdokLocationApiResult);
+    expect(
+      (serviceWithPendingCollectionsRequest as any).usedCollections
+    ).toEqual(customCollections);
   });
 
   describe("search", () => {

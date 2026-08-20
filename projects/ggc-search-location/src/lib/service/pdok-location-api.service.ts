@@ -51,7 +51,10 @@ export class PdokLocationApiService {
       .get<PdokLocationApiResult>(`${this.baseUrl}collections?f=json`)
       .subscribe((res) => {
         this.pdokLocationApiResult = res;
-        this.setDefaultCollections();
+        if (!this.usedCollections) {
+          // collection is nog niet eerder geset, pak default
+          this.setDefaultCollections();
+        }
         this.collectionsLoadedSubject.next(res);
       });
   }

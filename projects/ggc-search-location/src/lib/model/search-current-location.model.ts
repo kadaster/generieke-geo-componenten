@@ -2,22 +2,22 @@
  * Configuratie voor de "Mijn Locatie" functionaliteit binnen de zoekcomponent.
  */
 export interface SearchCurrentLocation {
-  /** Bepaalt of de locatieknop in de lijst (select) of als aparte knop (button) verschijnt. */
-  type: SearchCurrentLocationType;
+  /** Bepaalt of de locatieknop in de lijst (select) of als aparte knop (button) verschijnt. Default is SELECT. */
+  type?: SearchCurrentLocationType;
   /** Het icoon dat getoond wordt (bijv. FontAwesome klasse). Standaard niet weergegeven als niet ingesteld. */
-  icon: string;
+  icon?: string;
   /** Het icoon dat getoond wordt terwijl de locatie geladen wordt. Standaard niet weergegeven als niet ingesteld. */
-  loadIcon: string;
+  loadIcon?: string;
   /** De tekst bij de locatieoptie. Standaard: "Gebruik mijn locatie". */
-  label: string;
+  label?: string;
   /** De gevonden coördinaten teruggestuurd moeten worden via events. */
-  returnLocation: boolean;
-  /** De kaart automatisch naar de gevonden locatie moet zoomen. */
-  zoomToLocation: boolean;
-  /** Er een marker geplaatst moet worden op de gevonden locatie. */
-  markLocation: boolean;
-  /** De locatie van de gebruiker continu gevolgd moet worden. */
-  trackLocation: boolean;
+  returnLocation?: boolean;
+  /** De kaart automatisch naar de gevonden locatie moet zoomen. Default is false. */
+  zoomToLocation?: boolean;
+  /** Er een marker geplaatst moet worden op de gevonden locatie. Default is false. */
+  markLocation?: boolean;
+  /** De locatie van de gebruiker continu gevolgd moet worden. Default is false. */
+  trackLocation?: boolean;
 }
 
 /**
