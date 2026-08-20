@@ -37,6 +37,9 @@ describe("GgcSearchLocationComponent", () => {
       searchOnTermChange: vi
         .fn()
         .mockName("PdokLocationApiService.searchOnTermChange"),
+      setCustomCollections: vi
+        .fn()
+        .mockName("PdokLocationApiService.setCustomCollections"),
       item: vi.fn().mockName("PdokLocationApiService.item")
     } as MockedObject<PdokLocationApiService>;
     locationServiceSpy = {
