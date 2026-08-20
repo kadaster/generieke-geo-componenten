@@ -344,9 +344,9 @@ describe("FeatureInfoWrapperComponent", () => {
     expect(
       component["customHeaderValueTemplates"].get("waarde3")
     ).toBeDefined();
-    expect(
-      component["customHeaderValueTemplates"].get("waarde4")
-    ).toBeDefined();
+    const waarde4 = component["customHeaderValueTemplates"].get("waarde4");
+    expect(waarde4).toBeDefined();
+    expect(waarde4).toEqual(null);
     expect(component["customHeaderValueTemplates"].get("waarde1")).not.toEqual(
       component["customHeaderValueTemplates"].get("waarde2")
     );
