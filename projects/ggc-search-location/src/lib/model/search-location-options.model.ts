@@ -1,9 +1,11 @@
 import { SearchComponentElementIds } from "./search-component-element-ids.model";
 import { EventEmitter } from "@angular/core";
 import { SearchCurrentLocation } from "./search-current-location.model";
-import { PdokLocationApiSearchFeature } from "./pdok-location-api-collection.model";
+import {
+  PdokLocationApiSearchFeature,
+  SearchCollection
+} from "./pdok-location-api-collection.model";
 import { ViewerType } from "@kadaster/ggc-models";
-import { SearchCollection } from "@kadaster/ggc-search-location";
 /**
  * Uitgebreide configuratie voor de SearchLocationComponent.
  */
