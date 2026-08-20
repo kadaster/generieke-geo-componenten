@@ -144,7 +144,7 @@ export class GgcFeatureInfoComponent
    * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
    */
   @Output() events = new EventEmitter<FeatureInfoComponentEvent>();
-  protected customHeaderValueTemplates: Map<string, TemplateRef<any>> =
+  protected customHeaderValueTemplates: Map<string, TemplateRef<any> | null> =
     new Map();
   protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
   protected hideEmptyFieldWithKeys: string[] = [];
@@ -278,7 +278,7 @@ export class GgcFeatureInfoComponent
             this.customValueTemplates.set(templateKey, template.templateRef);
             break;
           case ValueTemplateDirectiveType.HIDE:
-            this.customHeaderValueTemplates.delete(templateKey);
+            this.customHeaderValueTemplates.set(templateKey, null);
             break;
           case ValueTemplateDirectiveType.HIDE_IF_EMPTY:
             if (!this.hideEmptyFieldWithKeys.includes(templateKey)) {
