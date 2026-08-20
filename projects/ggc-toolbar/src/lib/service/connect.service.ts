@@ -27,14 +27,15 @@ export class GgcToolbarConnectService {
    * Zorgt dat de module slechts één keer geladen wordt.
    */
   private loadMapModule(): Promise<GgcMapModule> {
-    this.modulePromise ??= import(/* @vite-ignore */ "@kadaster/ggc-map").catch(
-      (e) => {
-        console.debug(
-          `Autoconnect ggc-toolbar met ggc-map is niet gelukt: ${e}`
-        );
-        throw e;
-      }
-    );
+    this.modulePromise ??= (async () => {
+      const moduleName = "@kadaster/ggc-map";
+      return import(moduleName);
+    })().catch((e) => {
+      console.debug(
+        `Autoconnect ggc-toolbar met ggc-map is niet gelukt: ${e}`
+      );
+      throw e;
+    });
     return this.modulePromise;
   }
 

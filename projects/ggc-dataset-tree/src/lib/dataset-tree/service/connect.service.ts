@@ -24,9 +24,10 @@ export class GgcDatasetTreeConnectService {
    * Lazy load Cesium module (once)
    */
   private loadCesiumModule(): Promise<CesiumModule> {
-    this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-map-3d"
-    ).catch((e) => {
+    this.cesiumModulePromise ??= (async () => {
+      const moduleName = "@kadaster/ggc-map-3d";
+      return import(moduleName);
+    })().catch((e) => {
       console.debug(
         `Autoconnect ggc-dataset-tree met ggc-map-3d is niet gelukt: ${e}`,
         e
@@ -40,9 +41,10 @@ export class GgcDatasetTreeConnectService {
    * Lazy load GGC Map module (once)
    */
   private loadMapModule(): Promise<GgcMapModule> {
-    this.mapModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-map"
-    ).catch((e) => {
+    this.mapModulePromise ??= (async () => {
+      const moduleName = "@kadaster/ggc-map";
+      return import(moduleName);
+    })().catch((e) => {
       console.debug(
         `Autoconnect ggc-dataset-tree met ggc-map is niet gelukt: ${e}`,
         e

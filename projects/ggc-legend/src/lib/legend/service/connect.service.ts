@@ -24,11 +24,10 @@ export class GgcLegendConnectService {
    * Lazy load Cesium module (once)
    */
   private loadCesiumModule(): Promise<CesiumModule> {
-    this.cesiumModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-map-3d"
-    ).catch((e) => {
-      throw e;
-    });
+    this.cesiumModulePromise ??= (async () => {
+      const moduleName = "@kadaster/ggc-map-3d";
+      return import(moduleName);
+    })();
     return this.cesiumModulePromise;
   }
 
@@ -36,11 +35,10 @@ export class GgcLegendConnectService {
    * Lazy load Map module (once)
    */
   private loadMapModule(): Promise<GgcMapModule> {
-    this.mapModulePromise ??= import(
-      /* @vite-ignore */ "@kadaster/ggc-map"
-    ).catch((e) => {
-      throw e;
-    });
+    this.mapModulePromise ??= (async () => {
+      const moduleName = "@kadaster/ggc-map";
+      return import(moduleName);
+    })();
     return this.mapModulePromise;
   }
 
