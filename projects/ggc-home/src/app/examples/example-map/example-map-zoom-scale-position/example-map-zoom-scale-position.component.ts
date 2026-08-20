@@ -29,7 +29,8 @@ import { Tags } from "../../tags.enum";
     GgcMousePositionComponent,
     GgcMousePositionComponent
   ],
-  templateUrl: "./example-map-zoom-scale-position.component.html"
+  templateUrl: "./example-map-zoom-scale-position.component.html",
+  styleUrls: ["./example-map-zoom-scale-position.component.scss"]
 })
 export class ExampleMapZoomScalePositionComponent
   extends ExampleFormatComponent
