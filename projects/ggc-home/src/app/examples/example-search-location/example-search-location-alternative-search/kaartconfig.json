@@ -18,6 +18,7 @@
       {
         "layerId": "terugmeldingen-bag",
         "title": "BAG Terugmeldingen",
+        "maxFeatures": 500,
         "getFeatureInfoOnSingleclick": true
       }
     ]

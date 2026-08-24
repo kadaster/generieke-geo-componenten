@@ -20,10 +20,10 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld kan je naast de PDOK Locatie API ook zoeken in een eigen
-      collectie, die de BAG terugmeldingnummers bevat. Door te zoeken op
-      "BAG..." met een meldingsnummer erachter, krijg je resultaten van de
-      terugmeldingen die overeenkomen met het opgegeven meldingsnummer.
+      In dit voorbeeld kan je ook zoeken in een eigen collectie naast de PDOK
+      Locatie API , namelijk de BAG terugmeldingnummers. Door te zoeken op "BAG"
+      met een (deel van het) meldingsnummer erachter, kan je zoeken naar
+      terugmeldingen met het opgegeven meldingsnummer.
       <br />
       Om een eigen collectie te gebruiken, moet je het volgende doen:
     </p>
@@ -37,7 +37,8 @@
       <li>
         Vang SearchComponentEvents af om resultaten van je eigen collectie te
         behandelen. In dit geval zoomen wij in naar het coordinaat van de
-        gezochte melding.
+        gezochte melding. Er wordt automatisch in de PDOK resultaten gezocht,
+        dus deze hoef je niet af te vangen.
       </li>
     </ol>
   </div>
