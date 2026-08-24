@@ -6,6 +6,10 @@ import {
   ValueTemplateDirective,
   ValueTemplateDirectiveType
 } from "../directive/value-template.directive";
+import {
+  FeatureInfoComponentEvent,
+  FeatureInfoComponentEventType
+} from "../model/feature-info-component-event";
 import { FeatureKeysPipe } from "../pipe/keys.pipe";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { GgcFeatureInfoComponent } from "./ggc-feature-info.component";
@@ -127,6 +131,25 @@ describe("FeatureInfoComponent", () => {
     expect(
       featureInfoConfigServiceSpy.filterAndSortAttributes
     ).toHaveBeenCalled();
+  });
+
+  it("when handleFeatureInfoEvent receives SELECTEDTAB with undefined value, it should set featureInfoCollection to undefined", () => {
+    component.featureInfoCollection = {
+      layerName: "laag",
+      features: [new Feature({ test: "123" })],
+      layerTitle: "title",
+      layerId: "id"
+    };
+
+    component["handleFeatureInfoEvent"](
+      new FeatureInfoComponentEvent(
+        FeatureInfoComponentEventType.SELECTEDTAB,
+        "test",
+        undefined
+      )
+    );
+
+    expect(component.featureInfoCollection).toBeUndefined();
   });
 
   it("when hidePagerWithOneFeature is not set it should default always show the pager", () => {

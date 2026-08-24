@@ -375,6 +375,8 @@ export class GgcFeatureInfoComponent
           collection.layerTitle,
           collection.layerId
         );
+      } else {
+        this.featureInfoCollection = undefined;
       }
     }
   }
