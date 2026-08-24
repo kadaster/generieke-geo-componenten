@@ -1,0 +1,26 @@
+{
+  "name": "@kadaster/ggc-conversion",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@kadaster/ggc-map": ">=0",
+    "ol": "^10.7.0"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "jszip": "^3.10.1",
+    "lru-cache": "^11.2.2",
+    "parsedbf": "^2.0.0",
+    "proj4": "^2.11.0",
+    "tslib": "^2.3.0"
+  },
+  "repository": {
+    "url": "https://github.com/kadaster/generieke-geo-componenten"
+  },
+  "license": "EUPL-1.2",
+  "publishConfig": {
+    "directory": "../../dist/ggc-conversion",
+    "access": "public"
+  }
+}

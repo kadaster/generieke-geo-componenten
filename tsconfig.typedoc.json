@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@kadaster/ggc-conversion": ["projects/ggc-conversion/src/public-api.ts"],
       "@kadaster/ggc-map-3d": ["projects/ggc-map-3d/src/public-api.ts"],
       "@kadaster/ggc-dataset-tree": [
         "projects/ggc-dataset-tree/src/public-api.ts"

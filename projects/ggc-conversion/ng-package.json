@@ -1,0 +1,26 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ggc-conversion",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "assets": [
+    {
+      "glob": "README.md",
+      "input": "src",
+      "output": "."
+    },
+    {
+      "glob": "LICENSE.md",
+      "input": "src",
+      "output": "."
+    }
+  ],
+  "allowedNonPeerDependencies": [
+    "buffer",
+    "jszip",
+    "lru-cache",
+    "parsedbf",
+    "proj4"
+  ]
+}
