@@ -4,7 +4,7 @@
     "declarationMap": false,
     "paths": {
       "@kadaster/ggc-map": [
-        "projects/ggc-conversion/src/typings/dataset-tree-shims.d.ts"
+        "projects/ggc-conversion/src/typings/conversion.d.ts"
       ],
       "@kadaster/ggc-models": ["dist/ggc-models"]
     }
