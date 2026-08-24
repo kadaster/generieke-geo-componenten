@@ -2,9 +2,13 @@ import { inject, Injectable } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Observable } from "rxjs";
-import { CoreSelectionService } from "./core-selection.service";
-import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  FeatureCollectionForCoordinate,
+  MapComponentEvent
+} from "@kadaster/ggc-models";
 import { SelectOptions } from "../../model/select-options";
+import { CoreSelectionService } from "./core-selection.service";
 
 /**
  * Service voor het selecteren en highlighten van features op de kaart.
@@ -182,12 +186,15 @@ export class GgcSelectionService {
    * @param features De nieuwe OpenLayers features die geselecteerd worden.
    * @param selectIndex Optionele selectIndex/kaartindex (default: DEFAULT_MAPINDEX) waarop
    * de selectie wordt overschreven.
+   * @param layerId De layerId waaraan de selectie moet worden toegevoegd.
+   * Als leeggelaten, dan wordt een leeg layerId gebruikt, maar dan kan het zijn dat andere componenten niet correct reageren.
    */
   setSelection(
     features: Feature<Geometry>[],
-    selectIndex: string = DEFAULT_MAPINDEX
+    selectIndex: string = DEFAULT_MAPINDEX,
+    layerId = ""
   ) {
-    this.coreSelectionService.setSelection(features, selectIndex);
+    this.coreSelectionService.setSelection(features, selectIndex, layerId);
   }
 
   /**
@@ -199,6 +206,23 @@ export class GgcSelectionService {
    */
   getCurrentSelection(selectIndex: string = DEFAULT_MAPINDEX) {
     return this.coreSelectionService.getCurrentSelection(selectIndex);
+  }
+
+  /**
+   * Geeft de huidige selectie als feature collection voor de opgegeven kaart.
+   *
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX).
+   * @param selectIndex Optionele selectIndex. Als leeg, dan wordt mapIndex gebruikt.
+   * @returns De huidige selectie als {@link FeatureCollectionForCoordinate}.
+   */
+  getCurrentFeatureCollection(
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): FeatureCollectionForCoordinate {
+    return this.coreSelectionService.getCurrentFeatureCollection(
+      mapIndex,
+      selectIndex
+    );
   }
 
   /**
