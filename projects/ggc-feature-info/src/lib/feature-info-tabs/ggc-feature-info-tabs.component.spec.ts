@@ -119,6 +119,29 @@ describe("FeatureInfoTabsComponent", () => {
     expect(component["selectedTabFeatureInfo"]()?.features).toEqual([feature]);
   });
 
+  it("should use the current value of the selection for initial feature-info", async () => {
+    const feature = new Feature({ test: "123" });
+    const currentFeatureCollection = new FeatureCollectionForCoordinate();
+    currentFeatureCollection.featureCollectionForLayers.push({
+      layerId: "id",
+      layerTitle: "titel",
+      features: [feature]
+    });
+    featureInfoMapConnectServiceSpy.getCurrentFeatureCollectionForMapSelection.mockResolvedValue(
+      currentFeatureCollection
+    );
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(
+      featureInfoMapConnectServiceSpy.getCurrentFeatureCollectionForMapSelection
+    ).toHaveBeenCalled();
+    expect(component["featureInfoCollectionArrayInternal"]().length).toBe(1);
+    expect(component["selectedTab"]()).toBe("id");
+    expect(component["selectedTabFeatureInfo"]()?.features).toEqual([feature]);
+  });
+
   it("when showEmptyTabs has default value, empty tabs will be removed from featureInfoCollectionArray", () => {
     const feature1 = new Feature({ test: "123" });
     const feature2 = new Feature({ test: "456" });
