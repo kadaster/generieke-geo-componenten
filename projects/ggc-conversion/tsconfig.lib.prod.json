@@ -3,9 +3,7 @@
   "compilerOptions": {
     "declarationMap": false,
     "paths": {
-      "@kadaster/ggc-map": [
-        "projects/ggc-conversion/src/typings/conversion.d.ts"
-      ],
+      "@kadaster/ggc-map": ["dist/ggc-map"],
       "@kadaster/ggc-models": ["dist/ggc-models"]
     }
   },
