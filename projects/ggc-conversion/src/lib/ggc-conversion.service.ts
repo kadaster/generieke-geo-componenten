@@ -169,7 +169,10 @@ export class GgcConversionService {
         .filter((el) => el.nodeName.split(":").pop() === tagLocalName)
         .forEach((tag) => {
           // Create new element with gml namespace
-          const clone = xml.createElementNS(gmlNamespace, `gml:${tagLocalName}`);
+          const clone = xml.createElementNS(
+            gmlNamespace,
+            `gml:${tagLocalName}`
+          );
 
           // Get all attributes from the source tag and add it to the clone
           tag.getAttributeNames().forEach((attr) => {

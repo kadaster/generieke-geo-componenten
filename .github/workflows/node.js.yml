@@ -73,6 +73,7 @@ jobs:
             ggc-models,
             ggc-search-location,
             ggc-toolbar,
+            ggc-conversion,
             ggc-home
           ]
     steps:
@@ -101,7 +102,8 @@ jobs:
             ggc-legend,
             ggc-map,
             ggc-search-location,
-            ggc-toolbar
+            ggc-toolbar,
+            ggc-conversion
           ]
     steps:
       - uses: actions/checkout@v6
