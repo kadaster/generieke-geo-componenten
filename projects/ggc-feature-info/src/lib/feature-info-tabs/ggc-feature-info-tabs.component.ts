@@ -23,6 +23,7 @@ import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import {
   DEFAULT_MAPINDEX,
+  FeatureCollectionForLayer,
   MapComponentEvent,
   MapComponentEventTypes,
   ViewerType
@@ -269,7 +270,17 @@ export class GgcFeatureInfoTabsComponent
     }
   }
 
-  private subscribeToMapSelection(mapIndex: string) {
+  private async subscribeToMapSelection(mapIndex: string) {
+    // Haal de meest recente selection op als deze bestaat
+    const currentFeatureCollectionForLayers =
+      await this.featureInfoMapConnectService.getCurrentFeatureCollectionForMapSelection(
+        this.viewerType,
+        mapIndex,
+        this.selectIndex
+      );
+    this.setFeatureInfoCollectionArray(
+      currentFeatureCollectionForLayers?.featureCollectionForLayers
+    );
     this.featureInfoMapConnectService
       .getObservableForMapSelection(this.viewerType, mapIndex, this.selectIndex)
       .then((observable) => {
@@ -279,12 +290,20 @@ export class GgcFeatureInfoTabsComponent
               event.type ===
               MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
             ) {
-              this.featureInfoCollectionArray =
-                event.value.featureCollectionForLayers;
-              this.onDataUpdate();
+              this.setFeatureInfoCollectionArray(
+                event.value.featureCollectionForLayers
+              );
             }
           }
         );
       });
+  }
+
+  private setFeatureInfoCollectionArray(
+    featureCollectionForLayers: FeatureCollectionForLayer[] | undefined
+  ) {
+    this.featureInfoCollectionArray =
+      featureCollectionForLayers as FeatureInfoCollection[];
+    this.onDataUpdate();
   }
 }

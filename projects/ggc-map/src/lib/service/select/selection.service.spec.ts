@@ -1,4 +1,4 @@
-import type { MockedObject } from "vitest";
+import { describe, MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { Observable, of } from "rxjs";
 import Feature from "ol/Feature";
@@ -6,7 +6,11 @@ import { Geometry } from "ol/geom";
 
 import { GgcSelectionService } from "./ggc-selection.service";
 import { CoreSelectionService } from "./core-selection.service";
-import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  FeatureCollectionForCoordinate,
+  MapComponentEvent
+} from "@kadaster/ggc-models";
 import { SelectOptions } from "../../model/select-options";
 
 describe("GgcSelectionService", () => {
@@ -30,7 +34,10 @@ describe("GgcSelectionService", () => {
       stopSelect: vi.fn().mockName("CoreSelectionService.stopSelect"),
       getCurrentSelection: vi
         .fn()
-        .mockName("CoreSelectionService.getCurrentSelection")
+        .mockName("CoreSelectionService.getCurrentSelection"),
+      getCurrentFeatureCollection: vi
+        .fn()
+        .mockName("CoreSelectionService.getCurrentFeatureCollection")
     };
     TestBed.configureTestingModule({
       providers: [
@@ -161,6 +168,25 @@ describe("GgcSelectionService", () => {
         "map-6",
         undefined
       );
+    });
+  });
+
+  describe("getCurrentFeatureCollection", () => {
+    it("should return the current feature collection for mapIndex and selectIndex", () => {
+      const featureCollection = new FeatureCollectionForCoordinate();
+      coreSelectionServiceSpy.getCurrentFeatureCollection.mockReturnValue(
+        featureCollection
+      );
+
+      const result = selectionService.getCurrentFeatureCollection(
+        "map-7",
+        "select-7"
+      );
+
+      expect(result).toBe(featureCollection);
+      expect(
+        coreSelectionServiceSpy.getCurrentFeatureCollection
+      ).toHaveBeenCalledWith("map-7", "select-7");
     });
   });
 });

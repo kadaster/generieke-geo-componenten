@@ -18,5 +18,10 @@
       }
     },
     "strictTemplates": true
-  }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

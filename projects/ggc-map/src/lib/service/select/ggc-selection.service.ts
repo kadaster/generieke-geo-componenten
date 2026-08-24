@@ -2,9 +2,13 @@ import { inject, Injectable } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Observable } from "rxjs";
-import { CoreSelectionService } from "./core-selection.service";
-import { DEFAULT_MAPINDEX, MapComponentEvent } from "@kadaster/ggc-models";
+import {
+  DEFAULT_MAPINDEX,
+  FeatureCollectionForCoordinate,
+  MapComponentEvent
+} from "@kadaster/ggc-models";
 import { SelectOptions } from "../../model/select-options";
+import { CoreSelectionService } from "./core-selection.service";
 
 /**
  * Service voor het selecteren en highlighten van features op de kaart.
@@ -188,7 +192,7 @@ export class GgcSelectionService {
   setSelection(
     features: Feature<Geometry>[],
     selectIndex: string = DEFAULT_MAPINDEX,
-    layerId: string = ""
+    layerId = ""
   ) {
     this.coreSelectionService.setSelection(features, selectIndex, layerId);
   }
@@ -202,6 +206,23 @@ export class GgcSelectionService {
    */
   getCurrentSelection(selectIndex: string = DEFAULT_MAPINDEX) {
     return this.coreSelectionService.getCurrentSelection(selectIndex);
+  }
+
+  /**
+   * Geeft de huidige selectie als feature collection voor de opgegeven kaart.
+   *
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX).
+   * @param selectIndex Optionele selectIndex. Als leeg, dan wordt mapIndex gebruikt.
+   * @returns De huidige selectie als {@link FeatureCollectionForCoordinate}.
+   */
+  getCurrentFeatureCollection(
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): FeatureCollectionForCoordinate {
+    return this.coreSelectionService.getCurrentFeatureCollection(
+      mapIndex,
+      selectIndex
+    );
   }
 
   /**

@@ -10,6 +10,7 @@ import Map from "ol/Map";
 import { of } from "rxjs";
 import {
   FeatureCollectionForCoordinate,
+  GGC_FEATURE_LAYERID,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
@@ -239,6 +240,33 @@ describe("CoreSelectionService", () => {
     });
 
     expect(service.getCurrentSelection(MAP_INDEX)).toEqual([feature]);
+  });
+
+  it("getCurrentFeatureCollection should return feature collection for active select interaction", () => {
+    const mockSelect = new MockSelect();
+    const feature = new Feature();
+    feature.set(GGC_FEATURE_LAYERID, LAYER_ID);
+    mockSelect.selectFeature(feature);
+    vi.spyOn(service as any, "getActiveSelectInteraction").mockReturnValue({
+      mapIndex: MAP_INDEX,
+      select: mockSelect as unknown as Select
+    });
+
+    const result = service.getCurrentFeatureCollection(MAP_INDEX, SELECT_INDEX);
+
+    expect(result.featureCollectionForLayers).toHaveLength(1);
+    expect(result.featureCollectionForLayers[0].layerId).toBe(LAYER_ID);
+    expect(result.featureCollectionForLayers[0].features).toEqual([feature]);
+  });
+
+  it("getCurrentFeatureCollection should return empty collection when select interaction does not exist", () => {
+    vi.spyOn(service as any, "getActiveSelectInteraction").mockReturnValue(
+      undefined
+    );
+
+    const result = service.getCurrentFeatureCollection(MAP_INDEX, SELECT_INDEX);
+
+    expect(result).toEqual(new FeatureCollectionForCoordinate());
   });
 
   it("should emit SELECTIONSERVICE_SELECTIONUPDATED when OpenLayers select event occurs", () => {

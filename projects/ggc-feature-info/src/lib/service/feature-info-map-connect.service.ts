@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import {
   DEFAULT_MAPINDEX,
+  FeatureCollectionForCoordinate,
   MapComponentEvent,
   ViewerType
 } from "@kadaster/ggc-models";
@@ -69,6 +70,32 @@ export class FeatureInfoMapConnectService {
           );
         });
     }
+  }
+
+  /**
+   * Geeft de huidige selectie terug als feature collection.
+   *
+   * @param viewerType Viewertype waarvoor dit uitgevoerd moet worden.
+   * @param mapIndex Optionele kaartindex (default: DEFAULT_MAPINDEX).
+   * @param selectIndex Optionele selectIndex.
+   * @returns Promise met de huidige {@link FeatureCollectionForCoordinate} voor 2D, anders undefined.
+   */
+  getCurrentFeatureCollectionForMapSelection(
+    viewerType: ViewerType,
+    mapIndex: string = DEFAULT_MAPINDEX,
+    selectIndex?: string
+  ): Promise<FeatureCollectionForCoordinate | undefined> {
+    if (viewerType == ViewerType.TWEE_D) {
+      return this.connectService
+        .getMapSelectionService()
+        .then((selectionService: any) => {
+          return selectionService?.getCurrentFeatureCollection(
+            mapIndex,
+            selectIndex
+          );
+        });
+    }
+    return Promise.resolve(undefined);
   }
 
   /**

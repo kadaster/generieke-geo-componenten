@@ -32,6 +32,7 @@ import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-inf
 import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import {
   DEFAULT_MAPINDEX,
+  FeatureCollectionForCoordinate,
   FeatureCollectionForLayer,
   GGC_FEATURE_LAYERID,
   MapComponentEvent,
@@ -236,7 +237,7 @@ export class GgcFeatureInfoComponent
 
   ngOnInit() {
     if (this.autoConnect) {
-      this.subscribeToMapSelection(this.mapIndex, this.selectIndex);
+      void this.subscribeToMapSelection(this.mapIndex, this.selectIndex);
       this.subscription = this.eventService.events$.subscribe((event) =>
         this.handleFeatureInfoEvent(event)
       );
@@ -484,10 +485,19 @@ export class GgcFeatureInfoComponent
     this.pagerIsHidden.set(this.hidePager());
   }
 
-  private subscribeToMapSelection(
+  private async subscribeToMapSelection(
     mapIndex: string,
     selectIndex?: string
-  ): void {
+  ) {
+    // Haal de meest recente selection op als deze bestaat
+    this.handleNewFeatureCollectionForCoordinate(
+      await this.featureInfoMapConnectService.getCurrentFeatureCollectionForMapSelection(
+        this.viewerType,
+        mapIndex,
+        selectIndex
+      ),
+      mapIndex
+    );
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
     // featureInfoCollection gezet via de tabs (hasTabs = true
     this.featureInfoMapConnectService
@@ -504,22 +514,27 @@ export class GgcFeatureInfoComponent
             ) {
               return;
             }
-
-            const collections: FeatureCollectionForLayer[] =
-              event.value.featureCollectionForLayers;
-
-            if (!collections || collections.length === 0) {
-              this.featureInfoMapConnectService.clearHighlightLayer(
-                this.viewerType,
-                mapIndex
-              );
-              this.featureInfoCollection = undefined;
-              return;
-            }
-            this.createNewFeatureCollection(collections);
+            this.handleNewFeatureCollectionForCoordinate(event.value, mapIndex);
           }
         );
       });
+  }
+
+  private handleNewFeatureCollectionForCoordinate(
+    featureCollectionForCoordinate: FeatureCollectionForCoordinate | undefined,
+    mapIndex: string
+  ): void {
+    const collections =
+      featureCollectionForCoordinate?.featureCollectionForLayers;
+    if (!collections || collections.length === 0) {
+      this.featureInfoMapConnectService.clearHighlightLayer(
+        this.viewerType,
+        mapIndex
+      );
+      this.featureInfoCollection = undefined;
+      return;
+    }
+    this.createNewFeatureCollection(collections);
   }
 
   private createNewFeatureCollection(
