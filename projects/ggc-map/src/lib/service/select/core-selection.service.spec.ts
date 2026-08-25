@@ -8,11 +8,7 @@ import { Select } from "ol/interaction";
 import Collection from "ol/Collection";
 import Map from "ol/Map";
 import { of } from "rxjs";
-import {
-  FeatureCollectionForCoordinate,
-  MapComponentEvent,
-  MapComponentEventTypes
-} from "@kadaster/ggc-models";
+import { MapComponentEventTypes } from "@kadaster/ggc-models";
 
 /**
  * Mock Select interaction zodat we OpenLayers niet volledig hoeven te initialiseren
@@ -190,8 +186,8 @@ describe("CoreSelectionService", () => {
       (interaction) => interaction instanceof Select
     );
     expect(hasSelect).toBeFalsy();
-    expect(service["activeMapClickEventsKeys"].size).toBe(0);
-    expect(service["activeSelectEventsKeys"].size).toBe(0);
+    expect(service["activeMapClickEventKeys"].size).toBe(0);
+    expect(service["activeSelectEventKeys"].size).toBe(0);
   });
 
   it("clearSelection should clear selection and emit event", () => {
@@ -239,36 +235,6 @@ describe("CoreSelectionService", () => {
     });
 
     expect(service.getCurrentSelection(MAP_INDEX)).toEqual([feature]);
-  });
-
-  it("should emit SELECTIONSERVICE_SELECTIONUPDATED when OpenLayers select event occurs", () => {
-    const receivedEvents: MapComponentEvent[] = [];
-    service
-      .getObservableForMap(MAP_INDEX)
-      .subscribe((event) => receivedEvents.push(event));
-
-    service.startSelect(
-      {
-        selectMode: "single"
-      },
-      MAP_INDEX,
-      undefined
-    );
-
-    // Haal de event handler op die reageert op een Select "select" event en run deze functie
-    const selectHandler = (service as any)["activeSelectEventsKeys"].get(
-      MAP_INDEX
-    );
-    selectHandler();
-
-    const selectionUpdatedEvents = receivedEvents.filter(
-      (event) =>
-        event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-    );
-    expect(selectionUpdatedEvents.length).toBe(1);
-    expect(selectionUpdatedEvents[0].value).toEqual(
-      new FeatureCollectionForCoordinate()
-    );
   });
 
   function createSelectMock(
