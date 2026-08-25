@@ -99,8 +99,7 @@ export class GgcConversionService {
     });
 
     const serializer = new XMLSerializer();
-    const xmlString = serializer.serializeToString(xml);
-    return `<?xml version="1.0" encoding="UTF-8"?>${xmlString}`;
+    return serializer.serializeToString(xml);
   }
 
   private async convertGmlToFeatures(file: File): Promise<Feature<Geometry>[]> {

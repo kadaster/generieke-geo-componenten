@@ -178,7 +178,11 @@ describe("ConversionService", () => {
       feature2
     ]);
     // Remove newlines from expectation, added for readability
-    expect(gmlAsString).toEqual(gml.replaceAll(/\n\s+/g, ""));
+    const expectedGml = gml
+      .replaceAll(/\n\s+/g, "")
+      .replace(/^<\?xml version="1.0" encoding="UTF-8"\?>/, "");
+
+    expect(gmlAsString).toEqual(expectedGml);
   });
 
   it("should convert a GML string to an Array of Features", () => {
