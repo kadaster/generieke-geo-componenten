@@ -174,7 +174,7 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
    * Default is TWEE_D
    */
   @Input()
-  get viewerType(): string {
+  get viewerType(): ViewerType {
     return this._viewerType;
   }
 
