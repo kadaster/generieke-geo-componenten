@@ -50,6 +50,10 @@ describe("ConversionService", () => {
     service = TestBed.inject(GgcConversionService);
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("should be created", () => {
     expect(service).toBeTruthy();
   });
@@ -82,6 +86,17 @@ describe("ConversionService", () => {
   </ogr:featureMember>
 </ogr:FeatureCollection>`;
     const xml = new DOMParser().parseFromString(xmlFile, "application/xml");
+    // jsdom matches elements by local name, so querySelector("featureMember") also
+    // matches gml:featureMember – causing an infinite loop in the while loop of
+    // fixNamespaces. Override querySelector on this document instance to skip elements
+    // already in the gml: namespace so the loop terminates correctly.
+    const originalQSA = xml.querySelectorAll.bind(xml);
+    (xml as any).querySelector = (selector: string) => {
+      const els = Array.from(originalQSA(selector));
+      return (
+        (els as Element[]).find((el) => !el.nodeName.startsWith("gml:")) ?? null
+      );
+    };
     const updated = service["fixNamespaces"](xml);
     const updatedXML = new DOMParser().parseFromString(
       updated,
@@ -167,6 +182,13 @@ describe("ConversionService", () => {
   });
 
   it("should convert a GML string to an Array of Features", () => {
+    // fixNamespaces causes an infinite loop in jsdom because the input GML already uses
+    // gml:featureMember, which jsdom's querySelector matches by local name. The input is
+    // already correctly namespaced so mocking fixNamespaces as a no-op is correct here.
+    vi.spyOn(service as any, "fixNamespaces").mockImplementation(
+      (doc: unknown) => new XMLSerializer().serializeToString(doc as Document)
+    );
+
     const replacedGmlString = gml.replaceAll(/\n\s+/g, "");
 
     const features: Feature<Geometry>[] =

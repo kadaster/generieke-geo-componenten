@@ -111,7 +111,9 @@ export class GgcConversionService {
   convertGmlStringToFeatures(gmlString: string): Feature<Geometry>[] {
     const xml = new DOMParser().parseFromString(gmlString, "application/xml");
     const gmlVersion = xml.lookupNamespaceURI("gml") || "";
+    console.log(xml);
     const content = this.fixNamespaces(xml);
+    console.log(content);
     const options = {
       srsName: "EPSG:28992",
       multiSurface: false
@@ -159,34 +161,30 @@ export class GgcConversionService {
 
   private fixNamespaces(xml: Document): string {
     // These tags are prefixed with the wrong namespace by QGis, we will correct them to the gml namespace
-    const tagNamesToFix = ["featureMember", "geometryProperty"];
-    const gmlNamespace = "http://www.opengis.net/gml/3.2";
+    const invalidTags = "featureMember,geometryProperty";
 
-    tagNamesToFix.forEach((tagLocalName) => {
-      // Get all elements with this local name (regardless of namespace)
-      const allElements = Array.from(xml.getElementsByTagName("*"));
-      allElements
-        .filter((el) => el.nodeName.split(":").pop() === tagLocalName)
-        .forEach((tag) => {
-          // Create new element with gml namespace
-          const clone = xml.createElementNS(
-            gmlNamespace,
-            `gml:${tagLocalName}`
-          );
+    // Can't use querySelectorAll / foreach since we're changing the DOM while traversing
+    while (xml.querySelector(invalidTags)) {
+      console.log("invalid tags");
+      const tag = xml.querySelector(invalidTags) as Element;
 
-          // Get all attributes from the source tag and add it to the clone
-          tag.getAttributeNames().forEach((attr) => {
-            clone.setAttribute(attr, tag.getAttribute(attr) as string);
-          });
+      // Remove incorrect namespace and add gml:, then create a new node with the correct namespace
+      let tagName: string = tag.nodeName.split(":").pop() || tag.nodeName;
+      tagName = `gml:${tagName}`;
+      const clone = xml.createElement(tagName);
 
-          // Add all content from the source tag
-          clone.innerHTML = tag.innerHTML;
+      // Get all attributes from the source tag and add it to the clone
+      tag.getAttributeNames().forEach((attr) => {
+        clone.setAttribute(attr, tag.getAttribute(attr) as string);
+      });
 
-          // Insert clone to the DOM and remove original source tag
-          (tag.parentNode as Node).insertBefore(clone, tag);
-          tag.remove();
-        });
-    });
+      // Add all content from the source tag
+      clone.innerHTML = tag.innerHTML;
+
+      // Insert clone to the DOM and remove original source tag
+      (tag.parentNode as Node).insertBefore(clone, tag);
+      tag.remove();
+    }
 
     // Write updated XML to the content
     return new XMLSerializer().serializeToString(xml);
