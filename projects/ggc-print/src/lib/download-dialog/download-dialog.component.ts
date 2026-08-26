@@ -32,11 +32,6 @@ export class DownloadDialogComponent {
   @Input() iconDownload: string;
   @Input() iconClose: string;
 
-  @Input()
-  set error(value: GgcPrintError | undefined) {
-    this.internalError.set(value);
-  }
-
   protected isLoading = signal(false);
   protected internalError = signal<GgcPrintError | undefined>(undefined);
   protected downloadURL: string | undefined;
@@ -48,6 +43,11 @@ export class DownloadDialogComponent {
   private printId: string;
   private _center: Coordinate;
   private _optionsForm: FormGroup<any>;
+
+  @Input()
+  set error(value: GgcPrintError | undefined) {
+    this.internalError.set(value);
+  }
 
   @Input()
   set center(center: Coordinate) {
@@ -114,15 +114,16 @@ export class DownloadDialogComponent {
       }
       this.isLoading.set(false);
     } else if (statusResponse.status === StatusResponseStatus.CANCELLED) {
-      this.internalError.set(new GgcPrintError(
-        GgcPrintErrorTypes.PRINTSTATUSCANCELLED,
-        statusResponse.error
-      ));
+      this.internalError.set(
+        new GgcPrintError(
+          GgcPrintErrorTypes.PRINTSTATUSCANCELLED,
+          statusResponse.error
+        )
+      );
     } else if (statusResponse.status === StatusResponseStatus.ERROR) {
-      this.internalError.set(new GgcPrintError(
-        GgcPrintErrorTypes.MAPFISHERROR,
-        statusResponse.error
-      ));
+      this.internalError.set(
+        new GgcPrintError(GgcPrintErrorTypes.MAPFISHERROR, statusResponse.error)
+      );
     }
   }
 

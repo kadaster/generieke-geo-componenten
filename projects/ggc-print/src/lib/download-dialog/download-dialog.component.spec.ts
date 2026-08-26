@@ -112,12 +112,11 @@ describe("DownloadDialogComponent", () => {
       component["getResultSubscription"],
       "unsubscribe"
     );
-    const mapfishInteractionServiceSpy = vi.spyOn(
-      mapfishInteractionService,
-      "cancel"
-    ).mockImplementation(() => {
-      return defer(() => Promise.resolve("OK"));
-    });
+    const mapfishInteractionServiceSpy = vi
+      .spyOn(mapfishInteractionService, "cancel")
+      .mockImplementation(() => {
+        return defer(() => Promise.resolve("OK"));
+      });
 
     component.closeModal();
 

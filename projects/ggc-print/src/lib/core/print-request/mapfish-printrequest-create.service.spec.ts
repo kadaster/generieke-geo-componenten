@@ -116,14 +116,18 @@ describe("MapfishPrintrequestCreateService", () => {
     mapfishPrintrequestCreateService = TestBed.inject(
       GgcMapfishPrintrequestCreateService
     );
-    mapServiceMock = TestBed.inject(GgcMapService) as MockedObject<GgcMapService>;
+    mapServiceMock = TestBed.inject(
+      GgcMapService
+    ) as MockedObject<GgcMapService>;
     crsConfigServiceMock = TestBed.inject(
       GgcCrsConfigService
     ) as MockedObject<GgcCrsConfigService>;
     printConfigServiceMock = TestBed.inject(
       PrintConfigService
     ) as MockedObject<PrintConfigService>;
-    drawServiceMock = TestBed.inject(GgcDrawService) as MockedObject<GgcDrawService>;
+    drawServiceMock = TestBed.inject(
+      GgcDrawService
+    ) as MockedObject<GgcDrawService>;
   });
 
   it("should create", () => {
@@ -309,16 +313,18 @@ describe("MapfishPrintrequestCreateService", () => {
       const messageMap: MapfishMap = {} as MapfishMap;
       const outputFileName = "filename";
 
-      vi.spyOn(mapfishPrintrequestCreateService, "createLayers").mockReturnValue(
-        Promise.resolve(layers)
-      );
+      vi.spyOn(
+        mapfishPrintrequestCreateService,
+        "createLayers"
+      ).mockReturnValue(Promise.resolve(layers));
       vi.spyOn(
         mapfishPrintrequestCreateService,
         "createMapfishMap"
       ).mockReturnValue(messageMap);
-      vi.spyOn(mapfishPrintrequestCreateService, "createFileName").mockReturnValue(
-        outputFileName
-      );
+      vi.spyOn(
+        mapfishPrintrequestCreateService,
+        "createFileName"
+      ).mockReturnValue(outputFileName);
 
       /*formGroup: FormGroup,
         center: Coordinate,
@@ -339,14 +345,12 @@ describe("MapfishPrintrequestCreateService", () => {
 
   it("when mapIndex is provided, it should getMap by name", async () => {
     printProperties.mapIndex = "print-map";
-    const createLayersSpy = vi.spyOn(
-      mapfishPrintrequestCreateService,
-      "createLayers"
-    ).mockReturnValue(Promise.resolve([]));
-    const createMapfishMapSpy = vi.spyOn(
-      mapfishPrintrequestCreateService,
-      "createMapfishMap"
-    ).mockReturnValue({} as any);
+    const createLayersSpy = vi
+      .spyOn(mapfishPrintrequestCreateService, "createLayers")
+      .mockReturnValue(Promise.resolve([]));
+    const createMapfishMapSpy = vi
+      .spyOn(mapfishPrintrequestCreateService, "createMapfishMap")
+      .mockReturnValue({} as any);
     const createAttributesSpy = vi.spyOn(
       mapfishPrintrequestCreateService,
       "createAttributes"

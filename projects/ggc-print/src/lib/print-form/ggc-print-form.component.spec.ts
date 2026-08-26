@@ -142,9 +142,7 @@ describe("PrintFormComponent", () => {
     component.printserver = "https://testUrl.nl/";
     component.ngOnInit();
 
-    expect(setPrintserverSpy).toHaveBeenCalledWith(
-      "https://testUrl.nl/"
-    );
+    expect(setPrintserverSpy).toHaveBeenCalledWith("https://testUrl.nl/");
   });
 
   it("ngOninit should call prepareMapForPrintPreview() with a styleLike object when this is set", () => {
@@ -166,7 +164,10 @@ describe("PrintFormComponent", () => {
   });
 
   it("ngOninit should call provideApiKey() when it's given as an attribute", () => {
-    const provideApiKeySpy = vi.spyOn(mapfishInteractionService, "provideApiKey");
+    const provideApiKeySpy = vi.spyOn(
+      mapfishInteractionService,
+      "provideApiKey"
+    );
 
     const apiTestKey = "Dit is een Key";
 

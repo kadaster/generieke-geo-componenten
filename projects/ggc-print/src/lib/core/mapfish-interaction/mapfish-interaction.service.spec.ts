@@ -24,12 +24,9 @@ describe("MapfishInteractionService", () => {
   let httpTestingController: HttpTestingController;
   let service: GgcMapfishInteractionService;
 
-  const capabilitiesUrl =
-    "https://print-services/DKK/capabilities.json";
-  const reportUrl =
-    "https://print-services/DKK/report.pdf";
-  const statusUrl =
-    "https://print-services/status/printId.json";
+  const capabilitiesUrl = "https://print-services/DKK/capabilities.json";
+  const reportUrl = "https://print-services/DKK/report.pdf";
+  const statusUrl = "https://print-services/status/printId.json";
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -275,9 +272,7 @@ describe("MapfishInteractionService", () => {
   });
 
   it("when setPrintserver() is called, it should change the baseUrl", () => {
-    expect(service["baseUrl"]).toEqual(
-      "https://print-services"
-    );
+    expect(service["baseUrl"]).toEqual("https://print-services");
 
     service.setPrintserver("https://testPrintserver.nl/");
 
@@ -313,9 +308,7 @@ describe("MapfishInteractionService", () => {
 
     // Assert that the request is a GET.
     expect(req.request.method).toEqual("DELETE");
-    expect(req.request.url).toEqual(
-      "https://print-services/cancel/" + printId
-    );
+    expect(req.request.url).toEqual("https://print-services/cancel/" + printId);
 
     // The mapfish server will return no Data
     req.flush("");
