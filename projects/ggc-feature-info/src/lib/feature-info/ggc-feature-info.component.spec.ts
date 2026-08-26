@@ -2,12 +2,19 @@ import type { MockedObject } from "vitest";
 import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
+import { of } from "rxjs";
+import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 import {
   ValueTemplateDirective,
   ValueTemplateDirectiveType
 } from "../directive/value-template.directive";
+import {
+  FeatureInfoComponentEvent,
+  FeatureInfoComponentEventType
+} from "../model/feature-info-component-event";
 import { FeatureKeysPipe } from "../pipe/keys.pipe";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
+import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import { GgcFeatureInfoComponent } from "./ggc-feature-info.component";
 
 @Component({
@@ -58,6 +65,13 @@ describe("FeatureInfoComponent", () => {
   let component: GgcFeatureInfoComponent;
   let fixture: ComponentFixture<GgcFeatureInfoComponent>;
   let nativeElement: HTMLElement;
+  let featureInfoMapConnectServiceSpy: {
+    getCurrentFeatureCollectionForMapSelection: ReturnType<typeof vi.fn>;
+    getObservableForMapSelection: ReturnType<typeof vi.fn>;
+    startSelect: ReturnType<typeof vi.fn>;
+    showHighlight: ReturnType<typeof vi.fn>;
+    clearHighlightLayer: ReturnType<typeof vi.fn>;
+  };
   const featureInfoConfigServiceSpy: MockedObject<GgcFeatureInfoConfigService> =
     {
       filterAndSortAttributes: vi
@@ -69,12 +83,23 @@ describe("FeatureInfoComponent", () => {
     } as unknown as MockedObject<GgcFeatureInfoConfigService>;
 
   beforeEach(() => {
+    featureInfoMapConnectServiceSpy = {
+      getCurrentFeatureCollectionForMapSelection: vi.fn(),
+      getObservableForMapSelection: vi.fn().mockResolvedValue(of()),
+      startSelect: vi.fn(),
+      showHighlight: vi.fn(),
+      clearHighlightLayer: vi.fn()
+    };
     TestBed.configureTestingModule({
       imports: [GgcFeatureInfoComponent, FeatureKeysPipe],
       providers: [
         {
           provide: GgcFeatureInfoConfigService,
           useValue: featureInfoConfigServiceSpy
+        },
+        {
+          provide: FeatureInfoMapConnectService,
+          useValue: featureInfoMapConnectServiceSpy
         }
       ]
     }).compileComponents();
@@ -127,6 +152,51 @@ describe("FeatureInfoComponent", () => {
     expect(
       featureInfoConfigServiceSpy.filterAndSortAttributes
     ).toHaveBeenCalled();
+  });
+
+  it("should use the recent value of the selection for initial feature-info", async () => {
+    const feature = new Feature({ test: "123" });
+    const currentFeatureCollection = new FeatureCollectionForCoordinate();
+    currentFeatureCollection.featureCollectionForLayers.push({
+      layerId: "id",
+      layerTitle: "title",
+      features: [feature]
+    });
+    featureInfoMapConnectServiceSpy.getCurrentFeatureCollectionForMapSelection.mockResolvedValue(
+      currentFeatureCollection
+    );
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
+      { test: "123" }
+    ]);
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(
+      featureInfoMapConnectServiceSpy.getCurrentFeatureCollectionForMapSelection
+    ).toHaveBeenCalled();
+    expect(component.featureInfoCollection?.layerId).toBe("id");
+    expect(component.featureInfoCollection?.features).toEqual([feature]);
+    expect(component["currentFeature"]()).toEqual({ test: "123" });
+  });
+
+  it("when handleFeatureInfoEvent receives SELECTEDTAB with undefined value, it should set featureInfoCollection to undefined", () => {
+    component.featureInfoCollection = {
+      layerName: "laag",
+      features: [new Feature({ test: "123" })],
+      layerTitle: "title",
+      layerId: "id"
+    };
+
+    component["handleFeatureInfoEvent"](
+      new FeatureInfoComponentEvent(
+        FeatureInfoComponentEventType.SELECTEDTAB,
+        "test",
+        undefined
+      )
+    );
+
+    expect(component.featureInfoCollection).toBeUndefined();
   });
 
   it("when hidePagerWithOneFeature is not set it should default always show the pager", () => {

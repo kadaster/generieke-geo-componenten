@@ -8,6 +8,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
   TemplateRef,
   OnDestroy
@@ -22,6 +23,7 @@ import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import {
   DEFAULT_MAPINDEX,
+  FeatureCollectionForLayer,
   MapComponentEvent,
   MapComponentEventTypes,
   ViewerType
@@ -39,6 +41,31 @@ import { Subscription } from "rxjs";
  *
  * Binnen deze tags kan worden gespecificeerd hoe de tabbladen worden gevuld
  * en welke content per tabblad wordt weergegeven.
+ *
+ * Initieel wordt het eerste tabblad geselecteerd. Daarna onthoudt de component
+ * welk tabblad als laatste door de gebruiker is geselecteerd: bij nieuwe data
+ * wordt dit tabblad opnieuw geselecteerd, en als dat tabblad niet meer aanwezig
+ * is in de nieuwe data, wordt weer het eerste tabblad geselecteerd.
+ *
+ * Via een `<ng-template [ggcTemplateKey]>` kan een custom component als label
+ * voor het tabblad gebruikt worden. In het template zijn de variabelen
+ * `layerTitle` (de weergavenaam van de tab) en `active` (of de tab actief is)
+ * beschikbaar.
+ *
+ * @example
+ * <ggc-feature-info-tabs
+ *   [featureInfoCollectionArray]="featureInfoCollectionArray"
+ *   (events)="handleTabEvent($event)"
+ * >
+ *   <ng-template [ggcTemplateKey]="" let-value="layerTitle" let-active="active">
+ *     <app-feature-info-tabs [tab]="value" [active]="active"></app-feature-info-tabs>
+ *   </ng-template>
+ *   <ggc-feature-info
+ *     (events)="handleEvent($event)"
+ *     [featureInfoCollection]="featureCollectionFromSelectedTab"
+ *   >
+ *   </ggc-feature-info>
+ * </ggc-feature-info-tabs>
  */
 @Component({
   selector: "ggc-feature-info-tabs",
@@ -129,20 +156,26 @@ export class GgcFeatureInfoTabsComponent
     new EventEmitter<FeatureInfoComponentEvent>();
   protected tabComponent?: TemplateRef<any>;
 
-  protected featureInfoCollectionArrayInternal: FeatureInfoCollection[];
-  protected selectedTab: string;
+  protected featureInfoCollectionArrayInternal = signal<
+    FeatureInfoCollection[]
+  >([]);
+  protected selectedTab = signal<string | undefined>(undefined);
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
   @ContentChild(ValueTemplateDirective, { descendants: false })
   private readonly tabTemplate: ValueTemplateDirective;
-  private selectedTabFeatureInfo: FeatureInfoCollection | undefined;
-  private lastSelectedTabOnClick: string;
+  private readonly selectedTabFeatureInfo = signal<
+    FeatureInfoCollection | undefined
+  >(undefined);
+  private readonly lastSelectedTabOnClick = signal<string | undefined>(
+    undefined
+  );
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
   private readonly eventService = inject(FeatureInfoEventService);
-  private readonly subscriptionSelection: Subscription;
+  private subscriptionSelection: Subscription;
 
   ngAfterContentInit(): void {
     if (this.tabTemplate) {
@@ -173,18 +206,19 @@ export class GgcFeatureInfoTabsComponent
    * @param tab the new active tab
    */
   onTabClicked(tab: string): void {
-    this.lastSelectedTabOnClick = tab;
+    this.lastSelectedTabOnClick.set(tab);
     this.setActiveTab(tab);
   }
 
   private onDataUpdate(): void {
     // create copy of featureInfoCollectionArray and check empty tabs
-    this.featureInfoCollectionArrayInternal = this.featureInfoCollectionArray
-      ? [...this.featureInfoCollectionArray]
-      : [];
+    this.featureInfoCollectionArrayInternal.set(
+      this.featureInfoCollectionArray
+        ? [...this.featureInfoCollectionArray]
+        : []
+    );
     this.checkShowEmptyTabs();
-
-    if (this.featureInfoCollectionArrayInternal.length === 0) {
+    if (this.featureInfoCollectionArrayInternal().length === 0) {
       const event = new FeatureInfoComponentEvent(
         FeatureInfoComponentEventType.SELECTEDTAB,
         "Het huidige weergegeven tabblad.",
@@ -198,25 +232,27 @@ export class GgcFeatureInfoTabsComponent
       this.events.emit(event);
     } else {
       this.featureInfoConfigService.sortTabs(
-        this.featureInfoCollectionArrayInternal
+        this.featureInfoCollectionArrayInternal()
       );
-      this.setActiveTab(this.lastSelectedTabOnClick);
+      this.setActiveTab(this.lastSelectedTabOnClick() as string);
     }
   }
 
   private setActiveTab(layerId: string): void {
-    let idx = this.featureInfoCollectionArrayInternal.findIndex(
+    let idx = this.featureInfoCollectionArrayInternal().findIndex(
       (tabFeatureInfo) => tabFeatureInfo.layerId === layerId
     );
     if (idx === -1) {
       idx = 0;
     }
-    this.selectedTabFeatureInfo = this.featureInfoCollectionArrayInternal[idx];
-    this.selectedTab = this.selectedTabFeatureInfo.layerId;
+    this.selectedTabFeatureInfo.set(
+      this.featureInfoCollectionArrayInternal()[idx]
+    );
+    this.selectedTab.set(this.selectedTabFeatureInfo()?.layerId);
     const event = new FeatureInfoComponentEvent(
       FeatureInfoComponentEventType.SELECTEDTAB,
       "Het huidige weergegeven tabblad.",
-      this.selectedTabFeatureInfo
+      this.selectedTabFeatureInfo()
     );
     this.eventService.emit(event);
     this.events.emit(event);
@@ -224,29 +260,50 @@ export class GgcFeatureInfoTabsComponent
 
   private checkShowEmptyTabs(): void {
     if (!this.showEmptyTabs) {
-      this.featureInfoCollectionArrayInternal =
-        this.featureInfoCollectionArrayInternal.filter(
+      this.featureInfoCollectionArrayInternal.set(
+        this.featureInfoCollectionArrayInternal().filter(
           (tabFeatureInfo: FeatureInfoCollection) => {
             return tabFeatureInfo.features.length > 0;
           }
-        );
+        )
+      );
     }
   }
 
-  private subscribeToMapSelection(mapIndex: string) {
+  private async subscribeToMapSelection(mapIndex: string) {
+    // Haal de meest recente selection op als deze bestaat
+    const currentFeatureCollectionForLayers =
+      await this.featureInfoMapConnectService.getCurrentFeatureCollectionForMapSelection(
+        this.viewerType,
+        mapIndex,
+        this.selectIndex
+      );
+    this.setFeatureInfoCollectionArray(
+      currentFeatureCollectionForLayers?.featureCollectionForLayers
+    );
     this.featureInfoMapConnectService
       .getObservableForMapSelection(this.viewerType, mapIndex, this.selectIndex)
-      .then((s) =>
-        s.subscribe((event: MapComponentEvent) => {
-          if (
-            event.type ===
-            MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-          ) {
-            this.featureInfoCollectionArray =
-              event.value.featureCollectionForLayers;
-            this.onDataUpdate();
+      .then((observable) => {
+        this.subscriptionSelection = observable.subscribe(
+          (event: MapComponentEvent) => {
+            if (
+              event.type ===
+              MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
+            ) {
+              this.setFeatureInfoCollectionArray(
+                event.value.featureCollectionForLayers
+              );
+            }
           }
-        })
-      );
+        );
+      });
+  }
+
+  private setFeatureInfoCollectionArray(
+    featureCollectionForLayers: FeatureCollectionForLayer[] | undefined
+  ) {
+    this.featureInfoCollectionArray =
+      featureCollectionForLayers as FeatureInfoCollection[];
+    this.onDataUpdate();
   }
 }

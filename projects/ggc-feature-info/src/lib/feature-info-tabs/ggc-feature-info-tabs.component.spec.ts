@@ -2,23 +2,42 @@ import type { Mock } from "vitest";
 import { SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
+import { of } from "rxjs";
+import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 import {
   FeatureInfoComponentEvent,
   FeatureInfoComponentEventType
 } from "../model/feature-info-component-event";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
+import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import { GgcFeatureInfoTabsComponent } from "./ggc-feature-info-tabs.component";
 
 describe("FeatureInfoTabsComponent", () => {
   let component: GgcFeatureInfoTabsComponent;
   let fixture: ComponentFixture<GgcFeatureInfoTabsComponent>;
   let sortFilterServiceSpy: Mock;
+  let featureInfoMapConnectServiceSpy: {
+    getCurrentFeatureCollectionForMapSelection: Mock;
+    getObservableForMapSelection: Mock;
+    clearHighlightLayer: Mock;
+  };
 
   beforeEach(() => {
+    featureInfoMapConnectServiceSpy = {
+      getCurrentFeatureCollectionForMapSelection: vi.fn(),
+      getObservableForMapSelection: vi.fn().mockResolvedValue(of()),
+      clearHighlightLayer: vi.fn()
+    };
     TestBed.configureTestingModule({
       imports: [GgcFeatureInfoTabsComponent],
-      providers: [GgcFeatureInfoConfigService]
+      providers: [
+        GgcFeatureInfoConfigService,
+        {
+          provide: FeatureInfoMapConnectService,
+          useValue: featureInfoMapConnectServiceSpy
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(GgcFeatureInfoTabsComponent);
@@ -75,6 +94,29 @@ describe("FeatureInfoTabsComponent", () => {
     expect(component["selectedTabFeatureInfo"]).toBeDefined();
     expect(component["lastSelectedTabOnClick"]).toBeUndefined();
     expect(sortFilterServiceSpy).toHaveBeenCalled();
+  });
+
+  it("should use the current value of the selection for initial feature-info", async () => {
+    const feature = new Feature({ test: "123" });
+    const currentFeatureCollection = new FeatureCollectionForCoordinate();
+    currentFeatureCollection.featureCollectionForLayers.push({
+      layerId: "id",
+      layerTitle: "titel",
+      features: [feature]
+    });
+    featureInfoMapConnectServiceSpy.getCurrentFeatureCollectionForMapSelection.mockResolvedValue(
+      currentFeatureCollection
+    );
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(
+      featureInfoMapConnectServiceSpy.getCurrentFeatureCollectionForMapSelection
+    ).toHaveBeenCalled();
+    expect(component["featureInfoCollectionArrayInternal"]().length).toBe(1);
+    expect(component["selectedTab"]()).toBe("id");
+    expect(component["selectedTabFeatureInfo"]()?.features).toEqual([feature]);
   });
 
   it("when showEmptyTabs has default value, empty tabs will be removed from featureInfoCollectionArray", () => {
