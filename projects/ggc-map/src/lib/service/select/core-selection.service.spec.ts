@@ -37,7 +37,9 @@ class MockSelect {
   on(eventType: string, handler: () => void) {
     if (eventType === "select") {
       this.selectHandler = handler;
+      return handler;
     }
+    return undefined;
   }
 
   un(eventType: string) {
@@ -76,7 +78,7 @@ class MockMap {
   }
 
   on() {
-    /* noop */
+    return vi.fn();
   }
 
   un() {
@@ -191,8 +193,8 @@ describe("CoreSelectionService", () => {
       (interaction) => interaction instanceof Select
     );
     expect(hasSelect).toBeFalsy();
-    expect(service["activeMapClickEventsKeys"].size).toBe(0);
-    expect(service["activeSelectEventsKeys"].size).toBe(0);
+    expect(service["activeMapClickEventKeys"].size).toBe(0);
+    expect(service["activeSelectEventKeys"].size).toBe(0);
   });
 
   it("clearSelection should clear selection and emit event", () => {
@@ -284,7 +286,7 @@ describe("CoreSelectionService", () => {
     );
 
     // Haal de event handler op die reageert op een Select "select" event en run deze functie
-    const selectHandler = (service as any)["activeSelectEventsKeys"].get(
+    const selectHandler = (service as any)["activeSelectEventKeys"].get(
       MAP_INDEX
     );
     selectHandler();
@@ -298,7 +300,6 @@ describe("CoreSelectionService", () => {
       new FeatureCollectionForCoordinate()
     );
   });
-
   function createSelectMock(
     selectMode: "single" | "multi",
     layerFilter?: string[]
