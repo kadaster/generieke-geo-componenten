@@ -18,11 +18,10 @@ import { AlternativeSuggestService } from "./alternative-suggest.service";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
 
 @Component({
-  selector: "ggc-home-example-search-location-alternative-search",
+  selector: "app-ggc-home-example-search-location-alternative-search",
   imports: [
     GgcMapComponent,
     GgcSearchLocationComponent,
-    ExampleFormatComponent,
     GgcFeatureInfoComponent
   ],
   providers: [

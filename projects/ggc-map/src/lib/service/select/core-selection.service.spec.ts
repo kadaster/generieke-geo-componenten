@@ -284,7 +284,7 @@ describe("CoreSelectionService", () => {
     );
 
     // Haal de event handler op die reageert op een Select "select" event en run deze functie
-    const selectHandler = (service as any)["activeSelectEventsKeys"].get(
+    const selectHandler = (service as any)["activeSelectEventKeys"].get(
       MAP_INDEX
     );
     selectHandler();
