@@ -1,0 +1,30 @@
+.modal-dialog {
+  max-width: 600px;
+}
+
+.card-body {
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.spinner-size {
+  font-size: 40px;
+}
+
+.doc-icon {
+  font-size: 30px;
+  margin-right: 5px;
+}
+
+.download-icon {
+  font-size: 20px;
+  margin-left: 10px;
+  margin-right: 7px;
+}
+
+.blue-color {
+  color: #406a9e;
+}

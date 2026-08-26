@@ -50,6 +50,10 @@ on:
         type: boolean
         description: Release ggc-conversion
         default: false
+      ggc_print:
+        type: boolean
+        description: Release ggc-print
+        default: false
 
 permissions:
   id-token: write # Required for OIDC
@@ -89,6 +93,7 @@ jobs:
           GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
           GGC_CONVERSION: ${{ github.event.inputs.ggc_conversion }}
+          GGC_PRINT: ${{ github.event.inputs.ggc_print }}
           NPM_DIST_TAG: ${{ github.event.inputs.npm_dist_tag }}
         run: |
           set -e
@@ -142,6 +147,10 @@ jobs:
             bump "ggc-conversion"
           fi
 
+          if [ "$GGC_PRINT" = "true" ]; then
+            bump "ggc-print"
+          fi
+
       - name: Commit changes
         run: |
           git config user.name "github-actions"
@@ -161,6 +170,7 @@ jobs:
           GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
           GGC_CONVERSION: ${{ github.event.inputs.ggc_conversion }}
+          GGC_PRINT: ${{ github.event.inputs.ggc_print }}
         run: |
           set -e
 
@@ -217,6 +227,10 @@ jobs:
             tag "ggc-conversion"
           fi
 
+          if [ "$GGC_PRINT" = "true" ]; then
+            tag "ggc-print"
+          fi
+
       - name: Push commits and tags
         # pinned for security, versie 1.0.0
         uses: ad-m/github-push-action@77c5b412c50b723d2a4fbc6d71fb5723bcd439aa
@@ -236,6 +250,7 @@ jobs:
           GGC_SEARCH_LOCATION: ${{ github.event.inputs.ggc_search_location }}
           GGC_TOOLBAR: ${{ github.event.inputs.ggc_toolbar }}
           GGC_CONVERSION: ${{ github.event.inputs.ggc_conversion }}
+          GGC_PRINT: ${{ github.event.inputs.ggc_print }}
           NPM_DIST_TAG: ${{ github.event.inputs.npm_dist_tag }}
         run: |
           set -e
@@ -304,4 +319,8 @@ jobs:
 
           if [ "$GGC_CONVERSION" = "true" ]; then
             build_and_publish "ggc-conversion"
+          fi
+
+          if [ "$GGC_PRINT" = "true" ]; then
+            build_and_publish "ggc-print"
           fi

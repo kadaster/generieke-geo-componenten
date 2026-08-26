@@ -1,0 +1,63 @@
+<ggc-download-dialog
+  [center]="center!"
+  [configurationName]="configurationName"
+  [extraPrintLayers]="extraPrintLayers"
+  [mapIndex]="mapIndex"
+  [outputFilenameFunction]="outputFilenameFunction"
+  [downloadOnComplete]="downloadOnComplete"
+  [optionsForm]="optionsForm"
+  [iconFile]="iconFile"
+  [iconDownload]="iconDownload"
+  [iconClose]="iconClose"
+  [error]="error"
+  [printStyle]="printStyle"
+></ggc-download-dialog>
+<form [formGroup]="optionsForm" (submit)="onSubmit()">
+  <div class="form-group">
+    <label for="templateInput">Template:</label>
+    <select class="form-control" formControlName="template" id="templateInput">
+      @for (templ of templates; track templ) {
+        <option [ngValue]="templ">
+          {{ templ.name }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="scaleInput">Schaal:</label>
+    <select class="form-control" formControlName="scale" id="scaleInput">
+      @for (sc of scales; track sc) {
+        <option [ngValue]="sc.key">
+          {{ sc.value }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div formGroupName="attributesGroup">
+    @for (attribute of attributes; track attribute) {
+      @if (!isAttributeHidden(attribute.name)) {
+        <div class="form-group">
+          <label [attr.for]="attribute.name">{{ attribute.name + ":" }}</label>
+          <input
+            class="form-control"
+            [formControlName]="attribute.name"
+            [id]="attribute.name"
+            [type]="attribute.type"
+          />
+        </div>
+      }
+    }
+  </div>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    data-toggle="modal"
+    data-bs-toggle="modal"
+    data-target="#downloadModal"
+    data-bs-target="#downloadModal"
+  >
+    Maak PDF
+  </button>
+</form>

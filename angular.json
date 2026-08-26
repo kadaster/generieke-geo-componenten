@@ -30,9 +30,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ],
+            "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-conversion/tsconfig.spec.json"
           }
         },
@@ -74,9 +72,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ]
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -117,9 +113,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ],
+            "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-dataset-tree/tsconfig.spec.json"
           }
         },
@@ -161,9 +155,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ]
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -283,9 +275,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ]
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -326,9 +316,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ]
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -368,9 +356,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ],
+            "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-map/tsconfig.spec.json"
           }
         },
@@ -411,9 +397,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ],
+            "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-models/tsconfig.spec.json"
           }
         },
@@ -423,6 +407,48 @@
             "lintFilePatterns": [
               "projects/ggc-models/**/*.ts",
               "projects/ggc-models/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "ggc-print": {
+      "projectType": "library",
+      "root": "projects/ggc-print",
+      "sourceRoot": "projects/ggc-print/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-print/tsconfig.lib.json",
+            "project": "projects/ggc-print/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-print/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-print/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "runnerConfig": "vitest.config.ts",
+            "setupFiles": ["src/test/setup-tests.ts"],
+            "tsConfig": "projects/ggc-print/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-print/**/*.ts",
+              "projects/ggc-print/**/*.html"
             ]
           }
         }
@@ -455,9 +481,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ]
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {
@@ -498,9 +522,7 @@
           "options": {
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "setupFiles": [
-              "src/test/setup-tests.ts"
-            ]
+            "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
         "lint": {

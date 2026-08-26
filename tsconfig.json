@@ -26,6 +26,7 @@
       "@kadaster/ggc-legend": ["dist/ggc-legend"],
       "@kadaster/ggc-map": ["dist/ggc-map"],
       "@kadaster/ggc-models": ["dist/ggc-models"],
+      "@kadaster/ggc-print": ["dist/ggc-print"],
       "@kadaster/ggc-search-location": ["dist/ggc-search-location"],
       "@kadaster/ggc-toolbar": ["dist/ggc-toolbar"]
     },
@@ -50,6 +51,9 @@
     },
     {
       "path": "./projects/ggc-home/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ggc-print/tsconfig.lib.json"
     },
     {
       "path": "./projects/ggc-legend/tsconfig.lib.json"

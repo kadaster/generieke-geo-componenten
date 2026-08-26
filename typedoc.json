@@ -7,6 +7,7 @@
     "projects/ggc-legend/src/public-api.ts",
     "projects/ggc-map/src/public-api.ts",
     "projects/ggc-models/src/public-api.ts",
+    "projects/ggc-print/src/public-api.ts",
     "projects/ggc-search-location/src/public-api.ts",
     "projects/ggc-toolbar/src/public-api.ts"
   ],
