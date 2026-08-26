@@ -12,13 +12,9 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: "ggc-home-example-feature-info-template",
-  imports: [
-    ExampleFormatComponent,
-    GgcFeatureInfoComponent,
-    GgcMapComponent,
-    ValueTemplateDirective
-  ],
+  imports: [GgcFeatureInfoComponent, GgcMapComponent, ValueTemplateDirective],
   templateUrl: "./example-feature-info-template.component.html"
 })
 export class ExampleFeatureInfoTemplateComponent

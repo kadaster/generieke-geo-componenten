@@ -191,8 +191,8 @@ describe("CoreSelectionService", () => {
       (interaction) => interaction instanceof Select
     );
     expect(hasSelect).toBeFalsy();
-    expect(service["activeMapClickEventsKeys"].size).toBe(0);
-    expect(service["activeSelectEventsKeys"].size).toBe(0);
+    expect(service["activeMapClickEventKeys"].size).toBe(0);
+    expect(service["activeSelectEventKeys"].size).toBe(0);
   });
 
   it("clearSelection should clear selection and emit event", () => {
