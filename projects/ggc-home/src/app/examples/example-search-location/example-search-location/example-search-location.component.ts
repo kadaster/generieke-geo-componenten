@@ -78,7 +78,8 @@ export class ExampleSearchLocationComponent
           ["adres", 0.1],
           ["gemeentegebied", 1],
           ["provinciegebied", 1],
-          ["woonplaats", 0.5]
+          ["woonplaats", 0.5],
+          ["perceel", 0.4]
         ]);
         this.pdokLocationApiService.setCustomCollections(
           collectionsResult.collections
