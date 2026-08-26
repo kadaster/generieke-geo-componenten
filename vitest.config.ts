@@ -5,11 +5,24 @@ export default defineConfig({
   resolve: {
     alias: [
       {
+        find: /^@kadaster\/ggc-map$/,
+        replacement: path.resolve(
+          require.resolve("@kadaster/ggc-map/package.json"),
+          "../src/public-api.ts"
+        )
+      },
+      {
         // nodig voor Vitest UI
         find: /^@kadaster\/ggc-models$/,
         replacement: path.resolve(
           require.resolve("@kadaster/ggc-models/package.json"),
           "../src/public-api.ts"
+        )
+      },
+      {
+        find: /^@geoblocks\/print$/,
+        replacement: path.resolve(
+          "/Users/jordymackay/workspace/generieke-geo-componenten/src/test/vitest-stubs/geoblocks-print.ts"
         )
       }
     ]
