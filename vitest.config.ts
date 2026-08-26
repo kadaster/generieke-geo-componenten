@@ -22,7 +22,8 @@ export default defineConfig({
       {
         find: /^@geoblocks\/print$/,
         replacement: path.resolve(
-          "/Users/jordymackay/workspace/generieke-geo-componenten/src/test/vitest-stubs/geoblocks-print.ts"
+          __dirname,
+          "src/test/vitest-stubs/geoblocks-print.ts"
         )
       }
     ]
