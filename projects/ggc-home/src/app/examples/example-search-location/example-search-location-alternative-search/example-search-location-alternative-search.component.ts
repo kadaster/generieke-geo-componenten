@@ -43,7 +43,7 @@ export class ExampleSearchLocationAlternativeSearchComponent
   readonly componentInfo: ComponentInfo = {
     route: "/search-location-alternative-search",
     title: "In eigen collectie zoeken",
-    introduction: "Zoek een in een eigen collectie naast de PDOK collecties.",
+    introduction: "Zoek een in eigen collectie naast de PDOK collecties.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.SEARCH, Tags.LOCATION],

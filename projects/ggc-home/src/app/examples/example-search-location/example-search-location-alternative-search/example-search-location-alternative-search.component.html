@@ -4,6 +4,7 @@
   [urlTSDocs]="tsDocsUrl"
   [pathExtraConfig]="'example-search-location/example-search-location-alternative-search/alternative-suggest.service.ts'"
   [extraConfigLabel]="`AlternativeSuggestService`"
+  [extraConfigLanguage]="'typescript'"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
@@ -25,7 +26,7 @@
       met een (deel van het) meldingsnummer erachter, kan je zoeken naar
       terugmeldingen met het opgegeven meldingsnummer.
       <br />
-      Om een eigen collectie te gebruiken, moet je het volgende doen:
+      Een eigen collectie gebruiken kan als volgt:
     </p>
     <ol>
       <li>
@@ -33,10 +34,10 @@
         hiervoor GgcAdditionalSuggestionSourceService. Wij hebben hiervoor een
         AlternativeSuggestService gemaakt.
       </li>
-      <li>Provide deze service als GgcAdditionalSuggestionSourceService</li>
+      <li>Provide deze service als GgcAdditionalSuggestionSourceService.</li>
       <li>
         Vang SearchComponentEvents af om resultaten van je eigen collectie te
-        behandelen. In dit geval zoomen wij in naar het coordinaat van de
+        behandelen. In dit geval zoomen wij in naar het coördinaat van de
         gezochte melding. Er wordt automatisch in de PDOK resultaten gezocht,
         dus deze hoef je niet af te vangen.
       </li>
@@ -46,7 +47,7 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4">
         <div>
           <ggc-search-location
             (events)="handleSearchComponentEvent($event)"
@@ -57,7 +58,7 @@
           <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
         </div>
       </div>
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8">
         <ggc-feature-info
           [mapIndex]="mapIndex"
           [hidePagerWithOneFeature]="true"

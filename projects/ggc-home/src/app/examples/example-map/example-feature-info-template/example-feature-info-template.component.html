@@ -17,20 +17,24 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      Op basis van een ng-template is het mogelijk om eigen HTML te gebruiken
-      voor velden in de het feature-info component. In dit voorbeeld kan je
-      klikken op de BAG panden voor informatie. Via de ggcTemplateKey en het
-      templateType is in te stellen welk gedrag je wilt veranderen met de HTML
-      templates. In dit voorbeeld hebben wij het onderstaande toegepast:
+      In dit voorbeeld zie je de BAG panden. Na het kiezen van een pand zie je
+      de aangepaste informatie.
     </p>
+    <p>
+      Op basis van een ng-template is het mogelijk om eigen HTML te gebruiken
+      voor velden in de feature-info component. Via de ggcTemplateKey en het
+      templateType is in te stellen welk gedrag je wilt veranderen met de HTML
+      templates.
+    </p>
+    <p>Instelmogelijkheden met ng-templates:</p>
     <ul>
       <li>
-        CONTENT: Hiermee kan je de de HTML van de waarde aanpassen. In dit
-        voorbeeld wordt het rdf-seealso veld weergegeven als een url.
+        CONTENT: Aanpassen van de de HTML (waarde). In dit voorbeeld wordt het
+        rdf-seealso veld weergegeven als een url.
       </li>
       <li>
-        HEADER: Hiermee kan je de naam/header aanpassen. In dit voorbeeld wordt
-        de naam "aantal_verblijfsobjecten" veranderd naar "aantal
+        HEADER: Aanpassen van de HTML (naam/header). In dit voorbeeld wordt de
+        naam "aantal_verblijfsobjecten" veranderd naar "aantal
         verblijfsobjecten".
       </li>
       <li>
@@ -43,11 +47,17 @@
         In dit voorbeeld wordt bouwjaar verborgen als deze leeg is.
       </li>
     </ul>
+    <p>
+      Mocht je alleen de waardes van de feature info component willen
+      veranderen, zonder HTML wijzigingen, dan kan je ook
+      <a [href]="'/feature-info-custom-names-values'">dit voorbeeld</a>
+      bekijken.
+    </p>
   </div>
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-xl-5 col-md-4 col-sm-5">
+      <div class="col-xl-5 col-md-6 col-sm-7">
         <div class="feature-info-container">
           <b>Feature Info</b>
           <br />
