@@ -696,9 +696,7 @@ export class GgcSearchLocationComponent implements OnInit {
   /**
    * Reageert op selectie-events vanuit de CDK Listbox.
    */
-  handleCdkListboxEvent(
-    $event: ListboxValueChangeEvent<unknown>
-  ) {
+  handleCdkListboxEvent($event: ListboxValueChangeEvent<unknown>) {
     const selectedValue = $event.value[0];
     if (!selectedValue) {
       return;
@@ -731,11 +729,7 @@ export class GgcSearchLocationComponent implements OnInit {
   private isPdokLocationApiSearchFeature(
     value: unknown
   ): value is PdokLocationApiSearchFeature {
-    return (
-      typeof value === "object" &&
-      value !== null &&
-      "properties" in value
-    );
+    return typeof value === "object" && value !== null && "properties" in value;
   }
 
   /**
