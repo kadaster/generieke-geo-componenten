@@ -47,6 +47,12 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8">
+        <ggc-feature-info
+          [mapIndex]="mapIndex"
+          [hidePagerWithOneFeature]="true"
+        ></ggc-feature-info>
+      </div>
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4">
         <div>
           <ggc-search-location
@@ -57,12 +63,6 @@
         <div class="map-container">
           <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
         </div>
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8">
-        <ggc-feature-info
-          [mapIndex]="mapIndex"
-          [hidePagerWithOneFeature]="true"
-        ></ggc-feature-info>
       </div>
       <!-- DOCS:END functionality -->
     </div>
