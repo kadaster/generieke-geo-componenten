@@ -5,7 +5,6 @@ import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import {
   CameraOptions,
-  cameraOptionsTorentjeDenHaag,
   GgcControlsComponent,
   GgcViewerComponent,
   ViewerOptions,
@@ -23,6 +22,7 @@ import { HttpClient } from "@angular/common/http";
 })
 export class Example3dLayerWmtsComponent {
   // DOCS-SKIP:START
+
   readonly componentInfo: ComponentInfo = {
     route: "/example-3d-layer-wmts",
     title: "Kaartlaag toevoegen: WMTS (3D, raster)",
@@ -41,7 +41,9 @@ export class Example3dLayerWmtsComponent {
   // DOCS-SKIP:END
 
   protected hideLogo = false;
-  protected cameraOptions: CameraOptions;
+  protected cameraOptions: CameraOptions = {
+    cameraPosition: { lat: 51.946, lon: 5.591 }
+  };
   protected webService: Webservice[];
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-layer-wmts",
@@ -64,9 +66,6 @@ export class Example3dLayerWmtsComponent {
   }
 
   public onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
-    });
+    console.log("Cesium is ready");
   }
 }
