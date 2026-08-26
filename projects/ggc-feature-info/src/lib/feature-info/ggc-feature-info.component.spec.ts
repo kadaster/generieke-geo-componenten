@@ -84,7 +84,9 @@ describe("FeatureInfoComponent", () => {
 
   beforeEach(() => {
     featureInfoMapConnectServiceSpy = {
-      getCurrentFeatureCollectionForMapSelection: vi.fn(),
+      getCurrentFeatureCollectionForMapSelection: vi
+        .fn()
+        .mockResolvedValue(undefined),
       getObservableForMapSelection: vi.fn().mockResolvedValue(of()),
       startSelect: vi.fn(),
       showHighlight: vi.fn(),

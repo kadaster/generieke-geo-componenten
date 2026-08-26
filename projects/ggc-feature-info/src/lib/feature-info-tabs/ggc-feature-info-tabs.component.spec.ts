@@ -25,7 +25,9 @@ describe("FeatureInfoTabsComponent", () => {
 
   beforeEach(() => {
     featureInfoMapConnectServiceSpy = {
-      getCurrentFeatureCollectionForMapSelection: vi.fn(),
+      getCurrentFeatureCollectionForMapSelection: vi
+        .fn()
+        .mockResolvedValue(undefined),
       getObservableForMapSelection: vi.fn().mockResolvedValue(of()),
       clearHighlightLayer: vi.fn()
     };
