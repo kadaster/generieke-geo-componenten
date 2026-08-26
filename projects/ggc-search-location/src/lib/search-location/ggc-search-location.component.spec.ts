@@ -37,6 +37,9 @@ describe("GgcSearchLocationComponent", () => {
       searchOnTermChange: vi
         .fn()
         .mockName("PdokLocationApiService.searchOnTermChange"),
+      setCustomCollections: vi
+        .fn()
+        .mockName("PdokLocationApiService.setCustomCollections"),
       item: vi.fn().mockName("PdokLocationApiService.item")
     } as MockedObject<PdokLocationApiService>;
     locationServiceSpy = {
@@ -93,11 +96,15 @@ describe("GgcSearchLocationComponent", () => {
     it("moet de pdok service configureren op basis van searchLocationOptions", () => {
       component.searchLocationOptions = {
         minQueryLength: 4,
-        numberOfSuggestions: 15
+        numberOfSuggestions: 15,
+        customCollections: [{ id: "a", version: 1, relevance: 1 }]
       } as SearchLocationOptions;
       fixture.detectChanges();
       expect(pdokServiceSpy.setMinQueryLength).toHaveBeenCalledWith(4);
       expect(pdokServiceSpy.setNumberOfSuggestions).toHaveBeenCalledWith(15);
+      expect(pdokServiceSpy.setCustomCollections).toHaveBeenCalledWith([
+        { id: "a", version: 1, relevance: 1 }
+      ]);
     });
 
     it("moet een initiële zoekterm verwerken", () => {

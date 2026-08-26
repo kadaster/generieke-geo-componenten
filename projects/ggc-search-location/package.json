@@ -7,7 +7,7 @@
     "@angular/cdk": "^22.0.0",
     "@kadaster/ggc-map": "^4.0.0",
     "@kadaster/ggc-map-3d": "^4.0.0",
-    "ol": "^10.7.0",
+    "ol": "^10.8.0",
     "proj4": "^2.8.0"
   },
   "peerDependenciesMeta": {
