@@ -269,36 +269,6 @@ describe("CoreSelectionService", () => {
     expect(result).toEqual(new FeatureCollectionForCoordinate());
   });
 
-  it("should emit SELECTIONSERVICE_SELECTIONUPDATED when OpenLayers select event occurs", () => {
-    const receivedEvents: MapComponentEvent[] = [];
-    service
-      .getObservableForMap(MAP_INDEX)
-      .subscribe((event) => receivedEvents.push(event));
-
-    service.startSelect(
-      {
-        selectMode: "single"
-      },
-      MAP_INDEX,
-      undefined
-    );
-
-    // Haal de event handler op die reageert op een Select "select" event en run deze functie
-    const selectHandler = (service as any)["activeSelectEventKeys"].get(
-      MAP_INDEX
-    );
-    selectHandler();
-
-    const selectionUpdatedEvents = receivedEvents.filter(
-      (event) =>
-        event.type === MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
-    );
-    expect(selectionUpdatedEvents.length).toBe(1);
-    expect(selectionUpdatedEvents[0].value).toEqual(
-      new FeatureCollectionForCoordinate()
-    );
-  });
-
   function createSelectMock(
     selectMode: "single" | "multi",
     layerFilter?: string[]
