@@ -177,7 +177,7 @@ describe("FeatureInfoComponent", () => {
     ).toHaveBeenCalled();
     expect(component.featureInfoCollection?.layerId).toBe("id");
     expect(component.featureInfoCollection?.features).toEqual([feature]);
-    expect(component["currentFeature"]()).toEqual({ test: "123" });
+    expect(component["currentFeature"]).toEqual({ test: "123" });
   });
 
   it("when handleFeatureInfoEvent receives SELECTEDTAB with undefined value, it should set featureInfoCollection to undefined", () => {

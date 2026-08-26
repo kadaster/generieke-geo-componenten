@@ -1,25 +1,22 @@
-@if (
-  featureInfoCollectionArrayInternal &&
-  featureInfoCollectionArrayInternal.length > 0
-) {
+@if (featureInfoCollectionArrayInternal().length > 0) {
   <div
     class="ggc-fi-tab"
     role="tablist"
     [attr.aria-labelledby]="ariaLabelledBy ? ariaLabelledBy : null"
     [attr.aria-label]="ariaLabelledBy ? null : ariaLabel"
   >
-    @for (info of featureInfoCollectionArrayInternal; track info) {
+    @for (info of featureInfoCollectionArrayInternal(); track info.layerId) {
       <button
         [id]="'tab-' + info.layerId"
         role="tab"
         [attr.aria-controls]="'tabpanel-' + info.layerTitle"
-        [attr.aria-selected]="info.layerId === selectedTab"
+        [attr.aria-selected]="info.layerId === selectedTab()"
         [ngClass]="{
-          active: info.layerId === selectedTab,
-          inactive: info.layerId !== selectedTab
+          active: info.layerId === selectedTab(),
+          inactive: info.layerId !== selectedTab()
         }"
         (click)="
-          featureInfoCollectionArrayInternal.length > 1
+          featureInfoCollectionArrayInternal().length > 1
             ? onTabClicked(info.layerId)
             : null
         "
@@ -30,7 +27,7 @@
           "
           [ngTemplateOutletContext]="{
             layerTitle: info.layerTitle,
-            active: info.layerId === selectedTab
+            active: info.layerId === selectedTab()
           }"
         ></ng-container>
         <ng-template #defaultValueTemplate>{{ info.layerTitle }}</ng-template>
@@ -40,9 +37,9 @@
 }
 <div
   class="ggc-fi-tab-content"
-  [attr.id]="'tabpanel-' + selectedTab"
+  [attr.id]="'tabpanel-' + selectedTab()"
   role="tabpanel"
-  [attr.aria-labelledby]="'tab-' + selectedTab"
+  [attr.aria-labelledby]="'tab-' + selectedTab()"
   tabIndex="0"
 >
   <ng-content></ng-content>

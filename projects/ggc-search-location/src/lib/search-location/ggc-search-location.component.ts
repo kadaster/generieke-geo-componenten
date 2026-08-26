@@ -73,7 +73,8 @@ export class GgcSearchLocationComponent implements OnInit {
   @Output() events: EventEmitter<SearchComponentEvent> =
     new EventEmitter<any>();
 
-  protected elementIds: SearchComponentElementIds;
+  protected elementIds: SearchComponentElementIds =
+    new SearchComponentElementIds({});
   protected inputValue = "";
   protected clsSearchButton: string;
   protected clsClearButton: string;
@@ -176,9 +177,9 @@ export class GgcSearchLocationComponent implements OnInit {
     }
 
     if (this.searchLocationOptions?.elementIds) {
-      this.elementIds = this.searchLocationOptions.elementIds;
-    } else {
-      this.elementIds = new SearchComponentElementIds({});
+      this.elementIds = new SearchComponentElementIds(
+        this.searchLocationOptions.elementIds
+      );
     }
 
     if (this.searchLocationOptions?.customCollections) {
@@ -696,13 +697,45 @@ export class GgcSearchLocationComponent implements OnInit {
    * Reageert op selectie-events vanuit de CDK Listbox.
    */
   handleCdkListboxEvent(
-    $event: ListboxValueChangeEvent<PdokLocationApiSearchFeature>
+    $event: ListboxValueChangeEvent<unknown>
   ) {
-    if ($event.value[0].id === "current-location") {
-      this.processCurrentLocation();
-    } else {
-      this.processPdokLocationApiSearchFeatureResult($event.value[0]);
+    const selectedValue = $event.value[0];
+    if (!selectedValue) {
+      return;
     }
+
+    if (this.isCurrentLocationSuggestion(selectedValue)) {
+      this.processCurrentLocation();
+      return;
+    }
+
+    if (this.isPdokLocationApiSearchFeature(selectedValue)) {
+      this.processPdokLocationApiSearchFeatureResult(selectedValue);
+      return;
+    }
+
+    throw new Error("Unsupported listbox option selected.");
+  }
+
+  private isCurrentLocationSuggestion(
+    value: unknown
+  ): value is AdditionalSuggestion {
+    return (
+      typeof value === "object" &&
+      value !== null &&
+      "id" in value &&
+      (value as AdditionalSuggestion).id === "current-location"
+    );
+  }
+
+  private isPdokLocationApiSearchFeature(
+    value: unknown
+  ): value is PdokLocationApiSearchFeature {
+    return (
+      typeof value === "object" &&
+      value !== null &&
+      "properties" in value
+    );
   }
 
   /**

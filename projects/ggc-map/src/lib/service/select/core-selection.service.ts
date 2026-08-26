@@ -231,7 +231,8 @@ export class CoreSelectionService {
 
     return this.buildFeatureCollectionForCoordinateFromFeatures(
       activeSelectInteraction.select.getFeatures(),
-      mapIndex
+      mapIndex,
+      undefined
     );
   }
 

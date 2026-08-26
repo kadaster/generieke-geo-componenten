@@ -13,7 +13,7 @@
           <span class="font-italic">Locatie laden</span>
           @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
             <span
-              [ngClass]="searchLocationOptions.searchCurrentLocation.loadIcon"
+              [ngClass]="searchLocationOptions?.searchCurrentLocation?.loadIcon"
               aria-hidden="true"
             ></span>
           }
@@ -78,14 +78,14 @@
               @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
                 <span
                   [ngClass]="
-                    searchLocationOptions.searchCurrentLocation.loadIcon
+                    searchLocationOptions?.searchCurrentLocation?.loadIcon
                   "
                   aria-hidden="true"
                 ></span>
               }
             } @else if (searchLocationOptions?.searchCurrentLocation?.icon) {
               <span
-                [ngClass]="searchLocationOptions.searchCurrentLocation.icon"
+                [ngClass]="searchLocationOptions?.searchCurrentLocation?.icon"
                 aria-hidden="true"
               ></span>
             }
@@ -109,7 +109,7 @@
         role="listbox"
         class="list-group list-group-ggc-search-suggestions"
         [tabindex]="0"
-        [id]="elementIds.suggestionListId"
+        [id]="elementIds.suggestionListId!"
         [attr.aria-labelledby]="
           searchLocationOptions?.labelText
             ? elementIds.searchLabelId
@@ -137,7 +137,7 @@
           >
             @if (searchLocationOptions?.searchCurrentLocation?.icon) {
               <span
-                [ngClass]="searchLocationOptions.searchCurrentLocation.icon"
+                [ngClass]="searchLocationOptions?.searchCurrentLocation?.icon"
                 aria-hidden="true"
               ></span>
             }
@@ -201,13 +201,13 @@
     @if (loadCurrentLocation) {
       @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
         <span
-          [ngClass]="searchLocationOptions.searchCurrentLocation.loadIcon"
+          [ngClass]="searchLocationOptions?.searchCurrentLocation?.loadIcon"
           aria-hidden="true"
         ></span>
       }
     } @else if (searchLocationOptions?.searchCurrentLocation?.icon) {
       <span
-        [ngClass]="searchLocationOptions.searchCurrentLocation.icon"
+        [ngClass]="searchLocationOptions?.searchCurrentLocation?.icon"
         aria-hidden="true"
       ></span>
     }

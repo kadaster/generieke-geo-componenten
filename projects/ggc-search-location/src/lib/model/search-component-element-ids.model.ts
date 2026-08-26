@@ -16,10 +16,10 @@ export interface ElementIdOptions {
  * Beheert de HTML element ID's van de zoekcomponent met standaardwaarden als fallback.
  */
 export class SearchComponentElementIds {
-  searchInputId?: string;
-  searchButtonId?: string;
-  suggestionListId?: string;
-  searchLabelId?: string;
+  searchInputId: string;
+  searchButtonId: string;
+  suggestionListId: string;
+  searchLabelId: string;
 
   constructor(elementIdOptions: ElementIdOptions) {
     this.searchInputId = elementIdOptions.searchInputId || "ggcSearchInput";
