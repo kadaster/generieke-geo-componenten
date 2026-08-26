@@ -1,6 +1,6 @@
 {
   "name": "@kadaster/ggc-search-location",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",

@@ -25,6 +25,7 @@ export class ExampleFormatComponent {
   @Input() title?: string;
   @Input() extraConfigLabel: string | undefined;
   @Input() urlTSDocs?: string = tsdocsUrl;
+  @Input() extraConfigLanguage = "json";
 
   protected urlCodeTypescript: string | undefined;
   protected urlCodeHtml: string | undefined;

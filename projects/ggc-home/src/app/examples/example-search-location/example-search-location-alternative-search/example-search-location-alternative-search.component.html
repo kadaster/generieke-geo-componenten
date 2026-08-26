@@ -4,6 +4,7 @@
   [urlTSDocs]="tsDocsUrl"
   [pathExtraConfig]="'example-search-location/example-search-location-alternative-search/alternative-suggest.service.ts'"
   [extraConfigLabel]="`AlternativeSuggestService`"
+  [extraConfigLanguage]="'typescript'"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
@@ -20,12 +21,12 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld kan je naast de PDOK Locatie API ook zoeken in een eigen
-      collectie, die de BAG terugmeldingnummers bevat. Door te zoeken op
-      "BAG..." met een meldingsnummer erachter, krijg je resultaten van de
-      terugmeldingen die overeenkomen met het opgegeven meldingsnummer.
+      In dit voorbeeld kan je ook zoeken in een eigen collectie naast de PDOK
+      Locatie API , namelijk de BAG terugmeldingnummers. Door te zoeken op "BAG"
+      met een (deel van het) meldingsnummer erachter, kan je zoeken naar
+      terugmeldingen met het opgegeven meldingsnummer.
       <br />
-      Om een eigen collectie te gebruiken, moet je het volgende doen:
+      Een eigen collectie gebruiken kan als volgt:
     </p>
     <ol>
       <li>
@@ -33,11 +34,12 @@
         hiervoor GgcAdditionalSuggestionSourceService. Wij hebben hiervoor een
         AlternativeSuggestService gemaakt.
       </li>
-      <li>Provide deze service als GgcAdditionalSuggestionSourceService</li>
+      <li>Provide deze service als GgcAdditionalSuggestionSourceService.</li>
       <li>
         Vang SearchComponentEvents af om resultaten van je eigen collectie te
-        behandelen. In dit geval zoomen wij in naar het coordinaat van de
-        gezochte melding.
+        behandelen. In dit geval zoomen wij in naar het coördinaat van de
+        gezochte melding. Er wordt automatisch in de PDOK resultaten gezocht,
+        dus deze hoef je niet af te vangen.
       </li>
     </ol>
   </div>
@@ -45,7 +47,13 @@
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
-      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8">
+        <ggc-feature-info
+          [mapIndex]="mapIndex"
+          [hidePagerWithOneFeature]="true"
+        ></ggc-feature-info>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4">
         <div>
           <ggc-search-location
             (events)="handleSearchComponentEvent($event)"

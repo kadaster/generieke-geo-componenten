@@ -107,3 +107,30 @@ Gebruik de [GitHub issue tracker](https://github.com/kadaster/generieke-geo-comp
 ## Contributing
 
 Lees onze [contributing](https://github.com/kadaster/generieke-geo-componenten/tree/main?tab=contributing-ov-file) handleiding als je geinteresseerd bent om bij te dragen aan het project.
+
+## 2D en/of 3D kaartweergave
+
+Wat te doen bij de runtime foutmelding:
+> Failed to resolve import "@kadaster/ggc-map-3d" from ".angular/vite-root/...". Does the file exist?
+> 
+De componenten ondersteunen 2D en 3D kaarten en alleen de dependencies zijn nodig voor de gewenste kaartweergave. `@kadaster/ggc-map` en `@kadaster/ggc-map-3d` zijn dan gemarkeerd als optionele dependencies. **Let op!** Om dit goed te laten werken is een aanpassing in de `angular.json` nodig: de dependency die je **niet** nodig hebt moet aan de externalDependencies worden toegevoegd. Bijvoorbeeld in het geval dat je een 2D kaartweergave gebruikt en geen 3D nodig hebt:
+
+In de angular.json:
+```json
+{
+  "projects": {
+    "my-app": {
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "externalDependencies": [
+              "@kadaster/ggc-map-3d"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
