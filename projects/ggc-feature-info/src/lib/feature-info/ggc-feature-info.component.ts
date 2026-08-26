@@ -237,7 +237,7 @@ export class GgcFeatureInfoComponent
 
   ngOnInit() {
     if (this.autoConnect) {
-      void this.subscribeToMapSelection(this.mapIndex, this.selectIndex);
+      this.subscribeToMapSelection(this.mapIndex, this.selectIndex);
       this.subscription = this.eventService.events$.subscribe((event) =>
         this.handleFeatureInfoEvent(event)
       );
@@ -485,19 +485,20 @@ export class GgcFeatureInfoComponent
     this.pagerIsHidden.set(this.hidePager());
   }
 
-  private async subscribeToMapSelection(
-    mapIndex: string,
-    selectIndex?: string
-  ) {
+  private subscribeToMapSelection(mapIndex: string, selectIndex?: string) {
     // Haal de meest recente selection op als deze bestaat
-    this.handleNewFeatureCollectionForCoordinate(
-      await this.featureInfoMapConnectService.getCurrentFeatureCollectionForMapSelection(
+    this.featureInfoMapConnectService
+      .getCurrentFeatureCollectionForMapSelection(
         this.viewerType,
         mapIndex,
         selectIndex
-      ),
-      mapIndex
-    );
+      )
+      .then((featureCollectionForCoordinate) => {
+        this.handleNewFeatureCollectionForCoordinate(
+          featureCollectionForCoordinate,
+          mapIndex
+        );
+      });
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
     // featureInfoCollection gezet via de tabs (hasTabs = true
     this.featureInfoMapConnectService

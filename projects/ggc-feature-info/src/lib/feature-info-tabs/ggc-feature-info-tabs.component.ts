@@ -270,17 +270,19 @@ export class GgcFeatureInfoTabsComponent
     }
   }
 
-  private async subscribeToMapSelection(mapIndex: string) {
+  private subscribeToMapSelection(mapIndex: string) {
     // Haal de meest recente selection op als deze bestaat
-    const currentFeatureCollectionForLayers =
-      await this.featureInfoMapConnectService.getCurrentFeatureCollectionForMapSelection(
+    this.featureInfoMapConnectService
+      .getCurrentFeatureCollectionForMapSelection(
         this.viewerType,
         mapIndex,
         this.selectIndex
-      );
-    this.setFeatureInfoCollectionArray(
-      currentFeatureCollectionForLayers?.featureCollectionForLayers
-    );
+      )
+      .then((currentFeatureCollectionForLayers) => {
+        this.setFeatureInfoCollectionArray(
+          currentFeatureCollectionForLayers?.featureCollectionForLayers
+        );
+      });
     this.featureInfoMapConnectService
       .getObservableForMapSelection(this.viewerType, mapIndex, this.selectIndex)
       .then((observable) => {
