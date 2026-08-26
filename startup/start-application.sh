@@ -16,9 +16,10 @@ echo "Get file location"
 export mainFileName="$(ls /etc/nginx/html/main*.js)"
 # substitute environment variable
 echo "Substitute this key for:$ENV_PIWIK_SCRIPT"
-envsubst '\$ENV_PIWIK_SCRIPT' < $mainFileName > /tmp/main.tmp
+tmpFile="$(mktemp /var/appdata/run/main.tmp.XXXXXX)"
+envsubst '\$ENV_PIWIK_SCRIPT' < "$mainFileName" > "$tmpFile"
 # move modified files to original location
-mv /tmp/main.tmp "${mainFileName}"
+mv "$tmpFile" "${mainFileName}"
 
 # static content read-only maken
 chmod -R a=rX /etc/nginx/html/
