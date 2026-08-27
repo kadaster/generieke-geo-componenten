@@ -35,8 +35,8 @@ export class DownloadDialogComponent {
   protected isLoading = signal(false);
   protected internalError = signal<GgcPrintError | undefined>(undefined);
   protected downloadURL: string | undefined;
-  private mapFishInteraction = inject(GgcMapfishInteractionService);
-  private mapFishPrintrequestCreateService = inject(
+  private readonly mapFishInteraction = inject(GgcMapfishInteractionService);
+  private readonly mapFishPrintrequestCreateService = inject(
     GgcMapfishPrintrequestCreateService
   );
   private getResultSubscription: Subscription;
@@ -96,12 +96,12 @@ export class DownloadDialogComponent {
           return this.mapFishInteraction.getResult(this.printId);
         })
       )
-      .subscribe(
-        (statusResponse) => this.procesStatusResponse(statusResponse),
-        (error) => {
+      .subscribe({
+        next: (statusResponse) => this.procesStatusResponse(statusResponse),
+        error: (error) => {
           this.internalError.set(error);
         }
-      );
+      });
   }
 
   procesStatusResponse(statusResponse: StatusResponse): void {

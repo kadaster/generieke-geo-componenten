@@ -58,12 +58,12 @@ import {
   providedIn: "root"
 })
 export class GgcMapfishPrintrequestCreateService {
-  private mapService = inject(GgcMapService);
-  private drawService = inject(GgcDrawService);
-  private crsConfigService = inject(GgcCrsConfigService);
-  private printConfigService = inject(PrintConfigService);
+  private readonly mapService = inject(GgcMapService);
+  private readonly drawService = inject(GgcDrawService);
+  private readonly crsConfigService = inject(GgcCrsConfigService);
+  private readonly printConfigService = inject(PrintConfigService);
   private customMeasureStyle: MapfishStyleV2 | undefined = undefined;
-  private dpi = 180;
+  private readonly dpi = 180;
 
   setCustomStyle(stylingObject: MapfishStyleV2 | undefined) {
     this.customMeasureStyle = stylingObject;

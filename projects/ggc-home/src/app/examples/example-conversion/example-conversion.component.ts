@@ -1,11 +1,6 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../example-format/example-format.component";
-import {
-  GgcDrawService,
-  GgcMapComponent,
-  GgcMapService,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../component-info.model";
 import { Components } from "../components.enum";
 import { Themes } from "../themes.enum";
@@ -22,8 +17,7 @@ import { MapComponentEventTypes } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-home-example-conversion",
   imports: [ExampleFormatComponent, GgcMapComponent],
-  templateUrl: "./example-conversion.component.html",
-  styleUrl: "./example-conversion.component.scss"
+  templateUrl: "./example-conversion.component.html"
 })
 export class ExampleConversionComponent
   extends ExampleFormatComponent
@@ -41,13 +35,11 @@ export class ExampleConversionComponent
     imageLocation: "code/examples/example-conversion/example-conversion.png"
   } as ComponentInfo;
   urlComponentModule = "example-conversion/example-conversion.component.ts";
-  tsDocsUrl = `${document.baseURI}tsdocs/classes/TODO_VERVANG_DIT_classpad.html`;
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-conversion_src_public-api.GgcConversionService.html`;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
-  private readonly editLayer = "edit";
-  private mapService = inject(GgcMapService);
-  private conversionService = inject(GgcConversionService);
-  private readonly drawService = inject(GgcDrawService);
+  private readonly mapService = inject(GgcMapService);
+  private readonly conversionService = inject(GgcConversionService);
 
   ngOnInit() {
     this.httpClient
