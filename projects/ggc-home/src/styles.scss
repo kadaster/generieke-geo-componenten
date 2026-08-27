@@ -830,16 +830,8 @@
       --ggc-card-as-link-border-end-end-radius,
       var(--ggc-card-as-link-border-radius, 5px)
     );
-    border-end-start-radius: var(
-      --ggc-card-as-link-border-end-start-radius,
-      var(--ggc-card-as-link-border-radius, 5px)
-    );
     border-start-end-radius: var(
       --ggc-card-as-link-border-start-end-radius,
-      var(--ggc-card-as-link-border-radius, 5px)
-    );
-    border-start-start-radius: var(
-      --ggc-card-as-link-border-start-start-radius,
       var(--ggc-card-as-link-border-radius, 5px)
     );
     background-color: var(
@@ -872,16 +864,8 @@
   }
 
   .ggc-card-as-link--horizontal .ggc-card-as-link__image {
-    border-end-end-radius: var(
-      --ggc-card-as-link-border-end-end-radius,
-      var(--ggc-card-as-link-border-radius, 5px)
-    );
     border-end-start-radius: var(
       --ggc-card-as-link-border-end-start-radius,
-      var(--ggc-card-as-link-border-radius, 5px)
-    );
-    border-start-end-radius: var(
-      --ggc-card-as-link-border-start-end-radius,
       var(--ggc-card-as-link-border-radius, 5px)
     );
     border-start-start-radius: var(

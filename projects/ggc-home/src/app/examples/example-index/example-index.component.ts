@@ -54,6 +54,8 @@ import { Example3dLayer3dTilesComponent } from "../example-3d/example-3d-layer-3
 import { Example3dLayerWmtsComponent } from "../example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 import { SessionStorageService } from "../../service/session-storage.service";
+import { ExampleFeatureInfoTemplateComponent } from "../example-map/example-feature-info-template/example-feature-info-template.component";
+import { ExampleSearchLocationAlternativeSearchComponent } from "../example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
 // PLOP:IMPORT
 
 interface GroupedCards {
@@ -134,7 +136,9 @@ export class ExampleIndexComponent {
     new Example3dLayer3dTilesComponent().componentInfo,
     new Example3dLayerWmtsComponent().componentInfo,
     // PLOP:CARD
-    new Example3dLayerGeojsonComponent().componentInfo
+    new Example3dLayerGeojsonComponent().componentInfo,
+    new ExampleFeatureInfoTemplateComponent().componentInfo,
+    new ExampleSearchLocationAlternativeSearchComponent().componentInfo
   ];
 
   private readonly sessionStorageService = inject(SessionStorageService);

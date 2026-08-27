@@ -170,13 +170,19 @@ export class GgcSearchLocationComponent implements OnInit {
    * Initialiseert de component, configureert de PDOK-service en start de zoekterm-subscriber.
    */
   ngOnInit() {
-    if (this.searchLocationOptions?.minQueryLength > 0) {
+    if (
+      this.searchLocationOptions?.minQueryLength !== undefined &&
+      this.searchLocationOptions?.minQueryLength > 0
+    ) {
       this.pdokLocationApiService.setMinQueryLength(
         this.searchLocationOptions.minQueryLength
       );
     }
 
-    if (this.searchLocationOptions?.numberOfSuggestions > 0) {
+    if (
+      this.searchLocationOptions?.numberOfSuggestions !== undefined &&
+      this.searchLocationOptions?.numberOfSuggestions > 0
+    ) {
       this.pdokLocationApiService.setNumberOfSuggestions(
         this.searchLocationOptions.numberOfSuggestions
       );
@@ -186,6 +192,12 @@ export class GgcSearchLocationComponent implements OnInit {
       this.elementIds = this.searchLocationOptions.elementIds;
     } else {
       this.elementIds = new SearchComponentElementIds({});
+    }
+
+    if (this.searchLocationOptions?.customCollections) {
+      this.pdokLocationApiService.setCustomCollections(
+        this.searchLocationOptions.customCollections
+      );
     }
 
     // Subscribe to searchSuggestionService.search

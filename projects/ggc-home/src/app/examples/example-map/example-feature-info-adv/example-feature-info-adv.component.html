@@ -68,15 +68,14 @@
       <!-- DOCS:END functionality -->
       <div class="col-xl-3 col-md-3 col-sm-3">
         <div class="row options-toggle">
-          <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
             <input
               (change)="goToPage('/feature-info-basic')"
-              aria-labelledby="extraOptionsLabel"
               checked
               type="checkbox"
             />
             <span class="slider round"></span>
+            Extra opties
           </label>
         </div>
         <br />
@@ -102,16 +101,16 @@
               type="checkbox"
             />
             <span class="slider round"></span>
+            Wissel tussen Lijst en Tabel weergave
           </label>
-          Wissel tussen Lijst en Tabel weergave
         </div>
         <br />
         <div>
           <label class="switch">
             <input (change)="toggleHighlightStyle()" checked type="checkbox" />
             <span class="slider round"></span>
+            Wissel highlight style
           </label>
-          Wissel highlight style
         </div>
       </div>
     </div>

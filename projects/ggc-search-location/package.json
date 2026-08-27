@@ -1,13 +1,13 @@
 {
   "name": "@kadaster/ggc-search-location",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/cdk": "^22.0.0",
     "@kadaster/ggc-map": "^4.0.0",
     "@kadaster/ggc-map-3d": "^4.0.0",
-    "ol": "^10.7.0",
+    "ol": "^10.8.0",
     "proj4": "^2.8.0"
   },
   "peerDependenciesMeta": {
