@@ -64,6 +64,12 @@
           <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
         </div>
       </div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+        <ggc-feature-info
+          [mapIndex]="mapIndex"
+          [hidePagerWithOneFeature]="true"
+        ></ggc-feature-info>
+      </div>
       <!-- DOCS:END functionality -->
     </div>
   </div>
