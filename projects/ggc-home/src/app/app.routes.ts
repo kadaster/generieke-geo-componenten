@@ -60,6 +60,7 @@ import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
 import { ExampleFeatureInfoTemplateComponent } from "./examples/example-map/example-feature-info-template/example-feature-info-template.component";
 import { ExampleSearchLocationAlternativeSearchComponent } from "./examples/example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
+import { ExampleConversionComponent } from "./examples/example-conversion/example-conversion.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -408,6 +409,12 @@ export const routes: Routes = [
     title: "Feature Info tabs | GGC-Home",
     component: ExampleFeatureInfoTabsComponent,
     data: { label: "example-feature-info-tabs" }
+  },
+  {
+    path: "conversion",
+    title: "Bestandsconversies | GGC-Home",
+    component: ExampleConversionComponent,
+    data: { label: "conversion" }
   },
   // PLOP:ROUTE
   {

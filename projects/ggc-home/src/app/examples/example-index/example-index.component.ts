@@ -56,6 +56,7 @@ import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-g
 import { SessionStorageService } from "../../service/session-storage.service";
 import { ExampleFeatureInfoTemplateComponent } from "../example-map/example-feature-info-template/example-feature-info-template.component";
 import { ExampleSearchLocationAlternativeSearchComponent } from "../example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
+import { ExampleConversionComponent } from "../example-conversion/example-conversion.component";
 // PLOP:IMPORT
 
 interface GroupedCards {
@@ -135,6 +136,7 @@ export class ExampleIndexComponent {
     new Example3dSearchComponent().componentInfo,
     new Example3dLayer3dTilesComponent().componentInfo,
     new Example3dLayerWmtsComponent().componentInfo,
+    new ExampleConversionComponent().componentInfo,
     // PLOP:CARD
     new Example3dLayerGeojsonComponent().componentInfo,
     new ExampleFeatureInfoTemplateComponent().componentInfo,

@@ -1,0 +1,46 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>In dit voorbeeld kun je een bestand uploaden dat wordt toegevoegd aan de kaart. Ook kun je de huidige kaartlaag downloaden als GeoJSON of GML bestand. Er is al een GeoJSON bestand met een aantal figuren geladen.</p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+        <fieldset class="ggc-fieldset">
+          <legend>Bediening</legend>
+          <form>
+            <label>
+              <span>Kies een bestand om toe te voegen aan de kaart (Shapefile, GeoJSON, JSON of GML)</span>
+              <input type="file" name="inputfile" (input)="onFileInput($event)" />
+            </label>
+          </form>
+        </fieldset>
+        <br />
+        <button (click)="downloadGeoJson()">Download GeoJson</button>
+        <button (click)="downloadGML()">Download GML</button>
+      </div>
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
+          <div class="map-container">
+            <ggc-map [webServices]="mapConfig" (events)="onMapEvent($event)"></ggc-map>
+          </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>
