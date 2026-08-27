@@ -10,10 +10,7 @@ Deze front-end componenten, gemaakt met Angular/TypeScript, kunnen in de eigen A
 - toolbar met tekenen, meten en bewerken op de kaart
 - presenteren van object-informatie
 - 3D kaartpresentatie (met Cesium)
-
-Binnenkort komen ook extra componenten beschikbaar voor:
-
-- printen
+- printen van kaarten (met MapFish Print)
 - bestandsconversie
 
 ## Voordelen
@@ -41,12 +38,14 @@ De Generieke Geo Componenten ondersteunen de Nederlandse standaarden:
 
 ## Lijst van componenten
 
+- [@kadaster/ggc-conversion](https://www.npmjs.com/package/@kadaster/ggc-conversion)
 - [@kadaster/ggc-dataset-tree](https://www.npmjs.com/package/@kadaster/ggc-dataset-tree)
 - [@kadaster/ggc-feature-info](https://www.npmjs.com/package/@kadaster/ggc-feature-info)
 - [@kadaster/ggc-legend](https://www.npmjs.com/package/@kadaster/ggc-legend)
 - [@kadaster/ggc-map](https://www.npmjs.com/package/@kadaster/ggc-map)
 - [@kadaster/ggc-map-3d](https://www.npmjs.com/package/@kadaster/ggc-map-3d)
 - [@kadaster/ggc-models](https://www.npmjs.com/package/@kadaster/ggc-models)
+- [@kadaster/ggc-print](https://www.npmjs.com/package/@kadaster/ggc-print)
 - [@kadaster/ggc-search-location](https://www.npmjs.com/package/@kadaster/ggc-search-location)
 - [@kadaster/ggc-toolbar](https://www.npmjs.com/package/@kadaster/ggc-toolbar)
 
