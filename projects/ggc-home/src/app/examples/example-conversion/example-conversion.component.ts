@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from "@angular/core";
 import { ExampleFormatComponent } from "../example-format/example-format.component";
 import {
   GgcDrawService,
-  GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent,
   GgcMapService,
   Webservice
@@ -19,15 +18,10 @@ import { Geometry } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
 import GeoJSON from "ol/format/GeoJSON";
 import { MapComponentEventTypes } from "@kadaster/ggc-models";
-import { Theme } from "@kadaster/ggc-dataset-tree";
 
 @Component({
   selector: "ggc-home-example-conversion",
-  imports: [
-    ExampleFormatComponent,
-    GgcMapComponent,
-    GgcLayerBrtAchtergrondkaartComponent
-  ],
+  imports: [ExampleFormatComponent, GgcMapComponent],
   templateUrl: "./example-conversion.component.html",
   styleUrl: "./example-conversion.component.scss"
 })
