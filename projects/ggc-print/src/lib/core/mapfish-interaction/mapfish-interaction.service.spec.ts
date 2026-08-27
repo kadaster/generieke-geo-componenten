@@ -98,18 +98,20 @@ describe("MapfishInteractionService", () => {
   });
 
   it("should be able to handle a HTTP error when trying to GET capabilities", () => {
-    service.getConfigCapabilities("DKK").subscribe(
-      () => {
+    service.getConfigCapabilities("DKK").subscribe({
+      next: () => {
         throw new Error("");
       },
-      (error: GgcPrintError) => {
+      error: (error: GgcPrintError) => {
         expect(error.foutmelding).toEqual(
           "Het ophalen van gegevens is mislukt, probeer het later nog een keer"
         );
-        expect(error.technischeFout).toEqual("Error: 404 Not Found!");
+        expect(error.technischeFout).toEqual(
+          "Error: 404 Http failure response for https://print-services/DKK/capabilities.json: 404 Not Found!"
+        );
         expect(error.type).toEqual("httpError");
       }
-    );
+    });
 
     httpTestingController.expectOne(capabilitiesUrl).error(new ErrorEvent(""), {
       status: 404,
@@ -177,7 +179,9 @@ describe("MapfishInteractionService", () => {
         throw new Error("");
       },
       (error: GgcPrintError) => {
-        expect(error.technischeFout).toEqual("Error: 418 Dit hoort niet!");
+        expect(error.technischeFout).toEqual(
+          "Error: 418 Http failure response for https://print-services/DKK/report.pdf: 418 Dit hoort niet!"
+        );
         expect(error.foutmelding).toEqual(
           "Het ophalen van gegevens is mislukt, probeer het later nog een keer"
         );
