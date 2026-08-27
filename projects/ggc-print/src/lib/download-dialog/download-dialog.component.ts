@@ -1,4 +1,4 @@
-import { Component, inject, input, Input, signal } from "@angular/core";
+import { Component, inject, Input, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Coordinate } from "ol/coordinate";
 import { noop, Subscription } from "rxjs";

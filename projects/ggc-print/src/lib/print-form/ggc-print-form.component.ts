@@ -108,12 +108,14 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
   protected center: Coordinate | undefined;
   private templateChangeSubscription: SubscriptionLike;
   private scaleChangeSubscription: SubscriptionLike;
-  private formBuilder = inject(FormBuilder);
-  private mapFishInteraction = inject(GgcMapfishInteractionService);
-  private printPreviewService = inject(PrintPreviewService);
-  private processCapabilitiesService = inject(ProcessCapabilitiesService);
-  private atrributesControlService = inject(AttributesControlService);
-  private printConfigService = inject(PrintConfigService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly mapFishInteraction = inject(GgcMapfishInteractionService);
+  private readonly printPreviewService = inject(PrintPreviewService);
+  private readonly processCapabilitiesService = inject(
+    ProcessCapabilitiesService
+  );
+  private readonly atrributesControlService = inject(AttributesControlService);
+  private readonly printConfigService = inject(PrintConfigService);
 
   constructor() {
     this.optionsForm = this.formBuilder.group({
@@ -133,14 +135,14 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
     if (this.configurationName) {
       this.mapFishInteraction
         .getConfigCapabilities(this.configurationName)
-        .subscribe(
-          (capabilities: Capabilities) => {
+        .subscribe({
+          next: (capabilities: Capabilities) => {
             this.processCapabilities(capabilities);
             this.addTemplateAndScaleChangeListeners();
             this.setDefaultValues();
           },
-          (error: GgcPrintError) => (this.error = error)
-        );
+          error: (error: GgcPrintError) => (this.error = error)
+        });
     }
     if (this.printConfigs) {
       this.printConfigService.addKeysToPrintConfigs(this.printConfigs);
@@ -192,13 +194,13 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
 
   onSubmit() {
     const centerTmp = this.printPreviewService.getCenterFromPrintPreview();
-    if (!centerTmp) {
+    if (centerTmp) {
+      this.center = JSON.parse(JSON.stringify(centerTmp)); //is nodig om de set opnieuw te triggeren.
+    } else {
       this.error = new GgcPrintError(
         GgcPrintErrorTypes.MAPNOTAVAILABLE,
         "Middelpunt van het te printen gebied op de kaart kan niet worden bepaald"
       );
-    } else {
-      this.center = JSON.parse(JSON.stringify(centerTmp)); //is nodig om de set opnieuw te triggeren.
     }
   }
 

@@ -20,7 +20,7 @@ import { StatusResponse } from "../../model/result/StatusRepsonse";
   providedIn: "root"
 })
 export class GgcMapfishInteractionService {
-  private httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
   private baseUrl = "https://print-services";
   private headers: HttpHeaders;
 
@@ -76,10 +76,10 @@ export class GgcMapfishInteractionService {
     if (error instanceof HttpErrorResponse) {
       error = new GgcPrintError(
         GgcPrintErrorTypes.HTTPERROR,
-        "Error: " + error.status + " " + error.statusText
+        "Error: " + error.status + " " + error.message
       );
     }
-    return throwError(error);
+    return throwError(() => error);
   }
 
   getResult(printId: string): Observable<StatusResponse> {
