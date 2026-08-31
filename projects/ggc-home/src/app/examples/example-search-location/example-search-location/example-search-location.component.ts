@@ -31,7 +31,7 @@ export class ExampleSearchLocationComponent extends ExampleFormatComponent {
     route: "/search-location",
     title: "Locatie zoeken",
     introduction:
-      "Zoek een adres, woonplaats of huidige locatie met de PDOK Locatie API.",
+      "Zoek een adres, woonplaats, perceel of huidige locatie met de PDOK Locatie API.",
     components: [Components.GGC_SEARCH_LOCATION],
     theme: [Themes.ZOEKEN],
     tags: [Tags.SEARCH, Tags.LOCATION],
@@ -75,6 +75,11 @@ export class ExampleSearchLocationComponent extends ExampleFormatComponent {
         id: "woonplaats",
         version: 1,
         relevance: 0.5
+      },
+      {
+        id: "perceel",
+        version: 1,
+        relevance: 0.4
       }
     ]
   };
