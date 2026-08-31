@@ -2,8 +2,12 @@ import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
-import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
-import { StyleLikeMap } from "@kadaster/ggc-map/src/lib/model/draw-interaction-event.model";
+import {
+  GgcDrawService,
+  GgcMapComponent,
+  StyleLikeMap,
+  Webservice
+} from "@kadaster/ggc-map";
 import Feature from "ol/Feature";
 import { Geometry, Polygon } from "ol/geom";
 import Style from "ol/style/Style";

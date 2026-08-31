@@ -32,6 +32,7 @@ import { FeatureInfoDisplayComponent } from "../feature-info-display/feature-inf
 import { FeatureInfoMapConnectService } from "../service/feature-info-map-connect.service";
 import {
   DEFAULT_MAPINDEX,
+  FeatureCollectionForCoordinate,
   FeatureCollectionForLayer,
   GGC_FEATURE_LAYERID,
   MapComponentEvent,
@@ -391,6 +392,8 @@ export class GgcFeatureInfoComponent
           collection.layerTitle,
           collection.layerId
         );
+      } else {
+        this.featureInfoCollection = undefined;
       }
     }
   }
@@ -482,10 +485,20 @@ export class GgcFeatureInfoComponent
     this.pagerIsHidden.set(this.hidePager());
   }
 
-  private subscribeToMapSelection(
-    mapIndex: string,
-    selectIndex?: string
-  ): void {
+  private subscribeToMapSelection(mapIndex: string, selectIndex?: string) {
+    // Haal de meest recente selection op als deze bestaat
+    this.featureInfoMapConnectService
+      .getCurrentFeatureCollectionForMapSelection(
+        this.viewerType,
+        mapIndex,
+        selectIndex
+      )
+      .then((featureCollectionForCoordinate) => {
+        this.handleNewFeatureCollectionForCoordinate(
+          featureCollectionForCoordinate,
+          mapIndex
+        );
+      });
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
     // featureInfoCollection gezet via de tabs (hasTabs = true
     this.featureInfoMapConnectService
@@ -502,22 +515,27 @@ export class GgcFeatureInfoComponent
             ) {
               return;
             }
-
-            const collections: FeatureCollectionForLayer[] =
-              event.value.featureCollectionForLayers;
-
-            if (!collections || collections.length === 0) {
-              this.featureInfoMapConnectService.clearHighlightLayer(
-                this.viewerType,
-                mapIndex
-              );
-              this.featureInfoCollection = undefined;
-              return;
-            }
-            this.createNewFeatureCollection(collections);
+            this.handleNewFeatureCollectionForCoordinate(event.value, mapIndex);
           }
         );
       });
+  }
+
+  private handleNewFeatureCollectionForCoordinate(
+    featureCollectionForCoordinate: FeatureCollectionForCoordinate | undefined,
+    mapIndex: string
+  ): void {
+    const collections =
+      featureCollectionForCoordinate?.featureCollectionForLayers;
+    if (!collections || collections.length === 0) {
+      this.featureInfoMapConnectService.clearHighlightLayer(
+        this.viewerType,
+        mapIndex
+      );
+      this.featureInfoCollection = undefined;
+      return;
+    }
+    this.createNewFeatureCollection(collections);
   }
 
   private createNewFeatureCollection(

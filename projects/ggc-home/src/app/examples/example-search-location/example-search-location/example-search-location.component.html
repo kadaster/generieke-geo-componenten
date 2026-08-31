@@ -19,7 +19,7 @@
     </p>
     <p>
       Dit component maakt gebruik van de PDOK Locatie API. Voor dit voorbeeld
-      wordt er gefilterd op adres, gemeente, woonplaats, provincie en perceel.
+      wordt er gezocht in de collecties adres, gemeente, woonplaats, provincie en perceel.
     </p>
     <p>
       Zie <a href="https://api.pdok.nl/kadaster/location-api/v1/search">PDOK Locatie API</a> voor meer informatie over de API.
@@ -44,14 +44,13 @@
       <!-- DOCS:END functionality -->
       <div class="col-xl-2 col-md-2 col-sm-12">
         <div class="row options-toggle">
-          <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
             <input
               type="checkbox"
-              aria-labelledby="extraOptionsLabel"
               (change)="goToPage('/search-location-adv')"
             />
             <span class="slider round"></span>
+            Extra opties
           </label>
         </div>
       </div>

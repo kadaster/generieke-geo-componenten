@@ -31,11 +31,10 @@ RUN mkdir -p /var/log/nginx && \
     chown -R ggc-home:ggc-home /etc/nginx/html/
 
 # Permissions adjustments
-RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ /tmp && \
-    chmod -R a+rwX,g+rX /etc/nginx/html/ && \
-    chmod +x /var/appdata/run/start-application.sh && \
-    chmod -R u+rwX,g+rX /tmp && \
-    chmod -R u+rwX,g+rX /var/cache/nginx
+RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ && \
+    chmod -R u+rwX,go+rX /etc/nginx/html/ && \
+    chmod 755 /var/appdata/run/start-application.sh && \
+    chmod -R u+rwX,go+rX /var/cache/nginx
 
 USER ggc-home
 

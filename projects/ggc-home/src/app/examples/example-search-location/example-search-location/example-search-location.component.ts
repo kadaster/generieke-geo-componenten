@@ -1,14 +1,11 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import {
   GgcLayerBrtAchtergrondkaartComponent,
   GgcMapComponent
 } from "@kadaster/ggc-map";
 import {
   GgcSearchLocationComponent,
-  PdokLocationApiService,
-  SearchCollection,
   SearchComponentEvent,
-  SearchCurrentLocation,
   SearchCurrentLocationType,
   SearchLocationOptions
 } from "@kadaster/ggc-search-location";
@@ -17,7 +14,6 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import { take } from "rxjs/operators";
 
 @Component({
   selector: "ggc-home-example-search-location",
@@ -29,10 +25,7 @@ import { take } from "rxjs/operators";
   ],
   templateUrl: "./example-search-location.component.html"
 })
-export class ExampleSearchLocationComponent
-  extends ExampleFormatComponent
-  implements OnInit
-{
+export class ExampleSearchLocationComponent extends ExampleFormatComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/search-location",
@@ -49,7 +42,7 @@ export class ExampleSearchLocationComponent
     "example-search-location/example-search-location/example-search-location.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
   // DOCS-SKIP:END
-  searchLocationOptions = {
+  searchLocationOptions: SearchLocationOptions = {
     alternativeSuggestionsFirst: true,
     collectionIdTranslations: new Map<string, string>([
       ["functioneel_gebied", "andere tekst voor functioneel gebied"]
@@ -59,43 +52,35 @@ export class ExampleSearchLocationComponent
       icon: "fas fa-map-marker-alt",
       loadIcon: "fa-spin fas fa-spinner",
       label: "Gebruik mijn locatie"
-    } as SearchCurrentLocation,
+    },
     zoomToResult: true,
-    markResult: true
-  } as SearchLocationOptions;
-
-  private readonly pdokLocationApiService = inject(PdokLocationApiService);
+    markResult: true,
+    customCollections: [
+      {
+        id: "adres",
+        version: 1,
+        relevance: 0.1
+      },
+      {
+        id: "gemeentegebied",
+        version: 1,
+        relevance: 1
+      },
+      {
+        id: "provinciegebied",
+        version: 1,
+        relevance: 0.9
+      },
+      {
+        id: "woonplaats",
+        version: 1,
+        relevance: 0.5
+      }
+    ]
+  };
 
   constructor() {
     super();
-  }
-
-  ngOnInit() {
-    this.pdokLocationApiService.collectionsLoaded$
-      .pipe(take(1))
-      .subscribe((collectionsResult) => {
-        const kvnlCollections = new Map<string, number>([
-          ["adres", 0.1],
-          ["gemeentegebied", 1],
-          ["provinciegebied", 1],
-          ["woonplaats", 0.5],
-          ["perceel", 0.4]
-        ]);
-        this.pdokLocationApiService.setCustomCollections(
-          collectionsResult.collections
-            .filter((collection) =>
-              Array.from(kvnlCollections.keys()).includes(collection.id)
-            )
-            .map(
-              (collection) =>
-                ({
-                  id: collection.id,
-                  version: collection.version,
-                  relevance: kvnlCollections.get(collection.id) ?? 0.5
-                }) as SearchCollection
-            )
-        );
-      });
   }
 
   logSearchComponentEvents(searchComponentEvent: SearchComponentEvent) {

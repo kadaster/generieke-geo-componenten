@@ -82,7 +82,7 @@ export class ExampleSearchLocationAdvComponent
     this.pdokLocationApiService.collectionsLoaded$
       .pipe(take(1))
       .subscribe((collectionsResult) => {
-        const kvnlCollections = new Map<string, number>([
+        const customCollections = new Map<string, number>([
           ["adres", 0.1],
           ["gemeentegebied", 1],
           ["provinciegebied", 1],
@@ -91,14 +91,14 @@ export class ExampleSearchLocationAdvComponent
         this.pdokLocationApiService.setCustomCollections(
           collectionsResult.collections
             .filter((collection) =>
-              Array.from(kvnlCollections.keys()).includes(collection.id)
+              Array.from(customCollections.keys()).includes(collection.id)
             )
             .map(
               (collection) =>
                 ({
                   id: collection.id,
                   version: collection.version,
-                  relevance: kvnlCollections.get(collection.id) ?? 0.5
+                  relevance: customCollections.get(collection.id) ?? 0.5
                 }) as SearchCollection
             )
         );

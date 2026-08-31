@@ -58,6 +58,8 @@ import { Example3dLayer3dTilesComponent } from "./examples/example-3d/example-3d
 import { Example3dLayerWmtsComponent } from "./examples/example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "./examples/example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
 import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-search-location/example-search-location-only-location/example-search-location-only-location.component";
+import { ExampleFeatureInfoTemplateComponent } from "./examples/example-map/example-feature-info-template/example-feature-info-template.component";
+import { ExampleSearchLocationAlternativeSearchComponent } from "./examples/example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -413,5 +415,17 @@ export const routes: Routes = [
     title: "Feature Info aangepast | GGC-Home",
     component: ExampleFeatureInfoCustomNamesValuesComponent,
     data: { label: "feature-info-custom-names-values" }
+  },
+  {
+    path: "feature-info-template",
+    title: "Feature Info template | GGC-Home",
+    component: ExampleFeatureInfoTemplateComponent,
+    data: { label: "feature-info-template" }
+  },
+  {
+    path: "search-location-alternative-search",
+    title: "In eigen collectie zoeken | GGC-Home",
+    component: ExampleSearchLocationAlternativeSearchComponent,
+    data: { label: "search-location-alternative-search" }
   }
 ];

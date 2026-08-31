@@ -19,8 +19,23 @@
     </p>
     <p>
       Dit component maakt gebruik van de PDOK Locatie API. Voor dit voorbeeld
-      wordt er gefilterd op adres, gemeente, woonplaats en provincie.
+      wordt er gezocht in de collecties adres, gemeente, woonplaats en
+      provincie.
     </p>
+    <p>
+      Deze collecties waarin gezocht wordt, kunnen worden meegegeven in de
+      SearchLocationOptions. In dit voorbeeld reageren wij op het event
+      collectionsLoaded$. Deze bevat alle collections die beschikbaar zijn met
+      de nieuwste veries. Daarme heb je altijd de nieuwste versie van de
+      collecties en is het mogelijk om bijvoorbeeld in alle collecties zoeken
+      behalve één specifieke collectie. Alle PDOK collecties zijn te vinden op
+      <a
+        href="https://api.pdok.nl/kadaster/location-api/v1/collections"
+        target="_blank"
+        >PDOK</a
+      >.
+    </p>
+
     <p>
       Instelmogelijkheden voor ggc-search-location, met
       <code>SearchLocationOptions</code>:
@@ -49,15 +64,14 @@
       </div>
       <div class="col-xl-2 col-md-2 col-sm-12">
         <div class="row options-toggle">
-          <h6 id="extraOptionsLabel">Extra opties</h6>
           <label class="switch">
             <input
               type="checkbox"
               checked
-              aria-labelledby="extraOptionsLabel"
               (change)="goToPage('/search-location')"
             />
             <span class="slider round"></span>
+            Extra opties
           </label>
         </div>
         <div class="row search-results-options">
