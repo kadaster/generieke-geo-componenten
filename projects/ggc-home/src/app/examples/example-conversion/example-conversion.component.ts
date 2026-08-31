@@ -78,7 +78,6 @@ export class ExampleConversionComponent
   }
 
   downloadGeoJson() {
-    // this.mapService.getExtraLayer("highlight")
     const layer = this.mapService.getExtraLayer("highlight") as VectorLayer<
       VectorSource<Feature<Geometry>>
     >;
