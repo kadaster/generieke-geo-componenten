@@ -1,6 +1,6 @@
 <ggc-home-example-format
-  [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
   [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
@@ -15,30 +15,43 @@
 
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
-    <p>In dit voorbeeld kun je een bestand uploaden dat wordt toegevoegd aan de kaart. Ook kun je de huidige kaartlaag downloaden als GeoJSON of GML bestand. Er is al een GeoJSON bestand met een aantal figuren geladen.</p>
+    <p>
+      In dit voorbeeld kun je een vectorbestand uploaden dat wordt toegevoegd
+      aan een laag op de kaart. Ook kun je de geometrieën van een kaartlaag
+      downloaden als GeoJSON of GML bestand.
+    </p>
   </div>
 
   <div page-functionality>
     <div class="row">
       <!-- DOCS:START functionality -->
       <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
-        <fieldset class="ggc-fieldset">
-          <legend>Bediening</legend>
-          <form>
-            <label>
-              <span>Kies een bestand om toe te voegen aan de kaart (Shapefile, GeoJSON, JSON of GML)</span>
-              <input type="file" name="inputfile" (input)="onFileInput($event)" />
-            </label>
-          </form>
-        </fieldset>
-        <br />
-        <button (click)="downloadGeoJson()">Download GeoJson</button>
-        <button (click)="downloadGML()">Download GML</button>
+        <b>Uploaden</b>
+        <form>
+          <label>
+            <span
+              >Kies een bestand om toe te voegen aan een kaartlaag: Shapefile,
+              GeoJSON, JSON of GML.</span
+            >
+            <input (input)="onFileInput($event)" name="inputfile" type="file" />
+          </label>
+        </form>
+        <!--        </fieldset>-->
+        <hr />
+        <div class="d-flex flex-column align-items-stretch">
+          <b>Downloaden</b>
+          <span>Converteer de inhoud van een kaartlaag.</span>
+          <button (click)="downloadGeoJson()">Download als GeoJson</button>
+          <button (click)="downloadGML()">Download als GML</button>
+        </div>
       </div>
       <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
-          <div class="map-container">
-            <ggc-map [webServices]="mapConfig" (events)="onMapEvent($event)"></ggc-map>
-          </div>
+        <div class="map-container">
+          <ggc-map
+            (events)="onMapEvent($event)"
+            [webServices]="mapConfig"
+          ></ggc-map>
+        </div>
       </div>
       <!-- DOCS:END functionality -->
     </div>

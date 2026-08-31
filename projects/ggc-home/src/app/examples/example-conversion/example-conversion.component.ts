@@ -12,7 +12,10 @@ import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import VectorLayer from "ol/layer/Vector";
 import GeoJSON from "ol/format/GeoJSON";
-import { MapComponentEventTypes } from "@kadaster/ggc-models";
+import {
+  MapComponentDrawTypes,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-home-example-conversion",
@@ -27,8 +30,7 @@ export class ExampleConversionComponent
   readonly componentInfo: ComponentInfo = {
     route: "/conversion",
     title: "Bestandsconversies",
-    introduction:
-      "Converteer GML/GeoJSON/Shapefile bestanden naar kaartlagen en vice versa.",
+    introduction: "Converteer geometrieën van of naar een bestand.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],
@@ -38,6 +40,7 @@ export class ExampleConversionComponent
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-conversion_src_public-api.GgcConversionService.html`;
   // DOCS-SKIP:END
   mapConfig: Webservice[];
+  protected readonly mapComponentDrawTypes = MapComponentDrawTypes;
   private readonly mapService = inject(GgcMapService);
   private readonly conversionService = inject(GgcConversionService);
 
