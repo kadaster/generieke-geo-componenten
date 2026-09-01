@@ -31,9 +31,9 @@ export class ExampleConversionComponent
     route: "/conversion",
     title: "Bestandsconversies",
     introduction: "Converteer geometrieën van of naar een bestand.",
-    components: [Components.GGC_MAP],
+    components: [Components.GGC_CONVERSION],
     theme: [Themes.KAARTLAGEN],
-    tags: [Tags.LAYER],
+    tags: [Tags.CONVERSION],
     imageLocation: "code/examples/example-conversion/example-conversion.png"
   } as ComponentInfo;
   urlComponentModule = "example-conversion/example-conversion.component.ts";

@@ -36,7 +36,6 @@
             <input (input)="onFileInput($event)" name="inputfile" type="file" />
           </label>
         </form>
-        <!--        </fieldset>-->
         <hr />
         <div class="d-flex flex-column align-items-stretch">
           <b>Downloaden</b>
@@ -44,6 +43,14 @@
           <button (click)="downloadGeoJson()">Download als GeoJson</button>
           <button (click)="downloadGML()">Download als GML</button>
         </div>
+        <hr />
+        <b>Voorbeeldbestanden</b>
+        <ul>
+          <li>Voorbeeld GML3.0: <a href="/assets/conversion/gelderland.gml" download>Provincie Gelderland</a></li>
+          <li>Voorbeeld GML3.2: <a href="/assets/conversion/gemeentes-flevoland.gml" download>Gemeentes in Flevoland</a></li>
+          <li>Voorbeeld GeoJSON: <a href="/assets/conversion/limburg.geojson" download>Provincie Limburg</a></li>
+          <li>Voorbeeld Shapefile: <a href="/assets/conversion/Gemeentes Groningen.zip" download>Gemeentes in Groningen</a></li>
+        </ul>
       </div>
       <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
         <div class="map-container">

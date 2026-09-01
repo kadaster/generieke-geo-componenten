@@ -1,10 +1,10 @@
 {
   "name": "@kadaster/ggc-conversion",
-  "version": "0.0.2",
+  "version": "3.0.0",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
-    "@kadaster/ggc-map": ">=0",
+    "@kadaster/ggc-map": "^4.0.0",
     "ol": "^10.7.0"
   },
   "dependencies": {
