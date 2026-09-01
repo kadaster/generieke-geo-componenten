@@ -1,0 +1,93 @@
+<div
+  class="modal"
+  id="downloadModal"
+  role="dialog"
+  data-backdrop="static"
+  data-keyboard="false"
+  aria-labelledby="title"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="title">Maak PDF</h2>
+        <button
+          type="button"
+          class="close btn-close"
+          data-dismiss="modal"
+          data-bs-dismiss="modal"
+          aria-label="Sluit dit venster"
+          (click)="closeModal()"
+        >
+          <span [ngClass]="iconClose + ' close-icon'" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <figure class="alert alert-warning mb-3">
+          <p>
+            Let op: Het downloaden van de PDF kan even duren. Als u dit venster
+            sluit bent u uw voortgang kwijt.
+          </p>
+        </figure>
+        @if (isLoading() && !internalError()) {
+          <p>
+            <strong>Een moment geduld a.u.b.</strong> <br />
+            Uw bestand wordt opgehaald.
+          </p>
+        }
+
+        <section class="row same-height-parent">
+          <div class="col-12">
+            <article
+              class="card same-height-child"
+              aria-labelledby="card-heading_cards-0"
+            >
+              <div class="card-body">
+                @if (internalError()) {
+                  <div class="alert alert-danger">
+                    {{ internalError()?.foutmelding }}
+                  </div>
+                }
+                @if (isLoading() && !internalError()) {
+                  <span
+                    class="ggc-loader fa-spin fas fa-spinner spinner-size"
+                  ></span>
+                }
+                @if (!isLoading() && !internalError()) {
+                  <div class="d-flex align-items-center">
+                    <button
+                      type="button"
+                      class="btn btn-link blue-color"
+                      (click)="downloadPrint()"
+                    >
+                      <i
+                        aria-hidden="true"
+                        [ngClass]="iconFile + ' doc-icon blue-color'"
+                      ></i>
+                      <span class="btn-text">Download bestand</span
+                      ><i
+                        aria-hidden="true"
+                        [ngClass]="iconDownload + ' download-icon blue-color'"
+                      ></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-target="downloadModal"
+          data-dismiss="modal"
+          data-bs-dismiss="modal"
+          (click)="closeModal()"
+        >
+          Sluiten
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [10379.54316043426, 413792.95999999996],
+          [69324.1947406514, 515721.92]
+        ]
+      },
+      "properties": {
+        "areaOrLength": "117.75 km",
+        "measurement": "none"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [84383.04733413753, 474864.32],
+            [241425.3672376357, 474864.32],
+            [241425.3672376357, 509270.72],
+            [84383.04733413753, 509270.72],
+            [84383.04733413753, 474864.32]
+          ]
+        ]
+      },
+      "properties": {
+        "areaOrLength": "5403.26 km2",
+        "measurement": "none"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [125257.07580217133, 448199.36],
+            [146339.46943305188, 387128],
+            [204853.86808202654, 375085.76],
+            [182910.96858866105, 434436.8],
+            [229808.5380940893, 439597.76],
+            [214319.4325693607, 464112.32],
+            [141606.68718938483, 463252.16],
+            [125257.07580217133, 448199.36]
+          ]
+        ]
+      },
+      "properties": {
+        "areaOrLength": "5446.38 km2",
+        "measurement": "none"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [219482.46774427022, 414653.12]
+      },
+      "properties": {
+        "areaOrLength": "",
+        "measurement": "none"
+      }
+    }
+  ],
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::28992"
+    }
+  }
+}

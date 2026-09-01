@@ -1,0 +1,66 @@
+<ggc-home-example-format
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>
+      In dit voorbeeld kun je een vectorbestand uploaden dat wordt toegevoegd
+      aan een laag op de kaart. Ook kun je de geometrieën van een kaartlaag
+      downloaden als GeoJSON of GML bestand.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+        <b>Uploaden</b>
+        <form>
+          <label>
+            <span
+              >Kies een bestand om toe te voegen aan een kaartlaag: Shapefile,
+              GeoJSON of GML.</span
+            >
+            <input (input)="onFileInput($event)" name="inputfile" type="file" />
+          </label>
+        </form>
+        <hr />
+        <div class="d-flex flex-column align-items-stretch">
+          <b>Downloaden</b>
+          <span>Converteer de inhoud van een kaartlaag.</span>
+          <button (click)="downloadGeoJson()">Download als GeoJson</button>
+          <button (click)="downloadGML()">Download als GML</button>
+        </div>
+        <hr />
+        <b>Voorbeeldbestanden</b>
+        <ul>
+          <li>Voorbeeld GML3.0: <a href="/assets/conversion/gelderland.gml" download>Provincie Gelderland</a></li>
+          <li>Voorbeeld GML3.2: <a href="/assets/conversion/gemeentes-flevoland.gml" download>Gemeentes in Flevoland</a></li>
+          <li>Voorbeeld GeoJSON: <a href="/assets/conversion/limburg.geojson" download>Provincie Limburg</a></li>
+          <li>Voorbeeld Shapefile: <a href="/assets/conversion/Gemeentes Groningen.zip" download>Gemeentes in Groningen</a></li>
+        </ul>
+      </div>
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
+        <div class="map-container">
+          <ggc-map
+            (events)="onMapEvent($event)"
+            [webServices]="mapConfig"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>

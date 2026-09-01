@@ -1,0 +1,22 @@
+{
+  "name": "@kadaster/ggc-print",
+  "version": "3.0.0",
+  "peerDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@kadaster/ggc-map": "^4.0.0"
+  },
+  "dependencies": {
+    "@geoblocks/print": "0.7.9",
+    "tslib": "^2.3.1"
+  },
+  "repository": {
+    "url": "https://github.com/kadaster/generieke-geo-componenten"
+  },
+  "license": "EUPL-1.2",
+  "publishConfig": {
+    "directory": "../../dist/ggc-print",
+    "access": "public"
+  }
+}

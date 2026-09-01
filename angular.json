@@ -3,6 +3,48 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ggc-conversion": {
+      "projectType": "library",
+      "root": "projects/ggc-conversion",
+      "sourceRoot": "projects/ggc-conversion/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-conversion/tsconfig.lib.json",
+            "project": "projects/ggc-conversion/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-conversion/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-conversion/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "runnerConfig": "vitest.config.ts",
+            "setupFiles": ["src/test/setup-tests.ts"],
+            "tsConfig": "projects/ggc-conversion/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-conversion/**/*.ts",
+              "projects/ggc-conversion/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "ggc-map-3d": {
       "projectType": "library",
       "root": "projects/ggc-map-3d",
@@ -370,6 +412,48 @@
         }
       }
     },
+    "ggc-print": {
+      "projectType": "library",
+      "root": "projects/ggc-print",
+      "sourceRoot": "projects/ggc-print/src",
+      "prefix": "ggc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ggc-print/tsconfig.lib.json",
+            "project": "projects/ggc-print/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ggc-print/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ggc-print/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "runnerConfig": "vitest.config.ts",
+            "setupFiles": ["src/test/setup-tests.ts"],
+            "tsConfig": "projects/ggc-print/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ggc-print/**/*.ts",
+              "projects/ggc-print/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "ggc-search-location": {
       "projectType": "library",
       "root": "projects/ggc-search-location",
@@ -454,7 +538,9 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@angular-eslint/schematics"],
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ],
     "analytics": false
   },
   "schematics": {

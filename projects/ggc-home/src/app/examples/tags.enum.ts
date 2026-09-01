@@ -1,5 +1,6 @@
 export enum Tags {
   CONTROLS = "controls",
+  CONVERSION = "conversion",
   DATASET = "dataset",
   DRAW = "draw",
   TWEED = "2d",

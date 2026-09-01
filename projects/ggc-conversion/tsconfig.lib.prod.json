@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "declarationMap": false,
+    "paths": {
+      "@kadaster/ggc-map": ["dist/ggc-map"],
+      "@kadaster/ggc-models": ["dist/ggc-models"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true,
+    "compilationMode": "partial",
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
+}
