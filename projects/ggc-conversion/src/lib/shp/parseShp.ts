@@ -348,9 +348,13 @@ class ParseShp {
         bbox: [mins[0], mins[1], maxs[0], maxs[1]]
       };
     }
+    const polyReduceResult: Position[][][] = [];
+    for (const ring of coordinates) {
+      polyReduce(polyReduceResult, ring);
+    }
     return {
       type: "MultiPolygon",
-      coordinates: coordinates.reduce(polyReduce, []),
+      coordinates: polyReduceResult,
       bbox: [mins[0], mins[1], maxs[0], maxs[1]]
     };
   }
