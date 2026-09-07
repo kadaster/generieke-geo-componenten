@@ -69,8 +69,7 @@ export class Example3dLayerGeojsonComponent {
             "code/examples/example-3d/example-3d-layer-geojson/pointer-pin.svg",
           scale: 0.05,
           heightReference: HeightReference.CLAMP_TO_GROUND,
-          verticalOrigin: VerticalOrigin.BOTTOM,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY
+          verticalOrigin: VerticalOrigin.BOTTOM
         });
       }
     }
