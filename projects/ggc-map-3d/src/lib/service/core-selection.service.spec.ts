@@ -180,6 +180,19 @@ describe("CoreSelectionService", () => {
   describe("handleInputEvent", () => {
     const cesiumMock = createCesiumMock() as Viewer;
 
+    beforeEach(() => {
+      vi.spyOn(
+        service as any,
+        "cesium3DTileFeatureToGenericFeatures"
+      ).mockReturnValue([]);
+      vi.spyOn(
+        service as any,
+        "cesiumGeoJsonFeatureToGenericFeatures"
+      ).mockReturnValue([]);
+      tiles3dLayerServiceSpy.getLayerId.mockReturnValue("layer1");
+      geoJsonLayerServiceSpy.getLayerId.mockReturnValue("layer1");
+    });
+
     it("should call setHighlightOnFeature() and emit event when the type of feature is Cesium3DTileFeature", () => {
       const pickedFeature = new Cesium3DTileFeature();
       service["viewer"] = cesiumMock;
@@ -214,6 +227,32 @@ describe("CoreSelectionService", () => {
 
       expect(getFeatureSpy).toHaveBeenCalled();
       expect(setHighlightOnFeatureSpy).toHaveBeenCalled();
+    });
+
+    it("should store the current selection for the selectIndex", () => {
+      const pickedFeature = createCesium3DTileFeatureMock();
+      const selection = createSelection(
+        ScreenSpaceEventType.RIGHT_CLICK,
+        Color.BLACK,
+        "index1"
+      );
+
+      service["setFeatureInSelection"](pickedFeature, selection);
+
+      expect(service["currentSelections"].has("index1")).toBe(true);
+    });
+
+    it("should store undefined current selections with the default key", () => {
+      const selection = createSelection(
+        ScreenSpaceEventType.RIGHT_CLICK,
+        Color.BLACK
+      );
+
+      service["setFeatureInSelection"](undefined, selection);
+
+      expect(service["currentSelections"].has("_default_selectindex_")).toBe(
+        true
+      );
     });
 
     it("should call updateLastClickedEntity() and emit event when the type of feature is Entity", async () => {
@@ -272,6 +311,29 @@ describe("CoreSelectionService", () => {
     });
   });
 
+  describe("getCurrentFeatureCollection", () => {
+    it("should return current selection for the provided selectIndex", () => {
+      const featureCollection = new FeatureCollectionForCoordinate();
+      service["currentSelections"].set("index1", featureCollection);
+
+      const currentSelection = service.getCurrentFeatureCollection("index1");
+
+      expect(currentSelection).toBe(featureCollection);
+    });
+
+    it("should use the default key when selectIndex is undefined", () => {
+      const featureCollection = new FeatureCollectionForCoordinate();
+      service["currentSelections"].set(
+        "_default_selectindex_",
+        featureCollection
+      );
+
+      const currentSelection = service.getCurrentFeatureCollection();
+
+      expect(currentSelection).toBe(featureCollection);
+    });
+  });
+
   describe("destroySelection", () => {
     it("should update the Highlightmap", () => {
       vi.spyOn(service["mouseHandler"], "removeInputAction");
@@ -310,6 +372,25 @@ describe("CoreSelectionService", () => {
         ScreenSpaceEventType.LEFT_CLICK
       );
     });
+
+    it("should remove the current selection from currentSelections", () => {
+      const selection = createSelection(
+        ScreenSpaceEventType.LEFT_CLICK,
+        Color.BLACK
+      );
+      service["selections"] = [selection];
+      service["currentSelections"].set(
+        "_default_selectindex_",
+        new FeatureCollectionForCoordinate()
+      );
+
+      service.destroySelection(ScreenSpaceEventType.LEFT_CLICK);
+
+      expect(service["currentSelections"].has("_default_selectindex_")).toBe(
+        false
+      );
+    });
+
     it("should call destroySelection() for each SelectionConfig when destroyAllSelections() is called", () => {
       service["selections"] = createSelections(3);
       const destroySelectionSpy = vi.spyOn(service, "destroySelection");
@@ -396,7 +477,7 @@ describe("CoreSelectionService", () => {
       it("should add feature to selected when isSilhouetteActivated", () => {
         service["isSilhouetteActivated"] = true;
         const eventType = ScreenSpaceEventType.LEFT_CLICK;
-        const feature = new Cesium3DTileFeature();
+        const feature = createCesium3DTileFeatureMock();
         service["addToHighlightMap"](eventType);
         const silhouette = service["highlightMap"].get(eventType);
         service["setHighlightOnFeature"](feature, eventType);
@@ -424,7 +505,7 @@ describe("CoreSelectionService", () => {
     it("should remove feature from selected when isSilhouetteActivated", () => {
       service["isSilhouetteActivated"] = true;
       const eventType = ScreenSpaceEventType.LEFT_CLICK;
-      const feature = new Cesium3DTileFeature();
+      const feature = createCesium3DTileFeatureMock();
       service["addToHighlightMap"](eventType);
       const silhouette = service["highlightMap"].get(eventType);
       (silhouette as PostProcessStage).selected = [feature];
@@ -478,7 +559,7 @@ describe("CoreSelectionService", () => {
     it("should return a feature if ScreenSpaceEventType is MOUSE_MOVE", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
-      const pickedFeature = new Cesium3DTileFeature();
+      const pickedFeature = createCesium3DTileFeatureMock();
       (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const endPosition = new Cartesian2();
 
@@ -494,7 +575,7 @@ describe("CoreSelectionService", () => {
     it("should return a feature if ScreenSpaceEventType is LEFT_CLICK", () => {
       const cesiumMock = createCesiumMock() as Viewer;
       service["viewer"] = cesiumMock;
-      const pickedFeature = new Cesium3DTileFeature();
+      const pickedFeature = createCesium3DTileFeatureMock();
       (cesiumMock.scene.pick as Mock).mockReturnValue(pickedFeature);
       const position = new Cartesian2();
 
@@ -606,7 +687,7 @@ describe("CoreSelectionService", () => {
   describe("getFeatureCollectionForCoordinateObservable", () => {
     it("should emit a mapped MapComponentEvent when selectIndex matches and feature is Cesium3DTileFeature", () => {
       const clickSubject = service["clickEvent"];
-      const feature = new Cesium3DTileFeature();
+      const feature = createCesium3DTileFeatureMock();
 
       sharedLayerServiceSpy.getTitle.mockReturnValue("Layer title");
 
@@ -745,7 +826,22 @@ function createSelections(amount: number) {
 
 function createSelection(
   eventType: ScreenSpaceEventType,
-  highlightColor: Color
+  highlightColor: Color,
+  selectIndex?: string
 ) {
-  return { eventType, highlightColor };
+  return { eventType, highlightColor, selectIndex };
+}
+
+function createCesium3DTileFeatureMock() {
+  const feature = new Cesium3DTileFeature();
+  (feature as any)._content = {
+    batchTable: {
+      setColor: vi.fn(),
+      getColor: vi.fn(),
+      setShow: vi.fn(),
+      getShow: vi.fn()
+    }
+  };
+  (feature as any)._batchId = 0;
+  return feature;
 }
