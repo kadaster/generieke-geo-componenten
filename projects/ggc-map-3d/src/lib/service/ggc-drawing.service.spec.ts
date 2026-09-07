@@ -164,8 +164,7 @@ describe("GgcDrawingService", () => {
           billboard: {
             image: createCustomSvg(),
             heightReference: HeightReference.CLAMP_TO_GROUND,
-            verticalOrigin: VerticalOrigin.BOTTOM,
-            disableDepthTestDistance: Number.POSITIVE_INFINITY
+            verticalOrigin: VerticalOrigin.BOTTOM
           }
         })
       );

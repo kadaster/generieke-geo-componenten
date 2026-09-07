@@ -36,8 +36,7 @@ export class GgcDrawingService {
   private readonly defaultPointStyle: PointGraphics = new PointGraphics({
     color: Color.BLUE,
     pixelSize: 10,
-    heightReference: HeightReference.CLAMP_TO_GROUND,
-    disableDepthTestDistance: Number.POSITIVE_INFINITY
+    heightReference: HeightReference.CLAMP_TO_GROUND
   });
   private viewer: Viewer | undefined;
   private screenSpaceEventHandler: ScreenSpaceEventHandler;
@@ -156,8 +155,7 @@ export class GgcDrawingService {
       billboard: {
         image: drawStyleSvg,
         heightReference: HeightReference.CLAMP_TO_GROUND,
-        verticalOrigin: VerticalOrigin.BOTTOM,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY
+        verticalOrigin: VerticalOrigin.BOTTOM
       }
     });
   }
