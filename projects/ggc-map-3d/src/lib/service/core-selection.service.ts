@@ -13,7 +13,7 @@ import {
   ScreenSpaceEventType
 } from "@cesium/engine";
 import { Viewer } from "@cesium/widgets";
-import { filter, map, Observable, ReplaySubject } from "rxjs";
+import { filter, map, Observable, Subject } from "rxjs";
 import { Tiles3dLayerService } from "../layers/tiles3d-layer.service";
 import {
   SelectionConfig,
@@ -39,6 +39,8 @@ export type ScreenSpaceEvent =
   | ScreenSpaceEventHandler.PositionedEvent
   | ScreenSpaceEventHandler.TwoPointEvent
   | ScreenSpaceEventHandler.TwoPointMotionEvent;
+
+type SelectionFeature = Cesium3DTileFeature | Entity;
 @Injectable({
   providedIn: "root"
 })
@@ -46,21 +48,25 @@ export class CoreSelectionService {
   public currentSupportedEvents: ScreenSpaceEventType[];
   protected viewer: Viewer | undefined;
   protected mouseHandler: ScreenSpaceEventHandler;
-  protected lastHoveredFeature: Cesium3DTileFeature | Entity | undefined =
-    undefined;
+  protected lastHoveredFeature: SelectionFeature | undefined = undefined;
   protected lastClickedEntity: Entity | undefined;
   protected isSilhouetteActivated = false;
   protected highlightMap: Map<
     ScreenSpaceEventType,
     PostProcessStage | undefined
   > = new Map<ScreenSpaceEventType, PostProcessStage>();
+  private readonly defaultCurrentSelectionKey = "_default_selectindex_";
   private readonly tiles3DService = inject(Tiles3dLayerService);
   private readonly geoJsonLayerService = inject(GeoJsonLayerService);
   private readonly coreViewerService = inject(CoreViewerService);
   private readonly sharedLayerService = inject(GgcSharedLayerService);
   private selections: SelectionConfig[] = [];
-  private readonly clickEvent: ReplaySubject<SelectionEvent> =
-    new ReplaySubject<SelectionEvent>(1);
+  private readonly currentSelections: Map<
+    string,
+    FeatureCollectionForCoordinate | undefined
+  > = new Map<string, FeatureCollectionForCoordinate | undefined>();
+  private readonly clickEvent: Subject<SelectionEvent> =
+    new Subject<SelectionEvent>();
 
   constructor() {
     this.coreViewerService.getViewerObservable().subscribe((viewer) => {
@@ -111,9 +117,16 @@ export class CoreSelectionService {
     }
   }
 
+  public getCurrentFeatureCollection(
+    selectIndex?: string
+  ): FeatureCollectionForCoordinate | undefined {
+    return this.currentSelections.get(this.getCurrentSelectionKey(selectIndex));
+  }
+
   public destroySelection(eventType: ScreenSpaceEventType) {
+    const selection = this.getSelection(eventType);
     this.clearSelection(eventType);
-    this.removeSelectionEvent(eventType);
+    this.removeSelectionEvent(eventType, selection?.selectIndex);
   }
 
   public clearAllSelections() {
@@ -143,27 +156,10 @@ export class CoreSelectionService {
       }),
       map((event) => {
         const featureCollectionForCoordinate =
-          new FeatureCollectionForCoordinate();
-
-        if (event.layerId) {
-          const layerTitle = this.sharedLayerService.getTitle(event.layerId);
-
-          let features: object[] = [];
-          if (event.feature instanceof Cesium3DTileFeature) {
-            features = this.cesium3DTileFeatureToGenericFeatures(event.feature);
-          } else if (event.feature instanceof Entity) {
-            features = this.cesiumGeoJsonFeatureToGenericFeatures(
-              event.feature
-            );
-          }
-
-          featureCollectionForCoordinate.featureCollectionForLayers.push({
-            layerName: "",
-            layerId: event.layerId,
-            layerTitle: layerTitle,
-            features: features as any
-          });
-        }
+          this.createFeatureCollectionForCoordinate(
+            event.feature,
+            event.layerId
+          );
 
         return new MapComponentEvent(
           MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED,
@@ -178,7 +174,7 @@ export class CoreSelectionService {
   }
 
   setSelection(
-    feature: Cesium3DTileFeature | Entity,
+    feature: SelectionFeature | undefined,
     selectIndex: string = DEFAULT_CESIUM_MAPINDEX
   ) {
     const selectionConfig = this.selections.find(
@@ -197,6 +193,33 @@ export class CoreSelectionService {
 
   private cesiumGeoJsonFeatureToGenericFeatures(feature: Entity): object[] {
     return cesiumGeoJsonFeatureToGenericFeatures(feature);
+  }
+
+  private createFeatureCollectionForCoordinate(
+    feature: SelectionFeature | undefined,
+    layerId?: string
+  ): FeatureCollectionForCoordinate {
+    const featureCollectionForCoordinate = new FeatureCollectionForCoordinate();
+
+    if (layerId) {
+      const layerTitle = this.sharedLayerService.getTitle(layerId);
+
+      let features: object[] = [];
+      if (feature instanceof Cesium3DTileFeature) {
+        features = this.cesium3DTileFeatureToGenericFeatures(feature);
+      } else if (feature instanceof Entity) {
+        features = this.cesiumGeoJsonFeatureToGenericFeatures(feature);
+      }
+
+      featureCollectionForCoordinate.featureCollectionForLayers.push({
+        layerName: "",
+        layerId: layerId,
+        layerTitle: layerTitle,
+        features: features as any
+      });
+    }
+
+    return featureCollectionForCoordinate;
   }
 
   private clearHighlight(type: ScreenSpaceEventType) {
@@ -224,11 +247,15 @@ export class CoreSelectionService {
     }
   }
 
-  private removeSelectionEvent(type: ScreenSpaceEventType) {
+  private removeSelectionEvent(
+    type: ScreenSpaceEventType,
+    selectIndex?: string
+  ) {
     if (this.mouseHandler) {
       this.mouseHandler.removeInputAction(type);
       this.highlightMap.set(type, undefined);
       this.removeSelectionFromSelectionArray(type);
+      this.currentSelections.delete(this.getCurrentSelectionKey(selectIndex));
     }
   }
 
@@ -273,10 +300,19 @@ export class CoreSelectionService {
   }
 
   private setFeatureInSelection(
-    feature: Cesium3DTileFeature | Entity | undefined,
+    feature: SelectionFeature | undefined,
     selection: SelectionConfig,
     movement?: ScreenSpaceEvent
   ) {
+    const layerId =
+      feature instanceof Cesium3DTileFeature
+        ? this.tiles3DService.getLayerId(feature)
+        : this.geoJsonLayerService.getLayerId(feature);
+
+    this.currentSelections.set(
+      this.getCurrentSelectionKey(selection.selectIndex),
+      this.createFeatureCollectionForCoordinate(feature, layerId)
+    );
     this.clearHighlight(selection.eventType);
     if (feature !== undefined && feature instanceof Cesium3DTileFeature) {
       this.setHighlightOnFeature(
@@ -300,10 +336,7 @@ export class CoreSelectionService {
           ? this.tiles3DService.getLayerId(feature)
           : this.geoJsonLayerService.getLayerId(feature),
       selectIndex: selection.selectIndex,
-      layerId:
-        feature instanceof Cesium3DTileFeature
-          ? this.tiles3DService.getLayerId(feature)
-          : this.geoJsonLayerService.getLayerId(feature)
+      layerId: layerId
     });
   }
 
@@ -360,7 +393,7 @@ export class CoreSelectionService {
   private getFeature(
     type: ScreenSpaceEventType,
     movement: ScreenSpaceEvent
-  ): Cesium3DTileFeature | Entity | undefined {
+  ): SelectionFeature | undefined {
     switch (type) {
       case ScreenSpaceEventType.WHEEL:
         return;
@@ -440,6 +473,7 @@ export class CoreSelectionService {
 
   private initializeCoreSelectionService() {
     this.selections = [];
+    this.currentSelections.clear();
     this.highlightMap = new Map<ScreenSpaceEventType, PostProcessStage>();
     this.mouseHandler = new ScreenSpaceEventHandler(this.viewer?.scene.canvas);
     this.currentSupportedEvents = [
@@ -461,10 +495,15 @@ export class CoreSelectionService {
   private clearCoreSelectionService() {
     this.currentSupportedEvents = [];
     this.selections = [];
+    this.currentSelections.clear();
     this.mouseHandler?.destroy();
     this.lastHoveredFeature = undefined;
     this.lastClickedEntity = undefined;
     this.isSilhouetteActivated = false;
     this.highlightMap = new Map<ScreenSpaceEventType, PostProcessStage>();
+  }
+
+  private getCurrentSelectionKey(selectIndex?: string) {
+    return selectIndex ?? this.defaultCurrentSelectionKey;
   }
 }

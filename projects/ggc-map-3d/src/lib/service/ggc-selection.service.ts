@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 import { CoreSelectionService } from "./core-selection.service";
 import {
   DEFAULT_CESIUM_MAPINDEX,
+  FeatureCollectionForCoordinate,
   MapComponentEvent
 } from "@kadaster/ggc-models";
 import { SelectionConfig, SelectionEvent } from "../model/interfaces";
@@ -80,6 +81,18 @@ export class GgcSelectionService {
     selectIndex: string = DEFAULT_CESIUM_MAPINDEX
   ) {
     this.coreSelectionService.setSelection(feature, selectIndex);
+  }
+
+  /**
+   * Haalt de actuele selectie op voor een specifieke selectiecontext.
+   *
+   * @param selectIndex Optionele selectIndex. Als deze niet is opgegeven, wordt de standaard selectIndex gebruikt.
+   * @returns Het huidige geselecteerde feature, of undefined.
+   */
+  public getCurrentFeatureCollection(
+    selectIndex?: string
+  ): FeatureCollectionForCoordinate | undefined {
+    return this.coreSelectionService.getCurrentFeatureCollection(selectIndex);
   }
 
   /**

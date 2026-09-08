@@ -7,6 +7,7 @@ import { GgcSelectionService } from "./ggc-selection.service";
 import { Subject } from "rxjs";
 import { vi } from "vitest";
 import { MapComponentEvent } from "@kadaster/ggc-models/src/lib/models/map-component-event.model";
+import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 describe("GgcSelectionService", () => {
   let service: GgcSelectionService;
   let coreService: MockedObject<CoreSelectionService>;
@@ -32,6 +33,9 @@ describe("GgcSelectionService", () => {
       getClickEventsObservable: vi
         .fn()
         .mockName("CoreSelectionService.getClickEventsObservable"),
+      getCurrentFeatureCollection: vi
+        .fn()
+        .mockName("CoreSelectionService.getCurrentFeatureCollection"),
       getFeatureCollectionForCoordinateObservable: vi.fn(),
       currentSupportedEvents: [ScreenSpaceEventType.LEFT_DOWN],
       clickEvent: new Subject<SelectionEvent>()
@@ -98,6 +102,18 @@ describe("GgcSelectionService", () => {
     coreService.getClickEventsObservable.mockReturnValue(observable);
     const selectionEventsObservable = service.getSelectionEventsObservable();
     expect(selectionEventsObservable).toEqual(observable);
+  });
+
+  it("should return the current selection from the CoreSelectionService", () => {
+    const featureCollection = new FeatureCollectionForCoordinate();
+    coreService.getCurrentFeatureCollection.mockReturnValue(featureCollection);
+
+    const currentSelection = service.getCurrentFeatureCollection("index1");
+
+    expect(coreService.getCurrentFeatureCollection).toHaveBeenCalledWith(
+      "index1"
+    );
+    expect(currentSelection).toBe(featureCollection);
   });
 
   it("should return an Observable from the CoreSelectionService when getFeatureCollectionForCoordinateObservable() is called", () => {

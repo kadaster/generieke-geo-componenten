@@ -94,8 +94,13 @@ export class FeatureInfoMapConnectService {
             selectIndex
           );
         });
+    } else {
+      return this.connectService
+        .getCesiumSelectionService()
+        .then((selectionService: any) => {
+          return selectionService?.getCurrentFeatureCollection(selectIndex);
+        });
     }
-    return Promise.resolve(undefined);
   }
 
   /**
@@ -134,7 +139,6 @@ export class FeatureInfoMapConnectService {
     if (viewerType == ViewerType.TWEE_D) {
       this.connectService.getMapService().then((mapService: any) => {
         mapService?.clearHighlightLayer(mapIndex);
-        return Promise.resolve();
       });
     }
     return Promise.resolve();
