@@ -130,6 +130,7 @@ export class GgcLayerService {
    * en voegt hun zichtbare lagen toe aan de kaart.
    */
   loadWebservices(services: Webservice[], mapIndex: string) {
+    console.log("layer service loadWebservices", services, mapIndex);
     this.removeCurrentLayers(mapIndex);
     this.mapConfigurations.set(mapIndex, services);
     for (const service of services) {
@@ -154,7 +155,7 @@ export class GgcLayerService {
           environmentInjector: this.appRef.injector
         }
       );
-      componentRef.instance.mapIndex = layerOptions.mapIndex;
+      componentRef.instance.mapIndex.set(layerOptions.mapIndex);
       componentRef.instance.ngOnInit();
       componentRef.instance["olLayer"].set(
         "ggc-layer-id",
@@ -227,14 +228,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcGeojsonLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 
@@ -246,14 +247,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcImageLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()!.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()!.layerId;
     }
   }
 
@@ -265,14 +266,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcVectorTileLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 
@@ -284,14 +285,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcWmsLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 
@@ -303,14 +304,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcWmtsLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 

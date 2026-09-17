@@ -1,7 +1,7 @@
 import {
   Component,
   inject,
-  Input,
+  model,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -29,6 +29,7 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import { StyleLike } from "ol/style/Style";
 
 @Component({
   selector: "ggc-vector-tile-layer",
@@ -67,8 +68,8 @@ export class GgcVectorTileLayerComponent
    * Opties voor configuratie van de vector tile laag.
    * Zie VectorTileLayerOptions voor beschikbare instellingen.
    */
-  @Input()
-  options?: VectorTileLayerOptions;
+
+  options = model<VectorTileLayerOptions | undefined>(undefined);
 
   /**
    * Angular HttpClient voor het ophalen van externe JSON-bestanden zoals stijl- of tile-informatie.
@@ -103,6 +104,73 @@ export class GgcVectorTileLayerComponent
   }
 
   /**
+   * Verwerkt een klik op de kaart en haalt feature informatie op.
+   * Emit een MapComponentEvent met gevonden features.
+   */
+  getFeatureInfo(event: MapBrowserEvent) {
+    const pixel = event.pixel;
+
+    this.map.forEachFeatureAtPixel(
+      pixel,
+      (feature) => this.limitFeatures(feature),
+      {
+        layerFilter: this.decideLayerCandidate.bind(this),
+        hitTolerance: this.options()?.hitTolerance
+      }
+    );
+    const foundFeaturesCopy = this.foundFeatures.slice();
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex(),
+      foundFeaturesCopy,
+      this.getLayerId()
+    );
+    const mapComponentEvent = new MapComponentEvent(
+      MapComponentEventTypes.VECTORFEATUREINFO,
+      this.mapIndex(),
+      "VectorTileLayer getFeatureInfo resultaten: ",
+      this.layerName,
+      foundFeaturesCopy
+    );
+    this.events.emit(mapComponentEvent);
+    this.foundFeatures = [];
+  }
+
+  /**
+   * Angular lifecycle hook die wordt aangeroepen bij het vernietigen van de component.
+   * Roept de parent destructor aan.
+   */
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+  }
+
+  /**
+   * Angular lifecycle hook die wordt aangeroepen bij wijzigingen in input properties.
+   * Past stijl aan indien opties of stijl zijn gewijzigd.
+   */
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.style && this.olLayer) {
+      this.setStyle(this.olLayer);
+    }
+
+    if (changes.options && !changes.options.firstChange) {
+      if (
+        this.options()?.layerOptions?.style !==
+        changes.options.previousValue.layerOptions?.style
+      ) {
+        this.setStyle(this.olLayer);
+      }
+      if (this.options()?.style !== changes.options.previousValue.style) {
+        this.setStyle(this.olLayer);
+      }
+    }
+  }
+
+  protected handleSingleClick(event: MapBrowserEvent) {
+    super.handleSingleClick(event);
+    // don't call getFeatureInfo, as that is already solved in the selectService
+  }
+
+  /**
    * Maakt een nieuwe VectorTileLayer instantie met configuratieopties.
    * Wordt gebruikt als renderlaag in de kaart.
    */
@@ -111,7 +179,7 @@ export class GgcVectorTileLayerComponent
       renderMode: "hybrid",
       declutter: true,
       useInterimTilesOnError: false,
-      ...this.options?.layerOptions,
+      ...this.options()?.layerOptions,
       ...this.layerOptions,
       source: this.vectorTileSource
     });
@@ -124,11 +192,11 @@ export class GgcVectorTileLayerComponent
   private async createTileGrid() {
     return new TileGrid({
       resolutions:
-        (this.options?.enableOverzoom ?? false)
+        (this.options()?.enableOverzoom ?? false)
           ? await this.createOverzoomResolutions()
           : this.crsConfig.getRdNewCrsConfig().resolutions,
       extent: this.crsConfig.getRdNewCrsConfig().extent,
-      tileSize: this.options?.tileSize || [256, 256],
+      tileSize: this.options()?.tileSize || [256, 256],
       origin: getTopLeft(this.crsConfig.getRdNewCrsConfig().extent)
     });
   }
@@ -152,9 +220,9 @@ export class GgcVectorTileLayerComponent
       // Zie TMS-9812, https://github.com/openlayers/openlayers/issues/15929
       // @ts-ignore
       format: new MVT({ featureClass: Feature as any }),
-      ...this.options?.sourceOptions,
+      ...this.options()?.sourceOptions,
       ...(this.attributions && { attributions: this.attributions }),
-      ...(this.options?.url && { url: this.options?.url }),
+      ...(this.options()?.url && { url: this.options()?.url }),
       projection: this.crsConfig.getRdNewCrsConfig().projectionCode,
       tileGrid: await this.createTileGrid()
     };
@@ -183,19 +251,21 @@ export class GgcVectorTileLayerComponent
    * Wordt gebruikt voor overzoom functionaliteit.
    */
   private async getMaxZoom(): Promise<number | undefined> {
-    if (this.options?.sourceOptions?.maxZoom) {
-      return this.options?.sourceOptions?.maxZoom;
+    if (this.options()?.sourceOptions?.maxZoom) {
+      return this.options()?.sourceOptions?.maxZoom;
     }
 
-    if (this.options?.url) {
-      const result = await this.getMaxZoomFromUrl(this.options?.url);
+    if (this.options()?.url) {
+      const result = await this.getMaxZoomFromUrl(this.options()!.url!);
       if (result) {
         return result;
       }
     }
 
-    if (this.options?.style && typeof this.options?.style === "string") {
-      const result = await this.getMaxZoomFromStyleUrl(this.options?.style);
+    if (this.options()?.style && typeof this.options()?.style === "string") {
+      const result = await this.getMaxZoomFromStyleUrl(
+        this.options()!.style! as string
+      );
       if (result) {
         return result;
       }
@@ -288,43 +358,6 @@ export class GgcVectorTileLayerComponent
     return this.olLayer === layerCandidate;
   }
 
-  protected handleSingleClick(event: MapBrowserEvent) {
-    super.handleSingleClick(event);
-    // don't call getFeatureInfo, as that is already solved in the selectService
-  }
-
-  /**
-   * Verwerkt een klik op de kaart en haalt feature informatie op.
-   * Emit een MapComponentEvent met gevonden features.
-   */
-  getFeatureInfo(event: MapBrowserEvent) {
-    const pixel = event.pixel;
-
-    this.map.forEachFeatureAtPixel(
-      pixel,
-      (feature) => this.limitFeatures(feature),
-      {
-        layerFilter: this.decideLayerCandidate.bind(this),
-        hitTolerance: this.options?.hitTolerance
-      }
-    );
-    const foundFeaturesCopy = this.foundFeatures.slice();
-    this.coreSelectionService.handleFeatureInfoForLayer(
-      this.mapIndex,
-      foundFeaturesCopy,
-      this.getLayerId()
-    );
-    const mapComponentEvent = new MapComponentEvent(
-      MapComponentEventTypes.VECTORFEATUREINFO,
-      this.mapIndex,
-      "VectorTileLayer getFeatureInfo resultaten: ",
-      this.layerName,
-      foundFeaturesCopy
-    );
-    this.events.emit(mapComponentEvent);
-    this.foundFeatures = [];
-  }
-
   /**
    * Beperkt het aantal geselecteerde features bij een klik tot een maximum.
    * Voegt geldige features toe aan de interne lijst.
@@ -361,44 +394,17 @@ export class GgcVectorTileLayerComponent
     layer: VectorTileLayer,
     updateOverzoomSettings = true
   ): void {
-    if (typeof this.options?.style === "string") {
-      this.loadStyle(this.options?.style as string);
+    if (typeof this.options()?.style === "string") {
+      this.loadStyle(this.options()?.style as string);
     } else {
-      layer.setStyle(this.options?.style || this.options?.layerOptions?.style);
+      layer.setStyle(
+        (this.options()!.style as StyleLike) ||
+          (this.options()!.layerOptions!.style as StyleLike)
+      );
     }
 
-    if (updateOverzoomSettings && this.options?.enableOverzoom) {
+    if (updateOverzoomSettings && this.options()?.enableOverzoom) {
       this.updateOverzoomSettings(layer);
-    }
-  }
-
-  /**
-   * Angular lifecycle hook die wordt aangeroepen bij het vernietigen van de component.
-   * Roept de parent destructor aan.
-   */
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-  }
-
-  /**
-   * Angular lifecycle hook die wordt aangeroepen bij wijzigingen in input properties.
-   * Past stijl aan indien opties of stijl zijn gewijzigd.
-   */
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.style && this.olLayer) {
-      this.setStyle(this.olLayer);
-    }
-
-    if (changes.options && !changes.options.firstChange) {
-      if (
-        this.options?.layerOptions?.style !==
-        changes.options.previousValue.layerOptions?.style
-      ) {
-        this.setStyle(this.olLayer);
-      }
-      if (this.options?.style !== changes.options.previousValue.style) {
-        this.setStyle(this.olLayer);
-      }
     }
   }
 }

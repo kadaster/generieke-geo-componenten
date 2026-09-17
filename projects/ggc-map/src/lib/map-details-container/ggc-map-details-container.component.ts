@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 /**
  * Containercomponent voor het tonen van detailinformatie
@@ -19,6 +19,7 @@ import { Component } from "@angular/core";
 @Component({
   selector: "ggc-map-details-container",
   templateUrl: "./ggc-map-details-container.component.html",
-  styleUrls: ["./ggc-map-details-container.component.css"]
+  styleUrls: ["./ggc-map-details-container.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcMapDetailsContainerComponent {}

@@ -1,19 +1,17 @@
 import {
-  Component,
+  Directive,
   EventEmitter,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  signal
 } from "@angular/core";
 import { AbstractBaseLayerComponent } from "../abstract-base-layer/abstract-base-layer.component";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
 import { zoomlevelToResolution } from "../../utils/epsg28992";
 import { MapComponentEvent } from "@kadaster/ggc-models";
 
-@Component({
-  selector: "ggc-abstract-configurable-layer",
-  template: ""
-})
+@Directive()
 export class AbstractConfigurableLayerComponent<T>
   extends AbstractBaseLayerComponent<any>
   implements OnInit, OnDestroy
@@ -23,42 +21,44 @@ export class AbstractConfigurableLayerComponent<T>
 
   protected attributions: string | undefined;
   protected layerName: string | undefined;
-  protected options?: AbstractConfigurableLayerOptions;
+  protected options = signal<AbstractConfigurableLayerOptions | undefined>(
+    undefined
+  );
 
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.layerName = this.options?.layerName;
-    this.attributions = this.options?.attributions;
+    this.layerName = this.options()?.layerName;
+    this.attributions = this.options()?.attributions;
 
     this.layerOptions = {
-      ...(this.options?.minResolution && {
-        minResolution: this.options?.minResolution
+      ...(this.options()?.minResolution && {
+        minResolution: this.options()?.minResolution
       }),
-      ...(this.options?.maxResolution && {
-        maxResolution: this.options?.maxResolution
+      ...(this.options()?.maxResolution && {
+        maxResolution: this.options()?.maxResolution
       }),
-      ...(this.options?.zIndex && { zIndex: this.options?.zIndex }),
-      ...(this.options?.opacity && { opacity: this.options?.opacity })
+      ...(this.options()?.zIndex && { zIndex: this.options()?.zIndex }),
+      ...(this.options()?.opacity && { opacity: this.options()?.opacity })
     };
 
     if (
-      this.options?.minZoomLevel !== undefined &&
-      this.options.maxResolution == undefined
+      this.options()?.minZoomLevel !== undefined &&
+      this.options()?.maxResolution == undefined
     ) {
       this.layerOptions = {
         ...this.layerOptions,
-        maxResolution: zoomlevelToResolution(this.options.minZoomLevel)
+        maxResolution: zoomlevelToResolution(this.options()!.minZoomLevel!)
       };
     }
 
     if (
-      this.options?.maxZoomLevel !== undefined &&
-      this.options.minResolution == undefined
+      this.options()?.maxZoomLevel !== undefined &&
+      this.options()?.minResolution == undefined
     ) {
       this.layerOptions = {
         ...this.layerOptions,
-        minResolution: zoomlevelToResolution(this.options.maxZoomLevel)
+        minResolution: zoomlevelToResolution(this.options()!.maxZoomLevel!)
       };
     }
   }
@@ -70,7 +70,7 @@ export class AbstractConfigurableLayerComponent<T>
   protected setLayer(layer: any) {
     super.setLayer(layer);
 
-    const attributions = this.options?.attributions;
+    const attributions = this.options()?.attributions;
     if (attributions !== undefined) {
       this.olLayer.getSource().setAttributions(attributions);
     }

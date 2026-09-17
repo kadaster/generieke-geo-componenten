@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, model, OnDestroy, OnInit } from "@angular/core";
 import ImageLayer from "ol/layer/Image";
 import { ImageStatic } from "ol/source";
 import ImageSource from "ol/source/Image";
@@ -35,7 +35,7 @@ export class GgcImageLayerComponent
    * Opties voor het configureren van de afbeeldingslaag.
    * Bevat instellingen voor de bron en de laag zelf.
    */
-  @Input() options?: ImageLayerOptions;
+  options = model<ImageLayerOptions | undefined>(undefined);
 
   private imageSource: ImageSource;
 
@@ -50,18 +50,18 @@ export class GgcImageLayerComponent
       // url is not optional in ImageStatic options, but can be set from options or input which can both be undefined.
       url: "",
       crossOrigin: "anonymous",
-      ...this.options?.sourceOptions,
+      ...this.options()?.sourceOptions,
       // only set url when this.options.url is defined, otherwise it will overwrite url from this.options?.sourceOptions
-      ...(this.options?.url && { url: this.options?.url }),
-      ...(this.options?.imageExtent && {
-        imageExtent: this.options?.imageExtent
+      ...(this.options()?.url && { url: this.options()?.url }),
+      ...(this.options()?.imageExtent && {
+        imageExtent: this.options()?.imageExtent
       }),
       projection: this.rdNewConfig.projectionCode
     } as Options);
 
     this.setLayer(
       new ImageLayer({
-        ...this.options?.layerOptions,
+        ...this.options()?.layerOptions,
         ...this.layerOptions,
         source: this.imageSource
       })

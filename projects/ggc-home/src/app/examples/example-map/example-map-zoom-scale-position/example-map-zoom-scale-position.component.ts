@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit
+} from "@angular/core";
 import {
   GgcMapComponent,
   GgcMapDetailsContainerComponent,
@@ -30,7 +35,8 @@ import { Tags } from "../../tags.enum";
     GgcMousePositionComponent
   ],
   templateUrl: "./example-map-zoom-scale-position.component.html",
-  styleUrls: ["./example-map-zoom-scale-position.component.scss"]
+  styleUrls: ["./example-map-zoom-scale-position.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleMapZoomScalePositionComponent
   extends ExampleFormatComponent

@@ -1,7 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   inject,
-  Input,
+  model,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -59,7 +60,8 @@ import Projection from "ol/proj/Projection";
  */
 @Component({
   selector: "ggc-geojson-layer",
-  template: ""
+  template: "",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcGeojsonLayerComponent
   extends AbstractClickableLayerComponent<
@@ -71,7 +73,7 @@ export class GgcGeojsonLayerComponent
    * Opties voor het configureren van de GeoJSON-laag.
    * Bevat instellingen voor bron, stijl, clustering en features.
    */
-  @Input() options?: GeojsonLayerOptions;
+  options = model<GeojsonLayerOptions | undefined>(undefined);
 
   private vectorSource: VectorSource<Feature<Geometry>>;
   private clusterSource: Cluster<Feature>;
@@ -99,14 +101,14 @@ export class GgcGeojsonLayerComponent
     };
 
     const isOgcApiUrl =
-      this.options?.url?.includes("/collections/") &&
-      this.options?.url?.includes("/items");
+      this.options()?.url?.includes("/collections/") &&
+      this.options()?.url?.includes("/items");
 
     if (!isOgcApiUrl) {
       Object.assign(options, {
-        ...this.options?.sourceOptions,
-        ...(this.options?.url && { url: this.options?.url }),
-        ...(this.options?.features && { features: this.options?.features })
+        ...this.options()?.sourceOptions,
+        ...(this.options()?.url && { url: this.options()?.url }),
+        ...(this.options()?.features && { features: this.options()?.features })
       });
     }
 
@@ -114,9 +116,9 @@ export class GgcGeojsonLayerComponent
       Feature<Geometry>,
       VectorSource<Feature<Geometry>>
     > = {
-      ...this.options?.layerOptions,
+      ...this.options()?.layerOptions,
       ...this.layerOptions,
-      ...(this.options?.styleLike && { style: this.options?.styleLike })
+      ...(this.options()?.styleLike && { style: this.options()?.styleLike })
     };
 
     this.vectorSource = new VectorSource(options);
@@ -174,19 +176,67 @@ export class GgcGeojsonLayerComponent
     }
   }
 
+  /**
+   * Verwerkt een klik op de kaart en haalt relevante features op.
+   * Stuurt een MapComponentEvent met de gevonden features.
+   *
+   * @param event - Het MapBrowserEvent van de klik.
+   */
+  getFeatureInfo(event: MapBrowserEvent) {
+    const pixel = event.pixel;
+    this.map.forEachFeatureAtPixel(
+      pixel,
+      (feature) => this.limitFeatures(feature),
+      {
+        layerFilter: this.decideLayerCandidate.bind(this),
+        hitTolerance: this.options()?.hitTolerance
+      }
+    );
+    /* Kopie van de foundFeatures meegeven, omdat dit anders later fout gaat met
+     de objectreferentie bij het zetten van foundFeatures.length op 0. */
+    const foundFeaturesCopy = this.foundFeatures.slice();
+    this.coreSelectionService.handleFeatureInfoForLayer(
+      this.mapIndex(),
+      foundFeaturesCopy,
+      this.getLayerId()
+    );
+
+    const mapComponentEvent = new MapComponentEvent(
+      MapComponentEventTypes.GEOJSONFEATUREINFO,
+      this.mapIndex(),
+      "GeoJSON getFeatureInfo resultaten: ",
+      this.layerName,
+      foundFeaturesCopy
+    );
+    this.events.emit(mapComponentEvent);
+    this.foundFeatures.length = 0;
+  }
+
+  /**
+   * Opruimen van resources bij het vernietigen van de component.
+   */
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+  }
+
+  protected handleSingleClick(event: MapBrowserEvent) {
+    super.handleSingleClick(event);
+    // don't call getFeatureInfo, as that is already solved in the selectService
+  }
+
   private loadGeojsonFeatures() {
     // Andere lagen laden wij zelf in, zodat wij altijd een feature loaded event kunnen throwen
     this.vectorSource.setLoader(
       (extent: Extent, resolution: number, projection: Projection) => {
-        if (!this.options?.url) {
+        if (!this.options()?.url) {
           throw new Error("GeoJson options.url is verplicht");
         }
 
-        const fetchPromise = this.options.customHeaders
-          ? fetch(new URL(this.options.url), {
-              headers: this.options.customHeaders
+        const fetchPromise = this.options()?.customHeaders
+          ? fetch(new URL(this.options()!.url!), {
+              headers: this.options()?.customHeaders
             })
-          : fetch(this.options.url);
+          : fetch(this.options()!.url!);
 
         fetchPromise
           .then((response) => {
@@ -212,12 +262,12 @@ export class GgcGeojsonLayerComponent
 
   private loadOgcApiFeatures(options: Record<string, any>) {
     (async () => {
-      const limit = this.options?.limit;
-      const maxFeatures = this.options?.maxFeatures;
+      const limit = this.options()?.limit;
+      const maxFeatures = this.options()?.maxFeatures;
       try {
         const features =
           await this.ggcOgcApiFeaturesService.fetchAllOgcApiFeatures(
-            this.options!.url!,
+            this.options()!.url!,
             limit,
             maxFeatures
           );
@@ -234,13 +284,13 @@ export class GgcGeojsonLayerComponent
     layerOptions: Options<Feature<Geometry>, VectorSource<Feature<Geometry>>>
   ) {
     if (
-      this.options?.clusterDistance !== undefined ||
-      this.options?.sourceClusterOptions !== undefined
+      this.options()?.clusterDistance !== undefined ||
+      this.options()?.sourceClusterOptions !== undefined
     ) {
       this.clusterSource = new Cluster({
-        ...this.options?.sourceClusterOptions,
-        ...(this.options?.clusterDistance && {
-          distance: this.options?.clusterDistance
+        ...this.options()?.sourceClusterOptions,
+        ...(this.options()?.clusterDistance && {
+          distance: this.options()?.clusterDistance
         }),
         ...(this.attributions && { attributions: this.attributions }),
         source: this.vectorSource
@@ -254,7 +304,7 @@ export class GgcGeojsonLayerComponent
   private emitLayerLoadedEvent() {
     this.coreMapService.emitLayerChangedEvent(
       this.getLayerId(),
-      this.mapIndex,
+      this.mapIndex(),
       LayerChangedEventTrigger.LAYER_LOADED
     );
   }
@@ -282,54 +332,6 @@ export class GgcGeojsonLayerComponent
     }
     vectorSource.clear();
     vectorSource.addFeatures(features);
-  }
-
-  protected handleSingleClick(event: MapBrowserEvent) {
-    super.handleSingleClick(event);
-    // don't call getFeatureInfo, as that is already solved in the selectService
-  }
-
-  /**
-   * Verwerkt een klik op de kaart en haalt relevante features op.
-   * Stuurt een MapComponentEvent met de gevonden features.
-   *
-   * @param event - Het MapBrowserEvent van de klik.
-   */
-  getFeatureInfo(event: MapBrowserEvent) {
-    const pixel = event.pixel;
-    this.map.forEachFeatureAtPixel(
-      pixel,
-      (feature) => this.limitFeatures(feature),
-      {
-        layerFilter: this.decideLayerCandidate.bind(this),
-        hitTolerance: this.options?.hitTolerance
-      }
-    );
-    /* Kopie van de foundFeatures meegeven, omdat dit anders later fout gaat met
-     de objectreferentie bij het zetten van foundFeatures.length op 0. */
-    const foundFeaturesCopy = this.foundFeatures.slice();
-    this.coreSelectionService.handleFeatureInfoForLayer(
-      this.mapIndex,
-      foundFeaturesCopy,
-      this.getLayerId()
-    );
-
-    const mapComponentEvent = new MapComponentEvent(
-      MapComponentEventTypes.GEOJSONFEATUREINFO,
-      this.mapIndex,
-      "GeoJSON getFeatureInfo resultaten: ",
-      this.layerName,
-      foundFeaturesCopy
-    );
-    this.events.emit(mapComponentEvent);
-    this.foundFeatures.length = 0;
-  }
-
-  /**
-   * Opruimen van resources bij het vernietigen van de component.
-   */
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
   }
 
   /**

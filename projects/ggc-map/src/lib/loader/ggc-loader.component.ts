@@ -1,4 +1,10 @@
-import { Component, inject, Input, OnDestroy } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+  OnDestroy
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import { CoreMapEventsService } from "../map/service/core-map-events.service";
 
@@ -16,7 +22,8 @@ import { CoreMapEventsService } from "../map/service/core-map-events.service";
 @Component({
   selector: "ggc-loader",
   templateUrl: "./ggc-loader.component.html",
-  styleUrls: ["./ggc-loader.component.css"]
+  styleUrls: ["./ggc-loader.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcLoaderComponent implements OnDestroy {
   /**

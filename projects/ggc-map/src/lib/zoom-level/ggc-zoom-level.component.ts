@@ -1,7 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   inject,
-  Input,
+  input,
   OnDestroy,
   OnInit,
   signal
@@ -21,14 +22,15 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-zoom-level",
   templateUrl: "./ggc-zoom-level.component.html",
-  imports: []
+  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcZoomLevelComponent implements OnInit, OnDestroy {
   /**
    * Index van de kaart waarvan het zoomniveau
    * wordt weergegeven.
    */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
   protected zoomLevel = signal<number | undefined>(undefined);
   private map: OlMap;
   private zoomendSubscription: Subscription;
@@ -42,13 +44,23 @@ export class GgcZoomLevelComponent implements OnInit, OnDestroy {
    * - werkt het zoomniveau bij bij iedere zoomwijziging
    */
   ngOnInit() {
-    this.map = this.coreMapService.getMap(this.mapIndex);
+    this.map = this.coreMapService.getMap(this.mapIndex());
     const zoomendObservable = this.mapEventsService.getZoomendObservableForMap(
-      this.mapIndex
+      this.mapIndex()
     );
     this.zoomendSubscription = zoomendObservable.subscribe(() => {
       this.getZoomLevel();
     });
+  }
+
+  /**
+   * Ruimt resources op door de subscription
+   * op het zoom-event te beëindigen.
+   */
+  ngOnDestroy(): void {
+    if (this.zoomendSubscription) {
+      this.zoomendSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -61,16 +73,6 @@ export class GgcZoomLevelComponent implements OnInit, OnDestroy {
       this.zoomLevel.set(Math.round(zoomLevel * 100) / 100);
     } else {
       this.zoomLevel.set(undefined);
-    }
-  }
-
-  /**
-   * Ruimt resources op door de subscription
-   * op het zoom-event te beëindigen.
-   */
-  ngOnDestroy(): void {
-    if (this.zoomendSubscription) {
-      this.zoomendSubscription.unsubscribe();
     }
   }
 }

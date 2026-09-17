@@ -1,8 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, model, OnDestroy, OnInit } from "@angular/core";
 import TileLayer from "ol/layer/Tile";
 import WMTS from "ol/source/WMTS";
 import WMTSTileGrid from "ol/tilegrid/WMTS";
 import { AbstractBaseLayerComponent } from "../abstract-base-layer/abstract-base-layer.component";
+import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 /**
  * Door `<ggc-layer-brt-achtergrondkaart></ggc-layer-brt-achtergrondkaart>` op te
@@ -23,7 +24,7 @@ export class GgcLayerBrtAchtergrondkaartComponent
   /**
    * Naam van de kaart waarin deze laag wordt geplaatst.
    */
-  @Input() mapIndex: string;
+  mapIndex = model<string>(DEFAULT_MAPINDEX);
 
   /**
    * Initialisatie van de WMTS-laag bij het laden van de component.
@@ -31,7 +32,7 @@ export class GgcLayerBrtAchtergrondkaartComponent
    */
   ngOnInit() {
     super.ngOnInit();
-
+    console.log("achtergrondje");
     const brtsource = new WMTS({
       projection: this.rdNewConfig.projectionCode,
       layer: "standaard",

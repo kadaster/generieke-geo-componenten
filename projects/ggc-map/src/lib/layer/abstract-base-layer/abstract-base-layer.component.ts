@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { Directive, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import { Layer } from "ol/layer";
 import { Options } from "ol/layer/Base";
 import OlMap from "ol/Map";
@@ -9,11 +9,11 @@ import { CoreSelectionService } from "../../service/select/core-selection.servic
 import { AbstractBaseLayerOptions } from "../model/abstract-layer.model";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
-@Component({ template: "" })
+@Directive()
 export class AbstractBaseLayerComponent<T extends Layer>
   implements OnInit, OnDestroy
 {
-  protected mapIndex: string = DEFAULT_MAPINDEX;
+  protected mapIndex = signal<string>(DEFAULT_MAPINDEX);
   protected coreMapService = inject(CoreMapService);
   protected coreSelectionService = inject(CoreSelectionService);
   protected crsConfig = inject(GgcCrsConfigService);
@@ -21,20 +21,25 @@ export class AbstractBaseLayerComponent<T extends Layer>
   protected olLayer: T;
   protected layerOptions: Options;
   protected rdNewConfig: CrsConfig;
-  protected options?: AbstractBaseLayerOptions;
+  protected options = signal<AbstractBaseLayerOptions | undefined>(undefined);
 
   ngOnInit(): void {
     this.rdNewConfig = this.crsConfig.getRdNewCrsConfig();
-    if (this.options) {
-      this.options.layerId ??= this.generateLayerId();
+
+    const options = this.options();
+    if (options) {
+      this.options.set({
+        ...options,
+        layerId: options.layerId ?? this.generateLayerId()
+      });
     } else {
-      this.options = {
-        mapIndex: this.mapIndex,
+      this.options.set({
+        mapIndex: this.mapIndex(),
         layerId: this.generateLayerId()
-      };
+      });
     }
-    if (this.options.mapIndex !== undefined) {
-      this.mapIndex = this.options.mapIndex;
+    if (options?.mapIndex !== undefined) {
+      this.mapIndex.set(options.mapIndex);
     }
   }
 
@@ -54,19 +59,19 @@ export class AbstractBaseLayerComponent<T extends Layer>
   }
 
   public getLayerId(): string {
-    return this.options!.layerId!;
+    return this.options()!.layerId!;
   }
 
   protected setLayer(layer: T): void {
     this.olLayer = layer;
-    this.olLayer.set("ggc-layer-id", this.options?.layerId);
-    this.olLayer.set("ggc-title", this.options?.title);
-    this.olLayer.set("persistent", this.options?.persistent);
-    if (this.options?.persistent) {
-      this.olLayer.setVisible(this.options.visible ?? true);
+    this.olLayer.set("ggc-layer-id", this.options()!.layerId!);
+    this.olLayer.set("ggc-title", this.options()!.title!);
+    this.olLayer.set("persistent", this.options()!.persistent!);
+    if (this.options()!.persistent!) {
+      this.olLayer.setVisible(this.options()!.visible ?? true);
     }
 
-    this.map = this.coreMapService.getMap(this.mapIndex);
+    this.map = this.coreMapService.getMap(this.mapIndex());
     this.map.addLayer(this.olLayer);
   }
 

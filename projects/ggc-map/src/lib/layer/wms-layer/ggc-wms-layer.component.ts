@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, model } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
@@ -47,7 +47,7 @@ export class GgcWmsLayerComponent
   implements OnInit, OnDestroy
 {
   /** Opties voor de WMS-laag. */
-  @Input() options?: WmsLayerOptions;
+  options = model<WmsLayerOptions | undefined>(undefined);
 
   /** Interne referentie naar de WMS-bron. */
   private wmsSource: ImageWMS | TileWMS;
@@ -59,30 +59,30 @@ export class GgcWmsLayerComponent
   ngOnInit(): void {
     super.ngOnInit();
 
-    if (this.options != undefined && this.options?.layers == undefined) {
-      this.options.layers = this.options?.layerName;
+    if (this.options() != undefined && this.options()?.layers == undefined) {
+      this.options()!.layers = this.options()!.layerName!;
     }
 
     this.enable();
 
-    if (this.options?.maxFeaturesOnSingleclick !== undefined) {
-      this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
+    if (this.options()?.maxFeaturesOnSingleclick !== undefined) {
+      this.maxFeaturesOnSingleclick = this.options()!.maxFeaturesOnSingleclick!;
     }
 
     const urlForCapabilities =
-      this.options?.url || this.options?.sourceOptions?.url;
-    if (this.options?.getCapabilities !== false && urlForCapabilities) {
+      this.options()?.url || this.options()?.sourceOptions?.url;
+    if (this.options()?.getCapabilities !== false && urlForCapabilities) {
       this.capabilitiesService
         .getCapabilitiesForUrl(
           urlForCapabilities,
           "WMS",
-          this.options?.sourceOptions?.crossOrigin === "withCredentials"
+          this.options()?.sourceOptions?.crossOrigin === "withCredentials"
         )
         .subscribe((result) => {
           this.events.emit(
             new MapComponentEvent(
               MapComponentEventTypes.WMSCAPABILITIES,
-              this.mapIndex,
+              this.mapIndex()!,
               "WMS capabilities resultaten:",
               this.layerName,
               result as Record<string, any>
@@ -92,8 +92,8 @@ export class GgcWmsLayerComponent
     }
 
     const params: { [x: string]: any } = this.makeParamsKeysUppercase({
-      ...this.options?.sourceOptions?.params,
-      ...(this.options?.layers && { layers: this.options?.layers })
+      ...this.options()?.sourceOptions?.params,
+      ...(this.options()?.layers && { layers: this.options()?.layers })
     });
 
     this.addDpiToParams(params, DEVICE_PIXEL_RATIO);
@@ -101,22 +101,22 @@ export class GgcWmsLayerComponent
     const sourceOptions: TileSourceOptions | ImageSourceOptions = {
       crossOrigin: "anonymous",
       serverType: "geoserver",
-      ...this.options?.sourceOptions,
+      ...this.options()?.sourceOptions,
       params,
-      ...(this.options?.url && { url: this.options?.url }),
+      ...(this.options()?.url && { url: this.options()?.url }),
       projection: this.rdNewConfig.projectionCode
     };
 
     const layerOptions:
       ImageLayerOptions<ImageSource> | TileLayerOptions<TileSource> = {
-      ...this.options?.layerOptions,
+      ...this.options()?.layerOptions,
       ...this.layerOptions
     };
 
-    if (this.options?.tiled) {
-      if (this.options?.gutter) {
+    if (this.options()?.tiled) {
+      if (this.options()?.gutter) {
         // set gutter to prevent that icons and labels are clipped at the edges of the tiles.
-        (sourceOptions as TileSourceOptions).gutter = this.options.gutter;
+        (sourceOptions as TileSourceOptions).gutter = this.options()?.gutter;
       }
       this.wmsSource = new TileWMS(sourceOptions as TileSourceOptions);
       layerOptions.source = this.wmsSource;
@@ -130,11 +130,6 @@ export class GgcWmsLayerComponent
         new ImageLayer(layerOptions as ImageLayerOptions<ImageSource>)
       );
     }
-  }
-
-  protected handleSingleClick(event: MapBrowserEvent) {
-    super.handleSingleClick(event);
-    this.getFeatureInfo(event);
   }
 
   /**
@@ -153,9 +148,9 @@ export class GgcWmsLayerComponent
       )
     ) {
       const querylayers =
-        this.options?.getFeatureInfoQueryLayers ||
-        this.options?.layers ||
-        this.options?.sourceOptions?.params?.layers;
+        this.options()?.getFeatureInfoQueryLayers ||
+        this.options()?.layers ||
+        this.options()?.sourceOptions?.params?.layers;
       const featureInfoUrl = this.wmsSource.getFeatureInfoUrl(
         coordinate,
         viewResolution,
@@ -249,11 +244,20 @@ export class GgcWmsLayerComponent
     }
   }
 
+  protected handleSingleClick(event: MapBrowserEvent) {
+    super.handleSingleClick(event);
+    this.getFeatureInfo(event);
+  }
+
   /** Werkt de lokale sourceOptions.params bij op basis van de WMS-bron. */
   private updateLocalSourceOptionsFromWmsSource(): void {
-    this.options = this.options ?? {};
-    this.options.sourceOptions = this.options.sourceOptions ?? {};
-    this.options.sourceOptions.params = this.wmsSource.getParams();
+    this.options.update((options) => ({
+      ...options,
+      sourceOptions: {
+        ...options?.sourceOptions,
+        params: this.wmsSource.getParams()
+      }
+    }));
   }
 
   /**
@@ -268,14 +272,14 @@ export class GgcWmsLayerComponent
     message = "WMS getFeatureInfo resultaten: "
   ): void {
     this.coreSelectionService.handleFeatureInfoForLayer(
-      this.mapIndex,
+      this.mapIndex(),
       features,
       this.getLayerId()
     );
     this.events.emit(
       new MapComponentEvent(
         MapComponentEventTypes.WMSFEATUREINFO,
-        this.mapIndex,
+        this.mapIndex(),
         message,
         this.layerName,
         features
