@@ -25,6 +25,56 @@ gemaakte build wordt hiermee toegevoegd aan de `package.json` van de afnemende a
 - Voeg in `angular.json` de volgende property toe: `projects.<project-name>.architect.build.options.preserveSymlinks: true`
 - De cache kan in de weg zitten wanneer er meerdere keren een package wordt gebouwd met hetzelfde versienummer. Dit kan je voorkomen door in `projects/<package-naam>/package.json` het versienummer in te vullen.
 
+## Lokale snapshot packages
+
+Je kunt lokale snapshot builds maken en automatisch laten installeren in Angular-projecten binnen de workspace (bijvoorbeeld `~/workspace`):
+
+```bash
+npm run snapshot
+```
+
+Het script:
+
+- toont interactief welke GGC libraries gebouwd kunnen worden
+- selecteert standaard de libraries waarin git-wijzigingen gevonden zijn
+- zet tijdelijk een unieke snapshot-versie op de packages in de vorm `<bestaande-versie>-snapshot.YYYYMMDDHHmmssSSS`
+- zoekt in `~/workspace` naar Angular-projecten die deze `@kadaster/ggc-*` packages al als dependency hebben
+- laat je kiezen in welke doelprojecten de snapshot geïnstalleerd wordt
+- kopieert de gegenereerde `.tgz` bestanden eerst naar `<doelproject>/.snapshots/ggc/`
+- voert daarna `npm install .snapshots/ggc/<bestand>.tgz` uit
+
+In de interactieve modus gebruik je:
+
+- `↑` / `↓` om door de lijst te bewegen
+- `spatie` om een item aan of uit te zetten
+- `a` om alles te selecteren
+- `n` om alles uit te zetten
+- `Enter` om te bevestigen
+
+Alleen specifieke packages snapshotten kan ook:
+
+```bash
+npm run snapshot -- --packages ggc-models,ggc-map
+```
+
+Alleen specifieke doelprojecten in je workspace bijwerken:
+
+```bash
+npm run snapshot -- --targets ggs-pmk-kaarten-van-nl,ggs-pmk-beheer-app
+```
+
+Zonder build/install uit te voeren eerst zien wat er zou gebeuren:
+
+```bash
+npm run snapshot -- --dry-run
+```
+
+Zonder interactieve prompts, met alleen de gewijzigde packages als default-selectie:
+
+```bash
+npm run snapshot -- --no-interactive
+```
+
 ## Linter
 
 De Generieke Geo componenten maken gebruik van ESLint / Prettier. Je kunt je editor instellen dat 'On Save' de linter
