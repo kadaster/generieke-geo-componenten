@@ -101,12 +101,12 @@ describe("ViewerComponent", () => {
   describe("directionalLightOptions", () => {
     it("should set directionalLightOptions if present in input viewerOptions", async () => {
       const cartesian3 = new Cartesian3(0.1, 0.1, 0.1);
-      component.viewerOptions = {
+      fixture.componentRef.setInput("viewerOptions", {
         directionalLightOptions: {
           direction: cartesian3,
           intensity: 10
         }
-      };
+      });
       fixture.detectChanges();
       await Promise.resolve();
       await Promise.resolve();
@@ -119,11 +119,11 @@ describe("ViewerComponent", () => {
     });
 
     it("should set directionalLightOptions with cameraDirection and get direction from camera.directionWC", async () => {
-      component.viewerOptions = {
+      fixture.componentRef.setInput("viewerOptions", {
         directionalLightOptions: {
           direction: "cameraDirection"
         }
-      };
+      });
 
       fixture.detectChanges();
       await Promise.resolve();

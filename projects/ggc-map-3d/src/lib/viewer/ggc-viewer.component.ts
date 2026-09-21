@@ -5,6 +5,7 @@ import {
   EventEmitter,
   HostBinding,
   inject,
+  input,
   Input,
   OnDestroy,
   OnInit,
@@ -116,17 +117,17 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Configuratie voor de viewer, zoals terrain, UI instellingen en animatie.
    */
-  @Input() viewerOptions: ViewerOptions;
+  viewerOptions = input<ViewerOptions>();
 
   /**
    * ARIA rol voor toegankelijkheid (default: "application").
    */
-  @Input() ariaRole = "application";
+  ariaRole = input("application");
 
   /**
    * ARIA label voor toegankelijkheid (default: "viewer").
    */
-  @Input() ariaLabel = "viewer";
+  ariaLabel = input("viewer");
 
   protected cesiumElementId = "CesiumContainerId";
   private readonly tiles3DService = inject(Tiles3dLayerService);
@@ -224,8 +225,9 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.viewerOptions?.elementId) {
-      this.cesiumElementId = this.viewerOptions.elementId;
+    const options = this.viewerOptions();
+    if (options?.elementId) {
+      this.cesiumElementId = options.elementId;
     }
   }
 
@@ -310,9 +312,10 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private async createViewer(): Promise<Viewer> {
     let terrainUrl;
+    const options = this.viewerOptions();
 
-    if (this.viewerOptions?.terrainModelUrl) {
-      terrainUrl = this.viewerOptions.terrainModelUrl;
+    if (options?.terrainModelUrl) {
+      terrainUrl = options.terrainModelUrl;
     } else {
       terrainUrl = undefined;
     }
@@ -331,7 +334,7 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Viewer(this.cesiumElementId, {
       terrainProvider: this.terrainProvider,
       baseLayer: false,
-      animation: this.viewerOptions?.animation ?? false,
+      animation: this.viewerOptions()?.animation ?? false,
       baseLayerPicker: false,
       fullscreenButton: false,
       vrButton: false,
@@ -340,7 +343,7 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       infoBox: false,
       sceneModePicker: false,
       selectionIndicator: false,
-      timeline: this.viewerOptions?.timeline ?? false,
+      timeline: this.viewerOptions()?.timeline ?? false,
       navigationHelpButton: false,
       navigationInstructionsInitiallyVisible: false,
       requestRenderMode: false
@@ -348,8 +351,9 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initLight() {
-    if (this.viewerOptions?.directionalLightOptions) {
-      const { direction, ...rest } = this.viewerOptions.directionalLightOptions;
+    const viewerOptions = this.viewerOptions();
+    if (viewerOptions?.directionalLightOptions) {
+      const { direction, ...rest } = viewerOptions.directionalLightOptions;
 
       const options = {
         direction:
