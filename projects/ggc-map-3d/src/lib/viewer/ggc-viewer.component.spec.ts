@@ -22,7 +22,7 @@ import { CoreCameraService } from "../service/core-camera.service";
 import { GgcViewerService } from "../service/ggc-viewer.service";
 import { CoreSelectionService } from "../service/core-selection.service";
 import { Observable } from "rxjs";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { vi } from "vitest";
 import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 describe("ViewerComponent", () => {
@@ -54,7 +54,7 @@ describe("ViewerComponent", () => {
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
         { provide: CoreCameraService, useValue: cameraSpy },
         { provide: GgcSharedLayerService, useValue: {} },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
 
@@ -89,11 +89,14 @@ describe("ViewerComponent", () => {
   });
 
   it("should call flyTo after cesium is ready when cameraOptions is set before init", async () => {
-    component.cameraOptions = { cameraPosition: { lon: 10, lat: 10 } };
+    fixture.componentRef.setInput("cameraOptions", {
+      cameraPosition: { lon: 10, lat: 10 }
+    });
 
     fixture.detectChanges();
     await Promise.resolve();
     await Promise.resolve();
+    fixture.detectChanges();
 
     expect(cesiumMock.camera!.flyTo).toHaveBeenCalledTimes(1);
   });
@@ -101,12 +104,12 @@ describe("ViewerComponent", () => {
   describe("directionalLightOptions", () => {
     it("should set directionalLightOptions if present in input viewerOptions", async () => {
       const cartesian3 = new Cartesian3(0.1, 0.1, 0.1);
-      component.viewerOptions = {
+      fixture.componentRef.setInput("viewerOptions", {
         directionalLightOptions: {
           direction: cartesian3,
           intensity: 10
         }
-      };
+      });
       fixture.detectChanges();
       await Promise.resolve();
       await Promise.resolve();
@@ -119,11 +122,11 @@ describe("ViewerComponent", () => {
     });
 
     it("should set directionalLightOptions with cameraDirection and get direction from camera.directionWC", async () => {
-      component.viewerOptions = {
+      fixture.componentRef.setInput("viewerOptions", {
         directionalLightOptions: {
           direction: "cameraDirection"
         }
-      };
+      });
 
       fixture.detectChanges();
       await Promise.resolve();
@@ -156,7 +159,8 @@ describe("ViewerComponent", () => {
       const center = viewerService["getCenter"](extent);
       const distance = viewerService["calculateDistance"](extent);
 
-      component.cameraOptions = cameraOptions;
+      fixture.componentRef.setInput("cameraOptions", cameraOptions);
+      fixture.detectChanges();
       expect(cesiumMock.camera!.lookAtTransform).toHaveBeenCalledTimes(2);
       expect(cesiumMock.camera!.lookAtTransform).toHaveBeenCalledWith(
         Transforms.eastNorthUpToFixedFrame(center),
@@ -170,7 +174,8 @@ describe("ViewerComponent", () => {
       } as CameraPosition;
       const flyToOptions = createFlyToOptions(cameraOptions as CameraPosition);
 
-      component.cameraOptions = cameraOptions;
+      fixture.componentRef.setInput("cameraOptions", cameraOptions);
+      fixture.detectChanges();
       expect(cesiumMock.camera!.flyTo).toHaveBeenCalledWith(flyToOptions);
     });
 
@@ -181,9 +186,10 @@ describe("ViewerComponent", () => {
         })
       );
 
-      component.cameraOptions = {
+      fixture.componentRef.setInput("cameraOptions", {
         lookAtPosition: { lon: 10, lat: 10 }
-      } as LookAtPosition;
+      } as LookAtPosition);
+      fixture.detectChanges();
 
       await Promise.resolve();
 
@@ -248,7 +254,7 @@ describe("ViewerComponent", () => {
       });
 
       it("zet displayLogo op none als hideLogo true is", () => {
-        component.hideLogo = true;
+        fixture.componentRef.setInput("hideLogo", true);
         fixture.detectChanges();
 
         const host: HTMLElement = fixture.nativeElement;
@@ -257,7 +263,7 @@ describe("ViewerComponent", () => {
       });
 
       it("zet displayLogo op block als hideLogo false is", () => {
-        component.hideLogo = false;
+        fixture.componentRef.setInput("hideLogo", false);
         fixture.detectChanges();
 
         const host: HTMLElement = fixture.nativeElement;
@@ -266,10 +272,10 @@ describe("ViewerComponent", () => {
       });
 
       it("update CSS variabele wanneer hideLogo verandert", () => {
-        component.hideLogo = false;
+        fixture.componentRef.setInput("hideLogo", false);
         fixture.detectChanges();
 
-        component.hideLogo = true;
+        fixture.componentRef.setInput("hideLogo", true);
         fixture.detectChanges();
 
         const host: HTMLElement = fixture.nativeElement;
