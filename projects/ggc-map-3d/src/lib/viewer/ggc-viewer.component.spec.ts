@@ -22,7 +22,7 @@ import { CoreCameraService } from "../service/core-camera.service";
 import { GgcViewerService } from "../service/ggc-viewer.service";
 import { CoreSelectionService } from "../service/core-selection.service";
 import { Observable } from "rxjs";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { vi } from "vitest";
 import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 describe("ViewerComponent", () => {
@@ -54,7 +54,7 @@ describe("ViewerComponent", () => {
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
         { provide: CoreCameraService, useValue: cameraSpy },
         { provide: GgcSharedLayerService, useValue: {} },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
 
