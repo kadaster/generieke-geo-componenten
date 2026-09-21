@@ -19,7 +19,7 @@ import VectorTileSource, {
 } from "ol/source/VectorTile";
 import TileGrid from "ol/tilegrid/TileGrid";
 
-import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
+import { AbstractClickableLayer } from "../abstract-clickable-layer/abstract-clickable-layer.directive";
 import { VectorTileLayerOptions } from "../model/vector-tile-layer.model";
 import BaseLayer from "ol/layer/Base";
 import { zoomlevelToResolution } from "../../utils/epsg28992";
@@ -61,7 +61,7 @@ import { StyleLike } from "ol/style/Style";
  *   </ggc-vector-tile-layer>
  */
 export class GgcVectorTileLayerComponent
-  extends AbstractClickableLayerComponent<VectorTileLayer>
+  extends AbstractClickableLayer<VectorTileLayer>
   implements OnChanges, OnDestroy, OnInit
 {
   /**

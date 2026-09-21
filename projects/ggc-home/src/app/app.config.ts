@@ -1,7 +1,7 @@
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection
+  provideZonelessChangeDetection
 } from "@angular/core";
 import { provideRouter, withInMemoryScrolling } from "@angular/router";
 import { provideHighlightOptions } from "ngx-highlightjs";
@@ -10,7 +10,8 @@ import { routes } from "./app.routes";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection(),
+    provideZonelessChangeDetection(),
+    //provideZoneChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,

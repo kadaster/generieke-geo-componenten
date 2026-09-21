@@ -110,8 +110,7 @@
     "jsonschema": "^1.5.0",
     "lru-cache": "^11.2.2",
     "rxjs": "^7.8.2",
-    "tslib": "^2.8.1",
-    "zone.js": "^0.16.2"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "22.0.1",

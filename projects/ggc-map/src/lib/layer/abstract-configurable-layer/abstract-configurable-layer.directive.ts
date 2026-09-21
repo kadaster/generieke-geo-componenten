@@ -6,14 +6,14 @@ import {
   Output,
   signal
 } from "@angular/core";
-import { AbstractBaseLayerComponent } from "../abstract-base-layer/abstract-base-layer.component";
+import { AbstractBaseLayer } from "../abstract-base-layer/abstract-base-layer.directive";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
 import { zoomlevelToResolution } from "../../utils/epsg28992";
 import { MapComponentEvent } from "@kadaster/ggc-models";
 
 @Directive()
-export class AbstractConfigurableLayerComponent<T>
-  extends AbstractBaseLayerComponent<any>
+export class AbstractConfigurableLayer<T>
+  extends AbstractBaseLayer<any>
   implements OnInit, OnDestroy
 {
   @Output() events: EventEmitter<MapComponentEvent> =

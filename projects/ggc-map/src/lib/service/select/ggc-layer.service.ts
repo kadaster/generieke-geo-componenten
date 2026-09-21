@@ -29,7 +29,7 @@ import {
   LegendRemovedEvent,
   Webservice2DType
 } from "@kadaster/ggc-models";
-import { AbstractBaseLayerComponent } from "../../layer/abstract-base-layer/abstract-base-layer.component";
+import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
 import Layer from "ol/layer/Layer";
 import { CoreMapService } from "../../map/service/core-map.service";
 
@@ -62,10 +62,8 @@ export class GgcLayerService {
     new Subject();
   private readonly mapConfigurations: Map<string, Webservice[]> = new Map();
 
-  private readonly mapLayerComponents: Map<
-    string,
-    AbstractBaseLayerComponent<any>
-  > = new Map();
+  private readonly mapLayerComponents: Map<string, AbstractBaseLayer<any>> =
+    new Map();
 
   /**
    * Initialiseert de service en luistert naar
@@ -130,7 +128,6 @@ export class GgcLayerService {
    * en voegt hun zichtbare lagen toe aan de kaart.
    */
   loadWebservices(services: Webservice[], mapIndex: string) {
-    console.log("layer service loadWebservices", services, mapIndex);
     this.removeCurrentLayers(mapIndex);
     this.mapConfigurations.set(mapIndex, services);
     for (const service of services) {
@@ -653,7 +650,7 @@ export class GgcLayerService {
   }
 
   private addLayerComponentToMapLayerComponents(
-    layerComponent: AbstractBaseLayerComponent<Layer>,
+    layerComponent: AbstractBaseLayer<Layer>,
     mapIndex: string,
     layerId: string | undefined
   ) {

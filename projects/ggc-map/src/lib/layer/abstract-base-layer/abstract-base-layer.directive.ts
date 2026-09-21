@@ -10,9 +10,7 @@ import { AbstractBaseLayerOptions } from "../model/abstract-layer.model";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 @Directive()
-export class AbstractBaseLayerComponent<T extends Layer>
-  implements OnInit, OnDestroy
-{
+export class AbstractBaseLayer<T extends Layer> implements OnInit, OnDestroy {
   protected mapIndex = signal<string>(DEFAULT_MAPINDEX);
   protected coreMapService = inject(CoreMapService);
   protected coreSelectionService = inject(CoreSelectionService);

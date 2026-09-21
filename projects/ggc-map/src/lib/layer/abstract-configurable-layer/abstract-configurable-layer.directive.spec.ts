@@ -7,16 +7,14 @@ import { ImageStatic, Source } from "ol/source";
 import ImageSource from "ol/source/Image";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import { AbstractConfigurableLayerComponent } from "./abstract-configurable-layer.component";
+import { AbstractConfigurableLayer } from "./abstract-configurable-layer.directive";
 import { ViewStateLayerStateExtent } from "ol/View";
 import { Options } from "ol/source/ImageStatic";
 import { zoomlevelToResolution } from "../../utils/epsg28992";
 import { expect } from "vitest";
 
 @Component({ template: "" })
-class TestLayerComponent extends AbstractConfigurableLayerComponent<
-  Layer<Source, any>
-> {
+class TestLayerComponent extends AbstractConfigurableLayer<Layer<Source, any>> {
   init(): void {
     super.ngOnInit();
   }
@@ -38,7 +36,7 @@ describe("AbstractConfigurableLayerComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AbstractConfigurableLayerComponent, TestLayerComponent],
+      imports: [AbstractConfigurableLayer, TestLayerComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
   });

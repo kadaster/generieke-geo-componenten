@@ -2,7 +2,7 @@ import { Component, model, OnDestroy, OnInit } from "@angular/core";
 import TileLayer from "ol/layer/Tile";
 import WMTS from "ol/source/WMTS";
 import WMTSTileGrid from "ol/tilegrid/WMTS";
-import { AbstractBaseLayerComponent } from "../abstract-base-layer/abstract-base-layer.component";
+import { AbstractBaseLayer } from "../abstract-base-layer/abstract-base-layer.directive";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 /**
@@ -18,7 +18,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   template: ""
 })
 export class GgcLayerBrtAchtergrondkaartComponent
-  extends AbstractBaseLayerComponent<any>
+  extends AbstractBaseLayer<any>
   implements OnInit, OnDestroy
 {
   /**

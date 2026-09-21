@@ -141,7 +141,7 @@ describe("ControlMousePositionComponent", () => {
 
   it("createCoordinateformat() should throw an error when an unknown projection is used", () => {
     component.decimalDigits = 6;
-    component.projection = "EPSG:1234";
+    component.projection() = "EPSG:1234";
     let error = "";
     try {
       component["createCoordinateFormat"]([155000, 463000]);

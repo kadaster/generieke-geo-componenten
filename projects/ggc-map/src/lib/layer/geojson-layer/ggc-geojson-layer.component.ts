@@ -17,7 +17,7 @@ import VectorLayer from "ol/layer/Vector";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import Cluster from "ol/source/Cluster";
 import VectorSource from "ol/source/Vector";
-import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
+import { AbstractClickableLayer } from "../abstract-clickable-layer/abstract-clickable-layer.directive";
 import { GeojsonLayerOptions } from "../model/geojson-layer.model";
 import { CoreOgcApiFeaturesService } from "../service/core-ogc-api-features.service";
 import {
@@ -64,9 +64,7 @@ import Projection from "ol/proj/Projection";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcGeojsonLayerComponent
-  extends AbstractClickableLayerComponent<
-    VectorLayer<VectorSource<Feature<Geometry>>>
-  >
+  extends AbstractClickableLayer<VectorLayer<VectorSource<Feature<Geometry>>>>
   implements OnInit, OnDestroy, OnChanges
 {
   /**

@@ -2,7 +2,7 @@ import { Component, model, OnDestroy, OnInit } from "@angular/core";
 import ImageLayer from "ol/layer/Image";
 import { ImageStatic } from "ol/source";
 import ImageSource from "ol/source/Image";
-import { AbstractConfigurableLayerComponent } from "../abstract-configurable-layer/abstract-configurable-layer.component";
+import { AbstractConfigurableLayer } from "../abstract-configurable-layer/abstract-configurable-layer.directive";
 import { ImageLayerOptions } from "../model/image-layer.model";
 import { Options } from "ol/source/ImageStatic";
 
@@ -28,7 +28,7 @@ import { Options } from "ol/source/ImageStatic";
   template: ""
 })
 export class GgcImageLayerComponent
-  extends AbstractConfigurableLayerComponent<ImageLayer<ImageSource>>
+  extends AbstractConfigurableLayer<ImageLayer<ImageSource>>
   implements OnInit, OnDestroy
 {
   /**

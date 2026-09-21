@@ -8,8 +8,7 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import TileSource from "ol/source/Tile";
 import WMTS from "ol/source/WMTS";
 import { Subscription } from "rxjs";
-
-import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
+import { AbstractClickableLayer } from "../abstract-clickable-layer/abstract-clickable-layer.directive";
 import { Capabilities } from "../model/capabilities.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
@@ -33,7 +32,7 @@ import {
   template: ""
 })
 export class GgcWmtsLayerComponent
-  extends AbstractClickableLayerComponent<TileLayer<TileSource>>
+  extends AbstractClickableLayer<TileLayer<TileSource>>
   implements OnInit, OnDestroy
 {
   /**

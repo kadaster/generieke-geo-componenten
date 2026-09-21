@@ -25,8 +25,6 @@ import { ViewObjectEventTypes } from "ol/View";
 import { Subscription } from "rxjs";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
 import { CoreDrawService } from "../drawing/service/core-draw.service";
-
-import { CoreSelectionService } from "../service/select/core-selection.service";
 import { CoreLoadingService } from "./service/core-loading.service";
 import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
@@ -100,15 +98,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
    * Waarde wordt geclamped binnen CRS‑limieten (0-25).
    * Wanneer minZoomlevel > maxZoomlevel wordt UNSUCCESSFUL event gestuurd.
    */
-
-  /*  @Input()
-    set minZoomlevel(value: number) {
-      this._minZoomlevel = Math.max(
-        0,
-        Math.min(GgcCrsConfigService.MAX_ZOOMLEVEL, value)
-      );
-    }*/
-
   readonly minZoomlevel = input(0, {
     transform: (value: number) => Math.max(0, Math.min(25, value))
   });
@@ -118,13 +107,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
    * Waarde wordt geclamped binnen CRS‑limieten (1-25).
    * Wanneer minZoomlevel > maxZoomlevel wordt UNSUCCESSFUL event gestuurd.
    */
-  /*  @Input()
-    set maxZoomlevel(value: number) {
-      this._maxZoomlevel = Math.max(
-        1,
-        Math.min(GgcCrsConfigService.MAX_ZOOMLEVEL, value)
-      );
-    }*/
   readonly maxZoomlevel = input(14, {
     transform: (value: number) =>
       Math.max(1, Math.min(GgcCrsConfigService.MAX_ZOOMLEVEL, value))
@@ -133,11 +115,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   /**
    * Webservices met lagen die op de kaart geladen moeten worden.
    */
-  /*  @Input()
-    set webServices(webservices: Webservice[]) {
-      this._webServices = webservices;
-      this.loadWebservices();
-    }*/
   readonly webServices = input<Webservice[]>([]);
 
   /**
@@ -159,7 +136,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   private readonly coreMapService = inject(CoreMapService);
   private readonly mapEventsService = inject(CoreMapEventsService);
   private readonly coreLoadingService = inject(CoreLoadingService);
-  private readonly coreSelectionService = inject(CoreSelectionService);
   private readonly coreDrawService = inject(CoreDrawService, {
     optional: true
   });
@@ -173,32 +149,14 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   private readonly OL_RENDERCOMPLETE: MapRenderEventTypes = "rendercomplete";
   private isLoading$: Subscription;
 
-  private _minZoomlevel = 0;
-  private _maxZoomlevel = 14;
-
-  /*  get minZoomlevel(): number {
-    return this._minZoomlevel;
-  }
-
-  get maxZoomlevel(): number {
-    return this._maxZoomlevel;
-  }*/
-
-  private _webServices: Webservice[];
-
   constructor() {
-    console.log("constructor", this._webServices);
     effect(() => {
-      this._minZoomlevel = this.minZoomlevel();
-      this._maxZoomlevel = this.maxZoomlevel();
-    });
-
-    effect(() => {
-      const services = this.webServices();
-
-      if (services?.length) {
+      if (this.webServices()?.length) {
         untracked(() => {
-          this.ggcLayerService.loadWebservices(services, this.mapIndex());
+          this.ggcLayerService.loadWebservices(
+            this.webServices(),
+            this.mapIndex()
+          );
         });
       }
     });
@@ -212,23 +170,21 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
    * - koppelt OL‑events aan GGC‑events
    */
   ngAfterViewInit(): void {
-    console.log("ngAfterViewInit()", this.mapIndex());
-    if (this._minZoomlevel > this._maxZoomlevel) {
+    if (this.minZoomlevel() > this.maxZoomlevel()) {
       this.events.emit(
         new MapComponentEvent(
           MapComponentEventTypes.UNSUCCESSFUL,
           this.mapIndex(),
-          `Kaart kon niet worden geladen omdat de waarde van minZoomLevel (${this._minZoomlevel}) ` +
-            `hoger is dan die van maxZoomLevel (${this._maxZoomlevel}).`
+          `Kaart kon niet worden geladen omdat de waarde van minZoomLevel (${this.minZoomlevel()}) ` +
+            `hoger is dan die van maxZoomLevel (${this.maxZoomlevel()}).`
         )
       );
     } else {
       const map = this.coreMapService.createAndGetMap(
         this.mapIndex(),
-        this._minZoomlevel,
-        this._maxZoomlevel
+        this.minZoomlevel(),
+        this.maxZoomlevel()
       );
-      console.log("naar setTarget", this.mapElement.nativeElement.id);
       map.setTarget(this.mapElement.nativeElement.id);
 
       this.eventsMap.push(
@@ -351,16 +307,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Laadt webservices en hun lagen via de LayerService.
-   */
-  private loadWebservices() {
-    console.log(":loadWebservices()", this.mapIndex(), this._webServices);
-    if (this._webServices) {
-      this.ggcLayerService.loadWebservices(this._webServices, this.mapIndex());
-    }
-  }
-
-  /**
    * Initialiseert de loader‑events van de kaart.
    */
   private initializeLoader(): void {
@@ -370,7 +316,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
         const message = value
           ? `De kaart is aan het laden`
           : `De kaart is klaar met laden`;
-        console.log("initializeLoader()", this.mapIndex(), message);
         this.events.emit(
           new MapComponentEvent(
             MapComponentEventTypes.LOADING,

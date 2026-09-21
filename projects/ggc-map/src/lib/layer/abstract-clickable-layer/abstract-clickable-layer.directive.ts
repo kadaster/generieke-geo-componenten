@@ -1,13 +1,13 @@
 import { Directive, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import { MapBrowserEvent } from "ol";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
-import { AbstractConfigurableLayerComponent } from "../abstract-configurable-layer/abstract-configurable-layer.component";
+import { AbstractConfigurableLayer } from "../abstract-configurable-layer/abstract-configurable-layer.directive";
 import { AbstractClickableLayerOptions } from "../model/abstract-layer.model";
 import { Subscription } from "rxjs";
 
 @Directive()
-export class AbstractClickableLayerComponent<T>
-  extends AbstractConfigurableLayerComponent<any>
+export class AbstractClickableLayer<T>
+  extends AbstractConfigurableLayer<any>
   implements OnInit, OnDestroy
 {
   protected maxFeaturesOnSingleclick = 8;

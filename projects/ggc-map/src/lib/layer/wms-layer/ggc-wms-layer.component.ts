@@ -15,8 +15,7 @@ import ImageWMS, { Options as ImageSourceOptions } from "ol/source/ImageWMS";
 import TileSource from "ol/source/Tile";
 import { Options as TileSourceOptions } from "ol/source/TileWMS";
 import { noop } from "rxjs";
-
-import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
+import { AbstractClickableLayer } from "../abstract-clickable-layer/abstract-clickable-layer.directive";
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
@@ -41,7 +40,7 @@ import {
   template: ""
 })
 export class GgcWmsLayerComponent
-  extends AbstractClickableLayerComponent<
+  extends AbstractClickableLayer<
     ImageLayer<ImageSource> | TileLayer<TileSource>
   >
   implements OnInit, OnDestroy

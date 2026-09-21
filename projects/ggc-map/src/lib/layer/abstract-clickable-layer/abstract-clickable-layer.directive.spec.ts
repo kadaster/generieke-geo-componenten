@@ -3,10 +3,10 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
-import { AbstractClickableLayerComponent } from "./abstract-clickable-layer.component";
+import { AbstractClickableLayer } from "./abstract-clickable-layer.directive";
 
 @Component({ changeDetection: ChangeDetectionStrategy.Eager, template: "" })
-class TestLayerComponent extends AbstractClickableLayerComponent<any> {}
+class TestLayerComponent extends AbstractClickableLayer<any> {}
 
 describe("AbstractClickableLayerComponent", () => {
   let component: TestLayerComponent;

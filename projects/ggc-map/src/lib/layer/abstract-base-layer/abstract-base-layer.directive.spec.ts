@@ -5,13 +5,11 @@ import OlMap from "ol/Map";
 import { Source } from "ol/source";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import { AbstractBaseLayerComponent } from "./abstract-base-layer.component";
+import { AbstractBaseLayer } from "./abstract-base-layer.directive";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 @Component({ template: "" })
-class TestLayerComponent extends AbstractBaseLayerComponent<
-  Layer<Source, any>
-> {
+class TestLayerComponent extends AbstractBaseLayer<Layer<Source, any>> {
   init(): void {
     super.ngOnInit();
   }
@@ -33,7 +31,7 @@ describe("AbstractBaseLayerComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AbstractBaseLayerComponent, TestLayerComponent],
+      imports: [AbstractBaseLayer, TestLayerComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
   });
