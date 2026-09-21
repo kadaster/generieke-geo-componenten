@@ -1,16 +1,16 @@
 import {
   AfterViewInit,
   Component,
+  effect,
   ElementRef,
-  EventEmitter,
   HostBinding,
   inject,
   input,
-  Input,
   OnDestroy,
   OnInit,
-  Output,
-  ViewChild
+  output,
+  signal,
+  viewChild
 } from "@angular/core";
 import {
   Camera,
@@ -96,23 +96,22 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Referentie naar het DOM element waarin de Cesium viewer wordt gerenderd.
    */
-  @ViewChild("cesiumViewer") cesiumViewer!: ElementRef;
+  cesiumViewer = viewChild.required<ElementRef>("cesiumViewer");
 
   /**
    * Event dat wordt geëmit zodra de viewer volledig geïnitialiseerd is.
    */
-  @Output() ready: EventEmitter<null> = new EventEmitter<null>();
+  ready = output<void>();
 
   /**
    * Event dat camerawaarden emit bij veranderingen.
    */
-  @Output() cameraEvent: EventEmitter<CameraValues> =
-    new EventEmitter<CameraValues>();
+  cameraEvent = output<CameraValues>();
 
   /**
    * Event dat wordt geëmit bij een WebGL context fout.
    */
-  @Output() webglErrorEvent: EventEmitter<Event> = new EventEmitter<Event>();
+  webglErrorEvent = output<Event>();
 
   /**
    * Configuratie voor de viewer, zoals terrain, UI instellingen en animatie.
@@ -129,6 +128,33 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   ariaLabel = input("viewer");
 
+  /**
+   * Verbergt het logo indien `true`.
+   */
+  hideLogo = input(false);
+
+  /**
+   * Lijst met webservices die geladen moeten worden.
+   */
+  webServices = input<Webservice[]>();
+
+  /**
+   * Camera configuratie voor het positioneren van de camera.
+   */
+  cameraOptions = input<CameraOptions>();
+
+  /**
+   * Configuraties voor GeoJSON lagen.
+   * Dit is aanvullend naast de opgegeven webServices.
+   */
+  geoJsonConfigs = input<GeoJsonConfig[]>();
+
+  /**
+   * Configuraties voor 3D tilesets.
+   * Dit is aanvullend naast de opgegeven webServices.
+   */
+  tilesetConfigs = input<TilesetConfig[]>();
+
   protected cesiumElementId = "CesiumContainerId";
   private readonly tiles3DService = inject(Tiles3dLayerService);
   private readonly wmtsService = inject(WmtsLayerService);
@@ -141,77 +167,23 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private viewer!: Viewer;
   private terrainProvider: TerrainProvider;
   private camera: Camera | undefined;
-  private lastCameraOptions: CameraOptions | undefined;
   private readonly previousCameraValues = new BehaviorSubject<CameraValues>(
     {} as CameraValues
   );
 
-  private pHideLogo = false;
-  private _webServices: Webservice[];
-  private isInitialized = false;
+  /**
+   * Geeft aan of de viewer volledig geïnitialiseerd is. Wordt gebruikt om
+   * side effects die afhankelijk zijn van de viewer (webservices laden,
+   * camera aansturen) pas uit te voeren nadat de viewer klaar is.
+   */
+  private readonly isInitialized = signal(false);
 
   /**
    * CSS display waarde voor het tonen/verbergen van het logo.
    */
   @HostBinding("style.--displayLogo")
   get displayLogo(): string {
-    return this.pHideLogo ? "none" : "block";
-  }
-
-  /**
-   * Lijst met webservices die geladen moeten worden.
-   *
-   * @param webservices Array van {@link Webservice}
-   */
-  @Input()
-  set webServices(webservices: Webservice[]) {
-    this._webServices = webservices;
-    if (this.isInitialized) {
-      this.loadWebservices();
-    }
-  }
-
-  /**
-   * Verbergt het logo indien `true`.
-   *
-   * @param hideLogo Flag om logo te tonen/verbergen
-   */
-  @Input()
-  set hideLogo(hideLogo: boolean) {
-    this.pHideLogo = hideLogo;
-  }
-
-  /**
-   * Camera configuratie voor het positioneren van de camera.
-   *
-   * @param cameraOptions {@link CameraOptions}
-   */
-  @Input()
-  set cameraOptions(cameraOptions: CameraOptions) {
-    this.lastCameraOptions = cameraOptions;
-    this.flyTo(cameraOptions);
-  }
-
-  /**
-   * Configuraties voor GeoJSON lagen.
-   * Dit is aanvullend naast de opgegeven webServices.
-   *
-   * @param geojsonConfigs Array van {@link GeoJsonConfig}
-   */
-  @Input()
-  set geoJsonConfigs(geojsonConfigs: GeoJsonConfig[]) {
-    this.geoJsonLayerService.setConfigs(geojsonConfigs);
-  }
-
-  /**
-   * Configuraties voor 3D tilesets.
-   * Dit is aanvullend naast de opgegeven webServices.
-   *
-   * @param tilesetConfigs Array van {@link TilesetConfig}
-   */
-  @Input()
-  set tilesetConfigs(tilesetConfigs: TilesetConfig[]) {
-    this.tiles3DService.setConfigs(tilesetConfigs);
+    return this.hideLogo() ? "none" : "block";
   }
 
   constructor() {
@@ -221,6 +193,38 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.coreViewerService.getViewerObservable().subscribe((viewer) => {
       this.camera = viewer?.camera;
+    });
+
+    // Webservices pas laden zodra de viewer geïnitialiseerd is, en opnieuw
+    // laden bij elke wijziging van de input.
+    effect(() => {
+      const webServices = this.webServices();
+      if (this.isInitialized() && webServices) {
+        this.ggcSharedLayerService.loadWebservices(webServices);
+      }
+    });
+
+    // Camera pas aansturen zodra de viewer geïnitialiseerd is, en opnieuw
+    // bij elke wijziging van de input.
+    effect(() => {
+      const cameraOptions = this.cameraOptions();
+      if (this.isInitialized() && cameraOptions) {
+        this.flyTo(cameraOptions);
+      }
+    });
+
+    effect(() => {
+      const geoJsonConfigs = this.geoJsonConfigs();
+      if (geoJsonConfigs) {
+        this.geoJsonLayerService.setConfigs(geoJsonConfigs);
+      }
+    });
+
+    effect(() => {
+      const tilesetConfigs = this.tilesetConfigs();
+      if (tilesetConfigs) {
+        this.tiles3DService.setConfigs(tilesetConfigs);
+      }
     });
   }
 
@@ -234,10 +238,10 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.initViewer().then(() => {
       this.init();
-      this.flyTo(this.lastCameraOptions);
       this.setCameraLogger();
-      this.loadWebservices();
-      this.isInitialized = true;
+      // Triggert de webServices/cameraOptions effects met de huidige
+      // input-waarden, nu de viewer klaar is.
+      this.isInitialized.set(true);
     });
   }
 
@@ -247,12 +251,6 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.geoJsonLayerService.destroyLayers();
     this.coreViewerService.setViewer(undefined);
     this.coreSelectionService.destroyAllSelections();
-  }
-
-  private loadWebservices() {
-    if (this._webServices) {
-      this.ggcSharedLayerService.loadWebservices(this._webServices);
-    }
   }
 
   private setCameraLogger() {
@@ -435,7 +433,7 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
    * Zet de focus op het viewer element.
    */
   getFocus() {
-    this.cesiumViewer.nativeElement.focus();
+    this.cesiumViewer().nativeElement.focus();
   }
 
   /**
