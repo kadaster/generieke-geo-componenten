@@ -8,7 +8,7 @@ import {
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import Feature from "ol/Feature";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("FeatureInfoComponent, no testbed", () => {
   let component: GgcFeatureInfoComponent;
@@ -28,7 +28,7 @@ describe("FeatureInfoComponent, no testbed", () => {
           provide: GgcFeatureInfoConfigService,
           useValue: featureInfoConfigSpy
         },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
     fixture = TestBed.createComponent(GgcFeatureInfoComponent);

@@ -8,7 +8,7 @@ import {
 } from "../../event/toolbar-item-measure-event";
 
 import { GgcToolbarItemMeasureComponent } from "./ggc-toolbar-item-measure.component";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { GgcDrawService } from "@kadaster/ggc-map/src/lib/drawing/service/ggc-draw.service";
 import { GgcToolbarConnectService } from "../../service/connect.service";
 
@@ -42,7 +42,7 @@ describe("ToolbarItemMeasureComponent", () => {
           provide: GgcToolbarConnectService,
           useValue: connectServiceSpy
         },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
 
