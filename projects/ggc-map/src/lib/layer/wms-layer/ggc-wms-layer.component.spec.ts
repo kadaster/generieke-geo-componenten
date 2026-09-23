@@ -49,15 +49,9 @@ describe("WmsLayerComponent", () => {
       getCapabilitiesForUrl: vi
         .fn()
         .mockName("CapabilitiesService.getCapabilitiesForUrl"),
-      hasFeatureInfoUrl: vi
+      getWmtsFeatureInfo: vi
         .fn()
-        .mockName("CapabilitiesService.hasFeatureInfoUrl"),
-      optionsFromCapabilities: vi
-        .fn()
-        .mockName("CapabilitiesService.optionsFromCapabilities"),
-      createGetFeatureInfoUrlObservable: vi
-        .fn()
-        .mockName("CapabilitiesService.createGetFeatureInfoUrlObservable")
+        .mockName("CapabilitiesService.getWmtsFeatureInfo")
     };
     capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
     TestBed.configureTestingModule({

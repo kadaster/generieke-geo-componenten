@@ -8,26 +8,19 @@ import {
   CapabilitiesServiceLayerStyle
 } from "./ggc-capabilities.service";
 
+/**
+ * Interne mapper-service voor WMS/WMTS capabilities.
+ * Vertaalt de ruwe capabilities (afkomstig van `CoreWmsWmtsCapabilitiesService`)
+ * naar het publieke `ServiceCapabilities`-model. Bevat dus geen HTTP-logica,
+ * maar puur WMS/WMTS-specifieke mapping-/extractielogica.
+ */
 @Injectable({
   providedIn: "root"
 })
-export class GgcWmsWmtsCapabilitiesService {
+export class CoreWmsWmtsCapabilitiesMapperService {
   private readonly coreCapabilitiesService = inject(
     CoreWmsWmtsCapabilitiesService
   );
-
-  /*
-   * Haalt de capabilities op voor een gegeven URL en service type.
-   * @param baseUrl - De URL van de capabilities endpoint.
-   * @param service - Het type service: `"WMTS"` of `"WMS"`.
-   * @returns Observable met de capabilities data.
-   */
-  getCapabilities(
-    baseUrl: string,
-    service: "WMTS" | "WMS"
-  ): Observable<Record<string, any> | undefined> {
-    return this.coreCapabilitiesService.getCapabilitiesForUrl(baseUrl, service);
-  }
 
   /*
    * Haalt de WMS capabilities op voor een gegeven URL en vertaald deze naar
@@ -38,14 +31,16 @@ export class GgcWmsWmtsCapabilitiesService {
   getServiceCapabilitiesWMS(
     baseUrl: string
   ): Observable<ServiceCapabilities | undefined> {
-    return this.getCapabilities(baseUrl, "WMS").pipe(
-      map((capabilities) => {
-        if (!capabilities) {
-          return undefined;
-        }
-        return this.extractServiceCapabilitiesWMS(capabilities);
-      })
-    );
+    return this.coreCapabilitiesService
+      .getCapabilitiesForUrl(baseUrl, "WMS")
+      .pipe(
+        map((capabilities) => {
+          if (!capabilities) {
+            return undefined;
+          }
+          return this.extractServiceCapabilitiesWMS(capabilities);
+        })
+      );
   }
 
   /*
@@ -117,14 +112,16 @@ export class GgcWmsWmtsCapabilitiesService {
   getServiceCapabilitiesWMTS(
     baseUrl: string
   ): Observable<ServiceCapabilities | undefined> {
-    return this.getCapabilities(baseUrl, "WMTS").pipe(
-      map((capabilities) => {
-        if (!capabilities) {
-          return undefined;
-        }
-        return this.extractServiceCapabilitiesWMTS(capabilities);
-      })
-    );
+    return this.coreCapabilitiesService
+      .getCapabilitiesForUrl(baseUrl, "WMTS")
+      .pipe(
+        map((capabilities) => {
+          if (!capabilities) {
+            return undefined;
+          }
+          return this.extractServiceCapabilitiesWMTS(capabilities);
+        })
+      );
   }
 
   /*

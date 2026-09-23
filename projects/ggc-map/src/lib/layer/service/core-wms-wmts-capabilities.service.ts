@@ -3,15 +3,17 @@ import { inject, Injectable } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import { Extent } from "ol/extent";
 import { WMSCapabilities, WMTSCapabilities } from "ol/format";
-import WMTS, { Options, optionsFromCapabilities } from "ol/source/WMTS";
+import WMTS from "ol/source/WMTS";
 import { TileCoord } from "ol/tilecoord";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 import { Capabilities } from "../model/capabilities.model";
 
 /**
- * Service voor het ophalen en verwerken van WMS/WMTS capabilities.
- * Ondersteunt caching van capabilities per URL en het genereren van GetFeatureInfo requests.
+ * Interne low-level service voor het ophalen van ruwe WMS/WMTS capabilities.
+ * Verantwoordelijk voor de HTTP-aanroepen, caching per URL en het bouwen van
+ * WMTS GetFeatureInfo requests. Kent alleen de ruwe OpenLayers-capabilities,
+ * niet het publieke `ServiceCapabilities`-model (zie daarvoor `CoreWmsWmtsCapabilitiesMapperService`).
  */
 @Injectable({
   providedIn: "root"
@@ -70,31 +72,7 @@ export class CoreWmsWmtsCapabilitiesService {
   }
 
   /**
-   * Genereert WMTS opties uit capabilities en configuratie.
-   *
-   * @param wmtsCapabilities - De capabilities zoals gelezen met WMTSCapabilities.
-   * @param config - Configuratie voor de laag.
-   * @returns Options object voor WMTS.
-   */
-  optionsFromCapabilities(
-    wmtsCapabilities: unknown,
-    config: unknown
-  ): Options | null {
-    return optionsFromCapabilities(wmtsCapabilities, config);
-  }
-
-  /**
-   * Controleert of de capabilities een GetFeatureInfo URL bevatten.
-   *
-   * @param capabilities - De capabilities.
-   * @returns `true` als een GetFeatureInfo URL beschikbaar is.
-   */
-  hasFeatureInfoUrl(capabilities: Capabilities): boolean {
-    return !!capabilities.getFeatureInfoUrl();
-  }
-
-  /**
-   * Maakt een observable voor een GetFeatureInfo request.
+   * Maakt een observable voor een WMTS GetFeatureInfo request.
    *
    * @param baseUrl - De URL van de WMTS service.
    * @param source - De WMTS bron.
@@ -102,7 +80,7 @@ export class CoreWmsWmtsCapabilitiesService {
    * @param resolution - De resolutie van de kaart.
    * @returns Observable met de response van de GetFeatureInfo request.
    */
-  createGetFeatureInfoUrlObservable(
+  getWmtsFeatureInfo(
     baseUrl: string,
     source: WMTS,
     coordinate: Coordinate,

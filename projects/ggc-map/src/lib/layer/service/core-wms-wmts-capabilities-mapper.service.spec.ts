@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
-import { of, throwError } from "rxjs";
-import { GgcWmsWmtsCapabilitiesService } from "./ggc-wms-wmts-capabilities.service";
+import { of } from "rxjs";
+import { CoreWmsWmtsCapabilitiesMapperService } from "./core-wms-wmts-capabilities-mapper.service";
 import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { ServiceCapabilities } from "./ggc-capabilities.service";
 import { provideZoneChangeDetection } from "@angular/core";
@@ -135,14 +135,14 @@ class CoreCapabilitiesServiceMock {
   getCapabilitiesForUrl = vi.fn();
 }
 
-describe("GgcWmsWmtsCapabilitiesService", () => {
-  let service: GgcWmsWmtsCapabilitiesService;
+describe("CoreWmsWmtsCapabilitiesMapperService", () => {
+  let service: CoreWmsWmtsCapabilitiesMapperService;
   let coreMock: CoreCapabilitiesServiceMock;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        GgcWmsWmtsCapabilitiesService,
+        CoreWmsWmtsCapabilitiesMapperService,
         {
           provide: CoreWmsWmtsCapabilitiesService,
           useClass: CoreCapabilitiesServiceMock
@@ -150,42 +150,10 @@ describe("GgcWmsWmtsCapabilitiesService", () => {
         provideZoneChangeDetection()
       ]
     });
-    service = TestBed.inject(GgcWmsWmtsCapabilitiesService);
+    service = TestBed.inject(CoreWmsWmtsCapabilitiesMapperService);
     coreMock = TestBed.inject(
       CoreWmsWmtsCapabilitiesService
     ) as unknown as CoreCapabilitiesServiceMock;
-  });
-
-  describe("getCapabilities", () => {
-    it("should call the core service with the correct args", async () => {
-      const baseUrl = "https://example.com/path";
-      const type = "WMS" as const;
-      const expected = { ok: true };
-
-      coreMock.getCapabilitiesForUrl.mockReturnValue(of(expected));
-
-      service.getCapabilities(baseUrl, type).subscribe((res) => {
-        expect(coreMock.getCapabilitiesForUrl).toHaveBeenCalledWith(
-          baseUrl,
-          type
-        );
-        expect(res).toEqual(expected);
-      });
-    });
-
-    it("will propagate errors of CoreWmsWmtsCapabilitiesService", async () => {
-      const error = new Error("network error");
-      coreMock.getCapabilitiesForUrl.mockReturnValue(throwError(() => error));
-
-      service.getCapabilities("u", "WMTS").subscribe({
-        next: () => {
-          throw new Error("Expected error");
-        },
-        error: (e) => {
-          expect(e).toBe(error);
-        }
-      });
-    });
   });
 
   describe("getCapabilitiesServiceWMS", () => {

@@ -7,13 +7,14 @@ import Tile from "ol/layer/Tile";
 import OlMap from "ol/Map";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import TileSource from "ol/source/Tile";
+import WMTS from "ol/source/WMTS";
 import { of } from "rxjs";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { Capabilities } from "../model/capabilities.model";
-import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
+import { GgcCapabilitiesService } from "../service/ggc-capabilities.service";
 import { GgcWmtsLayerComponent } from "./ggc-wmts-layer.component";
 import {
   DEFAULT_MAPINDEX,
@@ -21,32 +22,83 @@ import {
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
 
+/**
+ * Bouwt een minimale, maar voor `ol`'s `optionsFromCapabilities` volledig
+ * geldige WMTS-capabilities structuur op, zodat de echte `ol`-functie
+ * (die het component rechtstreeks aanroept) een bruikbare `WMTS`-source
+ * kan construeren zonder te crashen.
+ */
+function createWmtsCapabilitiesFixture(
+  layerIdentifier?: string,
+  includeFeatureInfoUrl = false
+): Record<string, any> {
+  return {
+    ...(includeFeatureInfoUrl && {
+      OperationsMetadata: {
+        GetFeatureInfo: {
+          DCP: { HTTP: { Get: [{ href: "https://example.com/wmts" }] } }
+        }
+      }
+    }),
+    Contents: {
+      Layer: [
+        {
+          Identifier: layerIdentifier,
+          TileMatrixSetLink: [{ TileMatrixSet: "EPSG:3857" }],
+          Format: ["image/png"],
+          Style: [{ Identifier: "default", Title: "default", isDefault: true }],
+          ResourceURL: [
+            {
+              resourceType: "tile",
+              format: "image/png",
+              template:
+                "https://example.com/wmts/{TileMatrix}/{TileCol}/{TileRow}.png"
+            }
+          ]
+        }
+      ],
+      TileMatrixSet: [
+        {
+          Identifier: "EPSG:3857",
+          SupportedCRS: "EPSG:3857",
+          TileMatrix: [
+            {
+              Identifier: "0",
+              ScaleDenominator: 559082264.0287178,
+              TopLeftCorner: [-20037508.342789244, 20037508.342789244],
+              TileWidth: 256,
+              TileHeight: 256,
+              MatrixWidth: 1,
+              MatrixHeight: 1
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
 describe("WmtsLayerComponent", () => {
   let component: GgcWmtsLayerComponent;
   let fixture: ComponentFixture<GgcWmtsLayerComponent>;
   let debugElement: DebugElement;
   let resultTileLayer: Tile<TileSource>;
-  let capabilitiesService: MockedObject<CoreWmsWmtsCapabilitiesService>;
+  let capabilitiesService: MockedObject<GgcCapabilitiesService>;
   let coreSelectionServiceSpy: MockedObject<CoreSelectionService>;
   let mapEventsService: CoreMapEventsService;
 
   beforeEach(() => {
     const capSpy = {
-      getCapabilitiesForUrl: vi
+      getCapabilities: vi
         .fn()
-        .mockName("CapabilitiesService.getCapabilitiesForUrl"),
-      hasFeatureInfoUrl: vi
+        .mockName("GgcCapabilitiesService.getCapabilities"),
+      getWmtsFeatureInfo: vi
         .fn()
-        .mockName("CapabilitiesService.hasFeatureInfoUrl"),
-      optionsFromCapabilities: vi
-        .fn()
-        .mockName("CapabilitiesService.optionsFromCapabilities"),
-      createGetFeatureInfoUrlObservable: vi
-        .fn()
-        .mockName("CapabilitiesService.createGetFeatureInfoUrlObservable")
+        .mockName("GgcCapabilitiesService.getWmtsFeatureInfo")
     };
-    capSpy.getCapabilitiesForUrl.mockReturnValue(of({}));
-    capSpy.optionsFromCapabilities.mockReturnValue(of({}));
+    capSpy.getCapabilities.mockReturnValue(
+      of(createWmtsCapabilitiesFixture(undefined))
+    );
     const selectionSpy = {
       handleFeatureInfoForLayer: vi
         .fn()
@@ -62,7 +114,7 @@ describe("WmtsLayerComponent", () => {
         GgcCrsConfigService,
         CoreMapEventsService,
         { provide: CoreSelectionService, useValue: selectionSpy },
-        { provide: CoreWmsWmtsCapabilitiesService, useValue: capSpy }
+        { provide: GgcCapabilitiesService, useValue: capSpy }
       ]
     }).compileComponents();
   });
@@ -75,8 +127,8 @@ describe("WmtsLayerComponent", () => {
     resultTileLayer = new Tile();
     mapEventsService = TestBed.inject(CoreMapEventsService);
     capabilitiesService = TestBed.inject(
-      CoreWmsWmtsCapabilitiesService
-    ) as MockedObject<CoreWmsWmtsCapabilitiesService>;
+      GgcCapabilitiesService
+    ) as MockedObject<GgcCapabilitiesService>;
     coreSelectionServiceSpy = TestBed.inject(
       CoreSelectionService
     ) as MockedObject<CoreSelectionService>;
@@ -107,15 +159,14 @@ describe("WmtsLayerComponent", () => {
         layer: "my-layer"
       }
     };
-
-    capabilitiesService.optionsFromCapabilities.mockImplementation(
-      (_: any, config: any) => {
-        expect(config.layer).toBe("my-layer");
-        return config;
-      }
+    capabilitiesService.getCapabilities.mockReturnValue(
+      of(createWmtsCapabilitiesFixture("my-layer"))
     );
+
     component.ngOnInit();
+
     expect(getMapSpy).toHaveBeenCalled();
+    expect((component["wmtsSource"] as WMTS).getLayer()).toBe("my-layer");
   });
 
   it("when ngOnInit is called, it should subscribe to the capabilities service", () => {
@@ -127,7 +178,7 @@ describe("WmtsLayerComponent", () => {
 
     component.ngOnInit();
 
-    expect(capabilitiesService.getCapabilitiesForUrl).toHaveBeenCalled();
+    expect(capabilitiesService.getCapabilities).toHaveBeenCalled();
     expect(getMapSpy).toHaveBeenCalled();
   });
 
@@ -217,9 +268,7 @@ describe("WmtsLayerComponent", () => {
       "when getFeatureInfo is called and capabilities is undefined, " +
         "an event with an empty array will be emitted",
       () => {
-        capabilitiesService.getCapabilitiesForUrl.mockReturnValue(
-          of(undefined)
-        );
+        capabilitiesService.getCapabilities.mockReturnValue(of(undefined));
         component.ngOnInit();
         component["map"] = mapViewMock;
         const emitFeatureInfoEventSpy = vi.spyOn(
@@ -229,7 +278,7 @@ describe("WmtsLayerComponent", () => {
 
         component.getFeatureInfo(evt);
 
-        expect(capabilitiesService.hasFeatureInfoUrl).not.toHaveBeenCalled();
+        expect(component["capabilities"]).toBeUndefined();
         expect(emitFeatureInfoEventSpy).toHaveBeenCalledWith([], coordinate);
       }
     );
@@ -243,12 +292,10 @@ describe("WmtsLayerComponent", () => {
           component,
           "emitFeatureInfoEvent"
         );
-        capabilitiesService.hasFeatureInfoUrl.mockReturnValue(false);
-        component["capabilities"] = {} as Capabilities;
+        component["capabilities"] = new Capabilities({});
 
         component.getFeatureInfo(evt);
 
-        expect(capabilitiesService.hasFeatureInfoUrl).toHaveBeenCalled();
         expect(emitFeatureInfoEventSpy).toHaveBeenCalledWith([], coordinate);
       }
     );
@@ -262,7 +309,6 @@ describe("WmtsLayerComponent", () => {
           component,
           "emitFeatureInfoEvent"
         );
-        capabilitiesService.hasFeatureInfoUrl.mockReturnValue(true);
         // simulate feature data
         const featureData = {
           type: "Feature",
@@ -275,10 +321,14 @@ describe("WmtsLayerComponent", () => {
             tekst: "2"
           }
         };
-        capabilitiesService.createGetFeatureInfoUrlObservable.mockReturnValue(
-          of(featureData)
-        );
-        component["capabilities"] = {} as Capabilities;
+        capabilitiesService.getWmtsFeatureInfo.mockReturnValue(of(featureData));
+        component["capabilities"] = new Capabilities({
+          OperationsMetadata: {
+            GetFeatureInfo: {
+              DCP: { HTTP: { Get: [{ href: "https://example.com/wmts" }] } }
+            }
+          }
+        });
 
         // subscribe to check result
         component.events.subscribe((result: MapComponentEvent) => {
@@ -295,10 +345,7 @@ describe("WmtsLayerComponent", () => {
 
         component.getFeatureInfo(evt);
 
-        expect(capabilitiesService.hasFeatureInfoUrl).toHaveBeenCalled();
-        expect(
-          capabilitiesService.createGetFeatureInfoUrlObservable
-        ).toHaveBeenCalled();
+        expect(capabilitiesService.getWmtsFeatureInfo).toHaveBeenCalled();
       }
     );
 

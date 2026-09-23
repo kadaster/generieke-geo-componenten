@@ -14,7 +14,6 @@ import WMTSTileGrid from "ol/tilegrid/WMTS";
 import { noop, of } from "rxjs";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import { Capabilities } from "../model/capabilities.model";
 import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { provideZoneChangeDetection } from "@angular/core";
 
@@ -52,29 +51,6 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
 
   it("should be created", () => {
     expect(capabilitiesService).toBeTruthy();
-  });
-
-  it("hasFeatureInfoUrl when url is present, it should return true", () => {
-    const cap = {
-      OperationsMetadata: {
-        GetFeatureInfo: { DCP: { HTTP: { Get: [{ href: "abcd" }] } } }
-      }
-    };
-    const capabilities = new Capabilities(cap);
-
-    const hasFeatureInfoUrl =
-      capabilitiesService.hasFeatureInfoUrl(capabilities);
-
-    expect(hasFeatureInfoUrl).toBe(true);
-  });
-
-  it("hasFeatureInfoUrl when url is not present, it should return false", () => {
-    const capabilities = new Capabilities({});
-
-    const hasFeatureInfoUrl =
-      capabilitiesService.hasFeatureInfoUrl(capabilities);
-
-    expect(hasFeatureInfoUrl).toBe(false);
   });
 
   describe("getCapabilitiesForUrl", () => {
@@ -152,12 +128,12 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
     );
   });
 
-  it("createGetFeatureInfoUrlObservable it should call constructGetFeatureInfoParams and return an observable", () => {
+  it("getWmtsFeatureInfo it should call constructGetFeatureInfoParams and return an observable", () => {
     const capabilitiesMapSpy = vi
       .spyOn(capabilitiesService as any, "constructGetFeatureInfoParams")
       .mockReturnValue({});
     const observable = capabilitiesService
-      .createGetFeatureInfoUrlObservable("https://url.test/", {} as WMTS, [], 2)
+      .getWmtsFeatureInfo("https://url.test/", {} as WMTS, [], 2)
       .subscribe(noop);
     const request = httpTestingController.expectOne("https://url.test/");
 
