@@ -32,7 +32,6 @@ export class GgcLayerBrtAchtergrondkaartComponent
    */
   ngOnInit() {
     super.ngOnInit();
-    console.log("achtergrondje");
     const brtsource = new WMTS({
       projection: this.rdNewConfig.projectionCode,
       layer: "standaard",
