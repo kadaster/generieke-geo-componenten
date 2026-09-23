@@ -195,12 +195,10 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
       );
       // event on the view of this map.
       const view = map.getView();
-      console.log("view", view);
       this.eventsMap.push(
         view.on(this.OL_CHANGE_RESOLUTION, this.processEvent.bind(this))
       );
       view.setZoom(3);
-      console.log("naar initializeLoader()", this.mapIndex());
       this.initializeLoader();
       this.events.emit(
         new MapComponentEvent(

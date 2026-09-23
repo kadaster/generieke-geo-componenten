@@ -18,6 +18,13 @@ class TestLayerComponent extends AbstractConfigurableLayer<Layer<Source, any>> {
   init(): void {
     super.ngOnInit();
   }
+  setOptions(opts: any): void {
+    this.options.set(opts);
+  }
+
+  getLayerOptions(): any {
+    return this.layerOptions;
+  }
 
   destroy(): void {
     super.ngOnDestroy();
@@ -69,9 +76,9 @@ describe("AbstractConfigurableLayerComponent", () => {
     const layer = new Layer({});
 
     layer.setSource(new ImageStatic({ url: "//" } as Options));
-    component["options"] = {
+    component.setOptions({
       attributions: "Options attributie voor de kaartlaag"
-    };
+    });
     component.ngOnInit();
     component.setTestLayer(layer);
 
@@ -95,7 +102,7 @@ describe("AbstractConfigurableLayerComponent", () => {
     const layer = new Layer({});
 
     layer.setSource(new ImageStatic({ url: "//" } as Options));
-    component["options"] = { layerId: "test-layer-id" };
+    component.setOptions({ layerId: "test-layer-id" });
     component.setTestLayer(layer);
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
@@ -104,7 +111,7 @@ describe("AbstractConfigurableLayerComponent", () => {
 
   it("should set the layer name from options", () => {
     const layerName = "test-layer-name";
-    component["options"] = { layerName };
+    component.setOptions({ layerName });
     component.ngOnInit();
 
     expect(component["layerName"]).toBe(layerName);
@@ -112,16 +119,16 @@ describe("AbstractConfigurableLayerComponent", () => {
 
   it("should set the zIndex from options", () => {
     const zIndex = 6;
-    component["options"] = { zIndex };
+    component.setOptions({ zIndex });
     component.ngOnInit();
 
-    expect(component["layerOptions"].zIndex).toBe(zIndex);
+    expect(component.getLayerOptions().zIndex).toBe(zIndex);
   });
 
   it("layerOptions should not have property zIndex, when zIndex in not provided", () => {
     component.ngOnInit();
 
-    expect(component["layerOptions"]).not.toEqual(
+    expect(component.getLayerOptions()).not.toEqual(
       expect.objectContaining({
         zIndex: undefined,
         url: "",
@@ -133,11 +140,10 @@ describe("AbstractConfigurableLayerComponent", () => {
   describe("min/maxZoomLevel", () => {
     it("should set maxResolution based on minZoomLevel when maxResolution is not provided", () => {
       const minZoomLevel = 5;
-      component["options"] = { minZoomLevel };
+      component.setOptions({ minZoomLevel });
 
       component.ngOnInit();
-
-      expect(component["layerOptions"].maxResolution).toBe(
+      expect(component.getLayerOptions().maxResolution).toBe(
         zoomlevelToResolution(minZoomLevel)
       );
     });
@@ -146,20 +152,20 @@ describe("AbstractConfigurableLayerComponent", () => {
       const minZoomLevel = 5;
       const maxResolution = 1234;
 
-      component["options"] = { minZoomLevel, maxResolution };
+      component.setOptions({ minZoomLevel, maxResolution });
 
       component.ngOnInit();
 
-      expect(component["layerOptions"].maxResolution).toBe(maxResolution);
+      expect(component.getLayerOptions().maxResolution).toBe(maxResolution);
     });
 
     it("should set minResolution based on maxZoomlevel when minResolution is not provided", () => {
       const maxZoomLevel = 10;
-      component["options"] = { maxZoomLevel: maxZoomLevel };
+      component.setOptions({ maxZoomLevel: maxZoomLevel });
 
       component.ngOnInit();
 
-      expect(component["layerOptions"].minResolution).toBe(
+      expect(component.getLayerOptions().minResolution).toBe(
         zoomlevelToResolution(maxZoomLevel)
       );
     });
@@ -167,12 +173,9 @@ describe("AbstractConfigurableLayerComponent", () => {
     it("should NOT override minResolution when both maxZoomlevel and minResolution are provided", () => {
       const maxZoomLevel = 10;
       const minResolution = 4321;
-
-      component["options"] = { maxZoomLevel, minResolution };
-
+      component.setOptions({ maxZoomLevel: maxZoomLevel, minResolution });
       component.ngOnInit();
-
-      expect(component["layerOptions"].minResolution).toBe(minResolution);
+      expect(component.getLayerOptions().minResolution).toBe(minResolution);
     });
   });
 });

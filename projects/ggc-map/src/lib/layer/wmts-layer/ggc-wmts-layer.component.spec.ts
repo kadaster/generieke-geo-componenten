@@ -102,11 +102,11 @@ describe("WmtsLayerComponent", () => {
       .spyOn(coreMapService, "getMap")
       .mockReturnValue(addTileLayerMock);
 
-    component.options = {
+    component.options.set({
       sourceOptions: {
         layer: "my-layer"
       }
-    };
+    });
 
     capabilitiesService.optionsFromCapabilities.mockImplementation(
       (_: any, config: any) => {
@@ -144,9 +144,9 @@ describe("WmtsLayerComponent", () => {
         .spyOn(mapEventsService, "getSingleclickObservableForMap")
         .mockReturnValue(of());
 
-      component.options = {
+      component.options.set({
         getFeatureInfoOnSingleclick: true
-      };
+      });
       component.ngOnInit();
       vi.spyOn(component["singleclick"], "unsubscribe");
       component.ngOnDestroy();
@@ -166,11 +166,11 @@ describe("WmtsLayerComponent", () => {
       .spyOn(coreMapService, "getMap")
       .mockReturnValue(addTileLayerMock);
 
-    component.options = {
+    component.options.set({
       layerOptions: {
         opacity: 0.8
       }
-    };
+    });
     component.ngOnInit();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -199,11 +199,11 @@ describe("WmtsLayerComponent", () => {
         "an event with an empty array will be emitted",
       () => {
         component["map"] = mapViewMock;
-        component.options = {
+        component.options.set({
           layerOptions: {
             minResolution: 20
           }
-        };
+        });
         const emitFeatureInfoEventSpy = vi.spyOn(
           component,
           "emitFeatureInfoEvent"
@@ -308,7 +308,7 @@ describe("WmtsLayerComponent", () => {
         "getSingleclickObservableForMap"
       );
 
-      component["options"] = { getFeatureInfoOnSingleclick: true };
+      component["options"].set({ getFeatureInfoOnSingleclick: true });
       component.ngOnInit();
 
       expect(mapEventsServicespy).toHaveBeenCalled();
@@ -321,7 +321,7 @@ describe("WmtsLayerComponent", () => {
         "getSingleclickObservableForMap"
       );
 
-      component["options"] = { getFeatureInfoOnSingleclick: true };
+      component["options"].set({ getFeatureInfoOnSingleclick: true });
       component.ngOnInit();
 
       expect(mapEventsServicespy).toHaveBeenCalled();
@@ -329,16 +329,16 @@ describe("WmtsLayerComponent", () => {
     });
 
     it("when options.maxFeaturesOnSingleclick is set, maxFeaturesOnSingleclick should be set on component", () => {
-      component["options"] = { maxFeaturesOnSingleclick: 15 };
+      component["options"].set({ maxFeaturesOnSingleclick: 15 });
       component.ngOnInit();
 
       expect(component["maxFeaturesOnSingleclick"]).toBe(15);
     });
 
     it("when emitFeatureInfoEvent is called it should emit an event and call CoreSelectionService", () => {
-      component.options = {
+      component.options.set({
         layerName: "test-layer"
-      };
+      });
       component.ngOnInit();
       component.events.subscribe((result: MapComponentEvent) => {
         expect(result.type).toEqual(MapComponentEventTypes.WMTSFEATUREINFO);

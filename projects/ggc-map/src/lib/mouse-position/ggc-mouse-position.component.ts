@@ -6,7 +6,8 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
-  input
+  input,
+  effect
 } from "@angular/core";
 import MousePosition, {
   Options as MousePositionOptions
@@ -56,6 +57,11 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   /** Doelprojectie waarin de coördinaten worden getoond.
    * Er kan een alternatieve projectie worden opgegeven, hiervoor dien je deze projectie en RD-new te registreren met proj4. */
   projection = input(epsg28992);
+
+  /** Coördinaatformaat
+   * Standaard is dit RD: x = {x} m; y = {y} m, waarbij {x} en {y} worden vervangen met de coördinaten.
+   * Naast een string accepteert format ook een callback functie ((coordinate:Coordinate) => string).
+   * */
   format = input<string | CoordinateFormat>("RD: x = {x} m; y = {y} m");
 
   private readonly coreMapService = inject(CoreMapService);
@@ -71,16 +77,11 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   @ViewChild("ggcMousePosition", { static: true })
   private readonly ggcMousePosition: ElementRef;
 
-  private _format: string | CoordinateFormat = "RD: x = {x} m; y = {y} m";
-
-  /** Geeft het huidige ingestelde coördinaatformaat terug
-   * Standaard is dit RD: x = {x} m; y = {y} m, waarbij {x} en {y} worden vervangen met de coördinaten.
-   * Naast een string accepteert format ook een callback functie ((coordinate:Coordinate) => string).
-   * */
-  /*get format(): string | CoordinateFormat {
-    return this._format;
-  }*/
-
+  constructor() {
+    effect(() => {
+      this.mode = typeof this.format() === "string" ? "string" : "callback";
+    });
+  }
   /** Initialiseert de MousePosition control en voegt deze toe aan de kaart */
   ngOnInit() {
     this.mousePositionControl = new MousePosition(
@@ -140,15 +141,14 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
         coord = transform(coord, epsg28992, this.projection());
       }
     }
-
     if (this.mode === "string") {
       return new CoordinateFormatPipe().transform(
         coord,
         this.decimalDigits(),
-        this._format as string
+        this.format() as string
       );
     } else {
-      return (this._format as CoordinateFormat)(coord);
+      return (this.format() as CoordinateFormat)(coord);
     }
   }
 

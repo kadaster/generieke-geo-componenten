@@ -2,7 +2,6 @@ import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import Control from "ol/control/Control";
 import { toStringHDMS } from "ol/coordinate";
-
 import OlMap from "ol/Map";
 import { register } from "ol/proj/proj4";
 import * as proj4x from "proj4";
@@ -18,6 +17,7 @@ const proj4 = (proj4x as any).default;
 describe("ControlMousePositionComponent", () => {
   let component: GgcMousePositionComponent;
   let fixture: ComponentFixture<GgcMousePositionComponent>;
+
   let debugElement: DebugElement;
   let addedControl: Control | undefined;
   let removedControl: Control | undefined;
@@ -113,25 +113,24 @@ describe("ControlMousePositionComponent", () => {
   it("createCoordinateformat() should return an string based on projection, coordinate, template and decimalDigits in alternate format", () => {
     proj4.defs("EPSG:28992", defs);
     register(proj4);
-
-    component.decimalDigits = 6;
-    component.projection = "EPSG:4326";
-    component.format = "Lat: {y}; Lng: {x}";
+    fixture.componentRef.setInput("decimalDigits", 6);
+    fixture.componentRef.setInput("projection", "EPSG:4326");
+    fixture.componentRef.setInput("format", "Lat: {y}; Lng: {x}");
     const coordinateFormat = component["createCoordinateFormat"]([
       155000, 463000
     ]);
-
     expect(coordinateFormat).toEqual("Lat: 52,155172; Lng: 5,387204");
   });
 
   it("should call the callback function if the provided format is a function", () => {
     proj4.defs("EPSG:28992", defs);
     register(proj4);
-
-    component.decimalDigits = 6;
-    component.projection = "EPSG:4326";
-    component.format = (coord: number[] | undefined) =>
-      toStringHDMS(coord || [0, 0], 2);
+    fixture.componentRef.setInput("decimalDigits", 6);
+    fixture.componentRef.setInput("projection", "EPSG:4326");
+    fixture.componentRef.setInput("format", (coord: number[] | undefined) =>
+      toStringHDMS(coord || [0, 0], 2)
+    );
+    fixture.detectChanges();
     const coordinateFormat = component["createCoordinateFormat"]([
       155000, 463000
     ]);
@@ -140,8 +139,8 @@ describe("ControlMousePositionComponent", () => {
   });
 
   it("createCoordinateformat() should throw an error when an unknown projection is used", () => {
-    component.decimalDigits = 6;
-    component.projection() = "EPSG:1234";
+    fixture.componentRef.setInput("decimalDigits", 6);
+    fixture.componentRef.setInput("projection", "EPSG:1234");
     let error = "";
     try {
       component["createCoordinateFormat"]([155000, 463000]);

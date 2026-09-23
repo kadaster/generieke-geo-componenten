@@ -7,7 +7,7 @@ import { FitOptions } from "ol/View";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "./core-map.service";
 import { GgcMapService } from "./ggc-map.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 describe("MapService", () => {
@@ -19,7 +19,7 @@ describe("MapService", () => {
         GgcMapService,
         CoreMapService,
         GgcCrsConfigService,
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
 

@@ -2,7 +2,6 @@ import type { Mocked, MockedObject } from "vitest";
 import { HttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { filter } from "rxjs/operators";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
 import { CoreSelectionService } from "../service/select/core-selection.service";
 import { GgcSelectionService } from "../service/select/ggc-selection.service";
@@ -12,13 +11,13 @@ import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
 import OlMap from "ol/Map";
 import View from "ol/View";
-import { provideZoneChangeDetection } from "@angular/core";
 import {
   DEFAULT_MAPINDEX,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
 import { of } from "rxjs";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("MapComponent, ngAfterViewInit", () => {
   let component: GgcMapComponent;
@@ -60,23 +59,20 @@ describe("MapComponent, ngAfterViewInit", () => {
         CoreSelectionService,
         GgcSelectionService,
         { provide: HttpClient, useValue: httpClientSpy },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
     fixture = TestBed.createComponent(GgcMapComponent);
     component = fixture.componentInstance;
   });
 
+  //LV
   it("Events should be set", async () => {
-    component.events
-      .pipe(
-        filter((event) => event.type === MapComponentEventTypes.MAPINITIALIZED)
-      )
-      .subscribe((mapComponentInitEvent: MapComponentEvent) => {
-        expect(mapComponentInitEvent.type).toBe(
-          MapComponentEventTypes.MAPINITIALIZED
-        );
-      });
+    component.events.subscribe((mapComponentInitEvent: MapComponentEvent) => {
+      expect(mapComponentInitEvent.type).toBe(
+        MapComponentEventTypes.MAPINITIALIZED
+      );
+    });
     fixture.detectChanges();
     expect(mapMock.setTarget).toHaveBeenCalled();
     expect(mapMock.on).toHaveBeenCalledTimes(4);
@@ -105,83 +101,74 @@ describe("MapComponent, ngAfterViewInit", () => {
 
     expect(component["eventsMap"].length).toEqual(0);
   });
-  it("minZoomlevel cannot be below 0 and maxZoomlevel cannot be below 1", async () => {
-    component.events
-      .pipe(
-        filter((event) => event.type === MapComponentEventTypes.MAPINITIALIZED)
-      )
-      .subscribe((mapComponentInitEvent: MapComponentEvent) => {
-        expect(coreMapService.createAndGetMap).toHaveBeenCalledWith(
-          DEFAULT_MAPINDEX,
-          0,
-          1
-        );
-        expect(mapComponentInitEvent.type).toBe(
-          MapComponentEventTypes.MAPINITIALIZED
-        );
-      });
-
-    component.minZoomlevel = -1;
-    component.maxZoomlevel = 0;
+  it("minZoomlevel cannot be below 0 and maxZoomlevel cannot be below 1", () => {
+    fixture.componentRef.setInput("minZoomlevel", -1);
+    fixture.componentRef.setInput("maxZoomlevel", 0);
     fixture.detectChanges();
+    expect(coreMapService.createAndGetMap).toHaveBeenCalledWith(
+      DEFAULT_MAPINDEX,
+      0,
+      1
+    );
   });
 
-  it("minZoomlevel and maxZoomlevel cannot above than 25", async () => {
-    component.events
+  it("minZoomlevel and maxZoomlevel cannot be higher than 25", () => {
+    /*    component.events
       .pipe(
         filter((event) => event.type === MapComponentEventTypes.MAPINITIALIZED)
       )
       .subscribe((mapComponentInitEvent: MapComponentEvent) => {
-        expect(coreMapService.createAndGetMap).toHaveBeenCalledWith(
-          DEFAULT_MAPINDEX,
-          25,
-          25
-        );
+
         expect(mapComponentInitEvent.type).toBe(
           MapComponentEventTypes.MAPINITIALIZED
         );
-      });
+      });*/
 
-    component.minZoomlevel = 26;
-    component.maxZoomlevel = 26;
+    fixture.componentRef.setInput("minZoomlevel", 26);
+    fixture.componentRef.setInput("maxZoomlevel", 26);
     fixture.detectChanges();
+    expect(coreMapService.createAndGetMap).toHaveBeenCalledWith(
+      DEFAULT_MAPINDEX,
+      25,
+      25
+    );
   });
 
   it("maxZoomlevel must be set within valid range", () => {
     // valid zoomlevel
-    component.maxZoomlevel = 5;
-    expect(component.maxZoomlevel).toBe(5);
+    fixture.componentRef.setInput("maxZoomlevel", 5);
+    expect(component.maxZoomlevel()).toBe(5);
     // minimum zoomlevel = 1
-    component.maxZoomlevel = 0;
-    expect(component.maxZoomlevel).toBe(1);
-    component.maxZoomlevel = 1;
-    expect(component.maxZoomlevel).toBe(1);
+    fixture.componentRef.setInput("maxZoomlevel", 0);
+    expect(component.maxZoomlevel()).toBe(1);
+    fixture.componentRef.setInput("maxZoomlevel", 1);
+    expect(component.maxZoomlevel()).toBe(1);
     // maximum zoomlevel = 25
-    component.maxZoomlevel = 25;
-    expect(component.maxZoomlevel).toBe(25);
-    component.maxZoomlevel = 26;
-    expect(component.maxZoomlevel).toBe(25);
+    fixture.componentRef.setInput("maxZoomlevel", 25);
+    expect(component.maxZoomlevel()).toBe(25);
+    fixture.componentRef.setInput("maxZoomlevel", 26);
+    expect(component.maxZoomlevel()).toBe(25);
   });
 
   it("minZoomlevel must be set within valid range", () => {
     // valid zoomlevel
-    component.minZoomlevel = 5;
-    expect(component.minZoomlevel).toBe(5);
+    fixture.componentRef.setInput("minZoomlevel", 5);
+    expect(component.minZoomlevel()).toBe(5);
     // minimum zoomlevel = 0
-    component.minZoomlevel = 0;
-    expect(component.minZoomlevel).toBe(0);
-    component.minZoomlevel = -1;
-    expect(component.minZoomlevel).toBe(0);
+    fixture.componentRef.setInput("minZoomlevel", 0);
+    expect(component.minZoomlevel()).toBe(0);
+    fixture.componentRef.setInput("minZoomlevel", -1);
+    expect(component.minZoomlevel()).toBe(0);
     // maximum zoomlevel = 25
-    component.minZoomlevel = 25;
-    expect(component.minZoomlevel).toBe(25);
-    component.minZoomlevel = 26;
-    expect(component.minZoomlevel).toBe(25);
+    fixture.componentRef.setInput("minZoomlevel", 25);
+    expect(component.minZoomlevel()).toBe(25);
+    fixture.componentRef.setInput("minZoomlevel", 26);
+    expect(component.minZoomlevel()).toBe(25);
   });
 
   it("when minZoomLevel is greater than maxZoomLevel, an event should be thrown informing the user about this", async () => {
-    component.minZoomlevel = 5;
-    component.maxZoomlevel = 2;
+    fixture.componentRef.setInput("minZoomlevel", 5);
+    fixture.componentRef.setInput("maxZoomlevel", 2);
 
     component.events.subscribe(
       (mapComponentUnsuccesfulEvent: MapComponentEvent) => {
@@ -199,8 +186,8 @@ describe("MapComponent, ngAfterViewInit", () => {
   });
 
   it("when a mapTabIndex is provided it should be set on the map", () => {
-    component.mapTabIndex = 0;
-    component.mapIndex = "tabIndexMap";
+    fixture.componentRef.setInput("mapTabIndex", 0);
+    fixture.componentRef.setInput("mapIndex", "tabIndexMap");
 
     fixture.detectChanges();
 
@@ -210,7 +197,7 @@ describe("MapComponent, ngAfterViewInit", () => {
   });
 
   it("when no mapTabIndex is provided it should not be set on the map", () => {
-    component.mapIndex = "noTabIndexMap";
+    fixture.componentRef.setInput("mapIndex", "noTabIndexMap");
     fixture.detectChanges();
 
     const mapElement = fixture.debugElement.query(By.css("#noTabIndexMap"));

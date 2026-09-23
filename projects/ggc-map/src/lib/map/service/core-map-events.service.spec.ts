@@ -2,13 +2,13 @@ import { TestBed } from "@angular/core/testing";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import MapEvent from "ol/MapEvent";
 import { CoreMapEventsService } from "./core-map-events.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("MapEventsService", () => {
   let service: CoreMapEventsService;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CoreMapEventsService, provideZoneChangeDetection()]
+      providers: [CoreMapEventsService, provideZonelessChangeDetection()]
     });
 
     service = TestBed.inject(CoreMapEventsService);

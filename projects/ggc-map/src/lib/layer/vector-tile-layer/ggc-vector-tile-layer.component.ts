@@ -398,8 +398,8 @@ export class GgcVectorTileLayerComponent
       this.loadStyle(this.options()?.style as string);
     } else {
       layer.setStyle(
-        (this.options()!.style as StyleLike) ||
-          (this.options()!.layerOptions!.style as StyleLike)
+        (this.options()?.style as StyleLike) ||
+          (this.options()?.layerOptions?.style as StyleLike)
       );
     }
 

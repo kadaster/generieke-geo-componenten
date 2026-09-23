@@ -1,14 +1,14 @@
 import { TestBed } from "@angular/core/testing";
 import { first } from "rxjs/operators";
 import { CoreLoadingService } from "./core-loading.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("CoreLoadingServiceService", () => {
   let service: CoreLoadingService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()]
+      providers: [provideZonelessChangeDetection()]
     });
     service = TestBed.inject(CoreLoadingService);
   });

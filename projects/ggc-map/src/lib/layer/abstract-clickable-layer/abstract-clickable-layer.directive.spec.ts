@@ -1,7 +1,6 @@
 import type { MockedObject } from "vitest";
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { AbstractClickableLayer } from "./abstract-clickable-layer.directive";
 

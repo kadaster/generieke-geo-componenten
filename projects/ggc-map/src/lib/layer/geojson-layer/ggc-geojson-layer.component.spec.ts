@@ -63,28 +63,6 @@ describe("GeojsonLayerComponent", () => {
     debugElement = fixture.debugElement;
   });
 
-  // const addLayerMock = {
-  //   addLayer(layer) {
-  //     resultLayer = layer as VectorLayer<VectorSource<Feature<Geometry>>>;
-  //   },
-  //   removeLayer(_layer) {
-  //     return;
-  //   }
-  // } as OlMap;
-
-  // const createMapSpy = () => {
-  //   // create ol.Map mock
-  //   const mapSpy = {
-  //     forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel"),
-  //     removeLayer: vi.fn().mockName("ol.Map.removeLayer")
-  //   } as Pick<MockedObject<OlMap>, "forEachFeatureAtPixel" | "removeLayer">;
-  //   mapSpy.forEachFeatureAtPixel;
-  //   mapSpy.removeLayer.mockImplementation((() => {
-  //     /* empty */
-  //   }) as any);
-  //   return mapSpy;
-  // };
-
   const createMapSpy = () =>
     ({
       addLayer: vi.fn().mockImplementation((layer) => {
@@ -106,11 +84,11 @@ describe("GeojsonLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createMapSpy());
 
-    component.options = {
+    component.options.set({
       sourceOptions: {
         attributions: "Een attributie voor de GeoJSON kaartlaag"
       }
-    };
+    });
     component.ngOnInit();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -133,13 +111,13 @@ describe("GeojsonLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createMapSpy());
 
-    component.options = {
+    component.options.set({
       sourceOptions: {},
       sourceClusterOptions: {
         attributions: "Een attributie voor de GeoJSON kaartlaag",
         distance: 10
       }
-    };
+    });
     component.ngOnInit();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -164,11 +142,11 @@ describe("GeojsonLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createMapSpy());
 
-    component.options = {
+    component.options.set({
       sourceOptions: {
         attributions: undefined
       }
-    };
+    });
     component.ngOnInit();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -183,11 +161,11 @@ describe("GeojsonLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createMapSpy());
 
-    component.options = {
+    component.options.set({
       sourceOptions: {
         url: "test-url"
       }
-    };
+    });
     component.ngOnInit();
 
     expect(getMapSpy).toHaveBeenCalled();
@@ -202,7 +180,7 @@ describe("GeojsonLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createMapSpy());
 
-    component.options = {
+    component.options.set({
       layerOptions: {
         style: new Style({
           stroke: new Stroke({
@@ -211,7 +189,7 @@ describe("GeojsonLayerComponent", () => {
           })
         })
       }
-    };
+    });
 
     component.ngOnInit();
 
@@ -229,7 +207,7 @@ describe("GeojsonLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createMapSpy());
 
-    component.options = {
+    component.options.set({
       layerOptions: {
         style: () => {
           return new Style({
@@ -240,7 +218,7 @@ describe("GeojsonLayerComponent", () => {
           });
         }
       }
-    };
+    });
 
     component.ngOnInit();
 
@@ -256,11 +234,11 @@ describe("GeojsonLayerComponent", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
 
-    component.options = {
+    component.options.set({
       layerOptions: {
         minResolution: 100
       }
-    };
+    });
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
@@ -273,11 +251,11 @@ describe("GeojsonLayerComponent", () => {
   it("when maxResolution is supplied to a layer, it should be used as a parameter", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    component.options = {
+    component.options.set({
       layerOptions: {
         maxResolution: 861
       }
-    };
+    });
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
@@ -290,11 +268,11 @@ describe("GeojsonLayerComponent", () => {
   it("when zIndex is supplied to a layer, it should be used as a parameter", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    component.options = {
+    component.options.set({
       layerOptions: {
         zIndex: 123
       }
-    };
+    });
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
@@ -307,11 +285,11 @@ describe("GeojsonLayerComponent", () => {
   it("when clusterDistance is supplied, the layer should have a cluster source and distance should be set", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    component.options = {
+    component.options.set({
       sourceClusterOptions: {
         distance: 40
       }
-    };
+    });
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
@@ -330,7 +308,7 @@ describe("GeojsonLayerComponent", () => {
   it("when layerId is supplied to a layer, it should be used as a property", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
-    component.options = { layerId: "testLayer" };
+    component.options.set({ layerId: "testLayer" });
 
     const getMapSpy = vi
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
@@ -344,7 +322,7 @@ describe("GeojsonLayerComponent", () => {
     "should return a feature to the foundFeatures-array if the maxFeaturesonSingleclick is not yet reached " +
       "when limitFeatures() is called",
     () => {
-      component.options = { maxFeaturesOnSingleclick: 5 };
+      component.options.set({ maxFeaturesOnSingleclick: 5 });
       // Preparing the foundFeatures-array with already 4 features in it.
       component["foundFeatures"] = getFoundFeatures(4);
       component["limitFeatures"](featureData);
@@ -366,7 +344,7 @@ describe("GeojsonLayerComponent", () => {
   );
 
   it("should NOT return a feature to the foundFeatures-array if maxFeaturesonSingleclick is already reached when limitFeatures() is called", () => {
-    component.options = { maxFeaturesOnSingleclick: 14 };
+    component.options.set({ maxFeaturesOnSingleclick: 14 });
     // Preparing the foundFeatures-array with already 14 features in it.
     component["foundFeatures"] = getFoundFeatures(14);
     component["limitFeatures"](featureData);
@@ -411,11 +389,11 @@ describe("GeojsonLayerComponent", () => {
   });
 
   it("should emit an event if getFeatureInfoOnSingleclick is true and the forEachFeaturePixelAt function returns features", async () => {
-    component.options = {
+    component.options.set({
       mapIndex: "test-map",
       layerName: "test-layer",
       getFeatureInfoOnSingleclick: true
-    };
+    });
     component.ngOnInit();
     const mapSpy = createMapSpy();
     component["map"] = mapSpy as unknown as OlMap;
@@ -443,11 +421,11 @@ describe("GeojsonLayerComponent", () => {
   });
 
   it("should pass pixel and hit tolerance to function forEachFeaturePixelAt", () => {
-    component.options = {
+    component.options.set({
       mapIndex: "test-map",
       hitTolerance: 5,
       getFeatureInfoOnSingleclick: true
-    };
+    });
     component.ngOnInit();
     const mapSpy = createMapSpy();
     component["map"] = mapSpy as unknown as OlMap;
@@ -482,10 +460,10 @@ describe("GeojsonLayerComponent", () => {
     it("should change the url and refresh the VectorSource when the url is changed via a SimpleChange", () => {
       getSourceSpy.mockReturnValue(vectorSource);
 
-      component.options = { sourceOptions: { url: "currentUrl" } };
+      component.options.set({ sourceOptions: { url: "currentUrl" } });
       component.ngOnChanges({
         options: new SimpleChange(
-          component.options,
+          component.options(),
           { sourceOptions: { url: "newUrl" } },
           false
         )
@@ -524,10 +502,10 @@ describe("GeojsonLayerComponent", () => {
       });
 
       const features = [new Feature(new Point([194190, 465880]))];
-      component.options = { features };
+      component.options.set({ features });
       component.ngOnChanges({
         options: new SimpleChange(
-          component.options,
+          component.options(),
           { sourceOptions: { features } },
           false
         )
@@ -553,10 +531,10 @@ describe("GeojsonLayerComponent", () => {
       });
 
       const features = [new Feature(new Point([194190, 465880]))];
-      component.options = { features };
+      component.options.set({ features });
       component.ngOnChanges({
         options: new SimpleChange(
-          component.options,
+          component.options(),
           { sourceOptions: { features } },
           false
         )
