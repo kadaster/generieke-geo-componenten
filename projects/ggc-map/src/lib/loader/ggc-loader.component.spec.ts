@@ -32,7 +32,8 @@ describe("LoaderComponent", () => {
     vi.spyOn(mapEventService, "getLoadingObservableForMap").mockReturnValue(
       loadingSubject
     );
-    component.mapIndex = "loading-map";
+    fixture.componentRef.setInput("mapIndex", "loading-map");
+    fixture.detectChanges();
     expect(component["isLoading"]).toBeFalsy();
     loadingSubject.next(true);
     expect(component["isLoading"]).toBeTruthy();
@@ -43,7 +44,8 @@ describe("LoaderComponent", () => {
       loadingSubject
     );
     loadingSubject.next(true);
-    component.mapIndex = "loading-map";
+    fixture.componentRef.setInput("mapIndex", "loading-map");
+    fixture.detectChanges();
     expect(component["isLoading"]).toBeTruthy();
     component.ngOnDestroy();
 
@@ -61,9 +63,11 @@ describe("LoaderComponent", () => {
       }
     );
     loadingSubject.next(true);
-    component.mapIndex = "loading-map";
+    fixture.componentRef.setInput("mapIndex", "loading-map");
+    fixture.detectChanges();
     expect(component["isLoading"]).toBeTruthy();
-    component.mapIndex = "new-map-name";
+    fixture.componentRef.setInput("mapIndex", "new-map-name");
+    fixture.detectChanges();
 
     loadingSubject.next(false);
     // should not be updated, already unsubscribed
