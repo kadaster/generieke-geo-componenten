@@ -17,7 +17,7 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
-import { GgcCapabilitiesService } from "@kadaster/ggc-map";
+import { GgcCapabilitiesService } from "../service/ggc-capabilities.service";
 
 /**
  * Door `<ggc-wmts-layer></ggc-wmts-layer>` op te nemen in de HTML kunnen WMTS-kaarten
