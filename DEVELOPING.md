@@ -63,12 +63,6 @@ Alleen specifieke doelprojecten in je workspace bijwerken:
 npm run snapshot -- --targets ggs-pmk-kaarten-van-nl,ggs-pmk-beheer-app
 ```
 
-Zonder build/install uit te voeren eerst zien wat er zou gebeuren:
-
-```bash
-npm run snapshot -- --dry-run
-```
-
 Zonder interactieve prompts, met alleen de gewijzigde packages als default-selectie:
 
 ```bash

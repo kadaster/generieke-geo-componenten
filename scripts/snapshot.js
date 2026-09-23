@@ -61,7 +61,6 @@ function parseArgs(argv) {
   const options = {
     projects: null,
     targets: null,
-    dryRun: false,
     interactive: process.stdout.isTTY,
     workspace: workspaceRoot,
   };
@@ -90,11 +89,6 @@ function parseArgs(argv) {
     if (arg === '--workspace') {
       options.workspace = path.resolve(argv[index + 1]);
       index += 1;
-      continue;
-    }
-
-    if (arg === '--dry-run') {
-      options.dryRun = true;
       continue;
     }
 
@@ -496,14 +490,12 @@ function ensureSnapshotDirectory(targetDir) {
   return snapshotDir;
 }
 
-function stageTarballs(target, orderedProjects, tarballsByPackageName, dryRun) {
+function stageTarballs(target, orderedProjects, tarballsByPackageName) {
   const stagedTarballsByPackageName = new Map();
   const snapshotDir = path.join(target.dir, '.snapshots', 'ggc');
 
-  if (!dryRun) {
-    fs.rmSync(snapshotDir, { recursive: true, force: true });
-    ensureSnapshotDirectory(target.dir);
-  }
+  fs.rmSync(snapshotDir, { recursive: true, force: true });
+  ensureSnapshotDirectory(target.dir);
 
   for (const project of orderedProjects) {
     if (!target.matchingPackages.includes(project.packageName)) {
@@ -513,9 +505,7 @@ function stageTarballs(target, orderedProjects, tarballsByPackageName, dryRun) {
     const sourceTarballPath = tarballsByPackageName.get(project.packageName);
     const targetTarballPath = path.join(snapshotDir, path.basename(sourceTarballPath));
 
-    if (!dryRun) {
-      fs.copyFileSync(sourceTarballPath, targetTarballPath);
-    }
+    fs.copyFileSync(sourceTarballPath, targetTarballPath);
 
     stagedTarballsByPackageName.set(project.packageName, targetTarballPath);
   }
@@ -523,7 +513,7 @@ function stageTarballs(target, orderedProjects, tarballsByPackageName, dryRun) {
   return stagedTarballsByPackageName;
 }
 
-function installSnapshots(target, orderedProjects, stagedTarballsByPackageName, dryRun) {
+function installSnapshots(target, orderedProjects, stagedTarballsByPackageName) {
   const installArgs = ['install'];
 
   for (const project of orderedProjects) {
@@ -536,12 +526,10 @@ function installSnapshots(target, orderedProjects, stagedTarballsByPackageName, 
     return;
   }
 
-  console.log(`\n${dryRun ? '[dry-run] ' : ''}Installeren in ${target.dir}`);
+  console.log(`\nInstalleren in ${target.dir}`);
   console.log(`Packages: ${target.matchingPackages.join(', ')}`);
 
-  if (!dryRun) {
-    run('npm', installArgs, target.dir);
-  }
+  run('npm', installArgs, target.dir);
 }
 
 async function main() {
@@ -584,13 +572,9 @@ async function main() {
       writeSnapshotVersion(project, snapshotVersion);
       cleanupOldTarballs(project);
 
-      if (!options.dryRun) {
-        run('npm', ['run', `pack:${project.projectName}`], repoRoot);
-      }
+      run('npm', ['run', `pack:${project.projectName}`], repoRoot);
 
-      const tarballPath = options.dryRun
-        ? path.join(project.distDir, `<${project.projectName}-${snapshotVersion}.tgz>`)
-        : findGeneratedTarball(project);
+      const tarballPath = findGeneratedTarball(project);
 
       tarballsByPackageName.set(project.packageName, tarballPath);
       console.log(`Tarball: ${tarballPath}`);
@@ -627,8 +611,8 @@ async function main() {
   }
 
   for (const target of selectedTargets) {
-    const stagedTarballsByPackageName = stageTarballs(target, selectedProjects, tarballsByPackageName, options.dryRun);
-    installSnapshots(target, selectedProjects, stagedTarballsByPackageName, options.dryRun);
+    const stagedTarballsByPackageName = stageTarballs(target, selectedProjects, tarballsByPackageName);
+    installSnapshots(target, selectedProjects, stagedTarballsByPackageName);
   }
 }
 
