@@ -107,7 +107,8 @@ describe("LayerService", () => {
     expect(layerId).toBe("wmtsLayer");
     expect(capSpy.getCapabilitiesForUrl).toHaveBeenCalledWith(
       "wmtsTestUrl",
-      "WMTS"
+      "WMTS",
+      false
     );
   });
 
