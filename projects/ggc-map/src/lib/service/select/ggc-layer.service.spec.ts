@@ -6,7 +6,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from "@angular/common/http";
-import { CoreWmsWmtsCapabilitiesService } from "../../layer/service/core-wms-wmts-capabilities.service";
+import { CoreWmsWmtsCapabilitiesRequestService } from "../../layer/service/core-wms-wmts-capabilities-request.service";
 import { of } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
@@ -17,7 +17,7 @@ import { createWmtsCapabilitiesMock } from "../../layer/service/mock/wmts-capabi
 
 describe("LayerService", () => {
   let service: GgcLayerService;
-  let capSpy: MockedObject<CoreWmsWmtsCapabilitiesService>;
+  let capSpy: MockedObject<CoreWmsWmtsCapabilitiesRequestService>;
   let coreMapServiceSpy: MockedObject<CoreMapService>;
 
   const MAP_INDEX = "testMap";
@@ -46,14 +46,14 @@ describe("LayerService", () => {
       optionsFromCapabilities: vi
         .fn()
         .mockName("CapabilitiesService.optionsFromCapabilities")
-    } as unknown as MockedObject<CoreWmsWmtsCapabilitiesService>;
+    } as unknown as MockedObject<CoreWmsWmtsCapabilitiesRequestService>;
 
     TestBed.configureTestingModule({
       providers: [
         GgcLayerService,
         provideHttpClient(withInterceptorsFromDi()),
         // { provide: GgcMapService, useValue: mapServiceSpy },
-        { provide: CoreWmsWmtsCapabilitiesService, useValue: capSpy },
+        { provide: CoreWmsWmtsCapabilitiesRequestService, useValue: capSpy },
         { provide: CoreMapService, useValue: coreMapServiceSpy }
       ]
     });

@@ -5,14 +5,14 @@ import {
   GgcCapabilitiesService,
   ServiceCapabilities
 } from "./ggc-capabilities.service";
-import { CoreWmsWmtsCapabilitiesMapperService } from "./core-wms-wmts-capabilities-mapper.service";
+import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
 import { provideZoneChangeDetection } from "@angular/core";
 
 describe("GgcCapabilitiesService", () => {
   let service: GgcCapabilitiesService;
 
-  let wmsWmtsSvcSpy: MockedObject<CoreWmsWmtsCapabilitiesMapperService>;
+  let wmsWmtsSvcSpy: MockedObject<CoreWmsWmtsCapabilitiesService>;
   let ogcApiSvcSpy: MockedObject<GgcOgcApiCapabilitiesService>;
 
   const baseUrl = "https://example.test/service";
@@ -21,15 +21,11 @@ describe("GgcCapabilitiesService", () => {
     wmsWmtsSvcSpy = {
       getServiceCapabilitiesWMS: vi
         .fn()
-        .mockName(
-          "CoreWmsWmtsCapabilitiesMapperService.getServiceCapabilitiesWMS"
-        ),
+        .mockName("CoreWmsWmtsCapabilitiesService.getServiceCapabilitiesWMS"),
       getServiceCapabilitiesWMTS: vi
         .fn()
-        .mockName(
-          "CoreWmsWmtsCapabilitiesMapperService.getServiceCapabilitiesWMTS"
-        )
-    } as MockedObject<CoreWmsWmtsCapabilitiesMapperService>;
+        .mockName("CoreWmsWmtsCapabilitiesService.getServiceCapabilitiesWMTS")
+    } as MockedObject<CoreWmsWmtsCapabilitiesService>;
 
     ogcApiSvcSpy = {
       getServiceCapabilitiesOgcApi: vi
@@ -41,7 +37,7 @@ describe("GgcCapabilitiesService", () => {
       providers: [
         GgcCapabilitiesService,
         {
-          provide: CoreWmsWmtsCapabilitiesMapperService,
+          provide: CoreWmsWmtsCapabilitiesService,
           useValue: wmsWmtsSvcSpy
         },
         { provide: GgcOgcApiCapabilitiesService, useValue: ogcApiSvcSpy },

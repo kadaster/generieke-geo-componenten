@@ -1,30 +1,28 @@
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Coordinate } from "ol/coordinate";
-import { Extent } from "ol/extent";
-import { WMSCapabilities, WMTSCapabilities } from "ol/format";
-import WMTS from "ol/source/WMTS";
-import { TileCoord } from "ol/tilecoord";
+import { CoreWmsWmtsCapabilitiesRequestService } from "./core-wms-wmts-capabilities-request.service";
+import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
-import { map, shareReplay } from "rxjs/operators";
-import { Capabilities } from "../model/capabilities.model";
+import {
+  ServiceCapabilities,
+  CapabilitiesServiceLayer,
+  CapabilitiesServiceLayerStyle
+} from "./ggc-capabilities.service";
+import WMTS from "ol/source/WMTS";
+import { Coordinate } from "ol/coordinate";
 
 /**
- * Interne low-level service voor het ophalen van ruwe WMS/WMTS capabilities.
- * Verantwoordelijk voor de HTTP-aanroepen, caching per URL en het bouwen van
- * WMTS GetFeatureInfo requests. Kent alleen de ruwe OpenLayers-capabilities,
- * niet het publieke `ServiceCapabilities`-model (zie daarvoor `CoreWmsWmtsCapabilitiesMapperService`).
+ * Interne mapper-service voor WMS/WMTS capabilities.
+ * Vertaalt de ruwe capabilities (afkomstig van `CoreWmsWmtsCapabilitiesRequestService`)
+ * naar het publieke `ServiceCapabilities`-model. Bevat dus geen HTTP-logica,
+ * maar puur WMS/WMTS-specifieke mapping-/extractielogica.
  */
 @Injectable({
   providedIn: "root"
 })
 export class CoreWmsWmtsCapabilitiesService {
-  private readonly httpClient = inject(HttpClient);
-
-  private readonly capabilitiesMap: Map<
-    string,
-    Observable<Record<string, any>>
-  > = new Map();
+  private readonly coreWmsWmtsCapabilitiesRequestService = inject(
+    CoreWmsWmtsCapabilitiesRequestService
+  );
 
   /**
    * Haalt capabilities op voor een gegeven URL en service type.
@@ -40,35 +38,11 @@ export class CoreWmsWmtsCapabilitiesService {
     service: "WMTS" | "WMS",
     withCredentials = false
   ): Observable<Record<string, any> | undefined> {
-    let format: WMSCapabilities | WMTSCapabilities;
-    const params: Record<string, string> = {
-      request: "getCapabilities",
-      service
-    };
-    if (service === "WMTS") {
-      format = new WMTSCapabilities();
-    } else {
-      format = new WMSCapabilities();
-      params.version = "1.3.0";
-    }
-    if (this.capabilitiesMap.has(baseUrl)) {
-      return this.capabilitiesMap.get(baseUrl) as Observable<
-        Record<string, any>
-      >;
-    } else {
-      const observable: Observable<Capabilities> = this.httpClient
-        .get(baseUrl, {
-          responseType: "text",
-          params,
-          withCredentials
-        })
-        .pipe(
-          map((res) => format.read(res)),
-          shareReplay(1)
-        );
-      this.capabilitiesMap.set(baseUrl, observable);
-      return observable;
-    }
+    return this.coreWmsWmtsCapabilitiesRequestService.getCapabilitiesForUrl(
+      baseUrl,
+      service,
+      withCredentials
+    );
   }
 
   /**
@@ -86,58 +60,168 @@ export class CoreWmsWmtsCapabilitiesService {
     coordinate: Coordinate,
     resolution: number
   ): Observable<any> {
-    const baseParams = this.constructGetFeatureInfoParams(
+    return this.coreWmsWmtsCapabilitiesRequestService.getWmtsFeatureInfo(
+      baseUrl,
       source,
       coordinate,
       resolution
     );
-
-    return this.httpClient.get(baseUrl, { params: baseParams });
   }
 
-  /**
-   * Genereert de parameters voor een GetFeatureInfo request.
-   *
-   * @param source - De WMTS bron.
-   * @param coordinate - De Coordinate waarop info gewenst is.
-   * @param resolution - De resolutie van de kaart.
-   * @returns Object met query parameters.
+  /*
+   * Haalt de WMS capabilities op voor een gegeven URL en vertaald deze naar
+   * een ServiceCapabilities Object.
+   * @param baseUrl - De URL van de capabilities endpoint.
+   * @returns Observable met de Capabilities vertaald naar een CapabilitiesService Object
    */
-  private constructGetFeatureInfoParams(
-    source: WMTS,
-    coordinate: Coordinate,
-    resolution: number
-  ): { [p: string]: string } {
-    const tileGrid = source.getTileGrid();
-    const tileCoord: TileCoord = tileGrid!.getTileCoordForCoordAndResolution(
-      coordinate,
-      resolution
-    );
-    const tileCol = tileCoord[1];
-    const tileRow = tileCoord[2];
+  getServiceCapabilitiesWMS(
+    baseUrl: string
+  ): Observable<ServiceCapabilities | undefined> {
+    return this.coreWmsWmtsCapabilitiesRequestService
+      .getCapabilitiesForUrl(baseUrl, "WMS")
+      .pipe(
+        map((capabilities) => {
+          if (!capabilities) {
+            return undefined;
+          }
+          return this.extractServiceCapabilitiesWMS(capabilities);
+        })
+      );
+  }
 
-    const tileExtent: Extent = tileGrid!.getTileCoordExtent(tileCoord);
-    const tileResolution = tileGrid!.getResolution(tileCoord[0]);
-    const zoom = tileGrid!.getZForResolution(tileResolution);
-    const i = Math.floor((coordinate[0] - tileExtent[0]) / tileResolution);
-    const j = Math.floor((tileExtent[3] - coordinate[1]) / tileResolution);
-
-    return {
-      SERVICE: "WMTS",
-      VERSION: "1.0.0",
-      REQUEST: "GetFeatureInfo",
-      LAYER: source.getLayer(),
-      STYLE: "",
-      FORMAT: "image/png",
-      TileCol: "" + tileCol,
-      TileRow: "" + tileRow,
-      TileMatrix: source.getMatrixSet() + ":" + zoom,
-      TileMatrixSet: source.getMatrixSet(),
-      I: "" + i,
-      J: "" + j,
-      infoformat: "application/json",
-      info_format: "application/json",
-      FEATURE_COUNT: "8"
+  /*
+   * Creëert een ServiceCapabilities uit de capabilities van een WMS service.
+   * @param capabilities - De capabilities van een WMS service.
+   * @returns ServiceCapabilities Object met de informatie uit de capabilities.
+   */
+  extractServiceCapabilitiesWMS(
+    capabilities: Record<string, any>
+  ): ServiceCapabilities {
+    const wmsLayers = capabilities?.Capability?.Layer?.Layer;
+    const layers: CapabilitiesServiceLayer[] = [];
+    const service: ServiceCapabilities = {
+      title: capabilities?.Service?.Title,
+      abstract: capabilities?.Service?.Abstract,
+      type: "WMS",
+      url: capabilities.Request?.GetCapabilities?.DCPType?.HTTP?.Get
+        ?.OnlineResource,
+      layers: layers
     };
+    if (wmsLayers === undefined) {
+      console.warn("Geen layers gevonden in WMS capabilities");
+    } else {
+      for (const layer of wmsLayers) {
+        const ggcLayerStyles: CapabilitiesServiceLayerStyle[] =
+          this.extractStylesFromWMSLayer(layer);
+        const datasetLayer: CapabilitiesServiceLayer = {
+          name: crypto.randomUUID(),
+          title: layer.Name,
+          maxResolution: layer.MaxScaleDenominator,
+          minResolution: layer.MinScaleDenominator,
+          styles: ggcLayerStyles
+        };
+        layers.push(datasetLayer);
+      }
+    }
+    return service;
+  }
+
+  /*
+   * Haalt de styles uit een WMS layer.
+   * @param layer - De WMS layer.
+   * @returns Array met CapabilitiesServiceLayerStyle objecten.
+   */
+  extractStylesFromWMSLayer(
+    layer: Record<string, any>
+  ): CapabilitiesServiceLayerStyle[] {
+    const styles: CapabilitiesServiceLayerStyle[] = [];
+    if (!layer.Style) {
+      console.warn("Geen stijlen gevonden in WMS layer: " + layer.Name);
+      return styles;
+    }
+    for (const style of layer.Style) {
+      const wmsStyle: CapabilitiesServiceLayerStyle = {
+        name: style.Name,
+        legendURL: style.LegendURL[0].OnlineResource
+      };
+      styles.push(wmsStyle);
+    }
+    return styles;
+  }
+
+  /*
+   * Haalt de WMTS capabilities op voor een gegeven URL en vertaald deze naar
+   * een ServiceCapabilitiesObject.
+   * @param baseUrl - De URL van de capabilities endpoint.
+   * @returns Observable met de Capabilities vertaald naar een ServiceCapabilities Object.
+   */
+  getServiceCapabilitiesWMTS(
+    baseUrl: string
+  ): Observable<ServiceCapabilities | undefined> {
+    return this.coreWmsWmtsCapabilitiesRequestService
+      .getCapabilitiesForUrl(baseUrl, "WMTS")
+      .pipe(
+        map((capabilities) => {
+          if (!capabilities) {
+            return undefined;
+          }
+          return this.extractServiceCapabilitiesWMTS(capabilities);
+        })
+      );
+  }
+
+  /*
+   * Creëert een ServiceCapabilities uit de capabilities van een WMTS service.
+   * @param capabilities - De capabilities van een WMTS service.
+   * @returns ServiceCapabilities Object met de informatie uit de capabilities.
+   */
+  extractServiceCapabilitiesWMTS(
+    capabilities: Record<string, any>
+  ): ServiceCapabilities {
+    const wmtsLayers = capabilities?.Contents?.Layer;
+    const layers: CapabilitiesServiceLayer[] = [];
+    const mapSource: ServiceCapabilities = {
+      title: capabilities?.ServiceIdentification?.Title,
+      url: capabilities?.OperationsMetadata?.DCP?.HTTP?.Get[0]?.href,
+      type: "WMTS",
+      layers: layers
+    };
+    if (wmtsLayers === undefined) {
+      console.warn("Geen layers gevonden in WMTS capabilities");
+    } else {
+      for (const layer of wmtsLayers) {
+        const styles: CapabilitiesServiceLayerStyle[] =
+          this.extractStylesFromWMTSLayer(layer);
+        layers.push({
+          name: layer.Identifier,
+          title: layer.Title,
+          styles: styles
+        });
+      }
+    }
+    return mapSource;
+  }
+
+  /*
+   * Haalt de styles uit een WMTS layer.
+   * @param layer - De WMTS layer.
+   * @returns Array met CapabilitiesServiceLayerStyle objecten.
+   */
+  extractStylesFromWMTSLayer(
+    layer: Record<string, any>
+  ): CapabilitiesServiceLayerStyle[] {
+    const styles: CapabilitiesServiceLayerStyle[] = [];
+    if (!layer.Style) {
+      console.warn("Geen stijlen gevonden in WMTS layer: " + layer.Name);
+      return styles;
+    }
+    for (const style of layer.Style) {
+      const wmtsStyle: CapabilitiesServiceLayerStyle = {
+        name: style.Identifier,
+        legendURL: style?.LegendURL?.[0]?.href
+      };
+      styles.push(wmtsStyle);
+    }
+    return styles;
   }
 }

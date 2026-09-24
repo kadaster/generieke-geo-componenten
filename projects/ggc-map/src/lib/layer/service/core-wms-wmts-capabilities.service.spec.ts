@@ -1,185 +1,275 @@
-import {
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-  withXhr
-} from "@angular/common/http";
-import {
-  HttpTestingController,
-  provideHttpClientTesting
-} from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import WMTS from "ol/source/WMTS";
-import WMTSTileGrid from "ol/tilegrid/WMTS";
-import { noop, of } from "rxjs";
-import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
-import { CoreMapService } from "../../map/service/core-map.service";
+import { of } from "rxjs";
 import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
+import { CoreWmsWmtsCapabilitiesRequestService } from "./core-wms-wmts-capabilities-request.service";
+import { ServiceCapabilities } from "./ggc-capabilities.service";
 import { provideZoneChangeDetection } from "@angular/core";
 
-describe("CoreWmsWmtsCapabilitiesService", () => {
-  const wmsCapabilities = `<?xml version="1.0" encoding="UTF-8"?>
-<WMS_Capabilities xmlns="http://www.opengis.net/wms" xmlns:sld="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd">
-</WMS_Capabilities>`;
+const WMS_CAPABILITIES = {
+  Service: {
+    Title: "Test WMS Service",
+    Abstract: "Beschrijving van WMS service"
+  },
+  Request: {
+    GetCapabilities: {
+      DCPType: {
+        HTTP: {
+          Get: {
+            OnlineResource:
+              "https://example.com/wms?service=WMS&request=GetCapabilities"
+          }
+        }
+      }
+    }
+  },
+  Capability: {
+    Layer: {
+      Layer: [
+        {
+          Name: "laag_1",
+          Title: "Laag 1 titel",
+          MaxScaleDenominator: "5000",
+          MinScaleDenominator: "250",
+          Style: [
+            {
+              Name: "default",
+              LegendURL: [
+                {
+                  OnlineResource:
+                    "https://example.com/wms?request=GetLegendGraphic&layer=laag_1"
+                }
+              ]
+            },
+            {
+              Name: "grijs",
+              LegendURL: [
+                { OnlineResource: "https://example.com/legend/grijs.png" }
+              ]
+            }
+          ]
+        },
+        {
+          Name: "laag_2",
+          Title: "Laag 2 titel",
+          MaxScaleDenominator: "10000",
+          MinScaleDenominator: "500",
+          Style: [
+            {
+              Name: "default",
+              LegendURL: [
+                {
+                  OnlineResource:
+                    "https://example.com/wms?request=GetLegendGraphic&layer=laag_2"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+};
 
-  let capabilitiesService: CoreWmsWmtsCapabilitiesService;
-  let crsConfigService: GgcCrsConfigService;
-  let httpTestingController: HttpTestingController;
+const WMTS_CAPABILITIES = {
+  OperationsMetadata: {
+    DCP: {
+      HTTP: {
+        Get: [{ href: "https://example.com/wmts?SERVICE=WMTS" }]
+      }
+    }
+  },
+  Contents: {
+    Layer: [
+      {
+        Identifier: "wmts_layer_1",
+        Title: "WMTS Laag 1",
+        Style: [
+          {
+            Identifier: "default",
+            LegendURL: [{ href: "https://example.com/wmts/legend/layer1.png" }]
+          }
+        ]
+      },
+      {
+        Identifier: "wmts_layer_2",
+        Title: "WMTS Laag 2",
+        Style: [
+          {
+            Identifier: "line",
+            LegendURL: [
+              { href: "https://example.com/wmts/legend/layer2-line.png" }
+            ]
+          },
+          {
+            Identifier: "fill",
+            LegendURL: [
+              { href: "https://example.com/wmts/legend/layer2-fill.png" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+};
+
+const WMS_CAPABILITIES_WITHOUT_STYLES = {
+  Service: { Title: "WMS zonder styles", Abstract: "" },
+  Request: {
+    GetCapabilities: {
+      DCPType: { HTTP: { Get: { OnlineResource: "https://example.com/wms" } } }
+    }
+  },
+  Capability: {
+    Layer: { Layer: [{ Name: "laag_zonder_styles", Title: "Geen styles" }] }
+  }
+};
+
+const WMTS_CAPABILITIES_WITHOUT_STYLES = {
+  OperationsMetadata: {
+    DCP: { HTTP: { Get: [{ href: "https://example.com/wmts" }] } }
+  },
+  Contents: { Layer: [{ Identifier: "wmts_no_styles", Title: "Geen styles" }] }
+};
+
+class CoreCapabilitiesServiceMock {
+  getCapabilitiesForUrl = vi.fn();
+}
+
+describe("CoreWmsWmtsCapabilitiesService", () => {
+  let service: CoreWmsWmtsCapabilitiesService;
+  let coreMock: CoreCapabilitiesServiceMock;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
       providers: [
         CoreWmsWmtsCapabilitiesService,
-        CoreMapService,
-        GgcCrsConfigService,
-        HttpClient,
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
-        provideHttpClientTesting(),
+        {
+          provide: CoreWmsWmtsCapabilitiesRequestService,
+          useClass: CoreCapabilitiesServiceMock
+        },
         provideZoneChangeDetection()
       ]
     });
-
-    capabilitiesService = TestBed.inject(CoreWmsWmtsCapabilitiesService);
-    crsConfigService = TestBed.inject(GgcCrsConfigService);
-    httpTestingController = TestBed.inject(HttpTestingController);
+    service = TestBed.inject(CoreWmsWmtsCapabilitiesService);
+    coreMock = TestBed.inject(
+      CoreWmsWmtsCapabilitiesRequestService
+    ) as unknown as CoreCapabilitiesServiceMock;
   });
 
-  afterEach(() => {
-    httpTestingController.verify();
+  describe("getCapabilitiesServiceWMS", () => {
+    it("will return a service (happy path)", async () => {
+      coreMock.getCapabilitiesForUrl.mockReturnValue(of(WMS_CAPABILITIES));
+
+      service
+        .getServiceCapabilitiesWMS("https://example.com/wms")
+        .subscribe((svc: ServiceCapabilities | undefined) => {
+          if (!svc) {
+            throw new Error("Expected service to be definend");
+            return;
+          }
+          expect(svc.type).toBe("WMS");
+          expect(svc.title).toBe("Test WMS Service");
+          expect(svc.abstract).toBe("Beschrijving van WMS service");
+          expect(svc.url).toBe(
+            "https://example.com/wms?service=WMS&request=GetCapabilities"
+          );
+          expect(svc.layers.length).toBe(2);
+
+          // Layer 1 assertions
+          const l1 = svc.layers[0];
+          expect(l1.title).toBe("laag_1");
+          expect(l1.maxResolution).toBe("5000");
+          expect(l1.minResolution).toBe("250");
+          expect(l1.styles.length).toBe(2);
+          expect(l1.styles[0]).toEqual({
+            name: "default",
+            legendURL:
+              "https://example.com/wms?request=GetLegendGraphic&layer=laag_1"
+          });
+          // Layer 2 assertions
+          const l2 = svc.layers[1];
+          expect(l2.title).toBe("laag_2");
+          expect(l2.styles.length).toBe(1);
+        });
+    });
+
+    it("extractStylesFromWMSLayer should retun the correct style", () => {
+      const layer = WMS_CAPABILITIES.Capability.Layer.Layer[0];
+      const styles = service.extractStylesFromWMSLayer(layer);
+      expect(styles.length).toBe(2);
+      expect(styles[1]).toEqual({
+        name: "grijs",
+        legendURL: "https://example.com/legend/grijs.png"
+      });
+    });
   });
 
-  it("should be created", () => {
-    expect(capabilitiesService).toBeTruthy();
+  describe("getCapabilitiesServiceWMTS", () => {
+    it("should convert capabilities to a Styles object (happy path)", async () => {
+      coreMock.getCapabilitiesForUrl.mockReturnValue(of(WMTS_CAPABILITIES));
+
+      service
+        .getServiceCapabilitiesWMTS("https://example.com/wmts")
+        .subscribe((svc: ServiceCapabilities | undefined) => {
+          if (!svc) {
+            throw new Error("Expected service to be definend");
+            return;
+          }
+          expect(svc.type).toBe("WMTS");
+          expect(svc.url).toBe("https://example.com/wmts?SERVICE=WMTS");
+          expect(svc.layers.length).toBe(2);
+
+          const l1 = svc.layers[0];
+          expect(l1.name).toBe("wmts_layer_1");
+          expect(l1.title).toBe("WMTS Laag 1");
+          expect(l1.styles.length).toBe(1);
+          expect(l1.styles[0]).toEqual({
+            name: "default",
+            legendURL: "https://example.com/wmts/legend/layer1.png"
+          });
+
+          const l2 = svc.layers[1];
+          expect(l2.name).toBe("wmts_layer_2");
+          expect(l2.styles.length).toBe(2);
+        });
+    });
+
+    it("extractStylesFromWMTSLayer should return correct Style[]", () => {
+      const layer = WMTS_CAPABILITIES.Contents.Layer[1];
+      const styles = service.extractStylesFromWMTSLayer(layer);
+      expect(styles.length).toBe(2);
+      expect(styles[0]).toEqual({
+        name: "line",
+        legendURL: "https://example.com/wmts/legend/layer2-line.png"
+      });
+    });
   });
 
-  describe("getCapabilitiesForUrl", () => {
-    const testUrl = "a.b/c";
+  describe("edge-cases & robustness", () => {
+    it("extractServiceWMS: handles empty capabilities/missing layers", () => {
+      const result = service.extractServiceCapabilitiesWMS({} as any);
+      expect(result.layers.length).toBe(0);
+    });
 
-    it(
-      "when called with url that not has been called before, " +
-        "it should call httpclient and add observable to capabilitiesMap",
-      () => {
-        capabilitiesService
-          .getCapabilitiesForUrl(testUrl, "WMTS")
-          .subscribe(noop);
-        const request = httpTestingController.expectOne(
-          testUrl + "?request=getCapabilities&service=WMTS"
-        );
-        request.flush({});
-        expect(capabilitiesService["capabilitiesMap"].size).toBe(1);
-      }
-    );
-
-    it("when called for a WMS service, it should add the version and withCredentials should be false", () => {
-      capabilitiesService.getCapabilitiesForUrl(testUrl, "WMS").subscribe(noop);
-      const request = httpTestingController.expectOne(
-        testUrl + "?request=getCapabilities&service=WMS&version=1.3.0"
+    it("should handle capabilities without WMS styles", () => {
+      const result = service.extractServiceCapabilitiesWMS(
+        WMS_CAPABILITIES_WITHOUT_STYLES as any
       );
-      request.flush(wmsCapabilities);
-
-      expect(capabilitiesService["capabilitiesMap"].size).toBe(1);
-      expect(request.request.withCredentials).toBe(false);
+      expect(result.layers.length).toBe(1);
+      expect(result.layers[0].styles.length).toBe(0);
     });
 
-    it("when called for a WMS service with withCredentials is false, it should set withCredentials to false", () => {
-      capabilitiesService
-        .getCapabilitiesForUrl(testUrl, "WMS", false)
-        .subscribe(noop);
-      const request = httpTestingController.expectOne(
-        testUrl + "?request=getCapabilities&service=WMS&version=1.3.0"
+    it("extractServiceWMTS: handles empty capabilities/missing layers", () => {
+      const result = service.extractServiceCapabilitiesWMTS({} as any);
+      expect(result.layers.length).toBe(0);
+    });
+
+    it("should handle missing styles in WMTS capabilities", () => {
+      const result = service.extractServiceCapabilitiesWMTS(
+        WMTS_CAPABILITIES_WITHOUT_STYLES as any
       );
-      request.flush(wmsCapabilities);
-
-      expect(request.request.withCredentials).toBe(false);
-    });
-
-    it("when called for a WMS service with withCredentials is true, it should set withCredentials to true", () => {
-      capabilitiesService
-        .getCapabilitiesForUrl(testUrl, "WMS", true)
-        .subscribe(noop);
-      const request = httpTestingController.expectOne(
-        testUrl + "?request=getCapabilities&service=WMS&version=1.3.0"
-      );
-      request.flush(wmsCapabilities);
-
-      expect(request.request.withCredentials).toBe(true);
-    });
-
-    it(
-      "when called with url that has been called before, " +
-        "it should not call httpclient and return observable from capabilitiesMap",
-      () => {
-        const capabilitiesMapSpy = vi.spyOn(
-          capabilitiesService["capabilitiesMap"],
-          "get"
-        );
-        const mock = of({});
-        capabilitiesService["capabilitiesMap"].set(testUrl, mock);
-
-        capabilitiesService
-          .getCapabilitiesForUrl(testUrl, "WMTS")
-          .subscribe(noop);
-
-        httpTestingController.expectNone("a.b/c");
-        expect(capabilitiesService["capabilitiesMap"].size).toBe(1);
-        expect(capabilitiesMapSpy).toHaveBeenCalled();
-      }
-    );
-  });
-
-  it("getWmtsFeatureInfo it should call constructGetFeatureInfoParams and return an observable", () => {
-    const capabilitiesMapSpy = vi
-      .spyOn(capabilitiesService as any, "constructGetFeatureInfoParams")
-      .mockReturnValue({});
-    const observable = capabilitiesService
-      .getWmtsFeatureInfo("https://url.test/", {} as WMTS, [], 2)
-      .subscribe(noop);
-    const request = httpTestingController.expectOne("https://url.test/");
-
-    request.flush({});
-    expect(observable).toBeDefined();
-    expect(capabilitiesMapSpy).toHaveBeenCalled();
-  });
-
-  it("constructGetFeatureInfoParams it should return a params object", () => {
-    const rdNewConfig = crsConfigService.getRdNewCrsConfig();
-    const wmtsSource = new WMTS({
-      url: "",
-      layer: "layer",
-      matrixSet: rdNewConfig.matrixSet,
-      format: "image/png",
-      projection: rdNewConfig.projectionCode,
-      style: "default",
-      crossOrigin: "anonymous",
-      tileGrid: new WMTSTileGrid({
-        extent: rdNewConfig.extent,
-        resolutions: rdNewConfig.resolutions,
-        matrixIds: rdNewConfig.matrixIds
-      })
-    });
-    const params = capabilitiesService["constructGetFeatureInfoParams"](
-      wmtsSource,
-      [155000, 456000],
-      2
-    );
-
-    expect(params).toEqual({
-      SERVICE: "WMTS",
-      VERSION: "1.0.0",
-      REQUEST: "GetFeatureInfo",
-      LAYER: "layer",
-      STYLE: "",
-      FORMAT: "image/png",
-      TileCol: "1024",
-      TileRow: "1040",
-      TileMatrix: "EPSG:28992:11",
-      TileMatrixSet: "EPSG:28992",
-      I: "0",
-      J: "70",
-      infoformat: "application/json",
-      info_format: "application/json",
-      FEATURE_COUNT: "8"
+      expect(result.layers.length).toBe(1);
+      expect(result.layers[0].styles.length).toBe(0);
     });
   });
 });

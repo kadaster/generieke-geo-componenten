@@ -1,11 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { CoreWmsWmtsCapabilitiesMapperService } from "./core-wms-wmts-capabilities-mapper.service";
+import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
 import { map } from "rxjs/operators";
 import WMTS from "ol/source/WMTS";
 import { Coordinate } from "ol/coordinate";
-import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 
 /**
  * Service voor het ophalen en verwerken van WMS/WMTS en OGCAPI capabilities.
@@ -14,12 +13,10 @@ import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.ser
   providedIn: "root"
 })
 export class GgcCapabilitiesService {
-  private readonly wmsWmtsCapabilitiesService = inject(
-    CoreWmsWmtsCapabilitiesMapperService
-  );
   private readonly coreWmsWmtsCapabilitiesService = inject(
     CoreWmsWmtsCapabilitiesService
   );
+
   private readonly ogcApiCapabilitiesService = inject(
     GgcOgcApiCapabilitiesService
   );
@@ -37,11 +34,11 @@ export class GgcCapabilitiesService {
   ): Observable<ServiceCapabilities | undefined> {
     switch (serviceType) {
       case "WMS":
-        return this.wmsWmtsCapabilitiesService.getServiceCapabilitiesWMS(
+        return this.coreWmsWmtsCapabilitiesService.getServiceCapabilitiesWMS(
           baseUrl
         );
       case "WMTS":
-        return this.wmsWmtsCapabilitiesService.getServiceCapabilitiesWMTS(
+        return this.coreWmsWmtsCapabilitiesService.getServiceCapabilitiesWMTS(
           baseUrl
         );
       case "OGCAPI":

@@ -21,7 +21,7 @@ import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
-import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
+import { CoreWmsWmtsCapabilitiesRequestService } from "../service/core-wms-wmts-capabilities-request.service";
 
 import { GgcWmsLayerComponent } from "./ggc-wms-layer.component";
 import {
@@ -37,7 +37,7 @@ describe("WmsLayerComponent", () => {
   let resultLayer: ImageLayer<ImageSource>;
   let coreMapService: CoreMapService;
   let coreSelectionService: CoreSelectionService;
-  let capabilitiesService: MockedObject<CoreWmsWmtsCapabilitiesService>;
+  let capabilitiesService: MockedObject<CoreWmsWmtsCapabilitiesRequestService>;
   let mapEventsService: CoreMapEventsService;
 
   let httpTestingController: HttpTestingController;
@@ -61,7 +61,7 @@ describe("WmsLayerComponent", () => {
         GgcCrsConfigService,
         CoreMapEventsService,
         CoreSelectionService,
-        { provide: CoreWmsWmtsCapabilitiesService, useValue: capSpy },
+        { provide: CoreWmsWmtsCapabilitiesRequestService, useValue: capSpy },
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
@@ -77,8 +77,8 @@ describe("WmsLayerComponent", () => {
     coreSelectionService = TestBed.inject(CoreSelectionService);
     httpTestingController = TestBed.inject(HttpTestingController);
     capabilitiesService = TestBed.inject(
-      CoreWmsWmtsCapabilitiesService
-    ) as MockedObject<CoreWmsWmtsCapabilitiesService>;
+      CoreWmsWmtsCapabilitiesRequestService
+    ) as MockedObject<CoreWmsWmtsCapabilitiesRequestService>;
     resolution = 1.54;
   });
 
