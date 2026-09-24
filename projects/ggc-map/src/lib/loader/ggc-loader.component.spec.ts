@@ -34,9 +34,9 @@ describe("LoaderComponent", () => {
     );
     fixture.componentRef.setInput("mapIndex", "loading-map");
     fixture.detectChanges();
-    expect(component["isLoading"]).toBeFalsy();
+    expect(component.isLoading()).toBeFalsy();
     loadingSubject.next(true);
-    expect(component["isLoading"]).toBeTruthy();
+    expect(component.isLoading()).toBeTruthy();
   });
 
   it("should unsubscribe on destroy", () => {
