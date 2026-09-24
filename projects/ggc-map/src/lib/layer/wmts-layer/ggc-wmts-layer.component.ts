@@ -224,7 +224,6 @@ export class GgcWmtsLayerComponent
   }
 
   protected handleSingleClick(event: MapBrowserEvent) {
-    super.handleSingleClick(event);
     this.getFeatureInfo(event);
   }
 }

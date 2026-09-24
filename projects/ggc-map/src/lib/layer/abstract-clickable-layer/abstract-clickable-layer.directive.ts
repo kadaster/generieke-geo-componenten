@@ -6,7 +6,7 @@ import { AbstractClickableLayerOptions } from "../model/abstract-layer.model";
 import { Subscription } from "rxjs";
 
 @Directive()
-export class AbstractClickableLayer<T>
+export abstract class AbstractClickableLayer<T>
   extends AbstractConfigurableLayer<any>
   implements OnInit, OnDestroy
 {
@@ -45,13 +45,7 @@ export class AbstractClickableLayer<T>
     );
   }
 
-  protected handleSingleClick(_event: MapBrowserEvent): void {
-    // stubbed method
-  }
-
-  protected getFeatureInfo(_event: MapBrowserEvent): void {
-    // stubbed method
-  }
+  protected abstract handleSingleClick(_event: MapBrowserEvent): void;
 
   private subscribeOnClickEvent() {
     this.unsubscribeOnClickEvent();

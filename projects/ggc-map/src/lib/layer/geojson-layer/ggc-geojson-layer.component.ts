@@ -218,7 +218,6 @@ export class GgcGeojsonLayerComponent
   }
 
   protected handleSingleClick(event: MapBrowserEvent) {
-    super.handleSingleClick(event);
     // don't call getFeatureInfo, as that is already solved in the selectService
   }
 

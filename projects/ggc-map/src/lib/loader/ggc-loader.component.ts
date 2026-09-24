@@ -4,7 +4,8 @@ import {
   effect,
   inject,
   input,
-  OnDestroy
+  OnDestroy,
+  signal
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { CoreMapEventsService } from "../map/service/core-map-events.service";
@@ -40,7 +41,7 @@ export class GgcLoaderComponent implements OnDestroy {
    * Geeft aan of de kaart momenteel aan het laden is.
    * Wordt gebruikt door de template om de loader te tonen of verbergen.
    */
-  protected isLoading = false;
+  isLoading = signal(false);
   private readonly mapEventsService = inject(CoreMapEventsService);
   private loadEvents$: Subscription;
 
@@ -67,7 +68,7 @@ export class GgcLoaderComponent implements OnDestroy {
     this.unsubscribe();
     this.loadEvents$ = this.mapEventsService
       .getLoadingObservableForMap(this.mapIndex())
-      .subscribe((isLoading) => (this.isLoading = isLoading));
+      .subscribe((isLoading) => this.isLoading.set(isLoading));
   }
 
   /**

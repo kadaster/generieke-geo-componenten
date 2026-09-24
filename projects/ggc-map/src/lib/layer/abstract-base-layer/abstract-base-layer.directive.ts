@@ -10,7 +10,9 @@ import { CoreMapService } from "../../map/service/core-map.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 
 @Directive()
-export class AbstractBaseLayer<T extends Layer> implements OnInit, OnDestroy {
+export abstract class AbstractBaseLayer<T extends Layer>
+  implements OnInit, OnDestroy
+{
   protected mapIndex = signal<string>(DEFAULT_MAPINDEX);
   protected coreMapService = inject(CoreMapService);
   protected coreSelectionService = inject(CoreSelectionService);

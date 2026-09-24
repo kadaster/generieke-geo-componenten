@@ -99,7 +99,8 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
    * Wanneer minZoomlevel > maxZoomlevel wordt UNSUCCESSFUL event gestuurd.
    */
   readonly minZoomlevel = input(0, {
-    transform: (value: number) => Math.max(0, Math.min(25, value))
+    transform: (value: number) =>
+      Math.max(0, Math.min(GgcCrsConfigService.MAX_ZOOMLEVEL, value))
   });
 
   /**
