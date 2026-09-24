@@ -1,10 +1,16 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
+import {
+  GgcLayerService,
+  GgcMapComponent,
+  GgcMapService,
+  Webservice
+} from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { Webservice2DType } from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-home-example-search-location",
@@ -34,6 +40,8 @@ export class ExampleLayerGeojsonOgcComponent
   protected mapConfig: Webservice[];
   protected mapIndex = "GeoJsonOgcExample";
 
+  private layerService = inject(GgcLayerService);
+
   private readonly mapService = inject(GgcMapService);
 
   ngOnInit() {
@@ -44,6 +52,23 @@ export class ExampleLayerGeojsonOgcComponent
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
         this.mapService.zoomToCoordinate([194195, 465885], this.mapIndex, 6);
+        console.log(
+          "Laag",
+          this.mapService.getMap(this.mapIndex),
+          this.mapService.getLayer("buurten", this.mapIndex)
+        );
       });
+  }
+
+  public foo() {
+    console.log("foo");
+    this.layerService.removeLayer(this.mapIndex, "perceel");
+    this.layerService.addGeojsonLayer({
+      url: "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=100&filter-lang=cql2-text&kadastrale_gemeente_waarde=Zundert&perceelnummer=1560&sectie=P",
+      layerId: "perceel",
+      title: "Perceel",
+      zIndex: 20,
+      mapIndex: this.mapIndex
+    });
   }
 }
