@@ -27,8 +27,8 @@ export class ExampleDynamicLayerOgcBasicComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dynamic-layer-ogc-basic",
-    title: "Dynamisch OGC feature toevoegen aan GeoJson kaartlaag",
-    introduction: "Toon en zoom naar een OGC feature op de kaart.",
+    title: "OGC feature toevoegen aan kaartlaag (dynamisch)",
+    introduction: "Voeg een OGC feature toe aan een GeoJSON kaartlaag.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.OGC_API],
