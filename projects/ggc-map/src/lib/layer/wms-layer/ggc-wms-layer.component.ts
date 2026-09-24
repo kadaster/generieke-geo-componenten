@@ -46,7 +46,7 @@ export class GgcWmsLayerComponent
   implements OnInit, OnDestroy
 {
   /** Opties voor de WMS-laag. */
-  options = model<WmsLayerOptions | undefined>(undefined);
+  options = model<WmsLayerOptions | undefined>();
 
   /** Interne referentie naar de WMS-bron. */
   private wmsSource: ImageWMS | TileWMS;

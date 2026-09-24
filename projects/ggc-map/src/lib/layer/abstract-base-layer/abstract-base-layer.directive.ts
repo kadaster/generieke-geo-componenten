@@ -2,12 +2,14 @@ import { Directive, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import { Layer } from "ol/layer";
 import { Options } from "ol/layer/Base";
 import OlMap from "ol/Map";
-import { CrsConfig } from "../../core/model/crs-config.model";
-import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
+import {
+  CrsConfig,
+  GgcCrsConfigService,
+  AbstractBaseLayerOptions
+} from "@kadaster/ggc-map";
+import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
-import { AbstractBaseLayerOptions } from "../model/abstract-layer.model";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 @Directive()
 export class AbstractBaseLayer<T extends Layer> implements OnInit, OnDestroy {

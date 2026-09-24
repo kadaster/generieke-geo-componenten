@@ -35,7 +35,7 @@ export class GgcImageLayerComponent
    * Opties voor het configureren van de afbeeldingslaag.
    * Bevat instellingen voor de bron en de laag zelf.
    */
-  options = model<ImageLayerOptions | undefined>(undefined);
+  options = model<ImageLayerOptions | undefined>();
 
   private imageSource: ImageSource;
 

@@ -38,7 +38,7 @@ export class GgcWmtsLayerComponent
   /**
    * Opties voor het configureren van de WMTS-laag.
    */
-  options = model<WmtsLayerOptions | undefined>(undefined);
+  options = model<WmtsLayerOptions | undefined>();
 
   /**
    * Interne instantie van de WMTS source.

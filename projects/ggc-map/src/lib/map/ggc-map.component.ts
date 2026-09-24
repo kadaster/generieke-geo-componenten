@@ -85,7 +85,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /** tabIndex t.b.v. toetsenbordnavigatie */
-  mapTabIndex = input<number | undefined>(undefined);
+  mapTabIndex = input<number | undefined>();
 
   /** ARIA role voor accessibility */
   ariaRole = input<string>("application");

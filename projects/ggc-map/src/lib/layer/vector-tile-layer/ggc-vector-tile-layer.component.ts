@@ -69,7 +69,7 @@ export class GgcVectorTileLayerComponent
    * Zie VectorTileLayerOptions voor beschikbare instellingen.
    */
 
-  options = model<VectorTileLayerOptions | undefined>(undefined);
+  options = model<VectorTileLayerOptions | undefined>();
 
   /**
    * Angular HttpClient voor het ophalen van externe JSON-bestanden zoals stijl- of tile-informatie.
