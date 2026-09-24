@@ -1,11 +1,12 @@
-import type { ElementRef } from "@angular/core";
 import {
+  ChangeDetectionStrategy,
+  ElementRef,
   Component,
   inject,
-  Input,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  input
 } from "@angular/core";
 import { ScaleLine } from "ol/control";
 import { Options as ScaleLineOptions, Units } from "ol/control/ScaleLine";
@@ -24,7 +25,8 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-scale-line",
   templateUrl: "./ggc-scale-line.component.html",
-  styleUrls: ["./ggc-scale-line.component.css"]
+  styleUrls: ["./ggc-scale-line.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcScaleLineComponent implements OnInit, OnDestroy {
   /**
@@ -40,13 +42,13 @@ export class GgcScaleLineComponent implements OnInit, OnDestroy {
    * Index van de kaart waaraan de schaalbalk
    * moet worden toegevoegd.
    */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /**
    * Eenheden waarin de schaal wordt weergegeven.
    * Standaard: metric. Overige mogelijke waarden: degrees, imperial, nautical, us.
    */
-  @Input() units: Units = "metric";
+  units = input<Units | undefined>("metric");
 
   /**
    * Referentie naar het HTML‑element
@@ -66,7 +68,7 @@ export class GgcScaleLineComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.scaleControl = new ScaleLine(this.createScaleLineOptions());
 
-    this.map = this.coreMapService.getMap(this.mapIndex);
+    this.map = this.coreMapService.getMap(this.mapIndex());
     this.map.addControl(this.scaleControl);
   }
 
@@ -79,7 +81,7 @@ export class GgcScaleLineComponent implements OnInit, OnDestroy {
    */
   createScaleLineOptions(): ScaleLineOptions {
     const options: ScaleLineOptions = {
-      units: this.units
+      units: this.units()
     };
     // Wanneer de MapDetailsContainerComponent aanwezig is,
     // wordt de schaalbalk daarin gerenderd in plaats van

@@ -1,4 +1,4 @@
-import { Component, inject, Input } from "@angular/core";
+import { Component, inject, input } from "@angular/core";
 import { Camera, Ellipsoid, Matrix4, Transforms } from "@cesium/engine";
 import { CoreViewerService } from "../service/core-viewer.service";
 import { LookAtPosition } from "../model/interfaces";
@@ -32,31 +32,31 @@ export class GgcControlsComponent {
   /**
    * CSS class voor het icoon dat gebruikt wordt voor "omhoog bewegen".
    */
-  @Input() upIcon = "fa-sharp fa-light fa-arrow-up-to-line";
+  upIcon = input("fa-sharp fa-light fa-arrow-up-to-line");
   /**
    * CSS class voor het icoon dat gebruikt wordt voor "links roteren".
    */
-  @Input() leftIcon = "fa-sharp fa-light fa-rotate-left";
+  leftIcon = input("fa-sharp fa-light fa-rotate-left");
   /**
    * CSS class voor het icoon dat gebruikt wordt voor "rechts roteren".
    */
-  @Input() rightIcon = "fa-sharp fa-light fa-rotate-right";
+  rightIcon = input("fa-sharp fa-light fa-rotate-right");
   /**
    * CSS class voor het icoon dat gebruikt wordt voor "omlaag bewegen".
    */
-  @Input() downIcon = "fa-sharp fa-light fa-arrow-down-to-line";
+  downIcon = input("fa-sharp fa-light fa-arrow-down-to-line");
   /**
    * CSS class voor het icoon dat gebruikt wordt voor "inzoomen".
    */
-  @Input() plusIcon = "fal fa-plus";
+  plusIcon = input("fal fa-plus");
   /**
    * CSS class voor het icoon dat gebruikt wordt voor "uitzoomen".
    */
-  @Input() minusIcon = "fal fa-minus";
+  minusIcon = input("fal fa-minus");
   /**
    * CSS class voor het icoon dat gebruikt wordt voor het resetten naar de standaard camerastand.
    */
-  @Input() defaultCameraPosition = "fal fa-eye";
+  defaultCameraPosition = input("fal fa-eye");
 
   private readonly coreViewerService = inject(CoreViewerService);
   private readonly viewerService = inject(GgcViewerService);

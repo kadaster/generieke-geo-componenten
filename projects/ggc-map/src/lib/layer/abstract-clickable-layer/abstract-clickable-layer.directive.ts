@@ -1,17 +1,20 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { Directive, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import { MapBrowserEvent } from "ol";
 import { CoreMapEventsService } from "../../map/service/core-map-events.service";
-import { AbstractConfigurableLayerComponent } from "../abstract-configurable-layer/abstract-configurable-layer.component";
+import { AbstractConfigurableLayer } from "../abstract-configurable-layer/abstract-configurable-layer.directive";
 import { AbstractClickableLayerOptions } from "../model/abstract-layer.model";
 import { Subscription } from "rxjs";
 
-@Component({ template: "" })
-export class AbstractClickableLayerComponent<T>
-  extends AbstractConfigurableLayerComponent<any>
+@Directive()
+export abstract class AbstractClickableLayer<T>
+  extends AbstractConfigurableLayer<any>
   implements OnInit, OnDestroy
 {
   protected maxFeaturesOnSingleclick = 8;
-  protected options?: AbstractClickableLayerOptions;
+
+  protected options = signal<AbstractClickableLayerOptions | undefined>(
+    undefined
+  );
   protected mapEventsService = inject(CoreMapEventsService);
   protected singleclick: Subscription;
 
@@ -38,15 +41,17 @@ export class AbstractClickableLayerComponent<T>
     super.setLayer(layer);
     this.olLayer.set(
       "ggc-get-feature-info-on-singleclick",
-      this.options?.getFeatureInfoOnSingleclick
+      this.options()?.getFeatureInfoOnSingleclick
     );
   }
 
+  protected abstract handleSingleClick(_event: MapBrowserEvent): void;
+
   private subscribeOnClickEvent() {
     this.unsubscribeOnClickEvent();
-    if (this.options?.getFeatureInfoOnSingleclick === true) {
+    if (this.options()?.getFeatureInfoOnSingleclick === true) {
       this.singleclick = this.mapEventsService
-        .getSingleclickObservableForMap(this.mapIndex)
+        .getSingleclickObservableForMap(this.mapIndex())
         .subscribe((evt) => {
           this.handleSingleClick(evt);
         });
@@ -57,13 +62,5 @@ export class AbstractClickableLayerComponent<T>
     if (this.singleclick !== undefined) {
       this.singleclick.unsubscribe();
     }
-  }
-
-  protected handleSingleClick(_event: MapBrowserEvent): void {
-    // stubbed method
-  }
-
-  protected getFeatureInfo(_event: MapBrowserEvent): void {
-    // stubbed method
   }
 }

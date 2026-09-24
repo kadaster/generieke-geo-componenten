@@ -6,7 +6,7 @@ import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../map/service/core-map-events.service";
 import { CoreMapService } from "../map/service/core-map.service";
 import { GgcZoomLevelComponent } from "./ggc-zoom-level.component";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import OlMap from "ol/Map";
 
 describe("ZoomLevelComponent", () => {
@@ -28,7 +28,7 @@ describe("ZoomLevelComponent", () => {
         CoreMapService,
         { provide: CoreMapEventsService, useClass: MapEventsServiceMock },
         GgcCrsConfigService,
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
   });

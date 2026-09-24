@@ -7,7 +7,7 @@ import {
 } from "./ggc-capabilities.service";
 import { GgcWmsWmtsCapabilitiesService } from "./ggc-wms-wmts-capabilities.service";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("GgcCapabilitiesService", () => {
   let service: GgcCapabilitiesService;
@@ -38,7 +38,7 @@ describe("GgcCapabilitiesService", () => {
         GgcCapabilitiesService,
         { provide: GgcWmsWmtsCapabilitiesService, useValue: wmsWmtsSvcSpy },
         { provide: GgcOgcApiCapabilitiesService, useValue: ogcApiSvcSpy },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
 

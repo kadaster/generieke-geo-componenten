@@ -3,7 +3,7 @@ import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcToolbarItemDrawComponent } from "./ggc-toolbar-item-draw.component";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { GgcDrawService } from "@kadaster/ggc-map/src/lib/drawing/service/ggc-draw.service";
 import {
   ToolbarItemDrawComponentEvent,
@@ -41,7 +41,7 @@ describe("ToolbarItemDrawComponent", () => {
           provide: GgcToolbarConnectService,
           useValue: connectServiceSpy
         },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
 

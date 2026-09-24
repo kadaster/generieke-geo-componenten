@@ -9,7 +9,7 @@ import {
   OGCAPITile,
   OGCAPITileset
 } from "./core-ogc-api-capabilities.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("GgcOgcApiCapabilitiesService", () => {
   let service: GgcOgcApiCapabilitiesService;
@@ -30,7 +30,7 @@ describe("GgcOgcApiCapabilitiesService", () => {
       providers: [
         GgcOgcApiCapabilitiesService,
         { provide: CoreOgcApiCapabilitiesService, useValue: coreMock },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
 

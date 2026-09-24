@@ -1,11 +1,12 @@
-import type { ElementRef } from "@angular/core";
 import {
+  ElementRef,
   Component,
   inject,
-  Input,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy,
+  input
 } from "@angular/core";
 import MousePosition, {
   Options as MousePositionOptions
@@ -32,7 +33,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   selector: "ggc-mouse-position",
   templateUrl: "./ggc-mouse-position.component.html",
   styleUrls: ["./ggc-mouse-position.component.css"],
-  standalone: true
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcMousePositionComponent implements OnInit, OnDestroy {
   /**
@@ -44,23 +45,28 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   });
 
   /** Aantal decimalen voor coördinaten */
-  @Input() decimalDigits = 2;
+  decimalDigits = input<number>(2);
 
   /** Index van de kaart waarop de mouse position wordt toegepast */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
 
   /** Placeholder tekst wanneer geen coördinaat beschikbaar is */
-  @Input() placeholder = " ";
+  placeholder = input<string>(" ");
 
   /** Doelprojectie waarin de coördinaten worden getoond.
    * Er kan een alternatieve projectie worden opgegeven, hiervoor dien je deze projectie en RD-new te registreren met proj4. */
-  @Input() projection = epsg28992;
+  projection = input(epsg28992);
+
+  /** Coördinaatformaat
+   * Standaard is dit RD: x = {x} m; y = {y} m, waarbij {x} en {y} worden vervangen met de coördinaten.
+   * Naast een string accepteert format ook een callback functie ((coordinate:Coordinate) => string).
+   * */
+  format = input<string | CoordinateFormat>("RD: x = {x} m; y = {y} m");
 
   private readonly coreMapService = inject(CoreMapService);
   private readonly crsConfigService = inject(GgcCrsConfigService);
-  private _format: string | CoordinateFormat = "RD: x = {x} m; y = {y} m";
   private map: OlMap;
-  private mode: "string" | "callback" = "string";
+
   private mousePositionControl: MousePosition;
 
   /**
@@ -69,20 +75,6 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
    */
   @ViewChild("ggcMousePosition", { static: true })
   private readonly ggcMousePosition: ElementRef;
-
-  /** Geeft het huidige ingestelde coördinaatformaat terug
-   * Standaard is dit RD: x = {x} m; y = {y} m, waarbij {x} en {y} worden vervangen met de coördinaten.
-   * Naast een string accepteert format ook een callback functie ((coordinate:Coordinate) => string).
-   * */
-  get format(): string | CoordinateFormat {
-    return this._format;
-  }
-
-  @Input()
-  set format(value: string | CoordinateFormat) {
-    this.mode = typeof value === "string" ? "string" : "callback";
-    this._format = value;
-  }
 
   /** Initialiseert de MousePosition control en voegt deze toe aan de kaart */
   ngOnInit() {
@@ -106,7 +98,7 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   createMousePositionOptions(): MousePositionOptions {
     const options: MousePositionOptions = {
       projection: this.crsConfigService.getRdNewCrsConfig().projectionCode,
-      placeholder: this.placeholder
+      placeholder: this.placeholder()
     };
     // when parent component MapDetailsContainerComponent is present, target for mouseposition is set to nativeElement
     // to show the mouse position within the parent component instead of the default location on the map
@@ -136,22 +128,21 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
       return "";
     }
 
-    if (this.projection !== epsg28992) {
-      if (!get(this.projection)) {
-        throw new Error(`Unknown projection '${this.projection}'`);
+    if (this.projection() !== epsg28992) {
+      if (!get(this.projection())) {
+        throw new Error(`Unknown projection '${this.projection()}'`);
       } else {
-        coord = transform(coord, epsg28992, this.projection);
+        coord = transform(coord, epsg28992, this.projection());
       }
     }
-
-    if (this.mode === "string") {
+    if (typeof this.format() === "string") {
       return new CoordinateFormatPipe().transform(
         coord,
-        this.decimalDigits,
-        this._format as string
+        this.decimalDigits(),
+        this.format() as string
       );
     } else {
-      return (this._format as CoordinateFormat)(coord);
+      return (this.format() as CoordinateFormat)(coord);
     }
   }
 
@@ -159,7 +150,7 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
    * Voegt de MousePosition control toe aan de actuele kaart.
    */
   private setMousePositionControlOnMap() {
-    this.map = this.coreMapService.getMap(this.mapIndex);
+    this.map = this.coreMapService.getMap(this.mapIndex());
     this.map.addControl(this.mousePositionControl);
   }
 }

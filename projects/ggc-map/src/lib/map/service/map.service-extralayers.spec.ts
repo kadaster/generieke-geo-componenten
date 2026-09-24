@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "./core-map.service";
 import { GgcMapService } from "./ggc-map.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("MapService", () => {
   let mapService: GgcMapService;
@@ -13,7 +13,7 @@ describe("MapService", () => {
         GgcMapService,
         CoreMapService,
         GgcCrsConfigService,
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
 

@@ -5,7 +5,7 @@ import { Theme } from "../../model/theme/theme.model";
 import { LayerSelectorComponent } from "../layer-selector/layer-selector.component";
 import { ThemeSelectorComponent } from "../theme-selector/theme-selector.component";
 import { GgcDatasetTreeComponent } from "./ggc-dataset-tree.component";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import {
   DatasetTreeLayer,
   DatasetTreeWebservice
@@ -60,7 +60,7 @@ describe("DatasetTreeComponent", () => {
           useValue: datasetTreeMapConnectServiceSpy
         },
         GgcDatasetTreeModelCreateService,
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
 

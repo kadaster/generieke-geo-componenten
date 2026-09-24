@@ -1,7 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   inject,
-  Input,
+  input,
   OnDestroy,
   OnInit,
   signal
@@ -23,14 +24,15 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
  */
 @Component({
   selector: "ggc-scale-denominator",
-  templateUrl: "./ggc-scale-denominator.component.html"
+  templateUrl: "./ggc-scale-denominator.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcScaleDenominatorComponent implements OnInit, OnDestroy {
   /**
    * Index van de kaart waarvoor het schaalgetal
    * berekend moet worden.
    */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
   protected currentScaleDenominator = signal<number | undefined>(undefined);
   private readonly coreMapService = inject(CoreMapService);
   private readonly mapEventsService = inject(CoreMapEventsService);
@@ -46,13 +48,23 @@ export class GgcScaleDenominatorComponent implements OnInit, OnDestroy {
    * - triggert herberekening van het schaalgetal
    */
   ngOnInit() {
-    this.map = this.coreMapService.getMap(this.mapIndex);
+    this.map = this.coreMapService.getMap(this.mapIndex());
     const zoomendObservable = this.mapEventsService.getZoomendObservableForMap(
-      this.mapIndex
+      this.mapIndex()
     );
     this.zoomendSubscription = zoomendObservable.subscribe(() => {
       this.calculateScaleDenominator();
     });
+  }
+
+  /**
+   * Ruimt resources op door de subscription
+   * op het zoom-event te beëindigen.
+   */
+  ngOnDestroy(): void {
+    if (this.zoomendSubscription) {
+      this.zoomendSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -80,16 +92,6 @@ export class GgcScaleDenominatorComponent implements OnInit, OnDestroy {
       );
     } else {
       this.currentScaleDenominator.set(undefined);
-    }
-  }
-
-  /**
-   * Ruimt resources op door de subscription
-   * op het zoom-event te beëindigen.
-   */
-  ngOnDestroy(): void {
-    if (this.zoomendSubscription) {
-      this.zoomendSubscription.unsubscribe();
     }
   }
 }

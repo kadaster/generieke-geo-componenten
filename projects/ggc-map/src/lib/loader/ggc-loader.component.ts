@@ -1,6 +1,15 @@
-import { Component, inject, Input, OnDestroy } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  OnDestroy,
+  signal
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import { CoreMapEventsService } from "../map/service/core-map-events.service";
+import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 /**
  * Component die een loader toont op basis van laadstatus
@@ -16,31 +25,31 @@ import { CoreMapEventsService } from "../map/service/core-map-events.service";
 @Component({
   selector: "ggc-loader",
   templateUrl: "./ggc-loader.component.html",
-  styleUrls: ["./ggc-loader.component.css"]
+  styleUrls: ["./ggc-loader.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GgcLoaderComponent implements OnDestroy {
-  /**
-   * Geeft aan of de kaart momenteel aan het laden is.
-   * Wordt gebruikt door de template om de loader te tonen of verbergen.
-   */
-  protected isLoading = false;
-
-  private readonly mapEventsService = inject(CoreMapEventsService);
-  private loadEvents$: Subscription;
-  private _mapIndex: string;
-
   /**
    * Index van de kaart waarvoor laad-events worden gevolgd.
    *
    * Bij wijziging wordt de bestaande subscription gestopt
    * en een nieuwe subscription opgezet voor de opgegeven kaart.
    */
-  @Input()
-  set mapIndex(value: string) {
-    this._mapIndex = value;
-    this.subscribe();
-  }
 
+  mapIndex = input<string>(DEFAULT_MAPINDEX);
+  /**
+   * Geeft aan of de kaart momenteel aan het laden is.
+   * Wordt gebruikt door de template om de loader te tonen of verbergen.
+   */
+  isLoading = signal(false);
+  private readonly mapEventsService = inject(CoreMapEventsService);
+  private loadEvents$: Subscription;
+
+  constructor() {
+    effect(() => {
+      this.subscribe();
+    });
+  }
   /**
    * Lifecycle hook die wordt aangeroepen wanneer
    * het component wordt vernietigd.
@@ -58,8 +67,8 @@ export class GgcLoaderComponent implements OnDestroy {
   private subscribe(): void {
     this.unsubscribe();
     this.loadEvents$ = this.mapEventsService
-      .getLoadingObservableForMap(this._mapIndex)
-      .subscribe((isLoading) => (this.isLoading = isLoading));
+      .getLoadingObservableForMap(this.mapIndex())
+      .subscribe((isLoading) => this.isLoading.set(isLoading));
   }
 
   /**

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { GgcToolbarItemComponent } from "../toolbar-item/ggc-toolbar-item.component";
 import { GgcToolbarComponent } from "./ggc-toolbar.component";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 @Component({
   imports: [GgcToolbarComponent, GgcToolbarItemComponent],
@@ -27,7 +27,7 @@ describe("ToolboxComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TestHostComponent],
-      providers: [provideZoneChangeDetection()]
+      providers: [provideZonelessChangeDetection()]
     }).compileComponents();
 
     hostFixture = TestBed.createComponent(TestHostComponent);
