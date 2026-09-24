@@ -13,6 +13,7 @@ import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
 import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
 import { LayerChangedEventTrigger } from "@kadaster/ggc-models/src/lib/models/layer-changed-event.model";
+import { createWmtsCapabilitiesFixture } from "../../layer/service/mock/wmts-capabilities.fixture";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
@@ -95,6 +96,9 @@ describe("LayerService", () => {
       getFeatureInfoOnSingleclick: false
     };
 
+    capSpy.getCapabilitiesForUrl.mockReturnValue(
+      of(createWmtsCapabilitiesFixture("testLayer"))
+    );
     vi.spyOn(service, "addWmtsLayer");
 
     const layerId = service.addWmtsLayer(layerOptions);
@@ -119,6 +123,9 @@ describe("LayerService", () => {
     };
 
     vi.spyOn(service, "addWmtsLayer");
+    capSpy.getCapabilitiesForUrl.mockReturnValue(
+      of(createWmtsCapabilitiesFixture("testLayer"))
+    );
     const layerId = service.addWmtsLayer(layerOptions);
 
     expect(isUUID(layerId!)).toBe(true);
