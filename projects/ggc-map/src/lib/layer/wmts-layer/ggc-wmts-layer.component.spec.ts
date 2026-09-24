@@ -21,7 +21,7 @@ import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
-import { createWmtsCapabilitiesFixture } from "../service/mock/wmts-capabilities.fixture";
+import { createWmtsCapabilitiesMock } from "../service/mock/wmts-capabilities.mock";
 
 describe("WmtsLayerComponent", () => {
   let component: GgcWmtsLayerComponent;
@@ -42,7 +42,7 @@ describe("WmtsLayerComponent", () => {
         .mockName("GgcCapabilitiesService.getWmtsFeatureInfo")
     };
     capSpy.getCapabilities.mockReturnValue(
-      of(createWmtsCapabilitiesFixture(undefined))
+      of(createWmtsCapabilitiesMock(undefined))
     );
     const selectionSpy = {
       handleFeatureInfoForLayer: vi
@@ -105,7 +105,7 @@ describe("WmtsLayerComponent", () => {
       }
     };
     capabilitiesService.getCapabilities.mockReturnValue(
-      of(createWmtsCapabilitiesFixture("my-layer"))
+      of(createWmtsCapabilitiesMock("my-layer"))
     );
 
     component.ngOnInit();

@@ -3,7 +3,7 @@
  * geldige WMTS-capabilities structuur op, zodat tests een bruikbare
  * `WMTS`-source kunnen construeren zonder te crashen.
  */
-export function createWmtsCapabilitiesFixture(
+export function createWmtsCapabilitiesMock(
   layerIdentifier?: string,
   includeFeatureInfoUrl = false
 ): Record<string, any> {
