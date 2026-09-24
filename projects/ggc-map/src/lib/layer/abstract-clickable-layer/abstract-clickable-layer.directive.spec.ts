@@ -3,9 +3,14 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 import { AbstractClickableLayer } from "./abstract-clickable-layer.directive";
+import MapBrowserEvent from "ol/MapBrowserEvent";
 
 @Component({ changeDetection: ChangeDetectionStrategy.Eager, template: "" })
-class TestLayerComponent extends AbstractClickableLayer<any> {}
+class TestLayerComponent extends AbstractClickableLayer<any> {
+  protected handleSingleClick(event: MapBrowserEvent) {
+    // don't call getFeatureInfo, as that is already solved in the selectService
+  }
+}
 
 describe("AbstractClickableLayerComponent", () => {
   let component: TestLayerComponent;

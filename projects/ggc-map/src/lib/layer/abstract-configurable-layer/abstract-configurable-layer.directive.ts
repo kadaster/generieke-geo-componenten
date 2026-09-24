@@ -12,7 +12,7 @@ import { zoomlevelToResolution } from "../../utils/epsg28992";
 import { MapComponentEvent } from "@kadaster/ggc-models";
 
 @Directive()
-export class AbstractConfigurableLayer<T>
+export abstract class AbstractConfigurableLayer<T>
   extends AbstractBaseLayer<any>
   implements OnInit, OnDestroy
 {
