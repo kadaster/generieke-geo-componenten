@@ -8,8 +8,9 @@ import {
   ViewChild,
   input,
   effect,
-  output,
-  untracked
+  untracked,
+  Output,
+  EventEmitter
 } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import { EventsKey } from "ol/events";
@@ -127,7 +128,8 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
    * - ZOOMEND / ZOOMENDLOCATION
    * - LOADING
    */
-  events = output<MapComponentEvent>();
+  @Output() events: EventEmitter<MapComponentEvent> =
+    new EventEmitter<MapComponentEvent>();
 
   /** DOM‑element waarin de kaart gerenderd wordt */
   @ViewChild("mapElement", { static: true })
