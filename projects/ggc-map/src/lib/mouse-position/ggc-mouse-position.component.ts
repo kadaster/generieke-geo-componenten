@@ -6,8 +6,7 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
-  input,
-  effect
+  input
 } from "@angular/core";
 import MousePosition, {
   Options as MousePositionOptions
@@ -67,7 +66,7 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   private readonly coreMapService = inject(CoreMapService);
   private readonly crsConfigService = inject(GgcCrsConfigService);
   private map: OlMap;
-  private mode: "string" | "callback" = "string";
+
   private mousePositionControl: MousePosition;
 
   /**
@@ -77,11 +76,6 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
   @ViewChild("ggcMousePosition", { static: true })
   private readonly ggcMousePosition: ElementRef;
 
-  constructor() {
-    effect(() => {
-      this.mode = typeof this.format() === "string" ? "string" : "callback";
-    });
-  }
   /** Initialiseert de MousePosition control en voegt deze toe aan de kaart */
   ngOnInit() {
     this.mousePositionControl = new MousePosition(
@@ -141,7 +135,7 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
         coord = transform(coord, epsg28992, this.projection());
       }
     }
-    if (this.mode === "string") {
+    if (typeof this.format() === "string") {
       return new CoordinateFormatPipe().transform(
         coord,
         this.decimalDigits(),

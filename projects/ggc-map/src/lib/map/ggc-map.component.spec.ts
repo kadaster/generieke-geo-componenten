@@ -66,7 +66,6 @@ describe("MapComponent, ngAfterViewInit", () => {
     component = fixture.componentInstance;
   });
 
-  //LV
   it("Events should be set", async () => {
     component.events.subscribe((mapComponentInitEvent: MapComponentEvent) => {
       expect(mapComponentInitEvent.type).toBe(
