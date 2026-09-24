@@ -105,7 +105,7 @@ export function buildExamplePaths(
 export function buildComponentMetadata(exampleName: string): ComponentMetadata {
   return {
     className: `Example${pascalCase(exampleName)}Component`,
-    selector: `app-example-${exampleName}`,
+    selector: `ggc-home-example-${exampleName}`,
     route: `/${exampleName}`
   };
 }
