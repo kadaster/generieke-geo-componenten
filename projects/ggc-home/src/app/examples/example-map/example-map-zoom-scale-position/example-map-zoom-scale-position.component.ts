@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from "@angular/core";
 import {
   GgcMapComponent,
@@ -60,7 +61,7 @@ export class ExampleMapZoomScalePositionComponent
   tsDocsUrl = `${document.baseURI}tsdocs/modules/ggc-map_src_public-api.html`;
   // DOCS-SKIP:END
 
-  protected mapConfig: Webservice[];
+  protected readonly mapConfig = signal<Webservice[]>([]);
   private readonly mapService = inject(GgcMapService);
 
   ngOnInit() {
@@ -70,7 +71,7 @@ export class ExampleMapZoomScalePositionComponent
         "code/examples/example-map/example-map-zoom-scale-position/kaartconfig.json"
       )
       .subscribe((data) => {
-        this.mapConfig = data as Webservice[];
+        this.mapConfig.set(data as Webservice[]);
       });
   }
 }
