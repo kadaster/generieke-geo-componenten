@@ -1,0 +1,75 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo?.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>In dit voorbeeld voegen we een feature toe aan de kaart met behulp van de <code>GgcLayerService</code>.
+      De features worden uit de percelencollectie van de <a href="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/api">OGC API</a> opgehaald.
+      Vervolgens wordt ingezoomd op de extent van de nieuwe feature.</p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+        <fieldset class="ggc-fieldset">
+          <legend>Kies een locatie</legend>
+          <div class="d-grid gap-2">
+            <button
+              (click)="goToDeGrift()"
+              class="btn"
+              [class.btn-primary]="activeLocation === 'grift'"
+              [class.btn-outline-primary]="activeLocation !== 'grift'"
+            >
+             Kantoor de Grift Apeldoorn
+            </button>
+            <button
+              (click)="goToDeBrug()"
+              class="btn"
+              [class.btn-primary]="activeLocation === 'brug'"
+              [class.btn-outline-primary]="activeLocation !== 'brug'"
+            >
+              Kantoor de Brug Apeldoorn
+            </button>
+            <button
+              (click)="goToLocatieArnhem()"
+              class="btn"
+              [class.btn-primary]="activeLocation === 'arnhem'"
+              [class.btn-outline-primary]="activeLocation !== 'arnhem'"
+            >
+              Kantoor Arnhem
+            </button>
+            <button
+              (click)="goToLocatieZwolle()"
+              class="btn"
+              [class.btn-primary]="activeLocation === 'zwolle'"
+              [class.btn-outline-primary]="activeLocation !== 'zwolle'"
+            >
+              Kantoor Zwolle
+            </button>
+          </div>
+        </fieldset>
+      </div>
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
+          <div class="map-container">
+            <ggc-map
+              [mapIndex]="mapIndex"
+              [webServices]="mapConfig"></ggc-map>
+          </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>
