@@ -37,7 +37,7 @@ export class ExampleDynamicLayerOgcBasicComponent
   } as ComponentInfo;
   urlComponentModule =
     "example-layer/example-dynamic-layer-ogc-basic/example-dynamic-layer-ogc-basic.component.ts";
-  tsDocsUrl = `${document.baseURI}tsdocs/classes/TODO_VERVANG_DIT_classpad.html`;
+  tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcLayerService.html`;
   // DOCS-SKIP:END
 
   protected mapConfig: Webservice[];
@@ -56,11 +56,11 @@ export class ExampleDynamicLayerOgcBasicComponent
         this.mapConfig = data as Webservice[];
       });
 
-    this.goToDeBrug();
-
     this.layerService.getLayerChangedObservable().subscribe((change) => {
       this.zoomToExtent(change);
     });
+
+    this.goToDeBrug();
   }
 
   goToDeGrift() {
