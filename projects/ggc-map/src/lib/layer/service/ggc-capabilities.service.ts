@@ -1,8 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { GgcWmsWmtsCapabilitiesService } from "./ggc-wms-wmts-capabilities.service";
+import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
 import { map } from "rxjs/operators";
+import WMTS from "ol/source/WMTS";
+import { Coordinate } from "ol/coordinate";
 
 /**
  * Service voor het ophalen en verwerken van WMS/WMTS en OGCAPI capabilities.
@@ -11,9 +13,10 @@ import { map } from "rxjs/operators";
   providedIn: "root"
 })
 export class GgcCapabilitiesService {
-  private readonly wmsWmtsCapabilitiesService = inject(
-    GgcWmsWmtsCapabilitiesService
+  private readonly coreWmsWmtsCapabilitiesService = inject(
+    CoreWmsWmtsCapabilitiesService
   );
+
   private readonly ogcApiCapabilitiesService = inject(
     GgcOgcApiCapabilitiesService
   );
@@ -31,11 +34,11 @@ export class GgcCapabilitiesService {
   ): Observable<ServiceCapabilities | undefined> {
     switch (serviceType) {
       case "WMS":
-        return this.wmsWmtsCapabilitiesService.getServiceCapabilitiesWMS(
+        return this.coreWmsWmtsCapabilitiesService.getServiceCapabilitiesWMS(
           baseUrl
         );
       case "WMTS":
-        return this.wmsWmtsCapabilitiesService.getServiceCapabilitiesWMTS(
+        return this.coreWmsWmtsCapabilitiesService.getServiceCapabilitiesWMTS(
           baseUrl
         );
       case "OGCAPI":
@@ -74,10 +77,35 @@ export class GgcCapabilitiesService {
     baseUrl: string,
     service: "WMTS" | "WMS"
   ): Observable<Record<string, any> | undefined> {
-    return this.wmsWmtsCapabilitiesService.getCapabilities(baseUrl, service);
+    return this.coreWmsWmtsCapabilitiesService.getCapabilitiesForUrl(
+      baseUrl,
+      service
+    );
+  }
+
+  /**
+   * Maakt een observable voor een WMTS GetFeatureInfo request.
+   *
+   * @param baseUrl - De URL van de WMTS service.
+   * @param source - De WMTS bron.
+   * @param coordinate - De Coordinate waarop info gewenst is.
+   * @param resolution - De resolutie van de kaart.
+   * @returns Observable met de response van de GetFeatureInfo request.
+   */
+  getWmtsFeatureInfo(
+    baseUrl: string,
+    source: WMTS,
+    coordinate: Coordinate,
+    resolution: number
+  ): Observable<any> {
+    return this.coreWmsWmtsCapabilitiesService.getWmtsFeatureInfo(
+      baseUrl,
+      source,
+      coordinate,
+      resolution
+    );
   }
 }
-
 /**
  * ServiceCapabilities object bevat de layers van een WMS, WMTS of OGCAPI service.
  */

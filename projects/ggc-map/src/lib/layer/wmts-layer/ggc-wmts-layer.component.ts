@@ -6,18 +6,18 @@ import { Geometry } from "ol/geom";
 import TileLayer from "ol/layer/Tile";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import TileSource from "ol/source/Tile";
-import WMTS from "ol/source/WMTS";
+import WMTS, { optionsFromCapabilities } from "ol/source/WMTS";
 import { Subscription } from "rxjs";
 
 import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
 import { Capabilities } from "../model/capabilities.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
-import { CoreWmsWmtsCapabilitiesService } from "../service/core-wms-wmts-capabilities.service";
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
 import {
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import { GgcCapabilitiesService } from "../service/ggc-capabilities.service";
 
 /**
  * Door `<ggc-wmts-layer></ggc-wmts-layer>` op te nemen in de HTML kunnen WMTS-kaarten
@@ -57,9 +57,9 @@ export class GgcWmtsLayerComponent
   private capabilities: Capabilities | undefined;
 
   /**
-   * Injectie van de CoreWmsWmtsCapabilitiesService.
+   * Injectie van de GgcCapabilitiesService.
    */
-  private readonly capabilitiesService = inject(CoreWmsWmtsCapabilitiesService);
+  private readonly ggcCapabilitiesService = inject(GgcCapabilitiesService);
 
   /**
    * Angular lifecycle hook die wordt aangeroepen bij initialisatie van de component.
@@ -82,9 +82,8 @@ export class GgcWmtsLayerComponent
     if (this.options?.maxFeaturesOnSingleclick !== undefined) {
       this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
     }
-
-    this.capabilitiesSubscription = this.capabilitiesService
-      .getCapabilitiesForUrl(
+    this.capabilitiesSubscription = this.ggcCapabilitiesService
+      .getCapabilities(
         (this.options?.url as string) ||
           (this.options?.sourceOptions?.url as string),
         "WMTS"
@@ -92,17 +91,14 @@ export class GgcWmtsLayerComponent
       .subscribe((result) => {
         if (result) {
           this.capabilities = new Capabilities(result);
-          const options = this.capabilitiesService.optionsFromCapabilities(
-            result,
-            {
-              format: "image/png",
-              style: "default",
-              crossOrigin: "anonymous",
-              ...this.options?.sourceOptions,
-              ...(this.options?.layer && { layer: this.options?.layer }),
-              projection: this.rdNewConfig.projectionCode
-            }
-          );
+          const options = optionsFromCapabilities(result, {
+            format: "image/png",
+            style: "default",
+            crossOrigin: "anonymous",
+            ...this.options?.sourceOptions,
+            ...(this.options?.layer && { layer: this.options?.layer }),
+            projection: this.rdNewConfig.projectionCode
+          });
           if (options) {
             // Set transition to 0 when opacity < 1 to prevent flicker
             const opacity = this.options?.layerOptions?.opacity;
@@ -161,12 +157,9 @@ export class GgcWmtsLayerComponent
         this.olLayer.getMaxResolution()
       )
     ) {
-      if (
-        this.capabilities &&
-        this.capabilitiesService.hasFeatureInfoUrl(this.capabilities)
-      ) {
+      if (this.capabilities && this.capabilities.hasFeatureInfoUrl()) {
         const featureInfoObservable =
-          this.capabilitiesService.createGetFeatureInfoUrlObservable(
+          this.ggcCapabilitiesService.getWmtsFeatureInfo(
             (this.options?.url as string) ||
               (this.options?.sourceOptions?.url as string),
             this.wmtsSource,
