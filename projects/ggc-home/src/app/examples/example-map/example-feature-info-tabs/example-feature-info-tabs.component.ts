@@ -55,12 +55,12 @@ export class ExampleFeatureInfoTabsComponent
     GgcFeatureInfoConfigService
   );
   private defaultTabOrder = [
-    { layerName: "Gemeenten", tabIndex: 1 },
-    { layerName: "Provincies", tabIndex: 2 }
+    { layerId: "gemeenten", tabIndex: 1 },
+    { layerId: "provincies", tabIndex: 2 }
   ] as SortFilterConfig[];
   private alternativeTabOrder = [
-    { layerName: "Provincies", tabIndex: 1 },
-    { layerName: "Gemeenten", tabIndex: 2 }
+    { layerId: "provincies", tabIndex: 1 },
+    { layerId: "gemeenten", tabIndex: 2 }
   ] as SortFilterConfig[];
   private tabOrder = this.defaultTabOrder;
 
