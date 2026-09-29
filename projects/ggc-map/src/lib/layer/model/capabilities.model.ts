@@ -33,4 +33,13 @@ export class Capabilities {
       cap.OperationsMetadata.GetFeatureInfo.DCP.HTTP.Get.length > 0 &&
       cap.OperationsMetadata.GetFeatureInfo.DCP.HTTP.Get["0"]?.href;
   }
+
+  /**
+   * Controleert of de capabilities een GetFeatureInfo URL bevatten.
+   *
+   * @returns `true` als een GetFeatureInfo URL beschikbaar is.
+   */
+  hasFeatureInfoUrl(): boolean {
+    return !!this.featureInfoUrl;
+  }
 }
