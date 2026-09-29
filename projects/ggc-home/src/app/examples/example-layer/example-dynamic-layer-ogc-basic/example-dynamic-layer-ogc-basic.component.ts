@@ -10,10 +10,6 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import {
-  LayerChangedEvent,
-  LayerChangedEventTrigger
-} from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-home-example-dynamic-layer-ogc-basic",
@@ -27,7 +23,7 @@ export class ExampleDynamicLayerOgcBasicComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dynamic-layer-ogc-basic",
-    title: "OGC feature toevoegen aan kaartlaag (dynamisch)",
+    title: "OGC API feature dynamisch toevoegen aan kaartlaag",
     introduction: "Voeg een OGC feature toe aan een GeoJSON kaartlaag.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
@@ -41,7 +37,8 @@ export class ExampleDynamicLayerOgcBasicComponent
   // DOCS-SKIP:END
 
   protected mapConfig: Webservice[];
-  protected activeLocation: "grift" | "brug" | "arnhem" | "zwolle" = "brug";
+  protected activeLocation:
+    "perceel1" | "perceel2" | "perceel3" | "perceel4" | undefined;
   protected readonly mapIndex = "mapName";
 
   private layerService: GgcLayerService = inject(GgcLayerService);
@@ -56,31 +53,34 @@ export class ExampleDynamicLayerOgcBasicComponent
         this.mapConfig = data as Webservice[];
       });
 
-    this.layerService.getLayerChangedObservable().subscribe((change) => {
-      this.zoomToExtent(change);
+    this.layerService.getLayerChangedObservable().subscribe(() => {
+      // zoom to location when layer is loaded
+      this.mapService.zoomToCoordinate(
+        [194290.41, 469436.395],
+        this.mapIndex,
+        12
+      );
     });
-
-    this.goToDeBrug();
   }
 
-  goToDeGrift() {
-    this.activeLocation = "grift";
+  selectPerceel1() {
+    this.activeLocation = "perceel1";
     this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=9833&sectie=U");
   }
 
-  goToDeBrug() {
-    this.activeLocation = "brug";
-    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=4095&sectie=AD");
+  selectPerceel2() {
+    this.activeLocation = "perceel2";
+    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=7083&sectie=U");
   }
 
-  goToLocatieArnhem() {
-    this.activeLocation = "arnhem";
-    this.addFeatureToGeoJsonLayer("Arnhem&perceelnummer=9288&sectie=AC");
+  selectPerceel3() {
+    this.activeLocation = "perceel3";
+    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=8643&sectie=U");
   }
 
-  goToLocatieZwolle() {
-    this.activeLocation = "zwolle";
-    this.addFeatureToGeoJsonLayer("Zwolle&perceelnummer=3244&sectie=P");
+  selectPerceel4() {
+    this.activeLocation = "perceel4";
+    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=6065&sectie=U");
   }
 
   private addFeatureToGeoJsonLayer(kadastraleGemeenteWaarde: string) {
@@ -92,39 +92,5 @@ export class ExampleDynamicLayerOgcBasicComponent
       zIndex: 20,
       mapIndex: this.mapIndex
     });
-  }
-
-  private zoomToExtent(change: LayerChangedEvent) {
-    if (
-      change.layerId === "perceel" &&
-      change.eventTrigger === LayerChangedEventTrigger.LAYER_LOADED
-    ) {
-      const layer: any = this.mapService.getLayer("perceel", this.mapIndex);
-      const source = layer?.getSource();
-      const features = source?.getFeatures();
-
-      if (source && features?.length) {
-        const map = this.mapService.getMap(this.mapIndex);
-        const view = map.getView();
-        const extent = source.getExtent();
-        const zoomOutLevel = 5; // pas het aantal niveaus aan naar smaak
-
-        // Stap 1: eerst uitzoomen, zodat tiles op tussenliggende niveaus tijd hebben te laden
-        view.animate(
-          {
-            zoom: zoomOutLevel,
-            duration: 800
-          },
-          () => {
-            // Stap 2: pas daarna pannen + inzoomen naar de nieuwe extent
-            view.fit(extent, {
-              padding: [20, 20, 20, 20],
-              maxZoom: 19,
-              duration: 2000
-            });
-          }
-        );
-      }
-    }
   }
 }

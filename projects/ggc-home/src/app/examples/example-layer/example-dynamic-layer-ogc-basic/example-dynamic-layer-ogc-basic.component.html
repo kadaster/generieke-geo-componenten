@@ -15,9 +15,8 @@
 
   <div page-introduction>
     <p>{{ componentInfo.introduction }}</p>
-    <p>In dit voorbeeld voegen we een feature toe aan de kaart met behulp van de <code>GgcLayerService</code>.
-      De features worden uit de percelencollectie van de <a href="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/api">OGC API</a> opgehaald.
-      Vervolgens wordt ingezoomd op de extent van de nieuwe feature.</p>
+    <p>Dit voorbeeld laat zien hoe een feature aan de kaart wordt toegevoegd met de <code>GgcLayerService</code>.<br>
+      De features worden uit de <a href="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/api">OGC API Features</a> van de Kadastrale kaart opgehaald.</p>
   </div>
 
   <div page-functionality>
@@ -25,39 +24,39 @@
       <!-- DOCS:START functionality -->
       <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
         <fieldset class="ggc-fieldset">
-          <legend>Kies een locatie</legend>
+          <legend>Voeg een perceel toe</legend>
           <div class="d-grid gap-2">
             <button
-              (click)="goToDeGrift()"
+              (click)="selectPerceel1()"
               class="btn"
-              [class.btn-primary]="activeLocation === 'grift'"
-              [class.btn-outline-primary]="activeLocation !== 'grift'"
+              [class.btn-primary]="activeLocation === 'perceel1'"
+              [class.btn-outline-primary]="activeLocation !== 'perceel1'"
             >
-             Kantoor de Grift Apeldoorn
+             Perceel 1
             </button>
             <button
-              (click)="goToDeBrug()"
+              (click)="selectPerceel2()"
               class="btn"
-              [class.btn-primary]="activeLocation === 'brug'"
-              [class.btn-outline-primary]="activeLocation !== 'brug'"
+              [class.btn-primary]="activeLocation === 'perceel2'"
+              [class.btn-outline-primary]="activeLocation !== 'perceel2'"
             >
-              Kantoor de Brug Apeldoorn
+              Perceel 2
             </button>
             <button
-              (click)="goToLocatieArnhem()"
+              (click)="selectPerceel3()"
               class="btn"
-              [class.btn-primary]="activeLocation === 'arnhem'"
-              [class.btn-outline-primary]="activeLocation !== 'arnhem'"
+              [class.btn-primary]="activeLocation === 'perceel3'"
+              [class.btn-outline-primary]="activeLocation !== 'perceel3'"
             >
-              Kantoor Arnhem
+              Perceel 3
             </button>
             <button
-              (click)="goToLocatieZwolle()"
+              (click)="selectPerceel4()"
               class="btn"
-              [class.btn-primary]="activeLocation === 'zwolle'"
-              [class.btn-outline-primary]="activeLocation !== 'zwolle'"
+              [class.btn-primary]="activeLocation === 'perceel4'"
+              [class.btn-outline-primary]="activeLocation !== 'perceel4'"
             >
-              Kantoor Zwolle
+              Perceel 4
             </button>
           </div>
         </fieldset>
@@ -65,8 +64,8 @@
       <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
           <div class="map-container">
             <ggc-map
-              [mapIndex]="mapIndex"
-              [webServices]="mapConfig"></ggc-map>
+              [webServices]="mapConfig"
+            [mapIndex]="this.mapIndex" ]></ggc-map>
           </div>
       </div>
       <!-- DOCS:END functionality -->
