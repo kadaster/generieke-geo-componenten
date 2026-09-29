@@ -32,8 +32,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-mouse-position",
   templateUrl: "./ggc-mouse-position.component.html",
-  styleUrls: ["./ggc-mouse-position.component.css"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ["./ggc-mouse-position.component.css"]
 })
 export class GgcMousePositionComponent implements OnInit, OnDestroy {
   /**

@@ -3,7 +3,6 @@ import { of } from "rxjs";
 import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { CoreWmsWmtsCapabilitiesRequestService } from "./core-wms-wmts-capabilities-request.service";
 import { ServiceCapabilities } from "./ggc-capabilities.service";
-import { provideZoneChangeDetection } from "@angular/core";
 import { provideZonelessChangeDetection } from "@angular/core";
 
 const WMS_CAPABILITIES = {
@@ -148,7 +147,7 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
           provide: CoreWmsWmtsCapabilitiesRequestService,
           useClass: CoreCapabilitiesServiceMock
         },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
     service = TestBed.inject(CoreWmsWmtsCapabilitiesService);

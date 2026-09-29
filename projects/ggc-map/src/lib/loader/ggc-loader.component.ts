@@ -25,8 +25,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-loader",
   templateUrl: "./ggc-loader.component.html",
-  styleUrls: ["./ggc-loader.component.css"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ["./ggc-loader.component.css"]
 })
 export class GgcLoaderComponent implements OnDestroy {
   /**

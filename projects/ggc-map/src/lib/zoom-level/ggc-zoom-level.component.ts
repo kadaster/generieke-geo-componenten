@@ -22,8 +22,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-zoom-level",
   templateUrl: "./ggc-zoom-level.component.html",
-  imports: [],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: []
 })
 export class GgcZoomLevelComponent implements OnInit, OnDestroy {
   /**

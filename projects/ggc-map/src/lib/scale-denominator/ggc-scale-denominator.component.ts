@@ -24,8 +24,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
  */
 @Component({
   selector: "ggc-scale-denominator",
-  templateUrl: "./ggc-scale-denominator.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "./ggc-scale-denominator.component.html"
 })
 export class GgcScaleDenominatorComponent implements OnInit, OnDestroy {
   /**

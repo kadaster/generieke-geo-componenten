@@ -60,8 +60,7 @@ import Projection from "ol/proj/Projection";
  */
 @Component({
   selector: "ggc-geojson-layer",
-  template: "",
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: ""
 })
 export class GgcGeojsonLayerComponent
   extends AbstractClickableLayer<VectorLayer<VectorSource<Feature<Geometry>>>>

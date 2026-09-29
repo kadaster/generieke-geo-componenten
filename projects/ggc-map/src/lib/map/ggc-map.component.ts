@@ -78,8 +78,7 @@ import {
 @Component({
   selector: "ggc-map",
   templateUrl: "./ggc-map.component.html",
-  styleUrls: ["./ggc-map.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ["./ggc-map.component.scss"]
 })
 export class GgcMapComponent implements AfterViewInit, OnDestroy {
   /** Unieke naam/index van de kaart (default: DEFAULT_MAPINDEX) */

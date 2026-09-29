@@ -25,8 +25,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 @Component({
   selector: "ggc-scale-line",
   templateUrl: "./ggc-scale-line.component.html",
-  styleUrls: ["./ggc-scale-line.component.css"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ["./ggc-scale-line.component.css"]
 })
 export class GgcScaleLineComponent implements OnInit, OnDestroy {
   /**
