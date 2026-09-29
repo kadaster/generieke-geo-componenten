@@ -103,7 +103,7 @@ describe("WmtsLayerComponent", () => {
       sourceOptions: {
         layer: "my-layer"
       }
-    };
+    });
     capabilitiesService.getCapabilities.mockReturnValue(
       of(createWmtsCapabilitiesMock("my-layer"))
     );

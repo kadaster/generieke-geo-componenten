@@ -95,7 +95,7 @@ export class GgcWmtsLayerComponent
             style: "default",
             crossOrigin: "anonymous",
             ...this.options()?.sourceOptions,
-            ...(this.options()?.layer && { layer: this.options?.layer }),
+            ...(this.options()?.layer && { layer: this.options()?.layer }),
             projection: this.rdNewConfig.projectionCode
           });
           if (options) {
