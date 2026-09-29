@@ -42,22 +42,6 @@
             >
               Perceel 2
             </button>
-            <button
-              (click)="selectPerceel3()"
-              class="btn"
-              [class.btn-primary]="activeLocation === 'perceel3'"
-              [class.btn-outline-primary]="activeLocation !== 'perceel3'"
-            >
-              Perceel 3
-            </button>
-            <button
-              (click)="selectPerceel4()"
-              class="btn"
-              [class.btn-primary]="activeLocation === 'perceel4'"
-              [class.btn-outline-primary]="activeLocation !== 'perceel4'"
-            >
-              Perceel 4
-            </button>
           </div>
         </fieldset>
       </div>
@@ -65,7 +49,7 @@
           <div class="map-container">
             <ggc-map
               [webServices]="mapConfig"
-            [mapIndex]="this.mapIndex" ]></ggc-map>
+            [mapIndex]="this.mapIndex"></ggc-map>
           </div>
       </div>
       <!-- DOCS:END functionality -->

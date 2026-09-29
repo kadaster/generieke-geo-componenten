@@ -73,16 +73,6 @@ export class ExampleDynamicLayerOgcBasicComponent
     this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=7083&sectie=U");
   }
 
-  selectPerceel3() {
-    this.activeLocation = "perceel3";
-    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=8643&sectie=U");
-  }
-
-  selectPerceel4() {
-    this.activeLocation = "perceel4";
-    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=6065&sectie=U");
-  }
-
   private addFeatureToGeoJsonLayer(kadastraleGemeenteWaarde: string) {
     this.layerService.removeLayer(this.mapIndex, "perceel");
     this.layerService.addGeojsonLayer({
