@@ -39,9 +39,9 @@ export class ExampleToolbar extends ExampleFormatComponent {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/toolbar",
-    title: "Toolbar",
+    title: "Werkbalk",
     introduction:
-      "Toolbar met knoppen voor tekenen, bewerken en locatie kopiëren.",
+      "Werkbalk met knoppen voor tekenen, bewerken en locatie kopiëren.",
     components: [Components.GGC_TOOLBAR],
     theme: [Themes.WERKBALK],
     tags: [Tags.TOOLBAR, Tags.CONTROLS],
