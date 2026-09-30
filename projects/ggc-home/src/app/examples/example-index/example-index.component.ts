@@ -346,7 +346,7 @@ export class ExampleIndexComponent {
   protected count2D3D(item: Tags) {
     return this.filteredCards("2d3d").filter(
       (card) =>
-        (item === Tags.TWEED && !card.tags.includes(item)) ||
+        (item === Tags.TWEED && !card.tags.includes(Tags.DRIED)) ||
         (item === Tags.DRIED && card.tags.includes(item))
     ).length;
   }
