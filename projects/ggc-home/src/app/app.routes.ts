@@ -61,6 +61,7 @@ import { ExampleSearchLocationOnlyLocationComponent } from "./examples/example-s
 import { ExampleFeatureInfoTemplateComponent } from "./examples/example-map/example-feature-info-template/example-feature-info-template.component";
 import { ExampleSearchLocationAlternativeSearchComponent } from "./examples/example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
 import { ExampleConversionComponent } from "./examples/example-conversion/example-conversion.component";
+import { ExampleDynamicLayerOgcBasicComponent } from "./examples/example-layer/example-dynamic-layer-ogc-basic/example-dynamic-layer-ogc-basic.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -415,6 +416,12 @@ export const routes: Routes = [
     title: "Bestandsconversies | GGC-Home",
     component: ExampleConversionComponent,
     data: { label: "conversion" }
+  },
+  {
+    path: "dynamic-layer-ogc-basic",
+    title: "OGC feature tonen | GGC-Home",
+    component: ExampleDynamicLayerOgcBasicComponent,
+    data: { label: "dynamic-layer-ogc-basic" }
   },
   // PLOP:ROUTE
   {

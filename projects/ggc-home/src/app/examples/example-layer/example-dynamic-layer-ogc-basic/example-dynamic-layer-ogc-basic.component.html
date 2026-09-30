@@ -1,0 +1,58 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo?.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>Dit voorbeeld laat zien hoe een feature aan de kaart wordt toegevoegd met de <code>GgcLayerService</code>.<br>
+      De features worden uit de <a href="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/api">OGC API Features</a> van de Kadastrale kaart opgehaald.</p>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+        <fieldset class="ggc-fieldset">
+          <legend>Voeg een perceel toe</legend>
+          <div class="d-grid gap-2">
+            <button
+              (click)="selectPerceel1()"
+              class="btn"
+              [class.btn-primary]="activeLocation === 'perceel1'"
+              [class.btn-outline-primary]="activeLocation !== 'perceel1'"
+            >
+             Perceel 1
+            </button>
+            <button
+              (click)="selectPerceel2()"
+              class="btn"
+              [class.btn-primary]="activeLocation === 'perceel2'"
+              [class.btn-outline-primary]="activeLocation !== 'perceel2'"
+            >
+              Perceel 2
+            </button>
+          </div>
+        </fieldset>
+      </div>
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
+          <div class="map-container">
+            <ggc-map
+              [webServices]="mapConfig"
+            [mapIndex]="this.mapIndex"></ggc-map>
+          </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>
