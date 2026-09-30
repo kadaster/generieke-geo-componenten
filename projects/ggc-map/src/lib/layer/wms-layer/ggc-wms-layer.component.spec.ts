@@ -111,13 +111,13 @@ describe("WmsLayerComponent", () => {
       .spyOn(coreMapService, "getMap")
       .mockReturnValue(addLayerMock);
 
-    component.options = {
+    component.options.set({
       sourceOptions: {
         params: {
           layers: ["layer-een", "layer-twee"]
         }
       }
-    };
+    });
 
     component.ngOnInit();
     expect(getMapSpy).toHaveBeenCalled();
@@ -127,10 +127,10 @@ describe("WmsLayerComponent", () => {
   });
 
   it("should call capabilitiesService if getCapabilities is true", () => {
-    component.options = {
+    component.options.set({
       url: "a.b/c",
       getCapabilities: true
-    };
+    });
 
     component.ngOnInit();
 
@@ -143,13 +143,13 @@ describe("WmsLayerComponent", () => {
 
   it("should call capabilitiesService with withCredentials if set in sourceOptions", () => {
     const url = "a.b/c";
-    component.options = {
+    component.options.set({
       url,
       getCapabilities: true,
       sourceOptions: {
         crossOrigin: "withCredentials"
       }
-    };
+    });
 
     component.ngOnInit();
 
@@ -161,10 +161,10 @@ describe("WmsLayerComponent", () => {
   });
 
   it("should not call capabilitiesService if getCapabilities is false", () => {
-    component.options = {
+    component.options.set({
       url: "a.b/c",
       getCapabilities: false
-    };
+    });
 
     component.ngOnInit();
 
@@ -177,9 +177,9 @@ describe("WmsLayerComponent", () => {
         expect(layer instanceof TileLayer).toEqual(true);
       }
     );
-    component.options = {
+    component.options.set({
       tiled: true
-    };
+    });
     component.ngOnInit();
   });
 
@@ -192,12 +192,12 @@ describe("WmsLayerComponent", () => {
         ).toEqual(42);
       }
     );
-    component.options = {
+    component.options.set({
       tiled: true,
       sourceOptions: {
         gutter: 42
       }
-    };
+    });
     component.ngOnInit();
   });
 
@@ -207,7 +207,7 @@ describe("WmsLayerComponent", () => {
     vi.spyOn(coreSelectionService, "handleFeatureInfoForLayer");
     setWMSKaartlaagVariables("wmsLayerName");
 
-    component.options!.maxFeaturesOnSingleclick = 17;
+    component.options()!.maxFeaturesOnSingleclick = 17;
     component.ngOnInit();
     const wmsSpy = vi.spyOn(component["wmsSource"], "getFeatureInfoUrl");
 
@@ -346,7 +346,7 @@ describe("WmsLayerComponent", () => {
 
     component.setStyles(["styleNew1", "styleNew2"]);
 
-    expect(component.options?.sourceOptions?.params?.["STYLES"]).toEqual([
+    expect(component.options()!.sourceOptions?.params?.["STYLES"]).toEqual([
       "styleNew1",
       "styleNew2"
     ]);
@@ -468,7 +468,7 @@ describe("WmsLayerComponent", () => {
       "getSingleclickObservableForMap"
     );
 
-    component["options"] = { getFeatureInfoOnSingleclick: true };
+    component.options.set({ getFeatureInfoOnSingleclick: true });
     component.ngOnInit();
 
     expect(mapEventsServicespy).toHaveBeenCalled();
@@ -481,7 +481,7 @@ describe("WmsLayerComponent", () => {
       "getSingleclickObservableForMap"
     );
 
-    component["options"] = { getFeatureInfoOnSingleclick: true };
+    component.options.set({ getFeatureInfoOnSingleclick: true });
     component.ngOnInit();
 
     expect(mapEventsServicespy).toHaveBeenCalled();
@@ -489,14 +489,14 @@ describe("WmsLayerComponent", () => {
   });
 
   it("when options.maxFeaturesOnSingleclick is set, maxFeaturesOnSingleclick should be set on component", () => {
-    component["options"] = { maxFeaturesOnSingleclick: 15 };
+    component.options.set({ maxFeaturesOnSingleclick: 15 });
     component.ngOnInit();
 
     expect(component["maxFeaturesOnSingleclick"]).toBe(15);
   });
 
   function setWMSKaartlaagVariables(nameLayer: string) {
-    component.options = {
+    component.options.set({
       attributions: "test-attribution",
       getFeatureInfoQueryLayers: ["testQueryLayer"],
       layerName: nameLayer,
@@ -505,6 +505,6 @@ describe("WmsLayerComponent", () => {
       maxResolution: 100,
       url: "test.url",
       zIndex: 123
-    };
+    });
   }
 });

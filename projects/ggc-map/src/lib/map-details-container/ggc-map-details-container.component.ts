@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 /**
  * Containercomponent voor het tonen van detailinformatie

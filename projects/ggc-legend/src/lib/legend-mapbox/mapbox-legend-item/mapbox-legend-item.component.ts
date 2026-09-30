@@ -28,8 +28,7 @@ import {
 @Component({
   selector: "ggc-mapbox-legend-item",
   templateUrl: "./mapbox-legend-item.component.html",
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true
 })
 export class MapboxLegendItemComponent implements OnInit {
   @Input() item!: LegendItem;

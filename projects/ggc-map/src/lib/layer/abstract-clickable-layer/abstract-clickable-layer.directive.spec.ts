@@ -1,12 +1,16 @@
 import type { MockedObject } from "vitest";
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CoreMapEventsService } from "../../map/service/core-map-events.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
-import { AbstractClickableLayerComponent } from "./abstract-clickable-layer.component";
+import { AbstractClickableLayer } from "./abstract-clickable-layer.directive";
+import MapBrowserEvent from "ol/MapBrowserEvent";
 
 @Component({ changeDetection: ChangeDetectionStrategy.Eager, template: "" })
-class TestLayerComponent extends AbstractClickableLayerComponent<any> {}
+class TestLayerComponent extends AbstractClickableLayer<any> {
+  protected handleSingleClick(event: MapBrowserEvent) {
+    // don't call getFeatureInfo, as that is already solved in the selectService
+  }
+}
 
 describe("AbstractClickableLayerComponent", () => {
   let component: TestLayerComponent;

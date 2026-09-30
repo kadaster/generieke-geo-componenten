@@ -28,6 +28,7 @@ export class CoordinateFormatPipe implements PipeTransform {
    * {{ coord | coordinateFormat:2:'RD: x = {x} m; y = {y} m' }}
    * ```
    */
+
   transform(
     coord: number[],
     decimals = 2,
@@ -41,7 +42,6 @@ export class CoordinateFormatPipe implements PipeTransform {
       minimumFractionDigits: decimals,
       useGrouping: false
     });
-
     const [x, y] = [numberFmt.format(coord[0]), numberFmt.format(coord[1])];
     return format.replace("{x}", x).replace("{y}", y);
   }

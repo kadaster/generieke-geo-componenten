@@ -29,7 +29,7 @@ import {
   LegendRemovedEvent,
   Webservice2DType
 } from "@kadaster/ggc-models";
-import { AbstractBaseLayerComponent } from "../../layer/abstract-base-layer/abstract-base-layer.component";
+import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
 import Layer from "ol/layer/Layer";
 import { CoreMapService } from "../../map/service/core-map.service";
 
@@ -62,10 +62,8 @@ export class GgcLayerService {
     new Subject();
   private readonly mapConfigurations: Map<string, Webservice[]> = new Map();
 
-  private readonly mapLayerComponents: Map<
-    string,
-    AbstractBaseLayerComponent<any>
-  > = new Map();
+  private readonly mapLayerComponents: Map<string, AbstractBaseLayer<any>> =
+    new Map();
 
   /**
    * Initialiseert de service en luistert naar
@@ -154,7 +152,7 @@ export class GgcLayerService {
           environmentInjector: this.appRef.injector
         }
       );
-      componentRef.instance.mapIndex = layerOptions.mapIndex;
+      componentRef.instance.mapIndex.set(layerOptions.mapIndex);
       componentRef.instance.ngOnInit();
       componentRef.instance["olLayer"].set(
         "ggc-layer-id",
@@ -227,14 +225,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcGeojsonLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 
@@ -246,14 +244,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcImageLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()!.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()!.layerId;
     }
   }
 
@@ -265,14 +263,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcVectorTileLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 
@@ -284,14 +282,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcWmsLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 
@@ -303,14 +301,14 @@ export class GgcLayerService {
       const componentRef = createComponent(GgcWmtsLayerComponent, {
         environmentInjector: this.appRef.injector
       });
-      componentRef.instance.options = layerOptions;
+      componentRef.instance.options.set(layerOptions);
       componentRef.instance.ngOnInit();
       this.addLayerComponentToMapLayerComponents(
         componentRef.instance,
         layerOptions.mapIndex,
-        componentRef.instance.options.layerId
+        componentRef.instance.options()?.layerId
       );
-      return componentRef.instance.options.layerId;
+      return componentRef.instance.options()?.layerId;
     }
   }
 
@@ -652,7 +650,7 @@ export class GgcLayerService {
   }
 
   private addLayerComponentToMapLayerComponents(
-    layerComponent: AbstractBaseLayerComponent<Layer>,
+    layerComponent: AbstractBaseLayer<Layer>,
     mapIndex: string,
     layerId: string | undefined
   ) {

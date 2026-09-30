@@ -10,7 +10,7 @@ import {
   LegendItem,
   MapboxStyle
 } from "../legend-mapbox/model/legend-mapbox.model";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { Polygon } from "ol/geom";
 import { vi } from "vitest";
 vi.mock("ol/geom/Polygon", () => ({
@@ -112,7 +112,7 @@ describe("DatasetLegendComponent", () => {
       providers: [
         CoreLegendService,
         { provide: MapboxStyleService, useValue: mapboxStyleServiceMock },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
       // eventueel je componenten of andere providers
     }).compileComponents();

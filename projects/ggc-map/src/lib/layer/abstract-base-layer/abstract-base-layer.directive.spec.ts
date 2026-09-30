@@ -5,21 +5,23 @@ import OlMap from "ol/Map";
 import { Source } from "ol/source";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "../../map/service/core-map.service";
-import { AbstractBaseLayerComponent } from "./abstract-base-layer.component";
+import { AbstractBaseLayer } from "./abstract-base-layer.directive";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 @Component({ template: "" })
-class TestLayerComponent extends AbstractBaseLayerComponent<
-  Layer<Source, any>
-> {
+class TestLayerComponent extends AbstractBaseLayer<Layer<Source, any>> {
   init(): void {
     super.ngOnInit();
   }
-
+  setOptions(opts: any): void {
+    this.options.set(opts);
+  }
+  getOptions(): any {
+    return this.options();
+  }
   destroy(): void {
     super.ngOnDestroy();
   }
-
   setTestLayer(layer: Layer<Source, any>): void {
     this.setLayer(layer);
   }
@@ -33,7 +35,7 @@ describe("AbstractBaseLayerComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AbstractBaseLayerComponent, TestLayerComponent],
+      imports: [AbstractBaseLayer, TestLayerComponent],
       providers: [CoreMapService, GgcCrsConfigService]
     }).compileComponents();
   });
@@ -51,36 +53,38 @@ describe("AbstractBaseLayerComponent", () => {
 
   describe("mapIndex", () => {
     it("should set default mapIndex", () => {
-      expect(component["mapIndex"]).toBe(DEFAULT_MAPINDEX);
+      expect(component.getOptions().mapIndex).toBe(DEFAULT_MAPINDEX);
     });
 
     it("should set default mapIndex from options input", () => {
       const optionsmapIndex = "optionsmapIndex";
-      component["options"] = { mapIndex: optionsmapIndex };
+      component.setOptions({ mapIndex: optionsmapIndex });
       component.ngOnInit();
 
-      expect(component["mapIndex"]).toBe(optionsmapIndex);
+      expect(component.getOptions().mapIndex).toBe(optionsmapIndex);
     });
   });
 
   describe("layerId", () => {
     it("should generate a layerId when not set", () => {
-      component["options"] = { mapIndex: "map" };
+      component.setOptions({ mapIndex: "map" });
       component.ngOnInit();
 
-      expect(component["options"]?.layerId).toBeDefined();
+      expect(component.getOptions().layerId).toBeDefined();
     });
 
-    it("should not call generateLayerId when layerId is sel", () => {
-      vi.spyOn(component as any, "generateLayerId");
-      component["options"] = { mapIndex: "map", layerId: "test" };
+    it("should not call generateLayerId when layerId is set", () => {
+      const spy = vi.spyOn(component as any, "generateLayerId");
+
+      component.setOptions({ mapIndex: "map", layerId: "test" });
       component.ngOnInit();
 
-      expect(component["generateLayerId"]).not.toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
+      expect(component.getLayerId()).toBe("test");
     });
 
     it("getLayerId should return layerId", () => {
-      component["options"] = { mapIndex: "map", layerId: "test" };
+      component.setOptions({ mapIndex: "map", layerId: "test" });
 
       expect(component.getLayerId()).toBe("test");
     });
@@ -127,12 +131,12 @@ describe("AbstractBaseLayerComponent", () => {
 
         vi.spyOn(coreMapService, "getMap").mockReturnValue(mapMock);
 
-        component["options"] = {
+        component.setOptions({
           mapIndex: "map",
           layerId: "test-layer",
           persistent: true,
           visible
-        };
+        });
 
         component.ngOnInit();
 

@@ -85,11 +85,11 @@ describe("VectorTileLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createOlMapMock());
 
-    component.options = {
+    component.options.set({
       sourceOptions: {
         attributions: "Een attributie voor de VectorTile kaartlaag"
       }
-    };
+    });
     component.ngOnInit();
     await vi.runAllTimersAsync();
 
@@ -112,11 +112,9 @@ describe("VectorTileLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createOlMapMock());
 
-    component.options = {
-      sourceOptions: {
-        url: "test-url"
-      }
-    };
+    component.options.set({
+      url: "test-url"
+    });
     component.ngOnInit();
     await vi.runAllTimersAsync();
 
@@ -132,7 +130,7 @@ describe("VectorTileLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createOlMapMock());
 
-    component.options = { minResolution: 10, maxResolution: 20 };
+    component.options.set({ minResolution: 10, maxResolution: 20 });
 
     component.ngOnInit();
     await vi.runAllTimersAsync();
@@ -149,16 +147,14 @@ describe("VectorTileLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createOlMapMock());
 
-    component.options = {
-      layerOptions: {
-        style: new Style({
-          stroke: new Stroke({
-            color: [63, 195, 128, 1],
-            width: 3
-          })
+    component.options.set({
+      style: new Style({
+        stroke: new Stroke({
+          color: [63, 195, 128, 1],
+          width: 3
         })
-      }
-    };
+      })
+    });
 
     component.ngOnInit();
     await vi.runAllTimersAsync();
@@ -177,18 +173,16 @@ describe("VectorTileLayerComponent", () => {
       .spyOn<CoreMapService, any>(coreMapService, "getMap")
       .mockReturnValue(createOlMapMock());
 
-    component.options = {
-      layerOptions: {
-        style: () => {
-          return new Style({
-            stroke: new Stroke({
-              color: [63, 195, 128, 1],
-              width: 3
-            })
-          });
-        }
+    component.options.set({
+      style: () => {
+        return new Style({
+          stroke: new Stroke({
+            color: [63, 195, 128, 1],
+            width: 3
+          })
+        });
       }
-    };
+    });
 
     component.ngOnInit();
     await vi.runAllTimersAsync();
@@ -206,7 +200,7 @@ describe("VectorTileLayerComponent", () => {
     "should return a feature to the foundFeatures-array if the maxFeaturesonSingleclick is not yet reached " +
       "when limitFeatures() is called",
     () => {
-      component.options = { maxFeaturesOnSingleclick: 5 };
+      component.options.set({ maxFeaturesOnSingleclick: 5 });
       // Preparing the foundFeatures-array with already 4 features in it.
       component["foundFeatures"] = getFoundFeatures(4);
       component["limitFeatures"](featureData);
@@ -228,7 +222,7 @@ describe("VectorTileLayerComponent", () => {
   );
 
   it("should NOT return a feature to the foundFeatures-array if maxFeaturesonSingleclick is already reached when limitFeatures() is called", () => {
-    component.options = { maxFeaturesOnSingleclick: 14 };
+    component.options.set({ maxFeaturesOnSingleclick: 14 });
     // Preparing the foundFeatures-array with already 14 features in it.
     component["foundFeatures"] = getFoundFeatures(14);
     component["limitFeatures"](featureData);
@@ -236,11 +230,11 @@ describe("VectorTileLayerComponent", () => {
   });
 
   it("should emit an event if getFeatureInfoOnSingleclick is true and the forEachFeaturePixelAt function returns features", async () => {
-    component.options = {
+    component.options.set({
       mapIndex: "test-map",
       layerName: "test-layer",
       getFeatureInfoOnSingleclick: true
-    };
+    });
     component.ngOnInit();
     const mapSpy = createOlMapMock();
     component["map"] = mapSpy as unknown as OlMap;
@@ -270,11 +264,11 @@ describe("VectorTileLayerComponent", () => {
   });
 
   it("should pass pixel and hit tolerance to function forEachFeaturePixelAt", () => {
-    component.options = {
+    component.options.set({
       mapIndex: "test-map",
       getFeatureInfoOnSingleclick: false,
       hitTolerance: 5
-    };
+    });
     const mapSpy = createOlMapMock();
     component["map"] = mapSpy as unknown as OlMap;
 
@@ -294,10 +288,10 @@ describe("VectorTileLayerComponent", () => {
 
   describe("should set the overzoom resolutions with createOverzoomResolutions", () => {
     it("should correctly set overzoom resolutions if overzoom active", async () => {
-      component.options = {
+      component.options.set({
         mapIndex: "test-map",
         enableOverzoom: true
-      };
+      });
       vi.spyOn(component as any, "getMaxZoom").mockReturnValue(
         Promise.resolve(12)
       );
@@ -310,10 +304,10 @@ describe("VectorTileLayerComponent", () => {
     });
 
     it("should correctly set overzoom resolutions if overzoom is not active", async () => {
-      component.options = {
+      component.options.set({
         mapIndex: "test-map",
         enableOverzoom: false
-      };
+      });
       component.ngOnInit();
       vi.runAllTimers();
       expect(component["vectorTileSource"].getResolutions()).toEqual(
@@ -331,25 +325,25 @@ describe("VectorTileLayerComponent", () => {
     });
 
     it("pick the maxZoom if provided in the direct source", async () => {
-      component.options = {
+      component.options.set({
         mapIndex: "test-map",
         sourceOptions: {
           maxZoom: 10,
           url: "url/{z}/{y}/{x}"
         },
         enableOverzoom: true
-      };
+      });
 
       const result = await (component as any).getMaxZoom();
       expect(result).toEqual(10);
     });
 
     it("pick the maxZoom in the url if not provided in the source", async () => {
-      component.options = {
+      component.options.set({
         mapIndex: "test-map",
         enableOverzoom: true,
         url: "url/{z}/{y}/{x}"
-      };
+      });
 
       const resultPromise = (component as any).getMaxZoom();
 
@@ -364,11 +358,11 @@ describe("VectorTileLayerComponent", () => {
     });
 
     it("pick the maxZoom in the styleurl if not provided in the source or url if missing", async () => {
-      component.options = {
+      component.options.set({
         mapIndex: "test-map",
         enableOverzoom: true,
         style: "styleUrl"
-      };
+      });
 
       const resultPromise = (component as any).getMaxZoom();
 
@@ -404,11 +398,11 @@ describe("VectorTileLayerComponent", () => {
           return { maxzoom: 9 };
         }
       }) as any);
-      component.options = {
+      component.options.set({
         mapIndex: "test-map",
         enableOverzoom: true,
         style: "styleUrl"
-      };
+      });
 
       const result = await (component as any).getMaxZoom();
       expect(result).toEqual(8);

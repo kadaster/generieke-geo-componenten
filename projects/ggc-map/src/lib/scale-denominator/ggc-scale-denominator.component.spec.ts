@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 import { GgcCrsConfigService } from "../core/service/ggc-crs-config.service";
 import { CoreMapEventsService } from "../map/service/core-map-events.service";
 import { CoreMapService } from "../map/service/core-map.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 import { GgcScaleDenominatorComponent } from "./ggc-scale-denominator.component";
 
@@ -22,7 +22,7 @@ describe("ScaleDenominatorComponent", () => {
         CoreMapService,
         GgcCrsConfigService,
         CoreMapEventsService,
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
   });

@@ -9,7 +9,7 @@
         title="Beweeg naar boven"
         type="button"
       >
-        <span [ngClass]="upIcon" aria-hidden="true"></span>
+        <span [ngClass]="upIcon()" aria-hidden="true"></span>
       </button>
     </div>
     <div class="d-inline-flex flex-row cesium-control map-control">
@@ -19,7 +19,7 @@
         title="Beweeg naar links"
         type="button"
       >
-        <span [ngClass]="leftIcon" aria-hidden="true"></span>
+        <span [ngClass]="leftIcon()" aria-hidden="true"></span>
       </button>
       <button
         (click)="setCameraPositionToDefault()"
@@ -27,7 +27,7 @@
         title="Zet de camera in de standaard positie"
         type="button"
       >
-        <span [ngClass]="defaultCameraPosition" aria-hidden="true"></span>
+        <span [ngClass]="defaultCameraPosition()" aria-hidden="true"></span>
       </button>
       <button
         (click)="rotateRight()"
@@ -35,7 +35,7 @@
         title="Beweeg naar rechts"
         type="button"
       >
-        <span [ngClass]="rightIcon" aria-hidden="true"></span>
+        <span [ngClass]="rightIcon()" aria-hidden="true"></span>
       </button>
     </div>
     <div class="d-flex justify-content-around cesium-control map-control">
@@ -45,7 +45,7 @@
         title="Beweeg naar beneden"
         type="button"
       >
-        <span [ngClass]="downIcon" aria-hidden="true"></span>
+        <span [ngClass]="downIcon()" aria-hidden="true"></span>
       </button>
     </div>
   </div>
@@ -58,7 +58,7 @@
       title="Zoom in"
       type="button"
     >
-      <span [ngClass]="plusIcon" aria-hidden="true"></span>
+      <span [ngClass]="plusIcon()" aria-hidden="true"></span>
     </button>
     <button
       (click)="moveBackward()"
@@ -66,7 +66,7 @@
       title="Zoom uit"
       type="button"
     >
-      <span [ngClass]="minusIcon" aria-hidden="true"></span>
+      <span [ngClass]="minusIcon()" aria-hidden="true"></span>
     </button>
   </div>
 </div>

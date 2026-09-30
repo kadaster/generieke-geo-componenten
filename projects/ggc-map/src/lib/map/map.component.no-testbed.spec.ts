@@ -11,7 +11,7 @@ import { CoreLoadingService } from "./service/core-loading.service";
 import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { of } from "rxjs";
 import {
   DEFAULT_MAPINDEX,
@@ -73,7 +73,7 @@ describe("MapComponent(no-testbed), processEvent", () => {
         { provide: CoreLoadingService, useValue: coreLoadingServiceSpy },
         { provide: CoreMapEventsService, useValue: mapEventsServiceSpy },
         { provide: CoreSelectionService, useValue: coreSelectionServiceSpy },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
     fixture = TestBed.createComponent(GgcMapComponent);

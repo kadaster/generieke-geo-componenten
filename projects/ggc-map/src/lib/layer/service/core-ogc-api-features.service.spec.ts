@@ -10,7 +10,7 @@ import {
   withInterceptorsFromDi,
   withXhr
 } from "@angular/common/http";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("CoreOgcApiFeaturesService", () => {
   let service: CoreOgcApiFeaturesService;
@@ -23,7 +23,7 @@ describe("CoreOgcApiFeaturesService", () => {
         CoreOgcApiFeaturesService,
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
 

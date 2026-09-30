@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, inject, model, OnDestroy, OnInit } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
@@ -8,8 +8,7 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import TileSource from "ol/source/Tile";
 import WMTS, { optionsFromCapabilities } from "ol/source/WMTS";
 import { Subscription } from "rxjs";
-
-import { AbstractClickableLayerComponent } from "../abstract-clickable-layer/abstract-clickable-layer.component";
+import { AbstractClickableLayer } from "../abstract-clickable-layer/abstract-clickable-layer.directive";
 import { Capabilities } from "../model/capabilities.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
@@ -33,13 +32,13 @@ import { GgcCapabilitiesService } from "../service/ggc-capabilities.service";
   template: ""
 })
 export class GgcWmtsLayerComponent
-  extends AbstractClickableLayerComponent<TileLayer<TileSource>>
+  extends AbstractClickableLayer<TileLayer<TileSource>>
   implements OnInit, OnDestroy
 {
   /**
    * Opties voor het configureren van de WMTS-laag.
    */
-  @Input() options?: WmtsLayerOptions;
+  options = model<WmtsLayerOptions | undefined>();
 
   /**
    * Interne instantie van de WMTS source.
@@ -68,24 +67,24 @@ export class GgcWmtsLayerComponent
   ngOnInit() {
     super.ngOnInit();
 
-    if (this.options != undefined && this.options?.layer == undefined) {
-      this.options.layer = this.options?.layerName;
+    if (this.options() != undefined && this.options()?.layer == undefined) {
+      this.options()!.layer = this.options()?.layerName;
     }
 
-    if (this.options?.getFeatureInfoOnSingleclick === true) {
+    if (this.options()?.getFeatureInfoOnSingleclick === true) {
       this.singleclick = this.mapEventsService
-        .getSingleclickObservableForMap(this.mapIndex)
+        .getSingleclickObservableForMap(this.mapIndex())
         .subscribe((evt) => {
           this.getFeatureInfo(evt);
         });
     }
-    if (this.options?.maxFeaturesOnSingleclick !== undefined) {
-      this.maxFeaturesOnSingleclick = this.options?.maxFeaturesOnSingleclick;
+    if (this.options()?.maxFeaturesOnSingleclick !== undefined) {
+      this.maxFeaturesOnSingleclick = this.options()!.maxFeaturesOnSingleclick!;
     }
     this.capabilitiesSubscription = this.ggcCapabilitiesService
       .getCapabilities(
-        (this.options?.url as string) ||
-          (this.options?.sourceOptions?.url as string),
+        (this.options()?.url as string) ||
+          (this.options()?.sourceOptions?.url as string),
         "WMTS"
       )
       .subscribe((result) => {
@@ -95,13 +94,13 @@ export class GgcWmtsLayerComponent
             format: "image/png",
             style: "default",
             crossOrigin: "anonymous",
-            ...this.options?.sourceOptions,
-            ...(this.options?.layer && { layer: this.options?.layer }),
+            ...this.options()?.sourceOptions,
+            ...(this.options()?.layer && { layer: this.options()?.layer }),
             projection: this.rdNewConfig.projectionCode
           });
           if (options) {
             // Set transition to 0 when opacity < 1 to prevent flicker
-            const opacity = this.options?.layerOptions?.opacity;
+            const opacity = this.options()?.layerOptions?.opacity;
             if (opacity !== undefined && opacity < 1) {
               options.transition = 0;
               this.layerOptions.opacity = opacity;
@@ -110,7 +109,7 @@ export class GgcWmtsLayerComponent
 
             this.setLayer(
               new TileLayer({
-                ...this.options?.layerOptions,
+                ...this.options()?.layerOptions,
                 ...this.layerOptions,
                 source: this.wmtsSource
               })
@@ -123,7 +122,7 @@ export class GgcWmtsLayerComponent
           this.events.emit(
             new MapComponentEvent(
               MapComponentEventTypes.WMTSCAPABILITES,
-              this.mapIndex,
+              this.mapIndex(),
               "WMTS capabilities resultaten: ",
               this.layerName,
               result
@@ -134,11 +133,6 @@ export class GgcWmtsLayerComponent
           console.error("Invalid capabilities");
         }
       });
-  }
-
-  protected handleSingleClick(event: MapBrowserEvent) {
-    super.handleSingleClick(event);
-    this.getFeatureInfo(event);
   }
 
   /**
@@ -160,8 +154,8 @@ export class GgcWmtsLayerComponent
       if (this.capabilities && this.capabilities.hasFeatureInfoUrl()) {
         const featureInfoObservable =
           this.ggcCapabilitiesService.getWmtsFeatureInfo(
-            (this.options?.url as string) ||
-              (this.options?.sourceOptions?.url as string),
+            (this.options()?.url as string) ||
+              (this.options()?.sourceOptions?.url as string),
             this.wmtsSource,
             coordinate,
             viewResolution
@@ -196,14 +190,14 @@ export class GgcWmtsLayerComponent
     coordinate: Coordinate
   ): void {
     this.coreSelectionService.handleFeatureInfoForLayer(
-      this.mapIndex,
+      this.mapIndex(),
       features,
       this.getLayerId()
     );
     this.events.emit(
       new MapComponentEvent(
         MapComponentEventTypes.WMTSFEATUREINFO,
-        this.mapIndex,
+        this.mapIndex(),
         "WMTS getFeatureInfo resultaten: ",
         this.layerName,
         features
@@ -220,5 +214,9 @@ export class GgcWmtsLayerComponent
       this.capabilitiesSubscription.unsubscribe();
     }
     super.ngOnDestroy();
+  }
+
+  protected handleSingleClick(event: MapBrowserEvent) {
+    this.getFeatureInfo(event);
   }
 }

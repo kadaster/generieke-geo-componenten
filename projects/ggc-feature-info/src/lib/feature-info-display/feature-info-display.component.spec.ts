@@ -5,7 +5,7 @@ import { FeatureKeysPipe } from "../pipe/keys.pipe";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoDisplayComponent } from "./feature-info-display.component";
 import { FeatureInfoDisplayType } from "./feature-info-display-type";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("FeatureInfoDisplayComponent", () => {
   let component: FeatureInfoDisplayComponent;
@@ -30,7 +30,7 @@ describe("FeatureInfoDisplayComponent", () => {
           provide: GgcFeatureInfoConfigService,
           useValue: featureInfoConfigServiceSpy
         },
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     }).compileComponents();
 

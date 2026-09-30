@@ -7,7 +7,7 @@ import Stroke from "ol/style/Stroke";
 import Style from "ol/style/Style";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "./core-map.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { DEFAULT_MAPINDEX, MapComponentEventTypes } from "@kadaster/ggc-models";
 import OlMap from "ol/Map";
 
@@ -19,7 +19,7 @@ describe("CoreMapService", () => {
       providers: [
         CoreMapService,
         GgcCrsConfigService,
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
     coreMapService = TestBed.inject(CoreMapService);

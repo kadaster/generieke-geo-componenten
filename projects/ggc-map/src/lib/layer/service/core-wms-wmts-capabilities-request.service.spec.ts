@@ -15,7 +15,7 @@ import { noop, of } from "rxjs";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { CoreWmsWmtsCapabilitiesRequestService } from "./core-wms-wmts-capabilities-request.service";
-import { provideZoneChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("CoreWmsWmtsCapabilitiesRequestService", () => {
   const wmsCapabilities = `<?xml version="1.0" encoding="UTF-8"?>
@@ -36,7 +36,7 @@ describe("CoreWmsWmtsCapabilitiesRequestService", () => {
         HttpClient,
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideZoneChangeDetection()
+        provideZonelessChangeDetection()
       ]
     });
 
