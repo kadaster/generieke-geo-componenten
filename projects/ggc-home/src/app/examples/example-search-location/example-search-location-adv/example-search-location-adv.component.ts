@@ -8,7 +8,6 @@ import {
   PdokLocationApiService,
   SearchCollection,
   SearchComponentEvent,
-  SearchCurrentLocation,
   SearchCurrentLocationType,
   SearchLocationOptions
 } from "@kadaster/ggc-search-location";
@@ -52,7 +51,15 @@ export class ExampleSearchLocationAdvComponent
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-search-location_src_public-api.GgcSearchLocationComponent.html`;
   // DOCS-SKIP:END
 
-  readonly searchLocationOptions = computed(() => {
+  readonly searchLocationOptions = computed<SearchLocationOptions>(() => {
+    const placeFirst = this.collectionRanking() === "place";
+    const relevanceByCollection = new Map<string, number>([
+      ["adres", 0.1],
+      ["gemeentegebied", 0.75],
+      ["provinciegebied", placeFirst ? 0.5 : 1],
+      ["woonplaats", placeFirst ? 1 : 0.5]
+    ]);
+
     return {
       alternativeSuggestionsFirst: true,
       collectionIdTranslations: new Map<string, string>([
@@ -63,15 +70,27 @@ export class ExampleSearchLocationAdvComponent
         icon: "fas fa-map-marker-alt",
         loadIcon: "fa-spin fas fa-spinner",
         label: "Gebruik mijn locatie"
-      } as SearchCurrentLocation,
+      },
+      hideCollectionId: !this.showCollectionType(),
+      numberOfSuggestions: this.numberOfSuggestions(),
+      customCollections: this.availableCollections().map((collection) => ({
+        ...collection,
+        relevance: relevanceByCollection.get(collection.id) ?? 0.5
+      })),
       zoomToResult: this.zoomToResult(),
       markResult: this.markResult()
-    } as SearchLocationOptions;
+    };
   });
 
+  protected readonly numberOfSuggestions = signal(10);
+  protected readonly showCollectionType = signal(true);
+  protected readonly collectionRanking = signal<"province" | "place">(
+    "province"
+  );
   protected zoomToResult = signal(true);
   protected markResult = signal(true);
 
+  private readonly availableCollections = signal<SearchCollection[]>([]);
   private readonly pdokLocationApiService = inject(PdokLocationApiService);
 
   constructor() {
@@ -82,25 +101,21 @@ export class ExampleSearchLocationAdvComponent
     this.pdokLocationApiService.collectionsLoaded$
       .pipe(take(1))
       .subscribe((collectionsResult) => {
-        const customCollections = new Map<string, number>([
-          ["adres", 0.1],
-          ["gemeentegebied", 1],
-          ["provinciegebied", 1],
-          ["woonplaats", 0.5]
-        ]);
-        this.pdokLocationApiService.setCustomCollections(
+        this.availableCollections.set(
           collectionsResult.collections
             .filter((collection) =>
-              Array.from(customCollections.keys()).includes(collection.id)
+              [
+                "adres",
+                "gemeentegebied",
+                "provinciegebied",
+                "woonplaats"
+              ].includes(collection.id)
             )
-            .map(
-              (collection) =>
-                ({
-                  id: collection.id,
-                  version: collection.version,
-                  relevance: customCollections.get(collection.id) ?? 0.5
-                }) as SearchCollection
-            )
+            .map((collection) => ({
+              id: collection.id,
+              version: collection.version,
+              relevance: 0.5
+            }))
         );
       });
   }
