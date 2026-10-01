@@ -94,16 +94,37 @@ describe("GgcSearchLocationComponent", () => {
 
   describe("Initialisatie", () => {
     it("moet de pdok service configureren op basis van searchLocationOptions", () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         minQueryLength: 4,
         numberOfSuggestions: 15,
         customCollections: [{ id: "a", version: 1, relevance: 1 }]
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       expect(pdokServiceSpy.setMinQueryLength).toHaveBeenCalledWith(4);
       expect(pdokServiceSpy.setNumberOfSuggestions).toHaveBeenCalledWith(15);
       expect(pdokServiceSpy.setCustomCollections).toHaveBeenCalledWith([
         { id: "a", version: 1, relevance: 1 }
+      ]);
+    });
+
+    it("moet gewijzigde service-opties opnieuw toepassen", () => {
+      fixture.componentRef.setInput("searchLocationOptions", {
+        numberOfSuggestions: 15,
+        customCollections: [{ id: "a", version: 1, relevance: 0.5 }]
+      });
+      fixture.detectChanges();
+      pdokServiceSpy.setNumberOfSuggestions.mockClear();
+      pdokServiceSpy.setCustomCollections.mockClear();
+
+      fixture.componentRef.setInput("searchLocationOptions", {
+        numberOfSuggestions: 10,
+        customCollections: [{ id: "b", version: 2, relevance: 1 }]
+      });
+      fixture.detectChanges();
+
+      expect(pdokServiceSpy.setNumberOfSuggestions).toHaveBeenCalledWith(10);
+      expect(pdokServiceSpy.setCustomCollections).toHaveBeenCalledWith([
+        { id: "b", version: 2, relevance: 1 }
       ]);
     });
 
