@@ -31,9 +31,8 @@ RUN mkdir -p /var/log/nginx && \
     chown -R ggc-home:ggc-home /etc/nginx/html/
 
 # Permissions adjustments
-RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run && \
-    chown -R ggc-home:0 /etc/nginx/html/ && \
-    chmod -R ug+rwX,o+rX /etc/nginx/html/ && \
+RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ && \
+    chmod -R u+rwX,go+rX /etc/nginx/html/ && \
     chmod 755 /var/appdata/run/start-application.sh && \
     chmod -R u+rwX,go+rX /var/cache/nginx
 
