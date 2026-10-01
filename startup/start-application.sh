@@ -39,6 +39,9 @@ tmpFile="$(mktemp "/tmp/${mainFileName}.tmp.XXXXXX")"
 envsubst '$ENV_PIWIK_SCRIPT' < "$mainFilePath" > "$tmpFile"
 
 chmod 644 "$tmpFile"
+id
+ls -ld /etc/nginx/html
+ls -l "$mainFilePath"
 # move modified files to original location
 mv "$tmpFile" "${mainFilePath}"
 
