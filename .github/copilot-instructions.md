@@ -22,7 +22,6 @@
 - When the developer corrects an unexpected result, identify the reusable cause and update these global instructions when the lesson applies across task types. Use a scoped instruction only when the correction is specific to files or workflows matched by its `applyTo`.
 
 - Name variables holding instances or typed configuration values after their concrete class, type, or domain (for example, `myClass` for `new MyClass()` and `searchLocationOptions` for `SearchLocationOptions`), rather than an ambiguous generic name such as `options`. Preserve the distinction when multiple variants exist so the value's identity is clear at each use.
-
 ## Verification
 
 - Define a check that demonstrates the requested change, run it, and report its result. Check `package.json` for the exact project scripts; for example, `npm run test:ggc-map`, `npm run lint:ggc-map`, and `npm run build:ggc-map`.
