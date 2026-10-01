@@ -33,7 +33,7 @@ fi
 
 # substitute environment variable
 echo "Substitute this key for:$ENV_PIWIK_SCRIPT"
-tmpFile="$(mktemp "${mainFileName}.tmp.XXXXXX")"
+tmpFile="$(mktemp "/tmp/${mainFileName}.tmp.XXXXXX")"
 
 
 envsubst '$ENV_PIWIK_SCRIPT' < "$mainFilePath" > "$tmpFile"
