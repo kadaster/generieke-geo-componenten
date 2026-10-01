@@ -22,7 +22,8 @@ if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
   exit 1
 fi
 
-mainFileName="$1"
+mainFilePath="$1"
+mainFileName="${1##*/}"
 
 # check if the ENV_PIWIK_SCRIPT environment variable is set, if not set or empty string exit with error
 if [ -z "${ENV_PIWIK_SCRIPT:-}" ]; then
@@ -33,17 +34,13 @@ fi
 # substitute environment variable
 echo "Substitute this key for:$ENV_PIWIK_SCRIPT"
 tmpFile="$(mktemp "${mainFileName}.tmp.XXXXXX")"
-# removes temp file after exit, hangup, interrupt or terminate signal
-trap 'rm -f "$tmpFile"' EXIT HUP INT TERM
 
-envsubst '$ENV_PIWIK_SCRIPT' < "$mainFileName" > "$tmpFile"
+
+envsubst '$ENV_PIWIK_SCRIPT' < "$mainFilePath" > "$tmpFile"
 
 chmod 644 "$tmpFile"
 # move modified files to original location
-mv "$tmpFile" "${mainFileName}"
-
-# remove trap
-trap - EXIT HUP INT TERM
+mv "$tmpFile" "${mainFilePath}"
 
 # static content read-only maken
 chmod -R a=rX /etc/nginx/html/
