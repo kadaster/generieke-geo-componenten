@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, input } from "@angular/core";
 import { Legend } from "../model/legend.model";
 
 @Component({
@@ -10,13 +10,13 @@ export class LegendEmptyComponent {
   /**
    * Als true, dan wordt de emptyLegendMessage weergegeven als er geen legenda beschikbaar is.
    */
-  @Input() showEmptyLegendMessage: boolean;
+  showEmptyLegendMessage = input(false);
   /**
    * De message die wordt weergegeven bij een lege agenda als showEmptyLegendMessage is true.
    */
-  @Input() emptyLegendMessage: string;
+  emptyLegendMessage = input<string>();
   /**
    * De legenda om weer te geven.
    */
-  @Input() legend: Legend;
+  legend = input<Legend>();
 }

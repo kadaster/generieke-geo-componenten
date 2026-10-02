@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, input, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  Output,
+  signal
+} from "@angular/core";
 import {
   ToolbarItemDrawComponentEvent,
   ToolbarItemDrawType
@@ -83,7 +90,9 @@ export class GgcToolbarItemDrawComponent {
   @Output() drawItemClicked: EventEmitter<ToolbarItemDrawComponentEvent> =
     new EventEmitter<ToolbarItemDrawComponentEvent>();
 
-  protected activeDraw: DrawType | "move" | "edit" | undefined;
+  protected activeDraw = signal<DrawType | "move" | "edit" | undefined>(
+    undefined
+  );
   private readonly connectService = inject(GgcToolbarConnectService);
 
   private drawServicePromise?: Promise<any>;
@@ -99,7 +108,7 @@ export class GgcToolbarItemDrawComponent {
    */
   draw(type: DrawType): void {
     from(this.getDrawService()).subscribe((service) => {
-      this.activeDraw = type;
+      this.activeDraw.set(type);
       service.startDraw(
         this.layer(),
         this.getMapComponentDrawType(type),
@@ -118,7 +127,7 @@ export class GgcToolbarItemDrawComponent {
   move(): void {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
-        this.activeDraw = "move";
+        this.activeDraw.set("move");
         service.startMove(this.layer(), this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.MOVE
@@ -133,7 +142,7 @@ export class GgcToolbarItemDrawComponent {
   edit(): void {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
-        this.activeDraw = "edit";
+        this.activeDraw.set("edit");
         service.startModify(this.layer(), this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.EDIT
@@ -148,7 +157,7 @@ export class GgcToolbarItemDrawComponent {
   stopDrawing() {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
-        this.activeDraw = undefined;
+        this.activeDraw.set(undefined);
         service.stopDraw(this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.STOP
@@ -163,7 +172,7 @@ export class GgcToolbarItemDrawComponent {
   eraseDrawLayer() {
     from(this.getDrawService()).subscribe((service) => {
       if (service) {
-        this.activeDraw = undefined;
+        this.activeDraw.set(undefined);
         service.clearLayer(this.layer(), this.mapIndex());
         this.drawItemClicked.emit({
           toolbarItemName: ToolbarItemDrawType.CLEAR

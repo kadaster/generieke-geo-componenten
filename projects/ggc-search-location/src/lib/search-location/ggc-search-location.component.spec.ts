@@ -129,9 +129,9 @@ describe("GgcSearchLocationComponent", () => {
     });
 
     it("moet een initiële zoekterm verwerken", () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         initialSearchTerm: "Amsterdam"
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       expect(component["inputValue"]()).toBe("Amsterdam");
     });
@@ -192,9 +192,9 @@ describe("GgcSearchLocationComponent", () => {
   describe("Kaart Interactie (Zoom & Mark)", () => {
     it("moet zoomToExtent aanroepen als een resultaat een bbox heeft", async () => {
       const featureWithBbox = { ...mockFeature, bbox: [1, 2, 3, 4] } as any;
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         zoomToResult: true
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
 
       component["loadFormatType"] = vi.fn().mockResolvedValue({
@@ -210,10 +210,10 @@ describe("GgcSearchLocationComponent", () => {
     });
 
     it("moet de highlight layer wissen bij clearSearchTerm", async () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         markResult: true,
         mapIndex: "test-map"
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       component.clearSearchTerm();
       await Promise.resolve();

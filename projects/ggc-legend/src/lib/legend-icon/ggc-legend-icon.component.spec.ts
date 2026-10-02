@@ -20,7 +20,7 @@ describe("GgcLegendIconComponent", () => {
   });
 
   it("should render list of icons", () => {
-    component.icons = [
+    fixture.componentRef.setInput("icons", [
       {
         imageUrl: "http://test.com/icon1.svg",
         text: "Icon 1",
@@ -31,7 +31,7 @@ describe("GgcLegendIconComponent", () => {
         text: "Icon 2",
         iconDescription: "Icon 2 description"
       } as any
-    ];
+    ]);
 
     fixture.detectChanges();
 
@@ -40,13 +40,13 @@ describe("GgcLegendIconComponent", () => {
   });
 
   it("should render image and text correctly", () => {
-    component.icons = [
+    fixture.componentRef.setInput("icons", [
       {
         imageUrl: "http://test.com/icon1.svg",
         text: "Icon 1",
         iconDescription: "Icon 1 description"
       } as any
-    ];
+    ]);
 
     fixture.detectChanges();
 
@@ -60,7 +60,7 @@ describe("GgcLegendIconComponent", () => {
   });
 
   it("should render empty list when no icons provided", () => {
-    component.icons = [];
+    fixture.componentRef.setInput("icons", []);
 
     fixture.detectChanges();
 
