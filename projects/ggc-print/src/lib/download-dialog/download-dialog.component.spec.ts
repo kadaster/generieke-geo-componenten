@@ -55,7 +55,7 @@ describe("DownloadDialogComponent", () => {
 
     component.procesStatusResponse(statusResponse);
 
-    expect(component["downloadURL"]).toBe(printServer + eenUrl);
+    expect(component["downloadURL"]()).toBe(printServer + eenUrl);
   });
 
   it("when procesStatusResponse is called with status cancelled, it should set error on the component", () => {

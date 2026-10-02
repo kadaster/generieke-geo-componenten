@@ -82,9 +82,9 @@ describe("FeatureInfoTabsComponent", () => {
     fixture.detectChanges();
     const feature1 = new Feature({ test: "123" });
     const feature2 = new Feature({ test: "456" });
-    component.featureInfoCollectionArray = [
+    fixture.componentRef.setInput("featureInfoCollectionArray", [
       new FeatureInfoCollection("Naam1", [feature1, feature2], "titel", "id")
-    ];
+    ]);
 
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
@@ -124,7 +124,7 @@ describe("FeatureInfoTabsComponent", () => {
   it("when showEmptyTabs has default value, empty tabs will be removed from featureInfoCollectionArray", () => {
     const feature1 = new Feature({ test: "123" });
     const feature2 = new Feature({ test: "456" });
-    component.featureInfoCollectionArray = [
+    fixture.componentRef.setInput("featureInfoCollectionArray", [
       new FeatureInfoCollection(
         "Not empty",
         [feature1, feature2],
@@ -132,7 +132,7 @@ describe("FeatureInfoTabsComponent", () => {
         "id"
       ),
       new FeatureInfoCollection("Empty", [], "titel", "id")
-    ];
+    ]);
 
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
@@ -145,10 +145,10 @@ describe("FeatureInfoTabsComponent", () => {
   });
 
   it("when showEmptyTabs is true, empty tabs will not be removed from featureInfoCollectionArray", () => {
-    component.showEmptyTabs = true;
+    fixture.componentRef.setInput("showEmptyTabs", true);
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
-    component.featureInfoCollectionArray = [
+    fixture.componentRef.setInput("featureInfoCollectionArray", [
       new FeatureInfoCollection(
         "Not empty",
         [feature1, feature2],
@@ -156,7 +156,7 @@ describe("FeatureInfoTabsComponent", () => {
         "id"
       ),
       new FeatureInfoCollection("Empty", [], "titel", "id")
-    ];
+    ]);
 
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
@@ -177,7 +177,7 @@ describe("FeatureInfoTabsComponent", () => {
 
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
-    component.featureInfoCollectionArray = [
+    fixture.componentRef.setInput("featureInfoCollectionArray", [
       new FeatureInfoCollection("Naam1", [feature1], "titelNaam1", "idNaam1"),
       new FeatureInfoCollection(
         "Clicked",
@@ -185,7 +185,7 @@ describe("FeatureInfoTabsComponent", () => {
         "titelClicked",
         "idClicked"
       )
-    ];
+    ]);
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
     });
@@ -209,10 +209,10 @@ describe("FeatureInfoTabsComponent", () => {
 
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
-    component.featureInfoCollectionArray = [
+    fixture.componentRef.setInput("featureInfoCollectionArray", [
       new FeatureInfoCollection("Tab1", [feature1], "titel", "id1"),
       new FeatureInfoCollection("Tab2", [feature2], "titel", "id2")
-    ];
+    ]);
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
     });
@@ -233,10 +233,10 @@ describe("FeatureInfoTabsComponent", () => {
     );
     const feature1 = new Feature({ a: "b" });
     const feature2 = new Feature({ a: "1" });
-    component.featureInfoCollectionArray = [
+    fixture.componentRef.setInput("featureInfoCollectionArray", [
       new FeatureInfoCollection("TabA", [feature1], "titel", "ida"),
       new FeatureInfoCollection(tabName, [feature2], "titel", "idb")
-    ];
+    ]);
     component.ngOnChanges({
       featureInfoCollectionArray: {} as SimpleChange
     });

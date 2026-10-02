@@ -1,7 +1,7 @@
-@if (showEmptyLegendMessage) {
-  @if (emptyLegendMessage) {
+@if (showEmptyLegendMessage()) {
+  @if (emptyLegendMessage()) {
     <span class="ggc-dl-empty-legend-message">
-      {{ emptyLegendMessage }}
+      {{ emptyLegendMessage() }}
     </span>
   } @else {
     <span class="ggc-dl-empty-legend-message"> Geen legenda beschikbaar </span>
