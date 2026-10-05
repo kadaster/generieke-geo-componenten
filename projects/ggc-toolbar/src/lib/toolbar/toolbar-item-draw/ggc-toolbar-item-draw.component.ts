@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  input,
-  Output,
-  signal
-} from "@angular/core";
+import { Component, inject, input, output, signal } from "@angular/core";
 import {
   ToolbarItemDrawComponentEvent,
   ToolbarItemDrawType
@@ -87,8 +80,7 @@ export class GgcToolbarItemDrawComponent {
    * Event dat wordt verstuurd wanneer een tekenactie wordt uitgevoerd.
    * Bevat het type actie via `toolbarItemName`.
    */
-  @Output() drawItemClicked: EventEmitter<ToolbarItemDrawComponentEvent> =
-    new EventEmitter<ToolbarItemDrawComponentEvent>();
+  readonly drawItemClicked = output<ToolbarItemDrawComponentEvent>();
 
   protected activeDraw = signal<DrawType | "move" | "edit" | undefined>(
     undefined

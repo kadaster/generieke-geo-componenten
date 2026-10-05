@@ -2,7 +2,7 @@ import {
   AfterContentInit,
   Component,
   computed,
-  ContentChild,
+  contentChild,
   inject,
   input,
   output,
@@ -121,7 +121,7 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
   /**
    * Output stream voor alle DatasetTreeEvents (`layerActivated` / `layerDeactivated`).
    */
-  events = output<DatasetTreeEvent>();
+  readonly events = output<DatasetTreeEvent>();
 
   themes = input.required<Theme[]>();
 
@@ -170,11 +170,13 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
     GgcDatasetTreeModelCreateService
   );
 
-  @ContentChild(LayerLabelTemplateDirective)
-  private readonly layerLabelTemplate: LayerLabelTemplateDirective;
+  private readonly layerLabelTemplate = contentChild(
+    LayerLabelTemplateDirective
+  );
 
-  @ContentChild(DatasetLabelTemplateDirective)
-  private readonly datasetLabelTemplate: DatasetLabelTemplateDirective;
+  private readonly datasetLabelTemplate = contentChild(
+    DatasetLabelTemplateDirective
+  );
 
   constructor() {
     this.datasetTreeService
@@ -188,11 +190,13 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
    * voor dataset‑ en layer‑labels (via @ContentChild).
    */
   ngAfterContentInit(): void {
-    if (this.layerLabelTemplate) {
-      this.layerLabelComponent.set(this.layerLabelTemplate.templateRef);
+    const layerLabelTemplate = this.layerLabelTemplate();
+    if (layerLabelTemplate) {
+      this.layerLabelComponent.set(layerLabelTemplate.templateRef);
     }
-    if (this.datasetLabelTemplate) {
-      this.datasetLabelComponent.set(this.datasetLabelTemplate.templateRef);
+    const datasetLabelTemplate = this.datasetLabelTemplate();
+    if (datasetLabelTemplate) {
+      this.datasetLabelComponent.set(datasetLabelTemplate.templateRef);
     }
   }
 

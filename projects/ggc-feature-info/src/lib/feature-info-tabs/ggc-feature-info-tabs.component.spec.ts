@@ -2,7 +2,7 @@ import type { Mock } from "vitest";
 import { SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 import {
@@ -52,6 +52,24 @@ describe("FeatureInfoTabsComponent", () => {
 
   it("should create", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should not subscribe to a selection observable that resolves after destruction", async () => {
+    let resolveSelectionObservable!: (observable: Observable<never>) => void;
+    const pendingSelectionObservable = new Promise<Observable<never>>(
+      (resolve) => (resolveSelectionObservable = resolve)
+    );
+    const sourceSubscribe = vi.fn();
+    featureInfoMapConnectServiceSpy.getObservableForMapSelection.mockReturnValue(
+      pendingSelectionObservable
+    );
+
+    fixture.detectChanges();
+    fixture.destroy();
+    resolveSelectionObservable(new Observable(() => sourceSubscribe()));
+    await Promise.resolve();
+
+    expect(sourceSubscribe).not.toHaveBeenCalled();
   });
 
   it("component should not have tabs when featureInfoCollectionArray is empty", () => {

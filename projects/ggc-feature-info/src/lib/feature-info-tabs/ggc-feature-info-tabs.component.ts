@@ -1,18 +1,19 @@
 import {
   AfterContentInit,
   Component,
-  ContentChild,
-  EventEmitter,
+  contentChild,
+  DestroyRef,
   inject,
   input,
   OnChanges,
   OnInit,
-  Output,
+  output,
   signal,
   SimpleChanges,
   TemplateRef,
   OnDestroy
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ValueTemplateDirective } from "../directive/value-template.directive";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 import {
@@ -152,8 +153,7 @@ export class GgcFeatureInfoTabsComponent
    * - Wanneer de `featureInfoCollectionArray` `undefined` is
    *   (in dit geval is de `value` van het event ook `undefined`)
    */
-  @Output() events: EventEmitter<FeatureInfoComponentEvent> =
-    new EventEmitter<FeatureInfoComponentEvent>();
+  readonly events = output<FeatureInfoComponentEvent>();
   protected readonly tabComponent = signal<TemplateRef<any> | undefined>(
     undefined
   );
@@ -165,8 +165,9 @@ export class GgcFeatureInfoTabsComponent
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
-  @ContentChild(ValueTemplateDirective, { descendants: false })
-  private readonly tabTemplate: ValueTemplateDirective;
+  private readonly tabTemplate = contentChild(ValueTemplateDirective, {
+    descendants: false
+  });
   private readonly selectedTabFeatureInfo = signal<
     FeatureInfoCollection | undefined
   >(undefined);
@@ -177,11 +178,13 @@ export class GgcFeatureInfoTabsComponent
     GgcFeatureInfoConfigService
   );
   private readonly eventService = inject(FeatureInfoEventService);
+  private readonly destroyRef = inject(DestroyRef);
   private subscriptionSelection: Subscription;
 
   ngAfterContentInit(): void {
-    if (this.tabTemplate) {
-      this.tabComponent.set(this.tabTemplate.templateRef);
+    const tabTemplate = this.tabTemplate();
+    if (tabTemplate) {
+      this.tabComponent.set(tabTemplate.templateRef);
     }
   }
 
@@ -282,6 +285,8 @@ export class GgcFeatureInfoTabsComponent
         this.selectIndex()
       )
       .then((currentFeatureCollectionForLayers) => {
+        if (this.destroyRef.destroyed) return;
+
         this.setFeatureInfoCollectionArray(
           currentFeatureCollectionForLayers?.featureCollectionForLayers
         );
@@ -293,8 +298,9 @@ export class GgcFeatureInfoTabsComponent
         this.selectIndex()
       )
       .then((observable) => {
-        this.subscriptionSelection = observable.subscribe(
-          (event: MapComponentEvent) => {
+        this.subscriptionSelection = observable
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((event: MapComponentEvent) => {
             if (
               event.type ===
               MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
@@ -303,8 +309,7 @@ export class GgcFeatureInfoTabsComponent
                 event.value.featureCollectionForLayers
               );
             }
-          }
-        );
+          });
       });
   }
 

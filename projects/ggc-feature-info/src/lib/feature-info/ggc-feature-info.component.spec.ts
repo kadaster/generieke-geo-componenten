@@ -2,7 +2,7 @@ import type { MockedObject } from "vitest";
 import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Feature } from "ol";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { FeatureCollectionForCoordinate } from "@kadaster/ggc-models";
 import {
   ValueTemplateDirective,
@@ -112,6 +112,24 @@ describe("FeatureInfoComponent", () => {
     featureInfoConfigServiceSpy.checkForCustomValues.mockReturnValue([
       { test: "123" }
     ]);
+  });
+
+  it("should not subscribe to a selection observable that resolves after destruction", async () => {
+    let resolveSelectionObservable!: (observable: Observable<never>) => void;
+    const pendingSelectionObservable = new Promise<Observable<never>>(
+      (resolve) => (resolveSelectionObservable = resolve)
+    );
+    const sourceSubscribe = vi.fn();
+    featureInfoMapConnectServiceSpy.getObservableForMapSelection.mockReturnValue(
+      pendingSelectionObservable
+    );
+
+    fixture.detectChanges();
+    fixture.destroy();
+    resolveSelectionObservable(new Observable(() => sourceSubscribe()));
+    await Promise.resolve();
+
+    expect(sourceSubscribe).not.toHaveBeenCalled();
   });
 
   it("should create", () => {
@@ -338,7 +356,7 @@ describe("FeatureInfoWrapperComponent", () => {
 
   it("when customTemplates are present, then ngAfterContentInit should add them to the correct customValueTemplates", () => {
     expect(component).toBeDefined();
-    expect(component["templates"].length).toBe(5);
+    expect(component["templates"]().length).toBe(5);
     expect(component["customValueTemplates"]().size).toBe(3);
     expect(component["customHeaderValueTemplates"]().size).toBe(4);
     expect(component["customValueTemplates"]().get("status")).toBeDefined();

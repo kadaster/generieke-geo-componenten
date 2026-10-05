@@ -1,14 +1,15 @@
 import {
   Component,
   computed,
-  EventEmitter,
+  DestroyRef,
   effect,
   inject,
   input,
   OnInit,
-  Output,
+  output,
   signal
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Legend } from "../model/legend.model";
 import {
   CoreLegendService,
@@ -145,8 +146,7 @@ export class GgcLegendComponent implements OnInit {
   /**
    * Event dat wordt afgegeven wanneer de lijst van legenda's verandert.
    */
-  @Output()
-  legendsChange: EventEmitter<Legend[]> = new EventEmitter<Legend[]>();
+  readonly legendsChange = output<Legend[]>();
 
   /**
    * Tekst die wordt getoond wanneer er geen legenda beschikbaar is en showEmptyLegendMessage = true
@@ -183,6 +183,7 @@ export class GgcLegendComponent implements OnInit {
 
   private readonly coreLegendService = inject(CoreLegendService);
   private readonly legendMapConnectService = inject(GgcLegendMapConnectService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly effectiveMapIndex = computed(() =>
     this.viewerType() === ViewerType.DRIE_D
@@ -199,11 +200,11 @@ export class GgcLegendComponent implements OnInit {
    * Abonneert op events om alle legenda's in of uit te klappen.
    */
   ngOnInit() {
-    this.coreLegendService.expandAll$.subscribe(
-      (datasetLegenToggle: DatasetLegendToggle) => {
+    this.coreLegendService.expandAll$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((datasetLegenToggle: DatasetLegendToggle) => {
         this.toggleAllLegends(datasetLegenToggle);
-      }
-    );
+      });
     if (this.autoConnect()) {
       void this.initialise();
     }
@@ -399,29 +400,35 @@ export class GgcLegendComponent implements OnInit {
       await this.legendMapConnectService.getZoomendObservableForMap(
         this.effectiveMapIndex()
       );
-    zoomendObservable.subscribe(async () => {
-      await this.updateEnabledLayerLegends();
-    });
+    zoomendObservable
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async () => {
+        await this.updateEnabledLayerLegends();
+      });
   }
 
   private async subscribeToLegendAddedObservable() {
     const legendAddedObservable =
       await this.legendMapConnectService.getLegendAddedObservable();
-    legendAddedObservable.subscribe((event) => {
-      if (this.effectiveMapIndex() == event.mapIndex && event.legend) {
-        this.addLegend(event.legend);
-      }
-    });
+    legendAddedObservable
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (this.effectiveMapIndex() == event.mapIndex && event.legend) {
+          this.addLegend(event.legend);
+        }
+      });
   }
 
   private async subscribeToLegendRemovedObservable() {
     const legendRemovedObservable =
       await this.legendMapConnectService.getLegendRemovedObservable();
-    legendRemovedObservable.subscribe((event) => {
-      if (this.effectiveMapIndex() == event.mapIndex) {
-        this.removeLegend(event.layerId);
-      }
-    });
+    legendRemovedObservable
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (this.effectiveMapIndex() == event.mapIndex) {
+          this.removeLegend(event.layerId);
+        }
+      });
   }
 
   private async applyCurrentActiveLegends() {

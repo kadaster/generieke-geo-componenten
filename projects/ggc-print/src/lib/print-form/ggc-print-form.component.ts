@@ -1,12 +1,11 @@
 import {
   Component,
-  EventEmitter,
   inject,
   input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  output,
   signal,
   SimpleChanges
 } from "@angular/core";
@@ -57,8 +56,7 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
   iconDownload = input("fal fa-arrow-to-bottom");
   iconClose = input("fal fa-times");
   printStyle = input<MapfishStyleV2>();
-  @Output() events: EventEmitter<PrintComponentEvent> =
-    new EventEmitter<PrintComponentEvent>();
+  readonly events = output<PrintComponentEvent>();
   // change for trigger
   protected readonly scales = [
     {

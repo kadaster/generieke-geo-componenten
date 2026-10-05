@@ -1,12 +1,5 @@
 import type { ElementRef, TemplateRef } from "@angular/core";
-import {
-  Component,
-  EventEmitter,
-  input,
-  Output,
-  signal,
-  ViewChild
-} from "@angular/core";
+import { Component, input, output, signal, viewChild } from "@angular/core";
 import { ToolbarItemComponentEvent } from "../../event/toolbar-item-event";
 import { NgClass } from "@angular/common";
 
@@ -81,25 +74,35 @@ export class GgcToolbarItemComponent {
   clickCallback = input<() => void>();
 
   /**
-   * TemplateRef naar de inhoud van het toolbar-item.
+   * Output die een `ToolbarItemComponentEvent` emit wanneer de actieve status verandert.
    */
-  @ViewChild("toolbarItemTemplate") toolbarItemTemplate: TemplateRef<any>;
-
-  /**
-   * ElementRef naar het DOM-element van het toolbar-item.
-   */
-  @ViewChild("toolbarItem") toolbarItem: ElementRef;
-
-  /**
-   * EventEmitter die een `ToolbarItemComponentEvent` emit wanneer de actieve status verandert.
-   */
-  @Output() activeChanged: EventEmitter<ToolbarItemComponentEvent> =
-    new EventEmitter<ToolbarItemComponentEvent>();
+  readonly activeChanged = output<ToolbarItemComponentEvent>();
 
   // NOSONAR: Non-cryptographic random value used only as a DOM id.
   // No security-sensitive context.
   protected readonly id = Math.random().toString(36).substring(2);
-  protected _active = signal(false);
+  protected readonly _active = signal(false);
+
+  /**
+   * TemplateRef naar de inhoud van het toolbar-item.
+   */
+  private readonly toolbarItemTemplateQuery = viewChild.required<
+    TemplateRef<any>
+  >("toolbarItemTemplate");
+
+  /**
+   * ElementRef naar het DOM-element van het toolbar-item.
+   */
+  private readonly toolbarItemQuery =
+    viewChild.required<ElementRef>("toolbarItem");
+
+  get toolbarItemTemplate(): TemplateRef<any> {
+    return this.toolbarItemTemplateQuery();
+  }
+
+  get toolbarItem(): ElementRef {
+    return this.toolbarItemQuery();
+  }
 
   /**
    * Wordt aangeroepen bij een klik op de knop.

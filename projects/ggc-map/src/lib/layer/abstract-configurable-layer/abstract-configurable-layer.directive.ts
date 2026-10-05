@@ -1,11 +1,4 @@
-import {
-  Directive,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-  signal
-} from "@angular/core";
+import { Directive, OnDestroy, OnInit, output, signal } from "@angular/core";
 import { AbstractBaseLayer } from "../abstract-base-layer/abstract-base-layer.directive";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
 import { zoomlevelToResolution } from "../../utils/epsg28992";
@@ -16,8 +9,7 @@ export abstract class AbstractConfigurableLayer<T>
   extends AbstractBaseLayer<any>
   implements OnInit, OnDestroy
 {
-  @Output() events: EventEmitter<MapComponentEvent> =
-    new EventEmitter<MapComponentEvent>();
+  readonly events = output<MapComponentEvent>();
 
   protected attributions: string | undefined;
   protected layerName: string | undefined;

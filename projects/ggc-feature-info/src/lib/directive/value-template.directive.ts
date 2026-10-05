@@ -1,4 +1,4 @@
-import { Directive, inject, Input, TemplateRef } from "@angular/core";
+import { Directive, inject, input, TemplateRef } from "@angular/core";
 
 /**
  * Bepaalt hoe een custom template (gekoppeld via {@link ValueTemplateDirective})
@@ -61,19 +61,18 @@ export enum ValueTemplateDirectiveType {
  */
 @Directive({ selector: "[ggcTemplateKey]" })
 export class ValueTemplateDirective {
-  templateRef = inject<TemplateRef<any>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<any>>(TemplateRef);
 
   /**
    * Key (of lijst van keys) waaraan dit template gekoppeld is.
    * Deze keys worden gebruikt om te bepalen wanneer dit template toegepast wordt.
    */
-  @Input() ggcTemplateKey: string | string[];
+  readonly ggcTemplateKey = input<string | string[]>();
 
   /**
    * Type van het template dat bepaalt hoe deze wordt gebruikt bij rendering.
    *
    * @defaultValue {@link ValueTemplateDirectiveType.CONTENT}
    */
-  @Input() templateType: ValueTemplateDirectiveType =
-    ValueTemplateDirectiveType.CONTENT;
+  readonly templateType = input(ValueTemplateDirectiveType.CONTENT);
 }

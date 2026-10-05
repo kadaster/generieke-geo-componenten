@@ -1,21 +1,21 @@
 import {
   AfterContentInit,
   Component,
-  ContentChildren,
+  contentChildren,
+  DestroyRef,
   ElementRef,
-  EventEmitter,
   inject,
   input,
   OnInit,
-  Output,
+  output,
   TemplateRef,
   AfterViewInit,
   OnChanges,
   OnDestroy,
-  QueryList,
   signal,
   SimpleChanges
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import {
@@ -159,11 +159,8 @@ export class GgcFeatureInfoComponent
   /** FeatureInfoEvent afkomstig van ggc-feature-info-tabs. */
   featureInfoEvent = input<FeatureInfoComponentEvent>();
 
-  /**
-   * EventEmitter voor het versturen van component-gerelateerde events.
-   * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
-   */
-  @Output() events = new EventEmitter<FeatureInfoComponentEvent>();
+  /** Output voor het versturen van component-gerelateerde events. */
+  readonly events = output<FeatureInfoComponentEvent>();
   protected customHeaderValueTemplates = signal(
     new Map<string, TemplateRef<any> | null>()
   );
@@ -177,12 +174,12 @@ export class GgcFeatureInfoComponent
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
+  private readonly destroyRef = inject(DestroyRef);
   private hasTabs = true;
   private subscription: Subscription;
   private subscriptionSelection: Subscription;
   private readonly eventService = inject(FeatureInfoEventService);
-  @ContentChildren(ValueTemplateDirective)
-  private readonly templates: QueryList<ValueTemplateDirective>;
+  private readonly templates = contentChildren(ValueTemplateDirective);
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
@@ -245,12 +242,15 @@ export class GgcFeatureInfoComponent
     );
     const customValueTemplates = new Map(this.customValueTemplates());
     const hideEmptyFieldWithKeys = [...this.hideEmptyFieldWithKeys()];
-    this.templates.forEach((template) => {
-      (Array.isArray(template.ggcTemplateKey)
-        ? template.ggcTemplateKey
-        : [template.ggcTemplateKey]
+    this.templates().forEach((template) => {
+      const ggcTemplateKey = template.ggcTemplateKey();
+      (Array.isArray(ggcTemplateKey)
+        ? ggcTemplateKey
+        : [ggcTemplateKey]
       ).forEach((templateKey) => {
-        switch (template.templateType) {
+        if (templateKey === undefined) return;
+
+        switch (template.templateType()) {
           case ValueTemplateDirectiveType.HEADER:
             customHeaderValueTemplates.set(templateKey, template.templateRef);
             break;
@@ -410,7 +410,7 @@ export class GgcFeatureInfoComponent
       featureForEvent
     );
     this.highlightFeature(featureForEvent);
-    this.events.next(featureInfoComponentEvent);
+    this.events.emit(featureInfoComponentEvent);
   }
 
   /**
@@ -459,7 +459,7 @@ export class GgcFeatureInfoComponent
     } else {
       this.currentFeatureIndex.set(-1);
       this.currentFeature.set(null);
-      this.events.next(
+      this.events.emit(
         new FeatureInfoComponentEvent(
           FeatureInfoComponentEventType.SELECTEDOBJECT,
           "Het huidige weergegeven object.",
@@ -480,6 +480,8 @@ export class GgcFeatureInfoComponent
         selectIndex
       )
       .then((featureCollectionForCoordinate) => {
+        if (this.destroyRef.destroyed) return;
+
         this.handleNewFeatureCollectionForCoordinate(
           featureCollectionForCoordinate,
           mapIndex
@@ -490,11 +492,12 @@ export class GgcFeatureInfoComponent
     this.featureInfoMapConnectService
       .getObservableForMapSelection(this.viewerType(), mapIndex, selectIndex)
       .then((mapSelectionEvent) => {
-        if (this.hasTabs) {
+        if (this.destroyRef.destroyed || this.hasTabs) {
           return;
         }
-        this.subscriptionSelection = mapSelectionEvent.subscribe(
-          (event: MapComponentEvent) => {
+        this.subscriptionSelection = mapSelectionEvent
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((event: MapComponentEvent) => {
             if (
               event.type !==
               MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
@@ -502,8 +505,7 @@ export class GgcFeatureInfoComponent
               return;
             }
             this.handleNewFeatureCollectionForCoordinate(event.value, mapIndex);
-          }
-        );
+          });
       });
   }
 
