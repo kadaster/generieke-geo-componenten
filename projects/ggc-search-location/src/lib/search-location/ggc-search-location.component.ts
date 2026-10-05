@@ -7,11 +7,13 @@ import {
   HostListener,
   inject,
   Input,
+  OnChanges,
   OnInit,
   Output,
   QueryList,
   signal,
   Signal,
+  SimpleChanges,
   ViewChild,
   ViewChildren,
   ViewEncapsulation
@@ -66,7 +68,7 @@ const proj4 = (proj4x as any).default;
   styleUrls: ["./ggc-search-location.component.scss"],
   imports: [NgClass, CdkListbox, CdkOption]
 })
-export class GgcSearchLocationComponent implements OnInit {
+export class GgcSearchLocationComponent implements OnChanges, OnInit {
   /** Configuratieopties voor de zoekfunctionaliteit, zoals zoomniveaus en PDOK-collecties. */
   @Input() searchLocationOptions: SearchLocationOptions;
 
@@ -167,37 +169,47 @@ export class GgcSearchLocationComponent implements OnInit {
   }
 
   /**
-   * Initialiseert de component, configureert de PDOK-service en start de zoekterm-subscriber.
+   * Past de PDOK-serviceconfiguratie aan wanneer searchLocationOptions verandert.
    */
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes["searchLocationOptions"]) {
+      return;
+    }
+
+    const searchLocationOptions = this.searchLocationOptions;
     if (
-      this.searchLocationOptions?.minQueryLength !== undefined &&
-      this.searchLocationOptions?.minQueryLength > 0
+      searchLocationOptions?.minQueryLength !== undefined &&
+      searchLocationOptions.minQueryLength > 0
     ) {
       this.pdokLocationApiService.setMinQueryLength(
-        this.searchLocationOptions.minQueryLength
+        searchLocationOptions.minQueryLength
       );
     }
 
     if (
-      this.searchLocationOptions?.numberOfSuggestions !== undefined &&
-      this.searchLocationOptions?.numberOfSuggestions > 0
+      searchLocationOptions?.numberOfSuggestions !== undefined &&
+      searchLocationOptions.numberOfSuggestions > 0
     ) {
       this.pdokLocationApiService.setNumberOfSuggestions(
-        this.searchLocationOptions.numberOfSuggestions
+        searchLocationOptions.numberOfSuggestions
       );
     }
 
+    if (searchLocationOptions?.customCollections) {
+      this.pdokLocationApiService.setCustomCollections(
+        searchLocationOptions.customCollections
+      );
+    }
+  }
+
+  /**
+   * Initialiseert de component en start de zoekterm-subscriber.
+   */
+  ngOnInit() {
     if (this.searchLocationOptions?.elementIds) {
       this.elementIds = this.searchLocationOptions.elementIds;
     } else {
       this.elementIds = new SearchComponentElementIds({});
-    }
-
-    if (this.searchLocationOptions?.customCollections) {
-      this.pdokLocationApiService.setCustomCollections(
-        this.searchLocationOptions.customCollections
-      );
     }
 
     // Subscribe to searchSuggestionService.search
