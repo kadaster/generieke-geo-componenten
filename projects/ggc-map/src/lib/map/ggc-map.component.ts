@@ -1,16 +1,14 @@
 import {
-  ChangeDetectionStrategy,
   ElementRef,
   AfterViewInit,
   Component,
   inject,
   OnDestroy,
-  ViewChild,
   input,
   effect,
   untracked,
-  Output,
-  EventEmitter
+  output,
+  viewChild
 } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import { EventsKey } from "ol/events";
@@ -127,12 +125,11 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
    * - ZOOMEND / ZOOMENDLOCATION
    * - LOADING
    */
-  @Output() events: EventEmitter<MapComponentEvent> =
-    new EventEmitter<MapComponentEvent>();
+  readonly events = output<MapComponentEvent>();
 
   /** DOM‑element waarin de kaart gerenderd wordt */
-  @ViewChild("mapElement", { static: true })
-  private readonly mapElement: ElementRef;
+  private readonly mapElement =
+    viewChild.required<ElementRef<HTMLElement>>("mapElement");
   private readonly eventsMap: EventsKey[] = [];
   private lastChangeResolutionEvent: ObjectEvent | undefined;
   private readonly coreMapService = inject(CoreMapService);
@@ -187,7 +184,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
         this.minZoomlevel(),
         this.maxZoomlevel()
       );
-      map.setTarget(this.mapElement.nativeElement.id);
+      map.setTarget(this.mapElement().nativeElement.id);
 
       this.eventsMap.push(
         map.on(this.OL_PRECOMPOSE, this.processEvent.bind(this)),

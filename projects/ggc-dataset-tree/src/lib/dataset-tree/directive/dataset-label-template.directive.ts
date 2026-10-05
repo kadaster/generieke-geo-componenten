@@ -1,4 +1,4 @@
-import { Directive, inject, Input, TemplateRef } from "@angular/core";
+import { Directive, inject, input, TemplateRef } from "@angular/core";
 
 /**
  * Directive voor het aanleveren van een custom dataset‑label template
@@ -27,7 +27,7 @@ import { Directive, inject, Input, TemplateRef } from "@angular/core";
 
 @Directive({ selector: "[ggcDatasetLabelTemplate]" })
 export class DatasetLabelTemplateDirective {
-  templateRef = inject<TemplateRef<any>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<any>>(TemplateRef);
 
-  @Input() ggcDatasetLabelTemplate: void;
+  readonly ggcDatasetLabelTemplate = input<void>();
 }

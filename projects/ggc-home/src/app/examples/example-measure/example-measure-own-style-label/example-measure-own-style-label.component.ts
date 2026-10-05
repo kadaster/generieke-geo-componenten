@@ -1,4 +1,4 @@
-import { Component, inject, model, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
@@ -58,19 +58,19 @@ export class ExampleMeasureOwnStyleLabel
     })
   });
 
-  mapConfig: Webservice[];
-  measuring = model(false);
+  readonly mapConfig = signal<Webservice[]>([]);
+  protected readonly measuring = signal(false);
 
   private readonly drawService = inject(GgcDrawService);
   private readonly measureLayer = "measure";
 
   ngOnInit() {
     this.httpClient
-      .get(
+      .get<Webservice[]>(
         "code/examples/example-measure/example-measure-own-style-label/kaartconfig.json"
       )
-      .subscribe((data) => {
-        this.mapConfig = data as Webservice[];
+      .subscribe((webServices) => {
+        this.mapConfig.set(webServices);
       });
 
     this.drawService.setDrawStyle(this.measureLayer, {

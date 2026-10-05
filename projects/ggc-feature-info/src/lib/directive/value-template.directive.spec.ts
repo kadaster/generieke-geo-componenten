@@ -1,6 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ValueTemplateDirective } from "./value-template.directive";
+import { ValueTemplateDirectiveType } from "./value-template.directive";
 
 @Component({
   imports: [ValueTemplateDirective],
@@ -32,7 +33,8 @@ describe("ValueTemplateDirective", () => {
     directive = wrapperComponent.template;
 
     expect(directive).toBeDefined();
-    expect(directive.ggcTemplateKey).toBe("bronhoudernaam");
+    expect(directive.ggcTemplateKey()).toBe("bronhoudernaam");
+    expect(directive.templateType()).toBe(ValueTemplateDirectiveType.CONTENT);
     expect(directive.templateRef).toBeDefined();
   });
 
@@ -42,7 +44,7 @@ describe("ValueTemplateDirective", () => {
     directive = wrapperComponent.template;
 
     expect(directive).toBeDefined();
-    expect(directive.ggcTemplateKey).toEqual([
+    expect(directive.ggcTemplateKey()).toEqual([
       "bronhoudernaam",
       "bronhoudercode"
     ]);

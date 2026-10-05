@@ -1,10 +1,9 @@
 import {
   Component,
-  EventEmitter,
   inject,
   input,
   OnChanges,
-  Output,
+  output,
   signal,
   SimpleChanges
 } from "@angular/core";
@@ -79,7 +78,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    *
    * Emit bij theme-wissels (handmatig of via initiële selectie).
    */
-  @Output() events = new EventEmitter<DatasetSwitcherEvent>();
+  readonly events = output<DatasetSwitcherEvent>();
 
   /**
    * Huidig actieve theme. Wordt gebruikt om:

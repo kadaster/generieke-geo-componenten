@@ -51,7 +51,7 @@ describe("ControlMousePositionComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("ngOninit should call setCoordinateFormatOnMousePositionControl(), setMousePositionControlOnMap() and createMousePositionOptions()", () => {
+  it("ngAfterViewInit should call setCoordinateFormatOnMousePositionControl(), setMousePositionControlOnMap() and createMousePositionOptions()", () => {
     const setCoordinateFormatOnMousePositionControlSpy = vi.spyOn(
       component as any,
       "setCoordinateFormatOnMousePositionControl"
@@ -65,7 +65,7 @@ describe("ControlMousePositionComponent", () => {
       "createMousePositionOptions"
     );
 
-    component.ngOnInit();
+    component.ngAfterViewInit();
 
     expect(setCoordinateFormatOnMousePositionControlSpy).toHaveBeenCalled();
     expect(setMousePositionControlOnMapSpy).toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe("ControlMousePositionComponent", () => {
   });
 
   it("setCoordinateFormatOnMousePositionControl should call setCoordinateFormat() on mousePositionControl", () => {
-    component.ngOnInit();
+    component.ngAfterViewInit();
 
     const setCoordinateFormatSpy = vi.spyOn(
       component["mousePositionControl"],
@@ -158,7 +158,7 @@ describe("ControlMousePositionComponent", () => {
     const getMapSpy = vi
       .spyOn(coreMapService, "getMap")
       .mockReturnValue(mapMock);
-    component.ngOnInit();
+    component.ngAfterViewInit();
     component.ngOnDestroy();
 
     expect(getMapSpy).toHaveBeenCalled();
