@@ -34,8 +34,9 @@ RUN mkdir -p /var/log/nginx && \
 RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ && \
     chmod -R u+rwX,go+rX /etc/nginx/html/ && \
     chmod 755 /var/appdata/run/start-application.sh && \
-    chmod -R u+rwX,go+rX /var/cache/nginx && \
-    chmod -R u+rw /etc/nginx/html/
+    chmod -R u+rwX,go+rX /var/cache/nginx
+
+RUN chmod -R a+rw /etc/nginx/html/ /tmp
 
 USER ggc-home
 
