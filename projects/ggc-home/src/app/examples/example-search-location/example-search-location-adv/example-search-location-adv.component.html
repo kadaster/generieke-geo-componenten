@@ -41,11 +41,11 @@
       <code>SearchLocationOptions</code>:
     </p>
     <ul>
+      <li>het aantal zoeksuggesties (1-50)</li>
+      <li>de collectie bij suggesties tonen of verbergen</li>
+      <li>de volgorde van zoeksuggesties instellen met <code>customCollections</code></li>
       <li>automatisch inzoomen naar gevonden locatie/gebied</li>
       <li>automatisch markeren van gevonden locatie/gebied</li>
-      <li>het maximum aantal suggesties (1-50)</li>
-      <li>de collectie bij suggesties tonen of verbergen</li>
-      <li>de relevantie per collectie instellen met <code>customCollections</code></li>
     </ul>
     <p>Een hogere relevantie geeft een collectie een hogere prioriteit.</p>
   </div>
@@ -67,7 +67,7 @@
         <!-- DOCS:END functionality -->
       </div>
       <div class="col-xl-2 col-md-2 col-sm-12">
-        <div class="row options-toggle">
+        <div class="options-toggle">
           <label class="switch">
             <input
               type="checkbox"
@@ -78,8 +78,9 @@
             Extra opties
           </label>
         </div>
-        <div class="row search-results-options">
-          <label for="number-of-suggestions">Aantal suggesties</label>
+        <div class="search-results-options">
+          <h6 class="option-section-heading">Configureren zoeksuggesties</h6>
+          <label for="number-of-suggestions">Aantal zoeksuggesties (1-50)</label>
           <input
             id="number-of-suggestions"
             class="form-control"
@@ -94,7 +95,7 @@
             Toon collectie bij suggesties
           </label>
           <fieldset>
-            <legend>Relevantie van collecties</legend>
+            <legend>Volgorde van zoeksuggesties (relevantie van collecties)</legend>
             <label>
               <input
                 type="radio"
@@ -114,6 +115,7 @@
               Woonplaats &gt; Gemeente &gt; Provincie
             </label>
           </fieldset>
+          <h6 class="option-section-heading">Zoekresultaat tonen op de kaart</h6>
           <label>
             <input type="checkbox" [(ngModel)]="zoomToResult" />
             Zoom naar het zoekresultaat
