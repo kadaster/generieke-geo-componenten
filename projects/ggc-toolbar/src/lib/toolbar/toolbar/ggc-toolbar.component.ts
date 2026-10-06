@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, QueryList, TemplateRef } from "@angular/core";
+import { QueryList, TemplateRef } from "@angular/core";
 import {
   AfterViewInit,
   Component,
   ContentChildren,
   inject,
-  Input,
-  OnInit
+  input,
+  OnInit,
+  signal
 } from "@angular/core";
 import Map from "ol/Map";
 import { ToolbarItemComponentEvent } from "../../event/toolbar-item-event";
@@ -51,9 +52,11 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
    * Naam van de kaart waarop de toolbar betrekking heeft.
    * Indien niet opgegeven, wordt de standaardkaart gebruikt.
    */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input(DEFAULT_MAPINDEX);
 
-  protected toolbarContentTemplate: TemplateRef<any> | undefined;
+  protected toolbarContentTemplate = signal<TemplateRef<any> | undefined>(
+    undefined
+  );
 
   @ContentChildren(GgcToolbarItemComponent)
   private readonly children: QueryList<GgcToolbarItemComponent>;
@@ -61,7 +64,6 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
   private map: Map;
   private readonly connectService = inject(GgcToolbarConnectService);
   private readonly toolbarService = inject(GgcToolbarService);
-  private cdr = inject(ChangeDetectorRef);
 
   /**
    * Constructor registreert een listener op de actieve toolbar-item observable.
@@ -85,7 +87,7 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
   async init(): Promise<void> {
     const mapService = await this.connectService.getMapService();
     if (mapService) {
-      this.map = (mapService as any).getMap(this.mapIndex);
+      this.map = (mapService as any).getMap(this.mapIndex());
     }
   }
 
@@ -97,16 +99,19 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
     this.children.forEach((child) => {
       child.activeChanged.subscribe((event: ToolbarItemComponentEvent) => {
         if (event.active) {
-          this.toolbarContentTemplate =
-            event.toolbarItemComponent.toolbarItemTemplate;
-          this.cdr.detectChanges();
-          this.inactivateOtherChildren(event.toolbarItemComponent);
-          this.toolbarService.setActiveToolbarItem(
-            event.toolbarItemComponent.activeId
+          this.toolbarContentTemplate.set(
+            event.toolbarItemComponent.toolbarItemTemplate
           );
+          this.inactivateOtherChildren(event.toolbarItemComponent);
+          const activeId = event.toolbarItemComponent.activeId();
+          if (activeId !== undefined) {
+            this.toolbarService.setActiveToolbarItem(activeId);
+          }
         } else {
-          this.toolbarContentTemplate = undefined;
-          this.toolbarService.setActiveToolbarItem(null);
+          this.toolbarContentTemplate.set(undefined);
+          if (event.toolbarItemComponent.activeId() !== undefined) {
+            this.toolbarService.setActiveToolbarItem(null);
+          }
         }
       });
     });

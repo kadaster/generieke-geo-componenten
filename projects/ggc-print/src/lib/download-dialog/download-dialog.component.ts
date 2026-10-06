@@ -1,4 +1,12 @@
-import { Component, inject, Input, signal } from "@angular/core";
+import {
+  Component,
+  inject,
+  input,
+  linkedSignal,
+  OnChanges,
+  signal,
+  SimpleChanges
+} from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Coordinate } from "ol/coordinate";
 import { noop, Subscription } from "rxjs";
@@ -22,49 +30,39 @@ import { NgClass } from "@angular/common";
   styleUrls: ["./download-dialog.component.css"],
   imports: [NgClass]
 })
-export class DownloadDialogComponent {
-  @Input() downloadOnComplete = false;
-  @Input() extraPrintLayers: string[];
-  @Input() configurationName: string;
-  @Input() outputFilenameFunction: (formValues: Map<string, string>) => string;
-  @Input() mapIndex: string;
-  @Input() iconFile: string;
-  @Input() iconDownload: string;
-  @Input() iconClose: string;
+export class DownloadDialogComponent implements OnChanges {
+  downloadOnComplete = input(false);
+  extraPrintLayers = input<string[]>();
+  configurationName = input<string>();
+  outputFilenameFunction = input<(formValues: Map<string, string>) => string>();
+  mapIndex = input<string>();
+  iconFile = input<string>();
+  iconDownload = input<string>();
+  iconClose = input<string>();
+  error = input<GgcPrintError>();
+  center = input<Coordinate>();
+  optionsForm = input<FormGroup<any>>();
+  printStyle = input<MapfishStyleV2>();
 
   protected isLoading = signal(false);
-  protected internalError = signal<GgcPrintError | undefined>(undefined);
-  protected downloadURL: string | undefined;
+  protected internalError = linkedSignal<GgcPrintError | undefined>(() =>
+    this.error()
+  );
+  protected downloadURL = signal<string | undefined>(undefined);
   private readonly mapFishInteraction = inject(GgcMapfishInteractionService);
   private readonly mapFishPrintrequestCreateService = inject(
     GgcMapfishPrintrequestCreateService
   );
   private getResultSubscription: Subscription;
   private printId: string;
-  private _center: Coordinate;
-  private _optionsForm: FormGroup<any>;
-
-  @Input()
-  set error(value: GgcPrintError | undefined) {
-    this.internalError.set(value);
-  }
-
-  @Input()
-  set center(center: Coordinate) {
-    this._center = center;
-    if (center) {
-      this.isLoading.set(true);
-      this.startDownloadingAsync();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["printStyle"]) {
+      this.mapFishPrintrequestCreateService.setCustomStyle(this.printStyle());
     }
-  }
-
-  @Input()
-  set optionsForm(optionsForm: FormGroup<any>) {
-    this._optionsForm = optionsForm;
-  }
-  @Input()
-  set printStyle(printStyle: MapfishStyleV2 | undefined) {
-    this.mapFishPrintrequestCreateService.setCustomStyle(printStyle);
+    if (changes["center"] && this.center()) {
+      this.isLoading.set(true);
+      void this.startDownloadingAsync();
+    }
   }
 
   private async startDownloadingAsync(): Promise<void> {
@@ -72,25 +70,30 @@ export class DownloadDialogComponent {
   }
 
   async startDownloading() {
+    const optionsForm = this.optionsForm();
+    const center = this.center();
+    const configurationName = this.configurationName();
+    if (!optionsForm || !center || !configurationName) return;
+
     const printProperties: MapfishPrintProperties = {
-      scale: this._optionsForm.getRawValue()["scale"],
-      layout: this._optionsForm.getRawValue()["template"].name,
-      center: this._center,
-      extraPrintlayers: this.extraPrintLayers,
-      mapAreaSize: this._optionsForm.getRawValue()["template"].mapAreaSize,
-      attributes: this._optionsForm.controls["attributesGroup"].value,
-      outputFilenameFunction: this.outputFilenameFunction,
-      mapIndex: this.mapIndex
+      scale: optionsForm.getRawValue()["scale"],
+      layout: optionsForm.getRawValue()["template"].name,
+      center,
+      extraPrintlayers: this.extraPrintLayers() ?? [],
+      mapAreaSize: optionsForm.getRawValue()["template"].mapAreaSize,
+      attributes: optionsForm.controls["attributesGroup"].value,
+      outputFilenameFunction: this.outputFilenameFunction(),
+      mapIndex: this.mapIndex()
     };
     const mapFishPrintRequest =
       await this.mapFishPrintrequestCreateService.createPrintRequest(
         printProperties
       );
     this.getResultSubscription = this.mapFishInteraction
-      .sendPrintRequest(this.configurationName, mapFishPrintRequest)
+      .sendPrintRequest(configurationName, mapFishPrintRequest)
       .pipe(
         switchMap((data: PrintRequestResponse) => {
-          this.downloadURL = undefined;
+          this.downloadURL.set(undefined);
           this.internalError.set(undefined);
           this.printId = data.ref;
           return this.mapFishInteraction.getResult(this.printId);
@@ -107,9 +110,10 @@ export class DownloadDialogComponent {
   procesStatusResponse(statusResponse: StatusResponse): void {
     this.getResultSubscription.unsubscribe();
     if (statusResponse.status === StatusResponseStatus.FINISHED) {
-      this.downloadURL =
-        this.mapFishInteraction.getPrintserver() + statusResponse.downloadURL;
-      if (this.downloadOnComplete) {
+      this.downloadURL.set(
+        this.mapFishInteraction.getPrintserver() + statusResponse.downloadURL
+      );
+      if (this.downloadOnComplete()) {
         this.downloadPrint();
       }
       this.isLoading.set(false);
@@ -128,9 +132,10 @@ export class DownloadDialogComponent {
   }
 
   downloadPrint(): void {
-    if (this.downloadURL) {
+    const downloadURL = this.downloadURL();
+    if (downloadURL) {
       this.mapFishInteraction
-        .getPrint(this.downloadURL)
+        .getPrint(downloadURL)
         .subscribe((print: Print) => {
           const file = new File([print.file], print.filename, {
             type: "application/pdf"
@@ -145,7 +150,7 @@ export class DownloadDialogComponent {
   }
 
   closeModal() {
-    this.downloadURL = undefined;
+    this.downloadURL.set(undefined);
 
     if (this.getResultSubscription && !this.getResultSubscription.closed) {
       this.getResultSubscription.unsubscribe();

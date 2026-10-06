@@ -1,33 +1,32 @@
 @if (hasSearch()) {
   <div class="form-group form-group-ggc-search-suggestions">
-    @if (searchLocationOptions?.labelText) {
+    @if (searchLocationOptions()?.labelText) {
       <label
-        [attr.id]="elementIds.searchLabelId"
-        [attr.for]="elementIds.searchInputId"
-        >{{ searchLocationOptions.labelText }}</label
+        [attr.id]="elementIds().searchLabelId"
+        [attr.for]="elementIds().searchInputId"
+        >{{ searchLocationOptions()?.labelText }}</label
       >
     }
     <div class="input-group" aria-haspopup="listbox">
       @if (loadCurrentLocation()) {
         <div class="form-control">
           <span class="font-italic">Locatie laden</span>
-          @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
+          @if (searchLocationOptions()?.searchCurrentLocation?.loadIcon) {
             <span
-              [ngClass]="searchLocationOptions.searchCurrentLocation.loadIcon"
+              [ngClass]="searchLocationOptions()?.searchCurrentLocation?.loadIcon"
               aria-hidden="true"
             ></span>
           }
         </div>
       }
       <input
-        [attr.id]="elementIds.searchInputId"
-        [attr.aria-controls]="elementIds.suggestionListId"
+        [attr.id]="elementIds().searchInputId"
+        [attr.aria-controls]="elementIds().suggestionListId"
         [attr.aria-label]="
-          $safeNavigationMigration(searchLocationOptions?.labelText) ===
-          undefined
-            ? (this.searchLocationOptions?.placeholderTextAndAriaLabel ??
+          searchLocationOptions()?.labelText
+            ? null
+            : (searchLocationOptions()?.placeholderTextAndAriaLabel ??
               'Voer locatie in')
-            : null
         "
         (keyup)="onInputUp($event)"
         (keyup.enter)="searchOnEnter()"
@@ -39,14 +38,14 @@
         [attr.aria-expanded]="
           showSuggestions() ||
           (showCurrentLocation() &&
-            searchLocationOptions?.searchCurrentLocation?.type ===
+            searchLocationOptions()?.searchCurrentLocation?.type ===
               searchCurrentLocationTypes.SELECT)
             ? 'true'
             : 'false'
         "
         aria-autocomplete="list"
         placeholder="{{
-          this.searchLocationOptions?.placeholderTextAndAriaLabel ??
+          searchLocationOptions()?.placeholderTextAndAriaLabel ??
             'Voer locatie in'
         }}"
         autocomplete="off"
@@ -61,11 +60,11 @@
             class="btn btn-form"
             type="button"
           >
-            <span [ngClass]="clsClearButton" aria-hidden="true"></span>
+            <span [ngClass]="clsClearButton()" aria-hidden="true"></span>
           </button>
         }
         @if (
-          searchLocationOptions?.searchCurrentLocation?.type ===
+          searchLocationOptions()?.searchCurrentLocation?.type ===
           searchCurrentLocationTypes.BUTTON
         ) {
           <button
@@ -75,30 +74,30 @@
             type="button"
           >
             @if (loadCurrentLocation()) {
-              @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
+              @if (searchLocationOptions()?.searchCurrentLocation?.loadIcon) {
                 <span
                   [ngClass]="
-                    searchLocationOptions.searchCurrentLocation.loadIcon
+                    searchLocationOptions()?.searchCurrentLocation?.loadIcon
                   "
                   aria-hidden="true"
                 ></span>
               }
-            } @else if (searchLocationOptions?.searchCurrentLocation?.icon) {
+            } @else if (searchLocationOptions()?.searchCurrentLocation?.icon) {
               <span
-                [ngClass]="searchLocationOptions.searchCurrentLocation.icon"
+                [ngClass]="searchLocationOptions()?.searchCurrentLocation?.icon"
                 aria-hidden="true"
               ></span>
             }
           </button>
         }
         <button
-          [attr.id]="elementIds.searchButtonId"
+          [attr.id]="elementIds().searchButtonId"
           aria-label="Zoeken"
           class="btn btn-form"
           (click)="searchOnEnter()"
           type="button"
         >
-          <span [ngClass]="clsSearchButton" aria-hidden="true"></span>
+          <span [ngClass]="clsSearchButton()" aria-hidden="true"></span>
         </button>
       </div>
     </div>
@@ -109,10 +108,10 @@
         role="listbox"
         class="list-group list-group-ggc-search-suggestions"
         [attr.tabindex]="hasFocusableSuggestions() ? '0' : '-1'"
-        [id]="elementIds.suggestionListId ?? ''"
+        [id]="elementIds().suggestionListId ?? ''"
         [attr.aria-labelledby]="
-          searchLocationOptions?.labelText
-            ? elementIds.searchLabelId
+          searchLocationOptions()?.labelText
+            ? elementIds().searchLabelId
             : undefined
         "
         (cdkListboxValueChange)="handleCdkListboxEvent($event)"
@@ -121,7 +120,7 @@
       >
         @if (
           showCurrentLocation() &&
-          searchLocationOptions?.searchCurrentLocation?.type ===
+          searchLocationOptions()?.searchCurrentLocation?.type ===
             searchCurrentLocationTypes.SELECT
         ) {
           <li
@@ -129,20 +128,20 @@
             role="option"
             aria-selected="false"
             tabindex="0"
-            [attr.id]="elementIds.suggestionListId + '-current-location'"
+            [attr.id]="elementIds().suggestionListId + '-current-location'"
             [attr.aria-live]="'off'"
             (keydown)="onListKeydown($event)"
             (keyup)="onListKeyup($event)"
             [cdkOption]="{ id: 'current-location' }"
           >
-            @if (searchLocationOptions?.searchCurrentLocation?.icon) {
+            @if (searchLocationOptions()?.searchCurrentLocation?.icon) {
               <span
-                [ngClass]="searchLocationOptions.searchCurrentLocation.icon"
+                [ngClass]="searchLocationOptions()?.searchCurrentLocation?.icon"
                 aria-hidden="true"
               ></span>
             }
             {{
-              searchLocationOptions?.searchCurrentLocation?.label ??
+              searchLocationOptions()?.searchCurrentLocation?.label ??
                 "Gebruik mijn locatie"
             }}
           </li>
@@ -154,28 +153,28 @@
               role="option"
               aria-selected="false"
               tabindex="0"
-              [attr.id]="elementIds.suggestionListId + '-' + idx"
+              [attr.id]="elementIds().suggestionListId + '-' + idx"
               [attr.aria-live]="idx === 0 ? 'polite' : 'off'"
               [attr.aria-labelledby]="
-                elementIds.suggestionListId + '-label-' + idx
+                elementIds().suggestionListId + '-label-' + idx
               "
               (keydown)="onListKeydown($event)"
               (keyup)="onListKeyup($event)"
               [cdkOption]="suggestion"
             >
               <span
-                [attr.id]="elementIds.suggestionListId + '-label-' + idx"
+                [attr.id]="elementIds().suggestionListId + '-label-' + idx"
                 [innerHTML]="suggestion.properties.highlight"
               ></span>
               @if (
-                searchLocationOptions?.hideCollectionId !== true &&
+                searchLocationOptions()?.hideCollectionId !== true &&
                 suggestion.properties?.collection_id
               ) {
                 <span class="collectionType">{{
-                  collectionIdTranslations?.has(
+                  collectionIdTranslations().has(
                     suggestion.properties.collection_id
                   )
-                    ? collectionIdTranslations.get(
+                    ? collectionIdTranslations().get(
                         suggestion.properties.collection_id
                       )
                     : suggestion.properties.collection_id
@@ -198,15 +197,15 @@
     type="button"
   >
     @if (loadCurrentLocation()) {
-      @if (searchLocationOptions?.searchCurrentLocation?.loadIcon) {
+      @if (searchLocationOptions()?.searchCurrentLocation?.loadIcon) {
         <span
-          [ngClass]="searchLocationOptions.searchCurrentLocation.loadIcon"
+          [ngClass]="searchLocationOptions()?.searchCurrentLocation?.loadIcon"
           aria-hidden="true"
         ></span>
       }
-    } @else if (searchLocationOptions?.searchCurrentLocation?.icon) {
+    } @else if (searchLocationOptions()?.searchCurrentLocation?.icon) {
       <span
-        [ngClass]="searchLocationOptions.searchCurrentLocation.icon"
+        [ngClass]="searchLocationOptions()?.searchCurrentLocation?.icon"
         aria-hidden="true"
       ></span>
     }
