@@ -103,12 +103,15 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
             event.toolbarItemComponent.toolbarItemTemplate
           );
           this.inactivateOtherChildren(event.toolbarItemComponent);
-          this.toolbarService.setActiveToolbarItem(
-            event.toolbarItemComponent.activeId() ?? null
-          );
+          const activeId = event.toolbarItemComponent.activeId();
+          if (activeId !== undefined) {
+            this.toolbarService.setActiveToolbarItem(activeId);
+          }
         } else {
           this.toolbarContentTemplate.set(undefined);
-          this.toolbarService.setActiveToolbarItem(null);
+          if (event.toolbarItemComponent.activeId() !== undefined) {
+            this.toolbarService.setActiveToolbarItem(null);
+          }
         }
       });
     });

@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   input,
+  linkedSignal,
   OnChanges,
   signal,
   SimpleChanges
@@ -44,7 +45,9 @@ export class DownloadDialogComponent implements OnChanges {
   printStyle = input<MapfishStyleV2>();
 
   protected isLoading = signal(false);
-  protected internalError = signal<GgcPrintError | undefined>(undefined);
+  protected internalError = linkedSignal<GgcPrintError | undefined>(() =>
+    this.error()
+  );
   protected downloadURL = signal<string | undefined>(undefined);
   private readonly mapFishInteraction = inject(GgcMapfishInteractionService);
   private readonly mapFishPrintrequestCreateService = inject(
@@ -53,9 +56,6 @@ export class DownloadDialogComponent implements OnChanges {
   private getResultSubscription: Subscription;
   private printId: string;
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["error"]) {
-      this.internalError.set(this.error());
-    }
     if (changes["printStyle"]) {
       this.mapFishPrintrequestCreateService.setCustomStyle(this.printStyle());
     }

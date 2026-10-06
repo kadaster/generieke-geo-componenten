@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { DownloadDialogComponent } from "./download-dialog.component";
 import { defer, Subscription } from "rxjs";
 import { GgcMapfishInteractionService } from "../core/mapfish-interaction/ggc-mapfish-interaction.service";
-import { GgcPrintErrorTypes } from "../model/print-error.model";
+import { GgcPrintError, GgcPrintErrorTypes } from "../model/print-error.model";
 import {
   StatusResponse,
   StatusResponseStatus
@@ -41,6 +41,32 @@ describe("DownloadDialogComponent", () => {
 
   it("should create", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should reset internal error when the error input changes", () => {
+    const fixture = TestBed.createComponent(DownloadDialogComponent);
+    const inputError = new GgcPrintError(GgcPrintErrorTypes.HTTPERROR, "input");
+    const internalError = new GgcPrintError(
+      GgcPrintErrorTypes.MAPFISHERROR,
+      "internal"
+    );
+    const updatedInputError = new GgcPrintError(
+      GgcPrintErrorTypes.HTTPERROR,
+      "updated-input"
+    );
+
+    fixture.componentRef.setInput("error", inputError);
+    fixture.detectChanges();
+    expect(fixture.componentInstance["internalError"]()).toBe(inputError);
+
+    fixture.componentInstance["internalError"].set(internalError);
+    expect(fixture.componentInstance["internalError"]()).toBe(internalError);
+
+    fixture.componentRef.setInput("error", updatedInputError);
+    fixture.detectChanges();
+    expect(fixture.componentInstance["internalError"]()).toBe(
+      updatedInputError
+    );
   });
 
   it("should set the correct downloadURL when procesStatusResponse is called with a statusResponse of status FINISHED", () => {
