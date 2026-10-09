@@ -1,9 +1,7 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { CustomEventsService } from "@piwikpro/ngx-piwik-pro";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class EventTrackerService {
   private readonly customEventsServicePiwik = inject(CustomEventsService);
 

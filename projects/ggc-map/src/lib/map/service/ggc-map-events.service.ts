@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import MapEvent from "ol/MapEvent";
 import { Observable } from "rxjs";
 import { CoreMapEventsService } from "./core-map-events.service";
@@ -12,9 +12,7 @@ import { CoreMapEventsService } from "./core-map-events.service";
  * kaartinteracties.
  */
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcMapEventsService {
   private coreMapEventsService = inject(CoreMapEventsService);
 

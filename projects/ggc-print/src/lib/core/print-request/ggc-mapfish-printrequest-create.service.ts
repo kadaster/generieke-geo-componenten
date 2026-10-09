@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 
 import { basicGeojsonStyle, basicMeasureStyle } from "./mapfish-printstyles";
 import { Coordinate } from "ol/coordinate";
@@ -54,9 +54,7 @@ import {
   GgcMapService
 } from "@kadaster/ggc-map";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcMapfishPrintrequestCreateService {
   private readonly mapService = inject(GgcMapService);
   private readonly drawService = inject(GgcDrawService);

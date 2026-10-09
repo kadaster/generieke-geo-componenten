@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { CoreWmsWmtsCapabilitiesRequestService } from "./core-wms-wmts-capabilities-request.service";
 import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
@@ -16,9 +16,7 @@ import { Coordinate } from "ol/coordinate";
  * naar het publieke `ServiceCapabilities`-model. Bevat dus geen HTTP-logica,
  * maar puur WMS/WMTS-specifieke mapping-/extractielogica.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreWmsWmtsCapabilitiesService {
   private readonly coreWmsWmtsCapabilitiesRequestService = inject(
     CoreWmsWmtsCapabilitiesRequestService

@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import { Extent } from "ol/extent";
 import { WMSCapabilities, WMTSCapabilities } from "ol/format";
@@ -15,9 +15,7 @@ import { Capabilities } from "../model/capabilities.model";
  * WMTS GetFeatureInfo requests. Kent alleen de ruwe OpenLayers-capabilities,
  * niet het publieke `ServiceCapabilities`-model (zie daarvoor `CoreWmsWmtsCapabilitiesService`).
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreWmsWmtsCapabilitiesRequestService {
   private readonly httpClient = inject(HttpClient);
 

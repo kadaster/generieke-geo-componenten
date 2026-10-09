@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector, Type } from "@angular/core";
+import { inject, Service, Injector, Type } from "@angular/core";
 
 type GgcMapModule = {
   GgcMapService: Type<unknown>;
@@ -12,9 +12,7 @@ type GgcMapModule = {
  * Deze service laadt de MapService dynamisch om circulaire afhankelijkheden te voorkomen
  * en biedt toegang tot kaartgerelateerde acties zoals zoomen en markeren.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcToolbarConnectService {
   private readonly injector = inject(Injector);
 

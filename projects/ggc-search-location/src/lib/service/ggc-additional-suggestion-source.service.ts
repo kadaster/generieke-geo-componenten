@@ -1,6 +1,6 @@
 import { Observable, of } from "rxjs";
 import { AdditionalSuggestion } from "../model/additional-suggestion.model";
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 
 /**
  * Service die fungeert als bron voor aanvullende zoeksuggesties die niet uit de standaard PDOK Location API komen.
@@ -8,9 +8,7 @@ import { Injectable } from "@angular/core";
  * Deze service kan worden uitgebreid of vervangen om aangepaste resultaten (zoals eigen kaartlagen of externe bronnen)
  * te integreren in de suggestielijst van de zoekcomponent.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcAdditionalSuggestionSourceService {
   /**
    * Zoekt naar aanvullende suggesties op basis van een zoekterm.

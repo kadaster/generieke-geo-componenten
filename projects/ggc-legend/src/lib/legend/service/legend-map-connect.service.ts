@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { GgcLegendConnectService } from "./connect.service";
 import {
   LayerLegend,
@@ -7,9 +7,7 @@ import {
 } from "@kadaster/ggc-models";
 import { EMPTY, merge, Observable, of } from "rxjs";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcLegendMapConnectService {
   private readonly connectService = inject(GgcLegendConnectService);
 

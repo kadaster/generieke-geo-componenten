@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { CoreViewerService } from "./core-viewer.service";
 import { Cartesian3, Entity, HeightReference, Rectangle } from "@cesium/engine";
 import { cameraUtils } from "../utils/camera-utils";
@@ -15,9 +15,7 @@ import { CameraOptions } from "../model/interfaces";
  *
  * Wordt onder andere gebruikt door zoek- en geolocatiecomponenten.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcLocationService {
   private readonly coreViewerService = inject(CoreViewerService);
   private marked: Entity | undefined = undefined;
