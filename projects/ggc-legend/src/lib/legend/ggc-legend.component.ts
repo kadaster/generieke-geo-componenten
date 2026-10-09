@@ -200,7 +200,8 @@ export class GgcLegendComponent implements OnInit {
    * Abonneert op events om alle legenda's in of uit te klappen.
    */
   ngOnInit() {
-    this.coreLegendService.expandAll$
+    this.coreLegendService
+      .getExpandAllObservable()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((datasetLegenToggle: DatasetLegendToggle) => {
         this.toggleAllLegends(datasetLegenToggle);

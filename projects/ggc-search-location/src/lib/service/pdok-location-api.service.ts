@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { forkJoin, Observable, of, ReplaySubject, retry, timer } from "rxjs";
 import {
@@ -24,16 +24,16 @@ import { AdditionalSuggestion } from "../model/additional-suggestion.model";
  * autocomplete-zoekopdrachten en het ophalen van specifieke objectdetails.
  * Het combineert resultaten van PDOK met aanvullende suggesties uit {@link GgcAdditionalSuggestionSourceService}.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class PdokLocationApiService {
-  readonly collectionsLoadedSubject = new ReplaySubject<PdokLocationApiResult>(
-    1
-  );
+  /**
+   * Emits the available collections and replays the latest result to new subscribers.
+   * Consumers should read this stream rather than write to the internal subject.
+   */
+  readonly collectionsLoaded$: Observable<PdokLocationApiResult>;
 
-  readonly collectionsLoaded$ = this.collectionsLoadedSubject.asObservable();
-
+  private readonly collectionsLoadedSubject =
+    new ReplaySubject<PdokLocationApiResult>(1);
   private readonly httpClient = inject(HttpClient);
   private readonly additionalSuggestionSourceService = inject(
     GgcAdditionalSuggestionSourceService
@@ -47,6 +47,7 @@ export class PdokLocationApiService {
   private numberOfSuggestions = 10;
 
   constructor() {
+    this.collectionsLoaded$ = this.collectionsLoadedSubject.asObservable();
     this.httpClient
       .get<PdokLocationApiResult>(`${this.baseUrl}collections?f=json`)
       .subscribe((res) => {

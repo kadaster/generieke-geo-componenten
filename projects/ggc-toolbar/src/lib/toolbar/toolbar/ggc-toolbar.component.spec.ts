@@ -59,6 +59,27 @@ describe("ToolboxComponent", () => {
     expect(tabPane.nativeElement.classList).not.toContain("d-sm-none");
   });
 
+  it("should deactivate toolbar items when the active item is cleared", () => {
+    const item = hostFixture.debugElement.query(
+      By.directive(GgcToolbarItemComponent)
+    ).componentInstance as GgcToolbarItemComponent;
+    const toolbarService = TestBed.inject(GgcToolbarService);
+
+    item.handleClick();
+    hostFixture.detectChanges();
+    expect(
+      hostFixture.debugElement.query(By.css(".ggc-toolbar-item.active"))
+    ).not.toBeNull();
+
+    toolbarService.setActiveToolbarItem("search");
+    toolbarService.setActiveToolbarItem(null);
+    hostFixture.detectChanges();
+
+    expect(
+      hostFixture.debugElement.query(By.css(".ggc-toolbar-item.active"))
+    ).toBeNull();
+  });
+
   it("should release projected item subscriptions when destroyed", () => {
     const item = hostFixture.debugElement.query(
       By.directive(GgcToolbarItemComponent)

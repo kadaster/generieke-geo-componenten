@@ -51,6 +51,49 @@ describe("CoreDrawService", () => {
     expect(service).toBeTruthy();
   });
 
+  it("should recreate per-map drawing event streams after layer cleanup", () => {
+    service.getDrawObservable(mapIndex);
+    service.getModifyEventsObservable(mapIndex);
+    const firstDrawSubject = service["drawEventsMap"].get(mapIndex);
+    const firstModifySubject = service["modifyEventsMap"].get(mapIndex);
+    vi.spyOn(service, "stopDraw").mockImplementation(() => undefined);
+    vi.spyOn(service, "stopModify").mockImplementation(() => undefined);
+    const stopMoveSpy = vi
+      .spyOn(service, "stopMove")
+      .mockImplementation(() => undefined);
+    vi.spyOn(coreSnapService, "stopSnap").mockImplementation(() => undefined);
+    vi.spyOn(coreDrawLayerService, "getDrawLayers").mockReturnValue(new Map());
+
+    service.deleteLayers(mapIndex);
+
+    expect(stopMoveSpy).toHaveBeenCalledWith(mapIndex);
+    expect(service["drawEventsMap"].get(mapIndex)).toBeUndefined();
+    expect(service["modifyEventsMap"].get(mapIndex)).toBeUndefined();
+
+    service.getDrawObservable(mapIndex);
+    service.getModifyEventsObservable(mapIndex);
+
+    expect(service["drawEventsMap"].get(mapIndex)).not.toBe(firstDrawSubject);
+    expect(service["modifyEventsMap"].get(mapIndex)).not.toBe(
+      firstModifySubject
+    );
+  });
+
+  it("cleans validators by owner when draw, modify, or move is stopped", () => {
+    const destroyValidatorsSpy = vi.spyOn(
+      service["coreDrawValidationService"],
+      "destroyValidators"
+    );
+
+    service.stopDraw(mapIndex);
+    service.stopModify(mapIndex);
+    service.stopMove(mapIndex);
+
+    expect(destroyValidatorsSpy).toHaveBeenNthCalledWith(1, mapIndex, "draw");
+    expect(destroyValidatorsSpy).toHaveBeenNthCalledWith(2, mapIndex, "modify");
+    expect(destroyValidatorsSpy).toHaveBeenNthCalledWith(3, mapIndex, "move");
+  });
+
   describe("addFeatureToLayer", () => {
     it("should add the feature and return successful if the mapIndex does exist", () => {
       const vectorLayer = createVectorLayer();
@@ -741,6 +784,16 @@ describe("CoreDrawService", () => {
     it("stopDrawInteraction, should remove listener and interaction for DEFAULT mapIndex", () => {
       service["drawEndListenerMap"].set(mapIndex, {} as EventsKey);
       service["drawInteractions"].set(mapIndex, new Draw({ type: "Polygon" }));
+      const geometry = new Point([1, 2]);
+      const geometryChangeSpy = vi.fn();
+      const geometryChangeListenerKey = geometry.on(
+        "change",
+        geometryChangeSpy
+      );
+      service["drawGeometryChangeListenerMap"].set(
+        mapIndex,
+        geometryChangeListenerKey
+      );
       const deleteDrawInteractionSpy = vi.spyOn(
         service,
         "deleteDrawInteraction"
@@ -749,8 +802,13 @@ describe("CoreDrawService", () => {
       expect(service["drawEndListenerMap"].size).toBe(1);
 
       service.stopDraw(mapIndex);
+      geometry.changed();
 
       expect(service["drawEndListenerMap"].size).toBe(0);
+      expect(service["drawGeometryChangeListenerMap"].has(mapIndex)).toBe(
+        false
+      );
+      expect(geometryChangeSpy).not.toHaveBeenCalled();
       expect(deleteDrawInteractionSpy).toHaveBeenCalledWith(mapIndex);
     });
 

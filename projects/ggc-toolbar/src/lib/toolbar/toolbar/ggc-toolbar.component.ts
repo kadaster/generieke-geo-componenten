@@ -2,14 +2,12 @@ import { TemplateRef } from "@angular/core";
 import {
   Component,
   contentChildren,
-  DestroyRef,
   effect,
   inject,
   input,
   OnInit,
   signal
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import Map from "ol/Map";
 import { ToolbarItemComponentEvent } from "../../event/toolbar-item-event";
 import { GgcToolbarItemComponent } from "../toolbar-item/ggc-toolbar-item.component";
@@ -65,21 +63,16 @@ export class GgcToolbarComponent implements OnInit {
   private map: Map;
   private readonly connectService = inject(GgcToolbarConnectService);
   private readonly toolbarService = inject(GgcToolbarService);
-  private readonly destroyRef = inject(DestroyRef);
 
   /**
-   * Constructor registreert een listener op de actieve toolbar-item observable.
-   * Wanneer geen item actief is, worden alle items gedeactiveerd.
+   * Wanneer geen toolbar-item actief is, worden alle items gedeactiveerd.
    */
   constructor() {
-    this.toolbarService
-      .getActiveToolbarItemObservable()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => {
-        if (event === null) {
-          this.children().forEach((child) => (child.active = false));
-        }
-      });
+    effect(() => {
+      if (this.toolbarService.activeToolbarItem() === null) {
+        this.children().forEach((child) => (child.active = false));
+      }
+    });
 
     effect((onCleanup) => {
       const childSubscriptions = this.children().map((child) =>

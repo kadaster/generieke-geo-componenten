@@ -292,14 +292,14 @@ describe("DatasetLegendComponent", () => {
     expect(component.legends()[1].expanded).toEqual(true);
 
     // expand all
-    legendService.expandAll$.next({ mapIndex: "Jan", expanded: true });
+    legendService.emitExpandAll({ mapIndex: "Jan", expanded: true });
 
     // verify
     expect(component.legends()[0].expanded).toEqual(true);
     expect(component.legends()[1].expanded).toEqual(true);
 
     // collapse all
-    legendService.expandAll$.next({ mapIndex: "Jan", expanded: false });
+    legendService.emitExpandAll({ mapIndex: "Jan", expanded: false });
 
     // verify
     expect(component.legends()[0].expanded).toEqual(false);
@@ -320,7 +320,7 @@ describe("DatasetLegendComponent", () => {
     expect(component.legends()[1].expanded).toEqual(true);
 
     // expand all with another mapIndex
-    legendService.expandAll$.next({ mapIndex: "NOT Kees", expanded: true });
+    legendService.emitExpandAll({ mapIndex: "NOT Kees", expanded: true });
 
     // verify
     expect(component.legends()[0].expanded).toEqual(false);

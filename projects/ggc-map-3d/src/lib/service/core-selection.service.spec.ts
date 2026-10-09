@@ -120,6 +120,15 @@ describe("CoreSelectionService", () => {
     expect(service["highlightMap"]).toHaveLength(0);
   });
 
+  it("clears current selections when the viewer is destroyed", () => {
+    const featureCollection = new FeatureCollectionForCoordinate();
+    service["currentSelections"].set("index1", featureCollection);
+
+    subject.next(undefined);
+
+    expect(service["currentSelections"].has("index1")).toBe(false);
+  });
+
   describe("initializeSelections", () => {
     it("should replace the current selection array and call reAddSelections()", () => {
       const selections = createSelections(3);
@@ -406,6 +415,29 @@ describe("CoreSelectionService", () => {
   });
 
   describe("clearSelection", () => {
+    it("should clear current state while preserving the clear event", () => {
+      const selection = createSelection(
+        ScreenSpaceEventType.RIGHT_CLICK,
+        Color.BLACK,
+        "index1"
+      );
+      service["selections"] = [selection];
+      const featureCollection = new FeatureCollectionForCoordinate();
+      service["currentSelections"].set("index1", featureCollection);
+      let emittedClearEvent = false;
+      service.getClickEventsObservable().subscribe((event) => {
+        emittedClearEvent =
+          event.selectionEventType ===
+          SelectionEventType.SELECTIONSERVICE_SELECTIONCLEARED;
+      });
+
+      service.clearSelection(ScreenSpaceEventType.RIGHT_CLICK);
+
+      expect(emittedClearEvent).toBe(true);
+      expect(service["currentSelections"].has("index1")).toBe(false);
+      expect(service.getCurrentFeatureCollection("index1")).toBeUndefined();
+    });
+
     it("should call clearHighlight() and throw a new SelectionEvent with the type SELECTIONSERVICE_SELECTIONCLEARED", async () => {
       service["selections"] = createSelections(2);
       const clearHighlightSpy = vi.spyOn(

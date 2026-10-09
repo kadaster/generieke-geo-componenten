@@ -3,6 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { GgcSearchLocationService } from "./ggc-location.service";
 import { GgcSearchLocationConnectService } from "./connect.service";
 import { take } from "rxjs/operators";
+import { Subject } from "rxjs";
 
 describe("GgcSearchLocationService", () => {
   Object.defineProperty(globalThis.navigator, "geolocation", {
@@ -17,6 +18,7 @@ describe("GgcSearchLocationService", () => {
   let service: GgcSearchLocationService;
   let connectServiceSpy: MockedObject<GgcSearchLocationConnectService>;
   let mapServiceMock: any;
+  let mapDestroyedSubject: Subject<string>;
 
   const mockCoords = {
     latitude: 52.0907,
@@ -24,9 +26,13 @@ describe("GgcSearchLocationService", () => {
   };
 
   beforeEach(() => {
+    mapDestroyedSubject = new Subject<string>();
     mapServiceMock = {
       getMap: vi.fn().mockName("GgcMapService.getMap"),
-      getExtraLayer: vi.fn().mockName("GgcMapService.getExtraLayer")
+      getExtraLayer: vi.fn().mockName("GgcMapService.getExtraLayer"),
+      getMapDestroyedObservable: vi
+        .fn()
+        .mockReturnValue(mapDestroyedSubject.asObservable())
     };
     connectServiceSpy = {
       getMapService: vi
@@ -111,6 +117,30 @@ describe("GgcSearchLocationService", () => {
       expect(service["geolocations"].has("default")).toBe(true);
     });
 
+    it("stopt de browser-watch when its map is destroyed", async () => {
+      mapServiceMock.getMap.mockReturnValue({});
+      const watchPositionSpy = vi.spyOn(navigator.geolocation, "watchPosition");
+      watchPositionSpy.mockClear();
+      const clearWatchSpy = vi.spyOn(navigator.geolocation, "clearWatch");
+
+      await service.getLocation(true, "trackedMap");
+      expect(service["geolocations"].has("trackedMap")).toBe(true);
+
+      mapDestroyedSubject.next("otherMap");
+      expect(service["geolocations"].has("trackedMap")).toBe(true);
+
+      mapDestroyedSubject.next("trackedMap");
+
+      expect(clearWatchSpy).toHaveBeenCalledWith(123);
+      expect(service["geolocations"].has("trackedMap")).toBe(false);
+      expect(service["subscriptions"].has("trackedMap")).toBe(false);
+
+      await service.getLocation(true, "trackedMap");
+
+      expect(watchPositionSpy).toHaveBeenCalledTimes(2);
+      expect(service["geolocations"].has("trackedMap")).toBe(true);
+    });
+
     it("moet een foutmelding sturen via de Subject bij een geolocatie fout", async () => {
       const errorMock = { code: 1, message: "User denied Geolocation" };
       (navigator.geolocation.getCurrentPosition as Mock).mockImplementation(
@@ -123,7 +153,7 @@ describe("GgcSearchLocationService", () => {
 
       let errorResult: any;
       service
-        .getGeolocationPositionErrorSubject()
+        .getGeolocationPositionErrorObservable()
         .pipe(take(1))
         .subscribe((e) => (errorResult = e));
 

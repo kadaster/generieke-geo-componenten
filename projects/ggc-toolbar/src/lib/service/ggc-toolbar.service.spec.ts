@@ -26,4 +26,14 @@ describe("GgcToolbarService", () => {
   it("Moet correct geïnitialiseerd worden", () => {
     expect(service).toBeTruthy();
   });
+
+  it("exposes the active item as readonly state updated through the setter", () => {
+    expect(service.activeToolbarItem()).toBeNull();
+
+    service.setActiveToolbarItem("search");
+    expect(service.activeToolbarItem()).toBe("search");
+
+    service.setActiveToolbarItem(null);
+    expect(service.activeToolbarItem()).toBeNull();
+  });
 });

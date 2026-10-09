@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import Feature from "ol/Feature";
 import WKT from "ol/format/WKT";
@@ -33,9 +33,7 @@ import {
  * {@link MapComponentEvent}-afhandeling.
  */
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcMapService {
   private readonly coreMapService = inject(CoreMapService);
 
@@ -48,6 +46,11 @@ export class GgcMapService {
    */
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
     return this.coreMapService.getLayerChangedObservable();
+  }
+
+  /** Emits the map index immediately before its map is destroyed. */
+  getMapDestroyedObservable(): Observable<string> {
+    return this.coreMapService.getMapDestroyedObservable();
   }
 
   /**

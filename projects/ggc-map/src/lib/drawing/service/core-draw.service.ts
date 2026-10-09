@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Collection } from "ol";
 import { EventsKey } from "ol/events";
 import { Condition, never } from "ol/events/condition";
@@ -50,9 +50,7 @@ import {
 } from "../center-interaction/center-modify";
 import { StyleLike } from "ol/style/Style";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreDrawService {
   MIN_POINTS_LINE_STRING = 2;
   MIN_POINTS_POLYGON = 3;
@@ -81,6 +79,8 @@ export class CoreDrawService {
     ModifyInteractionEvent
   >(() => new Subject<ModifyInteractionEvent>());
   private readonly drawEndListenerMap: Map<string, EventsKey> = new Map();
+  private readonly drawGeometryChangeListenerMap: Map<string, EventsKey> =
+    new Map();
   private readonly drawStyleMap: Map<string, StyleLikeMap> = new Map();
   private readonly modifyListenersMap: Map<string, EventsKey[]> = new Map();
   private readonly moveListenersMap: Map<string, EventsKey[]> = new Map();
@@ -225,6 +225,7 @@ export class CoreDrawService {
   }
 
   deleteDrawInteraction(mapIndex: string): void {
+    this.cleanupDrawGeometryChangeListener(mapIndex);
     const map = this.coreMapService.getMap(mapIndex);
     if (this.drawInteractions.has(mapIndex)) {
       map.removeInteraction(
@@ -234,9 +235,21 @@ export class CoreDrawService {
     this.drawInteractions.delete(mapIndex);
   }
 
+  private cleanupDrawGeometryChangeListener(mapIndex: string): void {
+    const geometryChangeListenerKey =
+      this.drawGeometryChangeListenerMap.get(mapIndex);
+    if (geometryChangeListenerKey) {
+      unByKey(geometryChangeListenerKey);
+      this.drawGeometryChangeListenerMap.delete(mapIndex);
+    }
+  }
+
   deleteLayers(mapIndex: string): void {
     this.stopDraw(mapIndex);
     this.stopModify(mapIndex);
+    this.stopMove(mapIndex);
+    this.drawEventsMap.delete(mapIndex);
+    this.modifyEventsMap.delete(mapIndex);
     const prefix = `${mapIndex}-`;
     this.coreSnapService.stopSnap(mapIndex);
     this.coreDrawLayerService.getDrawLayers().forEach((_layer, key: string) => {
@@ -328,6 +341,7 @@ export class CoreDrawService {
       if (drawOptions.validators) {
         this.coreDrawValidationService.addValidators(
           mapIndex,
+          "draw",
           event.feature,
           drawOptions.validators,
           selectedStyle
@@ -335,20 +349,28 @@ export class CoreDrawService {
       }
       const geom = event.feature.getGeometry();
       if (geom) {
-        geom.on("change", () => {
+        this.cleanupDrawGeometryChangeListener(mapIndex);
+        const geometryChangeListenerKey = geom.on("change", () => {
           this.validLineStringOrPolygon = this.isValidOnFinishByMethod(
             event.feature
           );
         });
+        this.drawGeometryChangeListenerMap.set(
+          mapIndex,
+          geometryChangeListenerKey
+        );
       }
     });
 
     const id = drawInteraction.on("drawend", (event) => {
+      this.cleanupDrawGeometryChangeListener(mapIndex);
       if (selectedStyle) {
         event.feature.setStyle(selectedStyle.finishDrawStyle);
       }
-      const valid =
-        this.coreDrawValidationService.checkAndRemoveValidators(mapIndex);
+      const valid = this.coreDrawValidationService.checkAndRemoveValidators(
+        mapIndex,
+        "draw"
+      );
       const areaOrLength = calculateAreaOrLength(event.feature);
       event.feature.setProperties({
         areaOrLength,
@@ -425,6 +447,7 @@ export class CoreDrawService {
             );
             this.coreDrawValidationService.addValidators(
               mapIndex,
+              "modify",
               feature,
               validators,
               selectedStyle
@@ -447,7 +470,10 @@ export class CoreDrawService {
             mapIndex,
             `bewerken ${layerName}`,
             event,
-            this.coreDrawValidationService.checkAndRemoveValidators(mapIndex)
+            this.coreDrawValidationService.checkAndRemoveValidators(
+              mapIndex,
+              "modify"
+            )
           )
         );
       })
@@ -494,6 +520,7 @@ export class CoreDrawService {
           );
           this.coreDrawValidationService.addValidators(
             mapIndex,
+            "move",
             selected as Feature<Geometry>,
             drawOptions.validators,
             selectedStyle
@@ -509,7 +536,10 @@ export class CoreDrawService {
             mapIndex,
             `verplaatsen feature op ${layerName}`,
             event,
-            this.coreDrawValidationService.checkAndRemoveValidators(mapIndex)
+            this.coreDrawValidationService.checkAndRemoveValidators(
+              mapIndex,
+              "move"
+            )
           )
         );
       }),
@@ -549,6 +579,7 @@ export class CoreDrawService {
       this.drawEndListenerMap.delete(mapIndex);
       this.deleteDrawInteraction(mapIndex);
     }
+    this.coreDrawValidationService.destroyValidators(mapIndex, "draw");
   }
 
   stopModify(mapIndex: string): void {
@@ -562,6 +593,7 @@ export class CoreDrawService {
       }
       this.coreMapService.getMap(mapIndex).removeInteraction(interaction);
     }
+    this.coreDrawValidationService.destroyValidators(mapIndex, "modify");
   }
 
   stopMove(mapIndex: string): void {
@@ -572,6 +604,7 @@ export class CoreDrawService {
       this.moveInteractions.delete(mapIndex);
       this.coreMapService.getMap(mapIndex).removeInteraction(interaction);
     }
+    this.coreDrawValidationService.destroyValidators(mapIndex, "move");
   }
 
   setLayerVisibility(layerName: string, mapIndex: string, visible: boolean) {

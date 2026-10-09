@@ -49,10 +49,10 @@ describe("GgcSearchLocationComponent", () => {
       getLocationEventsObservable: vi
         .fn()
         .mockName("GgcSearchLocationService.getLocationEventsObservable"),
-      getGeolocationPositionErrorSubject: vi
+      getGeolocationPositionErrorObservable: vi
         .fn()
         .mockName(
-          "GgcSearchLocationService.getGeolocationPositionErrorSubject"
+          "GgcSearchLocationService.getGeolocationPositionErrorObservable"
         ),
       getLocation: vi.fn().mockName("GgcSearchLocationService.getLocation")
     } as MockedObject<GgcSearchLocationService>;
@@ -279,7 +279,7 @@ describe("GgcSearchLocationComponent", () => {
       locationServiceSpy.getLocationEventsObservable.mockReturnValue(
         new Subject()
       );
-      locationServiceSpy.getGeolocationPositionErrorSubject.mockReturnValue(
+      locationServiceSpy.getGeolocationPositionErrorObservable.mockReturnValue(
         new Subject()
       );
 
