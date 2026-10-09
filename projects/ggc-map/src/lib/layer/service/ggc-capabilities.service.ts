@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Observable } from "rxjs";
 import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
@@ -9,9 +9,7 @@ import { Coordinate } from "ol/coordinate";
 /**
  * Service voor het ophalen en verwerken van WMS/WMTS en OGCAPI capabilities.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcCapabilitiesService {
   private readonly coreWmsWmtsCapabilitiesService = inject(
     CoreWmsWmtsCapabilitiesService

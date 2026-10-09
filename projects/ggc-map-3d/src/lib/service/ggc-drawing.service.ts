@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { DrawingType } from "../model/enums";
 import {
   Cartesian3,
@@ -27,9 +27,7 @@ import { CoreSelectionService } from "./core-selection.service";
  * - Houdt bij welke entities zijn toegevoegd;
  * - Emit {@link DrawEvent} events bij elke tekenactie;
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcDrawingService {
   private readonly coreSelectionService = inject(CoreSelectionService);
   private readonly coreViewerService = inject(CoreViewerService);

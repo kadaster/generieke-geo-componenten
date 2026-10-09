@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Entity } from "@cesium/engine";
 import { GeoJsonLayerService } from "./geojson-layer.service";
 import { Tiles3dLayerService } from "./tiles3d-layer.service";
@@ -31,9 +31,7 @@ import {
  * Deze service bepaalt welke specifieke laagservice moet worden aangeroepen
  * voor het verversen of verwijderen van lagen.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcSharedLayerService {
   private layerConfigurations: Webservice[] = [];
 

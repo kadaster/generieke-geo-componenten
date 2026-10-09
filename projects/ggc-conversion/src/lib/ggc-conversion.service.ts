@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { fromGeoJSONFeatures } from "@kadaster/ggc-map";
 import { FeatureCollection } from "geojson";
 import Feature from "ol/Feature";
@@ -18,9 +18,7 @@ export interface ExtendedGeoJson extends FeatureCollection {
 /**
  * Service voor het converteren tussen verschillende bestandsformaten en OpenLayers-features.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcConversionService {
   /**
    * Zet een bestand om naar een array OpenLayers-features op basis van het bestandstype.

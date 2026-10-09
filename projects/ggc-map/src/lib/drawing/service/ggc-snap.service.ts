@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { SnapOptions } from "../../model/snap-options";
 import { CoreSnapService } from "./core-snap.service";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
@@ -9,9 +9,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
  * Deze service biedt methoden voor het starten en stoppen van snap-interacties,
  * en het ophalen van snap-events.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcSnapService {
   private readonly coreSnapService = inject(CoreSnapService);
 

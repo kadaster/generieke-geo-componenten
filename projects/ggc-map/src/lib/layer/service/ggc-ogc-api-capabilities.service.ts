@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import {
   CoreOgcApiCapabilitiesService,
   OGCAPILink,
@@ -19,9 +19,7 @@ import { zoomlevelToResolution } from "../../utils/epsg28992";
  * Service voor het ophalen en vertalen van OGCAPI capabilities naar GGC objecten.
  */
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcOgcApiCapabilitiesService {
   private readonly coreOgcApiCapabilitiesService = inject(
     CoreOgcApiCapabilitiesService

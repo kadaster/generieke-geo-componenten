@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 
 import { Dataset } from "../model/theme/dataset.model";
 import { Theme } from "../model/theme/theme.model";
@@ -18,9 +18,7 @@ import {
  * @see DatasetTreeLayer
  */
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcDatasetTreeModelCreateService {
   /**
    * Bouwt een nieuwe array van {@link Theme} op door van elk item

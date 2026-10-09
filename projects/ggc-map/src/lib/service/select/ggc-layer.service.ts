@@ -2,7 +2,7 @@ import {
   ApplicationRef,
   createComponent,
   inject,
-  Injectable
+  Service
 } from "@angular/core";
 import { GgcGeojsonLayerComponent } from "../../layer/geojson-layer/ggc-geojson-layer.component";
 import { GeojsonLayerOptions } from "../../layer/model/geojson-layer.model";
@@ -47,9 +47,7 @@ import { CoreMapService } from "../../map/service/core-map.service";
  * - OpenLayers Map
  * - UI‑componenten (legenda, toggles)
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcLayerService {
   private readonly mapService = inject(CoreMapService);
   private readonly appRef = inject(ApplicationRef);

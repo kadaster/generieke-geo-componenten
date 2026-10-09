@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import {
   Cesium3DTileFeature,
   Color,
@@ -24,9 +24,7 @@ import { SelectionConfig, SelectionEvent } from "../model/interfaces";
  * - luisteren naar selectie-events;
  * - feature-informatie ophalen op basis van coördinaten.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcSelectionService {
   private readonly coreSelectionService = inject(CoreSelectionService);
 

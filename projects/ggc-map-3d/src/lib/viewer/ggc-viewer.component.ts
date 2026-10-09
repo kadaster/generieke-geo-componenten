@@ -3,7 +3,7 @@ import {
   Component,
   effect,
   ElementRef,
-  HostBinding,
+  DestroyRef,
   inject,
   input,
   OnDestroy,
@@ -31,6 +31,7 @@ import {
   getCameraValues
 } from "../utils/camera-utils";
 import { BehaviorSubject } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
   CameraOptions,
   CameraPosition,
@@ -90,7 +91,10 @@ globalThis.CESIUM_BASE_URL = "/assets/cesium/";
 @Component({
   selector: "ggc-map-3d-viewer",
   templateUrl: "./ggc-viewer.component.html",
-  styleUrls: ["./ggc-viewer.component.scss"]
+  styleUrls: ["./ggc-viewer.component.scss"],
+  host: {
+    "[style.--displayLogo]": 'hideLogo() ? "none" : "block"'
+  }
 })
 export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
@@ -164,9 +168,17 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly coreCameraService = inject(CoreCameraService);
   private readonly geoJsonLayerService = inject(GeoJsonLayerService);
   private readonly ggcSharedLayerService = inject(GgcSharedLayerService);
+  private readonly destroyRef = inject(DestroyRef);
   private viewer!: Viewer;
   private terrainProvider: TerrainProvider;
   private camera: Camera | undefined;
+  private removeCameraChangedListener?: () => void;
+  private removeCameraMoveEndListener?: () => void;
+  private webglCanvas?: HTMLCanvasElement;
+  private readonly webglContextLostListener = (event: Event) => {
+    this.webglErrorEvent.emit(event);
+    event.preventDefault();
+  };
   private readonly previousCameraValues = new BehaviorSubject<CameraValues>(
     {} as CameraValues
   );
@@ -178,22 +190,15 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private readonly isInitialized = signal(false);
 
-  /**
-   * CSS display waarde voor het tonen/verbergen van het logo.
-   */
-  @HostBinding("style.--displayLogo")
-  get displayLogo(): string {
-    return this.hideLogo() ? "none" : "block";
-  }
-
   constructor() {
     this.previousCameraValues.subscribe((cameraValues: CameraValues) => {
       this.cameraEvent.emit(cameraValues);
       this.coreCameraService.setCameraValues(cameraValues);
     });
-    this.coreViewerService.getViewerObservable().subscribe((viewer) => {
-      this.camera = viewer?.camera;
-    });
+    this.coreViewerService
+      .getViewerObservable()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((viewer) => (this.camera = viewer?.camera));
 
     // Webservices pas laden zodra de viewer geïnitialiseerd is, en opnieuw
     // laden bij elke wijziging van de input.
@@ -246,21 +251,31 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.previousCameraValues.complete();
+    this.removeCameraChangedListener?.();
+    this.removeCameraMoveEndListener?.();
+    this.webglCanvas?.removeEventListener(
+      "webglcontextlost",
+      this.webglContextLostListener
+    );
     this.tiles3DService.destroyLayers();
     this.wmtsService.destroyLayers();
     this.geoJsonLayerService.destroyLayers();
     this.coreViewerService.setViewer(undefined);
     this.coreSelectionService.destroyAllSelections();
+    this.viewer?.destroy?.();
   }
 
   private setCameraLogger() {
     this.viewer.camera.percentageChanged = 0.1;
-    this.viewer.camera.changed.addEventListener(() =>
-      this.updateCameraValues()
-    );
-    this.viewer.camera.moveEnd.addEventListener(() =>
-      this.updateCameraValues()
-    );
+    this.removeCameraChangedListener =
+      this.viewer.camera.changed.addEventListener(() =>
+        this.updateCameraValues()
+      );
+    this.removeCameraMoveEndListener =
+      this.viewer.camera.moveEnd.addEventListener(() =>
+        this.updateCameraValues()
+      );
   }
 
   private updateCameraValues() {
@@ -279,15 +294,14 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private addWebGLEventListener() {
-    const canvas = document.querySelector(`#${this.cesiumElementId} canvas`);
+    const canvas = document.querySelector<HTMLCanvasElement>(
+      `#${this.cesiumElementId} canvas`
+    );
     if (canvas) {
+      this.webglCanvas = canvas;
       canvas.addEventListener(
         "webglcontextlost",
-        (event: Event) => {
-          this.webglErrorEvent.emit(event);
-          event.preventDefault();
-        },
-        false
+        this.webglContextLostListener
       );
     } else {
       console.error("Canvas element not found.");

@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { first } from "rxjs/operators";
 import { CoreLoadingService } from "./core-loading.service";
 import { provideZonelessChangeDetection } from "@angular/core";
+import OlMap from "ol/Map";
 
 describe("CoreLoadingServiceService", () => {
   let service: CoreLoadingService;
@@ -43,6 +44,17 @@ describe("CoreLoadingServiceService", () => {
     setTimeout(function () {
       expect(calls).toEqual(1);
     }, 2000);
+  });
+
+  it("should remove map listener references when map loaders are removed", () => {
+    const map = new OlMap();
+
+    service.addMapLoaders("testMap", map);
+    expect(service["eventsMap"].has("testMap")).toBe(true);
+
+    service.removeMapLoaders("testMap");
+
+    expect(service["eventsMap"].has("testMap")).toBe(false);
   });
 
   afterEach(() => {

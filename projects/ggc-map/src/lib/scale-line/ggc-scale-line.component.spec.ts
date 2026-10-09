@@ -45,7 +45,7 @@ describe("ScaleLineComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("ngOnInit should create scaleLineControl and add it to the map", () => {
+  it("ngAfterViewInit should create scaleLineControl and add it to the map", () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);
     const getMapSpy = vi
@@ -56,7 +56,7 @@ describe("ScaleLineComponent", () => {
       "createScaleLineOptions"
     );
 
-    component.ngOnInit();
+    component.ngAfterViewInit();
 
     expect(getMapSpy).toHaveBeenCalled();
     expect(getScaleLineOptionsSpy).toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe("ScaleLineComponent", () => {
     const getMapSpy = vi
       .spyOn(coreMapService, "getMap")
       .mockReturnValue(mapMock);
-    component.ngOnInit();
+    component.ngAfterViewInit();
     component.ngOnDestroy();
 
     expect(getMapSpy).toHaveBeenCalled();

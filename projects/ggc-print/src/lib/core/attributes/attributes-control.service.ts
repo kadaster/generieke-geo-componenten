@@ -1,10 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { Attribute } from "../../model/capabilities/attribute";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class AttributesControlService {
   attributesToFormGroup(
     attributes: Attribute[],

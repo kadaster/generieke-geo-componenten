@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector, Type } from "@angular/core";
+import { inject, Service, Injector, Type } from "@angular/core";
 
 type CesiumModule = {
   GgcSharedLayerService: Type<unknown>;
@@ -9,7 +9,7 @@ type GgcMapModule = {
   GgcMapEventsService: Type<unknown>;
 };
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class GgcDatasetTreeConnectService {
   private readonly injector = inject(Injector);
 

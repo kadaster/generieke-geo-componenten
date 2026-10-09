@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { AdditionalSuggestion } from "@kadaster/ggc-search-location";
 import { GgcLayerService } from "@kadaster/ggc-map";
@@ -8,9 +8,7 @@ import Feature from "ol/Feature";
 import { Coordinate } from "ol/coordinate";
 import { Point } from "ol/geom";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class AlternativeSuggestService {
   private meldingnummers: string[] = [];
   private readonly layerService = inject(GgcLayerService);

@@ -38,6 +38,16 @@ describe("MapService", () => {
     expect(coreMapService.getMap).toHaveBeenCalledWith("my-map");
   });
 
+  it("should forward map-destroyed notifications", () => {
+    const mapDestroyedObservable = coreMapService.getMapDestroyedObservable();
+    vi.spyOn(coreMapService, "getMapDestroyedObservable").mockReturnValue(
+      mapDestroyedObservable
+    );
+
+    expect(mapService.getMapDestroyedObservable()).toBe(mapDestroyedObservable);
+    expect(coreMapService.getMapDestroyedObservable).toHaveBeenCalled();
+  });
+
   it("should return the layer", () => {
     vi.spyOn(coreMapService, "getLayer");
     mapService.getLayer("my-layer");

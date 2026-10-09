@@ -1,10 +1,9 @@
 import {
   Component,
-  EventEmitter,
   inject,
-  Input,
+  input,
   OnChanges,
-  Output,
+  output,
   signal,
   SimpleChanges
 } from "@angular/core";
@@ -48,38 +47,38 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    *
    * Als deze input overgaat van leeg → gevuld, probeert het component automatisch een initiële actieve theme te bepalen.
    */
-  @Input() themes: Theme[] = [];
+  readonly themes = input<Theme[]>([]);
 
   /**
    * De theme die actief is bij de initialisatie van de dataset switcher. Default wordt het eerste theme actief.
    * Let op: De dataset switcher zet niet automatisch de lagen aan van het initiële thema,
    * dit moet je zelf inregelen via de zichtbaarheid van de losse lagen in de layer configuratie.
    */
-  @Input() initialActiveTheme: string;
+  readonly initialActiveTheme = input<string>();
 
   /**
    * Knoppen die in de UI getoond worden.
    *
    * De `name` van een knop moet overeenkomen met de {@link Theme} om selectie te laten werken.
    */
-  @Input() datasetSwitcherButtons: DatasetSwitcherButton[];
+  readonly datasetSwitcherButtons = input<DatasetSwitcherButton[]>([]);
 
   /**
    * Identificeert de kaart/viewer waarop laag-zichtbaarheid wordt toegepast.
    */
-  @Input() mapIndex = DEFAULT_MAPINDEX;
+  readonly mapIndex = input(DEFAULT_MAPINDEX);
 
   /**
    * Geeft aan of deze dataset switcher werkt met een 2D of 3D viewer
    */
-  @Input() viewerType = ViewerType.TWEE_D;
+  readonly viewerType = input(ViewerType.TWEE_D);
 
   /**
    * Event-stream voor consumers van dit component.
    *
    * Emit bij theme-wissels (handmatig of via initiële selectie).
    */
-  @Output() events = new EventEmitter<DatasetSwitcherEvent>();
+  readonly events = output<DatasetSwitcherEvent>();
 
   /**
    * Huidig actieve theme. Wordt gebruikt om:
@@ -183,7 +182,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * @returns Het gevonden {@link Theme}, of `undefined` als er geen match is.
    */
   private getThemeFromName(name: string): Theme | undefined {
-    return this.themes.find((theme) => theme.themeName === name);
+    return this.themes().find((theme) => theme.themeName === name);
   }
 
   /**
@@ -202,8 +201,8 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
           await this.datasetTreeMapConnectService.setVisibilityLayers(
             service.layers.map((layer: DatasetTreeLayer) => layer.layerId),
             visible,
-            this.viewerType,
-            this.mapIndex
+            this.viewerType(),
+            this.mapIndex()
           )
       )
     );
@@ -222,12 +221,12 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    * - emit een {@link DatasetSwitcherEvent}.
    */
   private async setInitialActiveTheme() {
-    const themes = this.themes;
+    const themes = this.themes();
 
     if (!themes.length) return;
 
-    const activeTheme = this.initialActiveTheme
-      ? (this.getThemeFromName(this.initialActiveTheme) ?? themes[0])
+    const activeTheme = this.initialActiveTheme()
+      ? (this.getThemeFromName(this.initialActiveTheme()!) ?? themes[0])
       : themes[0];
 
     this.activeTheme.set(activeTheme);
@@ -243,8 +242,8 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
           for (const layer of service.layers) {
             const visible = await this.datasetTreeMapConnectService.isVisible(
               layer.layerId,
-              this.mapIndex,
-              this.viewerType
+              this.mapIndex(),
+              this.viewerType()
             );
 
             if (visible) {

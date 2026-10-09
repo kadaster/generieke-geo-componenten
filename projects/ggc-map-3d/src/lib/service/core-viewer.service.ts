@@ -1,10 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Viewer } from "@cesium/widgets";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreViewerService {
   private viewerSubject = new BehaviorSubject<Viewer | undefined>(undefined);
 

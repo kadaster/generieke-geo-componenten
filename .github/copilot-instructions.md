@@ -10,6 +10,7 @@
 - Preserve existing worktree changes and touch only what the request requires. Do not modify generated output, dependencies, lockfiles, or release metadata unless required.
 - Ask when requirements or trade-offs are unclear; do not invent project names, scripts, configuration options, or exports.
 - Treat published GGC library APIs and consumer-visible behavior as compatibility contracts for third-party users. Before changing something that may break consumers (for example, renaming or removing an input/output, changing an event API, or changing a public type), inspect the impact and prefer a backwards-compatible path. If a breaking change may be necessary, explain the impact and get the developer’s explicit approval before implementing it; do not assume approval from the feature request alone.
+- When addressing PR review comments, inspect the exact diff and surrounding behavior, then treat each comment as requested work unless the developer asks only for discussion. Verify the concern and implement the smallest appropriate correction; explain rather than blindly apply a suggestion that would change behavior or conflict with compatibility contracts. Validate each correction and report any concern that remains unresolved.
 
 ## Core principles
 

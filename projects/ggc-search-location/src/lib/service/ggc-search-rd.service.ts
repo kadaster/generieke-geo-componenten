@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { AdditionalSuggestion } from "../model/additional-suggestion.model";
 
@@ -8,9 +8,7 @@ import { AdditionalSuggestion } from "../model/additional-suggestion.model";
  * Deze service ondersteunt diverse formaten (met/zonder decimalen, gescheiden door spaties of komma's)
  * en normaliseert deze naar een standaard formaat voor gebruik in de zoekcomponent.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcSearchRdService {
   search(input: string): Observable<AdditionalSuggestion[]> {
     const cleaned = (input ?? "").replace(/^RD-coördinaten:\s*/i, "").trim();

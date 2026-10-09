@@ -233,6 +233,22 @@ describe("CoreSelectionService", () => {
     expect(selection).toContain(feature2);
   });
 
+  it("should stop only selections associated with the destroyed map", () => {
+    service["activeSelectInteractions"].set(SELECT_INDEX, {
+      mapIndex: MAP_INDEX,
+      select: new MockSelect() as unknown as Select
+    });
+    service["activeSelectInteractions"].set("select-2", {
+      mapIndex: "map-2",
+      select: new MockSelect() as unknown as Select
+    });
+    const stopSelectSpy = vi.spyOn(service, "stopSelect");
+
+    service.destroySelectionsForMap(MAP_INDEX);
+
+    expect(stopSelectSpy).toHaveBeenCalledExactlyOnceWith(SELECT_INDEX);
+  });
+
   it("getCurrentSelection should return empty array when no Select is active", () => {
     const mockSelect = new MockSelect();
     const feature = new Feature();

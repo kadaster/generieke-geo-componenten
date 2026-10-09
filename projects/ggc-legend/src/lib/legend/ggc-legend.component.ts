@@ -1,12 +1,15 @@
 import {
   Component,
-  EventEmitter,
+  computed,
+  DestroyRef,
+  effect,
   inject,
-  Input,
+  input,
   OnInit,
-  Output,
+  output,
   signal
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Legend } from "../model/legend.model";
 import {
   CoreLegendService,
@@ -106,65 +109,56 @@ export class GgcLegendComponent implements OnInit {
   /**
    * Geeft aan of de legenda inklapbaar is.
    */
-  @Input()
-  collapsable = false;
+  collapsable = input(false);
 
   /**
    * Geeft aan of legendas als default uitgeklapt zijn of niet.
    * Heeft alleen effect als collapsable op true staat.
    */
-  @Input()
-  defaultExpanded = true;
+  defaultExpanded = input(true);
 
   /**
    * CSS-class voor het icoon wanneer de legenda is ingeklapt.
    */
-  @Input()
-  iconCollapsed = "fas fa-angle-right";
+  iconCollapsed = input("fas fa-angle-right");
 
   /**
    * CSS-class voor het icoon wanneer de legenda is uitgeklapt.
    */
-  @Input()
-  iconExpanded = "fas fa-angle-down";
+  iconExpanded = input("fas fa-angle-down");
 
   /**
    * Geeft aan of de namen van de legenda-items getoond moeten worden.
    */
-  @Input()
-  showLegendsName = true;
+  showLegendsName = input(true);
 
   /**
    * Geeft aan of een melding moet worden getoond wanneer er geen legenda beschikbaar is.
    */
-  @Input()
-  showEmptyLegendMessage = false;
+  showEmptyLegendMessage = input(false);
 
   /**
    * Legenda's worden per default alleen weergegeven als de laag ook zichtbaar is in het huidige zoomniveau.
    * Mocht je legenda's altijd willen tonen,ongeacht het zoomniveau, dan kan deze input op true gezet worden.
    */
-  @Input()
-  alwaysEnableLegends = false;
+  alwaysEnableLegends = input(false);
 
   /**
    * Event dat wordt afgegeven wanneer de lijst van legenda's verandert.
    */
-  @Output()
-  legendsChange: EventEmitter<Legend[]> = new EventEmitter<Legend[]>();
+  readonly legendsChange = output<Legend[]>();
 
   /**
    * Tekst die wordt getoond wanneer er geen legenda beschikbaar is en showEmptyLegendMessage = true
    */
-  @Input()
-  emptyLegendMessage = "Geen legenda beschikbaar";
+  emptyLegendMessage = input("Geen legenda beschikbaar");
   /** Service voor het beheren van legenda-acties. */
 
   /**
    * Callback waarmee je de door de dataset-tree berekende *enabled* status van een layer
    * optioneel kunt **overschrijven**.
    */
-  @Input() layerLegendEnabledCallback: LayerLegendEnabledCallback;
+  layerLegendEnabledCallback = input<LayerLegendEnabledCallback>();
 
   /**
    * Bepaalt of events automatisch intern worden afgehandeld binnen de component.
@@ -176,72 +170,29 @@ export class GgcLegendComponent implements OnInit {
    * Bij `false` worden de events niet intern afgehandeld en wordt verwacht
    * dat de parent-component deze afhandeling verzorgt.
    */
-  @Input() autoConnect = true;
+  autoConnect = input(true);
+
+  legends = input<Legend[]>([]);
+
+  mapIndex = input(DEFAULT_MAPINDEX);
+
+  viewerType = input<ViewerType>(ViewerType.TWEE_D);
 
   /** Interne opslag van de legenda's. */
   protected _legends = signal<Legend[]>([]);
 
   private readonly coreLegendService = inject(CoreLegendService);
   private readonly legendMapConnectService = inject(GgcLegendMapConnectService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private _mapIndex = DEFAULT_MAPINDEX;
-  private _viewerType: ViewerType = ViewerType.TWEE_D;
+  private readonly effectiveMapIndex = computed(() =>
+    this.viewerType() === ViewerType.DRIE_D
+      ? DEFAULT_CESIUM_MAPINDEX
+      : this.mapIndex()
+  );
 
-  /**
-   * Haalt de huidige lijst van legenda's op.
-   */
-  get legends(): Legend[] {
-    return this._legends();
-  }
-
-  /**
-   * Stelt de lijst van legenda's in.
-   * @param value Nieuwe lijst van legenda's.
-   */
-  @Input()
-  set legends(value: Legend[]) {
-    if (!value) return;
-    this._legends.set(value);
-  }
-
-  /**
-   * De mapIndex die hoort bij deze legend. Deze legenda reageert automatisch op events van de maps met dezelfde mapIndex.
-   *
-   * @remarks
-   * Zorg dat de `mapIndex` overeenkomt met de `mapIndex` van de bijbehorende `ggc-map`,
-   * anders vindt dit component niet de juiste kaart. Heb je maar één kaart in je applicatie,
-   * dan hoef je geen `mapIndex` in te stellen: de default (`DEFAULT_MAPINDEX`) wordt dan altijd gebruikt.
-   * `ggc-map-3d` maakt geen gebruik van een mapIndex.
-   *
-   * Let op: als meerdere `<ggc-legend>`-componenten dezelfde `mapIndex` hebben, worden ze
-   * bij het aanroepen van `GgcLegendService.collapseAllLegends`/`expandAllLegends` allemaal
-   * tegelijk in- of uitgeklapt.
-   */
-  @Input()
-  get mapIndex(): string {
-    return this._mapIndex;
-  }
-
-  set mapIndex(mapIndex: string) {
-    if (this.viewerType === ViewerType.TWEE_D) {
-      this._mapIndex = mapIndex;
-    }
-  }
-
-  /**
-   * Type kaartviewer waarmee de dataset-tree interacteert, TWEE_D (ol) of DRIE_D (cesium).
-   * Default is TWEE_D
-   */
-  @Input()
-  get viewerType(): ViewerType {
-    return this._viewerType;
-  }
-
-  set viewerType(viewerType: ViewerType) {
-    this._viewerType = viewerType;
-    if (this.viewerType === ViewerType.DRIE_D) {
-      this._mapIndex = DEFAULT_CESIUM_MAPINDEX;
-    }
+  constructor() {
+    effect(() => this._legends.set(this.legends() ?? []));
   }
 
   /**
@@ -249,12 +200,13 @@ export class GgcLegendComponent implements OnInit {
    * Abonneert op events om alle legenda's in of uit te klappen.
    */
   ngOnInit() {
-    this.coreLegendService.expandAll$.subscribe(
-      (datasetLegenToggle: DatasetLegendToggle) => {
+    this.coreLegendService
+      .getExpandAllObservable()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((datasetLegenToggle: DatasetLegendToggle) => {
         this.toggleAllLegends(datasetLegenToggle);
-      }
-    );
-    if (this.autoConnect) {
+      });
+    if (this.autoConnect()) {
       void this.initialise();
     }
   }
@@ -271,15 +223,16 @@ export class GgcLegendComponent implements OnInit {
       !this.isLegendUrl(legend.legend) &&
       !this.isIconListArray(legend.legend) &&
       !this.isVectorTileStyle(legend.legend) &&
-      !this.showEmptyLegendMessage
+      !this.showEmptyLegendMessage()
     ) {
       return;
     }
-    if (this.layerLegendEnabledCallback) {
-      const enabled = await this.layerLegendEnabledCallback({
+    const layerLegendEnabledCallback = this.layerLegendEnabledCallback();
+    if (layerLegendEnabledCallback) {
+      const enabled = await layerLegendEnabledCallback({
         layerLegend: legend,
-        mapIndex: this.mapIndex,
-        viewerType: this.viewerType
+        mapIndex: this.effectiveMapIndex(),
+        viewerType: this.viewerType()
       });
       if (typeof enabled === "boolean" && !enabled) {
         return;
@@ -287,7 +240,7 @@ export class GgcLegendComponent implements OnInit {
     }
     const datasetLegendNew: Legend = {
       name: legend.serviceTitle ?? legend.layerTitle ?? "",
-      expanded: this.defaultExpanded,
+      expanded: this.defaultExpanded(),
       layerLegends: [legend]
     };
     const indexExistingLegend = this._legends().findIndex((datasetLegend) => {
@@ -331,7 +284,7 @@ export class GgcLegendComponent implements OnInit {
    * @param legend De legenda die moet worden gewisseld.
    */
   public toggleLegend(legend: Legend): void {
-    if (this.collapsable) {
+    if (this.collapsable()) {
       this.toggleLegendInternal(legend);
     } else {
       console.warn(
@@ -349,7 +302,10 @@ export class GgcLegendComponent implements OnInit {
     legend: Legend,
     keyboardEvent: KeyboardEvent | undefined = undefined
   ): void {
-    if (this.collapsable && (!keyboardEvent || keyboardEvent.key === "Enter")) {
+    if (
+      this.collapsable() &&
+      (!keyboardEvent || keyboardEvent.key === "Enter")
+    ) {
       legend.expanded = !legend.expanded;
       this.legendsChange.emit(this._legends());
     }
@@ -425,7 +381,7 @@ export class GgcLegendComponent implements OnInit {
     if (
       this._legends() != null &&
       Array.isArray(this._legends()) &&
-      this.mapIndex === datasetLegendToggle.mapIndex
+      this.effectiveMapIndex() === datasetLegendToggle.mapIndex
     ) {
       for (const legend of this._legends()) {
         legend.expanded = datasetLegendToggle.expanded;
@@ -444,36 +400,44 @@ export class GgcLegendComponent implements OnInit {
   private async subscribeToZoomendObservable() {
     const zoomendObservable =
       await this.legendMapConnectService.getZoomendObservableForMap(
-        this.mapIndex
+        this.effectiveMapIndex()
       );
-    zoomendObservable.subscribe(async () => {
-      await this.updateEnabledLayerLegends();
-    });
+    zoomendObservable
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async () => {
+        await this.updateEnabledLayerLegends();
+      });
   }
 
   private async subscribeToLegendAddedObservable() {
     const legendAddedObservable =
       await this.legendMapConnectService.getLegendAddedObservable();
-    legendAddedObservable.subscribe((event) => {
-      if (this.mapIndex == event.mapIndex && event.legend) {
-        this.addLegend(event.legend);
-      }
-    });
+    legendAddedObservable
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (this.effectiveMapIndex() == event.mapIndex && event.legend) {
+          this.addLegend(event.legend);
+        }
+      });
   }
 
   private async subscribeToLegendRemovedObservable() {
     const legendRemovedObservable =
       await this.legendMapConnectService.getLegendRemovedObservable();
-    legendRemovedObservable.subscribe((event) => {
-      if (this.mapIndex == event.mapIndex) {
-        this.removeLegend(event.layerId);
-      }
-    });
+    legendRemovedObservable
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (this.effectiveMapIndex() == event.mapIndex) {
+          this.removeLegend(event.layerId);
+        }
+      });
   }
 
   private async applyCurrentActiveLegends() {
     const currentLegends =
-      await this.legendMapConnectService.getCurrentActiveLegends(this.mapIndex);
+      await this.legendMapConnectService.getCurrentActiveLegends(
+        this.effectiveMapIndex()
+      );
     currentLegends.forEach((legend) => {
       this.addLegend(legend);
     });
@@ -485,7 +449,7 @@ export class GgcLegendComponent implements OnInit {
         layerLegend.layerEnabled =
           await this.legendMapConnectService.getEnabled(
             layerLegend.layerId,
-            this.mapIndex
+            this.effectiveMapIndex()
           );
       }
     }

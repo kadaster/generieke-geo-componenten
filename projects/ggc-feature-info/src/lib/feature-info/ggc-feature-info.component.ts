@@ -1,19 +1,21 @@
 import {
   AfterContentInit,
   Component,
-  ContentChildren,
+  contentChildren,
+  DestroyRef,
   ElementRef,
-  EventEmitter,
   inject,
-  Input,
+  input,
   OnInit,
-  Output,
+  output,
   TemplateRef,
   AfterViewInit,
+  OnChanges,
   OnDestroy,
-  QueryList,
-  signal
+  signal,
+  SimpleChanges
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import {
@@ -78,49 +80,48 @@ import { FeatureInfoCollection } from "../model/feature-info-collection.model";
   imports: [FeatureInfoDisplayComponent]
 })
 export class GgcFeatureInfoComponent
-  implements AfterContentInit, OnInit, AfterViewInit, OnDestroy
+  implements AfterContentInit, OnChanges, OnInit, AfterViewInit, OnDestroy
 {
   /** Unieke naam/index van de kaart waarvoor Feature Info getoond moet worden
    * Een 3D viewer maakt geen gebruikt van een mapIndex, dus die kan dan worden leeggelaten.
    * Wel kan een 3D viewer gebruik maken van een selectIndex, netzoals een 2D viewer.
    * */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input(DEFAULT_MAPINDEX);
 
   /** Unieke naam/index van de selectie index waarvoor Feature Info getoond moet worden, indien opgegeven.
    *  Feature-info zal in dit geval luisteren naar de select interactie waar de mapIndex en selectIndex overeenkomt.
    *  Als selectIndex undefined is, dan wordt alleen naar de mapIndex gekeken.
    */
-  @Input() selectIndex: string | undefined = undefined;
+  selectIndex = input<string>();
 
   /**
    * Geeft aan of een message moet worden getoond ("Geen informatie beschikbaar") wanneer er geen data is.
    * Default: `true`.
    */
-  @Input() showEmptyMessage = true;
+  showEmptyMessage = input(true);
 
   /**
    * Type weergave voor de feature-informatie: lijst of tabel.
    * Default: `FeatureInfoDisplayType.TABLE`.
    */
-  @Input() featureInfoDisplayType: FeatureInfoDisplayType =
-    FeatureInfoDisplayType.TABLE;
+  featureInfoDisplayType = input(FeatureInfoDisplayType.TABLE);
 
   /**
    * Tekst voor de knop om naar de vorige feature te gaan.
    * Default: `"<"`.
    */
-  @Input() pagerPrevious = "<";
+  pagerPrevious = input("<");
 
   /**
    * Tekst voor de knop om naar de volgende feature te gaan.
    * Default: `">"`.
    */
-  @Input() pagerNext = ">";
+  pagerNext = input(">");
   /**
    * Verberg velden die leeg zijn (null of lege string).
    * Default: `false`.
    */
-  @Input() hideEmptyFields = false;
+  hideEmptyFields = input(false);
   /**
    * Maak gebruik van auto-connect functionaliteit,
    * auto-connect zorgt ervoor dat er automatische op
@@ -128,41 +129,57 @@ export class GgcFeatureInfoComponent
    * het actieve feature wordt gehighlighted.
    * Default: `true`.
    */
-  @Input() autoConnect = true;
+  autoConnect = input(true);
   /**
    * Wanneer false, dan start de feature-info niet automatisch de selection interaction.
    * De feature-info blijft wel luisteren naar events op de opgegeven mapIndex/selectIndex en doet de betreffende highlighting.
    * Met deze optie kan de afnemer zelf de select interactie starten met de gewenste parameters.
    */
-  @Input() autoStartSelect = true;
+  autoStartSelect = input(true);
   /**
    * Geeft aan of dit feature info component gebruikt wordt voor 2D of 3D kaart.
    */
-  @Input() viewerType = ViewerType.TWEE_D;
+  viewerType = input(ViewerType.TWEE_D);
+
+  hidePagerWithOneFeature = input(false);
 
   /**
-   * EventEmitter voor het versturen van component-gerelateerde events.
-   * Stuurt `FeatureInfoComponentEvent` bij selectie van een object.
+   * Verzameling van features en metadata die weergegeven moeten worden.
+   * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
    */
-  @Output() events = new EventEmitter<FeatureInfoComponentEvent>();
-  protected customHeaderValueTemplates: Map<string, TemplateRef<any> | null> =
-    new Map();
-  protected customValueTemplates: Map<string, TemplateRef<any>> = new Map();
-  protected hideEmptyFieldWithKeys: string[] = [];
-  protected displayFeaturesProperties: object[] | undefined;
+  featureInfoCollection = input<FeatureInfoCollection>();
+
+  /**
+   * Map van een koppeling van veldnamen naar `CustomFeatureInfo` objecten,
+   * in de vorm van een customAttributeName en/of customAttributeValueFunction.
+   * Hiermee kunnen veldnamen en/of veldwaarden aangepast worden.
+   */
+  customAttributeNamesAndValues = input<Map<string, CustomFeatureInfo>>();
+
+  /** FeatureInfoEvent afkomstig van ggc-feature-info-tabs. */
+  featureInfoEvent = input<FeatureInfoComponentEvent>();
+
+  /** Output voor het versturen van component-gerelateerde events. */
+  readonly events = output<FeatureInfoComponentEvent>();
+  protected customHeaderValueTemplates = signal(
+    new Map<string, TemplateRef<any> | null>()
+  );
+  protected customValueTemplates = signal(new Map<string, TemplateRef<any>>());
+  protected hideEmptyFieldWithKeys = signal<string[]>([]);
+  protected displayFeaturesProperties = signal<object[] | undefined>(undefined);
   protected pagerIsHidden = signal(false);
   protected currentFeatureIndex = signal(0);
   protected currentFeature = signal<object | null>(null);
-  protected emptyInfo = "Geen informatie beschikbaar";
+  protected readonly emptyInfo = signal("Geen informatie beschikbaar");
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
+  private readonly destroyRef = inject(DestroyRef);
   private hasTabs = true;
   private subscription: Subscription;
   private subscriptionSelection: Subscription;
   private readonly eventService = inject(FeatureInfoEventService);
-  @ContentChildren(ValueTemplateDirective)
-  private readonly templates: QueryList<ValueTemplateDirective>;
+  private readonly templates = contentChildren(ValueTemplateDirective);
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
   );
@@ -172,72 +189,29 @@ export class GgcFeatureInfoComponent
    */
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  private _featureInfoCollection: FeatureInfoCollection | undefined;
+  private readonly currentFeatureInfoCollection = signal<
+    FeatureInfoCollection | undefined
+  >(undefined);
 
-  private _customAttributeNamesAndValues?: Map<string, CustomFeatureInfo>;
-
-  /**
-   * Verberg de paginering als er slechts één feature is.
-   * Default: `false`.
-   */
-  private _hidePagerWithOneFeature = false;
-
-  @Input()
-  set hidePagerWithOneFeature(value: boolean) {
-    this._hidePagerWithOneFeature = value;
-    this.handleFeatureInfoChanges();
-  }
-
-  get hidePagerWithOneFeature(): boolean {
-    return this._hidePagerWithOneFeature;
-  }
-
-  get featureInfoCollection(): FeatureInfoCollection | undefined {
-    return this._featureInfoCollection;
-  }
-
-  /**
-   * Verzameling van features en metadata die weergegeven moeten worden.
-   * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
-   */
-  @Input()
-  set featureInfoCollection(value: FeatureInfoCollection | undefined) {
-    this._featureInfoCollection = value;
-    this.handleFeatureInfoChanges();
-  }
-
-  get customAttributeNamesAndValues():
-    Map<string, CustomFeatureInfo> | undefined {
-    return this._customAttributeNamesAndValues;
-  }
-
-  /**
-   * Map van een koppeling van veldnamen naar `CustomFeatureInfo` objecten,
-   * in de vorm van een customAttributeName en/of customAttributeValueFunction.
-   * Hiermee kunnen veldnamen en/of veldwaarden aangepast worden.
-   */
-  @Input()
-  set customAttributeNamesAndValues(
-    value: Map<string, CustomFeatureInfo> | undefined
-  ) {
-    this._customAttributeNamesAndValues = value;
-    this.handleFeatureInfoChanges();
-  }
-
-  /**
-   * FeatureInfoEvent afkomstig van ggc-feature-info-tabs.
-   */
-  @Input()
-  set featureInfoEvent(event: FeatureInfoComponentEvent | undefined) {
-    if (!event) {
-      return;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["featureInfoCollection"]) {
+      this.setFeatureInfoCollection(this.featureInfoCollection());
+    } else if (
+      changes["customAttributeNamesAndValues"] ||
+      changes["hidePagerWithOneFeature"]
+    ) {
+      this.handleFeatureInfoChanges();
     }
-    this.handleFeatureInfoEvent(event);
+
+    const featureInfoEvent = this.featureInfoEvent();
+    if (changes["featureInfoEvent"] && featureInfoEvent) {
+      this.handleFeatureInfoEvent(featureInfoEvent);
+    }
   }
 
   ngOnInit() {
-    if (this.autoConnect) {
-      this.subscribeToMapSelection(this.mapIndex, this.selectIndex);
+    if (this.autoConnect()) {
+      this.subscribeToMapSelection(this.mapIndex(), this.selectIndex());
       this.subscription = this.eventService.events$.subscribe((event) =>
         this.handleFeatureInfoEvent(event)
       );
@@ -249,11 +223,11 @@ export class GgcFeatureInfoComponent
       "ggc-feature-info-tabs"
     );
     this.hasTabs = !!featureInfoTabs;
-    if (this.autoConnect && this.autoStartSelect) {
+    if (this.autoConnect() && this.autoStartSelect()) {
       this.featureInfoMapConnectService.startSelect(
         { style: null } as any,
-        this.mapIndex,
-        this.viewerType
+        this.mapIndex(),
+        this.viewerType()
       );
     }
   }
@@ -263,32 +237,40 @@ export class GgcFeatureInfoComponent
    * Ondersteunt custom templates voor headers, content, en verbergen van velden.
    */
   ngAfterContentInit(): void {
-    this.templates.forEach((template) => {
-      (Array.isArray(template.ggcTemplateKey)
-        ? template.ggcTemplateKey
-        : [template.ggcTemplateKey]
+    const customHeaderValueTemplates = new Map(
+      this.customHeaderValueTemplates()
+    );
+    const customValueTemplates = new Map(this.customValueTemplates());
+    const hideEmptyFieldWithKeys = [...this.hideEmptyFieldWithKeys()];
+    this.templates().forEach((template) => {
+      const ggcTemplateKey = template.ggcTemplateKey();
+      (Array.isArray(ggcTemplateKey)
+        ? ggcTemplateKey
+        : [ggcTemplateKey]
       ).forEach((templateKey) => {
-        switch (template.templateType) {
+        if (templateKey === undefined) return;
+
+        switch (template.templateType()) {
           case ValueTemplateDirectiveType.HEADER:
-            this.customHeaderValueTemplates.set(
-              templateKey,
-              template.templateRef
-            );
+            customHeaderValueTemplates.set(templateKey, template.templateRef);
             break;
           case ValueTemplateDirectiveType.CONTENT:
-            this.customValueTemplates.set(templateKey, template.templateRef);
+            customValueTemplates.set(templateKey, template.templateRef);
             break;
           case ValueTemplateDirectiveType.HIDE:
-            this.customHeaderValueTemplates.set(templateKey, null);
+            customHeaderValueTemplates.set(templateKey, null);
             break;
           case ValueTemplateDirectiveType.HIDE_IF_EMPTY:
-            if (!this.hideEmptyFieldWithKeys.includes(templateKey)) {
-              this.hideEmptyFieldWithKeys.push(templateKey);
+            if (!hideEmptyFieldWithKeys.includes(templateKey)) {
+              hideEmptyFieldWithKeys.push(templateKey);
             }
             break;
         }
       });
     });
+    this.customHeaderValueTemplates.set(customHeaderValueTemplates);
+    this.customValueTemplates.set(customValueTemplates);
+    this.hideEmptyFieldWithKeys.set(hideEmptyFieldWithKeys);
   }
 
   ngOnDestroy() {
@@ -318,8 +300,9 @@ export class GgcFeatureInfoComponent
 
   /** Controleer of er een volgende feature beschikbaar is. */
   hasNextFeature(): boolean {
-    const length = this.displayFeaturesProperties
-      ? this.displayFeaturesProperties.length
+    const displayFeaturesProperties = this.displayFeaturesProperties();
+    const length = displayFeaturesProperties
+      ? displayFeaturesProperties.length
       : -1;
     if (length > 0) {
       return this.currentFeatureIndex() < length - 1;
@@ -329,10 +312,8 @@ export class GgcFeatureInfoComponent
 
   /** Controleer of er een vorige feature beschikbaar is. */
   hasPreviousFeature(): boolean {
-    if (
-      this.displayFeaturesProperties &&
-      this.displayFeaturesProperties.length > 1
-    ) {
+    const displayFeaturesProperties = this.displayFeaturesProperties();
+    if (displayFeaturesProperties && displayFeaturesProperties.length > 1) {
       return this.currentFeatureIndex() > 0;
     }
     return false;
@@ -368,9 +349,9 @@ export class GgcFeatureInfoComponent
    */
   hidePager(): boolean {
     return (
-      this.hidePagerWithOneFeature &&
-      (this.displayFeaturesProperties == undefined ||
-        this.displayFeaturesProperties.length === 1)
+      this.hidePagerWithOneFeature() &&
+      (this.displayFeaturesProperties() == undefined ||
+        this.displayFeaturesProperties()!.length === 1)
     );
   }
 
@@ -384,16 +365,18 @@ export class GgcFeatureInfoComponent
     if (event.type === FeatureInfoComponentEventType.SELECTEDTAB) {
       const collection: FeatureCollectionForLayer = event.value;
       if (collection) {
-        this.featureInfoCollection = new FeatureInfoCollection(
-          undefined,
-          this.featureCollectionIsClustered(collection)
-            ? declusterFeatures(collection.features)
-            : collection.features,
-          collection.layerTitle,
-          collection.layerId
+        this.setFeatureInfoCollection(
+          new FeatureInfoCollection(
+            undefined,
+            this.featureCollectionIsClustered(collection)
+              ? declusterFeatures(collection.features)
+              : collection.features,
+            collection.layerTitle,
+            collection.layerId
+          )
         );
       } else {
-        this.featureInfoCollection = undefined;
+        this.setFeatureInfoCollection(undefined);
       }
     }
   }
@@ -411,13 +394,15 @@ export class GgcFeatureInfoComponent
    * Wordt aangeroepen bij navigatie of initiële selectie.
    */
   private setCurrentFeature(): void {
+    const displayFeaturesProperties = this.displayFeaturesProperties();
     this.currentFeature.set(
-      this.displayFeaturesProperties
-        ? this.displayFeaturesProperties[this.currentFeatureIndex()]
+      displayFeaturesProperties
+        ? displayFeaturesProperties[this.currentFeatureIndex()]
         : null
     );
-    const featureForEvent = this.featureInfoCollection
-      ? this.featureInfoCollection.features[this.currentFeatureIndex()]
+    const featureInfoCollection = this.currentFeatureInfoCollection();
+    const featureForEvent = featureInfoCollection
+      ? featureInfoCollection.features[this.currentFeatureIndex()]
       : undefined;
     const featureInfoComponentEvent = new FeatureInfoComponentEvent(
       FeatureInfoComponentEventType.SELECTEDOBJECT,
@@ -425,7 +410,7 @@ export class GgcFeatureInfoComponent
       featureForEvent
     );
     this.highlightFeature(featureForEvent);
-    this.events.next(featureInfoComponentEvent);
+    this.events.emit(featureInfoComponentEvent);
   }
 
   /**
@@ -436,8 +421,8 @@ export class GgcFeatureInfoComponent
   private highlightFeature(feature: object | undefined): void {
     this.featureInfoMapConnectService.showHighlight(
       feature,
-      this.mapIndex,
-      this.viewerType
+      this.mapIndex(),
+      this.viewerType()
     );
   }
 
@@ -446,34 +431,35 @@ export class GgcFeatureInfoComponent
    * ongeacht of deze via een @Input of interne logica komen.
    */
   private handleFeatureInfoChanges(): void {
-    if (this.featureInfoCollection) {
-      if (this.customAttributeNamesAndValues) {
+    const featureInfoCollection = this.currentFeatureInfoCollection();
+    const customAttributeNamesAndValues = this.customAttributeNamesAndValues();
+    if (featureInfoCollection) {
+      if (customAttributeNamesAndValues) {
         this.featureInfoConfigService.setCustomFeatureInfo(
-          this.customAttributeNamesAndValues
+          customAttributeNamesAndValues
         );
       }
       const featuresProperties = this.getPropertiesFromFeatures(
-        this.featureInfoCollection.features
+        featureInfoCollection.features
       );
-      this.displayFeaturesProperties =
+      this.displayFeaturesProperties.set(
         this.featureInfoConfigService.filterAndSortAttributes(
-          this.featureInfoCollection.layerId,
+          featureInfoCollection.layerId,
           featuresProperties
-        );
+        )
+      );
     } else {
-      this.displayFeaturesProperties = undefined;
+      this.displayFeaturesProperties.set(undefined);
     }
 
-    if (
-      this.displayFeaturesProperties &&
-      this.displayFeaturesProperties.length > 0
-    ) {
+    const displayFeaturesProperties = this.displayFeaturesProperties();
+    if (displayFeaturesProperties && displayFeaturesProperties.length > 0) {
       this.currentFeatureIndex.set(0);
       this.setCurrentFeature();
     } else {
       this.currentFeatureIndex.set(-1);
       this.currentFeature.set(null);
-      this.events.next(
+      this.events.emit(
         new FeatureInfoComponentEvent(
           FeatureInfoComponentEventType.SELECTEDOBJECT,
           "Het huidige weergegeven object.",
@@ -489,11 +475,13 @@ export class GgcFeatureInfoComponent
     // Haal de meest recente selection op als deze bestaat
     this.featureInfoMapConnectService
       .getCurrentFeatureCollectionForMapSelection(
-        this.viewerType,
+        this.viewerType(),
         mapIndex,
         selectIndex
       )
       .then((featureCollectionForCoordinate) => {
+        if (this.destroyRef.destroyed) return;
+
         this.handleNewFeatureCollectionForCoordinate(
           featureCollectionForCoordinate,
           mapIndex
@@ -502,13 +490,14 @@ export class GgcFeatureInfoComponent
     // Wanneer FeatureInfoTabs aanwezig is dan wordt de
     // featureInfoCollection gezet via de tabs (hasTabs = true
     this.featureInfoMapConnectService
-      .getObservableForMapSelection(this.viewerType, mapIndex, selectIndex)
+      .getObservableForMapSelection(this.viewerType(), mapIndex, selectIndex)
       .then((mapSelectionEvent) => {
-        if (this.hasTabs) {
+        if (this.destroyRef.destroyed || this.hasTabs) {
           return;
         }
-        this.subscriptionSelection = mapSelectionEvent.subscribe(
-          (event: MapComponentEvent) => {
+        this.subscriptionSelection = mapSelectionEvent
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((event: MapComponentEvent) => {
             if (
               event.type !==
               MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
@@ -516,8 +505,7 @@ export class GgcFeatureInfoComponent
               return;
             }
             this.handleNewFeatureCollectionForCoordinate(event.value, mapIndex);
-          }
-        );
+          });
       });
   }
 
@@ -529,10 +517,10 @@ export class GgcFeatureInfoComponent
       featureCollectionForCoordinate?.featureCollectionForLayers;
     if (!collections || collections.length === 0) {
       this.featureInfoMapConnectService.clearHighlightLayer(
-        this.viewerType,
+        this.viewerType(),
         mapIndex
       );
-      this.featureInfoCollection = undefined;
+      this.setFeatureInfoCollection(undefined);
       return;
     }
     this.createNewFeatureCollection(collections);
@@ -541,21 +529,30 @@ export class GgcFeatureInfoComponent
   private createNewFeatureCollection(
     collections: FeatureCollectionForLayer[]
   ): void {
-    this.featureInfoCollection = new FeatureInfoCollection(
-      undefined,
-      collections.flatMap((feature) =>
-        this.featureCollectionIsClustered(feature)
-          ? declusterFeatures(feature.features)
-          : (feature.features ?? [])
-      ),
-      collections
-        .map((layer) => layer.layerTitle)
-        .filter((value) => value && value.trim().length > 0)
-        .join(", "),
-      collections
-        .map((layer) => layer.layerId)
-        .filter((value) => value && value.trim().length > 0)
-        .join(", ")
+    this.setFeatureInfoCollection(
+      new FeatureInfoCollection(
+        undefined,
+        collections.flatMap((feature) =>
+          this.featureCollectionIsClustered(feature)
+            ? declusterFeatures(feature.features)
+            : (feature.features ?? [])
+        ),
+        collections
+          .map((layer) => layer.layerTitle)
+          .filter((value) => value && value.trim().length > 0)
+          .join(", "),
+        collections
+          .map((layer) => layer.layerId)
+          .filter((value) => value && value.trim().length > 0)
+          .join(", ")
+      )
     );
+  }
+
+  private setFeatureInfoCollection(
+    featureInfoCollection: FeatureInfoCollection | undefined
+  ): void {
+    this.currentFeatureInfoCollection.set(featureInfoCollection);
+    this.handleFeatureInfoChanges();
   }
 }

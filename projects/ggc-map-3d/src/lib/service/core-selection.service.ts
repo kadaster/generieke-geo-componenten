@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import {
   Cartesian2,
   Cesium3DTileFeature,
@@ -41,9 +41,7 @@ export type ScreenSpaceEvent =
   | ScreenSpaceEventHandler.TwoPointMotionEvent;
 
 type SelectionFeature = Cesium3DTileFeature | Entity;
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreSelectionService {
   public currentSupportedEvents: ScreenSpaceEventType[];
   protected viewer: Viewer | undefined;
@@ -99,6 +97,9 @@ export class CoreSelectionService {
     const selection = this.getSelection(eventType);
     if (selection) {
       this.clearHighlight(eventType);
+      this.currentSelections.delete(
+        this.getCurrentSelectionKey(selection.selectIndex)
+      );
       this.clickEvent.next({
         selectionEventType:
           SelectionEventType.SELECTIONSERVICE_SELECTIONCLEARED,
@@ -309,10 +310,12 @@ export class CoreSelectionService {
         ? this.tiles3DService.getLayerId(feature)
         : this.geoJsonLayerService.getLayerId(feature);
 
-    this.currentSelections.set(
-      this.getCurrentSelectionKey(selection.selectIndex),
-      this.createFeatureCollectionForCoordinate(feature, layerId)
+    const selectionKey = this.getCurrentSelectionKey(selection.selectIndex);
+    const featureCollection = this.createFeatureCollectionForCoordinate(
+      feature,
+      layerId
     );
+    this.currentSelections.set(selectionKey, featureCollection);
     this.clearHighlight(selection.eventType);
     if (feature !== undefined && feature instanceof Cesium3DTileFeature) {
       this.setHighlightOnFeature(
