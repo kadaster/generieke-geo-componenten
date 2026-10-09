@@ -109,8 +109,9 @@ export class GgcToolbarItemComponent {
    * Roept `clickCallback` aan indien aanwezig, anders `handleClick`.
    */
   onClick() {
-    if (this.clickCallback()) {
-      this.clickCallback()!();
+    const clickCallback = this.clickCallback();
+    if (clickCallback) {
+      clickCallback();
     } else {
       this.handleClick();
     }

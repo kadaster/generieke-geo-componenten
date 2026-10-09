@@ -226,8 +226,9 @@ export class GgcLegendComponent implements OnInit {
     ) {
       return;
     }
-    if (this.layerLegendEnabledCallback()) {
-      const enabled = await this.layerLegendEnabledCallback()!({
+    const layerLegendEnabledCallback = this.layerLegendEnabledCallback();
+    if (layerLegendEnabledCallback) {
+      const enabled = await layerLegendEnabledCallback({
         layerLegend: legend,
         mapIndex: this.effectiveMapIndex(),
         viewerType: this.viewerType()
