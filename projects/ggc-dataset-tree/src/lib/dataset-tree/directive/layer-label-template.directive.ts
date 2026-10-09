@@ -1,4 +1,4 @@
-import { Directive, inject, Input, TemplateRef } from "@angular/core";
+import { Directive, inject, input, TemplateRef } from "@angular/core";
 
 /**
  * Directive waarmee een custom template kan worden aangeboden voor het
@@ -31,7 +31,7 @@ import { Directive, inject, Input, TemplateRef } from "@angular/core";
 
 @Directive({ selector: "[ggcLayerLabelTemplate]" })
 export class LayerLabelTemplateDirective {
-  templateRef = inject<TemplateRef<any>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<any>>(TemplateRef);
 
-  @Input() ggcLayerLabelTemplate: void;
+  readonly ggcLayerLabelTemplate = input<void>();
 }

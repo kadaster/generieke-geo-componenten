@@ -1,12 +1,11 @@
 import {
-  ChangeDetectionStrategy,
   ElementRef,
+  AfterViewInit,
   Component,
   inject,
   OnDestroy,
-  OnInit,
-  ViewChild,
-  input
+  input,
+  viewChild
 } from "@angular/core";
 import { ScaleLine } from "ol/control";
 import { Options as ScaleLineOptions, Units } from "ol/control/ScaleLine";
@@ -27,7 +26,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   templateUrl: "./ggc-scale-line.component.html",
   styleUrls: ["./ggc-scale-line.component.css"]
 })
-export class GgcScaleLineComponent implements OnInit, OnDestroy {
+export class GgcScaleLineComponent implements AfterViewInit, OnDestroy {
   /**
    * Optionele injectie van de MapDetailsContainer.
    * Indien aanwezig wordt de ScaleLine daarin gerenderd
@@ -53,7 +52,8 @@ export class GgcScaleLineComponent implements OnInit, OnDestroy {
    * Referentie naar het HTML‑element
    * dat als target dient voor de ScaleLine.
    */
-  @ViewChild("ggcScaleLine", { static: true }) ggcScaleLine: ElementRef;
+  readonly ggcScaleLine =
+    viewChild.required<ElementRef<HTMLElement>>("ggcScaleLine");
   private map: OlMap;
   private scaleControl: ScaleLine;
   private readonly coreMapService = inject(CoreMapService);
@@ -64,7 +64,7 @@ export class GgcScaleLineComponent implements OnInit, OnDestroy {
    * - haalt de kaart op
    * - voegt de control toe aan de kaart
    */
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.scaleControl = new ScaleLine(this.createScaleLineOptions());
 
     this.map = this.coreMapService.getMap(this.mapIndex());
@@ -86,7 +86,7 @@ export class GgcScaleLineComponent implements OnInit, OnDestroy {
     // wordt de schaalbalk daarin gerenderd in plaats van
     // op de standaard kaartpositie.
     if (this.mapDetailsContainer) {
-      options.target = this.ggcScaleLine.nativeElement;
+      options.target = this.ggcScaleLine().nativeElement;
     }
     return options;
   }

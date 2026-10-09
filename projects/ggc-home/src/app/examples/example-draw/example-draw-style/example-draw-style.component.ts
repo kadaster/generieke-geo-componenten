@@ -1,4 +1,4 @@
-import { Component, inject, model, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { GgcDrawService, GgcMapComponent, Webservice } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
@@ -33,17 +33,19 @@ export class ExampleDrawStyle extends ExampleFormatComponent implements OnInit {
     "example-draw/example-draw-style/example-draw-style.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-map_src_public-api.GgcDrawService.html`;
   // DOCS-SKIP:END
-  mapConfig: Webservice[];
-  drawing = model("line");
+  readonly mapConfig = signal<Webservice[]>([]);
+  protected readonly drawing = signal("line");
 
   private readonly drawService = inject(GgcDrawService);
   private readonly drawLayer = "drawLayerWithStyle";
 
   ngOnInit() {
     this.httpClient
-      .get("code/examples/example-draw/example-draw-style/kaartconfig.json")
-      .subscribe((data) => {
-        this.mapConfig = data as Webservice[];
+      .get<Webservice[]>(
+        "code/examples/example-draw/example-draw-style/kaartconfig.json"
+      )
+      .subscribe((webServices) => {
+        this.mapConfig.set(webServices);
       });
 
     this.drawService.setDrawStyle(this.drawLayer, {

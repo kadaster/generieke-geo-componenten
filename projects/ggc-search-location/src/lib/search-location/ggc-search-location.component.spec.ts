@@ -5,7 +5,10 @@ import { PdokLocationApiService } from "../service/pdok-location-api.service";
 import { GgcSearchLocationService } from "../service/ggc-location.service";
 import { GgcSearchLocationConnectService } from "../service/connect.service";
 import { of, Subject } from "rxjs";
-import { SearchComponentEventTypes } from "../model/search-component-event.model";
+import {
+  SearchComponentEvent,
+  SearchComponentEventTypes
+} from "../model/search-component-event.model";
 import { HttpErrorResponse, provideHttpClient } from "@angular/common/http";
 import { SearchLocationOptions } from "../model/search-location-options.model";
 import { PdokLocationApiSearchResponse } from "../model/pdok-location-api-collection.model";
@@ -93,6 +96,33 @@ describe("GgcSearchLocationComponent", () => {
   });
 
   describe("Initialisatie", () => {
+    it("volgt de conditionele inputquery", () => {
+      fixture.detectChanges();
+      expect(component["input"]()?.nativeElement).toBeTruthy();
+
+      fixture.componentRef.setInput("searchLocationOptions", {
+        hideSearch: true
+      } as SearchLocationOptions);
+      fixture.detectChanges();
+
+      expect(component["input"]()).toBeUndefined();
+    });
+
+    it("stopt de suggestiesubscription bij vernietiging", () => {
+      const suggestions = new Subject<PdokLocationApiSearchResponse | null>();
+      pdokServiceSpy.searchOnTermChange.mockReturnValue(suggestions);
+      const processSuggestionsResult = vi.spyOn(
+        component,
+        "processSuggestionsResult"
+      );
+      fixture.detectChanges();
+
+      fixture.destroy();
+      suggestions.next(null);
+
+      expect(processSuggestionsResult).not.toHaveBeenCalled();
+    });
+
     it("moet de pdok service configureren op basis van searchLocationOptions", () => {
       fixture.componentRef.setInput("searchLocationOptions", {
         minQueryLength: 4,
@@ -129,21 +159,17 @@ describe("GgcSearchLocationComponent", () => {
     });
 
     it("moet een initiële zoekterm verwerken", () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         initialSearchTerm: "Amsterdam"
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       expect(component["inputValue"]()).toBe("Amsterdam");
     });
   });
 
   describe("Toetsenbord en Input", () => {
-    beforeEach(() => {
-      (component as any).input = {
-        nativeElement: document.createElement("input")
-      };
-    });
     it("moet de zoekterm wissen bij Escape", async () => {
+      fixture.detectChanges();
       component["inputValue"].set("Utrecht");
       const event = new KeyboardEvent("keyup", { key: "Escape" });
       component.onInputUp(event);
@@ -192,9 +218,9 @@ describe("GgcSearchLocationComponent", () => {
   describe("Kaart Interactie (Zoom & Mark)", () => {
     it("moet zoomToExtent aanroepen als een resultaat een bbox heeft", async () => {
       const featureWithBbox = { ...mockFeature, bbox: [1, 2, 3, 4] } as any;
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         zoomToResult: true
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
 
       component["loadFormatType"] = vi.fn().mockResolvedValue({
@@ -210,10 +236,10 @@ describe("GgcSearchLocationComponent", () => {
     });
 
     it("moet de highlight layer wissen bij clearSearchTerm", async () => {
-      component.searchLocationOptions = {
+      fixture.componentRef.setInput("searchLocationOptions", {
         markResult: true,
         mapIndex: "test-map"
-      } as SearchLocationOptions;
+      } as SearchLocationOptions);
       fixture.detectChanges();
       component.clearSearchTerm();
       await Promise.resolve();
@@ -227,7 +253,8 @@ describe("GgcSearchLocationComponent", () => {
 
   describe("Foutafhandeling", () => {
     it("moet SEARCH_SUGGESTION_ERROR emitten bij een API fout", () => {
-      vi.spyOn(component.events, "emit");
+      let emittedEvent: SearchComponentEvent | undefined;
+      component.events.subscribe((event) => (emittedEvent = event));
       const errorResponse = new HttpErrorResponse({
         status: 500,
         statusText: "Server Error"
@@ -238,7 +265,7 @@ describe("GgcSearchLocationComponent", () => {
         SearchComponentEventTypes.SEARCH_SUGGESTION_ERROR
       );
 
-      expect(component.events.emit).toHaveBeenCalledWith(
+      expect(emittedEvent).toEqual(
         expect.objectContaining({
           type: SearchComponentEventTypes.SEARCH_SUGGESTION_ERROR,
           message: expect.stringMatching("500")

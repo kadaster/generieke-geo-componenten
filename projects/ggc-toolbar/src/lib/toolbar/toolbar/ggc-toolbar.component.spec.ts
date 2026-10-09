@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { GgcToolbarItemComponent } from "../toolbar-item/ggc-toolbar-item.component";
 import { GgcToolbarComponent } from "./ggc-toolbar.component";
 import { provideZonelessChangeDetection } from "@angular/core";
+import { GgcToolbarService } from "../../service/ggc-toolbar.service";
 
 @Component({
   imports: [GgcToolbarComponent, GgcToolbarItemComponent],
@@ -50,8 +51,27 @@ describe("ToolboxComponent", () => {
     const content = hostFixture.debugElement.query(
       By.css(".ggc-toolbar-content")
     );
+    const tabPane = hostFixture.debugElement.query(By.css(".tab-pane"));
 
     expect(content).not.toBeNull();
     expect(content.nativeElement.textContent).toContain("Hello World");
+    expect(tabPane.nativeElement.classList).toContain("active");
+    expect(tabPane.nativeElement.classList).not.toContain("d-sm-none");
+  });
+
+  it("should release projected item subscriptions when destroyed", () => {
+    const item = hostFixture.debugElement.query(
+      By.directive(GgcToolbarItemComponent)
+    ).componentInstance as GgcToolbarItemComponent;
+    const toolbarService = TestBed.inject(GgcToolbarService);
+    const setActiveToolbarItemSpy = vi.spyOn(
+      toolbarService,
+      "setActiveToolbarItem"
+    );
+
+    hostFixture.destroy();
+    item.handleClick();
+
+    expect(setActiveToolbarItemSpy).not.toHaveBeenCalled();
   });
 });

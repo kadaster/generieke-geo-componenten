@@ -5,7 +5,8 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  TemplateRef
+  TemplateRef,
+  signal
 } from "@angular/core";
 import { GgcFeatureInfoConfigService } from "../service/ggc-feature-info-config.service";
 import { FeatureInfoKeyValue } from "./feature-info-key-value";
@@ -27,9 +28,9 @@ export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
   contentValueTemplates = input<Map<string, TemplateRef<any>>>(new Map());
   hideEmptyFieldWithKeys = input<string[]>([]);
 
-  protected displayFeature: { [key: string]: any };
-  protected objectKeys: string[];
-  protected featureInfoDisplayTypeEnum = FeatureInfoDisplayType;
+  protected readonly displayFeature = signal<{ [key: string]: any }>({});
+  protected readonly objectKeys = signal<string[]>([]);
+  protected readonly featureInfoDisplayTypeEnum = FeatureInfoDisplayType;
 
   private readonly featureInfoConfigService = inject(
     GgcFeatureInfoConfigService
@@ -66,14 +67,17 @@ export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
   }
 
   prepareForDisplay() {
-    this.objectKeys = FeatureInfoKeyValue.objectKeys(
+    const objectKeys = FeatureInfoKeyValue.objectKeys(
       this.currentFeature() as { [key: string]: any },
       this.hideEmptyFields(),
       this.hideEmptyFieldWithKeys()
     );
-    this.displayFeature = this.featureInfoConfigService.checkForCustomValues(
-      this.currentFeature() as { [key: string]: any },
-      this.objectKeys
+    this.objectKeys.set(objectKeys);
+    this.displayFeature.set(
+      this.featureInfoConfigService.checkForCustomValues(
+        this.currentFeature() as { [key: string]: any },
+        objectKeys
+      )
     );
   }
 }

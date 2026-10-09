@@ -1,18 +1,19 @@
 import {
   AfterContentInit,
   Component,
-  ContentChild,
-  EventEmitter,
+  contentChild,
+  DestroyRef,
   inject,
-  Input,
+  input,
   OnChanges,
   OnInit,
-  Output,
+  output,
   signal,
   SimpleChanges,
   TemplateRef,
   OnDestroy
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ValueTemplateDirective } from "../directive/value-template.directive";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 import {
@@ -80,17 +81,17 @@ export class GgcFeatureInfoTabsComponent
    * Een 3D viewer maakt geen gebruikt van een mapIndex, dus die kan dan worden leeggelaten.
    * Wel kan een 3D viewer gebruik maken van een selectIndex, netzoals een 2D viewer.
    * */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input(DEFAULT_MAPINDEX);
   /** Unieke naam/index van de selectie index waarvoor Feature Info getoond moet worden, indien opgegeven.
    *  Feature-info zal in dit geval luisteren naar de select interactie waar de mapIndex en selectIndex overeenkomt.
    *  Als selectIndex undefined is, dan wordt alleen naar de mapIndex gekeken.
    */
-  @Input() selectIndex: string | undefined = undefined;
+  selectIndex = input<string>();
   /**
    * Verzameling van features en metadata die weergegeven moeten worden.
    * Bevat een layerTitle, layerId en een lijst van features (OpenLayers of plain objects).
    */
-  @Input() featureInfoCollectionArray: FeatureInfoCollection[];
+  featureInfoCollectionArray = input<FeatureInfoCollection[]>([]);
   /**
    * Bepaalt of tabbladen zonder inhoud zichtbaar moeten zijn.
    *
@@ -101,7 +102,7 @@ export class GgcFeatureInfoTabsComponent
    * (d.w.z. met een lege `features`-array) toch weergegeven.
    * Bij `false` worden deze tabbladen verborgen.
    */
-  @Input() showEmptyTabs = false;
+  showEmptyTabs = input(false);
 
   /**
    * Verwijst naar het element (via ID) dat het label levert voor deze component.
@@ -109,7 +110,7 @@ export class GgcFeatureInfoTabsComponent
    * @remarks
    * Indien niet opgegeven, wordt {@link ariaLabel} gebruikt als fallback.
    */
-  @Input() ariaLabelledBy?: string;
+  ariaLabelledBy = input<string>();
 
   /**
    * Direct aria-label voor de component.
@@ -120,7 +121,7 @@ export class GgcFeatureInfoTabsComponent
    * Wordt gebruikt wanneer {@link ariaLabelledBy} niet is opgegeven.
    * Als beide niet zijn ingesteld, wordt de standaardwaarde `"feature-info"` gebruikt.
    */
-  @Input() ariaLabel = "feature-info";
+  ariaLabel = input("feature-info");
 
   /**
    * Bepaalt of events automatisch intern worden afgehandeld binnen de component.
@@ -132,11 +133,11 @@ export class GgcFeatureInfoTabsComponent
    * Bij `false` worden de events niet intern afgehandeld en wordt verwacht
    * dat de parent-component deze afhandeling verzorgt.
    */
-  @Input() autoConnect = true;
+  autoConnect = input(true);
   /**
    * Geeft aan of dit feature info component gebruikt wordt voor 2D of 3D kaart.
    */
-  @Input() viewerType = ViewerType.TWEE_D;
+  viewerType = input(ViewerType.TWEE_D);
   /**
    * Verplicht output-event voor alle gebeurtenissen afkomstig van de tabbladenfunctionaliteit.
    *
@@ -152,9 +153,10 @@ export class GgcFeatureInfoTabsComponent
    * - Wanneer de `featureInfoCollectionArray` `undefined` is
    *   (in dit geval is de `value` van het event ook `undefined`)
    */
-  @Output() events: EventEmitter<FeatureInfoComponentEvent> =
-    new EventEmitter<FeatureInfoComponentEvent>();
-  protected tabComponent?: TemplateRef<any>;
+  readonly events = output<FeatureInfoComponentEvent>();
+  protected readonly tabComponent = signal<TemplateRef<any> | undefined>(
+    undefined
+  );
 
   protected featureInfoCollectionArrayInternal = signal<
     FeatureInfoCollection[]
@@ -163,8 +165,9 @@ export class GgcFeatureInfoTabsComponent
   private readonly featureInfoMapConnectService = inject(
     FeatureInfoMapConnectService
   );
-  @ContentChild(ValueTemplateDirective, { descendants: false })
-  private readonly tabTemplate: ValueTemplateDirective;
+  private readonly tabTemplate = contentChild(ValueTemplateDirective, {
+    descendants: false
+  });
   private readonly selectedTabFeatureInfo = signal<
     FeatureInfoCollection | undefined
   >(undefined);
@@ -175,17 +178,19 @@ export class GgcFeatureInfoTabsComponent
     GgcFeatureInfoConfigService
   );
   private readonly eventService = inject(FeatureInfoEventService);
+  private readonly destroyRef = inject(DestroyRef);
   private subscriptionSelection: Subscription;
 
   ngAfterContentInit(): void {
-    if (this.tabTemplate) {
-      this.tabComponent = this.tabTemplate.templateRef;
+    const tabTemplate = this.tabTemplate();
+    if (tabTemplate) {
+      this.tabComponent.set(tabTemplate.templateRef);
     }
   }
 
   ngOnInit() {
-    if (this.autoConnect) {
-      this.subscribeToMapSelection(this.mapIndex);
+    if (this.autoConnect()) {
+      this.subscribeToMapSelection(this.mapIndex());
     } else {
       this.onDataUpdate();
     }
@@ -210,12 +215,13 @@ export class GgcFeatureInfoTabsComponent
     this.setActiveTab(tab);
   }
 
-  private onDataUpdate(): void {
+  private onDataUpdate(
+    featureInfoCollectionArray:
+      FeatureInfoCollection[] | undefined = this.featureInfoCollectionArray()
+  ): void {
     // create copy of featureInfoCollectionArray and check empty tabs
     this.featureInfoCollectionArrayInternal.set(
-      this.featureInfoCollectionArray
-        ? [...this.featureInfoCollectionArray]
-        : []
+      featureInfoCollectionArray ? [...featureInfoCollectionArray] : []
     );
     this.checkShowEmptyTabs();
     if (this.featureInfoCollectionArrayInternal().length === 0) {
@@ -225,8 +231,8 @@ export class GgcFeatureInfoTabsComponent
         undefined
       );
       this.featureInfoMapConnectService.clearHighlightLayer(
-        this.viewerType,
-        this.mapIndex
+        this.viewerType(),
+        this.mapIndex()
       );
       this.eventService.emit(event);
       this.events.emit(event);
@@ -259,7 +265,7 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private checkShowEmptyTabs(): void {
-    if (!this.showEmptyTabs) {
+    if (!this.showEmptyTabs()) {
       this.featureInfoCollectionArrayInternal.set(
         this.featureInfoCollectionArrayInternal().filter(
           (tabFeatureInfo: FeatureInfoCollection) => {
@@ -271,23 +277,29 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private subscribeToMapSelection(mapIndex: string) {
+    const viewerType = this.viewerType();
+    const selectIndex = this.selectIndex();
+
     // Haal de meest recente selection op als deze bestaat
     this.featureInfoMapConnectService
       .getCurrentFeatureCollectionForMapSelection(
-        this.viewerType,
+        viewerType,
         mapIndex,
-        this.selectIndex
+        selectIndex
       )
       .then((currentFeatureCollectionForLayers) => {
+        if (this.destroyRef.destroyed) return;
+
         this.setFeatureInfoCollectionArray(
           currentFeatureCollectionForLayers?.featureCollectionForLayers
         );
       });
     this.featureInfoMapConnectService
-      .getObservableForMapSelection(this.viewerType, mapIndex, this.selectIndex)
+      .getObservableForMapSelection(viewerType, mapIndex, selectIndex)
       .then((observable) => {
-        this.subscriptionSelection = observable.subscribe(
-          (event: MapComponentEvent) => {
+        this.subscriptionSelection = observable
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((event: MapComponentEvent) => {
             if (
               event.type ===
               MapComponentEventTypes.SELECTIONSERVICE_SELECTIONUPDATED
@@ -296,16 +308,13 @@ export class GgcFeatureInfoTabsComponent
                 event.value.featureCollectionForLayers
               );
             }
-          }
-        );
+          });
       });
   }
 
   private setFeatureInfoCollectionArray(
     featureCollectionForLayers: FeatureCollectionForLayer[] | undefined
   ) {
-    this.featureInfoCollectionArray =
-      featureCollectionForLayers as FeatureInfoCollection[];
-    this.onDataUpdate();
+    this.onDataUpdate(featureCollectionForLayers as FeatureInfoCollection[]);
   }
 }

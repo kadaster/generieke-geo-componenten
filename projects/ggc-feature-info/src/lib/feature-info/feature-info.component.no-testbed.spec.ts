@@ -42,13 +42,13 @@ describe("FeatureInfoComponent, no testbed", () => {
 
   describe("when array is not present", () => {
     beforeEach(() => {
-      component.featureInfoCollection = undefined;
+      component["setFeatureInfoCollection"](undefined);
     });
 
     it("goToPreviousFeature should decrease currentFeatureIndex by one", () => {
       component.goToPreviousFeature();
       expect(component["currentFeatureIndex"]()).toEqual(-1);
-      expect(component["displayFeaturesProperties"]).toBeUndefined();
+      expect(component["displayFeaturesProperties"]()).toBeUndefined();
       expect(
         featureInfoConfigSpy.filterAndSortAttributes
       ).not.toHaveBeenCalled();
@@ -60,7 +60,7 @@ describe("FeatureInfoComponent, no testbed", () => {
     it("goToNextFeature should increase currentFeatureIndex by one", () => {
       component.goToNextFeature();
       expect(component["currentFeatureIndex"]()).toEqual(-1);
-      expect(component["displayFeaturesProperties"]).toBeUndefined();
+      expect(component["displayFeaturesProperties"]()).toBeUndefined();
       expect(
         featureInfoConfigSpy.filterAndSortAttributes
       ).not.toHaveBeenCalled();
@@ -76,19 +76,19 @@ describe("FeatureInfoComponent, no testbed", () => {
       feature1 = { test: "123" };
       const features = [feature1];
       featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
-      component.featureInfoCollection = {
+      component["setFeatureInfoCollection"]({
         layerName: "laag",
         features,
         layerTitle: "titel",
         layerId: "id"
-      };
+      });
     });
 
     it("goToPreviousFeature should not change currentFeature and currentFeatureIndex", () => {
       component.goToPreviousFeature();
       expect(component["currentFeatureIndex"]()).toEqual(0);
       expect(component["currentFeature"]()).toEqual(feature1);
-      const displayFeatures = component["displayFeaturesProperties"];
+      const displayFeatures = component["displayFeaturesProperties"]();
       expect(displayFeatures).toBeDefined();
       expect(displayFeatures?.length).toBe(1);
       expect(featureInfoConfigSpy.filterAndSortAttributes).toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe("FeatureInfoComponent, no testbed", () => {
       component.goToNextFeature();
       expect(component["currentFeatureIndex"]()).toEqual(0);
       expect(component["currentFeature"]()).toEqual(feature1);
-      const displayFeatures = component["displayFeaturesProperties"];
+      const displayFeatures = component["displayFeaturesProperties"]();
       expect(displayFeatures).toBeDefined();
       expect(displayFeatures?.length).toBe(1);
       expect(featureInfoConfigSpy.filterAndSortAttributes).toHaveBeenCalled();
@@ -133,18 +133,18 @@ describe("FeatureInfoComponent, no testbed", () => {
       feature3 = { test: "789" };
       const features = [feature1, feature2, feature3];
       featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
-      component.featureInfoCollection = {
+      component["setFeatureInfoCollection"]({
         layerName: "laag",
         features,
         layerTitle: "titel",
         layerId: "id"
-      };
+      });
       component["currentFeatureIndex"].set(1);
     });
 
     it("displayFeatures length should be 3", () => {
       expect(component.hasNextFeature()).toEqual(true);
-      const displayFeatures = component["displayFeaturesProperties"];
+      const displayFeatures = component["displayFeaturesProperties"]();
       expect(displayFeatures).toBeDefined();
       expect(displayFeatures?.length).toBe(3);
     });
@@ -192,21 +192,21 @@ describe("FeatureInfoComponent, no testbed", () => {
       const feature2 = new Feature({ test: "456" });
       const feature3 = new Feature({ test: "789" });
       const features = [feature1, feature2, feature3];
-      component.featureInfoCollection = {
+      component["setFeatureInfoCollection"]({
         layerName: "laag",
         features,
         layerTitle: "titel",
         layerId: "id"
-      };
+      });
       featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
       component["currentFeatureIndex"].set(1);
 
-      component.featureInfoCollection = undefined;
+      component["setFeatureInfoCollection"](undefined);
     });
 
     it("displayFeatures length should be 0", () => {
       expect(component.hasNextFeature()).toEqual(false);
-      expect(component["displayFeaturesProperties"]).toBeUndefined();
+      expect(component["displayFeaturesProperties"]()).toBeUndefined();
     });
 
     it("emitted event should not have a value", () => {
@@ -276,15 +276,15 @@ describe("FeatureInfoComponent, no testbed", () => {
         arrayContaningFeatures.push(featureOne, featureTwo);
 
         const features = [{ a: "a" }, { b: "b" }];
-        component.featureInfoCollection = {
+        component["setFeatureInfoCollection"]({
           layerName: "laag",
           features: arrayContaningFeatures,
           layerTitle: "titel",
           layerId: "id"
-        };
+        });
         featureInfoConfigSpy.filterAndSortAttributes.mockReturnValue(features);
 
-        expect(component.featureInfoCollection!.features).toBe(
+        expect(component["currentFeatureInfoCollection"]()!.features).toBe(
           arrayContaningFeatures
         );
       }

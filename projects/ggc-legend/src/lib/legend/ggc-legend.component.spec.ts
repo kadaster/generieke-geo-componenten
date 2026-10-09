@@ -120,7 +120,7 @@ describe("DatasetLegendComponent", () => {
     legendService = TestBed.inject(CoreLegendService);
 
     component = fixture.componentInstance;
-    component["alwaysEnableLegends"] = true;
+    fixture.componentRef.setInput("alwaysEnableLegends", true);
     fixture.detectChanges();
   });
 
@@ -142,8 +142,10 @@ describe("DatasetLegendComponent", () => {
     "when the emptyLegendMessage is not set the default value is showed when de legendUrl value is empty, " +
       "it should display the emptyLegendMessage",
     async () => {
-      component.legends = [JSON.parse(JSON.stringify(legendEmpty))];
-      component.showEmptyLegendMessage = true;
+      fixture.componentRef.setInput("legends", [
+        JSON.parse(JSON.stringify(legendEmpty))
+      ]);
+      fixture.componentRef.setInput("showEmptyLegendMessage", true);
       fixture.detectChanges();
       const element = fixture.debugElement.query(
         By.css(".ggc-dl-empty-legend-message")
@@ -157,9 +159,14 @@ describe("DatasetLegendComponent", () => {
     "when the emptyLegendMessage is set and dataset contains a empty legendUrl, " +
       "it should display the emptyLegendMessage value",
     async () => {
-      component.legends = [JSON.parse(JSON.stringify(legendEmpty))];
-      component.emptyLegendMessage = "aanpasbare lege legenda bericht";
-      component.showEmptyLegendMessage = true;
+      fixture.componentRef.setInput("legends", [
+        JSON.parse(JSON.stringify(legendEmpty))
+      ]);
+      fixture.componentRef.setInput(
+        "emptyLegendMessage",
+        "aanpasbare lege legenda bericht"
+      );
+      fixture.componentRef.setInput("showEmptyLegendMessage", true);
       fixture.detectChanges();
       const element = fixture.debugElement.query(
         By.css(".ggc-dl-empty-legend-message")
@@ -173,7 +180,9 @@ describe("DatasetLegendComponent", () => {
     "when there is a dataset available, " +
       "it should display the datasetlegend name",
     async () => {
-      component.legends = [JSON.parse(JSON.stringify(legendIcon))];
+      fixture.componentRef.setInput("legends", [
+        JSON.parse(JSON.stringify(legendIcon))
+      ]);
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css("span"));
       const firstChildData = element.nativeElement.firstChild.data.trim();
@@ -185,8 +194,10 @@ describe("DatasetLegendComponent", () => {
     "when there is a dataset available with a iconlist, " +
       "it should display the icon with text from the legend",
     async () => {
-      component.legends = [JSON.parse(JSON.stringify(legendIcon))];
-      component.showLegendsName = false;
+      fixture.componentRef.setInput("legends", [
+        JSON.parse(JSON.stringify(legendIcon))
+      ]);
+      fixture.componentRef.setInput("showLegendsName", false);
       fixture.detectChanges();
       const imgElement = fixture.debugElement.query(
         By.css(".ggc-dl-iconlist-image")
@@ -208,7 +219,7 @@ describe("DatasetLegendComponent", () => {
     "when there is a dataset with vectorTileStyle, " +
       "the html should contain a ggc-legend-mapbox component with a legendItem with title = (zee)water",
     async () => {
-      component.legends = [legendMapbox];
+      fixture.componentRef.setInput("legends", [legendMapbox]);
       vi.mocked(mapboxStyleServiceMock.getMapboxStyle).mockReturnValue(
         of(testStyle)
       );
@@ -232,15 +243,18 @@ describe("DatasetLegendComponent", () => {
   );
 
   it("the legend has a property collapsable=false by default. ", async () => {
-    expect(component.collapsable).toEqual(false);
+    expect(component.collapsable()).toEqual(false);
   });
 
   it("when legend has a property collapsable=true toggleLegend switches between expanded and !expanded", async () => {
-    component.collapsable = true;
-    component.legends = [JSON.parse(JSON.stringify(legendIcon))];
-    component.toggleLegend(component.legends[0]);
+    fixture.componentRef.setInput("collapsable", true);
+    fixture.componentRef.setInput("legends", [
+      JSON.parse(JSON.stringify(legendIcon))
+    ]);
     fixture.detectChanges();
-    expect(component.legends[0].expanded).toEqual(true);
+    component.toggleLegend(component.legends()[0]);
+    fixture.detectChanges();
+    expect(component.legends()[0].expanded).toEqual(true);
     const element = fixture.debugElement.query(By.css("button"));
     expect(element.children[0].classes["fa-angle-right"]).toBe(true);
     expect(element.children[1].classes["fa-angle-down"]).toBe(true);
@@ -254,9 +268,11 @@ describe("DatasetLegendComponent", () => {
 
   it("when legend has no property collapsable=true toggleLegend gives a console warning", async () => {
     console.warn = vi.fn();
-    component.collapsable = false;
-    component.legends = [JSON.parse(JSON.stringify(legendIcon))];
-    component.toggleLegend(component.legends[0]);
+    fixture.componentRef.setInput("collapsable", false);
+    fixture.componentRef.setInput("legends", [
+      JSON.parse(JSON.stringify(legendIcon))
+    ]);
+    component.toggleLegend(component.legends()[0]);
     fixture.detectChanges();
     expect(console.warn).toHaveBeenCalledWith(
       "Set DatasetLegendComponent.collapsable = true om legends in of uit te klappen."
@@ -265,42 +281,50 @@ describe("DatasetLegendComponent", () => {
 
   it("when expandAll$ from coreService emits value it shoud collapse and expand", async () => {
     //setup
-    component.mapIndex = "Jan";
+    fixture.componentRef.setInput("mapIndex", "Jan");
     // Provide copy to legends, so the tests cannot clash with each other
-    component.legends = JSON.parse(JSON.stringify(collapsableDatasetLegend));
-    expect(component.legends[0].expanded).toEqual(false);
-    expect(component.legends[1].expanded).toEqual(true);
+    fixture.componentRef.setInput(
+      "legends",
+      JSON.parse(JSON.stringify(collapsableDatasetLegend))
+    );
+    fixture.detectChanges();
+    expect(component.legends()[0].expanded).toEqual(false);
+    expect(component.legends()[1].expanded).toEqual(true);
 
     // expand all
     legendService.expandAll$.next({ mapIndex: "Jan", expanded: true });
 
     // verify
-    expect(component.legends[0].expanded).toEqual(true);
-    expect(component.legends[1].expanded).toEqual(true);
+    expect(component.legends()[0].expanded).toEqual(true);
+    expect(component.legends()[1].expanded).toEqual(true);
 
     // collapse all
     legendService.expandAll$.next({ mapIndex: "Jan", expanded: false });
 
     // verify
-    expect(component.legends[0].expanded).toEqual(false);
-    expect(component.legends[1].expanded).toEqual(false);
+    expect(component.legends()[0].expanded).toEqual(false);
+    expect(component.legends()[1].expanded).toEqual(false);
   });
 
   it("when expandAll$ from coreService emits value with another mapIndex it should not collapse or expand", async () => {
     // setup
-    component.mapIndex = "Kees";
+    fixture.componentRef.setInput("mapIndex", "Kees");
     // Provide copy to legends, so the tests cannot clash with each other
-    component.legends = JSON.parse(JSON.stringify(collapsableDatasetLegend));
+    fixture.componentRef.setInput(
+      "legends",
+      JSON.parse(JSON.stringify(collapsableDatasetLegend))
+    );
+    fixture.detectChanges();
 
-    expect(component.legends[0].expanded).toEqual(false);
-    expect(component.legends[1].expanded).toEqual(true);
+    expect(component.legends()[0].expanded).toEqual(false);
+    expect(component.legends()[1].expanded).toEqual(true);
 
     // expand all with another mapIndex
     legendService.expandAll$.next({ mapIndex: "NOT Kees", expanded: true });
 
     // verify
-    expect(component.legends[0].expanded).toEqual(false);
-    expect(component.legends[1].expanded).toEqual(true);
+    expect(component.legends()[0].expanded).toEqual(false);
+    expect(component.legends()[1].expanded).toEqual(true);
   });
 
   it("should add a new legend to the front if serviceName does not exist yet", () => {

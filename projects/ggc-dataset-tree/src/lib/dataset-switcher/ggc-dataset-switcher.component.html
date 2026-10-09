@@ -3,7 +3,7 @@
   class="ggc-ds-switcher-radio-container"
   aria-label="Datasets"
 >
-  @for (button of datasetSwitcherButtons; track button) {
+  @for (button of datasetSwitcherButtons(); track button) {
     <input
       class="ggc-ds-switcher-radio-button"
       type="radio"

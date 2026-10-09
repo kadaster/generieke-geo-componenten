@@ -1,6 +1,6 @@
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SimpleChange, SimpleChanges } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import Stroke from "ol/style/Stroke";
 import Style from "ol/style/Style";
@@ -17,6 +17,7 @@ import { Capabilities } from "../model/capabilities/capabilities";
 import { PrintConfig } from "../model/config/print-config.model";
 import { PrintUtilTestMethods } from "../PrintUtilTestMethods";
 import { GgcPrintFormComponent } from "./ggc-print-form.component";
+import { DownloadDialogComponent } from "../download-dialog/download-dialog.component";
 import { Coordinate } from "ol/coordinate";
 import { GgcPrintErrorTypes } from "../model/print-error.model";
 import {
@@ -26,6 +27,7 @@ import {
 
 describe("PrintFormComponent", () => {
   let component: GgcPrintFormComponent;
+  let fixture: ComponentFixture<GgcPrintFormComponent>;
   let mapfishInteractionService: GgcMapfishInteractionService;
   let printConfigService: PrintConfigService;
   let processCapabilitiesSpy: MockedObject<ProcessCapabilitiesService>;
@@ -77,7 +79,11 @@ describe("PrintFormComponent", () => {
     ]);
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+      imports: [
+        ReactiveFormsModule,
+        GgcPrintFormComponent,
+        DownloadDialogComponent
+      ],
       providers: [
         GgcMapfishInteractionService,
         PrintConfigService,
@@ -99,11 +105,13 @@ describe("PrintFormComponent", () => {
       ]
     });
 
+    TestBed.overrideComponent(GgcPrintFormComponent, {
+      remove: { providers: [PrintPreviewService] }
+    });
     mapfishInteractionService = TestBed.inject(GgcMapfishInteractionService);
     printConfigService = TestBed.inject(PrintConfigService);
-    component = TestBed.runInInjectionContext(
-      () => new GgcPrintFormComponent()
-    );
+    fixture = TestBed.createComponent(GgcPrintFormComponent);
+    component = fixture.componentInstance;
   });
 
   it("should create", () => {
@@ -123,7 +131,7 @@ describe("PrintFormComponent", () => {
       component,
       "processCapabilities"
     );
-    component.configurationName = configName;
+    fixture.componentRef.setInput("configurationName", configName);
     component.ngOnInit();
 
     expect(serviceSpy).toHaveBeenCalledWith(configName);
@@ -139,7 +147,7 @@ describe("PrintFormComponent", () => {
       "setPrintserver"
     );
 
-    component.printserver = "https://testUrl.nl/";
+    fixture.componentRef.setInput("printserver", "https://testUrl.nl/");
     component.ngOnInit();
 
     expect(setPrintserverSpy).toHaveBeenCalledWith("https://testUrl.nl/");
@@ -154,8 +162,8 @@ describe("PrintFormComponent", () => {
     });
     const mapIndex = "test";
 
-    component.previewStyle = style;
-    component.mapIndex = mapIndex;
+    fixture.componentRef.setInput("previewStyle", style);
+    fixture.componentRef.setInput("mapIndex", mapIndex);
     component.ngOnInit();
 
     expect(
@@ -171,7 +179,7 @@ describe("PrintFormComponent", () => {
 
     const apiTestKey = "Dit is een Key";
 
-    component.apiKey = apiTestKey;
+    fixture.componentRef.setInput("apiKey", apiTestKey);
     component.ngOnInit();
 
     expect(provideApiKeySpy).toHaveBeenCalledWith(apiTestKey);
@@ -183,7 +191,9 @@ describe("PrintFormComponent", () => {
       "addKeysToPrintConfigs"
     );
 
-    component.printConfigs = [new PrintConfig({ layerId: "testLayerId" })];
+    fixture.componentRef.setInput("printConfigs", [
+      new PrintConfig({ layerId: "testLayerId" })
+    ]);
 
     component.ngOnInit();
     expect(addKeysToPrintConfigsSpy).toHaveBeenCalled();
@@ -198,39 +208,39 @@ describe("PrintFormComponent", () => {
     expect(
       processCapabilitiesSpy.getTemplatesFromCapabilities
     ).toHaveBeenCalled();
-    expect(component["templates"].length).toEqual(1);
-    expect(component["templates"][0].name).toEqual("ggc-template");
-    expect(component["error"]).toBeUndefined();
+    expect(component["templates"]().length).toEqual(1);
+    expect(component["templates"]()[0].name).toEqual("ggc-template");
+    expect(component["error"]()).toBeUndefined();
   });
 
   it("processCapabilities should set error when getTemplatesFromCapabilities returns zero templates", () => {
-    expect(component["error"]).toBeUndefined();
+    expect(component["error"]()).toBeUndefined();
 
     processCapabilitiesSpy.getTemplatesFromCapabilities.mockReturnValue([]);
     component.processCapabilities(capabilitiesMock);
 
-    expect(component["templates"]).toEqual([]);
-    expect(component["error"]).toBeDefined();
+    expect(component["templates"]()).toEqual([]);
+    expect(component["error"]()).toBeDefined();
   });
 
   it("setDefaultValues should set template values", () => {
     // preparing
-    component["templates"] = [
+    component["templates"].set([
       { name: configName, mapAreaSize: { width: 11, height: 22 } },
       { name: "template2", mapAreaSize: { width: 33, height: 44 } }
-    ];
+    ]);
     const patchValueSpy = vi.spyOn(component["optionsForm"], "patchValue");
 
     component.setDefaultValues();
 
     expect(patchValueSpy).toHaveBeenCalledWith({
-      template: component["templates"][0],
+      template: component["templates"]()[0],
       scale: 500
     });
   });
 
   it("when template, scale and attributes are changed, it should call changehandlers", () => {
-    component["templates"] = [
+    component["templates"].set([
       {
         name: "template1",
         mapAreaSize: { width: 11, height: 22 }
@@ -246,7 +256,7 @@ describe("PrintFormComponent", () => {
           }
         ]
       }
-    ];
+    ]);
     component.setDefaultValues();
 
     component.addTemplateAndScaleChangeListeners();
@@ -257,7 +267,7 @@ describe("PrintFormComponent", () => {
     );
 
     component["optionsForm"].controls["template"].setValue(
-      component["templates"][1]
+      component["templates"]()[1]
     );
 
     component["optionsForm"].controls["scale"].setValue(2000);
@@ -355,7 +365,7 @@ describe("PrintFormComponent", () => {
     });
 
     it("ngOnChanges should call attributesToFormGroup if this is not the firstChange", () => {
-      component["attributes"] = PrintUtilTestMethods.getAttributesMock();
+      component["attributes"].set(PrintUtilTestMethods.getAttributesMock());
       const addAttributesToFormGroupSpy = vi.spyOn(
         component,
         "addAttributesToFormGroup"
@@ -401,7 +411,7 @@ describe("PrintFormComponent", () => {
 
     component.onSubmit();
 
-    expect(component["center"]).toEqual(centerCoordinatesMock);
+    expect(component["center"]()).toEqual(centerCoordinatesMock);
   });
 
   it("should set error when onSubmit is called and center from print preview is not available", () => {
@@ -411,16 +421,19 @@ describe("PrintFormComponent", () => {
 
     component.onSubmit();
 
-    expect(component["error"]).toBeTruthy();
-    expect(component["error"]?.type).toBe(GgcPrintErrorTypes.MAPNOTAVAILABLE);
-    expect(component["error"]?.technischeFout).toBe(
+    expect(component["error"]()).toBeTruthy();
+    expect(component["error"]()?.type).toBe(GgcPrintErrorTypes.MAPNOTAVAILABLE);
+    expect(component["error"]()?.technischeFout).toBe(
       "Middelpunt van het te printen gebied op de kaart kan niet worden bepaald"
     );
   });
 
   describe("isHiddenAttribute", () => {
     it("should return false when 'hiddenAttributes' is defined, but the value is not in the array", () => {
-      component.hiddenAttributes = ["referentie", "subtitel"];
+      fixture.componentRef.setInput("hiddenAttributes", [
+        "referentie",
+        "subtitel"
+      ]);
       const hidden = component["isAttributeHidden"]("pandStatus");
       expect(hidden).toBeFalsy();
     });
@@ -431,7 +444,10 @@ describe("PrintFormComponent", () => {
     });
 
     it("should return true when 'hiddenAttributes' is defined and the value is in the array", () => {
-      component.hiddenAttributes = ["referentie", "subtitel"];
+      fixture.componentRef.setInput("hiddenAttributes", [
+        "referentie",
+        "subtitel"
+      ]);
       const hidden = component["isAttributeHidden"]("referentie");
       expect(hidden).toBeTruthy();
     });

@@ -48,6 +48,15 @@ describe("ControlsComponent", () => {
     expect(component).toBeTruthy();
   });
 
+  it("should stop reacting to viewer updates after the component is destroyed", () => {
+    const viewerBeforeDestroy = component["viewer"];
+    fixture.destroy();
+
+    viewerSubject.next(createCesiumMock() as Viewer);
+
+    expect(component["viewer"]).toBe(viewerBeforeDestroy);
+  });
+
   it("should call camera.moveForward on zoomIn", () => {
     const zoomInButton = fixture.debugElement.query(
       By.css(".gc-controls-zoom > .cesium-control-top")

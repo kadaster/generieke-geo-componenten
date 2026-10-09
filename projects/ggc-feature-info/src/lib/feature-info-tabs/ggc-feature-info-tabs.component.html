@@ -5,8 +5,8 @@
   <div
     class="ggc-fi-tab"
     role="tablist"
-    [attr.aria-labelledby]="ariaLabelledBy ? ariaLabelledBy : null"
-    [attr.aria-label]="ariaLabelledBy ? null : ariaLabel"
+    [attr.aria-labelledby]="ariaLabelledBy() ? ariaLabelledBy() : null"
+    [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel()"
   >
     @for (info of featureInfoCollectionArrayInternal(); track info) {
       <button
@@ -26,7 +26,7 @@
       >
         <ng-container
           [ngTemplateOutlet]="
-            tabComponent ? tabComponent : defaultValueTemplate
+            tabComponent() ? tabComponent() : defaultValueTemplate
           "
           [ngTemplateOutletContext]="{
             layerTitle: info.layerTitle,
