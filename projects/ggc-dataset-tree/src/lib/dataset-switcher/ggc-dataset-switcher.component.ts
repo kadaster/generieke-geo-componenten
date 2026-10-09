@@ -47,31 +47,31 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
    *
    * Als deze input overgaat van leeg → gevuld, probeert het component automatisch een initiële actieve theme te bepalen.
    */
-  themes = input<Theme[]>([]);
+  readonly themes = input<Theme[]>([]);
 
   /**
    * De theme die actief is bij de initialisatie van de dataset switcher. Default wordt het eerste theme actief.
    * Let op: De dataset switcher zet niet automatisch de lagen aan van het initiële thema,
    * dit moet je zelf inregelen via de zichtbaarheid van de losse lagen in de layer configuratie.
    */
-  initialActiveTheme = input<string>();
+  readonly initialActiveTheme = input<string>();
 
   /**
    * Knoppen die in de UI getoond worden.
    *
    * De `name` van een knop moet overeenkomen met de {@link Theme} om selectie te laten werken.
    */
-  datasetSwitcherButtons = input<DatasetSwitcherButton[]>([]);
+  readonly datasetSwitcherButtons = input<DatasetSwitcherButton[]>([]);
 
   /**
    * Identificeert de kaart/viewer waarop laag-zichtbaarheid wordt toegepast.
    */
-  mapIndex = input(DEFAULT_MAPINDEX);
+  readonly mapIndex = input(DEFAULT_MAPINDEX);
 
   /**
    * Geeft aan of deze dataset switcher werkt met een 2D of 3D viewer
    */
-  viewerType = input(ViewerType.TWEE_D);
+  readonly viewerType = input(ViewerType.TWEE_D);
 
   /**
    * Event-stream voor consumers van dit component.

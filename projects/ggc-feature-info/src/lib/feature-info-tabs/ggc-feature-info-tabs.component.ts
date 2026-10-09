@@ -277,12 +277,15 @@ export class GgcFeatureInfoTabsComponent
   }
 
   private subscribeToMapSelection(mapIndex: string) {
+    const viewerType = this.viewerType();
+    const selectIndex = this.selectIndex();
+
     // Haal de meest recente selection op als deze bestaat
     this.featureInfoMapConnectService
       .getCurrentFeatureCollectionForMapSelection(
-        this.viewerType(),
+        viewerType,
         mapIndex,
-        this.selectIndex()
+        selectIndex
       )
       .then((currentFeatureCollectionForLayers) => {
         if (this.destroyRef.destroyed) return;
@@ -292,11 +295,7 @@ export class GgcFeatureInfoTabsComponent
         );
       });
     this.featureInfoMapConnectService
-      .getObservableForMapSelection(
-        this.viewerType(),
-        mapIndex,
-        this.selectIndex()
-      )
+      .getObservableForMapSelection(viewerType, mapIndex, selectIndex)
       .then((observable) => {
         this.subscriptionSelection = observable
           .pipe(takeUntilDestroyed(this.destroyRef))
