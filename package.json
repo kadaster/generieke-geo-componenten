@@ -39,7 +39,7 @@
     "lint:ggc-print": "ng lint --project ggc-print",
     "lint:ggc-search-location": "ng lint --project ggc-search-location",
     "lint:ggc-toolbar": "ng lint --project ggc-toolbar",
-    "lint:all": "npm run lint:ggc-conversion && npm run lint:ggc-map-3d && npm run lint:ggc-dataset-tree && npm run lint:ggc-home && npm run lint:ggc-legend && npm run lint:ggc-map && npm run lint:ggc-models && npm run lint:ggc-print && npm run lint:ggc-search-location && npm run lint:ggc-toolbar",
+    "lint:all": "npm run lint:ggc-conversion && npm run lint:ggc-map-3d && npm run lint:ggc-dataset-tree && npm run lint:ggc-feature-info && npm run lint:ggc-home && npm run lint:ggc-legend && npm run lint:ggc-map && npm run lint:ggc-models && npm run lint:ggc-print && npm run lint:ggc-search-location && npm run lint:ggc-toolbar",
     "lint:fix:ggc-conversion": "ng lint --project ggc-conversion --fix",
     "lint:fix:ggc-map-3d": "ng lint --project ggc-map-3d --fix",
     "lint:fix:ggc-dataset-tree": "ng lint --project ggc-dataset-tree --fix",
