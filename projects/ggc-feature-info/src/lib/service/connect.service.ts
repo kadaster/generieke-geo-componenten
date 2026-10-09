@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector, Type } from "@angular/core";
+import { inject, Service, Injector, Type } from "@angular/core";
 
 type GgcMapModule = {
   GgcSelectionService: Type<unknown>;
@@ -9,7 +9,7 @@ type GgcCesiumModule = {
   GgcSelectionService: Type<unknown>;
 };
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class GgcFeatureInfoConnectService {
   private mapSelectionService?: unknown;
   private mapService?: unknown;

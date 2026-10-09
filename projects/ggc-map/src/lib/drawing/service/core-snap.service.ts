@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Collection } from "ol";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -15,9 +15,7 @@ import { ObservableMapWrapper } from "@kadaster/ggc-models";
 import { Subject } from "rxjs";
 import { CoreDrawLayerService } from "./core-draw-layer.service";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreSnapService {
   snapInteractions: Map<string, Snap> = new Map();
 

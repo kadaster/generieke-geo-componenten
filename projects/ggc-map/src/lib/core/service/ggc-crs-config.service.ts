@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import {
   epsg28992,
   extent,
@@ -16,9 +16,7 @@ import { CrsConfig } from "../model/crs-config.model";
  * voor kaartprojectie, resoluties en WMTS-matrixinstellingen.
  */
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcCrsConfigService {
   /**
    * Maximale ondersteunde zoomlevel voor RD New.

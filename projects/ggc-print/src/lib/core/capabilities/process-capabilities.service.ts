@@ -1,11 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { Capabilities } from "../../model/capabilities/capabilities";
 import { MapAreaSizeInPixels } from "../../model/print-request/mapfish-print-properties";
 import { Template } from "../../model/component/template";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class ProcessCapabilitiesService {
   getTemplatesFromCapabilities(capabilities: Capabilities): Template[] {
     const templates: Template[] = [];

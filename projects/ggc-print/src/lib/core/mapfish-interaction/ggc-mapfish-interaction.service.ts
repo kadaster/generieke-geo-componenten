@@ -3,7 +3,7 @@ import {
   HttpErrorResponse,
   HttpHeaders
 } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { interval, Observable, throwError } from "rxjs";
 import { catchError, filter, map, startWith, switchMap } from "rxjs/operators";
 import { Capabilities } from "../../model/capabilities/capabilities";
@@ -16,9 +16,7 @@ import { PrintRequestResponse } from "../../model/print-request/print-request-re
 import { Print } from "../../model/result/Print";
 import { StatusResponse } from "../../model/result/StatusRepsonse";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcMapfishInteractionService {
   private readonly httpClient = inject(HttpClient);
   private baseUrl = "https://print-services";

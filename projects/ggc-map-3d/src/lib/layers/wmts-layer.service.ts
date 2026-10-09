@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import {
   ImageryLayer,
   ImageryLayerCollection,
@@ -14,9 +14,7 @@ import { LayerConfig } from "../model/interfaces";
  * Deze service maakt gebruik van WebMapTileServiceImageryProvider om lagen toe te voegen
  * op basis van een Service configuratie.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class WmtsLayerService extends BaseLayerService {
   protected layers: ImageryLayerCollection | null;
   /**

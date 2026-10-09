@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import {
   Color,
   DataSource,
@@ -18,9 +18,7 @@ import { GeoJsonConfig, GeoJsonLayerConfig } from "../model/interfaces";
  * en te visualiseren.
  * Configuratie gebeurt via GeoJsonConfig.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GeoJsonLayerService extends BaseLayerService {
   protected layers: DataSourceCollection | null;
   /**

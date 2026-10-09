@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { EMPTY, map, Observable, Subject } from "rxjs";
 import { GgcDatasetTreeConnectService } from "./connect.service";
 import {
@@ -17,9 +17,7 @@ import { filter } from "rxjs/operators";
  * informatie op te halen van layerIds.
  */
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class DatasetTreeMapConnectService {
   private readonly connectService = inject(GgcDatasetTreeConnectService);
 

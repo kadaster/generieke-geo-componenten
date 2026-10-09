@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Condition } from "ol/events/condition";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
@@ -37,9 +37,7 @@ import { CenterModifyOptions } from "../center-interaction/center-modify";
  * - `areaOrLength`, dit is de gemeten waarde
  * - `measurement`, dit is het type meting met als opties: `area`, `length` of `none`
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcDrawService {
   private readonly coreDrawService = inject(CoreDrawService);
   private readonly coreDrawLayerService = inject(CoreDrawLayerService);

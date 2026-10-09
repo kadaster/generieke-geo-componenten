@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { LayerObject } from "../model/core-interfaces";
 import { Observable, Subject } from "rxjs";
 import {
@@ -18,9 +18,7 @@ import { LayerConfig } from "../model/interfaces";
  *
  * Concrete implementaties dienen minimaal {@link getEnabled} te implementeren.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export abstract class BaseLayerService {
   protected layerMap: Map<string, LayerObject> = new Map<string, LayerObject>();
   protected layerChangedSubject: Subject<CesiumLayerChangedEvent> =

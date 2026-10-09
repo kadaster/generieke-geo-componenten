@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import {
   DatasetTreeEvent,
@@ -10,9 +10,7 @@ import { Theme } from "../model/theme/theme.model";
 import { DatasetTreeWebservice } from "../model/theme/dataset-tree-webservice.model";
 import { ViewerType } from "@kadaster/ggc-models";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreDatasetTreeService {
   private readonly datasetTreeMapConnectService = inject(
     DatasetTreeMapConnectService

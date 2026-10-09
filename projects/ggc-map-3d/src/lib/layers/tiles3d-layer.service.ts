@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import {
   Cesium3DTileFeature,
   Cesium3DTileset,
@@ -22,9 +22,7 @@ import { LayerChangedEventTrigger } from "@kadaster/ggc-models";
  * Deze service maakt gebruik van Cesium3DTileset en PrimitiveCollection
  * om lagen dynamisch toe te voegen en te beheren op basis van camera-instellingen.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class Tiles3dLayerService extends BaseLayerService {
   protected layers: PrimitiveCollection | null;
   /**
