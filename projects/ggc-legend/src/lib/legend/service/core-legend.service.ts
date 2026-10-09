@@ -1,15 +1,20 @@
-import { Injectable } from "@angular/core";
-import { ReplaySubject } from "rxjs";
+import { Service } from "@angular/core";
+import { Observable, ReplaySubject } from "rxjs";
 
 export interface DatasetLegendToggle {
   mapIndex: string;
   expanded: boolean;
 }
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreLegendService {
-  expandAll$: ReplaySubject<DatasetLegendToggle> =
-    new ReplaySubject<DatasetLegendToggle>();
+  private readonly expandAllSubject = new ReplaySubject<DatasetLegendToggle>();
+
+  getExpandAllObservable(): Observable<DatasetLegendToggle> {
+    return this.expandAllSubject.asObservable();
+  }
+
+  emitExpandAll(datasetLegendToggle: DatasetLegendToggle): void {
+    this.expandAllSubject.next(datasetLegendToggle);
+  }
 }

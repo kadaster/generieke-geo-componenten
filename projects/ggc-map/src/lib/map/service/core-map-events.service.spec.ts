@@ -114,6 +114,22 @@ describe("MapEventsService", () => {
       expect(service["zoomendMap"].get(mapIndex)).toBeDefined();
     });
 
+    it("should replay the latest zoomend event to a late subscriber", () => {
+      const mapIndex = "late-zoomend-map";
+      const firstEvent = { type: "firstZoomEnd" } as MapEvent;
+      const latestEvent = { type: "latestZoomEnd" } as MapEvent;
+      service.emitZoomendEventForMap(firstEvent, mapIndex);
+      service.emitZoomendEventForMap(latestEvent, mapIndex);
+      const receivedEvents: MapEvent[] = [];
+
+      const subscription = service
+        .getZoomendObservableForMap(mapIndex)
+        .subscribe((event) => receivedEvents.push(event));
+      subscription.unsubscribe();
+
+      expect(receivedEvents).toEqual([latestEvent]);
+    });
+
     it("destroyZoomendForMap should destroy subject and observable", () => {
       const mapIndex = "mapGgc";
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { EventsKey } from "ol/events";
 import OlMap from "ol/Map";
 import { unByKey } from "ol/Observable";
@@ -6,9 +6,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 import { ObservableMapWrapper } from "@kadaster/ggc-models";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreLoadingService {
   private eventsMap: Map<string, EventsKey[]> = new Map();
   private loadCounter: Map<string, number> = new Map<string, number>();
@@ -32,6 +30,7 @@ export class CoreLoadingService {
     if (events) {
       events.forEach((key) => unByKey(key));
     }
+    this.eventsMap.delete(mapIndex);
   }
 
   destroyLoadersForMap(mapIndex: string): void {

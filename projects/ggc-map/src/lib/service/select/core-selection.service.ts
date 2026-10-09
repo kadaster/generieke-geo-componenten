@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Observable, Subject } from "rxjs";
@@ -38,9 +38,7 @@ interface ActiveSelectInteraction {
   readonly select: Select;
 }
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreSelectionService {
   static readonly messageClearSelection = "Selectie is gewist";
   static readonly messageMapClicked =
@@ -152,6 +150,12 @@ export class CoreSelectionService {
       this.cleanupMapClickEvent(mapIndex, selectIndex);
     }
     this.cleanupSelectInteraction(selectIndex);
+  }
+
+  destroySelectionsForMap(mapIndex: string): void {
+    this.getAllActiveSelectIndicesOnMapIndex(mapIndex).forEach((selectIndex) =>
+      this.stopSelect(selectIndex)
+    );
   }
 
   clearSelection(mapIndex: string, selectIndex?: string): void {

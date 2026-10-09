@@ -28,6 +28,7 @@ import { CoreLoadingService } from "./service/core-loading.service";
 import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
 import { Webservice } from "../layer/model/webservice.model";
+import { CoreSelectionService } from "../service/select/core-selection.service";
 import { GgcLayerService } from "../service/select/ggc-layer.service";
 import {
   DEFAULT_MAPINDEX,
@@ -138,6 +139,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   private readonly coreDrawService = inject(CoreDrawService, {
     optional: true
   });
+  private readonly coreSelectionService = inject(CoreSelectionService);
   private readonly ggcLayerService = inject(GgcLayerService);
   // ol event type name
   private readonly OL_MOVEEND: MapEventTypes = "moveend";
@@ -294,6 +296,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     /* destroying the olMap, optional drawInteraction and selectionService. Destroying the OlMap itself last to prevent issues during
     destruction of the other parts */
     this.coreLoadingService.destroyLoadersForMap(this.mapIndex());
+    this.coreSelectionService.destroySelectionsForMap(this.mapIndex());
     if (this.coreDrawService) {
       this.coreDrawService.deleteLayers(this.mapIndex());
     }

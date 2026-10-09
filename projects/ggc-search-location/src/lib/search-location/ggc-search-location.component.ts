@@ -760,7 +760,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
         this.processMarkResult(event);
       });
     this.searchLocationService
-      .getGeolocationPositionErrorSubject()
+      .getGeolocationPositionErrorObservable()
       .pipe(first(), takeUntilDestroyed(this.destroyRef))
       .subscribe((error: GeolocationPositionError) => {
         this.events.emit(
