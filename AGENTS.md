@@ -19,4 +19,4 @@ This is an Angular monorepo with publishable `projects/ggc-*` libraries and the 
 
 ## Copilot instructions
 
-For GitHub Copilot, also follow [`.github/copilot-instructions.md`](.github/copilot-instructions.md). Instructions in `.github/instructions/` apply only to files matched by their `applyTo` frontmatter.
+For GitHub Copilot, also follow [`.github/copilot-instructions.md`](.github/copilot-instructions.md), which repeats the shared rules for IDEs that do not read this file (JetBrains Copilot Chat reads only the Copilot files). Change the shared rules in both files together. Instructions in `.github/instructions/` apply only to files matched by their `applyTo` frontmatter.

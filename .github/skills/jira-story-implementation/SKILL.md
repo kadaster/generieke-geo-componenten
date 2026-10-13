@@ -25,7 +25,12 @@ Implement the requested story in this repository. Treat the story and its accept
 - Trace the code path that implements the behavior. For cross-library work, inspect public APIs and existing integration patterns before deciding where a change belongs.
 - Check `package.json` and `angular.json` for real project scripts and targets. Do not invent commands.
 
-## 3. Implement the smallest complete change
+## 3. Propose a plan, then wait for approval
+
+- Before changing any file, present: a 1–2 sentence summary; the numbered acceptance criteria with a success criterion each (unit test, GGC Home example, manual); the planned changes per file including tests and documentation; tradeoffs and risks, especially any public API or consumer-visible behavior change; and open questions.
+- Wait for explicit approval. Update and re-confirm the plan if the developer changes it. If something unplanned turns out to be necessary during implementation, stop and ask.
+
+## 4. Implement the smallest complete change
 
 - Preserve unrelated worktree changes and follow `AGENTS.md`, `.github/copilot-instructions.md`, and applicable scoped instructions.
 - Make the minimum change that satisfies the acceptance criteria. Preserve established public APIs and behavior unless the story requires changing them.
@@ -33,7 +38,7 @@ Implement the requested story in this repository. Treat the story and its accept
 - For GGC Home examples, use the existing Plop generator and preserve its generated structure.
 - Do not update Jira status, comments, estimates, or other issue fields; do not commit or create a branch unless explicitly requested.
 
-## 4. Verify and report
+## 5. Verify and report
 
 - Run the focused test, lint, and build checks that apply to the changed project, using the scripts actually defined in `package.json`. Run broader checks only when warranted by the change.
 - If a check fails, determine whether the failure is caused by this change. Fix relevant failures and rerun the focused check; report unrelated failures without expanding scope.
