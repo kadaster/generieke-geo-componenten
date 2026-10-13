@@ -2,11 +2,12 @@ import {
   Component,
   EventEmitter,
   inject,
-  Input,
+  input,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  signal,
   SimpleChanges
 } from "@angular/core";
 import {
@@ -40,26 +41,26 @@ import { DownloadDialogComponent } from "../download-dialog/download-dialog.comp
   imports: [DownloadDialogComponent, ReactiveFormsModule]
 })
 export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() configurationName: string;
-  @Input() extraPrintLayers: string[] = ["drawing", "measuring"];
-  @Input() mapIndex: string;
-  @Input() printserver: string;
-  @Input() apiKey: string;
-  @Input() printConfigs: Array<PrintConfig>;
-  @Input() templateAttributes: Map<string, string>;
-  @Input() hiddenAttributes?: string[];
-  @Input() printPreviewCenter: Coordinate;
-  @Input() outputFilenameFunction: (formValues: Map<string, string>) => string;
-  @Input() previewStyle: StyleLike | undefined;
-  @Input() downloadOnComplete = false;
-  @Input() iconFile = "fal fa-file-alt";
-  @Input() iconDownload = "fal fa-arrow-to-bottom";
-  @Input() iconClose = "fal fa-times";
-  @Input() printStyle: MapfishStyleV2 | undefined;
+  configurationName = input<string>();
+  extraPrintLayers = input<string[]>(["drawing", "measuring"]);
+  mapIndex = input<string>();
+  printserver = input<string>();
+  apiKey = input<string>();
+  printConfigs = input<PrintConfig[]>();
+  templateAttributes = input<Map<string, string>>();
+  hiddenAttributes = input<string[]>();
+  printPreviewCenter = input<Coordinate>();
+  outputFilenameFunction = input<(formValues: Map<string, string>) => string>();
+  previewStyle = input<StyleLike>();
+  downloadOnComplete = input(false);
+  iconFile = input("fal fa-file-alt");
+  iconDownload = input("fal fa-arrow-to-bottom");
+  iconClose = input("fal fa-times");
+  printStyle = input<MapfishStyleV2>();
   @Output() events: EventEmitter<PrintComponentEvent> =
     new EventEmitter<PrintComponentEvent>();
   // change for trigger
-  protected scales = [
+  protected readonly scales = [
     {
       key: 500,
       value: "1:500"
@@ -101,11 +102,11 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
       value: "1:5000"
     }
   ];
-  protected templates: Template[] = [];
-  protected optionsForm: FormGroup;
-  protected attributes: Attribute[];
-  protected error: GgcPrintError | undefined;
-  protected center: Coordinate | undefined;
+  protected templates = signal<Template[]>([]);
+  protected readonly optionsForm: FormGroup;
+  protected attributes = signal<Attribute[]>([]);
+  protected error = signal<GgcPrintError | undefined>(undefined);
+  protected center = signal<Coordinate | undefined>(undefined);
   private templateChangeSubscription: SubscriptionLike;
   private scaleChangeSubscription: SubscriptionLike;
   private readonly formBuilder = inject(FormBuilder);
@@ -126,30 +127,30 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.printserver) {
-      this.mapFishInteraction.setPrintserver(this.printserver);
+    if (this.printserver()) {
+      this.mapFishInteraction.setPrintserver(this.printserver()!);
     }
-    if (this.apiKey) {
-      this.mapFishInteraction.provideApiKey(this.apiKey);
+    if (this.apiKey()) {
+      this.mapFishInteraction.provideApiKey(this.apiKey()!);
     }
-    if (this.configurationName) {
+    if (this.configurationName()) {
       this.mapFishInteraction
-        .getConfigCapabilities(this.configurationName)
+        .getConfigCapabilities(this.configurationName()!)
         .subscribe({
           next: (capabilities: Capabilities) => {
             this.processCapabilities(capabilities);
             this.addTemplateAndScaleChangeListeners();
             this.setDefaultValues();
           },
-          error: (error: GgcPrintError) => (this.error = error)
+          error: (error: GgcPrintError) => this.error.set(error)
         });
     }
-    if (this.printConfigs) {
-      this.printConfigService.addKeysToPrintConfigs(this.printConfigs);
+    if (this.printConfigs()) {
+      this.printConfigService.addKeysToPrintConfigs(this.printConfigs()!);
     }
     this.printPreviewService.prepareMapForPrintPreview(
-      this.mapIndex,
-      this.previewStyle
+      this.mapIndex(),
+      this.previewStyle()
     );
   }
 
@@ -164,7 +165,7 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
     const templateAttributesChange = changes["templateAttributes"];
     if (templateAttributesChange) {
       if (!templateAttributesChange.firstChange) {
-        this.addAttributesToFormGroup(this.attributes);
+        this.addAttributesToFormGroup(this.attributes());
       }
     }
   }
@@ -175,11 +176,13 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
         capabilities
       );
     if (templates.length > 0) {
-      this.templates = templates;
+      this.templates.set(templates);
     } else {
-      this.error = new GgcPrintError(
-        GgcPrintErrorTypes.CAPABILITIESPROCESSING,
-        "Templates kunnen niet uitgelezen worden uit de capabilities"
+      this.error.set(
+        new GgcPrintError(
+          GgcPrintErrorTypes.CAPABILITIESPROCESSING,
+          "Templates kunnen niet uitgelezen worden uit de capabilities"
+        )
       );
     }
   }
@@ -187,7 +190,7 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
   setDefaultValues(): void {
     // setting default values for the options form.
     this.optionsForm.patchValue({
-      template: this.templates[0],
+      template: this.templates()[0],
       scale: this.scales[0].key
     });
   }
@@ -195,11 +198,13 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
   onSubmit() {
     const centerTmp = this.printPreviewService.getCenterFromPrintPreview();
     if (centerTmp) {
-      this.center = JSON.parse(JSON.stringify(centerTmp)); //is nodig om de set opnieuw te triggeren.
+      this.center.set(JSON.parse(JSON.stringify(centerTmp))); //is nodig om de set opnieuw te triggeren.
     } else {
-      this.error = new GgcPrintError(
-        GgcPrintErrorTypes.MAPNOTAVAILABLE,
-        "Middelpunt van het te printen gebied op de kaart kan niet worden bepaald"
+      this.error.set(
+        new GgcPrintError(
+          GgcPrintErrorTypes.MAPNOTAVAILABLE,
+          "Middelpunt van het te printen gebied op de kaart kan niet worden bepaald"
+        )
       );
     }
   }
@@ -235,15 +240,16 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
     const formGroup: FormGroup =
       this.atrributesControlService.attributesToFormGroup(
         changedAttributes,
-        this.templateAttributes
+        this.templateAttributes() ?? new Map<string, string>()
       );
     this.optionsForm.addControl("attributesGroup", formGroup);
-    this.attributes = changedAttributes;
+    this.attributes.set(changedAttributes);
   }
 
   protected isAttributeHidden(attributeName: string): boolean {
     return (
-      !!this.hiddenAttributes && this.hiddenAttributes.includes(attributeName)
+      !!this.hiddenAttributes() &&
+      this.hiddenAttributes()!.includes(attributeName)
     );
   }
 

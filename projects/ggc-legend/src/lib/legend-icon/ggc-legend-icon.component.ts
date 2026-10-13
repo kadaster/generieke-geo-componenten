@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, input } from "@angular/core";
 import { IconList } from "@kadaster/ggc-models";
 
 @Component({
@@ -10,5 +10,5 @@ export class GgcLegendIconComponent {
   /**
    * De iconlist die wordt weergegeven in het component
    */
-  @Input() icons: IconList[];
+  icons = input<IconList[]>([]);
 }

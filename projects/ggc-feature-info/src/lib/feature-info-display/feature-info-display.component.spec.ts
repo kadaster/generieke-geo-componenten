@@ -50,14 +50,14 @@ describe("FeatureInfoDisplayComponent", () => {
 
       component.prepareForDisplay();
 
-      expect(component["objectKeys"].length).toEqual(1);
-      expect(component["objectKeys"]).toEqual(["dit"]);
+      expect(component["objectKeys"]().length).toEqual(1);
+      expect(component["objectKeys"]()).toEqual(["dit"]);
     });
 
     it("when prepareForDisplay() is called and currentFeature is undefined, objectKeys should be an empty array", () => {
       component.prepareForDisplay();
 
-      expect(component["objectKeys"]).toEqual([]);
+      expect(component["objectKeys"]()).toEqual([]);
     });
   });
 
@@ -85,7 +85,7 @@ describe("FeatureInfoDisplayComponent", () => {
     // omdat anders deze argumenten niet worden meegegeven.
     expect(
       featureInfoConfigServiceSpy.checkForCustomValues
-    ).toHaveBeenCalledWith(currentFeature, component["objectKeys"]);
+    ).toHaveBeenCalledWith(currentFeature, component["objectKeys"]());
     expect(
       featureInfoConfigServiceSpy.checkForCustomValues
     ).toHaveBeenCalledTimes(2);

@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  signal,
   TemplateRef
 } from "@angular/core";
 import { CoreDatasetTreeService } from "../../core/core-dataset-tree.service";
@@ -136,8 +137,12 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
    */
   viewerType = input(ViewerType.TWEE_D);
 
-  protected layerLabelComponent?: TemplateRef<any>;
-  protected datasetLabelComponent?: TemplateRef<any>;
+  protected readonly layerLabelComponent = signal<TemplateRef<any> | undefined>(
+    undefined
+  );
+  protected readonly datasetLabelComponent = signal<
+    TemplateRef<any> | undefined
+  >(undefined);
 
   protected readonly effectiveMapIndex = computed(() =>
     this.viewerType() === ViewerType.DRIE_D
@@ -184,10 +189,10 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
    */
   ngAfterContentInit(): void {
     if (this.layerLabelTemplate) {
-      this.layerLabelComponent = this.layerLabelTemplate.templateRef;
+      this.layerLabelComponent.set(this.layerLabelTemplate.templateRef);
     }
     if (this.datasetLabelTemplate) {
-      this.datasetLabelComponent = this.datasetLabelTemplate.templateRef;
+      this.datasetLabelComponent.set(this.datasetLabelTemplate.templateRef);
     }
   }
 

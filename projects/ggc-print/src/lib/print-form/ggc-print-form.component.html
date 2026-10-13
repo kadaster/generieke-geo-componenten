@@ -1,22 +1,22 @@
 <ggc-download-dialog
-  [center]="center!"
-  [configurationName]="configurationName"
-  [extraPrintLayers]="extraPrintLayers"
-  [mapIndex]="mapIndex"
-  [outputFilenameFunction]="outputFilenameFunction"
-  [downloadOnComplete]="downloadOnComplete"
+  [center]="center()!"
+  [configurationName]="configurationName()"
+  [extraPrintLayers]="extraPrintLayers()"
+  [mapIndex]="mapIndex()"
+  [outputFilenameFunction]="outputFilenameFunction()"
+  [downloadOnComplete]="downloadOnComplete()"
   [optionsForm]="optionsForm"
-  [iconFile]="iconFile"
-  [iconDownload]="iconDownload"
-  [iconClose]="iconClose"
-  [error]="error"
-  [printStyle]="printStyle"
+  [iconFile]="iconFile()"
+  [iconDownload]="iconDownload()"
+  [iconClose]="iconClose()"
+  [error]="error()"
+  [printStyle]="printStyle()"
 ></ggc-download-dialog>
 <form [formGroup]="optionsForm" (submit)="onSubmit()">
   <div class="form-group">
     <label for="templateInput">Template:</label>
     <select class="form-control" formControlName="template" id="templateInput">
-      @for (templ of templates; track templ) {
+      @for (templ of templates(); track templ) {
         <option [ngValue]="templ">
           {{ templ.name }}
         </option>
@@ -36,7 +36,7 @@
   </div>
 
   <div formGroupName="attributesGroup">
-    @for (attribute of attributes; track attribute) {
+    @for (attribute of attributes(); track attribute) {
       @if (!isAttributeHidden(attribute.name)) {
         <div class="form-group">
           <label [attr.for]="attribute.name">{{ attribute.name + ":" }}</label>

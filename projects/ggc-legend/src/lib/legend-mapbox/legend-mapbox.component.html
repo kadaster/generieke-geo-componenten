@@ -1,13 +1,15 @@
-@if (legendItems.length > 0) {
+@if (legendContent(); as content) {
+  @if (content.items.length > 0) {
   <ul class="ggc-dl-mapbox-legendContainer">
-    @for (item of legendItems; track item) {
+    @for (item of content.items; track item) {
       <li class="ggc-dl-mapbox-legend-item">
         <ggc-mapbox-legend-item
           [item]="item"
-          [mapboxStyle]="mapboxStyle"
+          [mapboxStyle]="content.style"
         ></ggc-mapbox-legend-item>
         <div class="ggc-dl-mapbox-legend-text">{{ item.title }}</div>
       </li>
     }
   </ul>
+  }
 }

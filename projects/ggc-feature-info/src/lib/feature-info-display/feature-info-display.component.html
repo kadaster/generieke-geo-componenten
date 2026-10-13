@@ -1,7 +1,7 @@
 @switch (type()) {
   @case (featureInfoDisplayTypeEnum.LIST) {
     <dl class="ggc-fi-list-item">
-      @for (key of objectKeys | featureinfokeys; track key) {
+      @for (key of objectKeys() | featureinfokeys; track key) {
         @if (!headerValueTemplates().has(key) || headerValueTemplates().get(key)) {
           <dt class="ggc-fi-list-title">
             <ng-container
@@ -12,8 +12,8 @@
               "
               [ngTemplateOutletContext]="{
                 $implicit: key,
-                value: displayFeature[key],
-                properties: displayFeature
+                value: displayFeature()[key],
+                properties: displayFeature()
               }"
             ></ng-container>
             <ng-template #defaultValueTemplateHeaderList>{{ key }}</ng-template>
@@ -27,12 +27,12 @@
               "
               [ngTemplateOutletContext]="{
                 $implicit: key,
-                value: displayFeature[key],
-                properties: displayFeature
+                value: displayFeature()[key],
+                properties: displayFeature()
               }"
             ></ng-container>
             <ng-template #defaultValueTemplateList>{{
-              displayFeature[key]
+              displayFeature()[key]
             }}</ng-template>
           </dd>
         }
@@ -51,7 +51,7 @@
         </tr>
       </thead>
       <tbody class="ggc-fi-tbody">
-        @for (key of objectKeys | featureinfokeys; track key) {
+        @for (key of objectKeys() | featureinfokeys; track key) {
           @if (
             !headerValueTemplates().has(key) || headerValueTemplates().get(key)
           ) {
@@ -65,8 +65,8 @@
                   "
                   [ngTemplateOutletContext]="{
                     $implicit: key,
-                    value: displayFeature[key],
-                    properties: displayFeature
+                    value: displayFeature()[key],
+                    properties: displayFeature()
                   }"
                 ></ng-container>
                 <ng-template #defaultValueTemplateHeaderTable>{{
@@ -83,12 +83,12 @@
                   "
                   [ngTemplateOutletContext]="{
                     $implicit: key,
-                    value: displayFeature[key],
-                    properties: displayFeature
+                    value: displayFeature()[key],
+                    properties: displayFeature()
                   }"
                 ></ng-container>
                 <ng-template #defaultValueTemplateTable>{{
-                  displayFeature[key]
+                  displayFeature()[key]
                 }}</ng-template>
               </td>
             </tr>

@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-  Input,
-  OnInit
-} from "@angular/core";
+import { Component, ElementRef, inject, input, OnInit } from "@angular/core";
 import { Feature, Map as OLMap, VectorTile, View } from "ol";
 import { applyStyle } from "ol-mapbox-style";
 import { getCenter } from "ol/extent";
@@ -31,8 +24,8 @@ import {
   standalone: true
 })
 export class MapboxLegendItemComponent implements OnInit {
-  @Input() item!: LegendItem;
-  @Input() mapboxStyle!: MapboxStyle;
+  item = input.required<LegendItem>();
+  mapboxStyle = input.required<MapboxStyle>();
 
   mapboxStyleService: MapboxStyleService = inject(MapboxStyleService);
   elementRef = inject(ElementRef);
@@ -79,7 +72,7 @@ export class MapboxLegendItemComponent implements OnInit {
         maxZoom: 2
       })
     });
-    const feature = this.newFeature(this.item);
+    const feature = this.newFeature(this.item());
     this.vectorLayer.getSource()?.setTileLoadFunction((tile) => {
       const vectorTile = tile as VectorTile<Feature>;
       vectorTile.setLoader(() => {
@@ -90,10 +83,10 @@ export class MapboxLegendItemComponent implements OnInit {
     });
     const resolutions: number[] = [];
     resolutions.push(1);
-    const sources = this.mapboxStyleService.getLayersids(this.mapboxStyle);
+    const sources = this.mapboxStyleService.getLayersids(this.mapboxStyle());
     applyStyle(
       this.vectorLayer,
-      this.mapboxStyle,
+      this.mapboxStyle(),
       sources,
       undefined,
       resolutions

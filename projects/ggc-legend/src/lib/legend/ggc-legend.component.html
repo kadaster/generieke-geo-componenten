@@ -1,20 +1,20 @@
 <div class="ggc-dl-active">
-  @if (!legends || legends.length === 0) {
+  @if (_legends().length === 0) {
     <span>Geen datasets geselecteerd!</span>
   } @else {
     @for (
-      legend of legends;
+      legend of _legends();
       track legend;
       let lastItem = $last;
       let idx = $index
     ) {
-      @if (legendIsEnabled(legend) || alwaysEnableLegends) {
+      @if (legendIsEnabled(legend) || alwaysEnableLegends()) {
         <div
           class="ggc-dl-dataset"
-          [class.ggc-dl-dataset-expanded]="!collapsable || legend.expanded"
+          [class.ggc-dl-dataset-expanded]="!collapsable() || legend.expanded"
         >
-          @if (showLegendsName) {
-            @if (collapsable) {
+          @if (showLegendsName()) {
+            @if (collapsable()) {
               <button
                 class="ggc-dl-dataset-name"
                 [attr.aria-expanded]="legend.expanded || false"
@@ -23,10 +23,10 @@
                 (keyup)="toggleLegendInternal(legend, $event)"
               >
                 <span
-                  class="ggc-dl-dataset-toggle-collapsed {{ iconCollapsed }}"
+                  class="ggc-dl-dataset-toggle-collapsed {{ iconCollapsed() }}"
                 ></span>
                 <span
-                  class="ggc-dl-dataset-toggle-expanded {{ iconExpanded }}"
+                  class="ggc-dl-dataset-toggle-expanded {{ iconExpanded() }}"
                 ></span>
                 {{ legend.name }}
               </button>
@@ -36,10 +36,10 @@
               </span>
             }
           }
-          @if (!collapsable || (collapsable && legend.expanded)) {
+          @if (!collapsable() || (collapsable() && legend.expanded)) {
             <div id="ggc-legend-{{ idx }}">
               @for (layerLegend of legend.layerLegends; track layerLegend) {
-                @if (layerLegend.layerEnabled || alwaysEnableLegends) {
+                @if (layerLegend.layerEnabled || alwaysEnableLegends()) {
                   <ng-container
                     *ngTemplateOutlet="
                       layerLegendtemplate;
@@ -72,8 +72,8 @@
   } @else {
     <ggc-legend-empty
       [legend]="layerLegend.legend"
-      [showEmptyLegendMessage]="showEmptyLegendMessage"
-      [emptyLegendMessage]="emptyLegendMessage"
+      [showEmptyLegendMessage]="showEmptyLegendMessage()"
+      [emptyLegendMessage]="emptyLegendMessage()"
     ></ggc-legend-empty>
   }
 </ng-template>

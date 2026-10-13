@@ -132,7 +132,7 @@ describe("FeatureInfoComponent", () => {
   });
 
   it("when showEmpty is false, it should not show empty message", () => {
-    component.showEmptyMessage = false;
+    fixture.componentRef.setInput("showEmptyMessage", false);
     fixture.detectChanges();
     const emptyMessageElement = nativeElement.querySelector(".ggc-fi-empty");
 
@@ -141,12 +141,16 @@ describe("FeatureInfoComponent", () => {
 
   it("when featureInfoCollection is not empty, it should not show empty message", () => {
     const feature1 = new Feature({ test: "123" });
-    component.featureInfoCollection = {
+    featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
+      { test: "123" }
+    ]);
+    fixture.componentRef.setInput("featureInfoCollection", {
       layerName: "laag",
       features: [feature1],
       layerTitle: "title",
       layerId: "id"
-    };
+    });
+    fixture.detectChanges();
 
     const emptyMessageElement = nativeElement.querySelector(".ggc-fi-empty");
 
@@ -177,18 +181,21 @@ describe("FeatureInfoComponent", () => {
     expect(
       featureInfoMapConnectServiceSpy.getCurrentFeatureCollectionForMapSelection
     ).toHaveBeenCalled();
-    expect(component.featureInfoCollection?.layerId).toBe("id");
-    expect(component.featureInfoCollection?.features).toEqual([feature]);
+    expect(component["currentFeatureInfoCollection"]()?.layerId).toBe("id");
+    expect(component["currentFeatureInfoCollection"]()?.features).toEqual([
+      feature
+    ]);
     expect(component["currentFeature"]()).toEqual({ test: "123" });
   });
 
   it("when handleFeatureInfoEvent receives SELECTEDTAB with undefined value, it should set featureInfoCollection to undefined", () => {
-    component.featureInfoCollection = {
+    fixture.componentRef.setInput("featureInfoCollection", {
       layerName: "laag",
       features: [new Feature({ test: "123" })],
       layerTitle: "title",
       layerId: "id"
-    };
+    });
+    fixture.detectChanges();
 
     component["handleFeatureInfoEvent"](
       new FeatureInfoComponentEvent(
@@ -198,7 +205,7 @@ describe("FeatureInfoComponent", () => {
       )
     );
 
-    expect(component.featureInfoCollection).toBeUndefined();
+    expect(component["currentFeatureInfoCollection"]()).toBeUndefined();
   });
 
   it("when hidePagerWithOneFeature is not set it should default always show the pager", () => {
@@ -206,12 +213,12 @@ describe("FeatureInfoComponent", () => {
       { test: "123" }
     ]);
     const feature = new Feature({ test: "123" });
-    component.featureInfoCollection = {
+    fixture.componentRef.setInput("featureInfoCollection", {
       layerName: "laag",
       features: [feature],
       layerTitle: "title",
       layerId: "id"
-    };
+    });
     fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
@@ -220,7 +227,7 @@ describe("FeatureInfoComponent", () => {
     );
     const pagerNextElement = nativeElement.querySelector(".ggc-fi-pager-next");
 
-    expect(component.hidePagerWithOneFeature).toBe(false);
+    expect(component.hidePagerWithOneFeature()).toBe(false);
     expect(pagerElement).not.toBeNull();
     expect(pagerPreviousElement).not.toBeNull();
     expect(pagerNextElement).not.toBeNull();
@@ -229,16 +236,17 @@ describe("FeatureInfoComponent", () => {
   it("when hidePagerWithOneFeature is set to true it not show the pager when there is only one feature", () => {
     const feature = new Feature({ test: "123" });
 
-    component.featureInfoCollection = {
+    fixture.componentRef.setInput("featureInfoCollection", {
       layerName: "laag",
       features: [feature],
       layerTitle: "title",
       layerId: "id"
-    };
+    });
     featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" }
     ]);
-    component.hidePagerWithOneFeature = true;
+    fixture.componentRef.setInput("hidePagerWithOneFeature", true);
+    fixture.detectChanges();
 
     const pagerElement = nativeElement.querySelector(".ggc-fi-pager");
     const pagerPreviousElement = nativeElement.querySelector(
@@ -254,17 +262,17 @@ describe("FeatureInfoComponent", () => {
   it("when hidePagerWithOneFeature is set to true, but there is more than 1 feature, it should show the pager", () => {
     const feature = new Feature({ test: "123" });
     const secondFeature = new Feature({ test: "456" });
-    component.hidePagerWithOneFeature = true;
+    fixture.componentRef.setInput("hidePagerWithOneFeature", true);
     featureInfoConfigServiceSpy.filterAndSortAttributes.mockReturnValue([
       { test: "123" },
       { test: "456" }
     ]);
-    component.featureInfoCollection = {
+    fixture.componentRef.setInput("featureInfoCollection", {
       layerName: "laag",
       features: [feature, secondFeature],
       layerTitle: "title",
       layerId: "id"
-    };
+    });
 
     fixture.detectChanges();
 
@@ -288,15 +296,15 @@ describe("FeatureInfoComponent", () => {
       { test: "456" }
     ]);
 
-    component.pagerPrevious = "previous";
-    component.pagerNext = "next";
+    fixture.componentRef.setInput("pagerPrevious", "previous");
+    fixture.componentRef.setInput("pagerNext", "next");
 
-    component.featureInfoCollection = {
+    fixture.componentRef.setInput("featureInfoCollection", {
       layerName: "laag",
       features: [feature, secondFeature],
       layerTitle: "title",
       layerId: "id"
-    };
+    });
 
     fixture.detectChanges();
 
@@ -331,26 +339,26 @@ describe("FeatureInfoWrapperComponent", () => {
   it("when customTemplates are present, then ngAfterContentInit should add them to the correct customValueTemplates", () => {
     expect(component).toBeDefined();
     expect(component["templates"].length).toBe(5);
-    expect(component["customValueTemplates"].size).toBe(3);
-    expect(component["customHeaderValueTemplates"].size).toBe(4);
-    expect(component["customValueTemplates"].get("status")).toBeDefined();
-    expect(component["customValueTemplates"].get("bronhoudernaam")).toEqual(
-      component["customValueTemplates"].get("bronhoudercode")
+    expect(component["customValueTemplates"]().size).toBe(3);
+    expect(component["customHeaderValueTemplates"]().size).toBe(4);
+    expect(component["customValueTemplates"]().get("status")).toBeDefined();
+    expect(component["customValueTemplates"]().get("bronhoudernaam")).toEqual(
+      component["customValueTemplates"]().get("bronhoudercode")
     );
     expect(
-      component["customHeaderValueTemplates"].get("waarde1")
+      component["customHeaderValueTemplates"]().get("waarde1")
     ).toBeDefined();
     expect(
-      component["customHeaderValueTemplates"].get("waarde2")
+      component["customHeaderValueTemplates"]().get("waarde2")
     ).toBeDefined();
     expect(
-      component["customHeaderValueTemplates"].get("waarde3")
+      component["customHeaderValueTemplates"]().get("waarde3")
     ).toBeDefined();
-    const waarde4 = component["customHeaderValueTemplates"].get("waarde4");
+    const waarde4 = component["customHeaderValueTemplates"]().get("waarde4");
     expect(waarde4).toBeDefined();
     expect(waarde4).toEqual(null);
-    expect(component["customHeaderValueTemplates"].get("waarde1")).not.toEqual(
-      component["customHeaderValueTemplates"].get("waarde2")
-    );
+    expect(
+      component["customHeaderValueTemplates"]().get("waarde1")
+    ).not.toEqual(component["customHeaderValueTemplates"]().get("waarde2"));
   });
 });
