@@ -7,8 +7,8 @@
     "bootstrap": ">=4.3.1 <6.0.0",
     "ol": "^10.8.0",
     "popper.js": "^1.16.1",
-    "@kadaster/ggc-map": "^4.0.0",
-    "@kadaster/ggc-map-3d": "^4.0.0"
+    "@kadaster/ggc-map": "^4.0.0 || ^5.0.0",
+    "@kadaster/ggc-map-3d": "^4.0.0 || ^5.0.0"
   },
   "peerDependenciesMeta": {
     "@kadaster/ggc-map-3d": {
