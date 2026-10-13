@@ -5,8 +5,8 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "dompurify": "^3.4.11",
-    "@kadaster/ggc-map-3d": "^4.0.0 || ^5.0.0",
-    "@kadaster/ggc-map": "^4.0.0 || ^5.0.0"
+    "@kadaster/ggc-map-3d": "^5.0.0",
+    "@kadaster/ggc-map": "^5.0.0"
   },
   "peerDependenciesMeta": {
     "@kadaster/ggc-map-3d": {
