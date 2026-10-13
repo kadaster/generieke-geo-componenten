@@ -14,7 +14,7 @@
 
 ## Core principles
 
-- When a story or the codebase uses different terms for the same entity, identify one canonical term from the existing API, domain model, and documentation, then use it consistently. If the intended term remains unclear, ask the developer before changing code or user-facing text.
+- Before introducing or changing a name or domain term, verify what the value or API represents and how it is used. Prefer established terminology from the API, domain model, documentation, and nearby code; avoid vague or overloaded terms. For example, if a map service stores validators in separate groups for drawing a feature, modifying its geometry, and moving it, `interactionType` describes the key that selects a group. `owner` could instead suggest that the key identifies which resource controls the validator's lifetime. If the meaning or canonical term remains unclear, surface the ambiguity and ask before encoding it in code or user-facing text.
 - Don’t assume. Don’t hide confusion. Surface tradeoffs.
 - Minimum code that solves the problem. Nothing speculative.
 - Touch only what you must. Clean up only your own mess.

@@ -5,42 +5,42 @@ import { StyleLikeMap } from "../../model/draw-interaction-event.model";
 import { ValidationFunction } from "../../model/draw-options";
 import { DrawValidator } from "../draw-validator";
 
-export type DrawValidatorOwner = "draw" | "modify" | "move";
+export type DrawValidatorInteractionType = "draw" | "modify" | "move";
 
 @Service()
 export class CoreDrawValidationService {
   private validators = new Map<
     string,
-    Map<DrawValidatorOwner, DrawValidator[]>
+    Map<DrawValidatorInteractionType, DrawValidator[]>
   >();
 
   addValidators(
     mapIndex: string,
-    owner: DrawValidatorOwner,
+    interactionType: DrawValidatorInteractionType,
     feature: Feature<Geometry>,
     validatorFunctions: ValidationFunction[],
     styles?: StyleLikeMap
   ): void {
     if (validatorFunctions.length > 0) {
       const drawValidator = new DrawValidator(feature, validatorFunctions);
-      const validatorsByOwner =
+      const validatorsByInteractionType =
         this.validators.get(mapIndex) ??
-        new Map<DrawValidatorOwner, DrawValidator[]>();
-      const validators = validatorsByOwner.get(owner) ?? [];
+        new Map<DrawValidatorInteractionType, DrawValidator[]>();
+      const validators = validatorsByInteractionType.get(interactionType) ?? [];
 
       drawValidator.styleMap = styles;
       validators.push(drawValidator);
-      validatorsByOwner.set(owner, validators);
-      this.validators.set(mapIndex, validatorsByOwner);
+      validatorsByInteractionType.set(interactionType, validators);
+      this.validators.set(mapIndex, validatorsByInteractionType);
     }
   }
 
   checkAndRemoveValidators(
     mapIndex: string,
-    owner: DrawValidatorOwner
+    interactionType: DrawValidatorInteractionType
   ): boolean {
     let isValid = true;
-    const validators = this.takeValidators(mapIndex, owner);
+    const validators = this.takeValidators(mapIndex, interactionType);
     validators.forEach((drawValidator) => {
       isValid = isValid && drawValidator.finish();
       drawValidator.destroy();
@@ -48,20 +48,23 @@ export class CoreDrawValidationService {
     return isValid;
   }
 
-  destroyValidators(mapIndex: string, owner: DrawValidatorOwner): void {
-    this.takeValidators(mapIndex, owner).forEach((drawValidator) =>
+  destroyValidators(
+    mapIndex: string,
+    interactionType: DrawValidatorInteractionType
+  ): void {
+    this.takeValidators(mapIndex, interactionType).forEach((drawValidator) =>
       drawValidator.destroy()
     );
   }
 
   private takeValidators(
     mapIndex: string,
-    owner: DrawValidatorOwner
+    interactionType: DrawValidatorInteractionType
   ): DrawValidator[] {
-    const validatorsByOwner = this.validators.get(mapIndex);
-    const validators = validatorsByOwner?.get(owner) ?? [];
-    validatorsByOwner?.delete(owner);
-    if (validatorsByOwner?.size === 0) {
+    const validatorsByInteractionType = this.validators.get(mapIndex);
+    const validators = validatorsByInteractionType?.get(interactionType) ?? [];
+    validatorsByInteractionType?.delete(interactionType);
+    if (validatorsByInteractionType?.size === 0) {
       this.validators.delete(mapIndex);
     }
     return validators;

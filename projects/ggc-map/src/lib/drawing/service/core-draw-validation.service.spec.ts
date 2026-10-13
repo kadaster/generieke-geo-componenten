@@ -42,7 +42,7 @@ describe("CoreDrawValidationService", () => {
     expect(service["validators"].get("TESTMAP")?.has("draw")).toBe(true);
   });
 
-  it("destroys validators without finishing and preserves other interaction owners", () => {
+  it("destroys validators without finishing and preserves other interaction types", () => {
     const drawValidator = new DrawValidator(new Feature<Geometry>(), [
       () => true
     ]);
