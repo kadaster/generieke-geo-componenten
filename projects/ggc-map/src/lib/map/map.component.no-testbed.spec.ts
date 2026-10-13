@@ -63,7 +63,7 @@ describe("MapComponent(no-testbed), processEvent", () => {
 
     coreSelectionServiceSpy = {
       handleSingleclickEventForMap: vi.fn(),
-      destroySelectionForMap: vi.fn()
+      destroySelectionsForMap: vi.fn()
     } as unknown as MockedObject<CoreSelectionService>;
 
     TestBed.configureTestingModule({
@@ -108,7 +108,6 @@ describe("MapComponent(no-testbed), processEvent", () => {
       type: "moveend",
       map: {} as OlMap
     } as MapEvent;
-
     mapComponent.events.subscribe((result: MapComponentEvent) => {
       events.push(result);
     });

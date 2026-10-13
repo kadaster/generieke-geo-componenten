@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { CoreViewerService } from "./core-viewer.service";
 import {
   getCameraValues,
@@ -19,9 +19,7 @@ import { Cartesian3, Rectangle } from "@cesium/engine";
  * Wordt voornamelijk gebruikt door viewer-logica zoals camera positioning
  * en "zoom-to-fit" functionaliteit.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcViewerService {
   private readonly coreViewerService = inject(CoreViewerService);
 

@@ -1,17 +1,16 @@
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import { Service } from "@angular/core";
+import { Observable, Subject } from "rxjs";
 import { FeatureInfoComponentEvent } from "../model/feature-info-component-event";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class FeatureInfoEventService {
-  readonly eventSubject = new Subject<FeatureInfoComponentEvent>();
+  readonly events$: Observable<FeatureInfoComponentEvent>;
 
-  /**
-   * Observable met FeatureInfoEvents.
-   */
-  readonly events$ = this.eventSubject.asObservable();
+  private readonly eventSubject = new Subject<FeatureInfoComponentEvent>();
+
+  constructor() {
+    this.events$ = this.eventSubject.asObservable();
+  }
 
   /**
    * Emit een FeatureInfoEvent.

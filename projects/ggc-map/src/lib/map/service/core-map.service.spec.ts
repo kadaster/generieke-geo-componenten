@@ -31,6 +31,19 @@ describe("CoreMapService", () => {
   });
 
   describe("create, get and destroyMap", () => {
+    it("should notify map destruction by mapIndex", () => {
+      const destroyedMapIndices: string[] = [];
+      coreMapService.createAndGetMap("destroyedMap");
+      const subscription = coreMapService
+        .getMapDestroyedObservable()
+        .subscribe((mapIndex) => destroyedMapIndices.push(mapIndex));
+
+      coreMapService.destroyMap("destroyedMap");
+      subscription.unsubscribe();
+
+      expect(destroyedMapIndices).toEqual(["destroyedMap"]);
+    });
+
     it("createAndGetMap, when called without parameters, should create a map with default values", () => {
       const createLayersSpy = vi.spyOn(
         coreMapService as any,
@@ -144,6 +157,22 @@ describe("CoreMapService", () => {
         expect(coreMapService["extraLayersMap"].size).toBe(0);
       }
     );
+
+    it("should stop layer-change events from a destroyed map", () => {
+      const destroyedMap = coreMapService.createAndGetMap("destroyedMap");
+      const layerChangeEvents: unknown[] = [];
+      const subscription = coreMapService
+        .getLayerChangedObservable()
+        .subscribe((event) => layerChangeEvents.push(event));
+
+      coreMapService.destroyMap("destroyedMap");
+      const layer = new VectorLayer({});
+      layer.set("ggc-layer-id", "late-layer");
+      destroyedMap.addLayer(layer);
+      subscription.unsubscribe();
+
+      expect(layerChangeEvents).toEqual([]);
+    });
 
     it(
       "destroyMap, when called with a not existing mapIndex, it should not " +

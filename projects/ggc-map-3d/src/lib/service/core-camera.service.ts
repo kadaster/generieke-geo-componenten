@@ -1,15 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { CameraValues } from "../model/interfaces";
 import { ReplaySubject } from "rxjs";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreCameraService {
-  private cameraValuesSubject: ReplaySubject<CameraValues> =
+  private readonly cameraValuesSubject: ReplaySubject<CameraValues> =
     new ReplaySubject<CameraValues>(1);
 
-  setCameraValues(cameraValues: CameraValues) {
+  setCameraValues(cameraValues: CameraValues): void {
     this.cameraValuesSubject.next(cameraValues);
   }
 

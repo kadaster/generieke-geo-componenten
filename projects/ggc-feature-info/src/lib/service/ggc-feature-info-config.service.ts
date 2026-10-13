@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { CustomFeatureInfo } from "../model/custom-feature-info.model";
 import { FeatureInfoCollection } from "../model/feature-info-collection.model";
 import { SortFilterConfig } from "../model/sort-filter-config.model";
@@ -7,9 +7,7 @@ import { SortFilterConfig } from "../model/sort-filter-config.model";
  * Service voor het configureren van sorteer-, filter- en custom weergave-instellingen
  * van feature info attributen en tabs.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcFeatureInfoConfigService {
   private sortFilterConfigs: SortFilterConfig[];
   private customFeatureInfo: Map<string, CustomFeatureInfo>;

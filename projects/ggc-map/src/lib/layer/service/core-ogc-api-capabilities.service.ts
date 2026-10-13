@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 import { catchError, map, switchMap } from "rxjs/operators";
@@ -8,10 +8,7 @@ import { TileMatrixSetLimit } from "ol/source/ogcTileUtil";
  * Service voor het ophalen van capabilities van een OgcApiService.
  * Ondersteunt caching van capabilities per URL.
  */
-@Injectable({
-  providedIn: "root"
-})
-@Injectable({ providedIn: "root" })
+@Service()
 export class CoreOgcApiCapabilitiesService {
   private readonly httpClient = inject(HttpClient);
   private readonly httpHeaders = new HttpHeaders({

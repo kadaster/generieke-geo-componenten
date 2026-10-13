@@ -70,6 +70,16 @@ describe("PdokLocationApiService", () => {
     expect(collections).toEqual(mockPdokLocationApiResult);
   });
 
+  it("replays loaded collections to subscribers after loading", () => {
+    let loadedCollections: unknown;
+    const subscription = service.collectionsLoaded$.subscribe((collections) => {
+      loadedCollections = collections;
+    });
+
+    expect(loadedCollections).toEqual(mockPdokLocationApiResult);
+    subscription.unsubscribe();
+  });
+
   describe("search", () => {
     it("moet de search API aanroepen met de juiste parameters", () => {
       const term = "utrecht";

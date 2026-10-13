@@ -1,11 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { PrintConfig } from "../../model/config/print-config.model";
 import { WmsLayerOptions } from "../../model/print-request/wms-layer.model";
 import { TiledWmsLayerOptions } from "../../model/print-request/tiled-wms-layer.model";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class PrintConfigService {
   private printConfigsMap: Map<string, PrintConfig>;
 

@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Collection } from "ol";
 import { Control, defaults as defaultControls } from "ol/control";
 import { Options as AttributionOptions } from "ol/control/Attribution";
@@ -7,6 +7,7 @@ import { Options as ZoomOptions } from "ol/control/Zoom";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { defaults as defaultInteractions } from "ol/interaction";
+import { EventsKey } from "ol/events";
 import BaseLayer from "ol/layer/Base";
 import VectorLayer from "ol/layer/Vector";
 import OlMap from "ol/Map";
@@ -18,6 +19,7 @@ import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 import Style, { StyleLike } from "ol/style/Style";
 import View from "ol/View";
+import { unByKey } from "ol/Observable";
 import {
   ATTRIBUTION_OPTIONS,
   ROTATE_OPTIONS,
@@ -36,9 +38,7 @@ import {
   MapComponentEvent
 } from "@kadaster/ggc-models";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreMapService {
   private readonly GEOLOCATION_LAYER_ID = "geolocation";
   private readonly crsConfigService = inject(GgcCrsConfigService);
@@ -57,6 +57,7 @@ export class CoreMapService {
 
   private readonly rdNewProjection: Projection;
   private readonly olMaps: Map<string, OlMap> = new Map();
+  private readonly layerAddedListenerKeys = new Map<string, EventsKey>();
   private readonly rdNewConfig: CrsConfig;
   private extraLayers: string[] = ["selection", "highlight"];
   private readonly extraLayersMap: Map<
@@ -66,6 +67,7 @@ export class CoreMapService {
 
   private readonly layerChangedSubject: Subject<LayerChangedEvent> =
     new Subject();
+  private readonly mapDestroyedSubject = new Subject<string>();
 
   constructor() {
     this.rdNewConfig = this.crsConfigService.getRdNewCrsConfig();
@@ -84,6 +86,10 @@ export class CoreMapService {
 
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
     return this.layerChangedSubject.asObservable();
+  }
+
+  getMapDestroyedObservable(): Observable<string> {
+    return this.mapDestroyedSubject.asObservable();
   }
 
   emitLayerChangedEvent(
@@ -179,6 +185,12 @@ export class CoreMapService {
   }
 
   destroyMap(mapIndex: string) {
+    this.mapDestroyedSubject.next(mapIndex);
+    const layerAddedListenerKey = this.layerAddedListenerKeys.get(mapIndex);
+    if (layerAddedListenerKey) {
+      unByKey(layerAddedListenerKey);
+      this.layerAddedListenerKeys.delete(mapIndex);
+    }
     this.olMaps.delete(mapIndex);
     this.extraLayers.forEach((layer) => {
       this.extraLayersMap.delete(`${mapIndex}-${layer}`);
@@ -361,13 +373,14 @@ export class CoreMapService {
         projection: this.rdNewProjection
       })
     });
-    newMap.getLayers().on("add", (event) => {
+    const layerAddedListenerKey = newMap.getLayers().on("add", (event) => {
       this.layerChangedSubject.next({
         layerId: event.element.get("ggc-layer-id"),
         mapIndex,
         eventTrigger: LayerChangedEventTrigger.LAYER_ADDED
       });
     });
+    this.layerAddedListenerKeys.set(mapIndex, layerAddedListenerKey);
     return newMap;
   }
 

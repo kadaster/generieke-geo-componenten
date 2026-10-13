@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { CoreLegendService } from "./core-legend.service";
 
 /**
@@ -24,9 +24,7 @@ import { CoreLegendService } from "./core-legend.service";
  * }
  * ```
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcLegendService {
   /**
    * Interne core‑service die de daadwerkelijke event‑stroom beheert.
@@ -48,7 +46,7 @@ export class GgcLegendService {
    * ```
    */
   public expandAllLegends(mapIndex: string): void {
-    this.coreLegendService.expandAll$.next({
+    this.coreLegendService.emitExpandAll({
       mapIndex: mapIndex,
       expanded: true
     });
@@ -66,7 +64,7 @@ export class GgcLegendService {
    * ```
    */
   public collapseAllLegends(mapIndex: string): void {
-    this.coreLegendService.expandAll$.next({
+    this.coreLegendService.emitExpandAll({
       mapIndex: mapIndex,
       expanded: false
     });

@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import * as proj4x from "proj4";
 import { Observable, Subject, Subscription } from "rxjs";
 import { GgcSearchLocationConnectService } from "./connect.service";
@@ -18,9 +18,7 @@ export type Coordinate = Array<number>;
  * De service maakt gebruik van de browser Geolocation API en zet coördinaten om naar het
  * Rijksdriehoekstelsel (EPSG:28992). Ook beheert het de visuele weergave van de locatie op de kaart.
  */
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcSearchLocationService {
   private readonly GEOLOCATION_LAYER_ID = "geolocation";
   private readonly connectService = inject(GgcSearchLocationConnectService);
@@ -80,6 +78,21 @@ export class GgcSearchLocationService {
    */
   async getLocation(track = false, mapIndex = DEFAULT_MAPINDEX): Promise<void> {
     const mapService = (await this.connectService.getMapService()) as any;
+    let mapDestroyedDuringSetup = false;
+    if (track && mapService && !this.geolocations.has(mapIndex)) {
+      const mapDestroyedObservable = mapService.getMapDestroyedObservable?.();
+      if (mapDestroyedObservable) {
+        const mapDestroyedSubscription = mapDestroyedObservable.subscribe(
+          (destroyedMapIndex: string) => {
+            if (destroyedMapIndex === mapIndex) {
+              mapDestroyedDuringSetup = true;
+              this.stopTrackLocation(mapIndex);
+            }
+          }
+        );
+        this.subscriptions.set(mapIndex, mapDestroyedSubscription);
+      }
+    }
     if (mapService) {
       const map = mapService.getMap(mapIndex);
       if (map) {
@@ -87,6 +100,9 @@ export class GgcSearchLocationService {
       }
     }
     if (track) {
+      if (mapDestroyedDuringSetup) {
+        return;
+      }
       if (!this.geolocations.has(mapIndex)) {
         this.geolocations.set(
           mapIndex,
@@ -112,13 +128,9 @@ export class GgcSearchLocationService {
     }
   }
 
-  /**
-   * Geeft toegang tot foutmeldingen die optreden tijdens het geolocatieproces.
-   *
-   * @returns Een Subject die `GeolocationPositionError` objecten uitzendt.
-   */
-  getGeolocationPositionErrorSubject(): Subject<GeolocationPositionError> {
-    return this.geolocationPositionError;
+  /** Replaces `getGeolocationPositionErrorSubject()`; subscribe to read errors. */
+  getGeolocationPositionErrorObservable(): Observable<GeolocationPositionError> {
+    return this.geolocationPositionError.asObservable();
   }
 
   /**

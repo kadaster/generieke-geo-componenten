@@ -23,6 +23,7 @@ describe("MapComponent, ngAfterViewInit", () => {
   let component: GgcMapComponent;
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapService: Mocked<CoreMapService>;
+  let coreSelectionService: CoreSelectionService;
 
   const httpClientSpy = {
     get: vi.fn().mockName("HttpClient.get")
@@ -33,7 +34,8 @@ describe("MapComponent, ngAfterViewInit", () => {
   beforeEach(() => {
     viewMock = {
       on: vi.fn(),
-      setZoom: vi.fn()
+      setZoom: vi.fn(),
+      getZoom: vi.fn().mockReturnValue(3)
     } as unknown as MockedObject<View>;
 
     mapMock = {
@@ -64,6 +66,7 @@ describe("MapComponent, ngAfterViewInit", () => {
     }).compileComponents();
     fixture = TestBed.createComponent(GgcMapComponent);
     component = fixture.componentInstance;
+    coreSelectionService = TestBed.inject(CoreSelectionService);
   });
 
   it("Events should be set", async () => {
@@ -101,10 +104,15 @@ describe("MapComponent, ngAfterViewInit", () => {
   it("Events should be unset", () => {
     // setUp
     fixture.detectChanges();
+    const destroySelectionsForMapSpy = vi.spyOn(
+      coreSelectionService,
+      "destroySelectionsForMap"
+    );
     // cleanUp
     fixture.destroy();
 
     expect(component["eventsMap"].length).toEqual(0);
+    expect(destroySelectionsForMapSpy).toHaveBeenCalledWith(DEFAULT_MAPINDEX);
   });
   it("minZoomlevel cannot be below 0 and maxZoomlevel cannot be below 1", () => {
     fixture.componentRef.setInput("minZoomlevel", -1);
