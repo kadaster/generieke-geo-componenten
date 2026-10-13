@@ -178,14 +178,6 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private readonly isInitialized = signal(false);
 
-  /**
-   * CSS display waarde voor het tonen/verbergen van het logo.
-   */
-  @HostBinding("style.--displayLogo")
-  get displayLogo(): string {
-    return this.hideLogo() ? "none" : "block";
-  }
-
   constructor() {
     this.previousCameraValues.subscribe((cameraValues: CameraValues) => {
       this.cameraEvent.emit(cameraValues);
@@ -228,6 +220,14 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * CSS display waarde voor het tonen/verbergen van het logo.
+   */
+  @HostBinding("style.--displayLogo")
+  get displayLogo(): string {
+    return this.hideLogo() ? "none" : "block";
+  }
+
   ngOnInit() {
     const options = this.viewerOptions();
     if (options?.elementId) {
@@ -251,6 +251,61 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.geoJsonLayerService.destroyLayers();
     this.coreViewerService.setViewer(undefined);
     this.coreSelectionService.destroyAllSelections();
+  }
+
+  /**
+   * Bepaalt het type camera opties.
+   *
+   * @param cameraOptions {@link CameraOptions}
+   * @returns {@link CameraOptionsType}
+   */
+  public getOptionsType(cameraOptions: CameraOptions): CameraOptionsType {
+    let type = CameraOptionsType.None;
+    if (Object.hasOwn(cameraOptions, "geojson")) {
+      type = CameraOptionsType.LookAtObject;
+    } else if (Object.hasOwn(cameraOptions, "cameraPosition")) {
+      type = CameraOptionsType.CameraPosition;
+    } else if (Object.hasOwn(cameraOptions, "lookAtPosition")) {
+      type = CameraOptionsType.LookAtPosition;
+    }
+    return type;
+  }
+
+  /**
+   * Zet de focus op het viewer element.
+   */
+  getFocus() {
+    this.cesiumViewer().nativeElement.focus();
+  }
+
+  /**
+   * Keyboard handler voor camera interactie met arrow keys.
+   *
+   * @param event Keyboard event
+   */
+  onKeyDown(event: KeyboardEvent) {
+    const key = event.key;
+
+    if (!this.camera || !this.isArrowKey(key)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    switch (key) {
+      case "ArrowUp":
+        this.camera.lookUp();
+        return;
+      case "ArrowRight":
+        this.camera.lookRight();
+        return;
+      case "ArrowDown":
+        this.camera.lookDown();
+        return;
+      case "ArrowLeft":
+        this.camera.lookLeft();
+        return;
+    }
   }
 
   private setCameraLogger() {
@@ -408,61 +463,6 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       case CameraOptionsType.None:
       default:
         break;
-    }
-  }
-
-  /**
-   * Bepaalt het type camera opties.
-   *
-   * @param cameraOptions {@link CameraOptions}
-   * @returns {@link CameraOptionsType}
-   */
-  public getOptionsType(cameraOptions: CameraOptions): CameraOptionsType {
-    let type = CameraOptionsType.None;
-    if (Object.hasOwn(cameraOptions, "geojson")) {
-      type = CameraOptionsType.LookAtObject;
-    } else if (Object.hasOwn(cameraOptions, "cameraPosition")) {
-      type = CameraOptionsType.CameraPosition;
-    } else if (Object.hasOwn(cameraOptions, "lookAtPosition")) {
-      type = CameraOptionsType.LookAtPosition;
-    }
-    return type;
-  }
-
-  /**
-   * Zet de focus op het viewer element.
-   */
-  getFocus() {
-    this.cesiumViewer().nativeElement.focus();
-  }
-
-  /**
-   * Keyboard handler voor camera interactie met arrow keys.
-   *
-   * @param event Keyboard event
-   */
-  onKeyDown(event: KeyboardEvent) {
-    const key = event.key;
-
-    if (!this.camera || !this.isArrowKey(key)) {
-      return;
-    }
-
-    event.preventDefault();
-
-    switch (key) {
-      case "ArrowUp":
-        this.camera.lookUp();
-        return;
-      case "ArrowRight":
-        this.camera.lookRight();
-        return;
-      case "ArrowDown":
-        this.camera.lookDown();
-        return;
-      case "ArrowLeft":
-        this.camera.lookLeft();
-        return;
     }
   }
 

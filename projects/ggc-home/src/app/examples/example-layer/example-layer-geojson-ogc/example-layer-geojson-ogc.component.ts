@@ -1,10 +1,14 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import {
+  MapComponentEvent,
+  MapComponentEventTypes
+} from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-home-example-search-location",
@@ -31,8 +35,10 @@ export class ExampleLayerGeojsonOgcComponent
     "example-layer/example-layer-geojson-ogc/example-layer-geojson-ogc.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GeojsonLayerOptions.html`;
   // DOCS-SKIP:END
-  protected mapConfig: Webservice[];
+
   protected mapIndex = "GeoJsonOgcExample";
+
+  protected readonly mapConfig = signal<Webservice[]>([]);
 
   private readonly mapService = inject(GgcMapService);
 
@@ -42,8 +48,28 @@ export class ExampleLayerGeojsonOgcComponent
         "code/examples/example-layer/example-layer-geojson-ogc/kaartconfig.json"
       )
       .subscribe((data) => {
-        this.mapConfig = data as Webservice[];
+        this.mapConfig.set(data as Webservice[]);
         this.mapService.zoomToCoordinate([194195, 465885], this.mapIndex, 6);
       });
+  }
+
+  // ...
+
+  protected onMapEvent(event: MapComponentEvent): void {
+    if (event.type !== MapComponentEventTypes.ZOOMENDLOCATION) return;
+
+    const map = this.mapService.getMap(event.mapIndex);
+    const extent = map.getView().calculateExtent(map.getSize());
+
+    this.mapConfig.update((webservices) =>
+      webservices.map((service) => {
+        if (service.type !== "geojson") return service;
+
+        const url = new URL(service.url);
+        url.searchParams.set("bbox", extent.join(","));
+
+        return { ...service, url: url.toString() };
+      })
+    );
   }
 }

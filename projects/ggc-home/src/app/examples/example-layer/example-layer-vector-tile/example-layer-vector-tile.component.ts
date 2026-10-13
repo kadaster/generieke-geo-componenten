@@ -1,10 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { GgcMapComponent, Webservice } from "@kadaster/ggc-map";
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from "@angular/core";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
+import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-home-example-search-location",
@@ -28,11 +34,13 @@ export class ExampleLayerVectorTileComponent
     imageLocation:
       "code/examples/example-layer/example-layer-vector-tile/example-layer-vector-tile.png"
   };
+
   urlComponentModule =
     "example-layer/example-layer-vector-tile/example-layer-vector-tile.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.VectorTileLayerOptions.html`;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
+  private mapService: GgcMapService = inject(GgcMapService);
 
   ngOnInit() {
     this.httpClient
@@ -41,6 +49,11 @@ export class ExampleLayerVectorTileComponent
       )
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
+        this.mapService.zoomToCoordinate(
+          [194290.41, 469436.395],
+          DEFAULT_MAPINDEX,
+          13
+        );
       });
   }
 }

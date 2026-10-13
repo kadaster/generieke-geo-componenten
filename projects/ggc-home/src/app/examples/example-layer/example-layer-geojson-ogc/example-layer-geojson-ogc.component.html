@@ -1,6 +1,6 @@
 <ggc-home-example-format
-  [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
   [urlTSDocs]="tsDocsUrl"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
@@ -27,7 +27,11 @@
   <div page-functionality>
     <!-- DOCS:START functionality -->
     <div class="map-container">
-      <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"> </ggc-map>
+      <ggc-map
+        (events)="onMapEvent($event)"
+        [mapIndex]="mapIndex"
+        [webServices]="mapConfig()"
+      ></ggc-map>
     </div>
     <!-- DOCS:END functionality -->
   </div>

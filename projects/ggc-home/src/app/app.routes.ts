@@ -62,6 +62,7 @@ import { ExampleFeatureInfoTemplateComponent } from "./examples/example-map/exam
 import { ExampleSearchLocationAlternativeSearchComponent } from "./examples/example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
 import { ExampleConversionComponent } from "./examples/example-conversion/example-conversion.component";
 import { ExampleDynamicLayerOgcBasicComponent } from "./examples/example-layer/example-dynamic-layer-ogc-basic/example-dynamic-layer-ogc-basic.component";
+import { ExampleLayerStylesComponent } from "./examples/example-layer/example-layer-styles/example-layer-styles.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -422,6 +423,12 @@ export const routes: Routes = [
     title: "OGC feature tonen | GGC-Home",
     component: ExampleDynamicLayerOgcBasicComponent,
     data: { label: "dynamic-layer-ogc-basic" }
+  },
+  {
+    path: "layer-styles",
+    title: "Layer-styles | GGC-Home",
+    component: ExampleLayerStylesComponent,
+    data: { label: "layer-styles" }
   },
   // PLOP:ROUTE
   {

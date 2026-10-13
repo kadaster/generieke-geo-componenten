@@ -8,7 +8,7 @@
         "title": "BRT achtergrondkaart (dark mode)",
         "zIndex": 0,
         "style": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/darkmode__netherlandsrdnewquad?f=json",
-        "enableOverzoom": true,
+        "enableOverzoom": false,
         "getFeatureInfoOnSingleclick": true
       }
     ]

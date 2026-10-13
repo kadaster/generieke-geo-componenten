@@ -58,6 +58,7 @@ import { ExampleFeatureInfoTemplateComponent } from "../example-map/example-feat
 import { ExampleSearchLocationAlternativeSearchComponent } from "../example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
 import { ExampleConversionComponent } from "../example-conversion/example-conversion.component";
 import { ExampleDynamicLayerOgcBasicComponent } from "../example-layer/example-dynamic-layer-ogc-basic/example-dynamic-layer-ogc-basic.component";
+import { ExampleLayerStylesComponent } from "../example-layer/example-layer-styles/example-layer-styles.component";
 // PLOP:IMPORT
 
 interface GroupedCards {
@@ -139,6 +140,7 @@ export class ExampleIndexComponent {
     new Example3dLayerWmtsComponent().componentInfo,
     new ExampleConversionComponent().componentInfo,
     new ExampleDynamicLayerOgcBasicComponent().componentInfo,
+    new ExampleLayerStylesComponent().componentInfo,
     // PLOP:CARD
     new Example3dLayerGeojsonComponent().componentInfo,
     new ExampleFeatureInfoTemplateComponent().componentInfo,

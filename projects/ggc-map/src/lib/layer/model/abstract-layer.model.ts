@@ -1,4 +1,4 @@
-import { LegendType } from "@kadaster/ggc-models";
+import { LegendType, Style } from "@kadaster/ggc-models";
 
 /**
  * Basale laagopties die gebruikt worden om een laag aan een specifieke kaart te koppelen.
@@ -106,6 +106,17 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
    * Optioneel: de opacity van de kaartlaag
    */
   opacity?: number;
+
+  /**
+   * Optioneel: De stijlen waarmee deze kaartlaag kan worden weergegeven.
+   */
+  styles?: Style[];
+
+  /**
+   * Optioneel: De technische naam van de actieve stijl binnen [styles].
+   * Wanneer deze niet is ingevuld, wordt de eerste stijl uit [styles] de actieve stijl.
+   */
+  activeStyle?: string;
 }
 
 /**

@@ -9,6 +9,7 @@ import {
 import { CoreWmsWmtsCapabilitiesRequestService } from "../../layer/service/core-wms-wmts-capabilities-request.service";
 import { of } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
+import { VectorTileLayerOptions } from "../../layer/model/vector-tile-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
 import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
@@ -316,6 +317,158 @@ describe("LayerService", () => {
 
     expect(removeSpy).toHaveBeenCalledWith("testMap", "layer-1");
     expect(addSpy).toHaveBeenCalledWith("layer-1", "testMap");
+  });
+
+  describe("styles", () => {
+    function loadStylesWebservice(
+      layerOverrides: any = {},
+      type: Webservice2DType = Webservice2DType.WMS
+    ) {
+      const webservice = {
+        url: "http://test-url",
+        type,
+        title: "testService",
+        layers: [
+          {
+            layerId: "layer1",
+            visible: false,
+            styles: [
+              {
+                name: "standaard",
+                title: "Standaardvisualisatie",
+                legend: {
+                  layerId: "layer1",
+                  legend: { legendUrl: "standaard.png" }
+                }
+              },
+              {
+                name: "kwaliteit",
+                title: "Kwaliteitsvisualisatie",
+                legend: {
+                  layerId: "layer1",
+                  legend: { legendUrl: "kwaliteit.png" }
+                }
+              }
+            ],
+            ...layerOverrides
+          }
+        ]
+      };
+      service.loadWebservices([webservice as any], MAP_INDEX);
+      return webservice;
+    }
+
+    it("should return the configured styles of a layer", () => {
+      loadStylesWebservice();
+
+      expect(
+        service.getStyles("layer1", MAP_INDEX).map((style) => style.name)
+      ).toEqual(["standaard", "kwaliteit"]);
+    });
+
+    it("should return an empty array when a layer has no styles", () => {
+      loadStylesWebservice({ styles: undefined });
+
+      expect(service.getStyles("layer1", MAP_INDEX)).toEqual([]);
+    });
+
+    it("should make the first style active when no activeStyle is configured", () => {
+      loadStylesWebservice();
+
+      expect(service.getActiveStyle("layer1", MAP_INDEX)?.name).toBe(
+        "standaard"
+      );
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend).toEqual(
+        { legendUrl: "standaard.png" }
+      );
+    });
+
+    it("should keep the configured activeStyle", () => {
+      loadStylesWebservice({ activeStyle: "kwaliteit" });
+
+      expect(service.getActiveStyle("layer1", MAP_INDEX)?.name).toBe(
+        "kwaliteit"
+      );
+    });
+
+    it("should set the active style, its legend and the WMS STYLES parameter", () => {
+      loadStylesWebservice();
+
+      service.setActiveStyle("kwaliteit", "layer1", MAP_INDEX);
+
+      const layerConfig = service.getLayerConfig(
+        "layer1",
+        MAP_INDEX
+      ) as WmsLayerOptions;
+      expect(layerConfig.activeStyle).toBe("kwaliteit");
+      expect(layerConfig.activeLegend).toEqual({ legendUrl: "kwaliteit.png" });
+      expect(layerConfig.sourceOptions?.params?.["STYLES"]).toBe("kwaliteit");
+    });
+
+    it("should set the WMTS style on the source options", () => {
+      loadStylesWebservice({}, Webservice2DType.WMTS);
+
+      service.setActiveStyle("kwaliteit", "layer1", MAP_INDEX);
+
+      const layerConfig = service.getLayerConfig(
+        "layer1",
+        MAP_INDEX
+      ) as WmtsLayerOptions;
+      expect(layerConfig.sourceOptions?.style).toBe("kwaliteit");
+    });
+
+    it("should set the vector tile style url from the style legend", () => {
+      loadStylesWebservice(
+        {
+          styles: [
+            {
+              name: "standaard",
+              legend: {
+                layerId: "layer1",
+                legend: { name: "standaard", url: "standaard-mapbox.json" }
+              }
+            },
+            {
+              name: "darkmode",
+              legend: {
+                layerId: "layer1",
+                legend: { name: "darkmode", url: "darkmode-mapbox.json" }
+              }
+            }
+          ]
+        },
+        Webservice2DType.VECTOR
+      );
+
+      service.setActiveStyle("darkmode", "layer1", MAP_INDEX);
+
+      expect(
+        (service.getLayerConfig("layer1", MAP_INDEX) as VectorTileLayerOptions)
+          .style
+      ).toBe("darkmode-mapbox.json");
+    });
+
+    it("should reload a visible layer when the active style changes", () => {
+      loadStylesWebservice({ visible: true });
+      vi.spyOn(service, "isVisible").mockReturnValue(true);
+      const reloadSpy = vi.spyOn(service, "reloadLayer").mockReturnValue();
+
+      service.setActiveStyle("kwaliteit", "layer1", MAP_INDEX);
+
+      expect(reloadSpy).toHaveBeenCalledWith("layer1", MAP_INDEX);
+    });
+
+    it("should ignore an unknown style", () => {
+      loadStylesWebservice();
+      const reloadSpy = vi.spyOn(service, "reloadLayer").mockReturnValue();
+
+      service.setActiveStyle("onbekend", "layer1", MAP_INDEX);
+
+      expect(service.getActiveStyle("layer1", MAP_INDEX)?.name).toBe(
+        "standaard"
+      );
+      expect(reloadSpy).not.toHaveBeenCalled();
+    });
   });
 
   function isUUID(str: string): boolean {

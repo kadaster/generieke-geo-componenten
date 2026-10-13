@@ -27,6 +27,7 @@ import {
   LayerLegend,
   LegendAddedEvent,
   LegendRemovedEvent,
+  Style,
   Webservice2DType
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
@@ -379,6 +380,66 @@ export class GgcLayerService {
   }
 
   /**
+   * Geeft de beschikbare stijlen van een laag terug.
+   *
+   * @param layerId De layerId van de laag.
+   * @param mapIndex De mapIndex van de laag.
+   * @returns De geconfigureerde stijlen, of een lege array als de laag geen stijlen heeft.
+   */
+  getStyles(layerId: string, mapIndex = DEFAULT_MAPINDEX): Style[] {
+    return this.getLayerConfig(layerId, mapIndex)?.styles ?? [];
+  }
+
+  /**
+   * Geeft de actieve stijl van een laag terug.
+   *
+   * Dit is de stijl binnen [styles] met de technische naam uit [activeStyle].
+   * Is er geen activeStyle ingesteld, dan geldt de eerste stijl als actieve stijl.
+   *
+   * @param layerId De layerId van de laag.
+   * @param mapIndex De mapIndex van de laag.
+   * @returns De actieve stijl, of undefined als de laag geen stijlen heeft.
+   */
+  getActiveStyle(
+    layerId: string,
+    mapIndex = DEFAULT_MAPINDEX
+  ): Style | undefined {
+    const styles = this.getStyles(layerId, mapIndex);
+    const activeStyleName = this.getLayerConfig(layerId, mapIndex)?.activeStyle;
+    return styles.find((style) => style.name === activeStyleName) ?? styles[0];
+  }
+
+  /**
+   * Zet de actieve stijl van een laag.
+   *
+   * De activeStyle en - indien de stijl een legenda heeft - de activeLegend van de
+   * laagconfiguratie worden bijgewerkt en de laag wordt opnieuw geladen, zodat de
+   * nieuwe stijl op de kaart en in de legenda zichtbaar wordt.
+   *
+   * @param styleName De technische naam van de stijl binnen [styles].
+   * @param layerId De layerId van de laag.
+   * @param mapIndex De mapIndex van de laag.
+   */
+  setActiveStyle(
+    styleName: string,
+    layerId: string,
+    mapIndex = DEFAULT_MAPINDEX
+  ): void {
+    const layerOptions = this.getLayerConfig(layerId, mapIndex);
+    if (!layerOptions || layerOptions.activeStyle === styleName) {
+      return;
+    }
+    const applied = this.applyStyle(
+      layerOptions,
+      styleName,
+      this.getTypeOfLayer(layerId, mapIndex)
+    );
+    if (applied && this.isVisible(layerId, mapIndex)) {
+      this.reloadLayer(layerId, mapIndex);
+    }
+  }
+
+  /**
    * Controleert of een laag zichtbaar is.
    */
   isVisible(layerId: string, mapIndex = DEFAULT_MAPINDEX): boolean {
@@ -536,6 +597,7 @@ export class GgcLayerService {
         mapIndex: mapIndex,
         visible: layerOptions.visible ?? true
       } as AbstractConfigurableLayerOptions;
+      this.initializeActiveStyle(updatedLayer, service.type);
       if (updatedLayer.visible || updatedLayer.persistent) {
         this.addLayer(updatedLayer, service.type);
       }
@@ -550,6 +612,108 @@ export class GgcLayerService {
 
       return updatedLayer;
     });
+  }
+
+  /**
+   * Bepaalt de initiële actieve stijl van een laag.
+   *
+   * Wanneer er geen (geldige) activeStyle is geconfigureerd,
+   * wordt de eerste stijl uit [styles] de actieve stijl.
+   */
+  private initializeActiveStyle(
+    layerOptions: AbstractConfigurableLayerOptions,
+    webserviceType: Webservice2DType | undefined
+  ): void {
+    const styles = layerOptions.styles;
+    if (!styles?.length) {
+      return;
+    }
+    const styleName =
+      styles.find((style) => style.name === layerOptions.activeStyle)?.name ??
+      styles[0].name;
+    this.applyStyle(layerOptions, styleName, webserviceType);
+  }
+
+  /**
+   * Werkt de laagconfiguratie bij met de opgegeven stijl.
+   *
+   * @returns true als de stijl beschikbaar is en is toegepast.
+   */
+  private applyStyle(
+    layerOptions: AbstractConfigurableLayerOptions,
+    styleName: string,
+    webserviceType: Webservice2DType | undefined
+  ): boolean {
+    const style = layerOptions.styles?.find(
+      (availableStyle) => availableStyle.name === styleName
+    );
+    if (!style) {
+      console.error(
+        `Stijl ${styleName} is niet beschikbaar voor kaartlaag ${layerOptions.layerId}`
+      );
+      return false;
+    }
+
+    layerOptions.activeStyle = style.name;
+    if (style.legend) {
+      layerOptions.activeLegend = style.legend.legend;
+    }
+    this.applyStyleToSourceOptions(layerOptions, style, webserviceType);
+    return true;
+  }
+
+  /**
+   * Vertaalt de stijl naar de laagtype‑specifieke opties,
+   * zodat de kaartlaag de stijl daadwerkelijk toont.
+   */
+  private applyStyleToSourceOptions(
+    layerOptions: AbstractConfigurableLayerOptions,
+    style: Style,
+    webserviceType: Webservice2DType | undefined
+  ): void {
+    switch (webserviceType) {
+      case Webservice2DType.WMS: {
+        const wmsLayerOptions = layerOptions as WmsLayerOptions;
+        const params = Object.fromEntries(
+          Object.entries(wmsLayerOptions.sourceOptions?.params ?? {}).filter(
+            ([key]) => key.toLowerCase() !== "styles"
+          )
+        );
+        params["STYLES"] = style.name;
+        wmsLayerOptions.sourceOptions = {
+          ...wmsLayerOptions.sourceOptions,
+          params
+        };
+        break;
+      }
+      case Webservice2DType.WMTS: {
+        const wmtsLayerOptions = layerOptions as WmtsLayerOptions;
+        wmtsLayerOptions.sourceOptions = {
+          ...wmtsLayerOptions.sourceOptions,
+          style: style.name
+        };
+        break;
+      }
+      case Webservice2DType.VECTOR: {
+        const vectorTileStyleUrl = this.getVectorTileStyleUrl(style);
+        if (vectorTileStyleUrl) {
+          (layerOptions as VectorTileLayerOptions).style = vectorTileStyleUrl;
+        }
+        break;
+      }
+    }
+  }
+
+  /**
+   * Geeft de mapbox style url van een stijl terug,
+   * wanneer de legenda van de stijl een VectorTileStyle is.
+   */
+  private getVectorTileStyleUrl(style: Style): string | undefined {
+    const legend = style.legend?.legend;
+    if (legend && !Array.isArray(legend) && "url" in legend) {
+      return legend.url;
+    }
+    return undefined;
   }
 
   private removeCurrentLayers(mapIndex: string) {
