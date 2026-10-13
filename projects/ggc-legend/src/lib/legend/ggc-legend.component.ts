@@ -174,8 +174,25 @@ export class GgcLegendComponent implements OnInit {
 
   legends = input<Legend[]>([]);
 
+  /**
+   * De mapIndex van de kaart waarvoor deze legenda wordt getoond. De legenda
+   * reageert op kaart- en legenda-events met dezelfde effectieve mapIndex.
+   *
+   * @remarks
+   * Zorg dat de `mapIndex` overeenkomt met die van de bijbehorende `ggc-map`.
+   * Bij één kaart kan deze input ongewijzigd blijven; standaard is
+   * `DEFAULT_MAPINDEX`. Voor `ggc-map-3d` wordt deze input niet gebruikt:
+   * daarvoor gebruikt de legenda `DEFAULT_CESIUM_MAPINDEX`.
+   *
+   * Meerdere `<ggc-legend>`-componenten met dezelfde effectieve mapIndex
+   * worden tegelijk in- of uitgeklapt bij collapse- en expand-events.
+   */
   mapIndex = input(DEFAULT_MAPINDEX);
 
+  /**
+   * Het type kaartviewer waarmee deze legenda werkt: 2D (OpenLayers) of
+   * 3D (Cesium). Standaard is dit `ViewerType.TWEE_D`.
+   */
   viewerType = input<ViewerType>(ViewerType.TWEE_D);
 
   /** Interne opslag van de legenda's. */

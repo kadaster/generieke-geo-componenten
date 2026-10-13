@@ -348,10 +348,11 @@ export class GgcFeatureInfoComponent
    * Wordt bepaald op basis van `hidePagerWithOneFeature` en aantal features.
    */
   hidePager(): boolean {
+    const displayFeaturesProperties = this.displayFeaturesProperties();
     return (
       this.hidePagerWithOneFeature() &&
-      (this.displayFeaturesProperties() == undefined ||
-        this.displayFeaturesProperties()!.length === 1)
+      (displayFeaturesProperties === undefined ||
+        displayFeaturesProperties.length === 1)
     );
   }
 
