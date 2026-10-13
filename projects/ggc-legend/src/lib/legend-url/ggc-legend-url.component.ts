@@ -19,7 +19,7 @@ export class GgcLegendUrlComponent {
   /**
    * De legenda url van de legenda die wordt weergegeven in dit component
    */
-  legend = input.required<LegendUrl>();
+  readonly legend = input.required<LegendUrl>();
   /**
    * De naam van de laag die wordt weergegeven. Deze wordt gebruikt als alternatieve tekst.
    */
@@ -28,11 +28,10 @@ export class GgcLegendUrlComponent {
   /**
    * Checkt of de legenda url een svg is.
    */
-  isSvg = computed(
-    () =>
-      this.legend()?.legendUrl &&
-      /\.svg(?:\?.*)?$/i.test(this.legend()!.legendUrl)
-  );
+  isSvg = computed(() => {
+    const legendUrl = this.legend().legendUrl;
+    return legendUrl && /\.svg(?:\?.*)?$/i.test(legendUrl);
+  });
 
   /**
    * Indien svg wordt weergegeven, bevat deze de veilige svg content.

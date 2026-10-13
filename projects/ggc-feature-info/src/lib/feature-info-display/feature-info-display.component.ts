@@ -28,8 +28,8 @@ export class FeatureInfoDisplayComponent implements OnInit, OnChanges {
   contentValueTemplates = input<Map<string, TemplateRef<any>>>(new Map());
   hideEmptyFieldWithKeys = input<string[]>([]);
 
-  protected displayFeature = signal<{ [key: string]: any }>({});
-  protected objectKeys = signal<string[]>([]);
+  protected readonly displayFeature = signal<{ [key: string]: any }>({});
+  protected readonly objectKeys = signal<string[]>([]);
   protected readonly featureInfoDisplayTypeEnum = FeatureInfoDisplayType;
 
   private readonly featureInfoConfigService = inject(

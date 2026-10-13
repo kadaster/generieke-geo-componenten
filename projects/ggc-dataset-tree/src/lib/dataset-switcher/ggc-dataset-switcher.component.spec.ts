@@ -154,21 +154,23 @@ describe("GgcDatasetSwitcherComponent", () => {
 
   describe("handleChangeEvent", () => {
     it("should ignore invalid events", () => {
-      const emitSpy = vi.spyOn(component.events, "emit");
+      const emitted: DatasetSwitcherEvent[] = [];
+      component.events.subscribe((event) => emitted.push(event));
 
       component.handleChangeEvent({ target: {} } as any);
 
-      expect(emitSpy).not.toHaveBeenCalled();
+      expect(emitted).toHaveLength(0);
     });
 
     it("should ignore unknown theme", () => {
       fixture.componentRef.setInput("themes", createThemes(["Theme A"]));
       fixture.detectChanges();
-      const emitSpy = vi.spyOn(component.events, "emit");
+      const emitted: DatasetSwitcherEvent[] = [];
+      component.events.subscribe((event) => emitted.push(event));
 
       component.handleChangeEvent({ target: { id: "X" } } as any);
 
-      expect(emitSpy).not.toHaveBeenCalled();
+      expect(emitted).toHaveLength(0);
     });
 
     it("should switch theme and update visibility", async () => {
@@ -179,7 +181,8 @@ describe("GgcDatasetSwitcherComponent", () => {
       fixture.detectChanges();
       component["activeTheme"].set(themes[0]);
 
-      const emitSpy = vi.spyOn(component.events, "emit");
+      const emitted: DatasetSwitcherEvent[] = [];
+      component.events.subscribe((event) => emitted.push(event));
 
       component.handleChangeEvent({ target: { id: "Theme B" } } as any);
 
@@ -202,7 +205,8 @@ describe("GgcDatasetSwitcherComponent", () => {
         component.mapIndex()
       );
 
-      expect(emitSpy).toHaveBeenCalled();
+      expect(emitted).toHaveLength(1);
+      expect(emitted[0].value.themeName).toBe("Theme B");
       expect(component["activeTheme"]()?.themeName).toBe("Theme B");
     });
   });

@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  input,
-  Output,
-  signal
-} from "@angular/core";
+import { Component, inject, input, output, signal } from "@angular/core";
 import {
   ToolbarItemMeasureComponentEvent,
   ToolbarItemMeasureType
@@ -78,8 +71,7 @@ export class GgcToolbarItemMeasureComponent {
    * Event dat wordt verstuurd wanneer een meetactie wordt uitgevoerd.
    * Bevat het type actie via `toolbarItemName`.
    */
-  @Output() measureItemClicked: EventEmitter<ToolbarItemMeasureComponentEvent> =
-    new EventEmitter<ToolbarItemMeasureComponentEvent>();
+  readonly measureItemClicked = output<ToolbarItemMeasureComponentEvent>();
 
   /** Huidig actieve meetactie. */
   protected activeMeasure = signal<

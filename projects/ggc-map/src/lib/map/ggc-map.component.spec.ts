@@ -18,7 +18,6 @@ import {
 } from "@kadaster/ggc-models";
 import { of } from "rxjs";
 import { provideZonelessChangeDetection } from "@angular/core";
-import { filter, take } from "rxjs/operators";
 
 describe("MapComponent, ngAfterViewInit", () => {
   let component: GgcMapComponent;
@@ -68,22 +67,18 @@ describe("MapComponent, ngAfterViewInit", () => {
   });
 
   it("Events should be set", async () => {
-    component.events
-      .pipe(
-        filter(
-          (event: MapComponentEvent) =>
-            event.type === MapComponentEventTypes.MAPINITIALIZED
-        ),
-        take(1)
-      )
-      .subscribe((mapComponentInitEvent: MapComponentEvent) => {
-        expect(mapComponentInitEvent.type).toBe(
-          MapComponentEventTypes.MAPINITIALIZED
-        );
-      });
+    let mapInitializedEvent: MapComponentEvent | undefined;
+    component.events.subscribe((event) => {
+      if (event.type === MapComponentEventTypes.MAPINITIALIZED) {
+        mapInitializedEvent = event;
+      }
+    });
 
     fixture.detectChanges();
 
+    expect(mapInitializedEvent?.type).toBe(
+      MapComponentEventTypes.MAPINITIALIZED
+    );
     expect(mapMock.setTarget).toHaveBeenCalled();
     expect(mapMock.on).toHaveBeenCalledTimes(4);
     expect(vi.mocked(mapMock.on).mock.calls[0][0] as unknown as string).toEqual(

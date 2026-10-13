@@ -2,22 +2,21 @@ import { HttpErrorResponse } from "@angular/common/http";
 import {
   Component,
   computed,
+  DestroyRef,
   ElementRef,
-  EventEmitter,
-  HostListener,
   inject,
   input,
   OnChanges,
   OnInit,
-  Output,
-  QueryList,
+  output,
   signal,
   Signal,
   SimpleChanges,
-  ViewChild,
-  ViewChildren,
+  viewChild,
+  viewChildren,
   ViewEncapsulation
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BehaviorSubject } from "rxjs";
 import { SearchComponentElementIds } from "../model/search-component-element-ids.model";
 import {
@@ -64,6 +63,9 @@ const proj4 = (proj4x as any).default;
 @Component({
   selector: "ggc-search-location",
   templateUrl: "./ggc-search-location.component.html",
+  host: {
+    "(document:click)": "closeShowCurrentLocationOnPageClickEvent($event)"
+  },
   encapsulation: ViewEncapsulation.None,
   styleUrls: ["./ggc-search-location.component.scss"],
   imports: [NgClass, CdkListbox, CdkOption]
@@ -75,9 +77,8 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
   searchTerm = input("");
   classSearchButton = input("fas fa-search");
 
-  /** EventEmitter die events verzendt bij zoekresultaten, fouten of statuswijzigingen. */
-  @Output() events: EventEmitter<SearchComponentEvent> =
-    new EventEmitter<any>();
+  /** Output die events verzendt bij zoekresultaten, fouten of statuswijzigingen. */
+  readonly events = output<SearchComponentEvent>();
 
   protected elementIds = signal(new SearchComponentElementIds({}));
   protected inputValue = signal("");
@@ -116,18 +117,18 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
     );
   });
 
-  @ViewChildren(CdkOption, {})
-  private readonly listOptions: QueryList<
-    CdkOption<PdokLocationApiSearchFeature | AdditionalSuggestion>
-  >;
+  private readonly listOptions =
+    viewChildren<
+      CdkOption<PdokLocationApiSearchFeature | AdditionalSuggestion>
+    >(CdkOption);
 
-  @ViewChild("input", { static: true })
-  private readonly input: ElementRef<HTMLInputElement>;
+  private readonly input = viewChild<ElementRef<HTMLInputElement>>("input");
 
   private readonly pdokLocationApiService = inject(PdokLocationApiService);
   private readonly searchLocationService = inject(GgcSearchLocationService);
   private readonly connectService = inject(GgcSearchLocationConnectService);
   private readonly elRef = inject(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
   private hasInitialSearchterm = false;
   private result?: PdokLocationApiSearchFeature | SearchComponentEventTypes;
   private readonly searchTerm$ = new BehaviorSubject<string>("");
@@ -189,6 +190,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
         this.searchTerm$,
         this.searchLocationOptions()?.alternativeSuggestionsFirst
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (results: PdokLocationApiSearchResponse | null) => {
           this.processSuggestionsResult(results);
@@ -201,15 +203,16 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
         }
       });
 
-    if (this.searchLocationOptions()?.initialResult) {
-      this.searchLocationOptions()!.initialResult!.subscribe(
-        (value: PdokLocationApiSearchFeature) => {
+    const initialResult = this.searchLocationOptions()?.initialResult;
+    if (initialResult) {
+      initialResult
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((value: PdokLocationApiSearchFeature) => {
           if (value.properties.display_name) {
             this.inputValue.set(value.properties.display_name);
             this.result = value;
           }
-        }
-      );
+        });
     }
 
     if (this.searchLocationOptions()?.initialSearchTerm) {
@@ -270,10 +273,14 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
   onInputUp($event: KeyboardEvent): void {
     switch ($event.key) {
       case "Esc":
-      case "Escape":
-        this.input.nativeElement.value = "";
+      case "Escape": {
+        const inputElement = this.input()?.nativeElement;
+        if (inputElement) {
+          inputElement.value = "";
+        }
         this.clearSearchTerm();
         break;
+      }
       case "ArrowDown":
         // Go from the text box to the top list option
         if (
@@ -282,7 +289,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
             this.searchLocationOptions()?.searchCurrentLocation?.type ===
               SearchCurrentLocationType.SELECT)
         ) {
-          if (this.listOptions?.get(0)) {
+          if (this.listOptions().length > 0) {
             this.setFocusOnTopSuggestion();
           }
         }
@@ -314,7 +321,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
       case "ArrowUp":
         // Go from the top list option to the text box
         // If the last element has the focus, the focus went from the top to the bottom, therefore the text box should get focus
-        if (this.listOptions?.last.isActive()) {
+        if (this.listOptions().at(-1)?.isActive()) {
           this.setFocusOnInputTextbox();
         }
         break;
@@ -340,6 +347,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
       return;
     }
     let preventDefault = true;
+    const inputElement = this.input()?.nativeElement;
     switch ($event.key) {
       case "ArrowDown":
       case "ArrowUp":
@@ -353,27 +361,29 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
         this.setFocusOnInputTextbox();
         break;
       default:
-        if ($event.key.length === 1) {
+        if ($event.key.length === 1 && inputElement) {
           // Single character
-          this.input.nativeElement.value += $event.key;
+          inputElement.value += $event.key;
           this.setFocusOnInputTextbox();
-          this.searchForSuggestions(this.input.nativeElement.value);
+          this.searchForSuggestions(inputElement.value);
         }
         preventDefault = false;
     }
 
     if (preventDefault) {
       $event.preventDefault();
-      this.scrollIntoViewIfNeeded(this.input.nativeElement);
+      if (inputElement) {
+        this.scrollIntoViewIfNeeded(inputElement);
+      }
     }
   }
 
   private setFocusOnTopSuggestion() {
-    this.listOptions.get(0)!.focus();
+    this.listOptions().at(0)?.focus();
   }
 
   private setFocusOnInputTextbox() {
-    this.input.nativeElement.focus();
+    this.input()?.nativeElement.focus();
   }
 
   /**
@@ -600,7 +610,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
               } else if (feature?.properties?.href) {
                 this.pdokLocationApiService
                   .item(feature)
-                  .pipe(take(1))
+                  .pipe(take(1), takeUntilDestroyed(this.destroyRef))
                   .subscribe(
                     (item: PdokLocationApiCollectionFeature | null) => {
                       if (item?.geometry) {
@@ -713,7 +723,6 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
   /**
    * Sluit de suggestielijst wanneer buiten de component wordt geklikt.
    */
-  @HostListener("document:click", ["$event"])
   closeShowCurrentLocationOnPageClickEvent(event: Event) {
     if (
       !this.elRef.nativeElement.contains(event.target) &&
@@ -734,7 +743,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
     this.result = SearchComponentEventTypes.SEARCH_LOCATION_RESULT;
     this.searchLocationService
       .getLocationEventsObservable(this.searchLocationOptions()?.mapIndex)
-      .pipe(first())
+      .pipe(first(), takeUntilDestroyed(this.destroyRef))
       .subscribe((event: number[]) => {
         this.inputValue.set("Uw locatie");
         this.inputCurrentLocation.set(true);
@@ -752,7 +761,7 @@ export class GgcSearchLocationComponent implements OnChanges, OnInit {
       });
     this.searchLocationService
       .getGeolocationPositionErrorSubject()
-      .pipe(first())
+      .pipe(first(), takeUntilDestroyed(this.destroyRef))
       .subscribe((error: GeolocationPositionError) => {
         this.events.emit(
           new SearchComponentEvent(

@@ -1,12 +1,11 @@
 import {
   Component,
-  EventEmitter,
   inject,
   input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  output,
   signal,
   SimpleChanges
 } from "@angular/core";
@@ -57,8 +56,7 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
   iconDownload = input("fal fa-arrow-to-bottom");
   iconClose = input("fal fa-times");
   printStyle = input<MapfishStyleV2>();
-  @Output() events: EventEmitter<PrintComponentEvent> =
-    new EventEmitter<PrintComponentEvent>();
+  readonly events = output<PrintComponentEvent>();
   // change for trigger
   protected readonly scales = [
     {
@@ -127,15 +125,20 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.printserver()) {
-      this.mapFishInteraction.setPrintserver(this.printserver()!);
+    const printserver = this.printserver();
+    const apiKey = this.apiKey();
+    const configurationName = this.configurationName();
+    const printConfigs = this.printConfigs();
+
+    if (printserver) {
+      this.mapFishInteraction.setPrintserver(printserver);
     }
-    if (this.apiKey()) {
-      this.mapFishInteraction.provideApiKey(this.apiKey()!);
+    if (apiKey) {
+      this.mapFishInteraction.provideApiKey(apiKey);
     }
-    if (this.configurationName()) {
+    if (configurationName) {
       this.mapFishInteraction
-        .getConfigCapabilities(this.configurationName()!)
+        .getConfigCapabilities(configurationName)
         .subscribe({
           next: (capabilities: Capabilities) => {
             this.processCapabilities(capabilities);
@@ -145,8 +148,8 @@ export class GgcPrintFormComponent implements OnInit, OnChanges, OnDestroy {
           error: (error: GgcPrintError) => this.error.set(error)
         });
     }
-    if (this.printConfigs()) {
-      this.printConfigService.addKeysToPrintConfigs(this.printConfigs()!);
+    if (printConfigs) {
+      this.printConfigService.addKeysToPrintConfigs(printConfigs);
     }
     this.printPreviewService.prepareMapForPrintPreview(
       this.mapIndex(),
