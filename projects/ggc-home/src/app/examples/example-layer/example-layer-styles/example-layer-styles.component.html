@@ -1,0 +1,82 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  pathKaartConfig="example-layer/example-layer-styles/kaartconfig.json"
+>
+  @if (componentInfo.tags && componentInfo.tags.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>{{ componentInfo.introduction }}</p>
+    <p>
+      In de kaartconfiguratie krijgt een kaartlaag een lijst met
+      <code>styles</code>. Elke stijl heeft een technische naam
+      (<code>name</code>), een weergavenaam (<code>title</code>) en optioneel de
+      bijbehorende <code>legend</code>. Met <code>activeStyle</code> wordt de
+      technische naam van de actieve stijl ingesteld; is deze leeg, dan wordt de
+      eerste stijl uit <code>styles</code> automatisch de actieve stijl.
+    </p>
+    <p>Functies van de <code>GgcLayerService</code> in dit voorbeeld:</p>
+    <ul>
+      <li>De beschikbare stijlen opvragen (<code>getStyles</code>)</li>
+      <li>De actieve stijl opvragen (<code>getActiveStyle</code>)</li>
+      <li>
+        Van stijl wisselen (<code>setActiveStyle</code>); de kaartlaag en de
+        legenda worden daarna bijgewerkt
+      </li>
+    </ul>
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+        @for (
+          styleableLayer of styleableLayers();
+          track styleableLayer.layerId
+        ) {
+          <fieldset class="ggc-fieldset">
+            <legend>{{ styleableLayer.title }}</legend>
+            @for (style of styleableLayer.styles; track style.name) {
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  [id]="styleableLayer.layerId + '-' + style.name"
+                  [name]="styleableLayer.layerId"
+                  [value]="style.name"
+                  [checked]="style.name === styleableLayer.activeStyleName"
+                  (change)="selectStyle(style.name, styleableLayer.layerId)"
+                />
+                <label
+                  class="form-check-label"
+                  [for]="styleableLayer.layerId + '-' + style.name"
+                >
+                  {{ style.title ?? style.name }}
+                </label>
+              </div>
+            }
+          </fieldset>
+        }
+        <div>
+          <b>Legenda</b>
+          <ggc-legend [mapIndex]="mapIndex"></ggc-legend>
+        </div>
+      </div>
+      <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6">
+        <div class="map-container">
+          <ggc-map [mapIndex]="mapIndex" [webServices]="mapConfig"></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>

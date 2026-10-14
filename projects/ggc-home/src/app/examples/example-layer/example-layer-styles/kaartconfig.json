@@ -1,0 +1,98 @@
+[
+  {
+    "type": "vector",
+    "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "title": "BRT achtergrondkaart",
+    "layers": [
+      {
+        "layerId": "brt-achtergrondkaart",
+        "title": "BRT achtergrondkaart",
+        "zIndex": 0,
+        "enableOverzoom": true,
+        "legendIndex": 2,
+        "styles": [
+          {
+            "name": "standaard__netherlandsrdnewquad",
+            "title": "Standaard",
+            "legend": {
+              "layerId": "brt-achtergrondkaart",
+              "legend": {
+                "name": "Standaard",
+                "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard__netherlandsrdnewquad?f=mapbox"
+              }
+            }
+          },
+          {
+            "name": "standaard_zonder_labels__netherlandsrdnewquad",
+            "title": "Standaard zonder labels",
+            "legend": {
+              "layerId": "brt-achtergrondkaart",
+              "legend": {
+                "name": "Standaard zonder labels",
+                "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/standaard_zonder_labels__netherlandsrdnewquad?f=mapbox"
+              }
+            }
+          },
+          {
+            "name": "darkmode__netherlandsrdnewquad",
+            "title": "Dark mode",
+            "legend": {
+              "layerId": "brt-achtergrondkaart",
+              "legend": {
+                "name": "Dark mode",
+                "url": "https://api.pdok.nl/kadaster/brt-achtergrondkaart/ogc/v1/styles/darkmode__netherlandsrdnewquad?f=mapbox"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "wms",
+    "url": "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0",
+    "title": "Kadastrale kaart",
+    "layers": [
+      {
+        "layerId": "kadastralekaart",
+        "title": "Kadastrale kaart",
+        "layerName": "Kadastralekaart",
+        "zIndex": 10,
+        "legendIndex": 1,
+        "maxResolution": 3.36,
+        "styles": [
+          {
+            "name": "standaard",
+            "title": "Standaardvisualisatie",
+            "legend": {
+              "layerId": "kadastralekaart",
+              "legend": {
+                "legendUrl": "https://service.pdok.nl/kadaster/brk-kadastrale-kaart/wms/v5_0/legend/Kadastralekaart/standaard.png"
+              }
+            }
+          },
+          {
+            "name": "kwaliteit",
+            "title": "Kwaliteitsvisualisatie",
+            "legend": {
+              "layerId": "kadastralekaart",
+              "legend": {
+                "legendUrl": "https://service.pdok.nl/kadaster/brk-kadastrale-kaart/wms/v5_0/legend/Kadastralekaart/kwaliteit.png"
+              }
+            }
+          },
+          {
+            "name": "print",
+            "title": "Printvisualisatie",
+            "legend": {
+              "layerId": "kadastralekaart",
+              "legend": {
+                "legendUrl": "https://service.pdok.nl/kadaster/brk-kadastrale-kaart/wms/v5_0/legend/Kadastralekaart/print.png"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
