@@ -1,4 +1,4 @@
-import VectorTileLayer, { Options } from "ol/layer/VectorTile";
+import { Options } from "ol/layer/VectorTile";
 import { Options as VectorTileSourceOptions } from "ol/source/VectorTile";
 import { AbstractClickableLayerOptions } from "./abstract-layer.model";
 import { StyleLike } from "ol/style/Style";
@@ -22,11 +22,21 @@ export interface VectorTileLayerOptions extends AbstractClickableLayerOptions {
   sourceOptions?: Partial<VectorTileSourceOptions>;
 
   /**
+   * @deprecated
    * Optioneel: Voor het meegeven van een OpenLayers-stijlobject, stijlfunctie of url
    * met json styles aan de weergegeven data. Denk hierbij aan het meegeven van kleur,
    * dikte van een strook of een eigen icoon. Voor extra info zie: [OpenLayers StyleLike](https://openlayers.org/en/latest/apidoc/module-ol_style_Style.html#~StyleLike)
+   * Deze property is deprecated, gebruik vanaf nu styleLike.
    */
   style?: StyleLike | string;
+
+  /**
+   * Optioneel: Voor het meegeven van een OpenLayers-stijlobject, stijlfunctie of url
+   * met json styles aan de weergegeven data. Denk hierbij aan het meegeven van kleur,
+   * dikte van een strook of een eigen icoon. Voor extra info zie: [OpenLayers StyleLike](https://openlayers.org/en/latest/apidoc/module-ol_style_Style.html#~StyleLike)
+   * Mocht je een bestaande style willen gebruiken via een url, dan kan je styles en activeStyle gebruiken. Wanneer je een eigen gedefinieerde style wilt gebruiken, dan kan je deze meegeven via styleLike.
+   */
+  styleLike?: StyleLike | string;
 
   /**
    * Optioneel: Instellen van een straal in pixels rond de plek waar in de kaart

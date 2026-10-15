@@ -148,7 +148,7 @@ describe("VectorTileLayerComponent", () => {
       .mockReturnValue(createOlMapMock());
 
     component.options.set({
-      style: new Style({
+      styleLike: new Style({
         stroke: new Stroke({
           color: [63, 195, 128, 1],
           width: 3
@@ -174,7 +174,7 @@ describe("VectorTileLayerComponent", () => {
       .mockReturnValue(createOlMapMock());
 
     component.options.set({
-      style: () => {
+      styleLike: () => {
         return new Style({
           stroke: new Stroke({
             color: [63, 195, 128, 1],
@@ -194,6 +194,67 @@ describe("VectorTileLayerComponent", () => {
     const strokeObject: Stroke | null = styleObject.getStroke();
     expect(strokeObject?.getColor()).toEqual([63, 195, 128, 1]);
     expect(strokeObject?.getWidth()).toBe(3);
+  });
+
+  it("should call setActiveStyle during ngOnInit when an initial activeStyle is configured", async () => {
+    const coreMapService: CoreMapService =
+      debugElement.injector.get(CoreMapService);
+    vi.spyOn<CoreMapService, any>(coreMapService, "getMap").mockReturnValue(
+      createOlMapMock()
+    );
+    const setActiveStyleSpy = vi
+      .spyOn(component, "setActiveStyle")
+      .mockImplementation(() => undefined);
+
+    component.options.set({
+      url: "https://example.com/tiles/layer/{z}/{y}/{x}?f=mvt",
+      activeStyle: "default-style"
+    });
+
+    component.ngOnInit();
+    await vi.runAllTimersAsync();
+
+    expect(setActiveStyleSpy).toHaveBeenCalledWith("default-style");
+  });
+
+  it("should build the correct style url and persist activeStyle when setActiveStyle is called", () => {
+    const loadStyleSpy = vi
+      .spyOn(component as any, "loadStyle")
+      .mockImplementation(() => Promise.resolve(undefined));
+
+    component.options.set({
+      url: "https://example.com/tiles/layer/{z}/{y}/{x}?f=mvt"
+    });
+
+    component.setActiveStyle("bgt-standaard");
+
+    expect(component.options()?.activeStyle).toBe("bgt-standaard");
+    expect(loadStyleSpy).toHaveBeenCalledWith(
+      "https://example.com/styles/bgt-standaard?f=style"
+    );
+  });
+
+  it("should copy the deprecated style option to styleLike during ngOnInit", async () => {
+    const coreMapService: CoreMapService =
+      debugElement.injector.get(CoreMapService);
+    vi.spyOn<CoreMapService, any>(coreMapService, "getMap").mockReturnValue(
+      createOlMapMock()
+    );
+    const deprecatedStyle = new Style({
+      stroke: new Stroke({
+        color: [0, 0, 0, 1],
+        width: 2
+      })
+    });
+
+    component.options.set({
+      style: deprecatedStyle
+    });
+
+    component.ngOnInit();
+    await vi.runAllTimersAsync();
+
+    expect(component.options()?.styleLike).toBe(deprecatedStyle);
   });
 
   it(
@@ -318,9 +379,9 @@ describe("VectorTileLayerComponent", () => {
 
   describe("get maxZoom from sources", () => {
     beforeEach(() => {
-      // To prevent that the getJsonFromUrl is called from the setStyle, which leads to complications in the httpTestcontroller
-      vi.spyOn(component as any, "setStyle").mockReturnValue(
-        Promise.resolve(undefined)
+      // To prevent that style loading triggers extra HTTP calls during these maxZoom tests.
+      vi.spyOn(component as any, "setStyleLike").mockImplementation(
+        () => undefined
       );
     });
 
@@ -361,7 +422,7 @@ describe("VectorTileLayerComponent", () => {
       component.options.set({
         mapIndex: "test-map",
         enableOverzoom: true,
-        style: "styleUrl"
+        styleLike: "styleUrl"
       });
 
       const resultPromise = (component as any).getMaxZoom();
@@ -401,7 +462,7 @@ describe("VectorTileLayerComponent", () => {
       component.options.set({
         mapIndex: "test-map",
         enableOverzoom: true,
-        style: "styleUrl"
+        styleLike: "styleUrl"
       });
 
       const result = await (component as any).getMaxZoom();

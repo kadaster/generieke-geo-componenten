@@ -358,6 +358,38 @@ describe("WmsLayerComponent", () => {
     });
   });
 
+  it("should call setActiveStyle during ngOnInit when an initial activeStyle is configured", () => {
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addLayerMock);
+    const setActiveStyleSpy = vi
+      .spyOn(component, "setActiveStyle")
+      .mockImplementation(() => undefined);
+
+    component.options.set({
+      layerName: "wms-layer",
+      activeStyle: "default-style",
+      url: "https://example.com/wms"
+    });
+
+    component.ngOnInit();
+
+    expect(setActiveStyleSpy).toHaveBeenCalledWith("default-style");
+  });
+
+  it("should persist activeStyle and delegate to setStyle for the configured layer", () => {
+    const setStyleSpy = vi
+      .spyOn(component, "setStyle")
+      .mockImplementation(() => undefined);
+
+    component.options.set({
+      layerName: "wms-layer"
+    });
+
+    component.setActiveStyle("contrast-style");
+
+    expect(component.options()?.activeStyle).toBe("contrast-style");
+    expect(setStyleSpy).toHaveBeenCalledWith("contrast-style", "wms-layer");
+  });
+
   describe("setStyle", () => {
     let wmsSpy: MockInstance;
     let localSourceUpdateSpy: MockInstance;

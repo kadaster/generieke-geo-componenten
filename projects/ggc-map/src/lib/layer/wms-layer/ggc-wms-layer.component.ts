@@ -129,6 +129,10 @@ export class GgcWmsLayerComponent
         new ImageLayer(layerOptions as ImageLayerOptions<ImageSource>)
       );
     }
+
+    if (this.options()?.activeStyle) {
+      this.setActiveStyle(this.options()!.activeStyle!);
+    }
   }
 
   /**
@@ -195,6 +199,20 @@ export class GgcWmsLayerComponent
   }
 
   /**
+   * Set the active style for the layer.
+   * @param styleName the name of the style that should be applied.
+   */
+  override setActiveStyle(styleName: string): void {
+    this.options.set({ ...this.options(), activeStyle: styleName });
+    const layerName = this.options()?.layerName;
+    if (layerName) {
+      this.setStyle(styleName, layerName);
+    }
+  }
+
+  /**
+   * @deprecated
+   * Maak voortaan gebruik van de styles en activeStyle in de options en GgcLayerService voor het managen van stlyes.
    * Past meerdere stijlen toe op de WMS-laag.
    * @param styles Een array van stijlstrings.
    */
@@ -204,6 +222,8 @@ export class GgcWmsLayerComponent
   }
 
   /**
+   * @deprecated
+   * Maak voortaan gebruik van de styles en activeStyle in de options en GgcLayerService voor het managen van stlyes.
    * Past een specifieke stijl toe op een specifieke sublaag.
    * @param style De stijlnaam.
    * @param layerName De naam van de sublaag waarop de stijl moet worden toegepast.
