@@ -22,7 +22,8 @@ import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionI
 import { DEVICE_PIXEL_RATIO } from "ol/has";
 import {
   MapComponentEvent,
-  MapComponentEventTypes
+  MapComponentEventTypes,
+  Style
 } from "@kadaster/ggc-models";
 
 /**
@@ -191,6 +192,31 @@ export class GgcWmsLayerComponent
         coordinate,
         "Binnen deze resolutie zijn er geen features gevonden."
       );
+    }
+  }
+
+  /**
+   * Past de opgegeven stijl toe als `STYLES`-parameter van de WMS-laag.
+   *
+   * De stijl wordt in de eigen bronopties gezet en, wanneer de WMS-bron al bestaat,
+   * direct op die bron toegepast zodat de kaartlaag niet opnieuw opgebouwd hoeft te worden.
+   */
+  override applyStyle(style: Style): void {
+    const params = Object.fromEntries(
+      Object.entries(this.options()?.sourceOptions?.params ?? {}).filter(
+        ([key]) => key.toLowerCase() !== "styles"
+      )
+    );
+    params["STYLES"] = style.name;
+    this.options.update((options) => ({
+      ...options,
+      sourceOptions: {
+        ...options?.sourceOptions,
+        params
+      }
+    }));
+    if (this.wmsSource) {
+      this.wmsSource.updateParams({ STYLES: style.name });
     }
   }
 

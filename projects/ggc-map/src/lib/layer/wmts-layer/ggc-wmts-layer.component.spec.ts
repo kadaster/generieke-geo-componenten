@@ -127,6 +127,39 @@ describe("WmtsLayerComponent", () => {
     expect(getMapSpy).toHaveBeenCalled();
   });
 
+  it("should apply the active style on the source options when the layer is created", () => {
+    const coreMapService: CoreMapService =
+      debugElement.injector.get(CoreMapService);
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addTileLayerMock);
+
+    component.options.set({
+      styles: [{ name: "default" }, { name: "grijs" }],
+      activeStyle: "grijs"
+    });
+
+    component.ngOnInit();
+
+    expect(component.options()?.sourceOptions?.style).toBe("grijs");
+  });
+
+  it("should rebuild its source when a style is applied on an existing layer", () => {
+    const coreMapService: CoreMapService =
+      debugElement.injector.get(CoreMapService);
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addTileLayerMock);
+    component.options.set({ sourceOptions: { layer: "my-layer" } });
+    capabilitiesService.getCapabilities.mockReturnValue(
+      of(createWmtsCapabilitiesMock("my-layer"))
+    );
+    component.ngOnInit();
+    const sourceBeforeStyleChange = component["wmtsSource"];
+
+    component.applyStyle({ name: "grijs" });
+
+    expect(component.options()?.sourceOptions?.style).toBe("grijs");
+    expect(component["wmtsSource"]).not.toBe(sourceBeforeStyleChange);
+    expect(resultTileLayer.getSource()).toBe(component["wmtsSource"]);
+  });
+
   describe("when the component is destroyed, ", () => {
     it("unsubscribe from singleclick events, removeLayer should be called on the map", () => {
       const coreMapService: CoreMapService =

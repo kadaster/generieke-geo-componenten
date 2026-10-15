@@ -77,6 +77,34 @@ describe("VectorTileLayerComponent", () => {
       forEachFeatureAtPixel: vi.fn().mockName("ol.Map.forEachFeatureAtPixel")
     }) as unknown as MockedObject<OlMap>;
 
+  it("should take the mapbox style url from the vector tile style legend when a style is applied", () => {
+    component.options.set({ style: "origineel-mapbox.json" });
+
+    component.applyStyle({
+      name: "darkmode",
+      legend: {
+        layerId: "layer1",
+        legend: { name: "darkmode", url: "darkmode-mapbox.json" }
+      }
+    });
+
+    expect(component.options()?.style).toBe("darkmode-mapbox.json");
+  });
+
+  it("should keep its style when the applied style has no vector tile style legend", () => {
+    component.options.set({ style: "origineel-mapbox.json" });
+
+    component.applyStyle({
+      name: "standaard",
+      legend: {
+        layerId: "layer1",
+        legend: { legendUrl: "standaard.png" }
+      }
+    });
+
+    expect(component.options()?.style).toBe("origineel-mapbox.json");
+  });
+
   it("when attributions is provided for a layer, it should be contained in the source", async () => {
     const coreMapService: CoreMapService =
       debugElement.injector.get(CoreMapService);

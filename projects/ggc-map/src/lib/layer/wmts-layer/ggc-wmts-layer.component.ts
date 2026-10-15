@@ -14,7 +14,8 @@ import { WmtsLayerOptions } from "../model/wmts-layer.model";
 import { viewResolutionIsInLayerResolutionRange } from "../utils/viewResolutionIsInLayerResolutionRange";
 import {
   MapComponentEvent,
-  MapComponentEventTypes
+  MapComponentEventTypes,
+  Style
 } from "@kadaster/ggc-models";
 import { GgcCapabilitiesService } from "../service/ggc-capabilities.service";
 
@@ -56,6 +57,12 @@ export class GgcWmtsLayerComponent
   private capabilities: Capabilities | undefined;
 
   /**
+   * Het ruwe capabilities-resultaat, zodat de source opnieuw opgebouwd kan worden
+   * wanneer de bronopties wijzigen.
+   */
+  private capabilitiesResult: Record<string, any> | undefined;
+
+  /**
    * Injectie van de GgcCapabilitiesService.
    */
   private readonly ggcCapabilitiesService = inject(GgcCapabilitiesService);
@@ -90,22 +97,10 @@ export class GgcWmtsLayerComponent
       .subscribe((result) => {
         if (result) {
           this.capabilities = new Capabilities(result);
-          const options = optionsFromCapabilities(result, {
-            format: "image/png",
-            style: "default",
-            crossOrigin: "anonymous",
-            ...this.options()?.sourceOptions,
-            ...(this.options()?.layer && { layer: this.options()?.layer }),
-            projection: this.rdNewConfig.projectionCode
-          });
-          if (options) {
-            // Set transition to 0 when opacity < 1 to prevent flicker
-            const opacity = this.options()?.layerOptions?.opacity;
-            if (opacity !== undefined && opacity < 1) {
-              options.transition = 0;
-              this.layerOptions.opacity = opacity;
-            }
-            this.wmtsSource = new WMTS(options);
+          this.capabilitiesResult = result;
+          const wmtsSource = this.createWmtsSource(result);
+          if (wmtsSource) {
+            this.wmtsSource = wmtsSource;
 
             this.setLayer(
               new TileLayer({
@@ -218,5 +213,58 @@ export class GgcWmtsLayerComponent
 
   protected handleSingleClick(event: MapBrowserEvent) {
     this.getFeatureInfo(event);
+  }
+
+  /**
+   * Past de opgegeven stijl toe op de WMTS-laag.
+   *
+   * De stijl wordt in de eigen bronopties gezet. Bestaat de kaartlaag al, dan bouwt de
+   * component zijn WMTS-source opnieuw op uit de opgehaalde capabilities, omdat de stijl
+   * van een bestaande WMTS-source niet gewijzigd kan worden.
+   */
+  override applyStyle(style: Style): void {
+    this.options.update((options) => ({
+      ...options,
+      sourceOptions: {
+        ...options?.sourceOptions,
+        style: style.name
+      }
+    }));
+
+    if (this.olLayer && this.capabilitiesResult) {
+      const wmtsSource = this.createWmtsSource(this.capabilitiesResult);
+      if (wmtsSource) {
+        this.wmtsSource = wmtsSource;
+        this.olLayer.setSource(this.wmtsSource);
+      }
+    }
+  }
+
+  /**
+   * Maakt een WMTS-source op basis van de opgehaalde capabilities en de eigen bronopties.
+   *
+   * @returns De nieuwe source, of undefined als de capabilities geen geldige opties opleveren.
+   */
+  private createWmtsSource(
+    capabilitiesResult: Record<string, any>
+  ): WMTS | undefined {
+    const wmtsSourceOptions = optionsFromCapabilities(capabilitiesResult, {
+      format: "image/png",
+      style: "default",
+      crossOrigin: "anonymous",
+      ...this.options()?.sourceOptions,
+      ...(this.options()?.layer && { layer: this.options()?.layer }),
+      projection: this.rdNewConfig.projectionCode
+    });
+    if (!wmtsSourceOptions) {
+      return undefined;
+    }
+    // Set transition to 0 when opacity < 1 to prevent flicker
+    const opacity = this.options()?.layerOptions?.opacity;
+    if (opacity !== undefined && opacity < 1) {
+      wmtsSourceOptions.transition = 0;
+      this.layerOptions.opacity = opacity;
+    }
+    return new WMTS(wmtsSourceOptions);
   }
 }

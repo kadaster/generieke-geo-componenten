@@ -5,7 +5,7 @@ import OlMap from "ol/Map";
 import { CrsConfig } from "../../core/model/crs-config.model";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
 import { AbstractBaseLayerOptions } from "../model/abstract-layer.model";
-import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
+import { DEFAULT_MAPINDEX, Style } from "@kadaster/ggc-models";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
 
@@ -55,6 +55,17 @@ export abstract class AbstractBaseLayer<T extends Layer>
   }
 
   enable() {
+    // placeholder
+  }
+
+  /**
+   * Past de opgegeven stijl toe op deze kaartlaag.
+   *
+   * Laagtypes die stijlen ondersteunen overschrijven deze methode en vertalen de stijl
+   * naar hun eigen bronopties en - wanneer de laag al op de kaart staat - naar hun eigen
+   * OpenLayers source. Laagtypes zonder stijlondersteuning doen niets.
+   */
+  applyStyle(style: Style): void {
     // placeholder
   }
 

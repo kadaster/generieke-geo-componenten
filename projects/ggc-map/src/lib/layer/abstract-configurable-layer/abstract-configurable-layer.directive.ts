@@ -61,10 +61,31 @@ export abstract class AbstractConfigurableLayer<T>
         minResolution: zoomlevelToResolution(this.options()!.maxZoomLevel!)
       };
     }
+
+    this.applyActiveStyle();
   }
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
+  }
+
+  /**
+   * Past de actieve stijl uit de laagopties toe op deze kaartlaag.
+   *
+   * De actieve stijl is de stijl binnen [styles] met de technische naam uit [activeStyle];
+   * is die er niet, dan geldt de eerste stijl als actieve stijl. De stijl wordt toegepast
+   * voordat de kaartlaag zijn source opbouwt, zodat de laag direct in de juiste stijl wordt
+   * weergegeven.
+   */
+  protected applyActiveStyle(): void {
+    const styles = this.options()?.styles;
+    if (!styles?.length) {
+      return;
+    }
+    const activeStyle =
+      styles.find((style) => style.name === this.options()?.activeStyle) ??
+      styles[0];
+    this.applyStyle(activeStyle);
   }
 
   protected setLayer(layer: any) {

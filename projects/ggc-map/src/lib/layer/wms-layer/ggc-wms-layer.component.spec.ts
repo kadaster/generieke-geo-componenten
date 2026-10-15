@@ -126,6 +126,37 @@ describe("WmsLayerComponent", () => {
     expect(source.getParams().LAYERS[1]).toBe("layer-twee");
   });
 
+  it("should apply the active style as STYLES parameter when the layer is created", () => {
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addLayerMock);
+
+    component.options.set({
+      sourceOptions: { params: { styles: "oud" } },
+      styles: [{ name: "standaard" }, { name: "kwaliteit" }],
+      activeStyle: "kwaliteit"
+    });
+
+    component.ngOnInit();
+
+    const source = resultLayer.getSource() as ImageWMS;
+    expect(source.getParams().STYLES).toBe("kwaliteit");
+  });
+
+  it("should apply a style on the existing source and on its own options", () => {
+    vi.spyOn(coreMapService, "getMap").mockReturnValue(addLayerMock);
+    component.options.set({
+      styles: [{ name: "standaard" }, { name: "kwaliteit" }]
+    });
+    component.ngOnInit();
+
+    component.applyStyle({ name: "kwaliteit" });
+
+    const source = resultLayer.getSource() as ImageWMS;
+    expect(source.getParams().STYLES).toBe("kwaliteit");
+    expect(component.options()?.sourceOptions?.params?.["STYLES"]).toBe(
+      "kwaliteit"
+    );
+  });
+
   it("should call capabilitiesService if getCapabilities is true", () => {
     component.options.set({
       url: "a.b/c",

@@ -9,7 +9,6 @@ import {
 import { CoreWmsWmtsCapabilitiesRequestService } from "../../layer/service/core-wms-wmts-capabilities-request.service";
 import { of } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
-import { VectorTileLayerOptions } from "../../layer/model/vector-tile-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
 import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
@@ -391,7 +390,7 @@ describe("LayerService", () => {
       );
     });
 
-    it("should set the active style, its legend and the WMS STYLES parameter", () => {
+    it("should set the active style and its legend", () => {
       loadStylesWebservice();
 
       service.setActiveStyle("kwaliteit", "layer1", MAP_INDEX);
@@ -402,60 +401,43 @@ describe("LayerService", () => {
       ) as WmsLayerOptions;
       expect(layerConfig.activeStyle).toBe("kwaliteit");
       expect(layerConfig.activeLegend).toEqual({ legendUrl: "kwaliteit.png" });
-      expect(layerConfig.sourceOptions?.params?.["STYLES"]).toBe("kwaliteit");
     });
 
-    it("should set the WMTS style on the source options", () => {
-      loadStylesWebservice({}, Webservice2DType.WMTS);
-
-      service.setActiveStyle("kwaliteit", "layer1", MAP_INDEX);
-
-      const layerConfig = service.getLayerConfig(
-        "layer1",
-        MAP_INDEX
-      ) as WmtsLayerOptions;
-      expect(layerConfig.sourceOptions?.style).toBe("kwaliteit");
-    });
-
-    it("should set the vector tile style url from the style legend", () => {
-      loadStylesWebservice(
-        {
-          styles: [
-            {
-              name: "standaard",
-              legend: {
-                layerId: "layer1",
-                legend: { name: "standaard", url: "standaard-mapbox.json" }
-              }
-            },
-            {
-              name: "darkmode",
-              legend: {
-                layerId: "layer1",
-                legend: { name: "darkmode", url: "darkmode-mapbox.json" }
-              }
-            }
-          ]
-        },
-        Webservice2DType.VECTOR
-      );
-
-      service.setActiveStyle("darkmode", "layer1", MAP_INDEX);
-
-      expect(
-        (service.getLayerConfig("layer1", MAP_INDEX) as VectorTileLayerOptions)
-          .style
-      ).toBe("darkmode-mapbox.json");
-    });
-
-    it("should reload a visible layer when the active style changes", () => {
+    it("should let the layer component apply the style", () => {
       loadStylesWebservice({ visible: true });
-      vi.spyOn(service, "isVisible").mockReturnValue(true);
+      const layerComponent = service["mapLayerComponents"].get(
+        `${MAP_INDEX}:layer1`
+      )!;
+      const applyStyleSpy = vi
+        .spyOn(layerComponent, "applyStyle")
+        .mockReturnValue();
       const reloadSpy = vi.spyOn(service, "reloadLayer").mockReturnValue();
 
       service.setActiveStyle("kwaliteit", "layer1", MAP_INDEX);
 
-      expect(reloadSpy).toHaveBeenCalledWith("layer1", MAP_INDEX);
+      expect(applyStyleSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ name: "kwaliteit" })
+      );
+      expect(reloadSpy).not.toHaveBeenCalled();
+    });
+
+    it("should update the legend of a visible layer when the active style changes", () => {
+      loadStylesWebservice({ visible: true });
+      vi.spyOn(service, "isVisible").mockReturnValue(true);
+      vi.spyOn(service, "getEnabled").mockReturnValue(true);
+      const legendRemoved: string[] = [];
+      const legendAdded: (string | undefined)[] = [];
+      service
+        .getLegendRemovedObservable()
+        .subscribe((event) => legendRemoved.push(event.layerId));
+      service
+        .getLegendAddedObservable()
+        .subscribe((event) => legendAdded.push(event.legend?.layerId));
+
+      service.setActiveStyle("kwaliteit", "layer1", MAP_INDEX);
+
+      expect(legendRemoved).toEqual(["layer1"]);
+      expect(legendAdded).toEqual(["layer1"]);
     });
 
     it("should ignore an unknown style", () => {

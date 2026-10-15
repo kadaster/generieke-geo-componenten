@@ -27,7 +27,8 @@ import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import {
   MapComponentEvent,
-  MapComponentEventTypes
+  MapComponentEventTypes,
+  Style
 } from "@kadaster/ggc-models";
 import { StyleLike } from "ol/style/Style";
 
@@ -167,6 +168,38 @@ export class GgcVectorTileLayerComponent
 
   protected handleSingleClick(event: MapBrowserEvent) {
     // don't call getFeatureInfo, as that is already solved in the selectService
+  }
+
+  /**
+   * Past de opgegeven stijl toe op de vector tile laag.
+   *
+   * De mapbox style url wordt uit de VectorTileStyle-legenda van de stijl gehaald en in de
+   * eigen opties gezet. Bestaat de kaartlaag al, dan wordt de stijl daar direct op toegepast.
+   */
+  override applyStyle(style: Style): void {
+    const vectorTileStyleUrl = this.getVectorTileStyleUrl(style);
+    if (!vectorTileStyleUrl) {
+      return;
+    }
+    this.options.update((options) => ({
+      ...options,
+      style: vectorTileStyleUrl
+    }));
+    if (this.olLayer) {
+      this.setStyle(this.olLayer);
+    }
+  }
+
+  /**
+   * Geeft de mapbox style url van een stijl terug,
+   * wanneer de legenda van de stijl een VectorTileStyle is.
+   */
+  private getVectorTileStyleUrl(style: Style): string | undefined {
+    const legend = style.legend?.legend;
+    if (legend && !Array.isArray(legend) && "url" in legend) {
+      return legend.url;
+    }
+    return undefined;
   }
 
   /**

@@ -413,8 +413,8 @@ export class GgcLayerService {
    * Zet de actieve stijl van een laag.
    *
    * De activeStyle en - indien de stijl een legenda heeft - de activeLegend van de
-   * laagconfiguratie worden bijgewerkt en de laag wordt opnieuw geladen, zodat de
-   * nieuwe stijl op de kaart en in de legenda zichtbaar wordt.
+   * laagconfiguratie worden bijgewerkt. De kaartlaag past de stijl vervolgens zelf toe,
+   * zodat de nieuwe stijl op de kaart en in de legenda zichtbaar wordt.
    *
    * @param styleName De technische naam van de stijl binnen [styles].
    * @param layerId De layerId van de laag.
@@ -429,13 +429,16 @@ export class GgcLayerService {
     if (!layerOptions || layerOptions.activeStyle === styleName) {
       return;
     }
-    const applied = this.applyStyle(
-      layerOptions,
-      styleName,
-      this.getTypeOfLayer(layerId, mapIndex)
-    );
-    if (applied && this.isVisible(layerId, mapIndex)) {
-      this.reloadLayer(layerId, mapIndex);
+    const style = this.updateActiveStyleConfig(layerOptions, styleName);
+    if (!style) {
+      return;
+    }
+    this.mapLayerComponents
+      .get(this.buildLayerComponentKey(mapIndex, layerId))
+      ?.applyStyle(style);
+    if (this.isVisible(layerId, mapIndex)) {
+      this.emitLegendRemovedEvent(layerId, mapIndex);
+      this.emitLegendAddedEvent(layerId, mapIndex);
     }
   }
 
@@ -597,7 +600,7 @@ export class GgcLayerService {
         mapIndex: mapIndex,
         visible: layerOptions.visible ?? true
       } as AbstractConfigurableLayerOptions;
-      this.initializeActiveStyle(updatedLayer, service.type);
+      this.initializeActiveStyle(updatedLayer);
       if (updatedLayer.visible || updatedLayer.persistent) {
         this.addLayer(updatedLayer, service.type);
       }
@@ -621,8 +624,7 @@ export class GgcLayerService {
    * wordt de eerste stijl uit [styles] de actieve stijl.
    */
   private initializeActiveStyle(
-    layerOptions: AbstractConfigurableLayerOptions,
-    webserviceType: Webservice2DType | undefined
+    layerOptions: AbstractConfigurableLayerOptions
   ): void {
     const styles = layerOptions.styles;
     if (!styles?.length) {
@@ -631,19 +633,20 @@ export class GgcLayerService {
     const styleName =
       styles.find((style) => style.name === layerOptions.activeStyle)?.name ??
       styles[0].name;
-    this.applyStyle(layerOptions, styleName, webserviceType);
+    this.updateActiveStyleConfig(layerOptions, styleName);
   }
 
   /**
    * Werkt de laagconfiguratie bij met de opgegeven stijl.
    *
-   * @returns true als de stijl beschikbaar is en is toegepast.
+   * De kaartlaag zelf vertaalt de stijl naar zijn eigen opties en bron.
+   *
+   * @returns de stijl, of undefined als de stijl niet beschikbaar is.
    */
-  private applyStyle(
+  private updateActiveStyleConfig(
     layerOptions: AbstractConfigurableLayerOptions,
-    styleName: string,
-    webserviceType: Webservice2DType | undefined
-  ): boolean {
+    styleName: string
+  ): Style | undefined {
     const style = layerOptions.styles?.find(
       (availableStyle) => availableStyle.name === styleName
     );
@@ -651,69 +654,14 @@ export class GgcLayerService {
       console.error(
         `Stijl ${styleName} is niet beschikbaar voor kaartlaag ${layerOptions.layerId}`
       );
-      return false;
+      return undefined;
     }
 
     layerOptions.activeStyle = style.name;
     if (style.legend) {
       layerOptions.activeLegend = style.legend.legend;
     }
-    this.applyStyleToSourceOptions(layerOptions, style, webserviceType);
-    return true;
-  }
-
-  /**
-   * Vertaalt de stijl naar de laagtype‑specifieke opties,
-   * zodat de kaartlaag de stijl daadwerkelijk toont.
-   */
-  private applyStyleToSourceOptions(
-    layerOptions: AbstractConfigurableLayerOptions,
-    style: Style,
-    webserviceType: Webservice2DType | undefined
-  ): void {
-    switch (webserviceType) {
-      case Webservice2DType.WMS: {
-        const wmsLayerOptions = layerOptions as WmsLayerOptions;
-        const params = Object.fromEntries(
-          Object.entries(wmsLayerOptions.sourceOptions?.params ?? {}).filter(
-            ([key]) => key.toLowerCase() !== "styles"
-          )
-        );
-        params["STYLES"] = style.name;
-        wmsLayerOptions.sourceOptions = {
-          ...wmsLayerOptions.sourceOptions,
-          params
-        };
-        break;
-      }
-      case Webservice2DType.WMTS: {
-        const wmtsLayerOptions = layerOptions as WmtsLayerOptions;
-        wmtsLayerOptions.sourceOptions = {
-          ...wmtsLayerOptions.sourceOptions,
-          style: style.name
-        };
-        break;
-      }
-      case Webservice2DType.VECTOR: {
-        const vectorTileStyleUrl = this.getVectorTileStyleUrl(style);
-        if (vectorTileStyleUrl) {
-          (layerOptions as VectorTileLayerOptions).style = vectorTileStyleUrl;
-        }
-        break;
-      }
-    }
-  }
-
-  /**
-   * Geeft de mapbox style url van een stijl terug,
-   * wanneer de legenda van de stijl een VectorTileStyle is.
-   */
-  private getVectorTileStyleUrl(style: Style): string | undefined {
-    const legend = style.legend?.legend;
-    if (legend && !Array.isArray(legend) && "url" in legend) {
-      return legend.url;
-    }
-    return undefined;
+    return style;
   }
 
   private removeCurrentLayers(mapIndex: string) {
