@@ -2,6 +2,6 @@
   <div [innerHTML]="svgContent()"></div>
 } @else {
   <div class="ggc-dl-legend-img">
-    <img [src]="legend.legendUrl" [alt]="layerName" />
+    <img [src]="legend().legendUrl" [alt]="layerName()" />
   </div>
 }

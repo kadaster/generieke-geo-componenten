@@ -1,12 +1,11 @@
 import {
   ElementRef,
+  AfterViewInit,
   Component,
   inject,
   OnDestroy,
-  OnInit,
-  ViewChild,
-  ChangeDetectionStrategy,
-  input
+  input,
+  viewChild
 } from "@angular/core";
 import MousePosition, {
   Options as MousePositionOptions
@@ -34,7 +33,7 @@ import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
   templateUrl: "./ggc-mouse-position.component.html",
   styleUrls: ["./ggc-mouse-position.component.css"]
 })
-export class GgcMousePositionComponent implements OnInit, OnDestroy {
+export class GgcMousePositionComponent implements AfterViewInit, OnDestroy {
   /**
    * Optionele injectie van de MapDetailsContainer.
    * Indien aanwezig wordt de mouse position daarin gerenderd.
@@ -72,11 +71,11 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
    * Referentie naar het HTML-element
    * waarin de mouse position wordt gerenderd.
    */
-  @ViewChild("ggcMousePosition", { static: true })
-  private readonly ggcMousePosition: ElementRef;
+  private readonly ggcMousePosition =
+    viewChild.required<ElementRef<HTMLElement>>("ggcMousePosition");
 
   /** Initialiseert de MousePosition control en voegt deze toe aan de kaart */
-  ngOnInit() {
+  ngAfterViewInit() {
     this.mousePositionControl = new MousePosition(
       this.createMousePositionOptions()
     );
@@ -102,7 +101,7 @@ export class GgcMousePositionComponent implements OnInit, OnDestroy {
     // when parent component MapDetailsContainerComponent is present, target for mouseposition is set to nativeElement
     // to show the mouse position within the parent component instead of the default location on the map
     if (this.mapDetailsContainer) {
-      options.target = this.ggcMousePosition.nativeElement;
+      options.target = this.ggcMousePosition().nativeElement;
     }
     return options;
   }

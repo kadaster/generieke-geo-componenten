@@ -1,13 +1,11 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import MapEvent from "ol/MapEvent";
 import { Observable, ReplaySubject, Subject } from "rxjs";
 import { ObservableMapWrapper } from "@kadaster/ggc-models";
 import { CoreLoadingService } from "./core-loading.service";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreMapEventsService {
   private coreLoadingServiceService = inject(CoreLoadingService);
 

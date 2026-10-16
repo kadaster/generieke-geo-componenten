@@ -10,10 +10,11 @@
 - Preserve existing worktree changes and touch only what the request requires. Do not modify generated output, dependencies, lockfiles, or release metadata unless required.
 - Ask when requirements or trade-offs are unclear; do not invent project names, scripts, configuration options, or exports.
 - Treat published GGC library APIs and consumer-visible behavior as compatibility contracts for third-party users. Before changing something that may break consumers (for example, renaming or removing an input/output, changing an event API, or changing a public type), inspect the impact and prefer a backwards-compatible path. If a breaking change may be necessary, explain the impact and get the developer’s explicit approval before implementing it; do not assume approval from the feature request alone.
+- When addressing PR review comments, inspect the exact diff and surrounding behavior, then treat each comment as requested work unless the developer asks only for discussion. Verify the concern and implement the smallest appropriate correction; explain rather than blindly apply a suggestion that would change behavior or conflict with compatibility contracts. Validate each correction and report any concern that remains unresolved.
 
 ## Core principles
 
-- When a story or the codebase uses different terms for the same entity, identify one canonical term from the existing API, domain model, and documentation, then use it consistently. If the intended term remains unclear, ask the developer before changing code or user-facing text.
+- Before introducing or changing a name or domain term, verify what the value or API represents and how it is used. Prefer established terminology from the API, domain model, documentation, and nearby code; avoid vague or overloaded terms. For example, if a map service stores validators in separate groups for drawing a feature, modifying its geometry, and moving it, `interactionType` describes the key that selects a group. `owner` could instead suggest that the key identifies which resource controls the validator's lifetime. If the meaning or canonical term remains unclear, surface the ambiguity and ask before encoding it in code or user-facing text.
 - Don’t assume. Don’t hide confusion. Surface tradeoffs.
 - Minimum code that solves the problem. Nothing speculative.
 - Touch only what you must. Clean up only your own mess.

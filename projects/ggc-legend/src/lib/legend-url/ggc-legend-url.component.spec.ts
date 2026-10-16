@@ -38,15 +38,17 @@ describe("GgcLegendUrlComponent", () => {
   });
 
   it("should detect svg url correctly", () => {
-    component.legend = { legendUrl: "http://test.com/icon.svg" } as any;
+    fixture.componentRef.setInput("legend", {
+      legendUrl: "http://test.com/icon.svg"
+    } as any);
 
     expect(component.isSvg()).toBeTruthy();
   });
 
   it("should fetch svg when legend is set", () => {
-    component.legend = {
+    fixture.componentRef.setInput("legend", {
       legendUrl: "http://test.com/icon.svg"
-    } as any;
+    } as any);
 
     fixture.detectChanges();
 
@@ -57,9 +59,9 @@ describe("GgcLegendUrlComponent", () => {
   });
 
   it("should sanitize and store svg content", () => {
-    component.legend = {
+    fixture.componentRef.setInput("legend", {
       legendUrl: "http://test.com/icon.svg"
-    } as any;
+    } as any);
 
     const rawSvg = `<svg><script>alert(1)</script></svg>`;
 
@@ -73,9 +75,9 @@ describe("GgcLegendUrlComponent", () => {
   });
 
   it("should not fetch when url is not svg", () => {
-    component.legend = {
+    fixture.componentRef.setInput("legend", {
       legendUrl: "http://test.com/icon.png"
-    } as any;
+    } as any);
 
     fixture.detectChanges();
 
@@ -83,7 +85,7 @@ describe("GgcLegendUrlComponent", () => {
   });
 
   it("should not fetch when legend is empty", () => {
-    component.legend = { legendUrl: null } as any;
+    fixture.componentRef.setInput("legend", { legendUrl: null } as any);
 
     fixture.detectChanges();
 

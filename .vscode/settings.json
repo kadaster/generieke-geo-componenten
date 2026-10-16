@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "https-sonarqube-dev-cloud-kadaster-nl-",
+        "projectKey": "nl.kadaster.ggc:generieke-geo-componenten"
+    }
+}

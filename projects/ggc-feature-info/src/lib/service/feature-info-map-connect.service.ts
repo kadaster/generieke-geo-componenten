@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 
 import { Observable, of } from "rxjs";
 import {
@@ -9,9 +9,7 @@ import {
 } from "@kadaster/ggc-models";
 import { GgcFeatureInfoConnectService } from "./connect.service";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class FeatureInfoMapConnectService {
   private readonly connectService: GgcFeatureInfoConnectService = inject(
     GgcFeatureInfoConnectService

@@ -300,7 +300,8 @@ describe("VectorTileLayerComponent", () => {
     const mapSpy = createOlMapMock();
     component["map"] = mapSpy as unknown as OlMap;
 
-    const eventSpy = vi.spyOn(component.events, "emit");
+    const emittedEvents: MapComponentEvent[] = [];
+    component.events.subscribe((event) => emittedEvents.push(event));
     const pixel: Pixel = [123, 456];
     const evt = { pixel } as MapBrowserEvent;
 
@@ -314,7 +315,7 @@ describe("VectorTileLayerComponent", () => {
       expect(emittedEvent.value).toEqual([]);
 
       expect(component["map"].forEachFeatureAtPixel).toHaveBeenCalled();
-      expect(eventSpy).toHaveBeenCalled();
+      expect(emittedEvents).toHaveLength(1);
       expect(
         coreSelectionServiceSpy.handleFeatureInfoForLayer
       ).toHaveBeenCalled();

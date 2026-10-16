@@ -39,10 +39,10 @@ describe("GgcDatasetSwitcherComponent", () => {
     fixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
     component = fixture.componentInstance;
 
-    component.datasetSwitcherButtons = [
+    fixture.componentRef.setInput("datasetSwitcherButtons", [
       new DatasetSwitcherButton("Theme A", ""),
       new DatasetSwitcherButton("Theme B", "")
-    ];
+    ]);
 
     fixture.detectChanges();
   });
@@ -69,8 +69,6 @@ describe("GgcDatasetSwitcherComponent", () => {
       const spy = vi.spyOn(component as any, "setInitialActiveTheme");
 
       const themes = createThemes(["Theme A", "Theme B"]);
-      component.themes = themes;
-
       component.ngOnChanges({
         themes: new SimpleChange(themes, themes, false)
       });
@@ -90,9 +88,9 @@ describe("GgcDatasetSwitcherComponent", () => {
         .mockResolvedValue(undefined);
 
       const themes = createThemes(["Theme A", "Theme B"]);
-      component.themes = themes;
+      fixture.componentRef.setInput("themes", themes);
 
-      component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
+      fixture.detectChanges();
 
       vi.advanceTimersByTime(100);
 
@@ -106,8 +104,8 @@ describe("GgcDatasetSwitcherComponent", () => {
     it("should pick the visible theme and emit event", async () => {
       vi.useFakeTimers();
 
-      component.themes = createThemesWithLayers();
-      component.initialActiveTheme = "Theme B";
+      fixture.componentRef.setInput("themes", createThemesWithLayers());
+      fixture.componentRef.setInput("initialActiveTheme", "Theme B");
 
       datasetTreeMapConnectServiceSpy.isVisible.mockImplementation(
         (layerId: string) => {
@@ -118,9 +116,7 @@ describe("GgcDatasetSwitcherComponent", () => {
       const emitted: DatasetSwitcherEvent[] = [];
       component.events.subscribe((e) => emitted.push(e));
 
-      component.ngOnChanges({
-        initialActiveTheme: new SimpleChange("", "Theme B", false)
-      });
+      fixture.detectChanges();
 
       vi.advanceTimersByTime(100);
       await vi.runAllTimersAsync();
@@ -137,14 +133,14 @@ describe("GgcDatasetSwitcherComponent", () => {
     it("should fall back to first theme when none visible", async () => {
       vi.useFakeTimers();
       const themes = createThemesWithLayers();
-      component.themes = themes;
+      fixture.componentRef.setInput("themes", themes);
 
       datasetTreeMapConnectServiceSpy.isVisible.mockResolvedValue(false);
 
       const emitted: DatasetSwitcherEvent[] = [];
       component.events.subscribe((e) => emitted.push(e));
 
-      component.ngOnChanges({ themes: new SimpleChange([], themes, false) });
+      fixture.detectChanges();
 
       vi.advanceTimersByTime(100);
       await vi.runAllTimersAsync();
@@ -158,30 +154,35 @@ describe("GgcDatasetSwitcherComponent", () => {
 
   describe("handleChangeEvent", () => {
     it("should ignore invalid events", () => {
-      const emitSpy = vi.spyOn(component.events, "emit");
+      const emitted: DatasetSwitcherEvent[] = [];
+      component.events.subscribe((event) => emitted.push(event));
 
       component.handleChangeEvent({ target: {} } as any);
 
-      expect(emitSpy).not.toHaveBeenCalled();
+      expect(emitted).toHaveLength(0);
     });
 
     it("should ignore unknown theme", () => {
-      const emitSpy = vi.spyOn(component.events, "emit");
-      component.themes = createThemes(["Theme A"]);
+      fixture.componentRef.setInput("themes", createThemes(["Theme A"]));
+      fixture.detectChanges();
+      const emitted: DatasetSwitcherEvent[] = [];
+      component.events.subscribe((event) => emitted.push(event));
 
       component.handleChangeEvent({ target: { id: "X" } } as any);
 
-      expect(emitSpy).not.toHaveBeenCalled();
+      expect(emitted).toHaveLength(0);
     });
 
     it("should switch theme and update visibility", async () => {
       vi.useFakeTimers();
 
       const themes = createThemesWithLayers();
-      component.themes = themes;
+      fixture.componentRef.setInput("themes", themes);
+      fixture.detectChanges();
       component["activeTheme"].set(themes[0]);
 
-      const emitSpy = vi.spyOn(component.events, "emit");
+      const emitted: DatasetSwitcherEvent[] = [];
+      component.events.subscribe((event) => emitted.push(event));
 
       component.handleChangeEvent({ target: { id: "Theme B" } } as any);
 
@@ -193,7 +194,7 @@ describe("GgcDatasetSwitcherComponent", () => {
         ["a-1"],
         false,
         ViewerType.TWEE_D,
-        component.mapIndex
+        component.mapIndex()
       );
       expect(
         datasetTreeMapConnectServiceSpy.setVisibilityLayers
@@ -201,10 +202,11 @@ describe("GgcDatasetSwitcherComponent", () => {
         ["b-1"],
         true,
         ViewerType.TWEE_D,
-        component.mapIndex
+        component.mapIndex()
       );
 
-      expect(emitSpy).toHaveBeenCalled();
+      expect(emitted).toHaveLength(1);
+      expect(emitted[0].value.themeName).toBe("Theme B");
       expect(component["activeTheme"]()?.themeName).toBe("Theme B");
     });
   });
@@ -216,13 +218,13 @@ describe("GgcDatasetSwitcherComponent", () => {
       const localFixture = TestBed.createComponent(GgcDatasetSwitcherComponent);
       const localComponent = localFixture.componentInstance;
 
-      localComponent.datasetSwitcherButtons = [
+      localFixture.componentRef.setInput("datasetSwitcherButtons", [
         new DatasetSwitcherButton("Theme A", ""),
         new DatasetSwitcherButton("Theme B", "")
-      ];
+      ]);
 
-      localComponent.themes = createThemesWithLayers();
-      localComponent["activeTheme"].set(localComponent.themes[0]);
+      localFixture.componentRef.setInput("themes", createThemesWithLayers());
+      localComponent["activeTheme"].set(localComponent.themes()[0]);
 
       localFixture.detectChanges();
       vi.advanceTimersByTime(100);

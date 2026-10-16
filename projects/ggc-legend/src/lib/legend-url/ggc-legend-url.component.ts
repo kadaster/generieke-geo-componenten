@@ -3,7 +3,7 @@ import {
   computed,
   effect,
   inject,
-  Input,
+  input,
   signal
 } from "@angular/core";
 import { LegendUrl } from "@kadaster/ggc-models";
@@ -19,19 +19,19 @@ export class GgcLegendUrlComponent {
   /**
    * De legenda url van de legenda die wordt weergegeven in dit component
    */
-  @Input() legend: LegendUrl;
+  readonly legend = input.required<LegendUrl>();
   /**
    * De naam van de laag die wordt weergegeven. Deze wordt gebruikt als alternatieve tekst.
    */
-  @Input() layerName: string;
+  layerName = input<string>();
 
   /**
    * Checkt of de legenda url een svg is.
    */
-  isSvg = computed(
-    () =>
-      this.legend?.legendUrl && /\.svg(?:\?.*)?$/i.test(this.legend.legendUrl)
-  );
+  isSvg = computed(() => {
+    const legendUrl = this.legend().legendUrl;
+    return legendUrl && /\.svg(?:\?.*)?$/i.test(legendUrl);
+  });
 
   /**
    * Indien svg wordt weergegeven, bevat deze de veilige svg content.
@@ -44,7 +44,7 @@ export class GgcLegendUrlComponent {
   constructor() {
     effect(() => {
       this.svgContent.set("");
-      const url = this.legend.legendUrl;
+      const url = this.legend().legendUrl;
 
       if (!url || !this.isSvg()) return;
 

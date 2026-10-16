@@ -4,11 +4,9 @@ import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { StyleLike } from "ol/style/Style";
 import { CoreMapService } from "../../map/service/core-map.service";
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreDrawLayerService {
   private coreMapService = inject(CoreMapService);
   private drawLayers: Map<

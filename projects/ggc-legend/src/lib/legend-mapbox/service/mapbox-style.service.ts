@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { Observable } from "rxjs";
 import {
   IProperties,
@@ -20,9 +20,7 @@ export function exhaustiveGuard(_value: never): never {
   );
 }
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class MapboxStyleService {
   http = inject(HttpClient);
 

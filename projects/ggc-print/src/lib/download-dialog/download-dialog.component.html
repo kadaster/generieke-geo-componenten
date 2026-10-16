@@ -18,7 +18,7 @@
           aria-label="Sluit dit venster"
           (click)="closeModal()"
         >
-          <span [ngClass]="iconClose + ' close-icon'" aria-hidden="true"></span>
+          <span [ngClass]="iconClose() + ' close-icon'" aria-hidden="true"></span>
         </button>
       </div>
       <div class="modal-body">
@@ -61,12 +61,12 @@
                     >
                       <i
                         aria-hidden="true"
-                        [ngClass]="iconFile + ' doc-icon blue-color'"
+                        [ngClass]="iconFile() + ' doc-icon blue-color'"
                       ></i>
                       <span class="btn-text">Download bestand</span
                       ><i
                         aria-hidden="true"
-                        [ngClass]="iconDownload + ' download-icon blue-color'"
+                        [ngClass]="iconDownload() + ' download-icon blue-color'"
                       ></i>
                     </button>
                   </div>

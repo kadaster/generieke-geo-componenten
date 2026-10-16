@@ -1,16 +1,14 @@
 import {
-  ChangeDetectionStrategy,
   ElementRef,
   AfterViewInit,
   Component,
   inject,
   OnDestroy,
-  ViewChild,
   input,
   effect,
   untracked,
-  Output,
-  EventEmitter
+  output,
+  viewChild
 } from "@angular/core";
 import { Coordinate } from "ol/coordinate";
 import { EventsKey } from "ol/events";
@@ -30,6 +28,7 @@ import { CoreLoadingService } from "./service/core-loading.service";
 import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
 import { Webservice } from "../layer/model/webservice.model";
+import { CoreSelectionService } from "../service/select/core-selection.service";
 import { GgcLayerService } from "../service/select/ggc-layer.service";
 import {
   DEFAULT_MAPINDEX,
@@ -127,12 +126,11 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
    * - ZOOMEND / ZOOMENDLOCATION
    * - LOADING
    */
-  @Output() events: EventEmitter<MapComponentEvent> =
-    new EventEmitter<MapComponentEvent>();
+  readonly events = output<MapComponentEvent>();
 
   /** DOM‑element waarin de kaart gerenderd wordt */
-  @ViewChild("mapElement", { static: true })
-  private readonly mapElement: ElementRef;
+  private readonly mapElement =
+    viewChild.required<ElementRef<HTMLElement>>("mapElement");
   private readonly eventsMap: EventsKey[] = [];
   private lastChangeResolutionEvent: ObjectEvent | undefined;
   private readonly coreMapService = inject(CoreMapService);
@@ -141,6 +139,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   private readonly coreDrawService = inject(CoreDrawService, {
     optional: true
   });
+  private readonly coreSelectionService = inject(CoreSelectionService);
   private readonly ggcLayerService = inject(GgcLayerService);
   // ol event type name
   private readonly OL_MOVEEND: MapEventTypes = "moveend";
@@ -187,7 +186,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
         this.minZoomlevel(),
         this.maxZoomlevel()
       );
-      map.setTarget(this.mapElement.nativeElement.id);
+      map.setTarget(this.mapElement().nativeElement.id);
 
       this.eventsMap.push(
         map.on(this.OL_PRECOMPOSE, this.processEvent.bind(this)),
@@ -297,6 +296,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     /* destroying the olMap, optional drawInteraction and selectionService. Destroying the OlMap itself last to prevent issues during
     destruction of the other parts */
     this.coreLoadingService.destroyLoadersForMap(this.mapIndex());
+    this.coreSelectionService.destroySelectionsForMap(this.mapIndex());
     if (this.coreDrawService) {
       this.coreDrawService.deleteLayers(this.mapIndex());
     }

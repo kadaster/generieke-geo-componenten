@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Type } from "ol/geom/Geometry";
@@ -25,9 +25,7 @@ type DrawStyle =
 
 type CoreMeasureDrawStyle = Style | Style[] | void;
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreMeasureDrawStyleService {
   public getMeasureStyle(
     measureType: Type,

@@ -1,11 +1,5 @@
 import type { ElementRef, TemplateRef } from "@angular/core";
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild
-} from "@angular/core";
+import { Component, input, output, signal, viewChild } from "@angular/core";
 import { ToolbarItemComponentEvent } from "../../event/toolbar-item-event";
 import { NgClass } from "@angular/common";
 
@@ -50,63 +44,74 @@ export class GgcToolbarItemComponent {
   /**
    * De ID van het actieve toolbar-item. Wordt gebruikt om te bepalen of dit item actief is.
    */
-  @Input() activeId: string;
+  activeId = input<string>();
 
   /**
    * Font Awesome icoonklasse die op de knop wordt weergegeven.
    * Bijvoorbeeld: `"fas fa-info-circle"`.
    */
-  @Input() icon: string;
+  icon = input<string>();
 
   /**
    * Tooltip en aria-label voor de knop.
    */
-  @Input() title: string;
+  title = input<string>();
 
   /**
    * Labeltekst die op de knop wordt weergegeven.
    */
-  @Input() label: string;
+  label = input<string>();
 
   /**
    * SVG-afbeelding die op de knop wordt weergegeven (alternatief voor `icon`).
    */
-  @Input() svg: string;
+  svg = input<string>();
 
   /**
    * Optionele callbackfunctie die wordt uitgevoerd bij een klik op de knop.
    * Als deze is ingesteld, wordt handleClick niet uitgevoerd (actieve element wordt niet geupdatet en er wordt geen event ge-emit)
    */
-  @Input() clickCallback: () => void;
+  clickCallback = input<() => void>();
+
+  /**
+   * Output die een `ToolbarItemComponentEvent` emit wanneer de actieve status verandert.
+   */
+  readonly activeChanged = output<ToolbarItemComponentEvent>();
+
+  // NOSONAR: Non-cryptographic random value used only as a DOM id.
+  // No security-sensitive context.
+  protected readonly id = Math.random().toString(36).substring(2);
+  protected readonly _active = signal(false);
 
   /**
    * TemplateRef naar de inhoud van het toolbar-item.
    */
-  @ViewChild("toolbarItemTemplate") toolbarItemTemplate: TemplateRef<any>;
+  private readonly toolbarItemTemplateQuery = viewChild.required<
+    TemplateRef<any>
+  >("toolbarItemTemplate");
 
   /**
    * ElementRef naar het DOM-element van het toolbar-item.
    */
-  @ViewChild("toolbarItem") toolbarItem: ElementRef;
+  private readonly toolbarItemQuery =
+    viewChild.required<ElementRef>("toolbarItem");
 
-  /**
-   * EventEmitter die een `ToolbarItemComponentEvent` emit wanneer de actieve status verandert.
-   */
-  @Output() activeChanged: EventEmitter<ToolbarItemComponentEvent> =
-    new EventEmitter<ToolbarItemComponentEvent>();
+  get toolbarItemTemplate(): TemplateRef<any> {
+    return this.toolbarItemTemplateQuery();
+  }
 
-  // NOSONAR: Non-cryptographic random value used only as a DOM id.
-  // No security-sensitive context.
-  protected id = Math.random().toString(36).substring(2);
-  protected _active = false;
+  get toolbarItem(): ElementRef {
+    return this.toolbarItemQuery();
+  }
 
   /**
    * Wordt aangeroepen bij een klik op de knop.
    * Roept `clickCallback` aan indien aanwezig, anders `handleClick`.
    */
   onClick() {
-    if (this.clickCallback) {
-      this.clickCallback();
+    const clickCallback = this.clickCallback();
+    if (clickCallback) {
+      clickCallback();
     } else {
       this.handleClick();
     }
@@ -116,10 +121,10 @@ export class GgcToolbarItemComponent {
    * Handelt de klik af door de actieve status te toggelen en een event te emitten.
    */
   handleClick() {
-    this._active = !this._active;
+    this._active.set(!this._active());
     this.activeChanged.emit({
       toolbarItemComponent: this,
-      active: this._active
+      active: this._active()
     });
   }
 
@@ -127,6 +132,6 @@ export class GgcToolbarItemComponent {
    * Zet de actieve status van het item.
    */
   set active(state: boolean) {
-    this._active = state;
+    this._active.set(state);
   }
 }

@@ -18,12 +18,12 @@ import {
 } from "@kadaster/ggc-models";
 import { of } from "rxjs";
 import { provideZonelessChangeDetection } from "@angular/core";
-import { filter, take } from "rxjs/operators";
 
 describe("MapComponent, ngAfterViewInit", () => {
   let component: GgcMapComponent;
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapService: Mocked<CoreMapService>;
+  let coreSelectionService: CoreSelectionService;
 
   const httpClientSpy = {
     get: vi.fn().mockName("HttpClient.get")
@@ -34,7 +34,8 @@ describe("MapComponent, ngAfterViewInit", () => {
   beforeEach(() => {
     viewMock = {
       on: vi.fn(),
-      setZoom: vi.fn()
+      setZoom: vi.fn(),
+      getZoom: vi.fn().mockReturnValue(3)
     } as unknown as MockedObject<View>;
 
     mapMock = {
@@ -65,25 +66,22 @@ describe("MapComponent, ngAfterViewInit", () => {
     }).compileComponents();
     fixture = TestBed.createComponent(GgcMapComponent);
     component = fixture.componentInstance;
+    coreSelectionService = TestBed.inject(CoreSelectionService);
   });
 
   it("Events should be set", async () => {
-    component.events
-      .pipe(
-        filter(
-          (event: MapComponentEvent) =>
-            event.type === MapComponentEventTypes.MAPINITIALIZED
-        ),
-        take(1)
-      )
-      .subscribe((mapComponentInitEvent: MapComponentEvent) => {
-        expect(mapComponentInitEvent.type).toBe(
-          MapComponentEventTypes.MAPINITIALIZED
-        );
-      });
+    let mapInitializedEvent: MapComponentEvent | undefined;
+    component.events.subscribe((event) => {
+      if (event.type === MapComponentEventTypes.MAPINITIALIZED) {
+        mapInitializedEvent = event;
+      }
+    });
 
     fixture.detectChanges();
 
+    expect(mapInitializedEvent?.type).toBe(
+      MapComponentEventTypes.MAPINITIALIZED
+    );
     expect(mapMock.setTarget).toHaveBeenCalled();
     expect(mapMock.on).toHaveBeenCalledTimes(4);
     expect(vi.mocked(mapMock.on).mock.calls[0][0] as unknown as string).toEqual(
@@ -106,10 +104,15 @@ describe("MapComponent, ngAfterViewInit", () => {
   it("Events should be unset", () => {
     // setUp
     fixture.detectChanges();
+    const destroySelectionsForMapSpy = vi.spyOn(
+      coreSelectionService,
+      "destroySelectionsForMap"
+    );
     // cleanUp
     fixture.destroy();
 
     expect(component["eventsMap"].length).toEqual(0);
+    expect(destroySelectionsForMapSpy).toHaveBeenCalledWith(DEFAULT_MAPINDEX);
   });
   it("minZoomlevel cannot be below 0 and maxZoomlevel cannot be below 1", () => {
     fixture.componentRef.setInput("minZoomlevel", -1);

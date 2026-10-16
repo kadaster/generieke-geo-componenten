@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { FeatureCollection } from "geojson";
 import { firstValueFrom } from "rxjs";
@@ -11,9 +11,7 @@ interface OgcApiResponse {
   features?: any[];
 }
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class CoreOgcApiFeaturesService {
   private readonly http = inject(HttpClient);
   private readonly geoJsonFormat = new GeoJSON();

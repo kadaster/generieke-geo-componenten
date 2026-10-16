@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, input, Output } from "@angular/core";
+import { Component, inject, input, output, signal } from "@angular/core";
 import {
   ToolbarItemMeasureComponentEvent,
   ToolbarItemMeasureType
@@ -71,11 +71,12 @@ export class GgcToolbarItemMeasureComponent {
    * Event dat wordt verstuurd wanneer een meetactie wordt uitgevoerd.
    * Bevat het type actie via `toolbarItemName`.
    */
-  @Output() measureItemClicked: EventEmitter<ToolbarItemMeasureComponentEvent> =
-    new EventEmitter<ToolbarItemMeasureComponentEvent>();
+  readonly measureItemClicked = output<ToolbarItemMeasureComponentEvent>();
 
   /** Huidig actieve meetactie. */
-  protected activeMeasure: "line" | "polygon" | "edit" | "move" | undefined;
+  protected activeMeasure = signal<
+    "line" | "polygon" | "edit" | "move" | undefined
+  >(undefined);
 
   private readonly connectService = inject(GgcToolbarConnectService);
 
@@ -97,7 +98,7 @@ export class GgcToolbarItemMeasureComponent {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
         this.resetActive();
-        this.activeMeasure = "line";
+        this.activeMeasure.set("line");
         drawService.startDraw(
           this.layer(),
           MapComponentDrawTypes.LINESTRING,
@@ -118,7 +119,7 @@ export class GgcToolbarItemMeasureComponent {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
         this.resetActive();
-        this.activeMeasure = "polygon";
+        this.activeMeasure.set("polygon");
         drawService.startDraw(
           this.layer(),
           MapComponentDrawTypes.POLYGON,
@@ -153,7 +154,7 @@ export class GgcToolbarItemMeasureComponent {
   move(): void {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
-        this.activeMeasure = "move";
+        this.activeMeasure.set("move");
         drawService.startMove(this.layer(), this.mapIndex());
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.MOVE
@@ -168,7 +169,7 @@ export class GgcToolbarItemMeasureComponent {
   edit(): void {
     from(this.getDrawService()).subscribe((drawService) => {
       if (drawService) {
-        this.activeMeasure = "edit";
+        this.activeMeasure.set("edit");
         drawService.startModify(this.layer(), this.mapIndex());
         this.measureItemClicked.emit({
           toolbarItemName: ToolbarItemMeasureType.EDIT
@@ -196,6 +197,6 @@ export class GgcToolbarItemMeasureComponent {
    * Reset de actieve meetactie.
    */
   private resetActive() {
-    this.activeMeasure = undefined;
+    this.activeMeasure.set(undefined);
   }
 }

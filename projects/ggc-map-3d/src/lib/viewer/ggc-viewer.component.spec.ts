@@ -88,6 +88,30 @@ describe("ViewerComponent", () => {
     expect(cesiumMock.camera!.flyTo).not.toHaveBeenCalled();
   });
 
+  it("should remove camera listeners and destroy the viewer on teardown", async () => {
+    const removeCameraChangedListener = vi.fn();
+    const removeCameraMoveEndListener = vi.fn();
+    const destroyViewer = vi.fn();
+    const camera = cesiumMock.camera as any;
+    camera.changed.addEventListener.mockReturnValue(
+      removeCameraChangedListener
+    );
+    camera.moveEnd.addEventListener.mockReturnValue(
+      removeCameraMoveEndListener
+    );
+
+    fixture.detectChanges();
+    await Promise.resolve();
+    await Promise.resolve();
+    (component["viewer"] as any).destroy = destroyViewer;
+
+    fixture.destroy();
+
+    expect(removeCameraChangedListener).toHaveBeenCalledOnce();
+    expect(removeCameraMoveEndListener).toHaveBeenCalledOnce();
+    expect(destroyViewer).toHaveBeenCalledOnce();
+  });
+
   it("should call flyTo after cesium is ready when cameraOptions is set before init", async () => {
     fixture.componentRef.setInput("cameraOptions", {
       cameraPosition: { lon: 10, lat: 10 }

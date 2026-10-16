@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, QueryList, TemplateRef } from "@angular/core";
+import { TemplateRef } from "@angular/core";
 import {
-  AfterViewInit,
   Component,
-  ContentChildren,
+  contentChildren,
+  effect,
   inject,
-  Input,
-  OnInit
+  input,
+  OnInit,
+  signal
 } from "@angular/core";
 import Map from "ol/Map";
 import { ToolbarItemComponentEvent } from "../../event/toolbar-item-event";
@@ -46,32 +47,57 @@ import { GgcToolbarConnectService } from "../../service/connect.service";
   styleUrls: ["./ggc-toolbar.component.css"],
   imports: [NgTemplateOutlet]
 })
-export class GgcToolbarComponent implements OnInit, AfterViewInit {
+export class GgcToolbarComponent implements OnInit {
   /**
    * Naam van de kaart waarop de toolbar betrekking heeft.
    * Indien niet opgegeven, wordt de standaardkaart gebruikt.
    */
-  @Input() mapIndex: string = DEFAULT_MAPINDEX;
+  mapIndex = input(DEFAULT_MAPINDEX);
 
-  protected toolbarContentTemplate: TemplateRef<any> | undefined;
+  protected toolbarContentTemplate = signal<TemplateRef<any> | undefined>(
+    undefined
+  );
 
-  @ContentChildren(GgcToolbarItemComponent)
-  private readonly children: QueryList<GgcToolbarItemComponent>;
+  private readonly children = contentChildren(GgcToolbarItemComponent);
 
   private map: Map;
   private readonly connectService = inject(GgcToolbarConnectService);
   private readonly toolbarService = inject(GgcToolbarService);
-  private cdr = inject(ChangeDetectorRef);
 
   /**
-   * Constructor registreert een listener op de actieve toolbar-item observable.
-   * Wanneer geen item actief is, worden alle items gedeactiveerd.
+   * Wanneer geen toolbar-item actief is, worden alle items gedeactiveerd.
    */
   constructor() {
-    this.toolbarService.getActiveToolbarItemObservable().subscribe((event) => {
-      if (event === null && this.children) {
-        this.children.forEach((child) => (child.active = false));
+    effect(() => {
+      if (this.toolbarService.activeToolbarItem() === null) {
+        this.children().forEach((child) => (child.active = false));
       }
+    });
+
+    effect((onCleanup) => {
+      const childSubscriptions = this.children().map((child) =>
+        child.activeChanged.subscribe((event: ToolbarItemComponentEvent) => {
+          if (event.active) {
+            this.toolbarContentTemplate.set(
+              event.toolbarItemComponent.toolbarItemTemplate
+            );
+            this.inactivateOtherChildren(event.toolbarItemComponent);
+            const activeId = event.toolbarItemComponent.activeId();
+            if (activeId !== undefined) {
+              this.toolbarService.setActiveToolbarItem(activeId);
+            }
+          } else {
+            this.toolbarContentTemplate.set(undefined);
+            if (event.toolbarItemComponent.activeId() !== undefined) {
+              this.toolbarService.setActiveToolbarItem(null);
+            }
+          }
+        })
+      );
+
+      onCleanup(() =>
+        childSubscriptions.forEach((subscription) => subscription.unsubscribe())
+      );
     });
   }
 
@@ -85,31 +111,8 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
   async init(): Promise<void> {
     const mapService = await this.connectService.getMapService();
     if (mapService) {
-      this.map = (mapService as any).getMap(this.mapIndex);
+      this.map = (mapService as any).getMap(this.mapIndex());
     }
-  }
-
-  /**
-   * Lifecycle hook, Stelt subscriptions in op `activeChanged` events van de toolbar-items.
-   * Zorgt voor het tonen van de juiste content en het beheren van de actieve status.
-   */
-  ngAfterViewInit(): void {
-    this.children.forEach((child) => {
-      child.activeChanged.subscribe((event: ToolbarItemComponentEvent) => {
-        if (event.active) {
-          this.toolbarContentTemplate =
-            event.toolbarItemComponent.toolbarItemTemplate;
-          this.cdr.detectChanges();
-          this.inactivateOtherChildren(event.toolbarItemComponent);
-          this.toolbarService.setActiveToolbarItem(
-            event.toolbarItemComponent.activeId
-          );
-        } else {
-          this.toolbarContentTemplate = undefined;
-          this.toolbarService.setActiveToolbarItem(null);
-        }
-      });
-    });
   }
 
   /**
@@ -117,7 +120,7 @@ export class GgcToolbarComponent implements OnInit, AfterViewInit {
    * @param activeItem Het item dat actief moet blijven.
    */
   private inactivateOtherChildren(activeItem: GgcToolbarItemComponent): void {
-    this.children
+    this.children()
       .filter((child) => child !== activeItem)
       .forEach((child) => (child.active = false));
   }

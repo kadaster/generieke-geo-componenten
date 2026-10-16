@@ -15,7 +15,7 @@
       type="button"
       class="btn btn-tools point"
       aria-label="Punt tekenen"
-      [ngClass]="{ active: activeDraw === 'Point' }"
+      [ngClass]="{ active: activeDraw() === 'Point' }"
       title="Punt tekenen"
       (click)="draw('Point')"
     >
@@ -27,7 +27,7 @@
       type="button"
       class="btn btn-tools line"
       aria-label="Lijn tekenen"
-      [ngClass]="{ active: activeDraw === 'Line' }"
+      [ngClass]="{ active: activeDraw() === 'Line' }"
       title="Lijn tekenen"
       (click)="draw('Line')"
     >
@@ -39,7 +39,7 @@
       type="button"
       class="btn btn-tools circle"
       aria-label="Cirkel tekenen"
-      [ngClass]="{ active: activeDraw === 'Circle' }"
+      [ngClass]="{ active: activeDraw() === 'Circle' }"
       title="Cirkel tekenen"
       (click)="draw('Circle')"
     >
@@ -51,7 +51,7 @@
       type="button"
       class="btn btn-tools square"
       aria-label="Rechthoek tekenen"
-      [ngClass]="{ active: activeDraw === 'Rectangle' }"
+      [ngClass]="{ active: activeDraw() === 'Rectangle' }"
       title="Rechthoek tekenen"
       (click)="draw('Rectangle')"
     >
@@ -63,7 +63,7 @@
       type="button"
       class="btn btn-tools polygon"
       aria-label="Vlak tekenen"
-      [ngClass]="{ active: activeDraw === 'Polygon' }"
+      [ngClass]="{ active: activeDraw() === 'Polygon' }"
       title="Vlak tekenen"
       (click)="draw('Polygon')"
     >
@@ -74,7 +74,7 @@
     <button
       type="button"
       class="btn btn-tools move"
-      [ngClass]="{ active: activeDraw === 'move' }"
+      [ngClass]="{ active: activeDraw() === 'move' }"
       aria-label="Tekening verplaatsen"
       title="Tekening verplaatsen"
       (click)="move()"
@@ -86,7 +86,7 @@
     <button
       type="button"
       class="btn btn-tools edit"
-      [ngClass]="{ active: activeDraw === 'edit' }"
+      [ngClass]="{ active: activeDraw() === 'edit' }"
       aria-label="Tekening bewerken"
       title="Tekening bewerken"
       (click)="edit()"

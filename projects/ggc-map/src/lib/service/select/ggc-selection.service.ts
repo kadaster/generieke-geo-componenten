@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
 import { Observable } from "rxjs";
@@ -75,9 +75,7 @@ import { CoreSelectionService } from "./core-selection.service";
  * @see {@link SelectOptions}
  */
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class GgcSelectionService {
   private readonly coreSelectionService = inject(CoreSelectionService);
 

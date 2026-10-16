@@ -82,6 +82,31 @@ describe("CoreWmsWmtsCapabilitiesRequestService", () => {
       expect(request.request.withCredentials).toBe(false);
     });
 
+    it("shares the HTTP request and replays the parsed response", () => {
+      const wmsUrl =
+        testUrl + "?request=getCapabilities&service=WMS&version=1.3.0";
+      const capabilities$ = capabilitiesService.getCapabilitiesForUrl(
+        testUrl,
+        "WMS"
+      );
+      const firstSubscriberValues: unknown[] = [];
+      const secondSubscriberValues: unknown[] = [];
+      capabilities$.subscribe((value) => firstSubscriberValues.push(value));
+      capabilities$.subscribe((value) => secondSubscriberValues.push(value));
+
+      const request = httpTestingController.expectOne(wmsUrl);
+      request.flush(wmsCapabilities);
+
+      expect(firstSubscriberValues).toHaveLength(1);
+      expect(secondSubscriberValues).toEqual(firstSubscriberValues);
+
+      let replayedValue: unknown;
+      capabilities$.subscribe((value) => (replayedValue = value));
+
+      expect(replayedValue).toEqual(firstSubscriberValues[0]);
+      httpTestingController.expectNone(wmsUrl);
+    });
+
     it("when called for a WMS service with withCredentials is false, it should set withCredentials to false", () => {
       capabilitiesService
         .getCapabilitiesForUrl(testUrl, "WMS", false)

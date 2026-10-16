@@ -1,4 +1,5 @@
 import { Component, inject, input } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Camera, Ellipsoid, Matrix4, Transforms } from "@cesium/engine";
 import { CoreViewerService } from "../service/core-viewer.service";
 import { LookAtPosition } from "../model/interfaces";
@@ -66,11 +67,14 @@ export class GgcControlsComponent {
   private readonly rotateAngle = 0.05;
 
   constructor() {
-    this.coreViewerService.getViewerObservable().subscribe((viewer) => {
-      this.viewer = viewer;
-      this.camera = viewer?.camera;
-      this.ellipsoid = viewer?.scene?.globe?.ellipsoid;
-    });
+    this.coreViewerService
+      .getViewerObservable()
+      .pipe(takeUntilDestroyed())
+      .subscribe((viewer) => {
+        this.viewer = viewer;
+        this.camera = viewer?.camera;
+        this.ellipsoid = viewer?.scene?.globe?.ellipsoid;
+      });
   }
 
   /**
