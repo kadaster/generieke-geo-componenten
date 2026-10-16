@@ -27,7 +27,7 @@ export class ExampleLayerStylesVectorTileComponent
     route: "/layer-styles-vector-tile",
     title: "Styles gebruiken in OGC API Vector Tile kaartlagen",
     introduction: "Kies en wijzig styles voor OGC API Vector Tile kaartlagen.",
-    components: [Components.GGC_MAP],
+    components: [Components.GGC_MAP, Components.GGC_LEGEND],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.OGC_API],
     imageLocation:
