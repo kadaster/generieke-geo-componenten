@@ -27,7 +27,8 @@ import {
   LayerLegend,
   LegendAddedEvent,
   LegendRemovedEvent,
-  Webservice2DType
+  Webservice2DType,
+  Style
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
 import Layer from "ol/layer/Layer";
@@ -522,17 +523,65 @@ export class GgcLayerService {
       .find((layer) => layer.layerId === layerId);
   }
 
+  getStyles(layerId: string, mapIndex: string = DEFAULT_MAPINDEX): Style[] {
+    const layerConfig = this.getLayerConfig(layerId, mapIndex);
+    return layerConfig?.styles ?? [];
+  }
+
+  getActiveStyle(
+    layerId: string,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Style | undefined {
+    const layerConfig = this.getLayerConfig(layerId, mapIndex);
+    if (!layerConfig?.activeStyle) {
+      return undefined;
+    }
+    return this.findStyleOfLayer(layerConfig.activeStyle, layerId, mapIndex);
+  }
+
+  setActiveStyle(
+    styleName: string,
+    layerId: string,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ) {
+    const layerConfig = this.getLayerConfig(layerId, mapIndex);
+    if (!layerConfig) {
+      return;
+    }
+    layerConfig.activeStyle = styleName;
+    const layerComponent = this.mapLayerComponents.get(
+      this.buildLayerComponentKey(mapIndex, layerId)
+    );
+    if (layerComponent) {
+      layerComponent.setActiveStyle(styleName);
+    }
+    const activeStyle = this.findStyleOfLayer(styleName, layerId, mapIndex);
+    if (activeStyle) {
+      this.updateStyleLegend(activeStyle, layerId, mapIndex);
+    }
+  }
+
   /**
    * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
    */
   private loadWebservice(service: Webservice, mapIndex: string) {
     service.layers = service.layers.map((layerOptions) => {
+      layerOptions.activeStyle =
+        layerOptions.activeStyle ?? layerOptions.styles?.[0]?.name;
+      const activeStyleLegend = layerOptions.activeStyle
+        ? this.findStyleInStyles(
+            layerOptions.activeStyle,
+            layerOptions.styles ?? []
+          )?.legend
+        : undefined;
+
       const updatedLayer = {
         ...layerOptions,
         url: service.url,
         customHeaders: service.customHeaders,
         mapIndex: mapIndex,
-        visible: layerOptions.visible ?? true
+        visible: layerOptions.visible ?? true,
+        activeLegend: layerOptions.activeLegend ?? activeStyleLegend
       } as AbstractConfigurableLayerOptions;
       if (updatedLayer.visible || updatedLayer.persistent) {
         this.addLayer(updatedLayer, service.type);
@@ -560,6 +609,35 @@ export class GgcLayerService {
           }
         });
       });
+    }
+  }
+
+  private findStyleOfLayer(
+    styleName: string,
+    layerId: string,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): Style | undefined {
+    const layerConfig = this.getLayerConfig(layerId, mapIndex);
+    return this.findStyleInStyles(styleName, layerConfig?.styles ?? []);
+  }
+
+  private findStyleInStyles(
+    styleName: string,
+    styles: Style[]
+  ): Style | undefined {
+    return styles.find((style) => style.name === styleName);
+  }
+
+  private updateStyleLegend(
+    activeStyle: Style,
+    layerId: string,
+    mapIndex: string
+  ) {
+    const layerConfig = this.getLayerConfig(layerId, mapIndex);
+    if (layerConfig) {
+      layerConfig.activeLegend = activeStyle.legend;
+      this.emitLegendRemovedEvent(layerId, mapIndex);
+      this.emitLegendAddedEvent(layerId, mapIndex);
     }
   }
 

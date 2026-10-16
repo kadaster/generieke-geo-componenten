@@ -1,0 +1,67 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  xmlns="http://www.w3.org/1999/html">
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Sommige kaartlagen hebben styles die kunnen worden gebruikt om de weergave van een kaartlaag aan te passen.
+      Als er een legenda is ingesteld bij een style, dan zal ook deze automatisch geupdatet worden als een style verandert.
+      Binnen de kaartlaag kunnen de beschikbare styles worden geconfigureerd:
+    </p>
+    <ul>
+      <li><code>styles</code>: hierin staan alle beschikbare styles.</li>
+      <li><code>activeStyle</code>: De naam van de style die actief is. Mocht er geen actieve style zijn ingesteld, dan wordt de eerste style in <code>styles</code> getoond.</li>
+    </ul>
+    <p>
+      De <code>GgcLayerService</code> bevat diverse functies waarmee styles kunnen worden ingesteld of opgevraagd.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="map-layout row">
+      <div class="style-selector col-lg-3 col-md-4 col-sm-12" aria-label="Selecteer kaartstijl">
+        <div class="fw-bold mb-1">Selecteer een style</div>
+        @for (style of styles(); track style.name) {
+          <label class="style-option">
+            <input
+              type="radio"
+              name="layerStyle"
+              [value]="style.name"
+              [checked]="activeStyle() === style.name"
+              (change)="onStyleSelectionChange(style.name)"
+            />
+            <span>{{ style.title }}</span>
+          </label>
+        }
+      </div>
+      <div class="map-container col-lg-7 col-md-6 col-sm-12">
+        <ggc-map
+          [webServices]="mapConfig"
+          [minZoomlevel]="12"
+          [maxZoomlevel]="12"
+          [mapIndex]="mapIndex"
+        ></ggc-map>
+      </div>
+      <div class="legend-container col-lg-2 col-md-2 col-sm-12">
+        <div class="fw-bold mb-1">Legenda</div>
+        <ggc-legend [mapIndex]="mapIndex"></ggc-legend>
+      </div>
+    </div>
+    <!-- DOCS:END functionality -->
+  </div>
+</ggc-home-example-format>
