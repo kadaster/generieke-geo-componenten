@@ -583,10 +583,11 @@ export class GgcLayerService {
         visible: layerOptions.visible ?? true,
         activeLegend: layerOptions.activeLegend ?? activeStyleLegend
       } as AbstractConfigurableLayerOptions;
-      if (updatedLayer.visible || updatedLayer.persistent) {
-        this.addLayer(updatedLayer, service.type);
-      }
 
+      return updatedLayer;
+    });
+
+    service.layers = service.layers.map((layerOptions) => {
       if (layerOptions.layerId) {
         this.emitLayerChanged(
           layerOptions.layerId,
@@ -595,7 +596,11 @@ export class GgcLayerService {
         );
       }
 
-      return updatedLayer;
+      if (layerOptions.visible || layerOptions.persistent) {
+        layerOptions.layerId = this.addLayer(layerOptions, service.type);
+      }
+
+      return layerOptions;
     });
   }
 

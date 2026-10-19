@@ -27,8 +27,7 @@
         "activeLegend": {
           "legendUrl": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0/legend/Gemeentegebied/Gemeentegebied.png"
         },
-        "visible": false,
-        "persistent": true
+        "visible": false
       },
       {
         "layerId": "provincies",
