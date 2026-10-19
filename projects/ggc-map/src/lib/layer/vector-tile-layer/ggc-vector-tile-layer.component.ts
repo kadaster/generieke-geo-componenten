@@ -97,7 +97,7 @@ export class GgcVectorTileLayerComponent
     if (this.options()?.style && !this.options()?.styleLike) {
       this.options.set({ ...this.options(), styleLike: this.options()?.style });
     }
-    // end that can be removed when deprecated style is removed
+    // end that can be removed when deprecated style is removed in TMS-11524
 
     super.ngOnInit();
     this.createVectorTileSource().then((source) => {

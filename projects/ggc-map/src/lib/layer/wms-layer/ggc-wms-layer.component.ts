@@ -212,7 +212,7 @@ export class GgcWmsLayerComponent
 
   /**
    * @deprecated
-   * Maak voortaan gebruik van de styles en activeStyle in de options en GgcLayerService voor het managen van stlyes.
+   * Maak voortaan gebruik van de styles en activeStyle in de options en GgcLayerService voor het managen van styles.
    * Past meerdere stijlen toe op de WMS-laag.
    * @param styles Een array van stijlstrings.
    */
@@ -223,7 +223,7 @@ export class GgcWmsLayerComponent
 
   /**
    * @deprecated
-   * Maak voortaan gebruik van de styles en activeStyle in de options en GgcLayerService voor het managen van stlyes.
+   * Maak voortaan gebruik van de styles en activeStyle in de options en GgcLayerService voor het managen van styles.
    * Past een specifieke stijl toe op een specifieke sublaag.
    * @param style De stijlnaam.
    * @param layerName De naam van de sublaag waarop de stijl moet worden toegepast.
