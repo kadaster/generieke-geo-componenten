@@ -1,4 +1,4 @@
-import { LegendType } from "@kadaster/ggc-models";
+import { LegendType, Style } from "@kadaster/ggc-models";
 
 /**
  * Basale laagopties die gebruikt worden om een laag aan een specifieke kaart te koppelen.
@@ -93,6 +93,7 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
 
   /**
    * Optioneel: Het legenda object voor deze laag.
+   * Mocht de style wisselen van de laag, dan wordt activeLegend automatisch aangepast aan de actieve style, mocht hier een legenda voor zijn.
    */
   activeLegend?: LegendType;
 
@@ -106,6 +107,18 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
    * Optioneel: de opacity van de kaartlaag
    */
   opacity?: number;
+
+  /**
+   * Optioneel: De mogelijke styles van deze laag. Dit wordt momenteel alleen gesupport voor WMS en vector tile layers.
+   */
+  styles?: Style[];
+
+  /**
+   * Optioneel: De name van de actieve style van deze laag. In styles moet ook een style aanwezig zijn met deze name.
+   * Als activeStyle niet is ingesteld, dan wordt de eerste style in styles gebruikt als actieve style.
+   * Dit wordt momenteel alleen gesupport voor WMS en vector tile layers.
+   */
+  activeStyle?: string;
 }
 
 /**

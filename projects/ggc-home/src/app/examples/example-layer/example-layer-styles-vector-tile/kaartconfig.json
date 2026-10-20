@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "layerName": "standaard",
+        "zIndex": -20
+      }
+    ]
+  },
+  {
+    "type": "vector",
+    "url": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "layers": [
+      {
+        "layerId": "brk-kadastrale-kaart",
+        "styles": [
+          {
+            "name": "standaardvisualisatie__netherlandsrdnewquad",
+            "title": "Kadastrale kaart standaardvisualisatie",
+            "legend": {
+              "legendUrl": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/styles/standaardvisualisatie__netherlandsrdnewquad/legend"
+            }
+          },
+          {
+            "name": "kwaliteitsvisualisatie__netherlandsrdnewquad",
+            "title": "Kadastrale kaart kwaliteitsvisualisatie",
+            "legend": {
+              "legendUrl": "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/styles/kwaliteitsvisualisatie__netherlandsrdnewquad/legend"
+          }
+          }
+        ]
+      }
+    ]
+  }
+]
