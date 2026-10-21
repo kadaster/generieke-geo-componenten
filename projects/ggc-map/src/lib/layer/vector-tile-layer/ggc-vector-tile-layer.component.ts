@@ -93,13 +93,22 @@ export class GgcVectorTileLayerComponent
    * Initialiseert de vector tile source en laag.
    */
   ngOnInit() {
+    // deprecated backwards compatibility: if style is set, use it as styleLike
+    if (this.options()?.style && !this.options()?.styleLike) {
+      this.options.set({ ...this.options(), styleLike: this.options()?.style });
+    }
+    // end that can be removed when deprecated style is removed in TMS-11524
+
     super.ngOnInit();
     this.createVectorTileSource().then((source) => {
       this.vectorTileSource = source;
       const vectorTileLayer = this.createVectorTileLayer();
       // Set style before adding layer preventing flickering
-      this.setStyle(vectorTileLayer, false);
+      this.setStyleLike(vectorTileLayer, false);
       this.setLayer(vectorTileLayer);
+      if (this.options()?.activeStyle) {
+        this.setActiveStyle(this.options()!.activeStyle!);
+      }
     });
   }
 
@@ -149,7 +158,7 @@ export class GgcVectorTileLayerComponent
    */
   ngOnChanges(changes: SimpleChanges) {
     if (changes.style && this.olLayer) {
-      this.setStyle(this.olLayer);
+      this.setStyleLike(this.olLayer);
     }
 
     if (changes.options && !changes.options.firstChange) {
@@ -157,12 +166,40 @@ export class GgcVectorTileLayerComponent
         this.options()?.layerOptions?.style !==
         changes.options.previousValue.layerOptions?.style
       ) {
-        this.setStyle(this.olLayer);
+        this.setStyleLike(this.olLayer);
       }
+
+      // deprecated backwards compatibility: if style is set, use it as styleLike
       if (this.options()?.style !== changes.options.previousValue.style) {
-        this.setStyle(this.olLayer);
+        this.options.set({
+          ...this.options(),
+          styleLike: this.options()?.style
+        });
+        changes.options.previousValue.styleLike =
+          changes.options.previousValue.style;
+      }
+      // end that can be removed when deprecated style is removed
+
+      if (
+        this.options()?.styleLike !== changes.options.previousValue.styleLike
+      ) {
+        this.setStyleLike(this.olLayer);
       }
     }
+  }
+
+  /**
+   * Set the active style for the layer.
+   * @param styleName the name of the style that should be applied.
+   */
+  override setActiveStyle(styleName: string): void {
+    this.options.set({ ...this.options(), activeStyle: styleName });
+    if (!this.options()?.url) {
+      return;
+    }
+    const baseurl = this.options()!.url!.split("/tiles")[0];
+    const styleUrl = baseurl + "/styles/" + styleName + "?f=style";
+    this.loadStyle(styleUrl);
   }
 
   protected handleSingleClick(event: MapBrowserEvent) {
@@ -261,9 +298,12 @@ export class GgcVectorTileLayerComponent
       }
     }
 
-    if (this.options()?.style && typeof this.options()?.style === "string") {
+    if (
+      this.options()?.styleLike &&
+      typeof this.options()?.styleLike === "string"
+    ) {
       const result = await this.getMaxZoomFromStyleUrl(
-        this.options()!.style! as string
+        this.options()!.styleLike! as string
       );
       if (result) {
         return result;
@@ -389,15 +429,15 @@ export class GgcVectorTileLayerComponent
    * @param layer - De VectorTileLayer waarop de stijl wordt toegepast.
    * @param updateOverzoomSettings - Of overzoom instellingen moeten worden bijgewerkt.
    */
-  private setStyle(
+  private setStyleLike(
     layer: VectorTileLayer,
     updateOverzoomSettings = true
   ): void {
-    if (typeof this.options()?.style === "string") {
-      this.loadStyle(this.options()?.style as string);
+    if (typeof this.options()?.styleLike === "string") {
+      this.loadStyle(this.options()?.styleLike as string);
     } else {
       layer.setStyle(
-        (this.options()?.style as StyleLike) ||
+        (this.options()?.styleLike as StyleLike) ||
           (this.options()?.layerOptions?.style as StyleLike)
       );
     }
