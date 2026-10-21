@@ -1,4 +1,3 @@
-
 ARG REGISTRY
 
 FROM ${REGISTRY}nginxinc/nginx-unprivileged:1.29-alpine
@@ -6,40 +5,19 @@ FROM ${REGISTRY}nginxinc/nginx-unprivileged:1.29-alpine
 WORKDIR /etc/nginx/html
 
 USER root
-RUN adduser --home /etc/ggc-home --disabled-password --gecos "" ggc-home
+RUN rm /etc/nginx/conf.d/default.conf && \
+    chown root:root /etc/nginx
 
 # Copy compiled Application sources
-COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/ /etc/nginx/html/
-COPY --chown=ggc-home:ggc-home dist/ggc-home/browser/assets/toegankelijkheid.html /etc/nginx/html/
+COPY dist/ggc-home/browser/ /etc/nginx/html/
+COPY dist/ggc-home/browser/assets/toegankelijkheid.html /etc/nginx/html/
+COPY --chmod=444 nginx.conf /etc/nginx/nginx.conf
+COPY --chmod=555 startup/start-application.sh /var/appdata/run/start-application.sh
 
-
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY startup/start-application.sh /var/appdata/run/start-application.sh
-
-# Create cache directories
-RUN mkdir -p /var/cache/nginx/client_temp && \
-    mkdir -p /var/cache/nginx/uwsgi_temp && \
-    mkdir -p /var/cache/nginx/proxy_temp && \
-    mkdir -p /var/cache/nginx/fastcgi_temp && \
-    mkdir -p /var/cache/nginx/scgi_temp && \
-    mkdir -p /var/cache/nginx/uwsgi_temp
-
-# Create log directory and file, set permissions
-RUN mkdir -p /var/log/nginx && \
-    touch /var/log/nginx/error.log && \
-    chown -R ggc-home:ggc-home /var/log/nginx && \
-    chown -R ggc-home:ggc-home /etc/nginx/html/
-
-# Permissions adjustments
-RUN chown -R ggc-home:ggc-home /var/cache/nginx/ /var/appdata/run /etc/nginx/html/ && \
-    chmod -R u+rwX,go+rX /etc/nginx/html/ && \
-    chmod 755 /var/appdata/run/start-application.sh && \
-    chmod -R u+rwX,go+rX /var/cache/nginx
-
-RUN chmod -R a+rw /etc/nginx/html/ /tmp
-
-USER ggc-home
+RUN chmod -R a=rX /etc/nginx/html/
 
 EXPOSE 8080
+
+USER nginx
 
 ENTRYPOINT ["/var/appdata/run/start-application.sh"]
