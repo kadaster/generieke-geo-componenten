@@ -2,6 +2,8 @@ import { inject, Service } from "@angular/core";
 import { Condition } from "ol/events/condition";
 import Feature from "ol/Feature";
 import { Geometry } from "ol/geom";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
 import { Observable } from "rxjs";
 import {
   DrawInteractionEvent,
@@ -112,7 +114,23 @@ export class GgcDrawService {
   // einde toetsenbord
 
   /**
-   * Voegt een feature toe aan een bestaande tekenlaag.
+   * Geeft de tekenlaag met de opgegeven naam terug. Als de laag nog niet bestaat,
+   * wordt deze aangemaakt op de kaart.
+   *
+   * @param layerName - Naam van de tekenlaag.
+   * @param mapIndex - Index van de kaart. Default: `DEFAULT_MAPINDEX`.
+   * @param style - Optionele stijl voor een nieuw aangemaakte laag.
+   */
+  getDrawLayer(
+    layerName: string,
+    mapIndex: string = DEFAULT_MAPINDEX,
+    style?: StyleLike
+  ): VectorLayer<VectorSource<Feature<Geometry>>> {
+    return this.coreDrawLayerService.getDrawLayer(layerName, mapIndex, style);
+  }
+
+  /**
+   * Voegt een feature toe aan een tekenlaag. Als de kaart bestaat, wordt de laag indien nodig aangemaakt.
    *
    * @param layerName - Naam van de laag waaraan de feature toegevoegd wordt.
    * @param feature - Toe te voegen `ol/Feature`.
@@ -240,7 +258,7 @@ export class GgcDrawService {
     layerName: string,
     mapIndex: string = DEFAULT_MAPINDEX
   ): Feature<Geometry>[] {
-    const layer = this.coreDrawLayerService.getDrawLayer(layerName, mapIndex);
+    const layer = this.getDrawLayer(layerName, mapIndex);
     return layer.getSource()!.getFeatures();
   }
 
@@ -252,7 +270,7 @@ export class GgcDrawService {
    * @returns `true` als de laag zichtbaar is, anders `false`.
    */
   isLayerVisible(layerName: string, mapIndex = DEFAULT_MAPINDEX): boolean {
-    const layer = this.coreDrawLayerService.getDrawLayer(layerName, mapIndex);
+    const layer = this.getDrawLayer(layerName, mapIndex);
     return layer.getVisible();
   }
 

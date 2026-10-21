@@ -41,6 +41,22 @@ describe("DrawService", () => {
     );
   });
 
+  it("should return the draw layer from coreDrawLayerService", () => {
+    const vectorLayer = new VectorLayer({
+      source: new VectorSource<Feature<Geometry>>()
+    });
+    vi.spyOn(coreLayerService, "getDrawLayer").mockReturnValue(vectorLayer);
+
+    const result = service.getDrawLayer(layerName, mapIndex);
+
+    expect(coreLayerService.getDrawLayer).toHaveBeenCalledWith(
+      layerName,
+      mapIndex,
+      undefined
+    );
+    expect(result).toBe(vectorLayer);
+  });
+
   it("should call coreDrawService.appendCoordinates", () => {
     const coordinates = [150000, 450000];
     vi.spyOn(coreService, "appendCoordinates");
