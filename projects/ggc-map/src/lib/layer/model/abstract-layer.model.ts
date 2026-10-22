@@ -92,6 +92,12 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
   url?: string;
 
   /**
+   * Optioneel: extra http headers zoals bijvoorbeeld een API-key
+   * bij het opvragen van een webservice.
+   */
+  customHeaders?: [string, string][];
+
+  /**
    * Optioneel: Het legenda object voor deze laag.
    * Mocht de style wisselen van de laag, dan wordt activeLegend automatisch aangepast aan de actieve style, mocht hier een legenda voor zijn.
    */

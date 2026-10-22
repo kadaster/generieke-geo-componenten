@@ -244,6 +244,80 @@ describe("LayerService", () => {
       );
     });
 
+    it("should complete layer defaults in a reusable helper", () => {
+      const layerConfig = {
+        layerId: "layer1",
+        styles: defaultStyles,
+        visible: undefined
+      };
+
+      const result = service["setLayerOptionsDefaults"](layerConfig);
+
+      expect(result).toBe(layerConfig);
+      expect(result.activeStyle).toBe("default");
+      expect(result.visible).toBe(true);
+      expect(result.activeLegend).toEqual({ legendUrl: "default-legend" });
+    });
+
+    it("should complete layer defaults before adding a layer directly", () => {
+      const layerConfig: any = {
+        mapIndex: MAP_INDEX,
+        layerId: "layer1",
+        styles: defaultStyles
+      };
+      const addWmsLayerSpy = vi
+        .spyOn(service, "addWmsLayer")
+        .mockReturnValue("layer1");
+
+      service.addLayer(layerConfig as any, Webservice2DType.WMS);
+
+      expect(addWmsLayerSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          visible: true,
+          activeStyle: "default",
+          activeLegend: { legendUrl: "default-legend" }
+        })
+      );
+      expect(layerConfig.visible).toBe(true);
+      expect(layerConfig.activeStyle).toBe("default");
+      expect(layerConfig.activeLegend).toEqual({ legendUrl: "default-legend" });
+    });
+
+    it("should keep layer defaults idempotent when applied more than once", () => {
+      const layerConfig = {
+        layerId: "layer1",
+        styles: defaultStyles,
+        visible: false,
+        activeStyle: "contrast"
+      };
+
+      const first = service["setLayerOptionsDefaults"](layerConfig);
+      const second = service["setLayerOptionsDefaults"](first);
+
+      expect(second).toBe(layerConfig);
+      expect(second.visible).toBe(false);
+      expect(second.activeStyle).toBe("contrast");
+      expect(second.activeLegend).toEqual({ legendUrl: "contrast-legend" });
+    });
+
+    it("should update the layer configuration in mapConfigurations by layerId", () => {
+      const webservice = createStyledWebservice({
+        activeStyle: "default",
+        activeLegend: { legendUrl: "default-legend" }
+      });
+
+      service["mapConfigurations"].set(MAP_INDEX, [webservice as any]);
+
+      const updatedLayer = service["updateMapConfigLayer"](
+        { visible: false },
+        "layer1",
+        MAP_INDEX
+      );
+
+      expect(updatedLayer).toMatchObject({ layerId: "layer1", visible: false });
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.visible).toBe(false);
+    });
+
     it("should update the active style, the layer component and the legend", () => {
       const webservice = createStyledWebservice({
         activeStyle: "default",

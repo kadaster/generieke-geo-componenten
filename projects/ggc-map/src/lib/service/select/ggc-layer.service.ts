@@ -173,6 +173,8 @@ export class GgcLayerService {
     layerOptions: AbstractConfigurableLayerOptions,
     webserviceType: Webservice2DType
   ): string | undefined {
+    layerOptions = this.setLayerOptionsDefaults(layerOptions);
+
     if (
       layerOptions.persistent === true &&
       layerOptions.layerId &&
@@ -202,15 +204,15 @@ export class GgcLayerService {
     }
     switch (webserviceType) {
       case Webservice2DType.GEOJSON:
-        return this.addGeojsonLayer(layerOptions as GeojsonLayerOptions);
+        return this.addGeojsonLayer(layerOptions);
       case Webservice2DType.IMAGE:
-        return this.addImageLayer(layerOptions as ImageLayerOptions);
+        return this.addImageLayer(layerOptions);
       case Webservice2DType.VECTOR:
-        return this.addVectorTileLayer(layerOptions as VectorTileLayerOptions);
+        return this.addVectorTileLayer(layerOptions);
       case Webservice2DType.WMS:
-        return this.addWmsLayer(layerOptions as WmsLayerOptions);
+        return this.addWmsLayer(layerOptions);
       case Webservice2DType.WMTS:
-        return this.addWmtsLayer(layerOptions as WmtsLayerOptions);
+        return this.addWmtsLayer(layerOptions);
       default:
         return undefined;
     }
@@ -566,42 +568,88 @@ export class GgcLayerService {
    */
   private loadWebservice(service: Webservice, mapIndex: string) {
     service.layers = service.layers.map((layerOptions) => {
-      layerOptions.activeStyle =
-        layerOptions.activeStyle ?? layerOptions.styles?.[0]?.name;
-      const activeStyleLegend = layerOptions.activeStyle
-        ? this.findStyleInStyles(
-            layerOptions.activeStyle,
-            layerOptions.styles ?? []
-          )?.legend
-        : undefined;
-
-      const updatedLayer = {
-        ...layerOptions,
-        url: service.url,
-        customHeaders: service.customHeaders,
-        mapIndex: mapIndex,
-        visible: layerOptions.visible ?? true,
-        activeLegend: layerOptions.activeLegend ?? activeStyleLegend
-      } as AbstractConfigurableLayerOptions;
-
-      return updatedLayer;
+      return this.initialiseLayer(
+        {
+          ...layerOptions,
+          url: service.url,
+          customHeaders: service.customHeaders,
+          mapIndex: mapIndex
+        },
+        service.type,
+        mapIndex
+      );
     });
+  }
 
-    service.layers = service.layers.map((layerOptions) => {
-      if (layerOptions.layerId) {
-        this.emitLayerChanged(
-          layerOptions.layerId,
-          mapIndex,
-          LayerChangedEventTrigger.LAYER_INITIALIZED
-        );
-      }
+  private initialiseLayer(
+    layerOptions: AbstractConfigurableLayerOptions,
+    layerType: Webservice2DType,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): AbstractConfigurableLayerOptions {
+    const updatedLayerOptions = this.setLayerOptionsDefaults(layerOptions);
 
-      if (layerOptions.visible || layerOptions.persistent) {
-        layerOptions.layerId = this.addLayer(layerOptions, service.type);
-      }
+    this.updateMapConfigLayer(
+      updatedLayerOptions,
+      updatedLayerOptions.layerId,
+      mapIndex
+    );
 
-      return layerOptions;
-    });
+    if (updatedLayerOptions.layerId) {
+      this.emitLayerChanged(
+        updatedLayerOptions.layerId,
+        mapIndex,
+        LayerChangedEventTrigger.LAYER_INITIALIZED
+      );
+    }
+
+    if (updatedLayerOptions.visible || updatedLayerOptions.persistent) {
+      updatedLayerOptions.layerId = this.addLayer(
+        updatedLayerOptions,
+        layerType
+      );
+    }
+
+    return updatedLayerOptions;
+  }
+
+  private setLayerOptionsDefaults(
+    layerOptions: AbstractConfigurableLayerOptions
+  ): AbstractConfigurableLayerOptions {
+    const activeStyleName =
+      layerOptions.activeStyle ?? layerOptions.styles?.[0]?.name;
+    const activeStyleLegend = activeStyleName
+      ? this.findStyleInStyles(activeStyleName, layerOptions.styles ?? [])
+          ?.legend
+      : undefined;
+
+    layerOptions.activeStyle = activeStyleName;
+    layerOptions.visible = layerOptions.visible ?? true;
+    layerOptions.activeLegend = layerOptions.activeLegend ?? activeStyleLegend;
+
+    return layerOptions;
+  }
+
+  private updateMapConfigLayer(
+    layerOptions: Partial<AbstractConfigurableLayerOptions>,
+    layerId: string | undefined = layerOptions.layerId,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): AbstractConfigurableLayerOptions | undefined {
+    const targetLayerId = layerId ?? layerOptions.layerId;
+    if (!targetLayerId) {
+      return undefined;
+    }
+
+    const matchingLayer = this.mapConfigurations
+      .get(mapIndex)
+      ?.flatMap((service) => service.layers)
+      .find((layer) => layer.layerId === targetLayerId);
+
+    if (!matchingLayer) {
+      return undefined;
+    }
+
+    Object.assign(matchingLayer, layerOptions);
+    return matchingLayer;
   }
 
   private removeCurrentLayers(mapIndex: string) {
