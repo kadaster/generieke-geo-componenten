@@ -144,7 +144,8 @@ describe("DrawService", () => {
 
     expect(coreLayerService.getDrawLayer).toHaveBeenCalledWith(
       layerName,
-      mapIndex
+      mapIndex,
+      undefined
     );
     expect(source.getFeatures).toHaveBeenCalled();
     expect(result).toEqual(features);
@@ -159,7 +160,8 @@ describe("DrawService", () => {
 
     expect(coreLayerService.getDrawLayer).toHaveBeenCalledWith(
       layerName,
-      mapIndex
+      mapIndex,
+      undefined
     );
     expect(result).toEqual(false);
   });
