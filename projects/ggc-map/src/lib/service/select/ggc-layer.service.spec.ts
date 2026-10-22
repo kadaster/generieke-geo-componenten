@@ -11,8 +11,12 @@ import { of } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
-import { DEFAULT_MAPINDEX, Webservice2DType } from "@kadaster/ggc-models";
-import { LayerChangedEventTrigger } from "@kadaster/ggc-models/src/lib/models/layer-changed-event.model";
+import {
+  DEFAULT_MAPINDEX,
+  LayerChangedEventTrigger,
+  Style,
+  Webservice2DType
+} from "@kadaster/ggc-models";
 import { createWmtsCapabilitiesMock } from "../../layer/service/mock/wmts-capabilities.mock";
 
 describe("LayerService", () => {
@@ -21,6 +25,18 @@ describe("LayerService", () => {
   let coreMapServiceSpy: MockedObject<CoreMapService>;
 
   const MAP_INDEX = "testMap";
+  const defaultStyles: Style[] = [
+    {
+      name: "default",
+      title: "Default style",
+      legend: { legendUrl: "default-legend" }
+    },
+    {
+      name: "contrast",
+      title: "Contrast style",
+      legend: { legendUrl: "contrast-legend" }
+    }
+  ];
 
   beforeEach(() => {
     coreMapServiceSpy = {
@@ -205,6 +221,81 @@ describe("LayerService", () => {
     ]);
   });
 
+  describe("styles", () => {
+    it("should return the configured styles of a layer", () => {
+      const webservice = createStyledWebservice();
+
+      service["mapConfigurations"].set(MAP_INDEX, [webservice as any]);
+
+      expect(service.getStyles("layer1", MAP_INDEX)).toEqual(
+        webservice.layers[0].styles
+      );
+    });
+
+    it("should return the active style of a layer", () => {
+      const webservice = createStyledWebservice({
+        activeStyle: "contrast"
+      });
+
+      service["mapConfigurations"].set(MAP_INDEX, [webservice as any]);
+
+      expect(service.getActiveStyle("layer1", MAP_INDEX)).toEqual(
+        webservice.layers[0].styles[1]
+      );
+    });
+
+    it("should update the active style, the layer component and the legend", () => {
+      const webservice = createStyledWebservice({
+        activeStyle: "default",
+        activeLegend: { legendUrl: "default-legend" }
+      });
+      const layerComponent = {
+        setActiveStyle: vi.fn()
+      };
+      const legendRemovedEvents: Array<{ layerId: string; mapIndex: string }> =
+        [];
+      const legendAddedEvents: Array<{
+        mapIndex: string;
+        legend: { layerId: string; legend: { legendUrl: string } | undefined };
+      }> = [];
+
+      service["mapConfigurations"].set(MAP_INDEX, [webservice as any]);
+      service["mapLayerComponents"].set(
+        `${MAP_INDEX}:layer1`,
+        layerComponent as any
+      );
+      service
+        .getLegendRemovedObservable()
+        .subscribe((event) => legendRemovedEvents.push(event));
+      service.getLegendAddedObservable().subscribe((event) => {
+        legendAddedEvents.push(event as any);
+      });
+      vi.spyOn(service, "getEnabled").mockReturnValue(true);
+
+      service.setActiveStyle("contrast", "layer1", MAP_INDEX);
+
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.activeStyle).toBe(
+        "contrast"
+      );
+      expect(layerComponent.setActiveStyle).toHaveBeenCalledWith("contrast");
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend).toEqual(
+        { legendUrl: "contrast-legend" }
+      );
+      expect(legendRemovedEvents).toEqual([
+        { layerId: "layer1", mapIndex: MAP_INDEX }
+      ]);
+      expect(legendAddedEvents).toEqual([
+        {
+          mapIndex: MAP_INDEX,
+          legend: expect.objectContaining({
+            layerId: "layer1",
+            legend: { legendUrl: "contrast-legend" }
+          })
+        }
+      ]);
+    });
+  });
+
   describe("loadWebservices", () => {
     function createWebservice(layerOverrides: any = {}) {
       return {
@@ -292,6 +383,41 @@ describe("LayerService", () => {
 
       expect(emitSpy).toHaveBeenCalledTimes(2);
     });
+
+    it("should select the first style as activeStyle when activeStyle is missing", () => {
+      const webservice = createStyledWebservice();
+      vi.spyOn(service, "addLayer").mockReturnValue("layer1");
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.activeStyle).toBe(
+        "default"
+      );
+    });
+
+    it("should set the activeLegend from the configured activeStyle", () => {
+      const webservice = createStyledWebservice({
+        activeStyle: "contrast"
+      });
+      vi.spyOn(service, "addLayer").mockReturnValue("layer1");
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend).toEqual(
+        { legendUrl: "contrast-legend" }
+      );
+    });
+
+    it("should set the activeLegend from the first style when activeStyle is missing", () => {
+      const webservice = createStyledWebservice();
+      vi.spyOn(service, "addLayer").mockReturnValue("layer1");
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend).toEqual(
+        { legendUrl: "default-legend" }
+      );
+    });
   });
 
   it("should return layer configs for given mapIndex", () => {
@@ -322,5 +448,26 @@ describe("LayerService", () => {
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidRegex.test(str);
+  }
+
+  function createStyledLayer(layerOverrides: any = {}) {
+    return {
+      layerId: "layer1",
+      title: "Layer 1",
+      styles: defaultStyles.map((style) => ({
+        ...style,
+        legend: style.legend ? { ...style.legend } : undefined
+      })),
+      ...layerOverrides
+    };
+  }
+
+  function createStyledWebservice(layerOverrides: any = {}) {
+    return {
+      url: "http://test-url",
+      type: Webservice2DType.WMS,
+      title: "testService",
+      layers: [createStyledLayer(layerOverrides)]
+    };
   }
 });
