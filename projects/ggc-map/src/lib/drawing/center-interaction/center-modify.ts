@@ -15,6 +15,7 @@ import {
 import {
   coordinateIsOnSegment,
   coordinatesAreEqual,
+  getClosestCoordinate,
   getClosestSegmentCoordinate,
   getClosestVertex,
   getCoordinatesOfFeature,
@@ -516,27 +517,60 @@ export class CenterModify extends CenterBase {
   };
 
   private updateNextTabCoordinate() {
-    const coordinatesLength = getCoordinatesOfFeatureWithMiddlePoints(
-      this.highlightedFeature!
-    ).length;
-    const newIndex =
-      this.selectedFeatureCurrentCoordinateIndex == undefined
-        ? 0
-        : this.selectedFeatureCurrentCoordinateIndex + 1;
-    this.selectedFeatureCurrentCoordinateIndex =
-      newIndex >= coordinatesLength ? 0 : newIndex;
+    this.updateTabCoordinate(1);
   }
 
   private updatePreviousTabCoordinate() {
-    const coordinatesLength = getCoordinatesOfFeatureWithMiddlePoints(
+    this.updateTabCoordinate(-1);
+  }
+
+  private updateTabCoordinate(direction: -1 | 1) {
+    const coordinates = getCoordinatesOfFeatureWithMiddlePoints(
       this.highlightedFeature!
-    ).length;
-    const newIndex =
-      this.selectedFeatureCurrentCoordinateIndex == undefined
-        ? coordinatesLength - 1
-        : this.selectedFeatureCurrentCoordinateIndex - 1;
+    );
+    if (coordinates.length === 0) {
+      return;
+    }
+
+    const centerCoordinate = this.centerPoint.getCoordinates();
+    const closestFeatureCoordinate = getClosestCoordinate(
+      this.highlightedFeature!,
+      centerCoordinate
+    );
+    if (!closestFeatureCoordinate) {
+      return;
+    }
+
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+    coordinates.forEach((coordinate, index) => {
+      if (!coordinate) {
+        return;
+      }
+      const distance = this.calculatePixelDistanceOfCoordinates(
+        closestFeatureCoordinate,
+        coordinate
+      );
+      if (distance < closestDistance) {
+        closestIndex = index;
+        closestDistance = distance;
+      }
+    });
+
+    const closestCoordinate = coordinates[closestIndex];
+    if (
+      !closestCoordinate ||
+      this.calculatePixelDistanceOfCoordinates(
+        centerCoordinate,
+        closestCoordinate
+      ) >= this.pixelTolerance
+    ) {
+      this.selectedFeatureCurrentCoordinateIndex = closestIndex;
+      return;
+    }
+
     this.selectedFeatureCurrentCoordinateIndex =
-      newIndex <= -1 ? coordinatesLength - 1 : newIndex;
+      (closestIndex + direction + coordinates.length) % coordinates.length;
   }
 
   private getCurrentTabCoordinate() {
