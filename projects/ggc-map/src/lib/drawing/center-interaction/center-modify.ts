@@ -517,11 +517,11 @@ export class CenterModify extends CenterBase {
   };
 
   private updateNextTabCoordinate() {
-    this.updateTabCoordinate(1);
+    this.updateTabCoordinate(-1);
   }
 
   private updatePreviousTabCoordinate() {
-    this.updateTabCoordinate(-1);
+    this.updateTabCoordinate(1);
   }
 
   private updateTabCoordinate(direction: -1 | 1) {

@@ -172,16 +172,16 @@ describe("CenterModify", () => {
     ).not.toBeDefined();
 
     centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
-    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(3);
-    centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
-    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(4);
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(1);
     centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
     expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(0);
+    centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(4);
 
     centerModify["handleKeyPress"]({ code: "BracketLeft" } as KeyboardEvent);
-    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(4);
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(0);
     centerModify["handleKeyPress"]({ code: "BracketLeft" } as KeyboardEvent);
-    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(3);
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(1);
   });
 
   it("jumps to the closest point before advancing when the center is not on a point", () => {
