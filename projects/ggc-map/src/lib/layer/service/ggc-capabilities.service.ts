@@ -1,10 +1,15 @@
 import { inject, Service } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
 import { map } from "rxjs/operators";
 import WMTS from "ol/source/WMTS";
 import { Coordinate } from "ol/coordinate";
+import { Webservice2DType } from "@kadaster/ggc-models";
+import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
+import { WmsLayerOptions } from "../model/wms-layer.model";
+import { WmtsLayerOptions } from "../model/wmts-layer.model";
+import { scaleToResolution } from "../../utils/epsg28992";
 
 /**
  * Service voor het ophalen en verwerken van WMS/WMTS en OGCAPI capabilities.
@@ -102,6 +107,140 @@ export class GgcCapabilitiesService {
       coordinate,
       resolution
     );
+  }
+
+  /**
+   * Haalt de capabilities op voor de url van de laag en mapt de `title`,
+   * `minResolution` en `maxResolution` van de bijbehorende capabilities-laag op
+   * de layerOptions. Waarden die al in de layerOptions zijn ingesteld, worden
+   * niet overschreven.
+   *
+   * - WMS: de laag wordt gezocht op basis van `layerName`, of anders de eerste
+   *   naam uit `layers`. De schaalgetallen (ScaleDenominators) uit de
+   *   capabilities worden omgerekend naar resoluties.
+   * - WMTS: de laag wordt gezocht op basis van `layerName`, of anders `layer`.
+   *   WMTS capabilities bevatten geen resoluties, daarom wordt alleen de
+   *   `title` gemapt.
+   * - Vector: de capabilities worden opgehaald van de OGC API landingspagina
+   *   (het deel van de url vóór `/tiles/`); de eerste tileset wordt gebruikt.
+   * - GeoJSON en image: deze functie doet niets en geeft de layerOptions
+   *   ongewijzigd terug.
+   *
+   * Wanneer de layerOptions geen `url` hebben of er geen passende laag in de
+   * capabilities wordt gevonden, worden de layerOptions ongewijzigd teruggegeven.
+   * @param layerOptions - De opties van de laag waarop de capabilities worden gemapt.
+   * @param layerType - Het type van de laag.
+   * @returns Observable met een kopie van de layerOptions, aangevuld met de
+   * waarden uit de capabilities.
+   */
+  mapCapabilitiesOnLayerOptions<T extends AbstractConfigurableLayerOptions>(
+    layerOptions: T,
+    layerType: Webservice2DType
+  ): Observable<T> {
+    const serviceType = this.getServiceType(layerType);
+    if (!serviceType || !layerOptions.url) {
+      return of(layerOptions);
+    }
+
+    const baseUrl = this.getBaseUrl(layerOptions.url, layerType);
+    return this.getServiceFromCapabilities(baseUrl, serviceType).pipe(
+      map((serviceCapabilities) => {
+        const capabilitiesServiceLayer = this.findCapabilitiesServiceLayer(
+          serviceCapabilities,
+          layerOptions,
+          layerType
+        );
+        if (!capabilitiesServiceLayer) {
+          return layerOptions;
+        }
+
+        const toResolution = (value?: string): number | undefined => {
+          const numberValue = Number(value);
+          if (value === undefined || !Number.isFinite(numberValue)) {
+            return undefined;
+          }
+          return layerType === Webservice2DType.WMS
+            ? scaleToResolution(numberValue)
+            : numberValue;
+        };
+
+        return {
+          ...layerOptions,
+          title: layerOptions.title ?? capabilitiesServiceLayer.title,
+          minResolution:
+            layerOptions.minResolution ??
+            toResolution(capabilitiesServiceLayer.minResolution),
+          maxResolution:
+            layerOptions.maxResolution ??
+            toResolution(capabilitiesServiceLayer.maxResolution)
+        };
+      })
+    );
+  }
+
+  /*
+   * Bepaalt de base url voor het ophalen van de capabilities. Het deel na het
+   * vraagteken wordt verwijderd; voor vector lagen wordt daarnaast alles vanaf
+   * `/tiles/` verwijderd, zodat de OGC API landingspagina overblijft.
+   */
+  private getBaseUrl(url: string, layerType: Webservice2DType): string {
+    const baseUrl = url.split("?")[0];
+    if (layerType === Webservice2DType.VECTOR) {
+      return baseUrl.split("/tiles/")[0];
+    }
+    return baseUrl;
+  }
+
+  private getServiceType(
+    layerType: Webservice2DType
+  ): "WMS" | "WMTS" | "OGCAPI" | undefined {
+    switch (layerType) {
+      case Webservice2DType.WMS:
+        return "WMS";
+      case Webservice2DType.WMTS:
+        return "WMTS";
+      case Webservice2DType.VECTOR:
+        return "OGCAPI";
+      default:
+        return undefined;
+    }
+  }
+
+  /**
+   * Zoekt de bijbehorende capabilities-laag voor de gegeven layerOptions, gezien er meerdere layers in de capabilities kunnen zitten en de weergeven laag gekoppeld moet worden.
+   * Returnt de bijbehorende CapabilitiesServiceLayer of undefined als er geen match is gevonden.
+   * @param serviceCapabilities De opgehaalde capabilities van de service
+   * @param layerOptions De layerOptions van de laag waarvoor de capabilities gezocht worden
+   * @param layerType Het type van de layer
+   * @private
+   */
+  private findCapabilitiesServiceLayer(
+    serviceCapabilities: ServiceCapabilities | undefined,
+    layerOptions: AbstractConfigurableLayerOptions,
+    layerType: Webservice2DType
+  ): CapabilitiesServiceLayer | undefined {
+    const capabilitiesServiceLayers = serviceCapabilities?.layers ?? [];
+    switch (layerType) {
+      case Webservice2DType.WMS: {
+        const wmsLayers = (layerOptions as WmsLayerOptions).layers;
+        const wmsLayerName =
+          layerOptions.layerName ??
+          (Array.isArray(wmsLayers) ? wmsLayers[0] : wmsLayers);
+        // In de WMS ServiceCapabilities bevat title de Name van de laag.
+        return capabilitiesServiceLayers.find(
+          (layer) => layer.title === wmsLayerName
+        );
+      }
+      case Webservice2DType.WMTS: {
+        const wmtsLayerName =
+          layerOptions.layerName ?? (layerOptions as WmtsLayerOptions).layer;
+        return capabilitiesServiceLayers.find(
+          (layer) => layer.name === wmtsLayerName
+        );
+      }
+      default:
+        return capabilitiesServiceLayers[0];
+    }
   }
 }
 /**
