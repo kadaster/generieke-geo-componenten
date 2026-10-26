@@ -13,4 +13,6 @@ Follow Angular's [style guide](https://angular.dev/style-guide#prefer-the-inject
 - Choose provider lifetime intentionally. Do not make configured or per-map state a global singleton; use the existing library/component scope where appropriate.
 - Keep one cohesive service per file and place it by feature responsibility, following nearby directory and filename conventions. Prefer a pure function over a service when no Angular DI or shared state is needed.
 - Make external subscriptions, map/event listeners, and other owned resources' lifetimes explicit; release them at the owning scope's destruction.
+- Prefer `takeUntilDestroyed()` (with `destroyRef` outside an injection context) over `Subscription[]` and `ngOnDestroy` in new code. Keep `Subject`s `private readonly` and expose `asObservable()`. Use `firstValueFrom` instead of `.toPromise()`.
+- Do not swallow errors silently: propagate them to the caller or report them through the library's established mechanism.
 - Use only APIs available in the Angular version pinned by this workspace. Do not introduce newer APIs solely because they appear in the latest online guide.

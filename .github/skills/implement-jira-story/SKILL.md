@@ -1,9 +1,11 @@
 ---
-name: jira-story-implementation
-description: "Use when implementing an Atlassian Jira story in this Angular monorepo. Read the issue, comments, linked work, and relevant attachments through Jira MCP when available, or request the complete story context as a fallback."
+name: implement-jira-story
+description: "Use when implementing a Jira story, ticket or issue in this Angular monorepo. Read it via Jira MCP or request pasted context; use Agent mode for simple stories and Plan mode for complex stories, following workspace instructions and public API compatibility rules."
 ---
 
 # Implement a Jira Story
+
+Use Jira solely as a source for the story and requirements; implementation takes place in the repository.
 
 Implement the requested story in this repository. Treat the story and its acceptance criteria as the source of truth; do not broaden the work into unrelated refactoring.
 
@@ -25,17 +27,22 @@ Implement the requested story in this repository. Treat the story and its accept
 - Trace the code path that implements the behavior. For cross-library work, inspect public APIs and existing integration patterns before deciding where a change belongs.
 - Check `package.json` and `angular.json` for real project scripts and targets. Do not invent commands.
 
-## 3. Implement the smallest complete change
+## 3. Choose Agent or Plan mode
+
+- **Simple story:** clear criteria, small local change, known patterns, no unresolved design/security/API decision. Use Agent mode, state approach/checks briefly and implement without an obligatory approval round.
+- **Complex story:** interacting projects/features, substantial design, security/API changes, migration or uncertain contracts. Use Plan mode: present a short summary, numbered criteria and checks (unit test, GGC Home, manual), per-file changes/tests/docs, risks and open questions. Wait for explicit approval before editing; update and reconfirm a changed plan.
+- Respect the developer's selected mode. A skill cannot automatically switch IDE modes; ask the developer to select the needed mode if switching is unavailable. Reassess growing complexity and ask before expanding scope. Breaking published API changes still require explicit approval regardless of mode.
+
+## 4. Implement the smallest complete change
 
 - Preserve unrelated worktree changes and follow `AGENTS.md`, `.github/copilot-instructions.md`, and applicable scoped instructions.
 - Make the minimum change that satisfies the acceptance criteria. Preserve established public APIs and behavior unless the story requires changing them.
-- Add or update focused tests for the behavior. Update source documentation when a public API or consumer-visible behavior changes.
+- Update source documentation when a public API or consumer-visible behavior changes; follow the repository test and verification instructions.
 - For GGC Home examples, use the existing Plop generator and preserve its generated structure.
-- Do not update Jira status, comments, estimates, or other issue fields; do not commit or create a branch unless explicitly requested.
 
-## 4. Verify and report
+## 5. Verify and report
 
-- Run the focused test, lint, and build checks that apply to the changed project, using the scripts actually defined in `package.json`. Run broader checks only when warranted by the change.
+- Follow the verification gates in `AGENTS.md` and `.github/copilot-instructions.md`, using the changed project's actual scripts.
 - If a check fails, determine whether the failure is caused by this change. Fix relevant failures and rerun the focused check; report unrelated failures without expanding scope.
 - Report which acceptance criteria were addressed, the important files or behavior changed, checks run and their results, and any unresolved criteria or assumptions.
 - Summarize which issue context and attachments were inspected, and whether they came from MCP or the user. Call out any relevant information that remained unavailable; never imply the Jira issue or its attachments were fully reviewed when they were not.
