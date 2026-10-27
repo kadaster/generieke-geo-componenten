@@ -19,7 +19,8 @@ import { GgcLayerBrtAchtergrondkaartComponent } from "../../layer/layer-brt-acht
 import { Webservice } from "../../layer/model/webservice.model";
 import BaseLayer from "ol/layer/Base";
 import { viewResolutionIsInLayerResolutionRange } from "../../layer/utils/viewResolutionIsInLayerResolutionRange";
-import { Observable, Subject } from "rxjs";
+import { Observable, of, Subject } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import {
   DEFAULT_MAPINDEX,
   LayerChangedEvent,
@@ -33,6 +34,7 @@ import {
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
 import Layer from "ol/layer/Layer";
 import { CoreMapService } from "../../map/service/core-map.service";
+import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
 
 /**
  * Centrale service voor het beheren van kaartlagen binnen GGC.
@@ -52,6 +54,7 @@ import { CoreMapService } from "../../map/service/core-map.service";
 export class GgcLayerService {
   private readonly mapService = inject(CoreMapService);
   private readonly appRef = inject(ApplicationRef);
+  private readonly capabilitiesService = inject(GgcCapabilitiesService);
 
   private readonly layerChangedSubject: Subject<LayerChangedEvent> =
     new Subject();
@@ -567,49 +570,77 @@ export class GgcLayerService {
    * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
    */
   private loadWebservice(service: Webservice, mapIndex: string) {
-    service.layers = service.layers.map((layerOptions) => {
-      return this.initialiseLayer(
-        {
-          ...layerOptions,
-          url: service.url,
-          customHeaders: service.customHeaders,
-          mapIndex: mapIndex
-        },
-        service.type,
-        mapIndex
-      );
-    });
+    service.layers = service.layers.map((layerOptions) => ({
+      ...layerOptions,
+      url: service.url,
+      customHeaders: service.customHeaders,
+      mapIndex: mapIndex
+    }));
+    for (const layerOptions of service.layers) {
+      this.initialiseLayer(layerOptions, service.type, mapIndex);
+    }
   }
 
+  /**
+   * Initialiseert een laag. Wanneer requestCapabilities true is, worden eerst de
+   * layerOptions aangevuld vanuit de capabilities. De layerOptions worden in-place
+   * bijgewerkt, zodat de kaartconfiguratie naar hetzelfde object blijft verwijzen.
+   */
   private initialiseLayer(
     layerOptions: AbstractConfigurableLayerOptions,
     layerType: Webservice2DType,
     mapIndex: string = DEFAULT_MAPINDEX
-  ): AbstractConfigurableLayerOptions {
-    const updatedLayerOptions = this.setLayerOptionsDefaults(layerOptions);
+  ) {
+    this.applyCapabilitiesOnLayerOptions(layerOptions, layerType).subscribe(
+      () => {
+        const updatedLayerOptions = this.setLayerOptionsDefaults(layerOptions);
 
-    this.updateMapConfigLayer(
-      updatedLayerOptions,
-      updatedLayerOptions.layerId,
-      mapIndex
+        this.updateMapConfigLayer(
+          updatedLayerOptions,
+          updatedLayerOptions.layerId,
+          mapIndex
+        );
+
+        if (updatedLayerOptions.layerId) {
+          this.emitLayerChanged(
+            updatedLayerOptions.layerId,
+            mapIndex,
+            LayerChangedEventTrigger.LAYER_INITIALIZED
+          );
+        }
+
+        if (updatedLayerOptions.visible || updatedLayerOptions.persistent) {
+          updatedLayerOptions.layerId = this.addLayer(
+            updatedLayerOptions,
+            layerType
+          );
+        }
+      }
     );
+  }
 
-    if (updatedLayerOptions.layerId) {
-      this.emitLayerChanged(
-        updatedLayerOptions.layerId,
-        mapIndex,
-        LayerChangedEventTrigger.LAYER_INITIALIZED
-      );
+  /**
+   * Vult de layerOptions aan vanuit de capabilities wanneer requestCapabilities true is
+   * en zet requestCapabilities daarna op false. Bij een fout wordt doorgegaan met de
+   * ongewijzigde layerOptions, zodat een volgende load het opnieuw probeert.
+   */
+  private applyCapabilitiesOnLayerOptions(
+    layerOptions: AbstractConfigurableLayerOptions,
+    layerType: Webservice2DType
+  ): Observable<AbstractConfigurableLayerOptions> {
+    if (layerOptions.requestCapabilities !== true) {
+      return of(layerOptions);
     }
-
-    if (updatedLayerOptions.visible || updatedLayerOptions.persistent) {
-      updatedLayerOptions.layerId = this.addLayer(
-        updatedLayerOptions,
-        layerType
+    return this.capabilitiesService
+      .mapCapabilitiesOnLayerOptions(layerOptions, layerType)
+      .pipe(
+        map((capabilitiesLayerOptions) =>
+          Object.assign(layerOptions, capabilitiesLayerOptions, {
+            requestCapabilities: false
+          })
+        ),
+        catchError(() => of(layerOptions))
       );
-    }
-
-    return updatedLayerOptions;
   }
 
   private setLayerOptionsDefaults(

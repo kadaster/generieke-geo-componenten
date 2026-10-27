@@ -7,7 +7,7 @@ import {
   withInterceptorsFromDi
 } from "@angular/common/http";
 import { CoreWmsWmtsCapabilitiesRequestService } from "../../layer/service/core-wms-wmts-capabilities-request.service";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
@@ -18,6 +18,7 @@ import {
   Webservice2DType
 } from "@kadaster/ggc-models";
 import { createWmtsCapabilitiesMock } from "../../layer/service/mock/wmts-capabilities.mock";
+import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
@@ -491,6 +492,116 @@ describe("LayerService", () => {
       expect(service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend).toEqual(
         { legendUrl: "default-legend" }
       );
+    });
+
+    describe("requestCapabilities", () => {
+      let capabilitiesService: GgcCapabilitiesService;
+
+      beforeEach(() => {
+        capabilitiesService = TestBed.inject(GgcCapabilitiesService);
+      });
+
+      it.each([undefined, false])(
+        "should not request capabilities when requestCapabilities is %s",
+        (requestCapabilities) => {
+          const mapCapabilitiesSpy = vi.spyOn(
+            capabilitiesService,
+            "mapCapabilitiesOnLayerOptions"
+          );
+          vi.spyOn(service, "addLayer").mockReturnValue("layer1");
+
+          service.loadWebservices(
+            [createWebservice({ requestCapabilities }) as any],
+            MAP_INDEX
+          );
+
+          expect(mapCapabilitiesSpy).not.toHaveBeenCalled();
+        }
+      );
+
+      it("should fill the layer config from the capabilities and set requestCapabilities to false", () => {
+        const mapCapabilitiesSpy = vi
+          .spyOn(capabilitiesService, "mapCapabilitiesOnLayerOptions")
+          .mockImplementation((layerOptions) =>
+            of({
+              ...layerOptions,
+              title: "Capabilities title",
+              minResolution: 1,
+              maxResolution: 100
+            })
+          );
+        const addLayerSpy = vi
+          .spyOn(service, "addLayer")
+          .mockReturnValue("layer1");
+
+        service.loadWebservices(
+          [createWebservice({ requestCapabilities: true }) as any],
+          MAP_INDEX
+        );
+
+        expect(mapCapabilitiesSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            layerId: "layer1",
+            url: "http://test-url"
+          }),
+          Webservice2DType.WMS
+        );
+        const layerConfig = service.getLayerConfig("layer1", MAP_INDEX);
+        expect(layerConfig).toEqual(
+          expect.objectContaining({
+            title: "Capabilities title",
+            minResolution: 1,
+            maxResolution: 100,
+            requestCapabilities: false,
+            visible: true
+          })
+        );
+        expect(addLayerSpy).toHaveBeenCalledWith(
+          layerConfig,
+          Webservice2DType.WMS
+        );
+      });
+
+      it("should not request capabilities again when the layer configs are reloaded", () => {
+        const mapCapabilitiesSpy = vi
+          .spyOn(capabilitiesService, "mapCapabilitiesOnLayerOptions")
+          .mockImplementation((layerOptions) => of(layerOptions));
+        vi.spyOn(service, "addLayer").mockReturnValue("layer1");
+        service.loadWebservices(
+          [createWebservice({ requestCapabilities: true }) as any],
+          MAP_INDEX
+        );
+
+        service.loadWebservices(service.getLayerConfigs(MAP_INDEX)!, MAP_INDEX);
+
+        expect(mapCapabilitiesSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should initialise the layer and keep requestCapabilities true when requesting the capabilities fails", () => {
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnLayerOptions"
+        ).mockReturnValue(throwError(() => new Error("capabilities error")));
+        const addLayerSpy = vi
+          .spyOn(service, "addLayer")
+          .mockReturnValue("layer1");
+        const emitSpy = vi.spyOn(service as any, "emitLayerChanged");
+
+        service.loadWebservices(
+          [createWebservice({ requestCapabilities: true }) as any],
+          MAP_INDEX
+        );
+
+        expect(emitSpy).toHaveBeenCalledWith(
+          "layer1",
+          MAP_INDEX,
+          LayerChangedEventTrigger.LAYER_INITIALIZED
+        );
+        expect(addLayerSpy).toHaveBeenCalledTimes(1);
+        expect(
+          service.getLayerConfig("layer1", MAP_INDEX)?.requestCapabilities
+        ).toBe(true);
+      });
     });
   });
 

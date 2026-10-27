@@ -145,8 +145,8 @@ export class GgcOgcApiCapabilitiesService {
     return {
       // Tel voor de maxresolutie er 1 level bij op, zodat de laag zichtbaar
       // wordt van...tot (bij bijv alleen tilelevel 12 van 12 tot 13)
-      minResolution: zoomlevelToResolution(maxlevel),
-      maxResolution: zoomlevelToResolution(minlevel - 1)
+      minResolution: zoomlevelToResolution(maxlevel + 1),
+      maxResolution: zoomlevelToResolution(minlevel)
     };
   }
 

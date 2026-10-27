@@ -1,0 +1,31 @@
+[
+  {
+    "themeName": "Kaarten",
+    "datasets": [
+      {
+        "datasetName": "WMS kaartlagen",
+        "services": [
+          {
+            "layers": [{ "layerId": "bagAdressenWms" }]
+          }
+        ]
+      },
+      {
+        "datasetName": "WMTS kaartlagen",
+        "services": [
+          {
+            "layers": [{ "layerId": "bgtStandaardvisualisatieWmts" }]
+          }
+        ]
+      },
+      {
+        "datasetName": "Vector kaartlagen",
+        "services": [
+          {
+            "layers": [{ "layerId": "bagVector" }]
+          }
+        ]
+      }
+    ]
+  }
+]

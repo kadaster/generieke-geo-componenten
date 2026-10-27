@@ -1,0 +1,54 @@
+[
+  {
+    "url": "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "brtAchtergrondkaartStandaard",
+        "layerName": "standaard",
+        "zIndex": -20
+      }
+    ]
+  },
+  {
+    "url": "https://service.pdok.nl/kadaster/bag-adressen/wms/v1_0",
+    "type": "wms",
+    "layers": [
+      {
+        "layerId": "bagAdressenWms",
+        "layerName": "adressen",
+        "visible": false,
+        "requestCapabilities": true,
+        "zIndex": 3
+      }
+    ]
+  },
+  {
+    "url": "https://service.pdok.nl/lv/bgt/wmts/v1_0",
+    "type": "wmts",
+    "layers": [
+      {
+        "layerId": "bgtStandaardvisualisatieWmts",
+        "layerName": "standaardvisualisatie",
+        "maxResolution": 0.84,
+        "visible": false,
+        "requestCapabilities": true,
+        "zIndex": 1
+      }
+    ]
+  },
+  {
+    "type": "vector",
+    "url": "https://api.pdok.nl/kadaster/bag/ogc/v2/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt",
+    "layers": [
+      {
+        "layerId": "bagVector",
+        "style": "https://api.pdok.nl/kadaster/bag/ogc/v2/styles/bag_standaardvisualisatie__netherlandsrdnewquad?f=mapbox",
+        "visible": false,
+        "enableOverzoom": true,
+        "requestCapabilities": true,
+        "zIndex": 2
+      }
+    ]
+  }
+]

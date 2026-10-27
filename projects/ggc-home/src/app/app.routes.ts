@@ -64,6 +64,7 @@ import { ExampleConversionComponent } from "./examples/example-conversion/exampl
 import { ExampleDynamicLayerOgcBasicComponent } from "./examples/example-layer/example-dynamic-layer-ogc-basic/example-dynamic-layer-ogc-basic.component";
 import { ExampleLayerStylesComponent } from "./examples/example-layer/example-layer-styles/example-layer-styles.component";
 import { ExampleLayerStylesVectorTileComponent } from "./examples/example-layer/example-layer-styles-vector-tile/example-layer-styles-vector-tile.component";
+import { ExampleCapabilitiesLayerOptionsComponent } from "./examples/example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -436,6 +437,12 @@ export const routes: Routes = [
     title: "OGC feature tonen | GGC-Home",
     component: ExampleDynamicLayerOgcBasicComponent,
     data: { label: "dynamic-layer-ogc-basic" }
+  },
+  {
+    path: "capabilities-layer-options",
+    title: "Capabilities kaartlagen | GGC-Home",
+    component: ExampleCapabilitiesLayerOptionsComponent,
+    data: { label: "capabilities-layer-options" }
   },
   // PLOP:ROUTE
   {
