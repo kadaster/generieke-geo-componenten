@@ -31,6 +31,11 @@ import {
   defaultSelectedPointStyle
 } from "./default-modify-style";
 
+enum TabCoordinateDirection {
+  Next,
+  Previous
+}
+
 export interface CenterModifyOptions extends CenterBaseOptions {
   targetSource: VectorSource;
   modifyStyle?: StyleLike;
@@ -507,24 +512,16 @@ export class CenterModify extends CenterBase {
     }
     switch (evt.code) {
       case this.keyNextPoint:
-        this.updateNextTabCoordinate();
+        this.updateTabCoordinate(TabCoordinateDirection.Next);
         break;
       case this.keyPrevPoint:
-        this.updatePreviousTabCoordinate();
+        this.updateTabCoordinate(TabCoordinateDirection.Previous);
         break;
     }
     this.getMap()!.getView().setCenter(this.getCurrentTabCoordinate());
   };
 
-  private updateNextTabCoordinate() {
-    this.updateTabCoordinate(-1);
-  }
-
-  private updatePreviousTabCoordinate() {
-    this.updateTabCoordinate(1);
-  }
-
-  private updateTabCoordinate(direction: -1 | 1) {
+  private updateTabCoordinate(direction: TabCoordinateDirection) {
     const coordinates = getCoordinatesOfFeatureWithMiddlePoints(
       this.highlightedFeature!
     );
@@ -569,8 +566,14 @@ export class CenterModify extends CenterBase {
       return;
     }
 
-    this.selectedFeatureCurrentCoordinateIndex =
-      (closestIndex + direction + coordinates.length) % coordinates.length;
+    // Next moves backward through the coordinate array (-1); previous moves forward (+1).
+    if (direction === TabCoordinateDirection.Next) {
+      this.selectedFeatureCurrentCoordinateIndex =
+        (closestIndex - 1 + coordinates.length) % coordinates.length;
+    } else {
+      this.selectedFeatureCurrentCoordinateIndex =
+        (closestIndex + 1) % coordinates.length;
+    }
   }
 
   private getCurrentTabCoordinate() {
