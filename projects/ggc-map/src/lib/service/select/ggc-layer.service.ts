@@ -171,13 +171,14 @@ export class GgcLayerService {
 
   /**
    * Voegt een laag toe aan de kaart op basis van het webservice‑type.
+   * Wanneer requestCapabilities true is, worden de layerOptions eerst aangevuld
+   * vanuit de capabilities en wordt de laag pas daarna toegevoegd. De layerId
+   * wordt dan direct teruggegeven en gegenereerd als deze ontbreekt.
    */
   addLayer(
     layerOptions: AbstractConfigurableLayerOptions,
     webserviceType: Webservice2DType
   ): string | undefined {
-    layerOptions = this.setLayerOptionsDefaults(layerOptions);
-
     if (
       layerOptions.persistent === true &&
       layerOptions.layerId &&
@@ -205,20 +206,32 @@ export class GgcLayerService {
         return layerOptions.layerId;
       }
     }
-    switch (webserviceType) {
-      case Webservice2DType.GEOJSON:
-        return this.addGeojsonLayer(layerOptions);
-      case Webservice2DType.IMAGE:
-        return this.addImageLayer(layerOptions);
-      case Webservice2DType.VECTOR:
-        return this.addVectorTileLayer(layerOptions);
-      case Webservice2DType.WMS:
-        return this.addWmsLayer(layerOptions);
-      case Webservice2DType.WMTS:
-        return this.addWmtsLayer(layerOptions);
-      default:
-        return undefined;
+
+    if (layerOptions.requestCapabilities === true) {
+      layerOptions.layerId ??= crypto.randomUUID();
     }
+    this.applyCapabilitiesOnLayerOptions(
+      layerOptions,
+      webserviceType
+    ).subscribe((capabilitiesLayerOptions) => {
+      const updatedLayerOptions = this.setLayerOptionsDefaults(
+        capabilitiesLayerOptions
+      );
+      switch (webserviceType) {
+        case Webservice2DType.GEOJSON:
+          return this.addGeojsonLayer(updatedLayerOptions);
+        case Webservice2DType.IMAGE:
+          return this.addImageLayer(updatedLayerOptions);
+        case Webservice2DType.VECTOR:
+          return this.addVectorTileLayer(updatedLayerOptions);
+        case Webservice2DType.WMS:
+          return this.addWmsLayer(updatedLayerOptions);
+        case Webservice2DType.WMTS:
+          return this.addWmtsLayer(updatedLayerOptions);
+        default:
+          return undefined;
+      }
+    });
   }
 
   /**

@@ -140,10 +140,10 @@ describe("GgcOgcApiCapabilitiesService", () => {
 
           // Resoluties voor tileMatrix level 12
           // initialResolution = 3440.64; minlevel=12, maxlevel=12
-          // minResolution = 3440.64 / 2^12 = 0.84
-          // maxResolution = 3440.64 / 2^(12-1) = 1.68
-          expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(0.84, 6);
-          expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(1.68, 6);
+          // minResolution = 3440.64 / 2^(12-1) = 0.42
+          // maxResolution = 3440.64 / 2^(12) = 0.84
+          expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(0.42, 6);
+          expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(0.84, 6);
         }
       });
     });

@@ -284,6 +284,28 @@ describe("LayerService", () => {
       expect(layerConfig.activeLegend).toEqual({ legendUrl: "default-legend" });
     });
 
+    it("should request capabilities when adding a layer directly with requestCapabilities true", () => {
+      const layerConfig: any = {
+        mapIndex: MAP_INDEX,
+        layerId: "layer1",
+        requestCapabilities: true
+      };
+      const mapCapabilitiesSpy = vi
+        .spyOn(
+          TestBed.inject(GgcCapabilitiesService),
+          "mapCapabilitiesOnLayerOptions"
+        )
+        .mockImplementation((layerOptions) => of(layerOptions));
+      vi.spyOn(service, "addWmsLayer").mockReturnValue("layer1");
+
+      service.addLayer(layerConfig, Webservice2DType.WMS);
+
+      expect(mapCapabilitiesSpy).toHaveBeenCalledWith(
+        layerConfig,
+        Webservice2DType.WMS
+      );
+    });
+
     it("should keep layer defaults idempotent when applied more than once", () => {
       const layerConfig = {
         layerId: "layer1",
