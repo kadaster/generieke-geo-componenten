@@ -9,6 +9,7 @@ import {
 } from "./ggc-capabilities.service";
 import WMTS from "ol/source/WMTS";
 import { Coordinate } from "ol/coordinate";
+import { scaleToResolution } from "../../utils/epsg28992";
 
 /**
  * Interne mapper-service voor WMS/WMTS capabilities.
@@ -112,16 +113,36 @@ export class CoreWmsWmtsCapabilitiesService {
         const ggcLayerStyles: CapabilitiesServiceLayerStyle[] =
           this.extractStylesFromWMSLayer(layer);
         const datasetLayer: CapabilitiesServiceLayer = {
-          name: crypto.randomUUID(),
-          title: layer.Name,
-          maxResolution: layer.MaxScaleDenominator,
-          minResolution: layer.MinScaleDenominator,
+          name: layer.Name,
+          title: layer.Title,
+          maxResolution: this.scaleDenominatorToResolution(
+            layer.MaxScaleDenominator
+          ),
+          minResolution: this.scaleDenominatorToResolution(
+            layer.MinScaleDenominator
+          ),
           styles: ggcLayerStyles
         };
         layers.push(datasetLayer);
       }
     }
     return service;
+  }
+
+  /*
+   * Rekent een ScaleDenominator uit de WMS capabilities om naar een resolutie.
+   * Geeft undefined terug als de ScaleDenominator ontbreekt of geen getal is.
+   */
+  private scaleDenominatorToResolution(
+    scaleDenominator: unknown
+  ): string | undefined {
+    if (scaleDenominator === undefined || scaleDenominator === null) {
+      return undefined;
+    }
+    const scale = Number(scaleDenominator);
+    return Number.isFinite(scale)
+      ? scaleToResolution(scale).toString()
+      : undefined;
   }
 
   /*

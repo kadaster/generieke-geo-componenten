@@ -1,9 +1,10 @@
 import { TestBed } from "@angular/core/testing";
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 import { CoreWmsWmtsCapabilitiesService } from "./core-wms-wmts-capabilities.service";
 import { CoreWmsWmtsCapabilitiesRequestService } from "./core-wms-wmts-capabilities-request.service";
 import { ServiceCapabilities } from "./ggc-capabilities.service";
 import { provideZonelessChangeDetection } from "@angular/core";
+import { scaleToResolution } from "../../utils/epsg28992";
 
 const WMS_CAPABILITIES = {
   Service: {
@@ -160,37 +161,61 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
     it("will return a service (happy path)", async () => {
       coreMock.getCapabilitiesForUrl.mockReturnValue(of(WMS_CAPABILITIES));
 
-      service
-        .getServiceCapabilitiesWMS("https://example.com/wms")
-        .subscribe((svc: ServiceCapabilities | undefined) => {
-          if (!svc) {
-            throw new Error("Expected service to be definend");
-            return;
-          }
-          expect(svc.type).toBe("WMS");
-          expect(svc.title).toBe("Test WMS Service");
-          expect(svc.abstract).toBe("Beschrijving van WMS service");
-          expect(svc.url).toBe(
-            "https://example.com/wms?service=WMS&request=GetCapabilities"
-          );
-          expect(svc.layers.length).toBe(2);
+      const svc = await firstValueFrom(
+        service.getServiceCapabilitiesWMS("https://example.com/wms")
+      );
 
-          // Layer 1 assertions
-          const l1 = svc.layers[0];
-          expect(l1.title).toBe("laag_1");
-          expect(l1.maxResolution).toBe("5000");
-          expect(l1.minResolution).toBe("250");
-          expect(l1.styles.length).toBe(2);
-          expect(l1.styles[0]).toEqual({
-            name: "default",
-            legendURL:
-              "https://example.com/wms?request=GetLegendGraphic&layer=laag_1"
-          });
-          // Layer 2 assertions
-          const l2 = svc.layers[1];
-          expect(l2.title).toBe("laag_2");
-          expect(l2.styles.length).toBe(1);
-        });
+      expect(coreMock.getCapabilitiesForUrl).toHaveBeenCalledWith(
+        "https://example.com/wms",
+        "WMS"
+      );
+      expect(svc).toBeDefined();
+      expect(svc!.type).toBe("WMS");
+      expect(svc!.title).toBe("Test WMS Service");
+      expect(svc!.abstract).toBe("Beschrijving van WMS service");
+      expect(svc!.url).toBe(
+        "https://example.com/wms?service=WMS&request=GetCapabilities"
+      );
+      expect(svc!.layers.length).toBe(2);
+
+      // Layer 1 assertions
+      const l1 = svc!.layers[0];
+      expect(l1.name).toBe("laag_1");
+      expect(l1.title).toBe("Laag 1 titel");
+      expect(l1.maxResolution).toBe(scaleToResolution(5000).toString());
+      expect(l1.minResolution).toBe(scaleToResolution(250).toString());
+      expect(l1.styles.length).toBe(2);
+      expect(l1.styles[0]).toEqual({
+        name: "default",
+        legendURL:
+          "https://example.com/wms?request=GetLegendGraphic&layer=laag_1"
+      });
+      // Layer 2 assertions
+      const l2 = svc!.layers[1];
+      expect(l2.name).toBe("laag_2");
+      expect(l2.title).toBe("Laag 2 titel");
+      expect(l2.styles.length).toBe(1);
+    });
+
+    it("geeft undefined terug als er geen capabilities zijn", async () => {
+      coreMock.getCapabilitiesForUrl.mockReturnValue(of(undefined));
+
+      const svc = await firstValueFrom(
+        service.getServiceCapabilitiesWMS("https://example.com/wms")
+      );
+
+      expect(svc).toBeUndefined();
+    });
+
+    it("extractServiceCapabilitiesWMS zet geen resoluties als ScaleDenominators ontbreken", () => {
+      const result = service.extractServiceCapabilitiesWMS(
+        WMS_CAPABILITIES_WITHOUT_STYLES
+      );
+
+      expect(result.layers[0].name).toBe("laag_zonder_styles");
+      expect(result.layers[0].title).toBe("Geen styles");
+      expect(result.layers[0].maxResolution).toBeUndefined();
+      expect(result.layers[0].minResolution).toBeUndefined();
     });
 
     it("extractStylesFromWMSLayer should retun the correct style", () => {
@@ -211,15 +236,11 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
       service
         .getServiceCapabilitiesWMTS("https://example.com/wmts")
         .subscribe((svc: ServiceCapabilities | undefined) => {
-          if (!svc) {
-            throw new Error("Expected service to be definend");
-            return;
-          }
-          expect(svc.type).toBe("WMTS");
-          expect(svc.url).toBe("https://example.com/wmts?SERVICE=WMTS");
-          expect(svc.layers.length).toBe(2);
+          expect(svc!.type).toBe("WMTS");
+          expect(svc!.url).toBe("https://example.com/wmts?SERVICE=WMTS");
+          expect(svc!.layers.length).toBe(2);
 
-          const l1 = svc.layers[0];
+          const l1 = svc!.layers[0];
           expect(l1.name).toBe("wmts_layer_1");
           expect(l1.title).toBe("WMTS Laag 1");
           expect(l1.styles.length).toBe(1);
@@ -228,7 +249,7 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
             legendURL: "https://example.com/wmts/legend/layer1.png"
           });
 
-          const l2 = svc.layers[1];
+          const l2 = svc!.layers[1];
           expect(l2.name).toBe("wmts_layer_2");
           expect(l2.styles.length).toBe(2);
         });

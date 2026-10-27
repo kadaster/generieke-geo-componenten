@@ -226,17 +226,17 @@ describe("GgcCapabilitiesService", () => {
   });
 
   describe("mapCapabilitiesOnLayerOptions", () => {
-    it("WMS: mapt title en rekent schaalgetallen om naar resoluties", async () => {
+    it("WMS: mapt title en resoluties van de laag met dezelfde name", async () => {
       const wmsMock: ServiceCapabilities = {
         url: baseUrl,
         type: "WMS",
         layers: [
-          { name: "uuid-1", title: "other", styles: [] },
+          { name: "other", title: "Andere laag", styles: [] },
           {
-            name: "uuid-2",
-            title: "natura2000",
-            maxResolution: "100000",
-            minResolution: "1000",
+            name: "natura2000",
+            title: "Natura 2000",
+            maxResolution: "28",
+            minResolution: "0.28",
             styles: []
           }
         ]
@@ -257,9 +257,9 @@ describe("GgcCapabilitiesService", () => {
       expect(wmsWmtsSvcSpy.getServiceCapabilitiesWMS).toHaveBeenCalledWith(
         baseUrl
       );
-      expect(result.title).toBe("natura2000");
-      expect(result.maxResolution).toBeCloseTo(28);
-      expect(result.minResolution).toBeCloseTo(0.28);
+      expect(result.title).toBe("Natura 2000");
+      expect(result.maxResolution).toBe(28);
+      expect(result.minResolution).toBe(0.28);
       expect(wmsLayerOptions.title).toBeUndefined();
     });
 
@@ -269,8 +269,8 @@ describe("GgcCapabilitiesService", () => {
         type: "WMS",
         layers: [
           {
-            name: "uuid",
-            title: "laag",
+            name: "laag",
+            title: "Titel uit capabilities",
             maxResolution: "100000",
             minResolution: "1000",
             styles: []
@@ -329,8 +329,8 @@ describe("GgcCapabilitiesService", () => {
           url: baseUrl,
           type: "WMS",
           layers: [
-            { name: "uuid-1", title: "uit-layers", styles: [] },
-            { name: "uuid-2", title: "uit-layerName", styles: [] }
+            { name: "uit-layers", title: "Layers", styles: [] },
+            { name: "uit-layerName", title: "LayerName", styles: [] }
           ]
         })
       );
@@ -347,7 +347,7 @@ describe("GgcCapabilitiesService", () => {
         )
       );
 
-      expect(result.title).toBe("uit-layerName");
+      expect(result.title).toBe("LayerName");
     });
 
     it("WMTS: gebruikt layerName boven layer", async () => {
@@ -412,6 +412,47 @@ describe("GgcCapabilitiesService", () => {
         title: "Tiles",
         maxResolution: 3440.64,
         minResolution: 0.105
+      });
+    });
+
+    describe("Vector met enableOverzoom", () => {
+      const landingPageUrl = "https://api.example.test/ogc/v1";
+      const vectorTileUrl = `${landingPageUrl}/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt`;
+
+      beforeEach(() => {
+        ogcApiSvcSpy.getServiceCapabilitiesOgcApi.mockReturnValue(
+          of({
+            url: landingPageUrl,
+            type: "OGCAPI",
+            layers: [
+              {
+                name: "tiles",
+                title: "Tiles",
+                maxResolution: "3440.64",
+                minResolution: "0.105",
+                styles: []
+              }
+            ]
+          })
+        );
+      });
+
+      it("zet minResolution niet uit de capabilities maar wel maxResolution", async () => {
+        const vectorTileLayerOptions: VectorTileLayerOptions = {
+          url: vectorTileUrl,
+          enableOverzoom: true
+        };
+
+        const result = await firstValueFrom(
+          service.mapCapabilitiesOnLayerOptions(
+            vectorTileLayerOptions,
+            Webservice2DType.VECTOR
+          )
+        );
+
+        expect(result.minResolution).toBeUndefined();
+        expect(result.maxResolution).toBe(3440.64);
+        expect(result.title).toBe("Tiles");
       });
     });
 

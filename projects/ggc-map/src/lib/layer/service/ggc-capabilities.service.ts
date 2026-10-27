@@ -9,7 +9,7 @@ import { Webservice2DType } from "@kadaster/ggc-models";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
-import { scaleToResolution } from "../../utils/epsg28992";
+import { VectorTileLayerOptions } from "../model/vector-tile-layer.model";
 
 /**
  * Service voor het ophalen en verwerken van WMS/WMTS en OGCAPI capabilities.
@@ -154,14 +154,14 @@ export class GgcCapabilitiesService {
           return layerOptions;
         }
 
+        // If overzoom is enabled for vector tile layers, we do not set minResolution from capabilities, as it would prevent overzooming.
+        const overZoomEnabled =
+          (layerOptions as VectorTileLayerOptions).enableOverzoom ?? false;
         const toResolution = (value?: string): number | undefined => {
-          const numberValue = Number(value);
-          if (value === undefined || !Number.isFinite(numberValue)) {
-            return undefined;
-          }
-          return layerType === Webservice2DType.WMS
-            ? scaleToResolution(numberValue)
-            : numberValue;
+          const resolution = Number(value);
+          return value === undefined || !Number.isFinite(resolution)
+            ? undefined
+            : resolution;
         };
 
         return {
@@ -169,7 +169,9 @@ export class GgcCapabilitiesService {
           title: layerOptions.title ?? capabilitiesServiceLayer.title,
           minResolution:
             layerOptions.minResolution ??
-            toResolution(capabilitiesServiceLayer.minResolution),
+            (overZoomEnabled
+              ? undefined
+              : toResolution(capabilitiesServiceLayer.minResolution)),
           maxResolution:
             layerOptions.maxResolution ??
             toResolution(capabilitiesServiceLayer.maxResolution)
@@ -226,9 +228,8 @@ export class GgcCapabilitiesService {
         const wmsLayerName =
           layerOptions.layerName ??
           (Array.isArray(wmsLayers) ? wmsLayers[0] : wmsLayers);
-        // In de WMS ServiceCapabilities bevat title de Name van de laag.
         return capabilitiesServiceLayers.find(
-          (layer) => layer.title === wmsLayerName
+          (layer) => layer.name === wmsLayerName
         );
       }
       case Webservice2DType.WMTS: {
