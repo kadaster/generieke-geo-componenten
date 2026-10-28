@@ -22,7 +22,9 @@
       <input
         #input
         [attr.id]="elementIds().searchInputId"
-        [attr.aria-controls]="elementIds().suggestionListId"
+        [attr.aria-controls]="
+          hasFocusableSuggestions() ? elementIds().suggestionListId : null
+        "
         [attr.aria-label]="
           searchLocationOptions()?.labelText
             ? null

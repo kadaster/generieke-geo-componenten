@@ -215,6 +215,41 @@ describe("GgcSearchLocationComponent", () => {
     });
   });
 
+  describe("Toegankelijkheid: aria-controls", () => {
+    it("mag geen aria-controls attribuut hebben zolang de suggestielijst niet in de DOM staat", () => {
+      fixture.detectChanges();
+
+      const input: HTMLInputElement =
+        fixture.nativeElement.querySelector("input");
+
+      expect(input.hasAttribute("aria-controls")).toBe(false);
+      expect(
+        fixture.nativeElement.querySelector("ul[role='listbox']")
+      ).toBeNull();
+    });
+
+    it("moet aria-controls verwijzen naar de daadwerkelijk gerenderde suggestielijst", () => {
+      const mockResponse = {
+        numberReturned: 1,
+        features: [mockFeature as any],
+        links: [],
+        timestamp: Date.now().toString(),
+        type: "FeatureCollection"
+      } as PdokLocationApiSearchResponse;
+      fixture.detectChanges();
+      component.processSuggestionsResult(mockResponse);
+      fixture.detectChanges();
+
+      const input: HTMLInputElement =
+        fixture.nativeElement.querySelector("input");
+      const suggestionList: HTMLUListElement =
+        fixture.nativeElement.querySelector("ul[role='listbox']");
+
+      expect(suggestionList).toBeTruthy();
+      expect(input.getAttribute("aria-controls")).toBe(suggestionList.id);
+    });
+  });
+
   describe("Kaart Interactie (Zoom & Mark)", () => {
     it("moet zoomToExtent aanroepen als een resultaat een bbox heeft", async () => {
       const featureWithBbox = { ...mockFeature, bbox: [1, 2, 3, 4] } as any;
