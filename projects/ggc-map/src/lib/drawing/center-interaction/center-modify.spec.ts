@@ -154,39 +154,172 @@ describe("CenterModify", () => {
     expect(centerModify["keyPrevPoint"]).toEqual("<-");
   });
 
-  it("skip point of selected feature, next en prev", () => {
+  it("cycles to the next and previous point of the selected feature", () => {
     const centerModify = new CenterModify(centerModifyOptions);
-    centerModify["calculatePixelDistanceOfCoordinates"] = featureNear;
+    centerModify["calculatePixelDistanceOfCoordinates"] = (
+      coordinate1,
+      coordinate2
+    ) =>
+      Math.hypot(
+        coordinate1[0] - coordinate2[0],
+        coordinate1[1] - coordinate2[1]
+      );
     centerModify.setMap(mockMap);
 
-    // no selecte feature
     expect(centerModify["highlightedFeature"]).toBeDefined();
-    // default index
     expect(
       centerModify["selectedFeatureCurrentCoordinateIndex"]
     ).not.toBeDefined();
 
-    // jump to first
-    centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
-
-    // feature selected
-    expect(centerModify["highlightedFeature"]).toBeDefined();
-    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(0);
-
-    // jump to next
     centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
     expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(1);
     centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
-    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(2);
-    centerModify["selectedFeatureCurrentCoordinateIndex"] = 4;
-    centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
     expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(0);
-    // // jump to prev
-    centerModify["handleKeyPress"]({ code: "BracketLeft" } as KeyboardEvent);
+    centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
     expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(4);
-    centerModify["selectedFeatureCurrentCoordinateIndex"] = 0;
+
     centerModify["handleKeyPress"]({ code: "BracketLeft" } as KeyboardEvent);
-    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(4);
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(0);
+    centerModify["handleKeyPress"]({ code: "BracketLeft" } as KeyboardEvent);
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(1);
+  });
+
+  it("jumps to the closest point before advancing when the center is not on a point", () => {
+    const centerModify = new CenterModify(centerModifyOptions);
+    centerModify["calculatePixelDistanceOfCoordinates"] = (
+      coordinate1,
+      coordinate2
+    ) =>
+      Math.hypot(
+        coordinate1[0] - coordinate2[0],
+        coordinate1[1] - coordinate2[1]
+      );
+    centerModify.setMap(mockMap);
+    centerModify["centerPoint"] = new Point([80, 90]);
+
+    centerModify["handleKeyPress"]({ code: "BracketRight" } as KeyboardEvent);
+
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(2);
+    expect(mockMap.getView().getCenter()).toEqual([100, 100]);
+  });
+
+  it("jumps to the closest point before going back when the center is not on a point", () => {
+    const centerModify = new CenterModify(centerModifyOptions);
+    centerModify["calculatePixelDistanceOfCoordinates"] = (
+      coordinate1,
+      coordinate2
+    ) =>
+      Math.hypot(
+        coordinate1[0] - coordinate2[0],
+        coordinate1[1] - coordinate2[1]
+      );
+    centerModify.setMap(mockMap);
+    centerModify["centerPoint"] = new Point([80, 60]);
+
+    centerModify["handleKeyPress"]({ code: "BracketLeft" } as KeyboardEvent);
+
+    expect(centerModify["selectedFeatureCurrentCoordinateIndex"]).toEqual(1);
+    expect(mockMap.getView().getCenter()).toEqual([50, 50]);
+  });
+
+  describe("keyboard navigation", () => {
+    let centerModify: CenterModify;
+
+    beforeEach(() => {
+      centerModify = new CenterModify(centerModifyOptions);
+      vi.spyOn(mockMap, "getPixelFromCoordinate").mockImplementation(
+        (coordinate) => coordinate
+      );
+      centerModify.setMap(mockMap);
+    });
+
+    afterEach(() => {
+      centerModify.cleanup();
+      mockMap.dispose();
+    });
+
+    it.each([
+      { center: [102, 100], key: "BracketRight", expected: [50, 50] },
+      { center: [102, 100], key: "BracketLeft", expected: [150, 150] },
+      { center: [52, 50], key: "BracketRight", expected: [0, 0] },
+      { center: [52, 50], key: "BracketLeft", expected: [100, 100] },
+      { center: [30, 32], key: "BracketRight", expected: [0, 0] },
+      { center: [30, 32], key: "BracketLeft", expected: [50, 50] },
+      { center: [70, 72], key: "BracketRight", expected: [50, 50] },
+      { center: [70, 72], key: "BracketLeft", expected: [100, 100] }
+    ])(
+      "should navigate from $center with $key to $expected",
+      ({ center, key, expected }) => {
+        mockMap.getView().setCenter(center);
+
+        centerModify["handleKeyPress"](
+          new KeyboardEvent("keypress", { code: key })
+        );
+
+        expect(mockMap.getView().getCenter()).toEqual(expected);
+      }
+    );
+
+    it.each([
+      { center: [2, 20], key: "BracketRight", expected: [0, 50] },
+      { center: [2, 20], key: "BracketLeft", expected: [0, 0] },
+      { center: [5.999, 20], key: "BracketRight", expected: [0, 50] },
+      { center: [6, 20], key: "BracketRight", expected: [0, 0] },
+      { center: [6, 20], key: "BracketLeft", expected: [0, 0] }
+    ])(
+      "should navigate near the closing polygon segment from $center with $key",
+      ({ center, key, expected }) => {
+        centerModifyOptions.targetSource.clear();
+        centerModifyOptions.targetSource.addFeature(
+          new Feature(
+            new Polygon([
+              [
+                [0, 0],
+                [100, 0],
+                [100, 100],
+                [0, 100],
+                [0, 0]
+              ]
+            ])
+          )
+        );
+        mockMap.getView().setCenter(center);
+
+        centerModify["handleKeyPress"](
+          new KeyboardEvent("keypress", { code: key })
+        );
+
+        expect(mockMap.getView().getCenter()).toEqual(expected);
+      }
+    );
+
+    it.each(["BracketRight", "BracketLeft"])(
+      "should use the closest point to the center inside a highlighted polygon with %s",
+      (key) => {
+        centerModifyOptions.targetSource.clear();
+        centerModifyOptions.targetSource.addFeature(
+          new Feature(
+            new Polygon([
+              [
+                [0, 0],
+                [1000, 0],
+                [1000, 90],
+                [450, 90],
+                [0, 90],
+                [0, 0]
+              ]
+            ])
+          )
+        );
+        mockMap.getView().setCenter([450, 40]);
+
+        centerModify["handleKeyPress"](
+          new KeyboardEvent("keypress", { code: key })
+        );
+
+        expect(mockMap.getView().getCenter()).toEqual([450, 90]);
+      }
+    );
   });
 
   describe("removeModifyCurrentPoint", () => {

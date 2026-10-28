@@ -15,6 +15,7 @@ import {
 import {
   coordinateIsOnSegment,
   coordinatesAreEqual,
+  getClosestCoordinate,
   getClosestSegmentCoordinate,
   getClosestVertex,
   getCoordinatesOfFeature,
@@ -29,6 +30,11 @@ import {
   defaultPointModifyStyle,
   defaultSelectedPointStyle
 } from "./default-modify-style";
+
+enum TabCoordinateDirection {
+  Next,
+  Previous
+}
 
 export interface CenterModifyOptions extends CenterBaseOptions {
   targetSource: VectorSource;
@@ -506,37 +512,113 @@ export class CenterModify extends CenterBase {
     }
     switch (evt.code) {
       case this.keyNextPoint:
-        this.updateNextTabCoordinate();
+        this.updateTabCoordinate(TabCoordinateDirection.Next);
         break;
       case this.keyPrevPoint:
-        this.updatePreviousTabCoordinate();
+        this.updateTabCoordinate(TabCoordinateDirection.Previous);
         break;
     }
     this.getMap()!.getView().setCenter(this.getCurrentTabCoordinate());
   };
 
-  private updateNextTabCoordinate() {
-    const coordinatesLength = getCoordinatesOfFeatureWithMiddlePoints(
-      this.highlightedFeature!
-    ).length;
-    const newIndex =
-      this.selectedFeatureCurrentCoordinateIndex == undefined
-        ? 0
-        : this.selectedFeatureCurrentCoordinateIndex + 1;
-    this.selectedFeatureCurrentCoordinateIndex =
-      newIndex >= coordinatesLength ? 0 : newIndex;
+  private updateTabCoordinate(direction: TabCoordinateDirection) {
+    const highlightedFeature = this.highlightedFeature;
+    if (!highlightedFeature) {
+      return;
+    }
+    const coordinates =
+      getCoordinatesOfFeatureWithMiddlePoints(highlightedFeature);
+    if (coordinates.length === 0) {
+      return;
+    }
+
+    const centerCoordinate = this.centerPoint.getCoordinates();
+
+    // Zoek het dichtsbijzijnde (midden)punt:
+    const { closestIndex, closestDistance } = this.getClosestTabCoordinate(
+      coordinates,
+      centerCoordinate
+    );
+
+    // Wanneer dichtbij, dan naar de vorige of volgende afhankelijk van direction
+    if (closestDistance < this.pixelTolerance) {
+      this.selectedFeatureCurrentCoordinateIndex =
+        direction === TabCoordinateDirection.Next
+          ? (closestIndex - 1 + coordinates.length) % coordinates.length
+          : (closestIndex + 1) % coordinates.length;
+      return;
+    }
+
+    // Anders kijken of we in de buurt zitten van een lijn (van het figuur):
+    const outlineIndex = this.getTabCoordinateIndexOnOutline(
+      highlightedFeature,
+      coordinates,
+      centerCoordinate,
+      direction
+    );
+
+    // Buiten pixeltolerantie: kies het dichtstbijzijnde (midden)punt vanaf het kaartcentrum.
+    this.selectedFeatureCurrentCoordinateIndex = outlineIndex ?? closestIndex;
   }
 
-  private updatePreviousTabCoordinate() {
-    const coordinatesLength = getCoordinatesOfFeatureWithMiddlePoints(
-      this.highlightedFeature!
-    ).length;
-    const newIndex =
-      this.selectedFeatureCurrentCoordinateIndex == undefined
-        ? coordinatesLength - 1
-        : this.selectedFeatureCurrentCoordinateIndex - 1;
-    this.selectedFeatureCurrentCoordinateIndex =
-      newIndex <= -1 ? coordinatesLength - 1 : newIndex;
+  private getClosestTabCoordinate(
+    coordinates: (Coordinate | undefined)[],
+    centerCoordinate: Coordinate
+  ): { closestIndex: number; closestDistance: number } {
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+    coordinates.forEach((coordinate, index) => {
+      if (!coordinate) {
+        return;
+      }
+      const distance = this.calculatePixelDistanceOfCoordinates(
+        centerCoordinate,
+        coordinate
+      );
+      if (distance < closestDistance) {
+        closestIndex = index;
+        closestDistance = distance;
+      }
+    });
+    return { closestIndex, closestDistance };
+  }
+
+  private getTabCoordinateIndexOnOutline(
+    highlightedFeature: Feature,
+    coordinates: (Coordinate | undefined)[],
+    centerCoordinate: Coordinate,
+    direction: TabCoordinateDirection
+  ): number | undefined {
+    const closestFeatureCoordinate = getClosestCoordinate(
+      highlightedFeature,
+      centerCoordinate
+    );
+    if (
+      !closestFeatureCoordinate ||
+      this.calculatePixelDistanceOfCoordinates(
+        centerCoordinate,
+        closestFeatureCoordinate
+      ) >= this.pixelTolerance
+    ) {
+      return undefined;
+    }
+
+    // We zitten in de buurt van een lijn, dus we moeten zoeken om welke lijn dat gaat.
+    // Bij een polygoon hoort ook het sluitsegment van het laatste naar het eerste punt.
+    const segmentCount =
+      highlightedFeature.getGeometry() instanceof Polygon
+        ? coordinates.length
+        : coordinates.length - 1;
+    for (let index = 0; index < segmentCount; index++) {
+      const nextIndex = (index + 1) % coordinates.length;
+      const x = coordinates[index];
+      const y = coordinates[nextIndex];
+      if (x && y && coordinateIsOnSegment(x, y, closestFeatureCoordinate)) {
+        // Richting -1 kiest x; richting +1 kiest y, ongeacht welk punt dichterbij ligt.
+        return direction === TabCoordinateDirection.Next ? index : nextIndex;
+      }
+    }
+    return undefined;
   }
 
   private getCurrentTabCoordinate() {
