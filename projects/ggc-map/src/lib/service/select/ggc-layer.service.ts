@@ -19,7 +19,8 @@ import { GgcLayerBrtAchtergrondkaartComponent } from "../../layer/layer-brt-acht
 import { Webservice } from "../../layer/model/webservice.model";
 import BaseLayer from "ol/layer/Base";
 import { viewResolutionIsInLayerResolutionRange } from "../../layer/utils/viewResolutionIsInLayerResolutionRange";
-import { Observable, Subject } from "rxjs";
+import { Observable, of, Subject } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import {
   DEFAULT_MAPINDEX,
   LayerChangedEvent,
@@ -33,6 +34,7 @@ import {
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
 import Layer from "ol/layer/Layer";
 import { CoreMapService } from "../../map/service/core-map.service";
+import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
 
 /**
  * Centrale service voor het beheren van kaartlagen binnen GGC.
@@ -52,6 +54,7 @@ import { CoreMapService } from "../../map/service/core-map.service";
 export class GgcLayerService {
   private readonly mapService = inject(CoreMapService);
   private readonly appRef = inject(ApplicationRef);
+  private readonly capabilitiesService = inject(GgcCapabilitiesService);
 
   private readonly layerChangedSubject: Subject<LayerChangedEvent> =
     new Subject();
@@ -168,6 +171,9 @@ export class GgcLayerService {
 
   /**
    * Voegt een laag toe aan de kaart op basis van het webservice‑type.
+   * Wanneer requestCapabilities true is, worden de layerOptions eerst aangevuld
+   * vanuit de capabilities en wordt de laag pas daarna toegevoegd. De layerId
+   * wordt dan direct teruggegeven en gegenereerd als deze ontbreekt.
    */
   addLayer(
     layerOptions: AbstractConfigurableLayerOptions,
@@ -200,20 +206,32 @@ export class GgcLayerService {
         return layerOptions.layerId;
       }
     }
-    switch (webserviceType) {
-      case Webservice2DType.GEOJSON:
-        return this.addGeojsonLayer(layerOptions as GeojsonLayerOptions);
-      case Webservice2DType.IMAGE:
-        return this.addImageLayer(layerOptions as ImageLayerOptions);
-      case Webservice2DType.VECTOR:
-        return this.addVectorTileLayer(layerOptions as VectorTileLayerOptions);
-      case Webservice2DType.WMS:
-        return this.addWmsLayer(layerOptions as WmsLayerOptions);
-      case Webservice2DType.WMTS:
-        return this.addWmtsLayer(layerOptions as WmtsLayerOptions);
-      default:
-        return undefined;
+
+    if (layerOptions.requestCapabilities === true) {
+      layerOptions.layerId ??= crypto.randomUUID();
     }
+    this.applyCapabilitiesOnLayerOptions(
+      layerOptions,
+      webserviceType
+    ).subscribe((capabilitiesLayerOptions) => {
+      const updatedLayerOptions = this.setLayerOptionsDefaults(
+        capabilitiesLayerOptions
+      );
+      switch (webserviceType) {
+        case Webservice2DType.GEOJSON:
+          return this.addGeojsonLayer(updatedLayerOptions);
+        case Webservice2DType.IMAGE:
+          return this.addImageLayer(updatedLayerOptions);
+        case Webservice2DType.VECTOR:
+          return this.addVectorTileLayer(updatedLayerOptions);
+        case Webservice2DType.WMS:
+          return this.addWmsLayer(updatedLayerOptions);
+        case Webservice2DType.WMTS:
+          return this.addWmtsLayer(updatedLayerOptions);
+        default:
+          return undefined;
+      }
+    });
   }
 
   /**
@@ -565,43 +583,117 @@ export class GgcLayerService {
    * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
    */
   private loadWebservice(service: Webservice, mapIndex: string) {
-    service.layers = service.layers.map((layerOptions) => {
-      layerOptions.activeStyle =
-        layerOptions.activeStyle ?? layerOptions.styles?.[0]?.name;
-      const activeStyleLegend = layerOptions.activeStyle
-        ? this.findStyleInStyles(
-            layerOptions.activeStyle,
-            layerOptions.styles ?? []
-          )?.legend
-        : undefined;
+    service.layers = service.layers.map((layerOptions) => ({
+      ...layerOptions,
+      url: service.url,
+      customHeaders: service.customHeaders,
+      mapIndex: mapIndex
+    }));
+    for (const layerOptions of service.layers) {
+      this.initialiseLayer(layerOptions, service.type, mapIndex);
+    }
+  }
 
-      const updatedLayer = {
-        ...layerOptions,
-        url: service.url,
-        customHeaders: service.customHeaders,
-        mapIndex: mapIndex,
-        visible: layerOptions.visible ?? true,
-        activeLegend: layerOptions.activeLegend ?? activeStyleLegend
-      } as AbstractConfigurableLayerOptions;
+  /**
+   * Initialiseert een laag. Wanneer requestCapabilities true is, worden eerst de
+   * layerOptions aangevuld vanuit de capabilities. De layerOptions worden in-place
+   * bijgewerkt, zodat de kaartconfiguratie naar hetzelfde object blijft verwijzen.
+   */
+  private initialiseLayer(
+    layerOptions: AbstractConfigurableLayerOptions,
+    layerType: Webservice2DType,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ) {
+    this.applyCapabilitiesOnLayerOptions(layerOptions, layerType).subscribe(
+      () => {
+        const updatedLayerOptions = this.setLayerOptionsDefaults(layerOptions);
 
-      return updatedLayer;
-    });
-
-    service.layers = service.layers.map((layerOptions) => {
-      if (layerOptions.layerId) {
-        this.emitLayerChanged(
-          layerOptions.layerId,
-          mapIndex,
-          LayerChangedEventTrigger.LAYER_INITIALIZED
+        this.updateMapConfigLayer(
+          updatedLayerOptions,
+          updatedLayerOptions.layerId,
+          mapIndex
         );
-      }
 
-      if (layerOptions.visible || layerOptions.persistent) {
-        layerOptions.layerId = this.addLayer(layerOptions, service.type);
-      }
+        if (updatedLayerOptions.layerId) {
+          this.emitLayerChanged(
+            updatedLayerOptions.layerId,
+            mapIndex,
+            LayerChangedEventTrigger.LAYER_INITIALIZED
+          );
+        }
 
-      return layerOptions;
-    });
+        if (updatedLayerOptions.visible || updatedLayerOptions.persistent) {
+          updatedLayerOptions.layerId = this.addLayer(
+            updatedLayerOptions,
+            layerType
+          );
+        }
+      }
+    );
+  }
+
+  /**
+   * Vult de layerOptions aan vanuit de capabilities wanneer requestCapabilities true is
+   * en zet requestCapabilities daarna op false. Bij een fout wordt doorgegaan met de
+   * ongewijzigde layerOptions, zodat een volgende load het opnieuw probeert.
+   */
+  private applyCapabilitiesOnLayerOptions(
+    layerOptions: AbstractConfigurableLayerOptions,
+    layerType: Webservice2DType
+  ): Observable<AbstractConfigurableLayerOptions> {
+    if (layerOptions.requestCapabilities !== true) {
+      return of(layerOptions);
+    }
+    return this.capabilitiesService
+      .mapCapabilitiesOnLayerOptions(layerOptions, layerType)
+      .pipe(
+        map((capabilitiesLayerOptions) =>
+          Object.assign(layerOptions, capabilitiesLayerOptions, {
+            requestCapabilities: false
+          })
+        ),
+        catchError(() => of(layerOptions))
+      );
+  }
+
+  private setLayerOptionsDefaults(
+    layerOptions: AbstractConfigurableLayerOptions
+  ): AbstractConfigurableLayerOptions {
+    const activeStyleName =
+      layerOptions.activeStyle ?? layerOptions.styles?.[0]?.name;
+    const activeStyleLegend = activeStyleName
+      ? this.findStyleInStyles(activeStyleName, layerOptions.styles ?? [])
+          ?.legend
+      : undefined;
+
+    layerOptions.activeStyle = activeStyleName;
+    layerOptions.visible = layerOptions.visible ?? true;
+    layerOptions.activeLegend = layerOptions.activeLegend ?? activeStyleLegend;
+
+    return layerOptions;
+  }
+
+  private updateMapConfigLayer(
+    layerOptions: Partial<AbstractConfigurableLayerOptions>,
+    layerId: string | undefined = layerOptions.layerId,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): AbstractConfigurableLayerOptions | undefined {
+    const targetLayerId = layerId ?? layerOptions.layerId;
+    if (!targetLayerId) {
+      return undefined;
+    }
+
+    const matchingLayer = this.mapConfigurations
+      .get(mapIndex)
+      ?.flatMap((service) => service.layers)
+      .find((layer) => layer.layerId === targetLayerId);
+
+    if (!matchingLayer) {
+      return undefined;
+    }
+
+    Object.assign(matchingLayer, layerOptions);
+    return matchingLayer;
   }
 
   private removeCurrentLayers(mapIndex: string) {

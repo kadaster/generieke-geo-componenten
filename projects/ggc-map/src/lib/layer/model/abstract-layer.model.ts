@@ -16,6 +16,7 @@ export interface AbstractBaseLayerOptions {
 
   /**
    * Optioneel: de weergavenaam van de kaartlaag.
+   * Kan worden opgehaald via de capabilities service, zie requestCapabilities.
    */
   title?: string;
 
@@ -47,12 +48,14 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
   /**
    * Optioneel: Instellen van de minimale resolutie waarbij de kaartlaag zichtbaar is
    * en er op de beschikbare featureInfo kan worden geklikt.
+   * Kan worden opgehaald via de capabilities service, zie requestCapabilities.
    */
   minResolution?: number;
 
   /**
    * Optioneel: Instellen van de maximale resolutie waarbij de kaartlaag zichtbaar is
    * en er op de beschikbare featureInfo kan worden geklikt.
+   * Kan worden opgehaald via de capabilities service, zie requestCapabilities.
    */
   maxResolution?: number;
 
@@ -92,6 +95,12 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
   url?: string;
 
   /**
+   * Optioneel: extra http headers zoals bijvoorbeeld een API-key
+   * bij het opvragen van een webservice.
+   */
+  customHeaders?: [string, string][];
+
+  /**
    * Optioneel: Het legenda object voor deze laag.
    * Mocht de style wisselen van de laag, dan wordt activeLegend automatisch aangepast aan de actieve style, mocht hier een legenda voor zijn.
    */
@@ -119,6 +128,16 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
    * Dit wordt momenteel alleen gesupport voor WMS en vector tile layers.
    */
   activeStyle?: string;
+
+  /**
+   * Optioneel: wanneer true, dan worden bij het laden van de webservices de capabilities
+   * van de service opgehaald en worden de layerOptions daarmee aangevuld (bijvoorbeeld
+   * `title`, `minResolution` en `maxResolution`). Reeds ingestelde waarden worden niet overschreven.
+   * PDOK WMTS kaartlagen geven geen max/minResolution terug, waardoor deze niet automatisch worden ingesteld.
+   * Na het succesvol ophalen van de capabilities wordt deze waarde op false gezet, zodat de
+   * capabilities niet opnieuw worden opgehaald. Default false.
+   */
+  requestCapabilities?: boolean;
 }
 
 /**

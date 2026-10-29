@@ -60,6 +60,7 @@ import { ExampleConversionComponent } from "../example-conversion/example-conver
 import { ExampleDynamicLayerOgcBasicComponent } from "../example-layer/example-dynamic-layer-ogc-basic/example-dynamic-layer-ogc-basic.component";
 import { ExampleLayerStylesComponent } from "../example-layer/example-layer-styles/example-layer-styles.component";
 import { ExampleLayerStylesVectorTileComponent } from "../example-layer/example-layer-styles-vector-tile/example-layer-styles-vector-tile.component";
+import { ExampleCapabilitiesLayerOptionsComponent } from "../example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
 // PLOP:IMPORT
 
 interface GroupedCards {
@@ -141,6 +142,7 @@ export class ExampleIndexComponent {
     new Example3dLayerWmtsComponent().componentInfo,
     new ExampleConversionComponent().componentInfo,
     new ExampleDynamicLayerOgcBasicComponent().componentInfo,
+    new ExampleCapabilitiesLayerOptionsComponent().componentInfo,
     // PLOP:CARD
     new Example3dLayerGeojsonComponent().componentInfo,
     new ExampleFeatureInfoTemplateComponent().componentInfo,
