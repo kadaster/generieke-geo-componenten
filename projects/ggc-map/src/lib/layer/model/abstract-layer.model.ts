@@ -97,6 +97,7 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
   /**
    * Optioneel: extra http headers zoals bijvoorbeeld een API-key
    * bij het opvragen van een webservice.
+   * Werkt momenteel alleen voor geojson.
    */
   customHeaders?: [string, string][];
 
