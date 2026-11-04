@@ -1,0 +1,65 @@
+<ggc-home-example-format
+  [extraConfigLabel]="`DatasetTree Configuratie (json)`"
+  [pathExtraConfig]="'example-map/example-capabilities-layer-options/treeconfig.json'"
+  [pathModule]="urlComponentModule"
+  [title]="componentInfo.title"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld is bij de WMS, WMTS en vector tile kaartlaag de optie
+      <code>requestCapabilities</code> op <code>true</code> gezet. In de
+      kaartconfiguratie zijn <code>title</code>, <code>minResolution</code> en
+      <code>maxResolution</code> weggelaten. Deze worden bij het laden van de
+      kaartlagen automatisch opgehaald uit de capabilities van de service en
+      worden ingevuld in de layer opties. De titels in de kaartlaagkeuze komen
+      daardoor uit de capabilities en het zichtbaarheidsbereik ook, waardoor de
+      dataset tree is uitgegrijsd als je niet ver genoeg bent ingezoomd.
+    </p>
+    <p>
+      Waarden die al in de kaartconfiguratie zijn ingesteld, worden niet
+      overschreven door de capabilities. <code>requestCapabilities</code> staat
+      standaard uit, waardoor er geen request zal worden gedaan naar de
+      capabilities.
+    </p>
+    <strong>Let op</strong>: WMTS capabilities bevatten geen
+    zichtbaarheidsbereik, daarom is <code>maxResolution</code> hier zelf
+    ingesteld.
+  </div>
+
+  <div page-functionality>
+    <div class="row">
+      <!-- DOCS:START functionality -->
+      <div class="col-xl-3 col-md-4 col-sm-5">
+        <ggc-dataset-tree
+          [expandTreeOnInit]="true"
+          [mapIndex]="mapIndex"
+          [themes]="datasetTreeConfig"
+        ></ggc-dataset-tree>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-7">
+        <div class="map-container">
+          <ggc-map
+            [mapIndex]="mapIndex"
+            [minZoomlevel]="8"
+            [webServices]="mapConfig"
+          ></ggc-map>
+        </div>
+      </div>
+      <!-- DOCS:END functionality -->
+    </div>
+  </div>
+</ggc-home-example-format>

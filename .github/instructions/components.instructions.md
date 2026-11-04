@@ -1,6 +1,6 @@
 ---
 description: "Use when creating or changing Angular components, including CLI-style suffixless files, GGC legacy component-suffixed files, APIs, selectors, and views."
-applyTo: "projects/**/src/**/*.component.ts,projects/**/src/**/*.component.html,projects/**/src/**/*.component.scss,projects/ggc-home/src/app/app.ts"
+applyTo: "projects/**/src/**/*.component.ts,projects/ggc-home/src/app/app.ts"
 ---
 
 # Angular Components

@@ -73,10 +73,4 @@ export interface GeojsonLayerOptions extends AbstractClickableLayerOptions {
    * Default: 5000
    */
   maxFeatures?: number;
-
-  /**
-   * Optioneel: instellen van extra http headers zoals bijvoorbeeld een API-key
-   * bij het opvragen van een webservice.
-   */
-  customHeaders?: [string, string][];
 }

@@ -62,8 +62,11 @@ import { ExampleFeatureInfoTemplateComponent } from "./examples/example-map/exam
 import { ExampleSearchLocationAlternativeSearchComponent } from "./examples/example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
 import { ExampleConversionComponent } from "./examples/example-conversion/example-conversion.component";
 import { ExampleDynamicLayerOgcBasicComponent } from "./examples/example-layer/example-dynamic-layer-ogc-basic/example-dynamic-layer-ogc-basic.component";
+import { AccessibilityStatementComponent } from "./accessibility-statement/accessibility-statement.component";
+import { CookieDeclarationComponent } from "./cookie-declaration/cookie-declaration.component";
 import { ExampleLayerStylesComponent } from "./examples/example-layer/example-layer-styles/example-layer-styles.component";
 import { ExampleLayerStylesVectorTileComponent } from "./examples/example-layer/example-layer-styles-vector-tile/example-layer-styles-vector-tile.component";
+import { ExampleCapabilitiesLayerOptionsComponent } from "./examples/example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -87,6 +90,16 @@ export const routes: Routes = [
     path: "downloads-npm",
     title: "Downloads (NPM) | GGC-Home",
     component: DownloadsNpmComponent
+  },
+  {
+    path: "toegankelijkheid",
+    title: "Toegankelijkheid | GGC-Home",
+    component: AccessibilityStatementComponent
+  },
+  {
+    path: "cookieverklaring",
+    title: "Cookieverklaring | GGC-Home",
+    component: CookieDeclarationComponent
   },
   {
     path: "example-index",
@@ -436,6 +449,12 @@ export const routes: Routes = [
     title: "OGC feature tonen | GGC-Home",
     component: ExampleDynamicLayerOgcBasicComponent,
     data: { label: "dynamic-layer-ogc-basic" }
+  },
+  {
+    path: "capabilities-layer-options",
+    title: "Capabilities kaartlagen | GGC-Home",
+    component: ExampleCapabilitiesLayerOptionsComponent,
+    data: { label: "capabilities-layer-options" }
   },
   // PLOP:ROUTE
   {

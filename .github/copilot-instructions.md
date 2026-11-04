@@ -20,7 +20,8 @@
 - Touch only what you must. Clean up only your own mess.
 - Define success criteria. Loop until verified.
 - When an API supports a generic type parameter, prefer specifying the type there (for example, `computed<SearchLocationOptions>(...)`) over asserting the result with `as SearchLocationOptions`. This lets TypeScript check that the value matches the type. Use an assertion only when no suitable generic or contextual type is available and it is genuinely necessary.
-- When the developer corrects an unexpected result, identify the reusable cause and update these global instructions when the lesson applies across task types. Use a scoped instruction only when the correction is specific to files or workflows matched by its `applyTo`.
+- Learn from developer discussions and corrections: identify the cause of the misunderstanding or the reusable improvement. If the intended improvement to the instructions is obvious, update them immediately in the same task and tell the developer what changed. Otherwise, explicitly ask the developer whether instructions should be updated to prevent the misunderstanding or capture the improvement next time, and wait for their answer before editing instructions. Do not turn a one-off task requirement into a permanent rule.
+- Before editing instructions, read [instruction-maintenance.instructions.md](instructions/instruction-maintenance.instructions.md).
 
 - Name variables holding instances or typed configuration values after their concrete class, type, or domain (for example, `myClass` for `new MyClass()` and `searchLocationOptions` for `SearchLocationOptions`), rather than an ambiguous generic name such as `options`. Preserve the distinction when multiple variants exist so the value's identity is clear at each use.
 
@@ -28,3 +29,5 @@
 
 - Define a check that demonstrates the requested change, run it, and report its result. Check `package.json` for the exact project scripts; for example, `npm run test:ggc-map`, `npm run lint:ggc-map`, and `npm run build:ggc-map`.
 - Use `npm run test:all` or `npm run lint:all` only when the full suite is appropriate. Inspect `angular.json` for applicable GGC Home targets.
+
+- For Jira stories follow [implement-jira-story](skills/implement-jira-story/SKILL.md): MCP with a pasted-context fallback, direct Agent mode for simple work, Plan mode for complex work.

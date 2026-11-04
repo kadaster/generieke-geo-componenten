@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+.info-message {
+  flex: 1 1 auto;
+  max-width: 75%;
+  margin-bottom: 50px;
+  overflow-wrap: anywhere;
+  hyphens: none;
+
+  @media screen and (min-width: 1233px) {
+    max-width: 50%;
+  }
+
+  @media screen and (min-width: 1360px) {
+    max-width: 35%;
+  }
+}
