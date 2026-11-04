@@ -1,6 +1,6 @@
 ARG REGISTRY
 
-FROM ${REGISTRY}nginxinc/nginx-unprivileged:1.29-alpine
+FROM ${REGISTRY}nginx/nginx-unprivileged:1.30-alpine
 
 WORKDIR /etc/nginx/html
 
