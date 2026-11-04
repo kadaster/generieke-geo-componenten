@@ -1,27 +1,21 @@
 #!/bin/sh
 
-# We place all our application file in one directory.
-# By starting the JVM from that directory, it is added to the classpath by default.
-# This way,the application has access to secrets.properties without any additional configuration.
+set -eu
 
-# Set logging to verbose, to show everything in console
-set -x
+set -- /etc/nginx/html/main*.js
+if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
+    echo "Expected exactly one main*.js file in /etc/nginx/html." >&2
+    exit 1
+fi
+mainFileName="$1"
 
-env
+# Only the generated bundle is writable; copied application files stay unchanged.
+mkdir -p /var/cache/nginx/app
+mainTemporaryFile="$(mktemp /var/cache/nginx/app/.main.XXXXXX)"
+trap 'rm -f "$mainTemporaryFile"' EXIT
 
-# Startup script based on the ENV variable STARTAPP. This is set via the deploy-cloud-<env>.yml config file
+envsubst '$ENV_PIWIK_SCRIPT' < "$mainFileName" > "$mainTemporaryFile"
+chmod 444 "$mainTemporaryFile"
+mv -f "$mainTemporaryFile" "/var/cache/nginx/app/${mainFileName##*/}"
 
-echo "Get file location"
-# If KEYs necessary then replace.
-export mainFileName="$(ls /etc/nginx/html/main*.js)"
-# substitute environment variable
-echo "Substitute this key for:$ENV_PIWIK_SCRIPT"
-envsubst '\$ENV_PIWIK_SCRIPT' < $mainFileName > /tmp/main.tmp
-# move modified files to original location
-mv /tmp/main.tmp "${mainFileName}"
-
-# static content read-only maken
-chmod -R a=rX /etc/nginx/html/
-
-# run nginx
-nginx -g 'daemon off;'
+exec nginx -g 'daemon off;'
