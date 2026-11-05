@@ -6,10 +6,10 @@ import {
   ServiceCapabilities,
   CapabilitiesServiceLayer,
   CapabilitiesServiceLayerStyle
-} from "@kadaster/ggc-map";
+} from "./ggc-capabilities.service";
 import WMTS from "ol/source/WMTS";
 import { Coordinate } from "ol/coordinate";
-import { scaleToResolution } from "@kadaster/ggc-map";
+import { scaleToResolution } from "../../utils/epsg28992";
 
 /**
  * Interne mapper-service voor WMS/WMTS capabilities.
