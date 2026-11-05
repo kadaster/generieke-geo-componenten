@@ -62,6 +62,7 @@ import { ExampleLayerStylesComponent } from "../example-layer/example-layer-styl
 import { ExampleLayerStylesVectorTileComponent } from "../example-layer/example-layer-styles-vector-tile/example-layer-styles-vector-tile.component";
 import { ExampleCapabilitiesLayerOptionsComponent } from "../example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
 import { ExampleLayerStylesCapabilitiesComponent } from "../example-layer/example-layer-styles-capabilities/example-layer-styles-capabilities.component";
+import { ExampleLayerStylesCapabilitiesVectorTileComponent } from "../example-layer/example-layer-styles-capabilities-vector-tile/example-layer-styles-capabilities-vector-tile.component";
 // PLOP:IMPORT
 
 interface GroupedCards {
@@ -150,7 +151,8 @@ export class ExampleIndexComponent {
     new ExampleSearchLocationAlternativeSearchComponent().componentInfo,
     new ExampleLayerStylesComponent().componentInfo,
     new ExampleLayerStylesVectorTileComponent().componentInfo,
-    new ExampleLayerStylesCapabilitiesComponent().componentInfo
+    new ExampleLayerStylesCapabilitiesComponent().componentInfo,
+    new ExampleLayerStylesCapabilitiesVectorTileComponent().componentInfo
   ];
 
   private readonly sessionStorageService = inject(SessionStorageService);

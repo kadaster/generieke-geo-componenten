@@ -5,7 +5,7 @@ import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service
 import { map } from "rxjs/operators";
 import WMTS from "ol/source/WMTS";
 import { Coordinate } from "ol/coordinate";
-import { Style, Webservice2DType } from "@kadaster/ggc-models";
+import { LegendType, Style, Webservice2DType } from "@kadaster/ggc-models";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
@@ -124,8 +124,7 @@ export class GgcCapabilitiesService {
    *   `title` gemapt. WMTS ondersteunt geen `styles`.
    * - Vector: de capabilities worden opgehaald van de OGC API landingspagina
    *   (het deel van de url vóór `/tiles/`); de eerste tileset wordt gebruikt.
-   *   De styles worden gemapt zonder legenda, omdat de OGC API capabilities
-   *   geen legenda-afbeelding bij de stijl leveren.
+   *   De styles worden gemapt met de mapbox stylesheet als legenda.
    * - GeoJSON en image: deze functie doet niets en geeft de layerOptions
    *   ongewijzigd terug.
    *
@@ -192,8 +191,9 @@ export class GgcCapabilitiesService {
    * wanneer de capabilities geen styles bevatten, zodat de layerOptions
    * ongewijzigd blijven.
    *
-   * Alleen voor WMS bevat `legendURL` een legenda-afbeelding; voor OGC API
-   * verwijst `legendURL` naar de stylesheet en wordt er dus geen legenda gezet.
+   * Voor WMS bevat `legendURL` een legenda-afbeelding; voor OGC API verwijst
+   * `legendURL` naar de mapbox stylesheet. Beide leveren een legenda op, maar
+   * van een ander `LegendType`.
    */
   private toStyles(
     capabilitiesServiceLayerStyles: CapabilitiesServiceLayerStyle[],
@@ -217,18 +217,33 @@ export class GgcCapabilitiesService {
     capabilitiesServiceLayerStyle: CapabilitiesServiceLayerStyle,
     layerType: Webservice2DType
   ): Style {
-    const hasLegendUrl =
-      layerType === Webservice2DType.WMS &&
-      !!capabilitiesServiceLayerStyle.legendURL;
     return {
       name: capabilitiesServiceLayerStyle.name,
       title:
         capabilitiesServiceLayerStyle.title ??
         capabilitiesServiceLayerStyle.name,
-      legend: hasLegendUrl
-        ? { legendUrl: capabilitiesServiceLayerStyle.legendURL }
-        : undefined
+      legend: this.toLegend(capabilitiesServiceLayerStyle, layerType)
     };
+  }
+
+  /*
+   * Voor vector tile layers bevat `legendURL` de mapbox stylesheet, waaruit de
+   * legenda-component zelf de legenda-items afleidt. Voor WMS bevat het een
+   * legenda-afbeelding.
+   */
+  private toLegend(
+    capabilitiesServiceLayerStyle: CapabilitiesServiceLayerStyle,
+    layerType: Webservice2DType
+  ): LegendType {
+    if (!capabilitiesServiceLayerStyle.legendURL) {
+      return undefined;
+    }
+    return layerType === Webservice2DType.VECTOR
+      ? {
+          name: capabilitiesServiceLayerStyle.name,
+          url: capabilitiesServiceLayerStyle.legendURL
+        }
+      : { legendUrl: capabilitiesServiceLayerStyle.legendURL };
   }
 
   /*
@@ -340,6 +355,9 @@ export type CapabilitiesServiceLayerStyle = {
   name: string;
   /** Titel van de stijl (optioneel) */
   title?: string;
-  /** URL van de legenda afbeelding (optioneel) */
+  /**
+   * URL van de legenda afbeelding voor WMS en WMTS. Voor OGCAPI bevat dit veld
+   * de URL van de mapbox stylesheet van de stijl.
+   */
   legendURL: string;
 };

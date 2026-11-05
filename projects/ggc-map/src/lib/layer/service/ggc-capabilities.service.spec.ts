@@ -569,7 +569,7 @@ describe("GgcCapabilitiesService", () => {
         expect(result.styles).toEqual([{ name: "eigen-style" }]);
       });
 
-      it("Vector: mapt de styles zonder legenda, omdat legendURL naar de stylesheet verwijst", async () => {
+      it("Vector: mapt de styles met de mapbox stylesheet als legenda", async () => {
         const landingPageUrl = "https://api.example.test/ogc/v1";
         ogcApiSvcSpy.getServiceCapabilitiesOgcApi.mockReturnValue(
           of({
@@ -605,7 +605,10 @@ describe("GgcCapabilitiesService", () => {
           {
             name: "standaard__netherlandsrdnewquad",
             title: "Standaardvisualisatie",
-            legend: undefined
+            legend: {
+              name: "standaard__netherlandsrdnewquad",
+              url: `${landingPageUrl}/styles/standaard__netherlandsrdnewquad?f=mapbox`
+            }
           }
         ]);
       });

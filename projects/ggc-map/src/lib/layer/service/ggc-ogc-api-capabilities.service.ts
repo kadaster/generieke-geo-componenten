@@ -132,21 +132,20 @@ export class GgcOgcApiCapabilitiesService {
     maxResolution: number;
     minResolution: number;
   } {
-    let minlevel = 0;
-    let maxlevel = 16;
-    for (const limits of tileset.tileMatrixSetLimits ?? []) {
-      const level = Number(limits.tileMatrix);
-      // Clamp naar het toegestane bereik 0..16
-      const clamped = Math.max(0, Math.min(16, level));
-      // Werk min/max bij
-      if (clamped > minlevel) minlevel = clamped;
-      if (clamped < maxlevel) maxlevel = clamped;
-    }
+    // Clamp naar het toegestane bereik 0..16
+    const tileLevels = (tileset.tileMatrixSetLimits ?? []).map((limits) =>
+      Math.max(0, Math.min(16, Number(limits.tileMatrix)))
+    );
+    // Zonder limits is het bereik van de tileset onbekend; val dan terug op het
+    // volledige bereik, zodat de laag niet onbedoeld onzichtbaar wordt.
+    const lowestTileLevel = tileLevels.length ? Math.min(...tileLevels) : 0;
+    const highestTileLevel = tileLevels.length ? Math.max(...tileLevels) : 16;
     return {
-      // Tel voor de maxresolutie er 1 level bij op, zodat de laag zichtbaar
-      // wordt van...tot (bij bijv alleen tilelevel 12 van 12 tot 13)
-      minResolution: zoomlevelToResolution(maxlevel + 1),
-      maxResolution: zoomlevelToResolution(minlevel)
+      // Het hoogste tilelevel bepaalt de minResolution: tel er 1 level bij op,
+      // zodat de laag zichtbaar is van...tot (bij bijv alleen tilelevel 12 van
+      // 12 tot 13). Het laagste tilelevel bepaalt de maxResolution.
+      minResolution: zoomlevelToResolution(highestTileLevel + 1),
+      maxResolution: zoomlevelToResolution(lowestTileLevel)
     };
   }
 

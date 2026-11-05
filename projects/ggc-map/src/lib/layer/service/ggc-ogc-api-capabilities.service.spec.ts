@@ -139,11 +139,67 @@ describe("GgcOgcApiCapabilitiesService", () => {
           );
 
           // Resoluties voor tileMatrix level 12
-          // initialResolution = 3440.64; minlevel=12, maxlevel=12
-          // minResolution = 3440.64 / 2^(12-1) = 0.42
-          // maxResolution = 3440.64 / 2^(12) = 0.84
+          // initialResolution = 3440.64; laagste en hoogste tilelevel = 12
+          // minResolution = 3440.64 / 2^13 = 0.42
+          // maxResolution = 3440.64 / 2^12 = 0.84
           expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(0.42, 6);
           expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(0.84, 6);
+        }
+      });
+    });
+
+    it("leidt de resoluties af uit het laagste en hoogste tilelevel van een tileset met meerdere levels", async () => {
+      const landingPage: OGCAPILandingPageInfo = {
+        title: "OGC API Example",
+        links: {}
+      };
+
+      const rdStyle: OGCAPIStyle = {
+        id: "netherlandsrdnewquad-style",
+        title: "RD Style",
+        links: [
+          {
+            rel: "stylesheet",
+            type: "application/vnd.mapbox.style+json",
+            href: "https://styles.example/style.json"
+          }
+        ]
+      };
+
+      const tilesetRD: OGCAPITileset = {
+        dataType: "type",
+        tileMatrixSetId: "id",
+        tileMatrixSetDefinition: "def",
+        crs: "https://www.opengis.net/def/crs/EPSG/0/28992",
+        links: [],
+        tileMatrixSetURI: "https://tiles.example/tms/28992",
+        tileMatrixSetLimits: [10, 11, 12].map((level) => ({
+          tileMatrix: String(level),
+          minTileRow: 0,
+          maxTileRow: 10,
+          minTileCol: 0,
+          maxTileCol: 10
+        }))
+      };
+
+      coreMock.getLandingPageInfo.mockReturnValue(of(landingPage));
+      coreMock.getStyles.mockReturnValue(of([rdStyle]));
+      coreMock.getTiles.mockReturnValue(
+        of({ title: "RD Tiles", tilesets: [tilesetRD] } as OGCAPITile)
+      );
+
+      service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
+        next: (capabilities) => {
+          const layer = capabilities.layers[0];
+          // Hoogste tilelevel 12 bepaalt de minResolution: 3440.64 / 2^13
+          expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(0.42, 6);
+          // Laagste tilelevel 10 bepaalt de maxResolution: 3440.64 / 2^10
+          expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(3.36, 6);
+          // De maxResolution moet groter zijn dan de minResolution, anders is
+          // de laag op geen enkel zoomniveau zichtbaar
+          expect(parseFloat(layer.maxResolution ?? "0")).toBeGreaterThan(
+            parseFloat(layer.minResolution ?? "0")
+          );
         }
       });
     });

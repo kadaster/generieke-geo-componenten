@@ -25,9 +25,9 @@ export class ExampleLayerStylesCapabilitiesComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-styles-capabilities",
-    title: "Styles uit de capabilities",
+    title: "Styles uit de capabilities van een WMS kaartlaag",
     introduction:
-      "Haal de styles van een kaartlaag automatisch op uit de capabilities van de service.",
+      "Haal de styles van een WMS kaartlaag automatisch op uit de capabilities van de service.",
     components: [Components.GGC_MAP, Components.GGC_LEGEND],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.STYLE],

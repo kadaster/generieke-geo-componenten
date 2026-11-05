@@ -68,6 +68,7 @@ import { ExampleLayerStylesComponent } from "./examples/example-layer/example-la
 import { ExampleLayerStylesVectorTileComponent } from "./examples/example-layer/example-layer-styles-vector-tile/example-layer-styles-vector-tile.component";
 import { ExampleCapabilitiesLayerOptionsComponent } from "./examples/example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
 import { ExampleLayerStylesCapabilitiesComponent } from "./examples/example-layer/example-layer-styles-capabilities/example-layer-styles-capabilities.component";
+import { ExampleLayerStylesCapabilitiesVectorTileComponent } from "./examples/example-layer/example-layer-styles-capabilities-vector-tile/example-layer-styles-capabilities-vector-tile.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -164,9 +165,16 @@ export const routes: Routes = [
   },
   {
     path: "layer-styles-capabilities",
-    title: "Styles uit de capabilities | GGC-Home",
+    title: "Styles uit de capabilities van een WMS kaartlaag | GGC-Home",
     component: ExampleLayerStylesCapabilitiesComponent,
-    data: { label: "layer-styles-capabilities" }
+    data: { label: "Styles uit capabilities WMS" }
+  },
+  {
+    path: "layer-styles-capabilities-vector-tile",
+    title:
+      "Styles uit de capabilities van een OGC API Vector Tile kaartlaag | GGC-Home",
+    component: ExampleLayerStylesCapabilitiesVectorTileComponent,
+    data: { label: "Styles uit capabilities OGC API Vector Tile" }
   },
   {
     path: "layer-html-config",
