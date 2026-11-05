@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   inject,
   model,
@@ -225,6 +224,7 @@ export class GgcGeojsonLayerComponent
     this.vectorSource.setLoader(
       (extent: Extent, resolution: number, projection: Projection) => {
         if (!this.options()?.url) {
+          this.emitLayerLoadedErrorEvent();
           throw new Error("GeoJson options.url is verplicht");
         }
 
@@ -251,6 +251,7 @@ export class GgcGeojsonLayerComponent
           })
           .catch((error) => {
             console.error("GeoJSON load error", error);
+            this.emitLayerLoadedErrorEvent();
           });
       }
     );
@@ -272,6 +273,7 @@ export class GgcGeojsonLayerComponent
         this.emitLayerLoadedEvent();
       } catch (e) {
         console.error("Fout bij ophalen OGC API features: ", e);
+        this.emitLayerLoadedErrorEvent();
       }
     })();
   }
@@ -302,6 +304,14 @@ export class GgcGeojsonLayerComponent
       this.getLayerId(),
       this.mapIndex(),
       LayerChangedEventTrigger.LAYER_LOADED
+    );
+  }
+
+  private emitLayerLoadedErrorEvent() {
+    this.coreMapService.emitLayerChangedEvent(
+      this.getLayerId(),
+      this.mapIndex(),
+      LayerChangedEventTrigger.LAYER_LOADED_ERROR
     );
   }
 

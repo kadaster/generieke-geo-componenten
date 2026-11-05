@@ -25,11 +25,17 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from "@angular/common/http";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import {
+  HttpTestingController,
+  provideHttpClientTesting
+} from "@angular/common/http/testing";
+import {
+  LayerChangedEventTrigger,
   MapComponentEvent,
   MapComponentEventTypes
 } from "@kadaster/ggc-models";
+import Projection from "ol/proj/Projection";
+import { filter, firstValueFrom } from "rxjs";
 
 describe("GeojsonLayerComponent", () => {
   let component: GgcGeojsonLayerComponent;
@@ -543,6 +549,92 @@ describe("GeojsonLayerComponent", () => {
 
       expect(vectorSource.clear).toHaveBeenCalled();
       expect(vectorSource.addFeatures).toHaveBeenCalledWith(features);
+    });
+  });
+
+  describe("Layer loaded error event", () => {
+    let coreMapService: CoreMapService;
+    let httpTestingController: HttpTestingController;
+
+    beforeEach(() => {
+      coreMapService = TestBed.inject(CoreMapService);
+      httpTestingController = TestBed.inject(HttpTestingController);
+      vi.spyOn<CoreMapService, any>(coreMapService, "getMap").mockReturnValue(
+        createMapSpy()
+      );
+      vi.spyOn(console, "error").mockImplementation(() => {
+        /* empty */
+      });
+    });
+
+    afterEach(() => {
+      httpTestingController.verify();
+      vi.unstubAllGlobals();
+      vi.restoreAllMocks();
+    });
+
+    const getLayerLoadedErrorEvent = () =>
+      firstValueFrom(
+        coreMapService
+          .getLayerChangedObservable()
+          .pipe(
+            filter(
+              (event) =>
+                event.eventTrigger ===
+                LayerChangedEventTrigger.LAYER_LOADED_ERROR
+            )
+          )
+      );
+
+    it("should emit a LAYER_LOADED_ERROR event when the GeoJSON url cannot be loaded", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi
+          .fn()
+          .mockName("fetch")
+          .mockResolvedValue({ ok: false, status: 404 } as Response)
+      );
+      component.options.set({
+        url: "https://example.com/foutieve-url.json",
+        layerId: "geojson-layer",
+        mapIndex: "test-map"
+      });
+      component.ngOnInit();
+      const layerLoadedErrorEvent = getLayerLoadedErrorEvent();
+
+      component["vectorSource"].loadFeatures(
+        [0, 0, 1, 1],
+        1,
+        new Projection({ code: "EPSG:28992" })
+      );
+
+      expect(await layerLoadedErrorEvent).toEqual({
+        layerId: "geojson-layer",
+        mapIndex: "test-map",
+        eventTrigger: LayerChangedEventTrigger.LAYER_LOADED_ERROR
+      });
+    });
+
+    it("should emit a LAYER_LOADED_ERROR event when the OGC API features url cannot be loaded", async () => {
+      const ogcApiFeaturesUrl =
+        "https://example.com/ogc/collections/foutief/items";
+      component.options.set({
+        url: ogcApiFeaturesUrl,
+        layerId: "ogc-api-features-layer",
+        mapIndex: "test-map"
+      });
+      const layerLoadedErrorEvent = getLayerLoadedErrorEvent();
+      component.ngOnInit();
+
+      httpTestingController
+        .expectOne((request) => request.url.startsWith(ogcApiFeaturesUrl))
+        .flush("Not Found", { status: 404, statusText: "Not Found" });
+
+      expect(await layerLoadedErrorEvent).toEqual({
+        layerId: "ogc-api-features-layer",
+        mapIndex: "test-map",
+        eventTrigger: LayerChangedEventTrigger.LAYER_LOADED_ERROR
+      });
     });
   });
 
