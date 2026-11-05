@@ -6,10 +6,10 @@ import {
   ServiceCapabilities,
   CapabilitiesServiceLayer,
   CapabilitiesServiceLayerStyle
-} from "./ggc-capabilities.service";
+} from "@kadaster/ggc-map";
 import WMTS from "ol/source/WMTS";
 import { Coordinate } from "ol/coordinate";
-import { scaleToResolution } from "../../utils/epsg28992";
+import { scaleToResolution } from "@kadaster/ggc-map";
 
 /**
  * Interne mapper-service voor WMS/WMTS capabilities.
@@ -161,7 +161,8 @@ export class CoreWmsWmtsCapabilitiesService {
     for (const style of layer.Style) {
       const wmsStyle: CapabilitiesServiceLayerStyle = {
         name: style.Name,
-        legendURL: style.LegendURL[0].OnlineResource
+        title: style.Title,
+        legendURL: style.LegendURL?.[0]?.OnlineResource
       };
       styles.push(wmsStyle);
     }
@@ -237,6 +238,7 @@ export class CoreWmsWmtsCapabilitiesService {
     for (const style of layer.Style) {
       const wmtsStyle: CapabilitiesServiceLayerStyle = {
         name: style.Identifier,
+        title: style.Title,
         legendURL: style?.LegendURL?.[0]?.href
       };
       styles.push(wmtsStyle);

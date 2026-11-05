@@ -5,7 +5,7 @@ import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service
 import { map } from "rxjs/operators";
 import WMTS from "ol/source/WMTS";
 import { Coordinate } from "ol/coordinate";
-import { Webservice2DType } from "@kadaster/ggc-models";
+import { Style, Webservice2DType } from "@kadaster/ggc-models";
 import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model";
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
@@ -111,18 +111,21 @@ export class GgcCapabilitiesService {
 
   /**
    * Haalt de capabilities op voor de url van de laag en mapt de `title`,
-   * `minResolution` en `maxResolution` van de bijbehorende capabilities-laag op
-   * de layerOptions. Waarden die al in de layerOptions zijn ingesteld, worden
-   * niet overschreven.
+   * `minResolution`, `maxResolution` en `styles` van de bijbehorende
+   * capabilities-laag op de layerOptions. Waarden die al in de layerOptions zijn
+   * ingesteld, worden niet overschreven.
    *
    * - WMS: de laag wordt gezocht op basis van `layerName`, of anders de eerste
    *   naam uit `layers`. De schaalgetallen (ScaleDenominators) uit de
-   *   capabilities worden omgerekend naar resoluties.
+   *   capabilities worden omgerekend naar resoluties. De styles worden gemapt
+   *   inclusief de legenda-afbeelding uit de capabilities.
    * - WMTS: de laag wordt gezocht op basis van `layerName`, of anders `layer`.
    *   WMTS capabilities bevatten geen resoluties, daarom wordt alleen de
-   *   `title` gemapt.
+   *   `title` gemapt. WMTS ondersteunt geen `styles`.
    * - Vector: de capabilities worden opgehaald van de OGC API landingspagina
    *   (het deel van de url vóór `/tiles/`); de eerste tileset wordt gebruikt.
+   *   De styles worden gemapt zonder legenda, omdat de OGC API capabilities
+   *   geen legenda-afbeelding bij de stijl leveren.
    * - GeoJSON en image: deze functie doet niets en geeft de layerOptions
    *   ongewijzigd terug.
    *
@@ -174,10 +177,58 @@ export class GgcCapabilitiesService {
               : toResolution(capabilitiesServiceLayer.minResolution)),
           maxResolution:
             layerOptions.maxResolution ??
-            toResolution(capabilitiesServiceLayer.maxResolution)
+            toResolution(capabilitiesServiceLayer.maxResolution),
+          styles:
+            layerOptions.styles ??
+            this.toStyles(capabilitiesServiceLayer.styles, layerType)
         };
       })
     );
+  }
+
+  /*
+   * Vertaalt de styles uit de capabilities naar het publieke `Style`-model.
+   * Geeft undefined terug wanneer het laagtype geen styles ondersteunt of
+   * wanneer de capabilities geen styles bevatten, zodat de layerOptions
+   * ongewijzigd blijven.
+   *
+   * Alleen voor WMS bevat `legendURL` een legenda-afbeelding; voor OGC API
+   * verwijst `legendURL` naar de stylesheet en wordt er dus geen legenda gezet.
+   */
+  private toStyles(
+    capabilitiesServiceLayerStyles: CapabilitiesServiceLayerStyle[],
+    layerType: Webservice2DType
+  ): Style[] | undefined {
+    if (
+      layerType !== Webservice2DType.WMS &&
+      layerType !== Webservice2DType.VECTOR
+    ) {
+      return undefined;
+    }
+    if (capabilitiesServiceLayerStyles.length === 0) {
+      return undefined;
+    }
+    return capabilitiesServiceLayerStyles.map((capabilitiesServiceLayerStyle) =>
+      this.toStyle(capabilitiesServiceLayerStyle, layerType)
+    );
+  }
+
+  private toStyle(
+    capabilitiesServiceLayerStyle: CapabilitiesServiceLayerStyle,
+    layerType: Webservice2DType
+  ): Style {
+    const hasLegendUrl =
+      layerType === Webservice2DType.WMS &&
+      !!capabilitiesServiceLayerStyle.legendURL;
+    return {
+      name: capabilitiesServiceLayerStyle.name,
+      title:
+        capabilitiesServiceLayerStyle.title ??
+        capabilitiesServiceLayerStyle.name,
+      legend: hasLegendUrl
+        ? { legendUrl: capabilitiesServiceLayerStyle.legendURL }
+        : undefined
+    };
   }
 
   /*

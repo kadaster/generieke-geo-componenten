@@ -120,6 +120,7 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
 
   /**
    * Optioneel: De mogelijke styles van deze laag. Dit wordt momenteel alleen gesupport voor WMS en vector tile layers.
+   * Kan worden opgehaald via de capabilities service, zie requestCapabilities.
    */
   styles?: Style[];
 
@@ -133,7 +134,7 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
   /**
    * Optioneel: wanneer true, dan worden bij het laden van de webservices de capabilities
    * van de service opgehaald en worden de layerOptions daarmee aangevuld (bijvoorbeeld
-   * `title`, `minResolution` en `maxResolution`). Reeds ingestelde waarden worden niet overschreven.
+   * `title`, `minResolution`, `maxResolution` en `styles`). Reeds ingestelde waarden worden niet overschreven.
    * PDOK WMTS kaartlagen geven geen max/minResolution terug, waardoor deze niet automatisch worden ingesteld.
    * Na het succesvol ophalen van de capabilities wordt deze waarde op false gezet, zodat de
    * capabilities niet opnieuw worden opgehaald. Default false.

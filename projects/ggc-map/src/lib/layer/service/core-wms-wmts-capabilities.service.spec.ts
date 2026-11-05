@@ -227,6 +227,31 @@ describe("CoreWmsWmtsCapabilitiesService", () => {
         legendURL: "https://example.com/legend/grijs.png"
       });
     });
+
+    it("extractStylesFromWMSLayer neemt de titel over en gaat om met een ontbrekende LegendURL", () => {
+      const styles = service.extractStylesFromWMSLayer({
+        Name: "laag",
+        Style: [
+          {
+            Name: "bever",
+            Title: "Bever",
+            LegendURL: [
+              { OnlineResource: "https://example.com/legend/bever.png" }
+            ]
+          },
+          { Name: "otter", Title: "Otter" }
+        ]
+      });
+
+      expect(styles).toEqual([
+        {
+          name: "bever",
+          title: "Bever",
+          legendURL: "https://example.com/legend/bever.png"
+        },
+        { name: "otter", title: "Otter", legendURL: undefined }
+      ]);
+    });
   });
 
   describe("getCapabilitiesServiceWMTS", () => {

@@ -67,6 +67,7 @@ import { CookieDeclarationComponent } from "./cookie-declaration/cookie-declarat
 import { ExampleLayerStylesComponent } from "./examples/example-layer/example-layer-styles/example-layer-styles.component";
 import { ExampleLayerStylesVectorTileComponent } from "./examples/example-layer/example-layer-styles-vector-tile/example-layer-styles-vector-tile.component";
 import { ExampleCapabilitiesLayerOptionsComponent } from "./examples/example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
+import { ExampleLayerStylesCapabilitiesComponent } from "./examples/example-layer/example-layer-styles-capabilities/example-layer-styles-capabilities.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -160,6 +161,12 @@ export const routes: Routes = [
     title: "Styles toepassen in Vector Tile kaartlagen | GGC-Home",
     component: ExampleLayerStylesVectorTileComponent,
     data: { label: "Styles in Vector Tile kaartlagen" }
+  },
+  {
+    path: "layer-styles-capabilities",
+    title: "Styles uit de capabilities | GGC-Home",
+    component: ExampleLayerStylesCapabilitiesComponent,
+    data: { label: "layer-styles-capabilities" }
   },
   {
     path: "layer-html-config",
