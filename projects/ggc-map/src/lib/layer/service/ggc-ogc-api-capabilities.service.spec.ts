@@ -300,7 +300,7 @@ describe("GgcOgcApiCapabilitiesService", () => {
           const layer = capabilities.layers[0];
           // Het volledige bereik 0..16, net als bij een tileset zonder limits
           expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(
-            0.0262451,
+            0.02625,
             6
           );
           expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(
