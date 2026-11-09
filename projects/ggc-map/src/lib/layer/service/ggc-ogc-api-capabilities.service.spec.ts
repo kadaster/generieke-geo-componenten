@@ -204,6 +204,113 @@ describe("GgcOgcApiCapabilitiesService", () => {
       });
     });
 
+    it("negeert onbruikbare tilelevels en leidt de resoluties af uit de overige levels", async () => {
+      const landingPage: OGCAPILandingPageInfo = {
+        title: "OGC API Example",
+        links: {}
+      };
+
+      const rdStyle: OGCAPIStyle = {
+        id: "netherlandsrdnewquad-style",
+        title: "RD Style",
+        links: [
+          {
+            rel: "stylesheet",
+            type: "application/vnd.mapbox.style+json",
+            href: "https://styles.example/style.json"
+          }
+        ]
+      };
+
+      const tilesetRD: OGCAPITileset = {
+        dataType: "type",
+        tileMatrixSetId: "id",
+        tileMatrixSetDefinition: "def",
+        crs: "https://www.opengis.net/def/crs/EPSG/0/28992",
+        links: [],
+        tileMatrixSetURI: "https://tiles.example/tms/28992",
+        tileMatrixSetLimits: ["10", "onbruikbaar", "12"].map((level) => ({
+          tileMatrix: level,
+          minTileRow: 0,
+          maxTileRow: 10,
+          minTileCol: 0,
+          maxTileCol: 10
+        }))
+      };
+
+      coreMock.getLandingPageInfo.mockReturnValue(of(landingPage));
+      coreMock.getStyles.mockReturnValue(of([rdStyle]));
+      coreMock.getTiles.mockReturnValue(
+        of({ title: "RD Tiles", tilesets: [tilesetRD] } as OGCAPITile)
+      );
+
+      service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
+        next: (capabilities) => {
+          const layer = capabilities.layers[0];
+          // Hetzelfde resultaat als voor de levels 10 en 12 zonder het
+          // onbruikbare level ertussen
+          expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(0.42, 6);
+          expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(3.36, 6);
+        }
+      });
+    });
+
+    it("valt terug op het volledige bereik wanneer geen enkel tilelevel bruikbaar is", async () => {
+      const landingPage: OGCAPILandingPageInfo = {
+        title: "OGC API Example",
+        links: {}
+      };
+
+      const rdStyle: OGCAPIStyle = {
+        id: "netherlandsrdnewquad-style",
+        title: "RD Style",
+        links: [
+          {
+            rel: "stylesheet",
+            type: "application/vnd.mapbox.style+json",
+            href: "https://styles.example/style.json"
+          }
+        ]
+      };
+
+      const tilesetRD: OGCAPITileset = {
+        dataType: "type",
+        tileMatrixSetId: "id",
+        tileMatrixSetDefinition: "def",
+        crs: "https://www.opengis.net/def/crs/EPSG/0/28992",
+        links: [],
+        tileMatrixSetURI: "https://tiles.example/tms/28992",
+        tileMatrixSetLimits: ["onbruikbaar"].map((level) => ({
+          tileMatrix: level,
+          minTileRow: 0,
+          maxTileRow: 10,
+          minTileCol: 0,
+          maxTileCol: 10
+        }))
+      };
+
+      coreMock.getLandingPageInfo.mockReturnValue(of(landingPage));
+      coreMock.getStyles.mockReturnValue(of([rdStyle]));
+      coreMock.getTiles.mockReturnValue(
+        of({ title: "RD Tiles", tilesets: [tilesetRD] } as OGCAPITile)
+      );
+
+      service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
+        next: (capabilities) => {
+          const layer = capabilities.layers[0];
+          // Het volledige bereik 0..16, net als bij een tileset zonder limits
+          expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(
+            0.0262451,
+            6
+          );
+          expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(
+            3440.64,
+            6
+          );
+        }
+      });
+    });
+
     it('gebruikt fallback URL wanneer geen rel="item" link beschikbaar is', async () => {
       const landingPage: OGCAPILandingPageInfo = {
         title: "OGC API Example",

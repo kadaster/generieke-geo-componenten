@@ -120,8 +120,11 @@ export class GgcCapabilitiesService {
    *   capabilities worden omgerekend naar resoluties. De styles worden gemapt
    *   inclusief de legenda-afbeelding uit de capabilities.
    * - WMTS: de laag wordt gezocht op basis van `layerName`, of anders `layer`.
-   *   WMTS capabilities bevatten geen resoluties, daarom wordt alleen de
-   *   `title` gemapt. WMTS ondersteunt geen `styles`.
+   *   Alleen de `title` wordt gemapt. De resoluties uit de TileMatrixSet worden
+   *   niet uitgelezen, en de styles uit de capabilities worden niet gebruikt
+   *   omdat GGC geen style-wissel voor WMTS ondersteunt. Bij WMTS zit de style
+   *   in de voorgerenderde tiles, waardoor een laag in de praktijk vrijwel
+   *   altijd één style heeft en varianten als aparte lagen worden aangeboden.
    * - Vector: de capabilities worden opgehaald van de OGC API landingspagina
    *   (het deel van de url vóór `/tiles/`); de eerste tileset wordt gebruikt.
    *   De styles worden gemapt met de mapbox stylesheet als legenda.
@@ -187,9 +190,9 @@ export class GgcCapabilitiesService {
 
   /*
    * Vertaalt de styles uit de capabilities naar het publieke `Style`-model.
-   * Geeft undefined terug wanneer het laagtype geen styles ondersteunt of
-   * wanneer de capabilities geen styles bevatten, zodat de layerOptions
-   * ongewijzigd blijven.
+   * Geeft undefined terug wanneer GGC voor het laagtype geen style-wissel
+   * ondersteunt of wanneer de capabilities geen styles bevatten, zodat de
+   * layerOptions ongewijzigd blijven.
    *
    * Voor WMS bevat `legendURL` een legenda-afbeelding; voor OGC API verwijst
    * `legendURL` naar de mapbox stylesheet. Beide leveren een legenda op, maar

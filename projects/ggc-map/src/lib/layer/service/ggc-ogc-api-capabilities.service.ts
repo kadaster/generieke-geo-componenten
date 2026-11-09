@@ -132,10 +132,12 @@ export class GgcOgcApiCapabilitiesService {
     maxResolution: number;
     minResolution: number;
   } {
-    // Clamp naar het toegestane bereik 0..16
-    const tileLevels = (tileset.tileMatrixSetLimits ?? []).map((limits) =>
-      Math.max(0, Math.min(16, Number(limits.tileMatrix)))
-    );
+    const tileLevels = (tileset.tileMatrixSetLimits ?? [])
+      .map((limits) => Number(limits.tileMatrix))
+      // Negeer onbruikbare waarden, zodat ze de overige levels niet bederven
+      .filter((tileLevel) => Number.isFinite(tileLevel))
+      // Clamp naar het toegestane bereik 0..16
+      .map((tileLevel) => Math.max(0, Math.min(16, tileLevel)));
     // Zonder limits is het bereik van de tileset onbekend; val dan terug op het
     // volledige bereik, zodat de laag niet onbedoeld onzichtbaar wordt.
     const lowestTileLevel = tileLevels.length ? Math.min(...tileLevels) : 0;
