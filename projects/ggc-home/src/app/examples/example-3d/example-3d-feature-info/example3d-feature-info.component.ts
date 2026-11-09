@@ -12,7 +12,7 @@ import {
   Webservice
 } from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { HttpClient } from "@angular/common/http";
+import { httpResource } from "@angular/common/http";
 import { Color, ScreenSpaceEventType } from "@cesium/engine";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
 import { ViewerType } from "@kadaster/ggc-models";
@@ -49,9 +49,9 @@ export class Example3dFeatureInfoComponent {
   tsDocsUrl = `${document.baseURI}tsdocs/modules/ggc-map_src_public-api.html`;
   // DOCS-SKIP:END
 
-  protected cameraOptions: CameraOptions;
+  protected readonly cameraOptions: CameraOptions =
+    cameraOptionsTorentjeDenHaag;
   protected viewerType = ViewerType.DRIE_D;
-  protected webService: Webservice[];
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-feature-info",
     terrainModelUrl:
@@ -66,20 +66,12 @@ export class Example3dFeatureInfoComponent {
   protected selectIndexClick = "selectClick";
   protected selectIndexHover = "selectHover";
 
-  private readonly httpClient = inject(HttpClient);
+  protected readonly webServicesResource = httpResource<Webservice[]>(
+    () => this.kaartConfig
+  );
   private readonly selectionService = inject(GgcSelectionService);
 
-  constructor() {
-    this.httpClient.get(this.kaartConfig).subscribe((data) => {
-      this.webService = data as Webservice[];
-    });
-  }
-
   public onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
-    });
     this.selectionService.addSelection({
       eventType: ScreenSpaceEventType.LEFT_CLICK,
       highlightColor: Color.BLUE,

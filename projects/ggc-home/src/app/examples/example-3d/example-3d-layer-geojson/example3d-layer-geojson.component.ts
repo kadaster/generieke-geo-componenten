@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -12,7 +12,7 @@ import {
   Webservice
 } from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { HttpClient } from "@angular/common/http";
+import { httpResource } from "@angular/common/http";
 import {
   BillboardGraphics,
   Entity,
@@ -46,8 +46,10 @@ export class Example3dLayerGeojsonComponent {
   // DOCS-SKIP:END
 
   protected hideLogo = false;
-  protected cameraOptions: CameraOptions;
-  protected webService: Webservice[];
+  protected readonly cameraOptions: CameraOptions = {
+    cameraPosition: { lat: 52.38277, lon: 4.64038, alt: 12776.57232 },
+    orientation: { heading: 2, pitch: -90, roll: 0 }
+  };
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-layer-geojson",
     terrainModelUrl:
@@ -76,21 +78,7 @@ export class Example3dLayerGeojsonComponent {
     }
   ];
 
-  private readonly httpClient = inject(HttpClient);
-
-  constructor() {
-    this.httpClient.get(this.kaartConfig).subscribe((data) => {
-      this.webService = data as Webservice[];
-    });
-  }
-
-  public onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = {
-        cameraPosition: { lat: 52.38277, lon: 4.64038, alt: 12776.57232 },
-        orientation: { heading: 2, pitch: -90, roll: 0 }
-      };
-    });
-  }
+  protected readonly webServicesResource = httpResource<Webservice[]>(
+    () => this.kaartConfig
+  );
 }

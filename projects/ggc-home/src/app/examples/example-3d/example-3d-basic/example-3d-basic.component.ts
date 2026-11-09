@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -11,7 +11,7 @@ import {
   Webservice
 } from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { HttpClient } from "@angular/common/http";
+import { httpResource } from "@angular/common/http";
 import { Tags } from "../../tags.enum";
 
 @Component({
@@ -40,8 +40,8 @@ export class Example3dBasicComponent {
   // DOCS-SKIP:END
 
   protected hideLogo = false;
-  protected cameraOptions: CameraOptions;
-  protected webService: Webservice[];
+  protected readonly cameraOptions: CameraOptions =
+    cameraOptionsTorentjeDenHaag;
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-basic",
     terrainModelUrl:
@@ -54,20 +54,9 @@ export class Example3dBasicComponent {
   protected kaartConfig =
     "code/examples/example-3d/example-3d-basic/kaartconfig.json";
 
-  private readonly httpClient = inject(HttpClient);
-
-  constructor() {
-    this.httpClient.get(this.kaartConfig).subscribe((data) => {
-      this.webService = data as Webservice[];
-    });
-  }
-
-  public onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
-    });
-  }
+  protected readonly webServicesResource = httpResource<Webservice[]>(
+    () => this.kaartConfig
+  );
 
   protected toggleHideLogo() {
     this.hideLogo = !this.hideLogo;
