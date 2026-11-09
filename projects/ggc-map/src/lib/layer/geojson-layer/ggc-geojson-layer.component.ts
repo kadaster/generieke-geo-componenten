@@ -224,8 +224,9 @@ export class GgcGeojsonLayerComponent
     this.vectorSource.setLoader(
       (extent: Extent, resolution: number, projection: Projection) => {
         if (!this.options()?.url) {
+          // GeoJson options.url is verplicht
           this.emitLayerLoadedErrorEvent();
-          throw new Error("GeoJson options.url is verplicht");
+          return;
         }
 
         const fetchPromise = this.options()?.customHeaders
@@ -236,9 +237,6 @@ export class GgcGeojsonLayerComponent
 
         fetchPromise
           .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error ${response.status}`);
-            }
             return response.json();
           })
           .then((data) => {
@@ -250,8 +248,9 @@ export class GgcGeojsonLayerComponent
             this.emitLayerLoadedEvent();
           })
           .catch((error) => {
-            console.error("GeoJSON load error", error);
+            // GeoJSON load error
             this.emitLayerLoadedErrorEvent();
+            return;
           });
       }
     );
@@ -272,8 +271,9 @@ export class GgcGeojsonLayerComponent
         this.vectorSource.addFeatures(features);
         this.emitLayerLoadedEvent();
       } catch (e) {
-        console.error("Fout bij ophalen OGC API features: ", e);
+        // Fout bij ophalen OGC API features
         this.emitLayerLoadedErrorEvent();
+        return;
       }
     })();
   }
