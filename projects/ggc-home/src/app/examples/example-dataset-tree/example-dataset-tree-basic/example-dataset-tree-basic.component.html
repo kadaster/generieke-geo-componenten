@@ -30,12 +30,13 @@
           <ggc-dataset-tree
             [themes]="datasetTreeConfig"
             [expandTreeOnInit]="true"
+            [mapIndex]="mapIndex"
           ></ggc-dataset-tree>
         </div>
       </div>
       <div class="col-xl-7 col-md-6 col-sm-12">
         <div class="map-container">
-          <ggc-map [webServices]="mapConfig"></ggc-map>
+          <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
         </div>
       </div>
       <!-- DOCS:END functionality -->
