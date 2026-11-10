@@ -22,16 +22,12 @@ import {
   GgcViewerService,
   ViewerOptions
 } from "@kadaster/ggc-map-3d";
-import { CoreCameraService } from "../../../../../../ggc-map-3d/src/lib/service/core-camera.service";
-import { CoreViewerService } from "../../../../../../ggc-map-3d/src/lib/service/core-viewer.service";
+import { CoreCameraService } from "@kadaster/ggc-map-3d/src/lib/service/core-camera.service";
+import { CoreViewerService } from "@kadaster/ggc-map-3d/src/lib/service/core-viewer.service";
 import { Cartesian2, Cartographic, Viewer } from "@cesium/engine";
 import proj4 from "proj4";
-import { Point, Polygon } from "ol/geom";
+import { Polygon } from "ol/geom";
 import { defs } from "@kadaster/ggc-models";
-import { getCenter } from "ol/extent";
-import { Icon } from "ol/style";
-import VectorSource from "ol/source/Vector";
-import VectorLayer from "ol/layer/Vector";
 
 @Component({
   selector: "app-example-search-location",
@@ -82,10 +78,8 @@ export class ExampleMapDriedExtraOverzichtComponent
   private readonly viewerService = inject(CoreViewerService);
   private readonly ggcLocationService = inject(GgcLocationService);
 
-  private onverzichtKaartZoomFactor = 12;
+  private overzichtKaartZoomFactor = 12;
   private overzichtKaartRotates = false;
-  private roosFeature: any;
-  private vectorSource: any;
 
   ngOnInit() {
     this.httpClient
@@ -111,8 +105,6 @@ export class ExampleMapDriedExtraOverzichtComponent
     this.connectOverzichtKaart();
     this.setBoxStyle();
 
-    this.addSvgFeatureLayer();
-
     void this.mapService.zoomToCoordinate([155000, 463000], this.mapIndex, 2);
   }
 
@@ -126,44 +118,6 @@ export class ExampleMapDriedExtraOverzichtComponent
     this.map3dCameraService.getCameraValuesObservable().subscribe((values) => {
       this.handleMapEvent(values);
     });
-  }
-
-  private addSvgFeatureLayer() {
-    const map = this.mapService.getMap(this.mapIndexOverzicht);
-
-    if (!map) return;
-
-    const coordinate: [number, number] = [155000, 463000];
-
-    this.roosFeature = new Feature({
-      geometry: new Point(coordinate)
-    });
-
-    const svgUrl = "./assets/overzicht-roos.svg";
-
-    const style = new Style({
-      image: new Icon({
-        src: svgUrl,
-        scale: 0.5,
-        anchor: [0.5, 0.5],
-        rotateWithView: false
-      })
-    });
-
-    this.roosFeature.setStyle(style);
-
-    this.vectorSource = new VectorSource({
-      features: [this.roosFeature]
-    });
-
-    const vectorLayer = new VectorLayer({
-      source: this.vectorSource,
-      zIndex: 1,
-      updateWhileInteracting: true,
-      updateWhileAnimating: true
-    });
-
-    map.addLayer(vectorLayer);
   }
 
   private setBoxStyle() {
@@ -213,9 +167,6 @@ export class ExampleMapDriedExtraOverzichtComponent
         mapIndex: this.mapIndexOverzicht
       });
 
-      const extentCenter = getCenter(bboxFeature.getGeometry()!.getExtent());
-      this.roosFeature.getGeometry().setCoordinates(extentCenter);
-
       if (this.overzichtKaartRotates) {
         const rotationDegree = values.orientation.heading;
         if (rotationDegree !== undefined) {
@@ -226,13 +177,6 @@ export class ExampleMapDriedExtraOverzichtComponent
             .setRotation(rotationRadius);
         }
       }
-
-      const rotationDegree = values.orientation.heading;
-      const rotationRadius = 1.5 * Math.PI + (rotationDegree! * Math.PI) / 180;
-      const style = this.roosFeature.getStyle() as Style;
-      const image = style.getImage() as Icon;
-      image.setRotation(rotationRadius);
-      this.roosFeature.changed();
     }
   }
 
