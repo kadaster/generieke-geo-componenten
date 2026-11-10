@@ -1,10 +1,5 @@
 import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
-import {
-  GgcMapComponent,
-  GgcMapEventsService,
-  GgcMapService,
-  Webservice
-} from "@kadaster/ggc-map";
+import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -16,10 +11,7 @@ import Style from "ol/style/Style";
 import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
-  CameraValues,
-  GgcLocationService,
   GgcViewerComponent,
-  GgcViewerService,
   ViewerOptions
 } from "@kadaster/ggc-map-3d";
 import { CoreCameraService } from "@kadaster/ggc-map-3d/src/lib/service/core-camera.service";
@@ -30,7 +22,7 @@ import { Polygon } from "ol/geom";
 import { defs } from "@kadaster/ggc-models";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-map-dried-extra-overzicht-location",
   imports: [GgcMapComponent, ExampleFormatComponent, GgcViewerComponent],
   templateUrl: "./example-map-dried-extra-overzicht.component.html",
   styleUrl: "./example-map-dried-extra-overzicht.component.scss"
@@ -72,14 +64,8 @@ export class ExampleMapDriedExtraOverzichtComponent
   };
 
   private readonly mapService: GgcMapService = inject(GgcMapService);
-  private readonly mapEventService = inject(GgcMapEventsService);
   private readonly map3dCameraService = inject(CoreCameraService);
-  private readonly map3dViewerService = inject(GgcViewerService);
   private readonly viewerService = inject(CoreViewerService);
-  private readonly ggcLocationService = inject(GgcLocationService);
-
-  private overzichtKaartZoomFactor = 12;
-  private overzichtKaartRotates = false;
 
   ngOnInit() {
     this.httpClient
@@ -115,8 +101,8 @@ export class ExampleMapDriedExtraOverzichtComponent
   }
 
   private connectOverzichtKaart() {
-    this.map3dCameraService.getCameraValuesObservable().subscribe((values) => {
-      this.handleMapEvent(values);
+    this.map3dCameraService.getCameraValuesObservable().subscribe(() => {
+      this.handleMapEvent();
     });
   }
 
@@ -134,7 +120,7 @@ export class ExampleMapDriedExtraOverzichtComponent
     );
   }
 
-  private handleMapEvent(values: CameraValues) {
+  private handleMapEvent() {
     const viewer = this.viewerService.getViewer();
     if (viewer) {
       const corners = this.getVisibleCorners(viewer);
@@ -166,17 +152,6 @@ export class ExampleMapDriedExtraOverzichtComponent
       this.mapService.zoomToExtent(polyExtent, {
         mapIndex: this.mapIndexOverzicht
       });
-
-      if (this.overzichtKaartRotates) {
-        const rotationDegree = values.orientation.heading;
-        if (rotationDegree !== undefined) {
-          const rotationRadius = (rotationDegree * Math.PI) / 180;
-          this.mapService
-            .getMap(this.mapIndexOverzicht)!
-            .getView()
-            .setRotation(rotationRadius);
-        }
-      }
     }
   }
 
