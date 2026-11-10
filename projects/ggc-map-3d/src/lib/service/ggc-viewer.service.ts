@@ -6,7 +6,13 @@ import {
   MIN_VIEWDISTANCE
 } from "../utils/camera-utils";
 import { CameraValues } from "../model/interfaces";
-import { Cartesian3, Rectangle } from "@cesium/engine";
+import {
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  Rectangle
+} from "@cesium/engine";
+import { Viewer } from "@cesium/widgets";
 
 /**
  * Service met helper-functionaliteit rondom de Cesium viewer.
@@ -14,6 +20,7 @@ import { Cartesian3, Rectangle } from "@cesium/engine";
  * Deze service biedt:
  * - Toegang tot de huidige {@link CameraValues};
  * - Berekeningen voor extent, center en kijkafstand;
+ * - Berekenen van hoekcoördinaten van het canvas;
  * - Hulpfuncties voor het werken met GeoJSON extents.
  *
  * Wordt voornamelijk gebruikt door viewer-logica zoals camera positioning
@@ -81,6 +88,50 @@ export class GgcViewerService {
       MAX_VIEWDISTANCE,
       Math.max(width, height, MIN_VIEWDISTANCE)
     );
+  }
+
+  /**
+   * Berekent de geografische coördinaten van de vier hoeken van het canvas.
+   *
+   * @param viewer De Cesium-viewer waarvoor de coördinaten worden berekend
+   * @returns De hoekcoördinaten met longitude en latitude in graden en height in meters. Wanneer minstebns één hoek geen raakpunt met het aardoppervlak oplevert, retouneert  de functie undefined.
+   */
+  getCanvasCornerCoordinates(
+    viewer: Viewer
+  ): { longitude: number; latitude: number; height: number }[] | undefined {
+    const scene = viewer.scene;
+    const camera = scene.camera;
+    const canvas = scene.canvas;
+
+    const corners = [
+      new Cartesian2(0, 0),
+      new Cartesian2(canvas.clientWidth, 0),
+      new Cartesian2(canvas.clientWidth, canvas.clientHeight),
+      new Cartesian2(0, canvas.clientHeight)
+    ];
+
+    const result: {
+      longitude: number;
+      latitude: number;
+      height: number;
+    }[] = [];
+
+    for (const corner of corners) {
+      const ray = camera.getPickRay(corner);
+      if (!ray) return undefined;
+
+      const cartesian = scene.globe.pick(ray, scene);
+      if (!cartesian) return undefined;
+
+      const cartographic = Cartographic.fromCartesian(cartesian);
+
+      result.push({
+        longitude: (cartographic.longitude * 180) / Math.PI,
+        latitude: (cartographic.latitude * 180) / Math.PI,
+        height: cartographic.height
+      });
+    }
+    return result;
   }
 
   /**

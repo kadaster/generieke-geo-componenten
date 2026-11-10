@@ -12,14 +12,15 @@ import {
   CameraOptions,
   cameraOptionsTorentjeDenHaag,
   GgcViewerComponent,
-  ViewerOptions
+  ViewerOptions,
+  GgcViewerService
 } from "@kadaster/ggc-map-3d";
 import { CoreCameraService } from "@kadaster/ggc-map-3d/src/lib/service/core-camera.service";
 import { CoreViewerService } from "@kadaster/ggc-map-3d/src/lib/service/core-viewer.service";
-import { Cartesian2, Cartographic, Viewer } from "@cesium/engine";
 import proj4 from "proj4";
 import { Polygon } from "ol/geom";
 import { defs } from "@kadaster/ggc-models";
+import { from } from "rxjs";
 
 @Component({
   selector: "ggc-home-example-map-dried-extra-overzicht-location",
@@ -66,6 +67,7 @@ export class ExampleMapDriedExtraOverzichtComponent
   private readonly mapService: GgcMapService = inject(GgcMapService);
   private readonly map3dCameraService = inject(CoreCameraService);
   private readonly viewerService = inject(CoreViewerService);
+  private readonly ggcViewerService = inject(GgcViewerService);
 
   ngOnInit() {
     this.httpClient
@@ -123,12 +125,8 @@ export class ExampleMapDriedExtraOverzichtComponent
   private handleMapEvent() {
     const viewer = this.viewerService.getViewer();
     if (viewer) {
-      const corners = this.getVisibleCorners(viewer);
-      const invalidIndex = corners.findIndex((corner) => {
-        return corner == null;
-      });
-
-      if (invalidIndex != -1) {
+      const corners = this.ggcViewerService.getCanvasCornerCoordinates(viewer);
+      if (corners === undefined) {
         return;
       }
 
@@ -157,35 +155,6 @@ export class ExampleMapDriedExtraOverzichtComponent
 
   private wgs84ToRd(lon: number, lat: number): [number, number] {
     return proj4("EPSG:4326", defs, [lon, lat]);
-  }
-
-  private getVisibleCorners(viewer: Viewer) {
-    const scene = viewer.scene;
-    const camera = scene.camera;
-    const canvas = scene.canvas;
-
-    const corners = [
-      new Cartesian2(0, 0),
-      new Cartesian2(canvas.clientWidth, 0),
-      new Cartesian2(canvas.clientWidth, canvas.clientHeight),
-      new Cartesian2(0, canvas.clientHeight)
-    ];
-
-    const result = corners.map((corner) => {
-      const ray = camera.getPickRay(corner);
-      const cartesian = scene.globe.pick(ray!, scene);
-
-      if (!cartesian) return null;
-
-      const cartographic = Cartographic.fromCartesian(cartesian);
-
-      return {
-        longitude: (cartographic.longitude * 180) / Math.PI,
-        latitude: (cartographic.latitude * 180) / Math.PI,
-        height: cartographic.height
-      };
-    });
-    return result;
   }
 
   private removeZoomButtons(mapIndex: string) {
