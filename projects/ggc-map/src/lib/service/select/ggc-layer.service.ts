@@ -623,10 +623,7 @@ export class GgcLayerService {
         }
 
         if (updatedLayerOptions.visible || updatedLayerOptions.persistent) {
-          updatedLayerOptions.layerId = this.addLayer(
-            updatedLayerOptions,
-            layerType
-          );
+          this.addLayer(updatedLayerOptions, layerType);
         }
       }
     );
