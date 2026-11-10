@@ -8,6 +8,8 @@ This is an Angular monorepo with publishable `projects/ggc-*` libraries and the 
 
 - Don’t assume. Don’t hide confusion. Surface tradeoffs.
 - Minimum code that solves the problem. Nothing speculative.
+- Before adding infrastructure or lifecycle logic, trace the existing implementation and reuse the owning service, registry, loading path, and underlying library capabilities. Extend the existing mechanism rather than building a parallel one.
+- Add validation, error handling, cancellation, UI feedback, and tests only for requested behavior or a demonstrated correctness gap. Preserve established handling and test the new contract, not behavior already covered by dependencies or existing tests.
 - Touch only what you must. Clean up only your own mess.
 - Define success criteria. Loop until verified.
 - When an API supports a generic type parameter, prefer specifying the type there (for example, `computed<SearchLocationOptions>(...)`) over asserting the result with `as SearchLocationOptions`. This lets TypeScript check that the value matches the type. Use an assertion only when no suitable generic or contextual type is available and it is genuinely necessary.

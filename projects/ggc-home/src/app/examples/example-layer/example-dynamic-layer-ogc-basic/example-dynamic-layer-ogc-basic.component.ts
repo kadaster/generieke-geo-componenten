@@ -4,6 +4,7 @@ import {
   GgcLayerService,
   GgcMapComponent,
   GgcMapService,
+  UrlParameter,
   Webservice
 } from "@kadaster/ggc-map";
 import { ComponentInfo } from "../../component-info.model";
@@ -23,8 +24,8 @@ export class ExampleDynamicLayerOgcBasicComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/dynamic-layer-ogc-basic",
-    title: "OGC API feature dynamisch toevoegen aan kaartlaag",
-    introduction: "Voeg een OGC feature toe aan een GeoJSON kaartlaag.",
+    title: "OGC API Features: parameters aanpassen",
+    introduction: "Pas de URL-parameters van een GeoJSON-laag aan.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.OGC_API],
@@ -65,22 +66,25 @@ export class ExampleDynamicLayerOgcBasicComponent
 
   selectPerceel1() {
     this.activeLocation = "perceel1";
-    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=9833&sectie=U");
+    this.selectPerceel("9833");
   }
 
   selectPerceel2() {
     this.activeLocation = "perceel2";
-    this.addFeatureToGeoJsonLayer("Apeldoorn&perceelnummer=7083&sectie=U");
+    this.selectPerceel("7083");
   }
 
-  private addFeatureToGeoJsonLayer(kadastraleGemeenteWaarde: string) {
-    this.layerService.removeLayer(this.mapIndex, "perceel");
-    this.layerService.addGeojsonLayer({
-      url: `https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?crs=http://www.opengis.net/def/crs/EPSG/0/28992&f=json&limit=100&filter-lang=cql2-text&kadastrale_gemeente_waarde=${kadastraleGemeenteWaarde}`,
-      layerId: "perceel",
-      title: "Perceel",
-      zIndex: 20,
-      mapIndex: this.mapIndex
-    });
+  private selectPerceel(perceelnummer: string) {
+    const urlParameters: UrlParameter[] = [
+      {
+        parameterName: "kadastrale_gemeente_waarde",
+        parameterValue: "Apeldoorn"
+      },
+      { parameterName: "sectie", parameterValue: "U" },
+      { parameterName: "perceelnummer", parameterValue: perceelnummer }
+    ];
+
+    this.layerService.setUrlParameters(urlParameters, "perceel", this.mapIndex);
+    this.layerService.setVisibilityLayers(["perceel"], true, this.mapIndex);
   }
 }

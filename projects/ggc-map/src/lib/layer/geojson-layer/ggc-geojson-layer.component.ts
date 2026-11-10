@@ -18,6 +18,7 @@ import Cluster from "ol/source/Cluster";
 import VectorSource from "ol/source/Vector";
 import { AbstractClickableLayer } from "../abstract-clickable-layer/abstract-clickable-layer.directive";
 import { GeojsonLayerOptions } from "../model/geojson-layer.model";
+import { UrlParameter } from "../model/abstract-layer.model";
 import { CoreOgcApiFeaturesService } from "../service/core-ogc-api-features.service";
 import {
   LayerChangedEventTrigger,
@@ -75,6 +76,7 @@ export class GgcGeojsonLayerComponent
   private clusterSource: Cluster<Feature>;
   private foundFeatures: Array<Feature<Geometry>> = [];
   private geoJsonFormat: GeoJSON;
+  private loadId = 0;
   private readonly ggcOgcApiFeaturesService: CoreOgcApiFeaturesService = inject(
     CoreOgcApiFeaturesService
   );
@@ -96,15 +98,24 @@ export class GgcGeojsonLayerComponent
       format: this.geoJsonFormat
     };
 
-    const isOgcApiUrl =
-      this.options()?.url?.includes("/collections/") &&
-      this.options()?.url?.includes("/items");
+    const geojsonLayerOptions = this.options();
+    const sourceUrl = this.getSourceUrl(geojsonLayerOptions);
+    const isOgcApiUrl = this.isOgcApiUrl(sourceUrl);
 
     if (!isOgcApiUrl) {
       Object.assign(options, {
-        ...this.options()?.sourceOptions,
-        ...(this.options()?.url && { url: this.options()?.url }),
-        ...(this.options()?.features && { features: this.options()?.features })
+        ...geojsonLayerOptions?.sourceOptions,
+        ...(sourceUrl
+          ? {
+              url: this.appendUrlParameters(
+                sourceUrl,
+                geojsonLayerOptions?.urlParameters
+              )
+            }
+          : {}),
+        ...(geojsonLayerOptions?.features && {
+          features: geojsonLayerOptions.features
+        })
       });
     }
 
@@ -122,7 +133,7 @@ export class GgcGeojsonLayerComponent
     this.setLayer(new VectorLayer(layerOptions));
 
     if (isOgcApiUrl) {
-      this.loadOgcApiFeatures(options);
+      void this.loadOgcApiFeatures(sourceUrl, this.loadId);
     } else {
       this.loadGeojsonFeatures();
     }
@@ -144,16 +155,25 @@ export class GgcGeojsonLayerComponent
     }
 
     if (changes.options && !changes.options.firstChange) {
-      if (
-        changes.options.currentValue.sourceOptions?.url !==
-        changes.options.previousValue?.sourceOptions?.url
-      ) {
-        this.updateUrl(changes.options.currentValue.sourceOptions?.url);
-      }
-      if (
-        changes.options.currentValue.url !== changes.options.previousValue?.url
-      ) {
-        this.updateUrl(changes.options.currentValue.url);
+      const currentOptions: GeojsonLayerOptions | undefined =
+        changes.options.currentValue;
+      const previousOptions: GeojsonLayerOptions | undefined =
+        changes.options.previousValue;
+      const sourceUrlChanged =
+        currentOptions?.sourceOptions?.url !==
+        previousOptions?.sourceOptions?.url;
+      const urlChanged = currentOptions?.url !== previousOptions?.url;
+
+      if (currentOptions?.urlParameters !== previousOptions?.urlParameters) {
+        this.reloadUrl();
+      } else {
+        const sourceOptionsUrl = currentOptions?.sourceOptions?.url;
+        if (sourceUrlChanged && typeof sourceOptionsUrl === "string") {
+          this.updateUrl(sourceOptionsUrl);
+        }
+        if (urlChanged && currentOptions?.url) {
+          this.updateUrl(currentOptions.url);
+        }
       }
       if (
         changes.options.currentValue.sourceOptions?.features !==
@@ -212,7 +232,21 @@ export class GgcGeojsonLayerComponent
    * Opruimen van resources bij het vernietigen van de component.
    */
   ngOnDestroy(): void {
+    this.loadId++;
     super.ngOnDestroy();
+  }
+
+  /**
+   * Vervangt de URL-parameters en laadt de gegevens van de bestaande laag opnieuw.
+   *
+   * @param urlParameters - De volledige nieuwe lijst met queryparameters.
+   */
+  override setUrlParameters(urlParameters: UrlParameter[]): void {
+    this.options.update((geojsonLayerOptions) => ({
+      ...geojsonLayerOptions,
+      urlParameters
+    }));
+    this.reloadUrl();
   }
 
   protected handleSingleClick(event: MapBrowserEvent) {
@@ -223,16 +257,22 @@ export class GgcGeojsonLayerComponent
     // Andere lagen laden wij zelf in, zodat wij altijd een feature loaded event kunnen throwen
     this.vectorSource.setLoader(
       (extent: Extent, resolution: number, projection: Projection) => {
-        if (!this.options()?.url) {
+        const geojsonLayerOptions = this.options();
+        const url = this.getSourceUrl(geojsonLayerOptions);
+        if (!url) {
           this.emitLayerLoadedErrorEvent();
           throw new Error("GeoJson options.url is verplicht");
         }
 
-        const fetchPromise = this.options()?.customHeaders
-          ? fetch(new URL(this.options()!.url!), {
-              headers: this.options()?.customHeaders
+        const loadId = this.loadId;
+        const fetchPromise = fetch(
+          this.appendUrlParameters(url, geojsonLayerOptions?.urlParameters),
+          {
+            ...(geojsonLayerOptions?.customHeaders && {
+              headers: geojsonLayerOptions.customHeaders
             })
-          : fetch(this.options()!.url!);
+          }
+        );
 
         fetchPromise
           .then((response) => {
@@ -242,6 +282,9 @@ export class GgcGeojsonLayerComponent
             return response.json();
           })
           .then((data) => {
+            if (loadId !== this.loadId) {
+              return;
+            }
             const features = this.geoJsonFormat.readFeatures(data, {
               featureProjection: projection
             });
@@ -250,6 +293,9 @@ export class GgcGeojsonLayerComponent
             this.emitLayerLoadedEvent();
           })
           .catch((error) => {
+            if (loadId !== this.loadId) {
+              return;
+            }
             console.error("GeoJSON load error", error);
             this.emitLayerLoadedErrorEvent();
           });
@@ -257,25 +303,109 @@ export class GgcGeojsonLayerComponent
     );
   }
 
-  private loadOgcApiFeatures(options: Record<string, any>) {
-    (async () => {
-      const limit = this.options()?.limit;
-      const maxFeatures = this.options()?.maxFeatures;
-      try {
-        const features =
-          await this.ggcOgcApiFeaturesService.fetchAllOgcApiFeatures(
-            this.options()!.url!,
-            limit,
-            maxFeatures
-          );
-        options.features = features;
-        this.vectorSource.addFeatures(features);
-        this.emitLayerLoadedEvent();
-      } catch (e) {
-        console.error("Fout bij ophalen OGC API features: ", e);
-        this.emitLayerLoadedErrorEvent();
+  private async loadOgcApiFeatures(
+    sourceUrl: string,
+    loadId: number
+  ): Promise<void> {
+    const geojsonLayerOptions = this.options();
+    const limit =
+      geojsonLayerOptions?.urlParameters?.find(
+        (urlParameter) => urlParameter.parameterName === "limit"
+      )?.parameterValue ?? geojsonLayerOptions?.limit;
+
+    try {
+      const features =
+        await this.ggcOgcApiFeaturesService.fetchAllOgcApiFeatures(
+          this.appendUrlParameters(
+            sourceUrl,
+            geojsonLayerOptions?.urlParameters
+          ),
+          limit,
+          geojsonLayerOptions?.maxFeatures
+        );
+      if (loadId !== this.loadId) {
+        return;
       }
-    })();
+      this.vectorSource.addFeatures(features);
+      this.emitLayerLoadedEvent();
+    } catch (error) {
+      if (loadId !== this.loadId) {
+        return;
+      }
+      console.error("Fout bij ophalen OGC API features: ", error);
+      this.emitLayerLoadedErrorEvent();
+    }
+  }
+
+  private reloadUrl(): void {
+    if (!this.vectorSource) {
+      return;
+    }
+
+    const geojsonLayerOptions = this.options();
+    const sourceUrl = this.getSourceUrl(geojsonLayerOptions);
+    if (!sourceUrl) {
+      return;
+    }
+
+    const loadId = ++this.loadId;
+    if (this.isOgcApiUrl(sourceUrl)) {
+      this.vectorSource.setLoader(() => {
+        // OGC features are loaded by the paginated service.
+      });
+      this.vectorSource.clear();
+      void this.loadOgcApiFeatures(sourceUrl, loadId);
+    } else {
+      this.vectorSource.setUrl(
+        this.appendUrlParameters(sourceUrl, geojsonLayerOptions?.urlParameters)
+      );
+      this.loadGeojsonFeatures();
+      this.vectorSource.refresh();
+    }
+  }
+
+  private isOgcApiUrl(sourceUrl: string | undefined): sourceUrl is string {
+    return (
+      typeof sourceUrl === "string" &&
+      sourceUrl.includes("/collections/") &&
+      sourceUrl.includes("/items")
+    );
+  }
+
+  private getSourceUrl(
+    geojsonLayerOptions: GeojsonLayerOptions | undefined
+  ): string | undefined {
+    const sourceOptionsUrl = geojsonLayerOptions?.sourceOptions?.url;
+    return (
+      geojsonLayerOptions?.url ??
+      (typeof sourceOptionsUrl === "string" ? sourceOptionsUrl : undefined)
+    );
+  }
+
+  private appendUrlParameters(
+    url: string,
+    urlParameters: UrlParameter[] | undefined
+  ): string {
+    if (!urlParameters?.length) {
+      return url;
+    }
+
+    const fragmentIndex = url.indexOf("#");
+    const fragment = fragmentIndex === -1 ? "" : url.slice(fragmentIndex);
+    const urlWithoutFragment =
+      fragmentIndex === -1 ? url : url.slice(0, fragmentIndex);
+    const queryIndex = urlWithoutFragment.indexOf("?");
+    const path =
+      queryIndex === -1
+        ? urlWithoutFragment
+        : urlWithoutFragment.slice(0, queryIndex);
+    const searchParams = new URLSearchParams(
+      queryIndex === -1 ? "" : urlWithoutFragment.slice(queryIndex + 1)
+    );
+    for (const urlParameter of urlParameters) {
+      searchParams.set(urlParameter.parameterName, urlParameter.parameterValue);
+    }
+    return `${path}?${searchParams.toString()}${fragment}`;
   }
 
   private setVectorSource(

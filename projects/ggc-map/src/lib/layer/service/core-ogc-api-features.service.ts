@@ -20,7 +20,7 @@ export class CoreOgcApiFeaturesService {
 
   async fetchAllOgcApiFeatures(
     initialUrl: string,
-    limit = this.limitDefault,
+    limit: number | string = this.limitDefault,
     maxFeatures = this.maxFeaturesDefault
   ): Promise<Feature<Geometry>[]> {
     const allFeatures: Feature<Geometry>[] = [];

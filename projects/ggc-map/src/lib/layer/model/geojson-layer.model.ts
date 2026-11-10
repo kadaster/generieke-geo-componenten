@@ -1,7 +1,10 @@
 import { Options } from "ol/layer/BaseVector";
 import VectorSource, { Options as VectorSourceOptions } from "ol/source/Vector";
 import { Options as ClusterSourceOptions } from "ol/source/Cluster";
-import { AbstractClickableLayerOptions } from "./abstract-layer.model";
+import {
+  AbstractClickableLayerOptions,
+  UrlParameter
+} from "./abstract-layer.model";
 import { Geometry } from "ol/geom";
 import Feature from "ol/Feature";
 import { StyleLike } from "ol/style/Style";
@@ -10,6 +13,16 @@ import { StyleLike } from "ol/style/Style";
  * Opties voor het configureren van een Geojson laag binnen een kaartapplicatie.
  */
 export interface GeojsonLayerOptions extends AbstractClickableLayerOptions {
+  /**
+   * Optionele queryparameters voor de URL van de laag. Een parameter met dezelfde
+   * naam als een bestaande parameter in de URL krijgt voorrang in het verzoek;
+   * de ingestelde URL zelf blijft ongewijzigd.
+   *
+   * Bij OGC API Features krijgt een `limit` in deze lijst voorrang op de
+   * `limit`-optie. Zonder zo'n parameter blijft de bestaande `limit` gelden.
+   */
+  urlParameters?: UrlParameter[];
+
   /**
    * Optioneel: instellen van de layerOptions voor de OpenLayers Layer.
    * Hiermee kunnen onder andere `zIndex`, `minResolution` en `maxResolution` worden ingesteld.

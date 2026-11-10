@@ -14,10 +14,14 @@ import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { WmtsLayerOptions } from "../../layer/model/wmts-layer.model";
 import { GgcWmtsLayerComponent } from "../../layer/wmts-layer/ggc-wmts-layer.component";
 import { GgcWmsLayerComponent } from "../../layer/wms-layer/ggc-wms-layer.component";
-import { AbstractConfigurableLayerOptions } from "../../layer/model/abstract-layer.model";
+import {
+  AbstractConfigurableLayerOptions,
+  UrlParameter
+} from "../../layer/model/abstract-layer.model";
 import { GgcLayerBrtAchtergrondkaartComponent } from "../../layer/layer-brt-achtergrondkaart/ggc-layer-brt-achtergrondkaart.component";
 import { Webservice } from "../../layer/model/webservice.model";
 import BaseLayer from "ol/layer/Base";
+import Layer from "ol/layer/Layer";
 import { viewResolutionIsInLayerResolutionRange } from "../../layer/utils/viewResolutionIsInLayerResolutionRange";
 import { Observable, of, Subject } from "rxjs";
 import { catchError, map } from "rxjs/operators";
@@ -32,7 +36,6 @@ import {
   Style
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
-import Layer from "ol/layer/Layer";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
 
@@ -86,6 +89,7 @@ export class GgcLayerService {
   /**
    * Observable voor layer change events.
    * Emits een event als een layer geïnitialiseerd is, is toegevoegd aan de kaart of is weggehaald uit de kaart.
+   * Ook het laden van GeoJSON-features en fouten daarbij worden gemeld.
    * Identiek aan de getLayerChangedObservable in GgcMapService.
    */
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
@@ -580,6 +584,32 @@ export class GgcLayerService {
   }
 
   /**
+   * Vervangt de volledige lijst URL-parameters van een GeoJSON-laag.
+   * De basis-URL blijft ongewijzigd en de bestaande laag wordt opnieuw geladen.
+   * Een lege lijst verwijdert de dynamische parameters.
+   *
+   * @param urlParameters - De volledige nieuwe lijst met queryparameters.
+   * @param layerId - De identifier van de laag.
+   * @param mapIndex - De kaart waarop de laag staat.
+   */
+  setUrlParameters(
+    urlParameters: UrlParameter[],
+    layerId: string,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): void {
+    this.mapLayerComponents
+      .get(this.buildLayerComponentKey(mapIndex, layerId))
+      ?.setUrlParameters(urlParameters);
+
+    if (this.getTypeOfLayer(layerId, mapIndex) === Webservice2DType.GEOJSON) {
+      const layerConfig = this.getLayerConfig(layerId, mapIndex);
+      if (layerConfig) {
+        Object.assign(layerConfig, { urlParameters });
+      }
+    }
+  }
+
+  /**
    * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
    */
   private loadWebservice(service: Webservice, mapIndex: string) {
@@ -623,10 +653,8 @@ export class GgcLayerService {
         }
 
         if (updatedLayerOptions.visible || updatedLayerOptions.persistent) {
-          updatedLayerOptions.layerId = this.addLayer(
-            updatedLayerOptions,
-            layerType
-          );
+          const layerId = this.addLayer(updatedLayerOptions, layerType);
+          updatedLayerOptions.layerId = layerId ?? updatedLayerOptions.layerId;
         }
       }
     );
