@@ -67,7 +67,11 @@
         <ggc-dataset-tree
           [viewerType]="viewerType"
           [expandTreeOnInit]="true"
-          [themes]="datasetTreeConfig"
+          [themes]="
+            datasetTreeConfigResource.hasValue()
+              ? datasetTreeConfigResource.value()
+              : []
+          "
         ></ggc-dataset-tree>
         <h3>Legenda's</h3>
         <ggc-legend [viewerType]="viewerType"></ggc-legend>
@@ -77,8 +81,11 @@
           <ggc-map-3d-viewer
             [viewerOptions]="viewerOptions"
             [cameraOptions]="cameraOptions"
-            (ready)="onCesiumReady()"
-            [webServices]="webService"
+            [webServices]="
+              webServicesResource.hasValue()
+                ? webServicesResource.value()
+                : undefined
+            "
           ></ggc-map-3d-viewer>
         </div>
       </div>

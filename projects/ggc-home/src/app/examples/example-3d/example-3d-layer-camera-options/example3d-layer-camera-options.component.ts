@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -14,7 +14,7 @@ import {
   Webservice
 } from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { HttpClient } from "@angular/common/http";
+import { httpResource } from "@angular/common/http";
 import { ViewerType } from "@kadaster/ggc-models";
 import { GgcDatasetTreeComponent, Theme } from "@kadaster/ggc-dataset-tree";
 
@@ -48,9 +48,8 @@ export class Example3dLayerCameraOptionsComponent {
   tsDocsUrl = `${document.baseURI}tsdocs/modules/ggc-map_src_public-api.html`;
   // DOCS-SKIP:END
 
-  protected cameraOptions: CameraOptions;
-  protected webService: Webservice[];
-  protected datasetTreeConfig: Theme[];
+  protected readonly cameraOptions: CameraOptions =
+    cameraOptionsTorentjeDenHaag;
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-layer-camera-options",
     terrainModelUrl:
@@ -78,25 +77,12 @@ export class Example3dLayerCameraOptionsComponent {
     }
   ];
 
-  private readonly httpClient = inject(HttpClient);
-
-  constructor() {
-    this.httpClient.get(this.kaartConfig).subscribe((data) => {
-      this.webService = data as Webservice[];
-    });
-    this.httpClient
-      .get(
-        "code/examples/example-3d/example-3d-layer-camera-options/treeconfig.json"
-      )
-      .subscribe((data) => {
-        this.datasetTreeConfig = data as Theme[];
-      });
-  }
-
-  public onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
-    });
-  }
+  protected readonly webServicesResource = httpResource<Webservice[]>(
+    () => this.kaartConfig
+  );
+  protected readonly datasetTreeConfigResource = httpResource<Theme[]>(
+    () =>
+      "code/examples/example-3d/example-3d-layer-camera-options/treeconfig.json",
+    { defaultValue: [] }
+  );
 }

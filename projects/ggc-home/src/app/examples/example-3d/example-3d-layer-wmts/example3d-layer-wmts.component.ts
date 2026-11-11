@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -11,7 +11,7 @@ import {
   Webservice
 } from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { HttpClient } from "@angular/common/http";
+import { httpResource } from "@angular/common/http";
 
 @Component({
   selector: "ggc-example-3d-layer-wmts",
@@ -44,7 +44,6 @@ export class Example3dLayerWmtsComponent {
   protected cameraOptions: CameraOptions = {
     cameraPosition: { lat: 51.946, lon: 5.591 }
   };
-  protected webService: Webservice[];
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-layer-wmts",
     terrainModelUrl:
@@ -57,13 +56,9 @@ export class Example3dLayerWmtsComponent {
   protected kaartConfig =
     "code/examples/example-3d/example-3d-layer-wmts/kaartconfig.json";
 
-  private readonly httpClient = inject(HttpClient);
-
-  constructor() {
-    this.httpClient.get(this.kaartConfig).subscribe((data) => {
-      this.webService = data as Webservice[];
-    });
-  }
+  protected readonly webServicesResource = httpResource<Webservice[]>(
+    () => this.kaartConfig
+  );
 
   public onCesiumReady() {
     console.log("Cesium is ready");
