@@ -40,7 +40,6 @@ export default defineConfig({
     coverage: {
       provider: "istanbul",
       reporter: ["text", "html", "lcov"],
-      reportsDirectory: "./coverage",
       exclude: ["src/test/**", "**/*.spec.ts"]
     }
   },
