@@ -596,6 +596,21 @@ describe("LayerService", () => {
       expect(emitSpy).toHaveBeenCalledTimes(2);
     });
 
+    it("should keep the existing layerId when addLayer returns undefined", () => {
+      const webservice = createWebservice();
+      const addLayerSpy = vi
+        .spyOn(service, "addLayer")
+        .mockReturnValue(undefined);
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      expect(addLayerSpy).toHaveBeenCalledTimes(1);
+      expect(webservice.layers[0].layerId).toBe("layer1");
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.layerId).toBe(
+        "layer1"
+      );
+    });
+
     it("should select the first style as activeStyle when activeStyle is missing", () => {
       const webservice = createStyledWebservice();
       vi.spyOn(service, "addLayer").mockReturnValue("layer1");

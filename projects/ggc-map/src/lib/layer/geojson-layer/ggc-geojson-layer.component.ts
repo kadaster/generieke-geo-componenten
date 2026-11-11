@@ -261,7 +261,7 @@ export class GgcGeojsonLayerComponent
         const url = this.getSourceUrl(geojsonLayerOptions);
         if (!url) {
           this.emitLayerLoadedErrorEvent();
-          throw new Error("GeoJson options.url is verplicht");
+          return;
         }
 
         const loadId = this.loadId;
@@ -276,9 +276,6 @@ export class GgcGeojsonLayerComponent
 
         fetchPromise
           .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error ${response.status}`);
-            }
             return response.json();
           })
           .then((data) => {
@@ -298,6 +295,7 @@ export class GgcGeojsonLayerComponent
             }
             console.error("GeoJSON load error", error);
             this.emitLayerLoadedErrorEvent();
+            return;
           });
       }
     );
