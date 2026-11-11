@@ -413,4 +413,15 @@ export class GgcMapService {
         return new WKT().readGeometry(geometry);
     }
   }
+
+  /**
+   * Verwijdert alle zoomknoppen en -interacties van een kaart.
+   *
+   * @param mapIndex Index van de kaart waarvoor de zoominteracties worden verwijderd
+   */
+  disableZoomInteractions(mapIndex: string): void {
+    const map = this.getMap(mapIndex);
+    map.getControls().clear();
+    map.getInteractions().clear();
+  }
 }

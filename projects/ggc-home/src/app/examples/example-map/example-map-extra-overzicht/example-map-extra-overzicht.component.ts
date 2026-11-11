@@ -17,7 +17,7 @@ import Stroke from "ol/style/Stroke";
 import Style from "ol/style/Style";
 
 @Component({
-  selector: "app-example-search-location",
+  selector: "ggc-home-example-map-extra-overzicht",
   imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-map-extra-overzicht.component.html",
   styleUrl: "./example-map-extra-overzicht.component.scss"
@@ -50,7 +50,7 @@ export class ExampleMapExtraOverzichtComponent
   private readonly mapService: GgcMapService = inject(GgcMapService);
   private readonly mapEventService = inject(GgcMapEventsService);
 
-  private onverzichtKaartZoomFactor = 12;
+  private overzichtKaartZoomFactor = 12;
 
   ngOnInit() {
     this.httpClient
@@ -70,9 +70,6 @@ export class ExampleMapExtraOverzichtComponent
   }
 
   ngAfterViewInit() {
-    this.removeZoomInteractions(this.mapIndexOverzicht);
-    this.removeZoomButtons(this.mapIndexOverzicht);
-
     this.connectOverzichtKaart();
     this.setBoxStyle();
 
@@ -117,7 +114,7 @@ export class ExampleMapExtraOverzichtComponent
     const extent = view.calculateExtent(map.getSize());
 
     const newZoomLevel = Math.max(
-      resolutionToZoomlevel(resolution * this.onverzichtKaartZoomFactor),
+      resolutionToZoomlevel(resolution * this.overzichtKaartZoomFactor),
       1
     );
 
@@ -137,17 +134,5 @@ export class ExampleMapExtraOverzichtComponent
       [bboxFeature],
       this.mapIndexOverzicht
     );
-  }
-
-  private removeZoomButtons(mapIndex: string) {
-    const map = this.mapService.getMap(mapIndex);
-    const controls = map.getControls();
-    controls.clear();
-  }
-
-  private removeZoomInteractions(mapIndex: string) {
-    const mapOverzicht = this.mapService.getMap(mapIndex);
-    const interactions = mapOverzicht.getInteractions();
-    interactions.clear();
   }
 }

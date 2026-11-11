@@ -36,6 +36,7 @@ import {
   MapComponentEventTypes,
   MapViewState
 } from "@kadaster/ggc-models";
+import { GgcMapService } from "./service/ggc-map.service";
 
 /**
  * `<ggc-map></ggc-map>` toont een 2D kaart waar verschillende lagen aan toegevoegd
@@ -118,6 +119,11 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   readonly webServices = input<Webservice[]>([]);
 
   /**
+   * Schakelt de zoominteracties van de kaart uit (default: false)
+   */
+  readonly disableZoomInteraction = input(false);
+
+  /**
    * Output event‑stream van het kaartcomponent.
    *
    * Emit o.a.:
@@ -133,6 +139,7 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     viewChild.required<ElementRef<HTMLElement>>("mapElement");
   private readonly eventsMap: EventsKey[] = [];
   private lastChangeResolutionEvent: ObjectEvent | undefined;
+  private readonly mapService = inject(GgcMapService);
   private readonly coreMapService = inject(CoreMapService);
   private readonly mapEventsService = inject(CoreMapEventsService);
   private readonly coreLoadingService = inject(CoreLoadingService);
@@ -186,6 +193,9 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
         this.minZoomlevel(),
         this.maxZoomlevel()
       );
+      if (this.disableZoomInteraction()) {
+        this.mapService.disableZoomInteractions(this.mapIndex());
+      }
       map.setTarget(this.mapElement().nativeElement.id);
 
       this.eventsMap.push(

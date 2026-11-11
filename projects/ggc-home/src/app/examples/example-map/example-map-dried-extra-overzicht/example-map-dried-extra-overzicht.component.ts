@@ -20,10 +20,9 @@ import { CoreViewerService } from "@kadaster/ggc-map-3d/src/lib/service/core-vie
 import proj4 from "proj4";
 import { Polygon } from "ol/geom";
 import { defs } from "@kadaster/ggc-models";
-import { from } from "rxjs";
 
 @Component({
-  selector: "ggc-home-example-map-dried-extra-overzicht-location",
+  selector: "ggc-home-example-map-dried-extra-overzicht",
   imports: [GgcMapComponent, ExampleFormatComponent, GgcViewerComponent],
   templateUrl: "./example-map-dried-extra-overzicht.component.html",
   styleUrl: "./example-map-dried-extra-overzicht.component.scss"
@@ -87,9 +86,6 @@ export class ExampleMapDriedExtraOverzichtComponent
   }
 
   ngAfterViewInit() {
-    this.removeZoomInteractions(this.mapIndexOverzicht);
-    this.removeZoomButtons(this.mapIndexOverzicht);
-
     this.connectOverzichtKaart();
     this.setBoxStyle();
 
@@ -155,17 +151,5 @@ export class ExampleMapDriedExtraOverzichtComponent
 
   private wgs84ToRd(lon: number, lat: number): [number, number] {
     return proj4("EPSG:4326", defs, [lon, lat]);
-  }
-
-  private removeZoomButtons(mapIndex: string) {
-    const map = this.mapService.getMap(mapIndex);
-    const controls = map.getControls();
-    controls.clear();
-  }
-
-  private removeZoomInteractions(mapIndex: string) {
-    const mapOverzicht = this.mapService.getMap(mapIndex);
-    const interactions = mapOverzicht.getInteractions();
-    interactions.clear();
   }
 }
