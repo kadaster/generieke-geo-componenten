@@ -21,7 +21,7 @@ export class GgcLegendUrlComponent {
    */
   readonly legend = input.required<LegendUrl>();
   /**
-   * De titel van de laag die wordt weergegeven. Deze wordt gebruikt als alternatieve tekst.
+   * De titel wordt gebruikt om de alternatieve tekst samen te stellen.
    */
   layerTitle = input<string>();
   legendAltText = computed(() => {
