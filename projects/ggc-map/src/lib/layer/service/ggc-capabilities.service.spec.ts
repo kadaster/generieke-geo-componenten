@@ -296,7 +296,7 @@ describe("GgcCapabilitiesService", () => {
       expect(result).toEqual(wmsLayerOptions);
     });
 
-    it("WMTS: matcht op layer en mapt alleen title", async () => {
+    it("WMTS: matcht op layer en mapt de title; resoluties komen uit de TileMatrixSet en worden niet op de laag gezet", async () => {
       const wmtsMock: ServiceCapabilities = {
         url: baseUrl,
         type: "WMTS",
@@ -613,7 +613,7 @@ describe("GgcCapabilitiesService", () => {
         ]);
       });
 
-      it("WMTS: mapt geen styles, omdat WMTS styles niet worden ondersteund", async () => {
+      it("WMTS: mapt de styles inclusief legenda uit de capabilities", async () => {
         wmsWmtsSvcSpy.getServiceCapabilitiesWMTS.mockReturnValue(
           of({
             url: baseUrl,
@@ -625,8 +625,10 @@ describe("GgcCapabilitiesService", () => {
                 styles: [
                   {
                     name: "default",
+                    title: "Standaard",
                     legendURL: "https://example.test/legend.png"
-                  }
+                  },
+                  { name: "grijs", legendURL: "" }
                 ]
               }
             ]
@@ -644,7 +646,14 @@ describe("GgcCapabilitiesService", () => {
           )
         );
 
-        expect(result.styles).toBeUndefined();
+        expect(result.styles).toEqual([
+          {
+            name: "default",
+            title: "Standaard",
+            legend: { legendUrl: "https://example.test/legend.png" }
+          },
+          { name: "grijs", title: "grijs", legend: undefined }
+        ]);
       });
 
       it("WMS: laat styles leeg wanneer de capabilities geen styles bevatten", async () => {

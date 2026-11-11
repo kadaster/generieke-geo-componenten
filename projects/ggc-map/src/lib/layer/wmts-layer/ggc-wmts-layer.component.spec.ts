@@ -173,6 +173,61 @@ describe("WmtsLayerComponent", () => {
     expect(resultTileLayer.getOpacity()).toBe(0.8);
   });
 
+  describe("styles", () => {
+    const stylesMock = [
+      { Identifier: "standaard", Title: "Standaard", isDefault: true },
+      { Identifier: "grijs", Title: "Grijs" }
+    ];
+
+    function initComponentWithStyles(activeStyle?: string) {
+      const coreMapService: CoreMapService =
+        debugElement.injector.get(CoreMapService);
+      vi.spyOn(coreMapService, "getMap").mockReturnValue(addTileLayerMock);
+      capabilitiesService.getCapabilities.mockReturnValue(
+        of(createWmtsCapabilitiesMock("my-layer", false, stylesMock))
+      );
+      component.options.set({ layer: "my-layer", activeStyle });
+      component.ngOnInit();
+    }
+
+    it("when an activeStyle is configured, it should be used for the source", () => {
+      initComponentWithStyles("grijs");
+
+      expect((component["wmtsSource"] as WMTS).getStyle()).toBe("grijs");
+    });
+
+    it("when no activeStyle is configured, the default style should be used", () => {
+      initComponentWithStyles();
+
+      expect((component["wmtsSource"] as WMTS).getStyle()).toBe("standaard");
+    });
+
+    it("when setActiveStyle is called, it should replace the source and reuse the layer", () => {
+      initComponentWithStyles();
+      const tileLayerBeforeStyleChange = resultTileLayer;
+
+      component.setActiveStyle("grijs");
+
+      expect(component.options()?.activeStyle).toBe("grijs");
+      expect((component["wmtsSource"] as WMTS).getStyle()).toBe("grijs");
+      expect(resultTileLayer).toBe(tileLayerBeforeStyleChange);
+      expect(tileLayerBeforeStyleChange.getSource()).toBe(
+        component["wmtsSource"]
+      );
+    });
+
+    it("when setActiveStyle is called without capabilities, it should only persist the activeStyle", () => {
+      capabilitiesService.getCapabilities.mockReturnValue(of(undefined));
+      component.ngOnInit();
+      const wmtsSourceBeforeStyleChange = component["wmtsSource"];
+
+      component.setActiveStyle("grijs");
+
+      expect(component.options()?.activeStyle).toBe("grijs");
+      expect(component["wmtsSource"]).toBe(wmtsSourceBeforeStyleChange);
+    });
+  });
+
   describe("GetFeatureInfo", () => {
     const coordinate: Coordinate = [45000, 55000];
     const evt = { coordinate } as MapBrowserEvent;

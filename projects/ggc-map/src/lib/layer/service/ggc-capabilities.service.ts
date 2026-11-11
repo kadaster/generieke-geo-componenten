@@ -120,11 +120,12 @@ export class GgcCapabilitiesService {
    *   capabilities worden omgerekend naar resoluties. De styles worden gemapt
    *   inclusief de legenda-afbeelding uit de capabilities.
    * - WMTS: de laag wordt gezocht op basis van `layerName`, of anders `layer`.
-   *   Alleen de `title` wordt gemapt. De resoluties uit de TileMatrixSet worden
-   *   niet uitgelezen, en de styles uit de capabilities worden niet gebruikt
-   *   omdat GGC geen style-wissel voor WMTS ondersteunt. Bij WMTS zit de style
-   *   in de voorgerenderde tiles, waardoor een laag in de praktijk vrijwel
-   *   altijd één style heeft en varianten als aparte lagen worden aangeboden.
+   *   De `title` en de styles worden gemapt, inclusief de legenda-afbeelding uit
+   *   de capabilities.
+   *   Bij WMTS zit de style in de voorgerenderde tiles, waardoor een laag in de
+   *   praktijk vaak één style heeft en varianten als aparte lagen worden
+   *   aangeboden; biedt een laag wel meerdere styles aan, dan kan daartussen
+   *   gewisseld worden.
    * - Vector: de capabilities worden opgehaald van de OGC API landingspagina
    *   (het deel van de url vóór `/tiles/`); de eerste tileset wordt gebruikt.
    *   De styles worden gemapt met de mapbox stylesheet als legenda.
@@ -194,9 +195,9 @@ export class GgcCapabilitiesService {
    * ondersteunt of wanneer de capabilities geen styles bevatten, zodat de
    * layerOptions ongewijzigd blijven.
    *
-   * Voor WMS bevat `legendURL` een legenda-afbeelding; voor OGC API verwijst
-   * `legendURL` naar de mapbox stylesheet. Beide leveren een legenda op, maar
-   * van een ander `LegendType`.
+   * Voor WMS en WMTS bevat `legendURL` een legenda-afbeelding; voor OGC API
+   * verwijst `legendURL` naar de mapbox stylesheet. Beide leveren een legenda
+   * op, maar van een ander `LegendType`.
    */
   private toStyles(
     capabilitiesServiceLayerStyles: CapabilitiesServiceLayerStyle[],
@@ -204,6 +205,7 @@ export class GgcCapabilitiesService {
   ): Style[] | undefined {
     if (
       layerType !== Webservice2DType.WMS &&
+      layerType !== Webservice2DType.WMTS &&
       layerType !== Webservice2DType.VECTOR
     ) {
       return undefined;
@@ -231,8 +233,8 @@ export class GgcCapabilitiesService {
 
   /*
    * Voor vector tile layers bevat `legendURL` de mapbox stylesheet, waaruit de
-   * legenda-component zelf de legenda-items afleidt. Voor WMS bevat het een
-   * legenda-afbeelding.
+   * legenda-component zelf de legenda-items afleidt. Voor WMS en WMTS bevat het
+   * een legenda-afbeelding.
    */
   private toLegend(
     capabilitiesServiceLayerStyle: CapabilitiesServiceLayerStyle,

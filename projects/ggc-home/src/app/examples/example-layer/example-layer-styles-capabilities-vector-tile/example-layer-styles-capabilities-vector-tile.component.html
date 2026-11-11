@@ -26,16 +26,14 @@
       capabilities wordt de actieve style.
     </p>
     <p>
-      De legenda wordt opgebouwd uit de mapbox stylesheet die de OGC API bij
-      elke style levert. Alleen styles in het Rijksdriehoekstelsel (EPSG:28992)
-      worden meegenomen.
+      Alleen styles in het Rijksdriehoekstelsel (EPSG:28992) worden meegenomen.
     </p>
     <p>
       Uit de capabilities volgt ook op welke zoomniveaus de service tiles
-      aanbiedt. Zoom je verder uit dan dat bereik, dan verdwijnen de kaartlaag
-      en de bijbehorende legenda automatisch &mdash; zonder
-      <code>requestCapabilities</code> had je daarvoor zelf
-      <code>minResolution</code> en <code>maxResolution</code> moeten instellen.
+      aanbiedt. Zoom je verder uit dan dat bereik, dan verdwijnt de kaartlaag
+      automatisch &mdash; zonder <code>requestCapabilities</code> had je daarvoor
+      zelf <code>minResolution</code> en <code>maxResolution</code> moeten
+      instellen.
     </p>
   </div>
 
@@ -62,12 +60,8 @@
           }
         </select>
       </div>
-      <div class="map-container col-lg-7 col-md-6 col-sm-12">
+      <div class="map-container col-lg-9 col-md-8 col-sm-12">
         <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
-      </div>
-      <div class="legend-container col-lg-2 col-md-2 col-sm-12">
-        <div class="fw-bold mb-1">Legenda</div>
-        <ggc-legend [mapIndex]="mapIndex"></ggc-legend>
       </div>
     </div>
     <!-- DOCS:END functionality -->

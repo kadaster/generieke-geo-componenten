@@ -5,7 +5,10 @@
  */
 export function createWmtsCapabilitiesMock(
   layerIdentifier?: string,
-  includeFeatureInfoUrl = false
+  includeFeatureInfoUrl = false,
+  styles: Record<string, any>[] = [
+    { Identifier: "default", Title: "default", isDefault: true }
+  ]
 ): Record<string, any> {
   return {
     ...(includeFeatureInfoUrl && {
@@ -21,7 +24,7 @@ export function createWmtsCapabilitiesMock(
           Identifier: layerIdentifier,
           TileMatrixSetLink: [{ TileMatrixSet: "EPSG:3857" }],
           Format: ["image/png"],
-          Style: [{ Identifier: "default", Title: "default", isDefault: true }],
+          Style: styles,
           ResourceURL: [
             {
               resourceType: "tile",

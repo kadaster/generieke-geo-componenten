@@ -10,11 +10,10 @@ import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
 import { LayerChangedEventTrigger, Style } from "@kadaster/ggc-models";
-import { GgcLegendComponent } from "@kadaster/ggc-legend";
 
 @Component({
   selector: "ggc-home-example-layer-styles-capabilities-vector-tile",
-  imports: [GgcMapComponent, GgcLegendComponent, ExampleFormatComponent],
+  imports: [GgcMapComponent, ExampleFormatComponent],
   templateUrl: "./example-layer-styles-capabilities-vector-tile.component.html",
   styleUrl: "./example-layer-styles-capabilities-vector-tile.component.scss"
 })
@@ -28,7 +27,7 @@ export class ExampleLayerStylesCapabilitiesVectorTileComponent
     title: "Styles uit de capabilities van een OGC API Vector Tile kaartlaag",
     introduction:
       "Haal de styles van een OGC API Vector Tile kaartlaag automatisch op uit de capabilities van de service.",
-    components: [Components.GGC_MAP, Components.GGC_LEGEND],
+    components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.STYLE, Tags.OGC_API],
     imageLocation:

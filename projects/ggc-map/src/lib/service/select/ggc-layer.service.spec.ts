@@ -636,7 +636,7 @@ describe("LayerService", () => {
         ).toBe(true);
       });
 
-      it("should keep the layerId in the configuration so the styles from the capabilities stay available", () => {
+      it("should store the styles from the capabilities on the layer config and allow switching the active style and legend by layerId", () => {
         vi.spyOn(
           capabilitiesService,
           "mapCapabilitiesOnLayerOptions"
