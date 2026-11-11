@@ -2,6 +2,8 @@
   [title]="componentInfo.title"
   [pathModule]="urlComponentModule"
   [urlTSDocs]="tsDocsUrl"
+  pathExtraConfig="example-map/example-map-extra-overzicht/kaartconfig-overzicht.json"
+  extraConfigLabel="Overzichtskaart configuratie (json)"
 >
   @if (componentInfo.tags && componentInfo.tags?.length > 0) {
     <div page-labels>
@@ -16,6 +18,18 @@
   <div page-introduction>
     <p>
       {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld is een overzichtskaart toegevoegd aan de kaart. In de
+      overzichtskaart geeft het blauwe kader aan welk gebied op de hoofdkaart
+      zichtbaar is. Zo kan de gebruiker in één oogopslag zien waar hij zich
+      bevindt in het grotere geheel. Wanneer er in de hoofdkaart wordt geschoven
+      of gezoomd, wordt de overzichtskaart automatisch bijgewerkt.
+
+      De hoofdkaart en de overzichtskaart hebben ieder een eigen mapIndex.
+      Hierdoor kunnen de kaarten onafhankelijk van elkaar worden geconfigureerd.
+      De overzichtskaart kan bijvoorbeeld een andere achtergrondkaart hebben dan
+      de hoofdkaart.
     </p>
   </div>
 

@@ -1,5 +1,6 @@
 import { inject, Service } from "@angular/core";
 import { CoreViewerService } from "./core-viewer.service";
+import { CoreCameraService } from "./core-camera.service";
 import {
   getCameraValues,
   MAX_VIEWDISTANCE,
@@ -13,6 +14,7 @@ import {
   Rectangle
 } from "@cesium/engine";
 import { Viewer } from "@cesium/widgets";
+import { Observable } from "rxjs";
 
 /**
  * Service met helper-functionaliteit rondom de Cesium viewer.
@@ -29,6 +31,7 @@ import { Viewer } from "@cesium/widgets";
 @Service()
 export class GgcViewerService {
   private readonly coreViewerService = inject(CoreViewerService);
+  private readonly coreCameraService = inject(CoreCameraService);
 
   /**
    * Haalt de huidige camerawaarden op van de viewer.
@@ -41,6 +44,16 @@ export class GgcViewerService {
       return getCameraValues(viewer.camera, viewer);
     }
     return undefined;
+  }
+
+  // Onderstaande functie toegevoegd om problemen met compileren te ondervangen.
+  /**
+   * Geeft een observable met updates van de camerawaarden van de viewer.
+   *
+   * @returns Een {@link Observable} van {@link CameraValues}
+   */
+  getCameraValuesObservable(): Observable<CameraValues> {
+    return this.coreCameraService.getCameraValuesObservable();
   }
 
   /**
@@ -97,8 +110,9 @@ export class GgcViewerService {
    * @returns De hoekcoördinaten met longitude en latitude in graden en height in meters. Wanneer minstebns één hoek geen raakpunt met het aardoppervlak oplevert, retouneert  de functie undefined.
    */
   getCanvasCornerCoordinates(
-    viewer: Viewer
+    viewer: Viewer | undefined = this.coreViewerService.getViewer()
   ): { longitude: number; latitude: number; height: number }[] | undefined {
+    if (!viewer) return undefined;
     const scene = viewer.scene;
     const camera = scene.camera;
     const canvas = scene.canvas;

@@ -13,17 +13,21 @@ import {
   cameraOptionsTorentjeDenHaag,
   GgcViewerComponent,
   ViewerOptions,
-  GgcViewerService
+  GgcViewerService,
+  GgcControlsComponent
 } from "@kadaster/ggc-map-3d";
-import { CoreCameraService } from "@kadaster/ggc-map-3d/src/lib/service/core-camera.service";
-import { CoreViewerService } from "@kadaster/ggc-map-3d/src/lib/service/core-viewer.service";
 import proj4 from "proj4";
 import { Polygon } from "ol/geom";
 import { defs } from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-home-example-map-dried-extra-overzicht",
-  imports: [GgcMapComponent, ExampleFormatComponent, GgcViewerComponent],
+  imports: [
+    GgcMapComponent,
+    ExampleFormatComponent,
+    GgcViewerComponent,
+    GgcControlsComponent
+  ],
   templateUrl: "./example-map-dried-extra-overzicht.component.html",
   styleUrl: "./example-map-dried-extra-overzicht.component.scss"
 })
@@ -34,14 +38,14 @@ export class ExampleMapDriedExtraOverzichtComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/map-dried-extra-overzicht",
-    title: "Experiment Innovation day 3D",
+    title: "Overzichtskaart toevoegen aan 3D kaart",
     introduction:
-      "Voeg een afbeelding als laag toe aan de kaart met Web Map Tile Service (WMTS).",
+      "Voeg een kleine overzichtskaart toe aan de 3D kaart ter verduidelijking van de gekozen locatie.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
-    tags: [Tags.LAYER],
+    tags: [Tags.LAYER, Tags.DRIED],
     imageLocation:
-      "code/examples/example-layer/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.png"
+      "code/examples/example-map/example-map-dried-extra-overzicht/example-map-extra-overzicht.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-map/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.component.ts";
@@ -64,8 +68,6 @@ export class ExampleMapDriedExtraOverzichtComponent
   };
 
   private readonly mapService: GgcMapService = inject(GgcMapService);
-  private readonly map3dCameraService = inject(CoreCameraService);
-  private readonly viewerService = inject(CoreViewerService);
   private readonly ggcViewerService = inject(GgcViewerService);
 
   ngOnInit() {
@@ -99,7 +101,7 @@ export class ExampleMapDriedExtraOverzichtComponent
   }
 
   private connectOverzichtKaart() {
-    this.map3dCameraService.getCameraValuesObservable().subscribe(() => {
+    this.ggcViewerService.getCameraValuesObservable().subscribe(() => {
       this.handleMapEvent();
     });
   }
@@ -119,34 +121,29 @@ export class ExampleMapDriedExtraOverzichtComponent
   }
 
   private handleMapEvent() {
-    const viewer = this.viewerService.getViewer();
-    if (viewer) {
-      const corners = this.ggcViewerService.getCanvasCornerCoordinates(viewer);
-      if (corners === undefined) {
-        return;
-      }
+    const corners = this.ggcViewerService.getCanvasCornerCoordinates();
+    if (corners === undefined) return;
 
-      const rdCorners = corners.map((corner) => {
-        return this.wgs84ToRd(corner!.longitude, corner!.latitude);
-      });
+    const rdCorners = corners.map((corner) => {
+      return this.wgs84ToRd(corner!.longitude, corner!.latitude);
+    });
 
-      const bboxFeature = new Feature({
-        geometry: new Polygon([rdCorners])
-      });
+    const bboxFeature = new Feature({
+      geometry: new Polygon([rdCorners])
+    });
 
-      this.mapService.clearSelectionLayer(this.mapIndexOverzicht);
-      this.mapService.addFeaturesToSelectionLayer(
-        [bboxFeature],
-        this.mapIndexOverzicht
-      );
+    this.mapService.clearSelectionLayer(this.mapIndexOverzicht);
+    this.mapService.addFeaturesToSelectionLayer(
+      [bboxFeature],
+      this.mapIndexOverzicht
+    );
 
-      const geo = bboxFeature.getGeometry()!.clone();
-      geo.scale(2.5);
-      const polyExtent = geo.getExtent();
-      this.mapService.zoomToExtent(polyExtent, {
-        mapIndex: this.mapIndexOverzicht
-      });
-    }
+    const geo = bboxFeature.getGeometry()!.clone();
+    geo.scale(2.5);
+    const polyExtent = geo.getExtent();
+    this.mapService.zoomToExtent(polyExtent, {
+      mapIndex: this.mapIndexOverzicht
+    });
   }
 
   private wgs84ToRd(lon: number, lat: number): [number, number] {

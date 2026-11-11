@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
 import {
   GgcMapComponent,
-  GgcMapEventsService,
   GgcMapService,
   resolutionToZoomlevel,
   Webservice
@@ -29,14 +28,14 @@ export class ExampleMapExtraOverzichtComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/map-extra-overzicht",
-    title: "Experiment Innovation day",
+    title: "Overzichtskaart toevoegen",
     introduction:
-      "Voeg een afbeelding als laag toe aan de kaart met Web Map Tile Service (WMTS).",
+      "Voeg een kleine overzichtskaart toe aan de kaart ter verduidelijking van de gekozen locatie.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],
     imageLocation:
-      "code/examples/example-layer/example-map-extra-overzicht/example-map-extra-overzicht.png"
+      "code/examples/example-map/example-map-extra-overzicht/example-map-extra-overzicht.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-map/example-map-extra-overzicht/example-map-extra-overzicht.component.ts";
@@ -48,8 +47,6 @@ export class ExampleMapExtraOverzichtComponent
   protected mapIndexOverzicht = "index-kaart-overzicht";
 
   private readonly mapService: GgcMapService = inject(GgcMapService);
-  private readonly mapEventService = inject(GgcMapEventsService);
-
   private overzichtKaartZoomFactor = 12;
 
   ngOnInit() {
