@@ -21,9 +21,13 @@ export class GgcLegendUrlComponent {
    */
   readonly legend = input.required<LegendUrl>();
   /**
-   * De naam van de laag die wordt weergegeven. Deze wordt gebruikt als alternatieve tekst.
+   * De titel van de laag die wordt weergegeven. Deze wordt gebruikt als alternatieve tekst.
    */
-  layerName = input<string>();
+  layerTitle = input<string>();
+  legendAltText = computed(() => {
+    const layerTitle = this.layerTitle();
+    return layerTitle ? `Legenda van ${layerTitle}` : "Legenda";
+  });
 
   /**
    * Checkt of de legenda url een svg is.
