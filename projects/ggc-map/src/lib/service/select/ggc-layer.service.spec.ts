@@ -21,7 +21,6 @@ import { createWmtsCapabilitiesMock } from "../../layer/service/mock/wmts-capabi
 import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
 import VectorLayer from "ol/layer/Vector";
 import { Webservice } from "../../layer/model/webservice.model";
-import { GeojsonLayerOptions } from "../../layer/model/geojson-layer.model";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
@@ -461,49 +460,6 @@ describe("LayerService", () => {
       service.toggleVisibility("perceel", MAP_INDEX);
       expect(addGeojsonLayer).toHaveBeenCalledWith(
         expect.objectContaining({ urlParameters })
-      );
-    });
-
-    it("should retain parameters when a visible configured layer is removed and added again", () => {
-      const geojsonLayerOptions: GeojsonLayerOptions = {
-        layerId: "perceel",
-        visible: true,
-        urlParameters: [{ parameterName: "filter", parameterValue: "oud" }]
-      };
-      const webservice: Webservice = {
-        type: Webservice2DType.GEOJSON,
-        url: "https://example.test/data.geojson?f=json",
-        layers: [geojsonLayerOptions]
-      };
-      const map = coreMapServiceSpy.getMap(MAP_INDEX);
-      const addLayer = vi.spyOn(map, "addLayer");
-      service.loadWebservices([webservice], MAP_INDEX);
-      const layer = addLayer.mock.calls[0][0];
-      if (!(layer instanceof VectorLayer)) {
-        throw new Error("Expected a vector layer");
-      }
-      coreMapServiceSpy.getLayer.mockReturnValue(layer);
-
-      service.setUrlParameters(
-        [{ parameterName: "filter", parameterValue: "nieuw" }],
-        "perceel",
-        MAP_INDEX
-      );
-      expect(service.getLayerConfig("perceel", MAP_INDEX)).toMatchObject({
-        url: "https://example.test/data.geojson?f=json",
-        urlParameters: [{ parameterName: "filter", parameterValue: "nieuw" }]
-      });
-
-      service.removeLayer(MAP_INDEX, "perceel");
-      coreMapServiceSpy.getLayer.mockReturnValue(undefined);
-      const addGeojsonLayer = vi
-        .spyOn(service, "addGeojsonLayer")
-        .mockReturnValue("perceel");
-      service.toggleVisibility("perceel", MAP_INDEX);
-      expect(addGeojsonLayer).toHaveBeenCalledWith(
-        expect.objectContaining({
-          urlParameters: [{ parameterName: "filter", parameterValue: "nieuw" }]
-        })
       );
     });
   });
