@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import Feature, { FeatureLike } from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
 import { Geometry, Point } from "ol/geom";
+import { Extent } from "ol/extent";
 import Layer from "ol/layer/Layer";
 import VectorLayer from "ol/layer/Vector";
 import OlMap from "ol/Map";
@@ -549,6 +550,184 @@ describe("GeojsonLayerComponent", () => {
 
       expect(vectorSource.clear).toHaveBeenCalled();
       expect(vectorSource.addFeatures).toHaveBeenCalledWith(features);
+    });
+  });
+
+  describe("URL parameters", () => {
+    const extent: Extent = [0, 0, 1, 1];
+    const projection = new Projection({ code: "EPSG:28992" });
+    const featureCollection = (id: number) => ({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [194000, 469000] },
+          properties: { id }
+        }
+      ]
+    });
+    let coreMapService: CoreMapService;
+    let httpTestingController: HttpTestingController;
+
+    beforeEach(() => {
+      coreMapService = TestBed.inject(CoreMapService);
+      httpTestingController = TestBed.inject(HttpTestingController);
+      vi.spyOn(coreMapService, "getMap").mockReturnValue(createMapSpy());
+    });
+
+    afterEach(() => {
+      httpTestingController.verify();
+      vi.unstubAllGlobals();
+    });
+
+    it("should encode parameters and override matching base URL parameters without changing the base URL", async () => {
+      const fetchSpy = vi
+        .fn<typeof fetch>()
+        .mockResolvedValue(
+          new Response(JSON.stringify(featureCollection(1)), { status: 200 })
+        );
+      vi.stubGlobal("fetch", fetchSpy);
+      const baseUrl = "/data.geojson?f=json&filter=oud&filter=ander#kaart";
+      const requestUrl =
+        "/data.geojson?f=json&filter=sectie+%3D+A%26B&kenmerk=a%2Fb#kaart";
+      component.options.set({
+        url: baseUrl,
+        customHeaders: [["X-Test", "voorbeeld"]],
+        urlParameters: [
+          { parameterName: "filter", parameterValue: "sectie = A&B" },
+          { parameterName: "kenmerk", parameterValue: "a/b" }
+        ]
+      });
+
+      component.ngOnInit();
+      const vectorSource = resultLayer.getSource();
+      if (!vectorSource) {
+        throw new Error("Expected a vector source");
+      }
+      expect(vectorSource.getUrl()).toBe(requestUrl);
+      vectorSource.loadFeatures(extent, 1, projection);
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        requestUrl,
+        expect.objectContaining({ headers: [["X-Test", "voorbeeld"]] })
+      );
+      await vi.waitFor(() =>
+        expect(
+          vectorSource.getFeatures().map((feature) => feature.get("id"))
+        ).toEqual([1])
+      );
+      expect(component.options()?.url).toBe(baseUrl);
+    });
+
+    it("should reload the existing source and ignore an older GeoJSON response", async () => {
+      let resolveOldResponse: ((response: Response) => void) | undefined;
+      const oldRequest = new Promise<Response>((resolve) => {
+        resolveOldResponse = resolve;
+      });
+      const oldResponse = new Response();
+      const oldJsonSpy = vi
+        .spyOn(oldResponse, "json")
+        .mockResolvedValue(featureCollection(1));
+      const fetchSpy = vi
+        .fn<typeof fetch>()
+        .mockReturnValueOnce(oldRequest)
+        .mockResolvedValueOnce(
+          new Response(JSON.stringify(featureCollection(2)), { status: 200 })
+        );
+      vi.stubGlobal("fetch", fetchSpy);
+      component.options.set({
+        url: "/data.geojson?filter=basis",
+        urlParameters: [{ parameterName: "filter", parameterValue: "oud" }]
+      });
+      component.ngOnInit();
+      const layer = resultLayer;
+      const vectorSource = layer.getSource();
+      if (!vectorSource) {
+        throw new Error("Expected a vector source");
+      }
+      vectorSource.loadFeatures(extent, 1, projection);
+
+      component.setUrlParameters([
+        { parameterName: "filter", parameterValue: "nieuw" }
+      ]);
+      expect(vectorSource.getUrl()).toBe("/data.geojson?filter=nieuw");
+      vectorSource.loadFeatures(extent, 1, projection);
+      await vi.waitFor(() =>
+        expect(
+          vectorSource.getFeatures().map((feature) => feature.get("id"))
+        ).toEqual([2])
+      );
+
+      if (!resolveOldResponse) {
+        throw new Error("Expected the first request to be pending");
+      }
+      resolveOldResponse(oldResponse);
+      await vi.waitFor(() => expect(oldJsonSpy).toHaveBeenCalled());
+      await Promise.resolve();
+      expect(
+        vectorSource.getFeatures().map((feature) => feature.get("id"))
+      ).toEqual([2]);
+      expect(resultLayer).toBe(layer);
+
+      component.setUrlParameters([]);
+      expect(vectorSource.getUrl()).toBe("/data.geojson?filter=basis");
+      expect(component.options()?.url).toBe("/data.geojson?filter=basis");
+    });
+
+    it("should reload OGC features with the updated parameters", async () => {
+      const baseUrl =
+        "https://example.test/collections/perceel/items?filter=basis&limit=5";
+      component.options.set({
+        url: baseUrl,
+        layerId: "perceel",
+        mapIndex: "map",
+        limit: 10,
+        urlParameters: [
+          { parameterName: "filter", parameterValue: "oud" },
+          { parameterName: "limit", parameterValue: "2" }
+        ]
+      });
+      component.ngOnInit();
+      const layer = resultLayer;
+      const vectorSource = layer.getSource();
+      if (!vectorSource) {
+        throw new Error("Expected a vector source");
+      }
+
+      httpTestingController
+        .expectOne((request) => {
+          const url = new URL(request.url);
+          return (
+            url.searchParams.get("filter") === "oud" &&
+            url.searchParams.get("limit") === "2"
+          );
+        })
+        .flush(featureCollection(1));
+      await vi.waitFor(() =>
+        expect(vectorSource.getFeatures()).toHaveLength(1)
+      );
+
+      component.setUrlParameters([
+        { parameterName: "filter", parameterValue: "nieuw" }
+      ]);
+      expect(vectorSource.getFeatures()).toHaveLength(0);
+      httpTestingController
+        .expectOne((request) => {
+          const url = new URL(request.url);
+          return (
+            url.searchParams.get("filter") === "nieuw" &&
+            url.searchParams.get("limit") === "10"
+          );
+        })
+        .flush(featureCollection(2));
+      await vi.waitFor(() =>
+        expect(
+          vectorSource.getFeatures().map((feature) => feature.get("id"))
+        ).toEqual([2])
+      );
+
+      expect(resultLayer).toBe(layer);
+      expect(component.options()?.url).toBe(baseUrl);
     });
   });
 

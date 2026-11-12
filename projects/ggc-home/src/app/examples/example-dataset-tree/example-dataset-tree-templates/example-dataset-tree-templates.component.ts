@@ -55,7 +55,7 @@ export class ExampleDatasetTreeTemplatesComponent
   urlComponentModule =
     "example-dataset-tree/example-dataset-tree-templates/example-dataset-tree-templates.component.ts";
   // DOCS-SKIP:END
-  mapIndex = "datasetTreeExample";
+  mapIndex = "example-dataset-tree-templates";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
   protected resolution: number | undefined;

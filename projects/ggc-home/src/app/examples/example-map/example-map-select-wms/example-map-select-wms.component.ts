@@ -49,7 +49,7 @@ export class ExampleMapSelectWmsComponent
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.GgcSelectService.html`;
   // DOCS-SKIP:END
   protected mapConfig: Webservice[];
-  protected mapIndex = "example-select";
+  protected mapIndex = "example-map-select-wms";
 
   protected selectMode: "singleselect" | "multiselect" = "singleselect";
   protected geselecteerdeGemeentes = signal<string>("");
