@@ -602,10 +602,10 @@ export class GgcLayerService {
       ?.setUrlParameters(urlParameters);
 
     if (this.getTypeOfLayer(layerId, mapIndex) === Webservice2DType.GEOJSON) {
-      const layerConfig = this.getLayerConfig(layerId, mapIndex);
-      if (layerConfig) {
-        Object.assign(layerConfig, { urlParameters });
-      }
+      const geojsonLayerOptions: Partial<GeojsonLayerOptions> = {
+        urlParameters
+      };
+      this.updateMapConfigLayer(geojsonLayerOptions, layerId, mapIndex);
     }
   }
 
