@@ -14,8 +14,7 @@ import { StyleLike } from "ol/style/Style";
  */
 export interface GeojsonLayerOptions extends AbstractClickableLayerOptions {
   /**
-   * Optionele queryparameters voor de URL van de laag. Een parameter met dezelfde
-   * naam als een bestaande parameter in de URL krijgt voorrang in het verzoek;
+   * Optionele queryparameters voor de URL van de laag. Een parameter met dezelfde naam zal een bestaande parameter in de URL overschrijven;
    * de ingestelde URL zelf blijft ongewijzigd.
    *
    * Bij OGC API Features krijgt een `limit` in deze lijst voorrang op de
