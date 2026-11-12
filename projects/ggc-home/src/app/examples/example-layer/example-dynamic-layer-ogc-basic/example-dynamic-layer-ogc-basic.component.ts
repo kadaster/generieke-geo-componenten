@@ -38,8 +38,7 @@ export class ExampleDynamicLayerOgcBasicComponent
   // DOCS-SKIP:END
 
   protected mapConfig: Webservice[];
-  protected activeLocation:
-    "perceel1" | "perceel2" | "perceel3" | "perceel4" | undefined;
+  protected activeLocation: "perceel1" | "perceel2" | undefined;
   protected readonly mapIndex = "mapName";
 
   private layerService: GgcLayerService = inject(GgcLayerService);
