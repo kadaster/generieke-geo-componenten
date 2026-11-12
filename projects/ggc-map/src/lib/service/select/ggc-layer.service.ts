@@ -194,14 +194,10 @@ export class GgcLayerService {
       );
       if (layer) {
         layer.setVisible(true);
-        this.mapLayerComponents
-          .get(
-            this.buildLayerComponentKey(
-              layerOptions.mapIndex,
-              layerOptions.layerId
-            )
-          )
-          ?.enable();
+        this.getLayerComponent(
+          layerOptions.mapIndex,
+          layerOptions.layerId
+        )?.enable();
         this.emitLayerChanged(
           layerOptions.layerId,
           layerOptions.mapIndex ?? DEFAULT_MAPINDEX,
@@ -345,9 +341,7 @@ export class GgcLayerService {
       } else {
         this.mapService.getMap(mapIndex).removeLayer(layer);
       }
-      this.mapLayerComponents
-        .get(this.buildLayerComponentKey(mapIndex, layerId))
-        ?.disable();
+      this.getLayerComponent(mapIndex, layerId)?.disable();
       // the layer service will automatically react on this event
       this.mapService.emitLayerChangedEvent(
         layerId,
@@ -571,9 +565,7 @@ export class GgcLayerService {
       return;
     }
     layerConfig.activeStyle = styleName;
-    const layerComponent = this.mapLayerComponents.get(
-      this.buildLayerComponentKey(mapIndex, layerId)
-    );
+    const layerComponent = this.getLayerComponent(mapIndex, layerId);
     if (layerComponent) {
       layerComponent.setActiveStyle(styleName);
     }
@@ -597,9 +589,7 @@ export class GgcLayerService {
     layerId: string,
     mapIndex: string = DEFAULT_MAPINDEX
   ): void {
-    this.mapLayerComponents
-      .get(this.buildLayerComponentKey(mapIndex, layerId))
-      ?.setUrlParameters(urlParameters);
+    this.getLayerComponent(mapIndex, layerId)?.setUrlParameters(urlParameters);
 
     if (this.getTypeOfLayer(layerId, mapIndex) === Webservice2DType.GEOJSON) {
       const geojsonLayerOptions: Partial<GeojsonLayerOptions> = {
@@ -857,6 +847,15 @@ export class GgcLayerService {
     this.mapLayerComponents.set(
       this.buildLayerComponentKey(mapIndex, layerId ?? ""),
       layerComponent
+    );
+  }
+
+  private getLayerComponent(
+    mapIndex: string,
+    layerId: string
+  ): AbstractBaseLayer<Layer> | undefined {
+    return this.mapLayerComponents.get(
+      this.buildLayerComponentKey(mapIndex, layerId)
     );
   }
 
