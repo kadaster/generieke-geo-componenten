@@ -32,7 +32,7 @@ export class ExampleLegendZoomComponent
     "example-legend/example-legend-zoom/example-legend-zoom.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;
   // DOCS-SKIP:END
-  mapIndex = "legendExample";
+  mapIndex = "example-legend-zoom";
   mapConfig: Webservice[];
 
   ngOnInit() {

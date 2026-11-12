@@ -41,7 +41,7 @@ export class ExampleLegendDatasetTreeComponent
     "example-legend/example-legend-dataset-tree/example-legend-dataset-tree.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-legend_src_public-api.GgcLegendComponent.html`;
   // DOCS-SKIP:END
-  mapIndex = "legendExample";
+  mapIndex = "example-legend-dataset-tree";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
 

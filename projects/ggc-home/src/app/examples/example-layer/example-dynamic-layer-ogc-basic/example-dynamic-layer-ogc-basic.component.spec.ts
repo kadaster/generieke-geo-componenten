@@ -108,12 +108,12 @@ describe("ExampleDynamicLayerOgcBasicComponent", () => {
         { parameterName: "perceelnummer", parameterValue: "9833" }
       ],
       "perceel",
-      "mapName"
+      "example-dynamic-layer-ogc-basic"
     );
     expect(layerService.setVisibilityLayers).toHaveBeenCalledWith(
       ["perceel"],
       true,
-      "mapName"
+      "example-dynamic-layer-ogc-basic"
     );
     expect(
       layerService.setUrlParameters.mock.invocationCallOrder[0]
@@ -134,7 +134,7 @@ describe("ExampleDynamicLayerOgcBasicComponent", () => {
         { parameterName: "perceelnummer", parameterValue: "7083" }
       ],
       "perceel",
-      "mapName"
+      "example-dynamic-layer-ogc-basic"
     );
     expect(layerService.setVisibilityLayers).toHaveBeenCalledTimes(2);
     expect(buttons[0].getAttribute("aria-pressed")).toBe("false");
@@ -147,7 +147,7 @@ describe("ExampleDynamicLayerOgcBasicComponent", () => {
         { parameterName: "perceelnummer", parameterValue: "9833" }
       ]),
       "perceel",
-      "mapName"
+      "example-dynamic-layer-ogc-basic"
     );
     expect(layerService.setVisibilityLayers).toHaveBeenCalledTimes(3);
     expect(buttons[0].getAttribute("aria-pressed")).toBe("true");

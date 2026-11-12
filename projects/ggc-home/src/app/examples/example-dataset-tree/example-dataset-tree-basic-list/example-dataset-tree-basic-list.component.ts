@@ -43,7 +43,7 @@ export class ExampleDatasetTreeBasicListComponent
   urlComponentModule =
     "example-dataset-tree/example-dataset-tree-basic-list/example-dataset-tree-basic-list.component.ts";
   // DOCS-SKIP:END
-  mapIndex = "datasetTreeExample";
+  mapIndex = "example-dataset-tree-basic-list";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
 

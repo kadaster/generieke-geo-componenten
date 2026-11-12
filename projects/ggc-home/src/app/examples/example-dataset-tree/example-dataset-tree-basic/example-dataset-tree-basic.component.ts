@@ -43,7 +43,7 @@ export class ExampleDatasetTreeBasicComponent
     "example-dataset-tree/example-dataset-tree-basic/example-dataset-tree-basic.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetTreeComponent.html`;
   // DOCS-SKIP:END
-  mapIndex = "datasetTreeExample";
+  mapIndex = "example-dataset-tree-basic";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
 

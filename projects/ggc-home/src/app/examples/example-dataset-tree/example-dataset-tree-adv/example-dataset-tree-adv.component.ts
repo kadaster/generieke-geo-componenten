@@ -44,7 +44,7 @@ export class ExampleDatasetTreeAdvComponent
     "example-dataset-tree/example-dataset-tree-adv/example-dataset-tree-adv.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/classes/ggc-dataset-tree_src_public-api.GgcDatasetTreeComponent.html`;
   // DOCS-SKIP:END
-  mapIndex = "datasetTreeExample";
+  mapIndex = "example-dataset-tree-adv";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
   protected hideTree = true;
