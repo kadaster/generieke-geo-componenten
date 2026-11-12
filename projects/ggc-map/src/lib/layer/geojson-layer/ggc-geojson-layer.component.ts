@@ -132,11 +132,7 @@ export class GgcGeojsonLayerComponent
     this.setVectorSource(layerOptions);
     this.setLayer(new VectorLayer(layerOptions));
 
-    if (isOgcApiUrl) {
-      void this.loadOgcApiFeatures(sourceUrl, this.loadId);
-    } else {
-      this.loadGeojsonFeatures();
-    }
+    this.loadFeatures(sourceUrl);
   }
 
   /**
@@ -301,10 +297,8 @@ export class GgcGeojsonLayerComponent
     );
   }
 
-  private async loadOgcApiFeatures(
-    sourceUrl: string,
-    loadId: number
-  ): Promise<void> {
+  private async loadOgcApiFeatures(sourceUrl: string): Promise<void> {
+    const loadId = this.loadId;
     const geojsonLayerOptions = this.options();
     const limit =
       geojsonLayerOptions?.urlParameters?.find(
@@ -346,19 +340,24 @@ export class GgcGeojsonLayerComponent
       return;
     }
 
-    const loadId = ++this.loadId;
+    this.loadId++;
+    if (!this.isOgcApiUrl(sourceUrl)) {
+      this.vectorSource.setUrl(
+        this.appendUrlParameters(sourceUrl, geojsonLayerOptions?.urlParameters)
+      );
+    }
+    this.loadFeatures(sourceUrl);
+    this.vectorSource.refresh();
+  }
+
+  private loadFeatures(sourceUrl: string | undefined): void {
     if (this.isOgcApiUrl(sourceUrl)) {
       this.vectorSource.setLoader(() => {
         // OGC features are loaded by the paginated service.
       });
-      this.vectorSource.clear();
-      void this.loadOgcApiFeatures(sourceUrl, loadId);
+      void this.loadOgcApiFeatures(sourceUrl);
     } else {
-      this.vectorSource.setUrl(
-        this.appendUrlParameters(sourceUrl, geojsonLayerOptions?.urlParameters)
-      );
       this.loadGeojsonFeatures();
-      this.vectorSource.refresh();
     }
   }
 
