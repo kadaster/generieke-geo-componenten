@@ -29,7 +29,8 @@ import {
   LegendAddedEvent,
   LegendRemovedEvent,
   Webservice2DType,
-  Style
+  Style,
+  WebserviceInitialisedEvent
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
 import Layer from "ol/layer/Layer";
@@ -61,6 +62,8 @@ export class GgcLayerService {
   private readonly legendAddedSubject: Subject<LegendAddedEvent> =
     new Subject();
   private readonly legendRemovedSubject: Subject<LegendRemovedEvent> =
+    new Subject();
+  private readonly webserviceInitialisedSubject: Subject<WebserviceInitialisedEvent> =
     new Subject();
   private readonly mapConfigurations: Map<string, Webservice[]> = new Map();
 
@@ -106,6 +109,10 @@ export class GgcLayerService {
    */
   getLegendRemovedObservable(): Observable<LegendRemovedEvent> {
     return this.legendRemovedSubject.asObservable();
+  }
+
+  getWebserviceInitialisedObservable(): Observable<WebserviceInitialisedEvent> {
+    return this.webserviceInitialisedSubject.asObservable();
   }
 
   /**
@@ -597,6 +604,20 @@ export class GgcLayerService {
    * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
    */
   private loadWebservice(service: Webservice, mapIndex: string) {
+    if (service.requestCapabilities) {
+      this.initialiseService(service).subscribe((updatedService) => {
+        this.initialiseLayers(updatedService, mapIndex);
+        this.webserviceInitialisedSubject.next({
+          mapIndex: mapIndex,
+          layers: updatedService.layers.map((layer) => layer.layerId || "")
+        });
+      });
+    } else {
+      this.initialiseLayers(service, mapIndex);
+    }
+  }
+
+  private initialiseLayers(service: Webservice, mapIndex: string) {
     service.layers = service.layers.map((layerOptions) => ({
       ...layerOptions,
       url: service.url,
@@ -606,6 +627,17 @@ export class GgcLayerService {
     for (const layerOptions of service.layers) {
       this.initialiseLayer(layerOptions, service.type, mapIndex);
     }
+  }
+
+  private initialiseService(service: Webservice) {
+    return this.capabilitiesService
+      .mapCapabilitiesOnWebservice(service, service.type)
+      .pipe(
+        map((updatedService) => {
+          return updatedService;
+        }),
+        catchError(() => of(service))
+      );
   }
 
   /**

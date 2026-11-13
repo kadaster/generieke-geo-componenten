@@ -19,4 +19,6 @@ export interface Webservice {
 
   /** Kaartlagen die van de service opgehaald worden */
   layers: AbstractConfigurableLayerOptions[];
+
+  requestCapabilities?: boolean;
 }
