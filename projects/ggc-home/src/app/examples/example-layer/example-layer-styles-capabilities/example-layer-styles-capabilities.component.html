@@ -1,0 +1,65 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld staat bij de WMS kaartlaag alleen
+      <code>requestCapabilities</code> op <code>true</code>; er zijn geen
+      <code>styles</code> en geen <code>activeStyle</code> in de
+      kaartconfiguratie opgenomen. Bij het laden van de kaartlaag worden de
+      styles, inclusief hun titel en legenda, uit de capabilities van de service
+      gehaald. De eerste style uit de capabilities wordt de actieve style.
+    </p>
+    <p>
+      Styles en de actieve style die wel in de kaartconfiguratie staan, worden
+      niet overschreven door de capabilities.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="map-layout row">
+      <div class="style-selector col-lg-3 col-md-4 col-sm-12">
+        <label class="fw-bold mb-1" for="layerStyle">Selecteer een style</label>
+        <select
+          class="form-select"
+          id="layerStyle"
+          [value]="activeStyle()"
+          (change)="onStyleSelectionChange($any($event.target).value)"
+        >
+          @for (style of styles(); track style.name) {
+            <option
+              [value]="style.name"
+              [selected]="activeStyle() === style.name"
+            >
+              {{ style.title }}
+            </option>
+          }
+        </select>
+      </div>
+      <div class="map-container col-lg-7 col-md-6 col-sm-12">
+        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
+      </div>
+      <div class="legend-container col-lg-2 col-md-2 col-sm-12">
+        <div class="fw-bold mb-1">Legenda</div>
+        <ggc-legend [mapIndex]="mapIndex"></ggc-legend>
+      </div>
+    </div>
+    <!-- DOCS:END functionality -->
+  </div>
+</ggc-home-example-format>

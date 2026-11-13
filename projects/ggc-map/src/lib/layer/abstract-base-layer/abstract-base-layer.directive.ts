@@ -64,7 +64,7 @@ export abstract class AbstractBaseLayer<T extends Layer>
   /**
    * Set the active style for the layer.
    * The function will find the style in styles with the corresponding style name and applies it.
-   * This function only supports WMS and vector tile layers.
+   * This function only supports WMS, WMTS and vector tile layers.
    * @param styleName the name of the style that should be applied.
    */
   setActiveStyle(styleName: string) {

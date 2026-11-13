@@ -1,0 +1,19 @@
+.map-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.style-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 12rem;
+}
+
+.map-container {
+  flex: 1;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+}
