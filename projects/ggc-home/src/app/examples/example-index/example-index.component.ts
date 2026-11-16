@@ -53,6 +53,8 @@ import { Example3dSearchComponent } from "../example-3d/example-3d-search/exampl
 import { Example3dLayer3dTilesComponent } from "../example-3d/example-3d-layer-3d-tiles/example3d-layer-3d-tiles.component";
 import { Example3dLayerWmtsComponent } from "../example-3d/example-3d-layer-wmts/example3d-layer-wmts.component";
 import { Example3dLayerGeojsonComponent } from "../example-3d/example-3d-layer-geojson/example3d-layer-geojson.component";
+import { ExampleMapExtraOverzichtComponent } from "../example-map/example-map-extra-overzicht/example-map-extra-overzicht.component";
+import { ExampleMapDriedExtraOverzichtComponent } from "../example-map/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.component";
 import { SessionStorageService } from "../../service/session-storage.service";
 import { ExampleFeatureInfoTemplateComponent } from "../example-map/example-feature-info-template/example-feature-info-template.component";
 import { ExampleSearchLocationAlternativeSearchComponent } from "../example-search-location/example-search-location-alternative-search/example-search-location-alternative-search.component";
@@ -143,12 +145,15 @@ export class ExampleIndexComponent {
     new ExampleConversionComponent().componentInfo,
     new ExampleDynamicLayerOgcBasicComponent().componentInfo,
     new ExampleCapabilitiesLayerOptionsComponent().componentInfo,
-    // PLOP:CARD
     new Example3dLayerGeojsonComponent().componentInfo,
     new ExampleFeatureInfoTemplateComponent().componentInfo,
     new ExampleSearchLocationAlternativeSearchComponent().componentInfo,
     new ExampleLayerStylesComponent().componentInfo,
-    new ExampleLayerStylesVectorTileComponent().componentInfo
+    new ExampleLayerStylesVectorTileComponent().componentInfo,
+    new Example3dLayerGeojsonComponent().componentInfo,
+    new ExampleMapExtraOverzichtComponent().componentInfo,
+    new ExampleMapDriedExtraOverzichtComponent().componentInfo
+    // PLOP:CARD
   ];
 
   private readonly sessionStorageService = inject(SessionStorageService);

@@ -66,6 +66,28 @@ describe("MapService", () => {
     );
   });
 
+  it("should disable controls and interactions only on the specified map", () => {
+    const targetMapIndex = "map-to-disable-zoom";
+    const otherMapIndex = "other-map";
+    const targetMap = coreMapService.createAndGetMap(targetMapIndex);
+    const otherMap = coreMapService.createAndGetMap(otherMapIndex);
+
+    const otherMapControlCount = otherMap.getControls().getLength();
+    const otherMapInteractionCount = otherMap.getInteractions().getLength();
+
+    expect(targetMap.getControls().getLength()).toBeGreaterThan(0);
+    expect(targetMap.getInteractions().getLength()).toBeGreaterThan(0);
+
+    mapService.disableZoomInteractions(targetMapIndex);
+
+    expect(targetMap.getControls().getLength()).toBe(0);
+    expect(targetMap.getInteractions().getLength()).toBe(0);
+    expect(otherMap.getControls().getLength()).toBe(otherMapControlCount);
+    expect(otherMap.getInteractions().getLength()).toBe(
+      otherMapInteractionCount
+    );
+  });
+
   describe("zoomToCoordinate", () => {
     it("should zoom to the coordinate", () => {
       let coords: Extent | undefined;

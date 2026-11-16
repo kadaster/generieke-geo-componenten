@@ -9,6 +9,7 @@ import { GgcMapComponent } from "./ggc-map.component";
 import { CoreLoadingService } from "./service/core-loading.service";
 import { CoreMapEventsService } from "./service/core-map-events.service";
 import { CoreMapService } from "./service/core-map.service";
+import { GgcMapService } from "./service/ggc-map.service";
 import OlMap from "ol/Map";
 import View from "ol/View";
 import {
@@ -24,6 +25,7 @@ describe("MapComponent, ngAfterViewInit", () => {
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapService: Mocked<CoreMapService>;
   let coreSelectionService: CoreSelectionService;
+  let ggcMapServiceMock: Pick<GgcMapService, "disableZoomInteractions">;
 
   const httpClientSpy = {
     get: vi.fn().mockName("HttpClient.get")
@@ -50,6 +52,12 @@ describe("MapComponent, ngAfterViewInit", () => {
       destroyMap: vi.fn().mockReturnValue(of())
     } as MockedObject<CoreMapService>;
 
+    ggcMapServiceMock = {
+      disableZoomInteractions: vi
+        .fn()
+        .mockName("GgcMapService.disableZoomInteractions")
+    };
+
     TestBed.configureTestingModule({
       imports: [GgcMapComponent],
       providers: [
@@ -61,6 +69,7 @@ describe("MapComponent, ngAfterViewInit", () => {
         CoreSelectionService,
         GgcSelectionService,
         { provide: HttpClient, useValue: httpClientSpy },
+        { provide: GgcMapService, useValue: ggcMapServiceMock },
         provideZonelessChangeDetection()
       ]
     }).compileComponents();
@@ -99,6 +108,20 @@ describe("MapComponent, ngAfterViewInit", () => {
     expect(mapMock.getView).toHaveBeenCalled();
     expect(viewMock.on).toHaveBeenCalled();
     expect(viewMock.setZoom).toHaveBeenCalledWith(3);
+    expect(ggcMapServiceMock.disableZoomInteractions).not.toHaveBeenCalled();
+  });
+
+  it("should disable zoom interactions when the input is true", () => {
+    const mapIndex = "overview-map";
+    fixture.componentRef.setInput("mapIndex", mapIndex);
+    fixture.componentRef.setInput("disableZoomInteraction", true);
+
+    fixture.detectChanges();
+
+    expect(ggcMapServiceMock.disableZoomInteractions).toHaveBeenCalledOnce();
+    expect(ggcMapServiceMock.disableZoomInteractions).toHaveBeenCalledWith(
+      mapIndex
+    );
   });
 
   it("Events should be unset", () => {
