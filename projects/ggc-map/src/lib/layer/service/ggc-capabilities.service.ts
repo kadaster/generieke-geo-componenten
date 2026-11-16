@@ -10,7 +10,7 @@ import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model"
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
 import { VectorTileLayerOptions } from "../model/vector-tile-layer.model";
-import { Webservice } from "@kadaster/ggc-map";
+import { Webservice } from "../model/webservice.model";
 
 /**
  * Service voor het ophalen en verwerken van WMS/WMTS en OGCAPI capabilities.

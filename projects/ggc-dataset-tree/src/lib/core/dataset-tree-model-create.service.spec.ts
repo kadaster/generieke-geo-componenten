@@ -69,6 +69,14 @@ describe("DatasetTreeModelCreateService", () => {
     }
   ));
 
+  it("should preserve the service ID when copying a webservice", () => {
+    const service = TestBed.inject(GgcDatasetTreeModelCreateService);
+    const original = new DatasetTreeWebservice([myLayer], "service-id");
+
+    expect(service.serviceFactory(original)).toEqual(original);
+    expect(service.serviceFactory(original)).not.toBe(original);
+  });
+
   it("datasetFactory should return a dataset", inject(
     [GgcDatasetTreeModelCreateService],
     (service: GgcDatasetTreeModelCreateService) => {

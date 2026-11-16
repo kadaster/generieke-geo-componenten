@@ -3,8 +3,10 @@ import {
   Component,
   computed,
   contentChild,
+  effect,
   inject,
   input,
+  linkedSignal,
   output,
   signal,
   TemplateRef
@@ -21,9 +23,13 @@ import { Dataset } from "../../model/theme/dataset.model";
 import {
   DEFAULT_CESIUM_MAPINDEX,
   DEFAULT_MAPINDEX,
-  ViewerType
+  ViewerType,
+  WebserviceInitialisedEvent
 } from "@kadaster/ggc-models";
 import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
+import { DatasetTreeLayer } from "../../model/theme/dataset-tree-webservice.model";
+import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
+import { from, switchMap } from "rxjs";
 
 /**
  * Het root‑component van de dataset‑structuurboom. Dit component vormt de volledige boomstructuur
@@ -150,10 +156,11 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
       : this.mapIndex()
   );
 
-  protected processedThemes = computed(() => {
-    let themes = this.themes();
+  protected readonly processedThemes = linkedSignal(() => {
+    const treeConfiguration = this.treeConfiguration();
+    let themes = treeConfiguration.themes;
 
-    if (this.showOnlyDatasets()) {
+    if (treeConfiguration.showOnlyDatasets) {
       themes = [
         new Theme(
           "",
@@ -165,9 +172,19 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
     return this.modelCreateService.themeArrayFactory(themes);
   });
 
+  private readonly treeConfiguration = computed(() => ({
+    themes: this.themes(),
+    showOnlyDatasets: this.showOnlyDatasets(),
+    viewerType: this.viewerType(),
+    mapIndex: this.mapIndex()
+  }));
+
   private readonly datasetTreeService = inject(CoreDatasetTreeService);
   private readonly modelCreateService = inject(
     GgcDatasetTreeModelCreateService
+  );
+  private readonly datasetTreeMapConnectService = inject(
+    DatasetTreeMapConnectService
   );
 
   private readonly layerLabelTemplate = contentChild(
@@ -183,6 +200,25 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
       .getEventsObservable()
       .pipe(takeUntilDestroyed())
       .subscribe((datasetTreeEvent) => this.events.emit(datasetTreeEvent));
+
+    effect((onCleanup) => {
+      const treeConfiguration = this.treeConfiguration();
+      if (
+        treeConfiguration.viewerType !== ViewerType.TWEE_D ||
+        !this.hasServiceId(treeConfiguration.themes)
+      ) {
+        return;
+      }
+
+      const subscription = from(
+        this.datasetTreeMapConnectService.getWebserviceInitialisedObservable(
+          treeConfiguration.mapIndex
+        )
+      )
+        .pipe(switchMap((observable) => observable))
+        .subscribe((event) => this.addInitialisedLayers(event));
+      onCleanup(() => subscription.unsubscribe());
+    });
   }
 
   /**
@@ -201,11 +237,73 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
   }
 
   private getDatasetsFromTheme(theme: Theme): Dataset[] {
-    if (theme.themes && theme.themes.length > 0) {
-      return theme.themes.flatMap((theme: Theme) =>
-        this.getDatasetsFromTheme(theme)
-      );
+    return [
+      ...(theme.datasets ?? []),
+      ...(theme.themes ?? []).flatMap((childTheme) =>
+        this.getDatasetsFromTheme(childTheme)
+      )
+    ];
+  }
+
+  private hasServiceId(themes: Theme[]): boolean {
+    return themes.some(
+      (theme) =>
+        (theme.datasets ?? []).some((dataset) =>
+          dataset.services.some((service) => !!service.serviceId)
+        ) || this.hasServiceId(theme.themes ?? [])
+    );
+  }
+
+  private addInitialisedLayers(event: WebserviceInitialisedEvent): void {
+    if (
+      !event.serviceId ||
+      this.viewerType() !== ViewerType.TWEE_D ||
+      event.mapIndex !== this.mapIndex()
+    ) {
+      return;
     }
-    return theme.datasets;
+
+    const updateTheme = (theme: Theme): boolean => {
+      let datasetsChanged = false;
+      for (const dataset of theme.datasets) {
+        let servicesChanged = false;
+        for (const service of dataset.services) {
+          if (service.serviceId !== event.serviceId) {
+            continue;
+          }
+          const layerIds = new Set(
+            service.layers.map((layer) => layer.layerId)
+          );
+          const addedLayers: DatasetTreeLayer[] = [];
+          for (const layerId of event.layers) {
+            if (layerId && !layerIds.has(layerId)) {
+              layerIds.add(layerId);
+              addedLayers.push(new DatasetTreeLayer(layerId));
+            }
+          }
+          if (addedLayers.length) {
+            service.layers = [...service.layers, ...addedLayers];
+            servicesChanged = true;
+          }
+        }
+        if (servicesChanged) {
+          dataset.services = [...dataset.services];
+          datasetsChanged = true;
+        }
+      }
+      if (datasetsChanged) {
+        theme.datasets = [...theme.datasets];
+      }
+      const themesChanged = theme.themes.map(updateTheme).some(Boolean);
+      if (themesChanged) {
+        theme.themes = [...theme.themes];
+      }
+      return datasetsChanged || themesChanged;
+    };
+
+    this.processedThemes.update((themes) => {
+      const changed = themes.map(updateTheme).some(Boolean);
+      return changed ? [...themes] : themes;
+    });
   }
 }

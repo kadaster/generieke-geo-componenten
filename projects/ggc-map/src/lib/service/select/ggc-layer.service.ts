@@ -66,6 +66,10 @@ export class GgcLayerService {
   private readonly webserviceInitialisedSubject: Subject<WebserviceInitialisedEvent> =
     new Subject();
   private readonly mapConfigurations: Map<string, Webservice[]> = new Map();
+  private readonly initialisedWebservices = new Map<
+    string,
+    WebserviceInitialisedEvent[]
+  >();
 
   private readonly mapLayerComponents: Map<string, AbstractBaseLayer<any>> =
     new Map();
@@ -115,6 +119,14 @@ export class GgcLayerService {
     return this.webserviceInitialisedSubject.asObservable();
   }
 
+  /** Geeft de initialisatie-events van de huidige kaartconfiguratie terug. */
+  getInitialisedWebservices(mapIndex: string): WebserviceInitialisedEvent[] {
+    return (this.initialisedWebservices.get(mapIndex) ?? []).map((event) => ({
+      ...event,
+      layers: [...event.layers]
+    }));
+  }
+
   /**
    * Geeft alle actieve legenda‑items terug voor de opgegeven kaart.
    */
@@ -139,6 +151,7 @@ export class GgcLayerService {
   loadWebservices(services: Webservice[], mapIndex: string) {
     this.removeCurrentLayers(mapIndex);
     this.mapConfigurations.set(mapIndex, services);
+    this.initialisedWebservices.set(mapIndex, []);
     for (const service of services) {
       this.loadWebservice(service, mapIndex);
     }
@@ -607,11 +620,18 @@ export class GgcLayerService {
     if (service.requestCapabilities) {
       this.initialiseService(service).subscribe((updatedService) => {
         this.initialiseLayers(updatedService, mapIndex);
-        this.webserviceInitialisedSubject.next({
+        const event: WebserviceInitialisedEvent = {
           mapIndex: mapIndex,
           layers: updatedService.layers.map((layer) => layer.layerId || ""),
           serviceId: updatedService.serviceId
-        });
+        };
+        if (this.mapConfigurations.get(mapIndex)?.includes(service)) {
+          this.initialisedWebservices.get(mapIndex)?.push({
+            ...event,
+            layers: [...event.layers]
+          });
+        }
+        this.webserviceInitialisedSubject.next(event);
       });
     } else {
       this.initialiseLayers(service, mapIndex);

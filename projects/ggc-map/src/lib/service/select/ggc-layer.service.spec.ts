@@ -669,6 +669,29 @@ describe("LayerService", () => {
           service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend
         ).toEqual({ legendUrl: "contrast-legend" });
       });
+
+      it("should retain initialised webservice events for the current map configuration", () => {
+        const capabilitiesService = TestBed.inject(GgcCapabilitiesService);
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnWebservice"
+        ).mockImplementation((webservice) => of(webservice));
+        const webservice = {
+          url: "url",
+          type: Webservice2DType.WMS,
+          serviceId: "service",
+          requestCapabilities: true,
+          layers: [{ layerId: "layer", visible: false }]
+        };
+        service.loadWebservices([webservice], MAP_INDEX);
+
+        expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([
+          { mapIndex: MAP_INDEX, serviceId: "service", layers: ["layer"] }
+        ]);
+        expect(service.getInitialisedWebservices("another-map")).toEqual([]);
+        service.loadWebservices([], MAP_INDEX);
+        expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([]);
+      });
     });
   });
 
