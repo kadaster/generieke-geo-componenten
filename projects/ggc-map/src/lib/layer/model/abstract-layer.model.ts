@@ -1,6 +1,16 @@
 import { LegendType, Style } from "@kadaster/ggc-models";
 
 /**
+ * Een naam en waarde van een URL-queryparameter.
+ */
+export interface UrlParameter {
+  /** De naam van de parameter. */
+  parameterName: string;
+  /** De waarde van de parameter. */
+  parameterValue: string;
+}
+
+/**
  * Basale laagopties die gebruikt worden om een laag aan een specifieke kaart te koppelen.
  */
 export interface AbstractBaseLayerOptions {

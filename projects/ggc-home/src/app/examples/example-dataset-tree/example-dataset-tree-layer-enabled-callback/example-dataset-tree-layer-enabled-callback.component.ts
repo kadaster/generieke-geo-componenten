@@ -51,7 +51,7 @@ export class ExampleDatasetTreeLayerEnabledCallback
     "example-dataset-tree/example-dataset-tree-layer-enabled-callback/example-dataset-tree-layer-enabled-callback.component.ts";
 
   // DOCS-SKIP:END
-  mapIndex = "datasetTreeExample";
+  mapIndex = "example-dataset-tree-layer-enabled-callback";
   mapConfig: Webservice[];
   datasetTreeConfig: Theme[];
   gemeentesEnabled = true;

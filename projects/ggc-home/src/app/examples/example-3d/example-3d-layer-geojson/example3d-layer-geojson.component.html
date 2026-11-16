@@ -66,8 +66,11 @@
             [viewerOptions]="viewerOptions"
             [cameraOptions]="cameraOptions"
             [hideLogo]="hideLogo"
-            (ready)="onCesiumReady()"
-            [webServices]="webService"
+            [webServices]="
+              webServicesResource.hasValue()
+                ? webServicesResource.value()
+                : undefined
+            "
             [geoJsonConfigs]="geoJsonConfigs"
           ></ggc-map-3d-viewer>
         </div>

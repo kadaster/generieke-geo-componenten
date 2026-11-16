@@ -58,8 +58,11 @@
           <ggc-map-3d-viewer
             [viewerOptions]="viewerOptions"
             [cameraOptions]="cameraOptions"
-            (ready)="onCesiumReady()"
-            [webServices]="webService"
+            [webServices]="
+              webServicesResource.hasValue()
+                ? webServicesResource.value()
+                : undefined
+            "
           ></ggc-map-3d-viewer>
         </div>
       </div>

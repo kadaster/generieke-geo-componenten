@@ -9,7 +9,9 @@ export enum LayerChangedEventTrigger {
   // Is thrown when the layer configuration is read
   LAYER_INITIALIZED = "layerInitialized",
   // Is thrown if the features inside the geojson layer are loaded
-  LAYER_LOADED = "layerLoaded"
+  LAYER_LOADED = "layerLoaded",
+  // Is thrown if loading the features inside the geojson layer fails
+  LAYER_LOADED_ERROR = "layerLoadedError"
 }
 
 export interface CesiumLayerChangedEvent {

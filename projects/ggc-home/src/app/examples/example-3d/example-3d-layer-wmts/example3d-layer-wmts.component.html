@@ -52,7 +52,11 @@
             [cameraOptions]="cameraOptions"
             [hideLogo]="hideLogo"
             (ready)="onCesiumReady()"
-            [webServices]="webService"
+            [webServices]="
+              webServicesResource.hasValue()
+                ? webServicesResource.value()
+                : undefined
+            "
           ></ggc-map-3d-viewer>
         </div>
       </div>

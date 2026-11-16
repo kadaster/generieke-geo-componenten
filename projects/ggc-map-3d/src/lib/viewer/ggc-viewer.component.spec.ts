@@ -22,7 +22,7 @@ import { CoreCameraService } from "../service/core-camera.service";
 import { GgcViewerService } from "../service/ggc-viewer.service";
 import { CoreSelectionService } from "../service/core-selection.service";
 import { Observable } from "rxjs";
-import { provideZonelessChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection, signal } from "@angular/core";
 import { vi } from "vitest";
 import { GgcSharedLayerService } from "../layers/ggc-shared-layer.service";
 describe("ViewerComponent", () => {
@@ -123,6 +123,22 @@ describe("ViewerComponent", () => {
     fixture.detectChanges();
 
     expect(cesiumMock.camera!.flyTo).toHaveBeenCalledTimes(1);
+  });
+
+  it("should load webServices once when the loading reads signals that change afterwards", async () => {
+    const signalReadDuringLoad = signal(0);
+    const loadWebservices = vi.fn(() => signalReadDuringLoad());
+    (component as any).ggcSharedLayerService = { loadWebservices };
+    fixture.componentRef.setInput("webServices", []);
+
+    fixture.detectChanges();
+    await Promise.resolve();
+    await Promise.resolve();
+    await fixture.whenStable();
+    signalReadDuringLoad.set(1);
+    await fixture.whenStable();
+
+    expect(loadWebservices).toHaveBeenCalledTimes(1);
   });
 
   describe("directionalLightOptions", () => {

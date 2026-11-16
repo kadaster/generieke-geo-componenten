@@ -17,6 +17,8 @@
 - Before introducing or changing a name or domain term, verify what the value or API represents and how it is used. Prefer established terminology from the API, domain model, documentation, and nearby code; avoid vague or overloaded terms. For example, if a map service stores validators in separate groups for drawing a feature, modifying its geometry, and moving it, `interactionType` describes the key that selects a group. `owner` could instead suggest that the key identifies which resource controls the validator's lifetime. If the meaning or canonical term remains unclear, surface the ambiguity and ask before encoding it in code or user-facing text.
 - Don’t assume. Don’t hide confusion. Surface tradeoffs.
 - Minimum code that solves the problem. Nothing speculative.
+- Before adding infrastructure or lifecycle logic, trace the existing implementation and reuse the owning service, registry, loading path, and underlying library capabilities. Extend the existing mechanism rather than building a parallel one.
+- Add validation, error handling, cancellation, UI feedback, and tests only for requested behavior or a demonstrated correctness gap. Preserve established handling and test the new contract, not behavior already covered by dependencies or existing tests.
 - Touch only what you must. Clean up only your own mess.
 - Define success criteria. Loop until verified.
 - When an API supports a generic type parameter, prefer specifying the type there (for example, `computed<SearchLocationOptions>(...)`) over asserting the result with `as SearchLocationOptions`. This lets TypeScript check that the value matches the type. Use an assertion only when no suitable generic or contextual type is available and it is genuinely necessary.

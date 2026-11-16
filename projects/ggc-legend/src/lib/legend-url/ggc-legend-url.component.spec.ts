@@ -37,6 +37,23 @@ describe("GgcLegendUrlComponent", () => {
     httpMock.verify();
   });
 
+  it("should use the layer title in the alternative text", () => {
+    fixture.componentRef.setInput("legend", { legendUrl: null } as any);
+    fixture.componentRef.setInput("layerTitle", "Wegen");
+
+    fixture.detectChanges();
+
+    expect(component.legendAltText()).toBe("Legenda van Wegen");
+  });
+
+  it("should use a default alternative text when no layer title is provided", () => {
+    fixture.componentRef.setInput("legend", { legendUrl: null } as any);
+
+    fixture.detectChanges();
+
+    expect(component.legendAltText()).toBe("Legenda");
+  });
+
   it("should detect svg url correctly", () => {
     fixture.componentRef.setInput("legend", {
       legendUrl: "http://test.com/icon.svg"
