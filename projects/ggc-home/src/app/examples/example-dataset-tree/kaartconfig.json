@@ -36,25 +36,7 @@
   {
     "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
     "type": "wms",
-    "layers": [
-      {
-        "layerId": "landsgrens",
-        "title": "Landsgrens",
-        "layerName": "landgebied",
-        "visible": false
-      },
-      {
-        "layerId": "provincies",
-        "title": "Provincies",
-        "layerName": "provinciegebied",
-        "visible": false
-      },
-      {
-        "layerId": "gemeenten",
-        "title": "Gemeenten",
-        "layerName": "gemeentegebied",
-        "visible": true
-      }
-    ]
+    "serviceId": "serviceBestuurlijkeGebieden",
+    "requestCapabilities": true
   }
 ]

@@ -609,7 +609,8 @@ export class GgcLayerService {
         this.initialiseLayers(updatedService, mapIndex);
         this.webserviceInitialisedSubject.next({
           mapIndex: mapIndex,
-          layers: updatedService.layers.map((layer) => layer.layerId || "")
+          layers: updatedService.layers.map((layer) => layer.layerId || ""),
+          serviceId: updatedService.serviceId
         });
       });
     } else {

@@ -21,4 +21,6 @@ export interface Webservice {
   layers: AbstractConfigurableLayerOptions[];
 
   requestCapabilities?: boolean;
+
+  serviceId?: string;
 }

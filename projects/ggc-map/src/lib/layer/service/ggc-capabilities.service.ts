@@ -210,8 +210,10 @@ export class GgcCapabilitiesService {
         webService.layers = serviceCapabilities.layers.map((layer) => ({
           layerId: crypto.randomUUID(),
           layerName: layer.name,
-          requestCapabilities: true
+          requestCapabilities: true,
+          visible: false // TODO: ophalen uit webService, niet default false
         }));
+        console.log(webService.layers);
         return webService;
       })
     );
