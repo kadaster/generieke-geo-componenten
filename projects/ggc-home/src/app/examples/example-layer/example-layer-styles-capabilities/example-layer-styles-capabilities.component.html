@@ -18,12 +18,17 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld staat bij de WMS kaartlaag alleen
-      <code>requestCapabilities</code> op <code>true</code>; er zijn geen
-      <code>styles</code> en geen <code>activeStyle</code> in de
-      kaartconfiguratie opgenomen. Bij het laden van de kaartlaag worden de
-      styles, inclusief hun titel en legenda, uit de capabilities van de service
-      gehaald. De eerste style uit de capabilities wordt de actieve style.
+      Dit voorbeeld haalt automatisch de titel van de WMS kaartlaag en de
+      styles, inclusief hun titel en legenda, op uit de capabilities van de
+      service. In de kaartconfiguratie is alleen
+      <code>requestCapabilities</code> op <code>true</code> gezet; er zijn geen
+      <code>styles</code> en <code>activeStyle</code> opgenomen. De eerste style
+      uit de capabilities wordt de actieve style.
+    </p>
+    <p>
+      Ook het schaalbereik van de kaartlaag komt uit de capabilities: de
+      schaalgetallen worden omgerekend naar een minimale en maximale resolutie.
+      Zoom je buiten dat bereik, dan verdwijnt de kaartlaag automatisch.
     </p>
     <p>
       Styles en de actieve style die wel in de kaartconfiguratie staan, worden
