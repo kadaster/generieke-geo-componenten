@@ -26,6 +26,7 @@ Implement the requested story in this repository. Treat the story and its accept
 - Identify the owning `projects/ggc-*` library or `projects/ggc-home` area. Read the relevant project README, nearby implementation and tests, and every `.github/instructions/*.instructions.md` file whose `applyTo` or `description` makes it relevant.
 - Trace the code path that implements the behavior. For cross-library work, inspect public APIs and existing integration patterns before deciding where a change belongs.
 - Check `package.json` and `angular.json` for real project scripts and targets. Do not invent commands.
+- When the story proposes a technical solution direction, verify it against the actual code and library behavior. If it would not meet the acceptance criteria or a clearly better approach exists, explain why with evidence and get the developer's approval before deviating, even in Agent mode. For example, if a story says to call an existing method with extra options but the library applies those options in a way that does not produce the required result, show where the source code does this and propose an alternative instead of switching approaches silently.
 
 ## 3. Choose Agent or Plan mode
 
