@@ -60,13 +60,13 @@
               [cameraOptions]="cameraOptions"
               [hideLogo]="true"
               (ready)="onCesiumReady()"
-              [webServices]="mapConfig"
+              [webServices]="mapConfig.value() ?? []"
             ></ggc-map-3d-viewer>
           </div>
           <div class="map-wrapper overview-map">
             <ggc-map
               [mapIndex]="mapIndexOverzicht"
-              [webServices]="mapConfigOverzicht"
+              [webServices]="mapConfigOverzicht.value() ?? []"
               [disableZoomInteraction]="true"
             ></ggc-map>
           </div>

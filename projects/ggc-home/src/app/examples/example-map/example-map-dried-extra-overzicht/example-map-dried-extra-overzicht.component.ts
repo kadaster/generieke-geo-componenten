@@ -1,5 +1,7 @@
-import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
+import { AfterViewInit, Component, inject } from "@angular/core";
+import { httpResource } from "@angular/common/http";
 import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
+import { Webservice as Webservice3D } from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -33,7 +35,7 @@ import { defs } from "@kadaster/ggc-models";
 })
 export class ExampleMapDriedExtraOverzichtComponent
   extends ExampleFormatComponent
-  implements OnInit, AfterViewInit
+  implements AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
@@ -45,14 +47,20 @@ export class ExampleMapDriedExtraOverzichtComponent
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.DRIED],
     imageLocation:
-      "code/examples/example-map/example-map-dried-extra-overzicht/example-map-extra-overzicht.png"
+      "code/examples/example-map/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.png"
   } as ComponentInfo;
   urlComponentModule =
     "example-map/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.WmtsLayerOptions.html`;
   // DOCS-SKIP:END
-  protected mapConfig: any;
-  protected mapConfigOverzicht: Webservice[];
+  protected readonly mapConfig = httpResource<Webservice3D[]>(
+    () =>
+      "code/examples/example-map/example-map-dried-extra-overzicht/kaartconfig.json"
+  );
+  protected readonly mapConfigOverzicht = httpResource<Webservice[]>(
+    () =>
+      "code/examples/example-map/example-map-dried-extra-overzicht/kaartconfig-overzicht.json"
+  );
   protected mapIndex = "index-kaart";
   protected mapIndexOverzicht = "index-kaart-overzicht";
 
@@ -69,23 +77,6 @@ export class ExampleMapDriedExtraOverzichtComponent
 
   private readonly mapService: GgcMapService = inject(GgcMapService);
   private readonly ggcViewerService = inject(GgcViewerService);
-
-  ngOnInit() {
-    this.httpClient
-      .get(
-        "code/examples/example-map/example-map-dried-extra-overzicht/kaartconfig.json"
-      )
-      .subscribe((data) => {
-        this.mapConfig = data;
-      });
-    this.httpClient
-      .get(
-        "code/examples/example-map/example-map-dried-extra-overzicht/kaartconfig-overzicht.json"
-      )
-      .subscribe((data) => {
-        this.mapConfigOverzicht = data as Webservice[];
-      });
-  }
 
   ngAfterViewInit() {
     this.connectOverzichtKaart();
@@ -125,7 +116,7 @@ export class ExampleMapDriedExtraOverzichtComponent
     if (corners === undefined) return;
 
     const rdCorners = corners.map((corner) => {
-      return this.wgs84ToRd(corner!.longitude, corner!.latitude);
+      return proj4("EPSG:4326", defs, [corner!.longitude, corner!.latitude]);
     });
 
     const bboxFeature = new Feature({

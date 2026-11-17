@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
+import { AfterViewInit, Component, inject } from "@angular/core";
+import { httpResource } from "@angular/common/http";
 import {
   GgcMapComponent,
   GgcMapService,
@@ -23,7 +24,7 @@ import Style from "ol/style/Style";
 })
 export class ExampleMapExtraOverzichtComponent
   extends ExampleFormatComponent
-  implements OnInit, AfterViewInit
+  implements AfterViewInit
 {
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
@@ -41,30 +42,19 @@ export class ExampleMapExtraOverzichtComponent
     "example-map/example-map-extra-overzicht/example-map-extra-overzicht.component.ts";
   tsDocsUrl = `${document.baseURI}tsdocs/interfaces/ggc-map_src_public-api.WmtsLayerOptions.html`;
   // DOCS-SKIP:END
-  protected mapConfig: Webservice[];
-  protected mapConfigOverzicht: Webservice[];
+  protected readonly mapConfig = httpResource<Webservice[]>(
+    () =>
+      "code/examples/example-map/example-map-extra-overzicht/kaartconfig.json"
+  );
+  protected readonly mapConfigOverzicht = httpResource<Webservice[]>(
+    () =>
+      "code/examples/example-map/example-map-extra-overzicht/kaartconfig-overzicht.json"
+  );
   protected mapIndex = "index-kaart";
   protected mapIndexOverzicht = "index-kaart-overzicht";
 
   private readonly mapService: GgcMapService = inject(GgcMapService);
   private overzichtKaartZoomFactor = 12;
-
-  ngOnInit() {
-    this.httpClient
-      .get(
-        "code/examples/example-map/example-map-extra-overzicht/kaartconfig.json"
-      )
-      .subscribe((data) => {
-        this.mapConfig = data as Webservice[];
-      });
-    this.httpClient
-      .get(
-        "code/examples/example-map/example-map-extra-overzicht/kaartconfig-overzicht.json"
-      )
-      .subscribe((data) => {
-        this.mapConfigOverzicht = data as Webservice[];
-      });
-  }
 
   ngAfterViewInit() {
     this.connectOverzichtKaart();

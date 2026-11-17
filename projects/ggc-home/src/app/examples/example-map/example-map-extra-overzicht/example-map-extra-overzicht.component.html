@@ -40,13 +40,13 @@
         <ggc-map
           [mapIndex]="mapIndex"
           [minZoomlevel]="2"
-          [webServices]="mapConfig"
+          [webServices]="mapConfig.value() ?? []"
         ></ggc-map>
       </div>
       <div class="map-wrapper overview-map">
         <ggc-map
           [mapIndex]="mapIndexOverzicht"
-          [webServices]="mapConfigOverzicht"
+          [webServices]="mapConfigOverzicht.value() ?? []"
           [disableZoomInteraction]="true"
         ></ggc-map>
       </div>
