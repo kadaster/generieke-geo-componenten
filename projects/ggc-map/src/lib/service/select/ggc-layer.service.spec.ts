@@ -312,6 +312,17 @@ describe("LayerService", () => {
       );
     });
 
+    it("should return the layerId when adding a layer", () => {
+      vi.spyOn(service, "addWmsLayer").mockReturnValue("layer1");
+
+      const layerId = service.addLayer(
+        { mapIndex: MAP_INDEX, layerId: "layer1" },
+        Webservice2DType.WMS
+      );
+
+      expect(layerId).toBe("layer1");
+    });
+
     it("should keep layer defaults idempotent when applied more than once", () => {
       const layerConfig = {
         layerId: "layer1",
@@ -709,6 +720,40 @@ describe("LayerService", () => {
         expect(
           service.getLayerConfig("layer1", MAP_INDEX)?.requestCapabilities
         ).toBe(true);
+      });
+
+      it("should store the styles from the capabilities on the layer config and allow switching the active style and legend by layerId", () => {
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnLayerOptions"
+        ).mockImplementation((layerOptions) =>
+          of({ ...layerOptions, styles: defaultStyles })
+        );
+
+        service.loadWebservices(
+          [
+            createWebservice({
+              layerName: "laag",
+              requestCapabilities: true
+            }) as any
+          ],
+          MAP_INDEX
+        );
+
+        expect(service.getLayerConfig("layer1", MAP_INDEX)?.layerId).toBe(
+          "layer1"
+        );
+        expect(service.getStyles("layer1", MAP_INDEX)).toEqual(defaultStyles);
+
+        vi.spyOn(service, "getEnabled").mockReturnValue(true);
+        service.setActiveStyle("contrast", "layer1", MAP_INDEX);
+
+        expect(service.getActiveStyle("layer1", MAP_INDEX)?.name).toBe(
+          "contrast"
+        );
+        expect(
+          service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend
+        ).toEqual({ legendUrl: "contrast-legend" });
       });
     });
   });

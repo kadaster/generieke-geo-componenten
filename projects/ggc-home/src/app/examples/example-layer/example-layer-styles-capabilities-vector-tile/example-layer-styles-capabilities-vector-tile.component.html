@@ -1,0 +1,72 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      Dit voorbeeld haalt automatisch de styles, inclusief hun titel en legenda, op uit de OGC API van de service. In de
+      kaartconfiguratie is alleen <code>requestCapabilities</code> op
+      <code>true</code> gezet; er zijn geen <code>styles</code> en
+      <code>activeStyle</code> opgenomen. De eerste style uit de capabilities
+      wordt de actieve style.
+    </p>
+    <p>
+      Van een OGC API-service neemt GGC alleen de tiles en styles in het
+      Rijksdriehoekstelsel (EPSG:28992) mee.
+    </p>
+    <p>
+      De opgehaalde styles zijn alleen zichtbaar op de beschikbare zoomniveaus.
+      De zoomniveaus waarop de service de tiles aanbiedt, worden ook automatisch
+      uit de capabilities gehaald door <code>requestCapabilities</code>. Zoom je
+      verder in of uit dan dat bereik, dan verdwijnt de kaartlaag automatisch.
+    </p>
+    <p>
+      Styles en de actieve style die wel in de kaartconfiguratie staan, worden
+      niet overschreven door de capabilities.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="map-layout row">
+      <div class="style-selector col-lg-3 col-md-4 col-sm-12">
+        <label class="fw-bold mb-1" for="vectorTileLayerStyle"
+          >Selecteer een style</label
+        >
+        <select
+          class="form-select"
+          id="vectorTileLayerStyle"
+          [value]="activeStyle()"
+          (change)="onStyleSelectionChange($any($event.target).value)"
+        >
+          @for (style of styles(); track style.name) {
+            <option
+              [value]="style.name"
+              [selected]="activeStyle() === style.name"
+            >
+              {{ style.title }}
+            </option>
+          }
+        </select>
+      </div>
+      <div class="map-container col-lg-9 col-md-8 col-sm-12">
+        <ggc-map [webServices]="mapConfig" [mapIndex]="mapIndex"></ggc-map>
+      </div>
+    </div>
+    <!-- DOCS:END functionality -->
+  </div>
+</ggc-home-example-format>

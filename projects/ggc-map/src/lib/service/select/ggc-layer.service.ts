@@ -210,6 +210,7 @@ export class GgcLayerService {
     if (layerOptions.requestCapabilities === true) {
       layerOptions.layerId ??= crypto.randomUUID();
     }
+    let layerId = layerOptions.layerId;
     this.applyCapabilitiesOnLayerOptions(
       layerOptions,
       webserviceType
@@ -217,21 +218,34 @@ export class GgcLayerService {
       const updatedLayerOptions = this.setLayerOptionsDefaults(
         capabilitiesLayerOptions
       );
-      switch (webserviceType) {
-        case Webservice2DType.GEOJSON:
-          return this.addGeojsonLayer(updatedLayerOptions);
-        case Webservice2DType.IMAGE:
-          return this.addImageLayer(updatedLayerOptions);
-        case Webservice2DType.VECTOR:
-          return this.addVectorTileLayer(updatedLayerOptions);
-        case Webservice2DType.WMS:
-          return this.addWmsLayer(updatedLayerOptions);
-        case Webservice2DType.WMTS:
-          return this.addWmtsLayer(updatedLayerOptions);
-        default:
-          return undefined;
-      }
+      layerId =
+        this.addLayerForWebserviceType(updatedLayerOptions, webserviceType) ??
+        layerId;
     });
+    return layerId;
+  }
+
+  /**
+   * Voegt de laag toe met de component die bij het webservice‑type hoort.
+   */
+  private addLayerForWebserviceType(
+    layerOptions: AbstractConfigurableLayerOptions,
+    webserviceType: Webservice2DType
+  ): string | undefined {
+    switch (webserviceType) {
+      case Webservice2DType.GEOJSON:
+        return this.addGeojsonLayer(layerOptions);
+      case Webservice2DType.IMAGE:
+        return this.addImageLayer(layerOptions);
+      case Webservice2DType.VECTOR:
+        return this.addVectorTileLayer(layerOptions);
+      case Webservice2DType.WMS:
+        return this.addWmsLayer(layerOptions);
+      case Webservice2DType.WMTS:
+        return this.addWmtsLayer(layerOptions);
+      default:
+        return undefined;
+    }
   }
 
   /**
