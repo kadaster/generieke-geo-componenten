@@ -18,22 +18,25 @@
       {{ componentInfo.introduction }}
     </p>
     <p>
-      In dit voorbeeld staat bij de vector tile kaartlaag alleen
-      <code>requestCapabilities</code> op <code>true</code>; er zijn geen
-      <code>styles</code> en geen <code>activeStyle</code> in de
-      kaartconfiguratie opgenomen. Bij het laden van de kaartlaag worden de
-      styles uit de OGC API van de service gehaald. De eerste style uit de
-      capabilities wordt de actieve style.
+      Dit voorbeeld haalt automatisch de styles, inclusief hun titel en legenda, op uit de OGC API van de service. In de
+      kaartconfiguratie is alleen <code>requestCapabilities</code> op
+      <code>true</code> gezet; er zijn geen <code>styles</code> en
+      <code>activeStyle</code> opgenomen. De eerste style uit de capabilities
+      wordt de actieve style.
     </p>
     <p>
-      Alleen styles in het Rijksdriehoekstelsel (EPSG:28992) worden meegenomen.
+      Van een OGC API-service neemt GGC alleen de tiles en styles in het
+      Rijksdriehoekstelsel (EPSG:28992) mee.
     </p>
     <p>
-      Uit de capabilities volgt ook op welke zoomniveaus de service tiles
-      aanbiedt. Zoom je verder uit dan dat bereik, dan verdwijnt de kaartlaag
-      automatisch &mdash; zonder <code>requestCapabilities</code> had je daarvoor
-      zelf <code>minResolution</code> en <code>maxResolution</code> moeten
-      instellen.
+      De opgehaalde styles zijn alleen zichtbaar op de beschikbare zoomniveaus.
+      De zoomniveaus waarop de service de tiles aanbiedt, worden ook automatisch
+      uit de capabilities gehaald door <code>requestCapabilities</code>. Zoom je
+      verder in of uit dan dat bereik, dan verdwijnt de kaartlaag automatisch.
+    </p>
+    <p>
+      Styles en de actieve style die wel in de kaartconfiguratie staan, worden
+      niet overschreven door de capabilities.
     </p>
   </div>
 

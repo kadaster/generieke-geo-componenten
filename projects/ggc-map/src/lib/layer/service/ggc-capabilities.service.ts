@@ -283,6 +283,68 @@ export class GgcCapabilitiesService {
   }
 
   /*
+   * Vertaalt de styles uit de capabilities naar het publieke `Style`-model.
+   * Geeft undefined terug wanneer GGC voor het laagtype geen style-wissel
+   * ondersteunt of wanneer de capabilities geen styles bevatten, zodat de
+   * layerOptions ongewijzigd blijven.
+   *
+   * Voor WMS en WMTS bevat `legendURL` een legenda-afbeelding; voor OGC API
+   * verwijst `legendURL` naar de mapbox stylesheet. Beide leveren een legenda
+   * op, maar van een ander `LegendType`.
+   */
+  private toStyles(
+    capabilitiesServiceLayerStyles: CapabilitiesServiceLayerStyle[],
+    layerType: Webservice2DType
+  ): Style[] | undefined {
+    if (
+      layerType !== Webservice2DType.WMS &&
+      layerType !== Webservice2DType.WMTS &&
+      layerType !== Webservice2DType.VECTOR
+    ) {
+      return undefined;
+    }
+    if (capabilitiesServiceLayerStyles.length === 0) {
+      return undefined;
+    }
+    return capabilitiesServiceLayerStyles.map((capabilitiesServiceLayerStyle) =>
+      this.toStyle(capabilitiesServiceLayerStyle, layerType)
+    );
+  }
+
+  private toStyle(
+    capabilitiesServiceLayerStyle: CapabilitiesServiceLayerStyle,
+    layerType: Webservice2DType
+  ): Style {
+    return {
+      name: capabilitiesServiceLayerStyle.name,
+      title:
+        capabilitiesServiceLayerStyle.title ??
+        capabilitiesServiceLayerStyle.name,
+      legend: this.toLegend(capabilitiesServiceLayerStyle, layerType)
+    };
+  }
+
+  /*
+   * Voor vector tile layers bevat `legendURL` de mapbox stylesheet, waaruit de
+   * legenda-component zelf de legenda-items afleidt. Voor WMS en WMTS bevat het
+   * een legenda-afbeelding.
+   */
+  private toLegend(
+    capabilitiesServiceLayerStyle: CapabilitiesServiceLayerStyle,
+    layerType: Webservice2DType
+  ): LegendType {
+    if (!capabilitiesServiceLayerStyle.legendURL) {
+      return undefined;
+    }
+    return layerType === Webservice2DType.VECTOR
+      ? {
+          name: capabilitiesServiceLayerStyle.name,
+          url: capabilitiesServiceLayerStyle.legendURL
+        }
+      : { legendUrl: capabilitiesServiceLayerStyle.legendURL };
+  }
+
+  /*
    * Bepaalt de base url voor het ophalen van de capabilities. Het deel na het
    * vraagteken wordt verwijderd; voor vector lagen wordt daarnaast alles vanaf
    * `/tiles/` verwijderd, zodat de OGC API landingspagina overblijft.

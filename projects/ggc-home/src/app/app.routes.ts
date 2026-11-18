@@ -165,16 +165,15 @@ export const routes: Routes = [
   },
   {
     path: "layer-styles-capabilities",
-    title: "Styles uit de capabilities van een WMS kaartlaag | GGC-Home",
+    title: "Automatisch styles ophalen (WMS) | GGC-Home",
     component: ExampleLayerStylesCapabilitiesComponent,
-    data: { label: "Styles uit capabilities WMS" }
+    data: { label: "Automatisch styles ophalen (WMS)" }
   },
   {
     path: "layer-styles-capabilities-vector-tile",
-    title:
-      "Styles uit de capabilities van een OGC API Vector Tile kaartlaag | GGC-Home",
+    title: "Automatisch styles ophalen (Vector Tile) | GGC-Home",
     component: ExampleLayerStylesCapabilitiesVectorTileComponent,
-    data: { label: "Styles uit capabilities OGC API Vector Tile" }
+    data: { label: "Automatisch styles ophalen (Vector Tile)" }
   },
   {
     path: "layer-html-config",

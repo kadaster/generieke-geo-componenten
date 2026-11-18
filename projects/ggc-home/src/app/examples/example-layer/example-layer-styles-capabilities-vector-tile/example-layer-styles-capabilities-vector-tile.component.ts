@@ -24,9 +24,9 @@ export class ExampleLayerStylesCapabilitiesVectorTileComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/layer-styles-capabilities-vector-tile",
-    title: "Styles uit de capabilities van een OGC API Vector Tile kaartlaag",
+    title: "Automatisch styles ophalen (Vector Tile)",
     introduction:
-      "Haal de styles van een OGC API Vector Tile kaartlaag automatisch op uit de capabilities van de service.",
+      "Haal automatisch de styles op van een OGC API Vector Tile kaartlaag uit de capabilities van de service.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.STYLE, Tags.OGC_API],
