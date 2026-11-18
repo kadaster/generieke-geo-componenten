@@ -37,6 +37,7 @@
     "url": "https://service.pdok.nl/kadaster/bestuurlijkegebieden/wms/v1_0",
     "type": "wms",
     "serviceId": "serviceBestuurlijkeGebieden",
-    "requestCapabilities": true
+    "requestCapabilities": true,
+    "visible": true
   }
 ]

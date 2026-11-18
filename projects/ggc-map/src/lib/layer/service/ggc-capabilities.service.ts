@@ -211,7 +211,8 @@ export class GgcCapabilitiesService {
           layerId: crypto.randomUUID(),
           layerName: layer.name,
           requestCapabilities: true,
-          visible: false // TODO: ophalen uit webService, niet default false
+          visible: webService.visible ?? false,
+          zIndex: webService.zIndex
         }));
         console.log(webService.layers);
         return webService;

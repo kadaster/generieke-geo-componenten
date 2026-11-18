@@ -23,4 +23,6 @@ export interface Webservice {
   requestCapabilities?: boolean;
 
   serviceId?: string;
+  visible?: boolean;
+  zIndex?: number;
 }
