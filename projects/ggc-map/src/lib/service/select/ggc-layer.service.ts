@@ -33,7 +33,8 @@ import {
   LegendAddedEvent,
   LegendRemovedEvent,
   Webservice2DType,
-  Style
+  Style,
+  WebserviceInitialisedEvent
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
 import { CoreMapService } from "../../map/service/core-map.service";
@@ -65,7 +66,13 @@ export class GgcLayerService {
     new Subject();
   private readonly legendRemovedSubject: Subject<LegendRemovedEvent> =
     new Subject();
+  private readonly webserviceInitialisedSubject: Subject<WebserviceInitialisedEvent> =
+    new Subject();
   private readonly mapConfigurations: Map<string, Webservice[]> = new Map();
+  private readonly initialisedWebservices = new Map<
+    string,
+    WebserviceInitialisedEvent[]
+  >();
 
   private readonly mapLayerComponents: Map<string, AbstractBaseLayer<any>> =
     new Map();
@@ -112,6 +119,18 @@ export class GgcLayerService {
     return this.legendRemovedSubject.asObservable();
   }
 
+  getWebserviceInitialisedObservable(): Observable<WebserviceInitialisedEvent> {
+    return this.webserviceInitialisedSubject.asObservable();
+  }
+
+  /** Geeft de initialisatie-events van de huidige kaartconfiguratie terug. */
+  getInitialisedWebservices(mapIndex: string): WebserviceInitialisedEvent[] {
+    return (this.initialisedWebservices.get(mapIndex) ?? []).map((event) => ({
+      ...event,
+      layers: [...event.layers]
+    }));
+  }
+
   /**
    * Geeft alle actieve legenda‑items terug voor de opgegeven kaart.
    */
@@ -136,6 +155,7 @@ export class GgcLayerService {
   loadWebservices(services: Webservice[], mapIndex: string) {
     this.removeCurrentLayers(mapIndex);
     this.mapConfigurations.set(mapIndex, services);
+    this.initialisedWebservices.set(mapIndex, []);
     for (const service of services) {
       this.loadWebservice(service, mapIndex);
     }
@@ -617,6 +637,28 @@ export class GgcLayerService {
    * Initialiseert lagen van één webservice en voegt deze toe aan de kaart
    */
   private loadWebservice(service: Webservice, mapIndex: string) {
+    if (service.requestCapabilities) {
+      this.initialiseService(service).subscribe((updatedService) => {
+        this.initialiseLayers(updatedService, mapIndex);
+        const event: WebserviceInitialisedEvent = {
+          mapIndex: mapIndex,
+          layers: updatedService.layers.map((layer) => layer.layerId || ""),
+          serviceId: updatedService.serviceId
+        };
+        if (this.mapConfigurations.get(mapIndex)?.includes(service)) {
+          this.initialisedWebservices.get(mapIndex)?.push({
+            ...event,
+            layers: [...event.layers]
+          });
+        }
+        this.webserviceInitialisedSubject.next(event);
+      });
+    } else {
+      this.initialiseLayers(service, mapIndex);
+    }
+  }
+
+  private initialiseLayers(service: Webservice, mapIndex: string) {
     service.layers = service.layers.map((layerOptions) => ({
       ...layerOptions,
       url: service.url,
@@ -626,6 +668,17 @@ export class GgcLayerService {
     for (const layerOptions of service.layers) {
       this.initialiseLayer(layerOptions, service.type, mapIndex);
     }
+  }
+
+  private initialiseService(service: Webservice) {
+    return this.capabilitiesService
+      .mapCapabilitiesOnWebservice(service, service.type)
+      .pipe(
+        map((updatedService) => {
+          return updatedService;
+        }),
+        catchError(() => of(service))
+      );
   }
 
   /**

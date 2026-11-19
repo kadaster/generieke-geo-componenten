@@ -10,6 +10,7 @@ import { AbstractConfigurableLayerOptions } from "../model/abstract-layer.model"
 import { WmsLayerOptions } from "../model/wms-layer.model";
 import { WmtsLayerOptions } from "../model/wmts-layer.model";
 import { VectorTileLayerOptions } from "../model/vector-tile-layer.model";
+import { Webservice } from "../model/webservice.model";
 
 /**
  * Service voor het ophalen en verwerken van WMS/WMTS en OGCAPI capabilities.
@@ -185,6 +186,35 @@ export class GgcCapabilitiesService {
             layerOptions.styles ??
             this.toStyles(capabilitiesServiceLayer.styles, layerType)
         };
+      })
+    );
+  }
+
+  mapCapabilitiesOnWebservice(
+    webService: Webservice,
+    layerType: Webservice2DType
+  ): Observable<Webservice> {
+    const serviceType = this.getServiceType(layerType);
+    if (!serviceType || !webService.url) {
+      return of(webService);
+    }
+
+    const baseUrl = this.getBaseUrl(webService.url, layerType);
+    return this.getServiceFromCapabilities(baseUrl, serviceType).pipe(
+      map((serviceCapabilities) => {
+        if (!serviceCapabilities) {
+          return webService;
+        }
+
+        webService.layers = serviceCapabilities.layers.map((layer) => ({
+          layerId: crypto.randomUUID(),
+          layerName: layer.name,
+          requestCapabilities: true,
+          visible: webService.visible ?? false,
+          zIndex: webService.zIndex
+        }));
+        console.log(webService.layers);
+        return webService;
       })
     );
   }

@@ -25,5 +25,8 @@ export class DatasetTreeWebservice {
    * @param layers - De verzameling kaartlagen die onder deze service vallen.
    */
 
-  constructor(public layers: DatasetTreeLayer[]) {}
+  constructor(
+    public layers: DatasetTreeLayer[], // TODO: deze moet waarschijnlijk optioneel worden
+    public serviceId?: string
+  ) {}
 }

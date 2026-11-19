@@ -13,12 +13,7 @@
   {
     "type": "wms",
     "url": "https://service.pdok.nl/rvo/habitatrichtlijn-verspreiding-soorten/wms/v1_0",
-    "layers": [
-      {
-        "layerId": "habitatrichtlijn-verspreiding-soorten",
-        "layerName": "Habitatrichtijnverspreidingsoorten",
-        "requestCapabilities": true
-      }
-    ]
+    "requestCapabilities": true,
+    "visible": true
   }
 ]

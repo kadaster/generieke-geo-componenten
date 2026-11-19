@@ -8,6 +8,7 @@ import {
   ViewerType,
   Webservice2DType,
   Webservice3DType,
+  WebserviceInitialisedEvent,
   DEFAULT_MAPINDEX
 } from "@kadaster/ggc-models";
 import { filter } from "rxjs/operators";
@@ -76,6 +77,34 @@ export class DatasetTreeMapConnectService {
         );
     }
     return (await this.getGgcOLLayerService()).getLayerChangedObservable();
+  }
+
+  async getWebserviceInitialisedObservable(
+    mapIndex: string
+  ): Promise<Observable<WebserviceInitialisedEvent>> {
+    const layerService:
+      | {
+          getWebserviceInitialisedObservable(): Observable<WebserviceInitialisedEvent>;
+          getInitialisedWebservices?(
+            mapIndex: string
+          ): WebserviceInitialisedEvent[];
+        }
+      | undefined = await this.getGgcOLLayerService();
+    if (!layerService) {
+      return EMPTY;
+    }
+
+    return new Observable((subscriber) => {
+      const subscription = layerService
+        .getWebserviceInitialisedObservable()
+        .pipe(filter((event) => event.mapIndex === mapIndex))
+        .subscribe(subscriber);
+      for (const event of layerService.getInitialisedWebservices?.(mapIndex) ??
+        []) {
+        subscriber.next(event);
+      }
+      return subscription;
+    });
   }
 
   /**

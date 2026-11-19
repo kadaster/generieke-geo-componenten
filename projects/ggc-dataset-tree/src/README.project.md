@@ -4,6 +4,12 @@ Met de Dataset-tree componenten kunnen eenvoudig meerdere lagen worden geladen. 
 Via een JSON-configuratie kan een boomstructuur van webservices worden meegegeven. Deze structuur is eveneens ingedeeld in thema’s en datasets.
 Binnen de Dataset-tree kunnen thema’s, datasets en individuele lagen eenvoudig worden in- en uitgeschakeld of met elkaar worden gewisseld.
 
+Voor een 2D-webservice met `requestCapabilities` kan in de dataset-tree een
+service met dezelfde `serviceId` en een lege `layers`-lijst worden opgegeven.
+Na initialisatie worden de gevonden laag-ID's aan deze service toegevoegd.
+Bestaande lagen blijven behouden; dezelfde laag-ID wordt niet dubbel toegevoegd.
+De dataset-tree verwerkt alleen events van de eigen `mapIndex`.
+
 Voor de dataset-tree is Bootstrap (versie 4.6.6) vereist.
 In plaats van Bootstrap zou ook een eigen huisstijl gebruikt kunnen worden, die ook gebruik maakt van Bootstrap.
 

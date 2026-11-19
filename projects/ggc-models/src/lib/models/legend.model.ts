@@ -91,3 +91,10 @@ export class LegendRemovedEvent {
   /** De layerId waar vand de legenda die moet worden verwijderd **/
   layerId: string;
 }
+
+export class WebserviceInitialisedEvent {
+  /** De mapIndex waar de webservice is geïnitialiseerd **/
+  mapIndex: string;
+  layers: string[];
+  serviceId?: string;
+}

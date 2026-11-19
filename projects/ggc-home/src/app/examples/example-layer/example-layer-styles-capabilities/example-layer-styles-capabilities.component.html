@@ -20,10 +20,10 @@
     <p>
       Dit voorbeeld haalt automatisch de titel van de WMS kaartlaag en de
       styles, inclusief bijbehorende titel en legenda, op uit de capabilities van de
-      service. In de kaartconfiguratie is alleen
-      <code>requestCapabilities</code> op <code>true</code> gezet; er zijn geen
-      <code>styles</code> en <code>activeStyle</code> opgenomen. De eerste style
-      uit de capabilities wordt de actieve style.
+      service. Met <code>requestCapabilities: true</code> haalt de kaart de
+      laaggegevens op. Met <code>visible: true</code> is de laag direct zichtbaar.
+      De configuratie bevat geen <code>styles</code> of <code>activeStyle</code>.
+      De eerste style uit de capabilities wordt de actieve style.
     </p>
     <p>
       Ook het schaalbereik van de kaartlaag komt uit de capabilities: de

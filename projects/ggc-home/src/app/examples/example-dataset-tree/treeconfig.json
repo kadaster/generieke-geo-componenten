@@ -30,11 +30,8 @@
         "datasetName": "Bestuurlijke gebieden (wms)",
         "services": [
           {
-            "layers": [
-              { "layerId": "landsgrens" },
-              { "layerId": "provincies" },
-              { "layerId": "gemeenten" }
-            ]
+            "serviceId": "serviceBestuurlijkeGebieden",
+            "layers": []
           }
         ]
       }
