@@ -11,6 +11,7 @@ import {
   Cartesian2,
   Cartesian3,
   Cartographic,
+  Math as CesiumMath,
   Rectangle
 } from "@cesium/engine";
 import { Viewer } from "@cesium/widgets";
@@ -22,7 +23,7 @@ import { Observable } from "rxjs";
  * Deze service biedt:
  * - Toegang tot de huidige {@link CameraValues};
  * - Berekeningen voor extent, center en kijkafstand;
- * - Berekenen van hoekcoördinaten van het canvas;
+ * - Berekeningen voor hoekcoördinaten van het canvas;
  * - Hulpfuncties voor het werken met GeoJSON extents.
  *
  * Wordt voornamelijk gebruikt door viewer-logica zoals camera positioning
@@ -30,8 +31,8 @@ import { Observable } from "rxjs";
  */
 @Service()
 export class GgcViewerService {
-  private readonly coreViewerService = inject(CoreViewerService);
   private readonly coreCameraService = inject(CoreCameraService);
+  private readonly coreViewerService = inject(CoreViewerService);
 
   /**
    * Haalt de huidige camerawaarden op van de viewer.
@@ -104,10 +105,13 @@ export class GgcViewerService {
   }
 
   /**
-   * Berekent de geografische coördinaten van de vier hoeken van het canvas.
+   * Berekent de geografische coördinaten van de vier hoeken van het canvas
+   * (linksboven, rechtsboven, rechtsonder, linksonder).
    *
-   * @param viewer De Cesium-viewer waarvoor de coördinaten worden berekend
-   * @returns De hoekcoördinaten met longitude en latitude in graden en height in meters. Wanneer minstebns één hoek geen raakpunt met het aardoppervlak oplevert, retouneert  de functie undefined.
+   * @param viewer De Cesium-viewer waarvoor de coördinaten worden berekend.
+   * @returns Een array met hoekcoördinaten (longitude/latitude in graden, height in meters).
+   * Retourneert undefined wanneer geen viewer beschikbaar is of wanneer voor minstens één hoek
+   * geen raakpunt met de globe kan worden bepaald (bijv. camera kijkt naar horizon/lucht).
    */
   getCanvasCornerCoordinates(
     viewer: Viewer | undefined = this.coreViewerService.getViewer()
@@ -140,8 +144,8 @@ export class GgcViewerService {
       const cartographic = Cartographic.fromCartesian(cartesian);
 
       result.push({
-        longitude: (cartographic.longitude * 180) / Math.PI,
-        latitude: (cartographic.latitude * 180) / Math.PI,
+        longitude: CesiumMath.toDegrees(cartographic.longitude),
+        latitude: CesiumMath.toDegrees(cartographic.latitude),
         height: cartographic.height
       });
     }

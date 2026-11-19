@@ -94,7 +94,14 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   ariaLabel = input<string>("viewer");
 
   /**
-   * minZoomlevel van de kaart (geldige waarde: 0-25)
+   * Schakelt de zoominteracties van de kaart uit (default: false)
+   *
+   * @DefaultValue false
+   */
+  readonly disableZoomInteraction = input(false);
+
+  /**
+   * Minimum zoomlevel van de kaart (geldige waarde: 0-25)
    * Waarde wordt geclamped binnen CRS‑limieten (0-25).
    * Wanneer minZoomlevel > maxZoomlevel wordt UNSUCCESSFUL event gestuurd.
    */
@@ -119,11 +126,6 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   readonly webServices = input<Webservice[]>([]);
 
   /**
-   * Schakelt de zoominteracties van de kaart uit (default: false)
-   */
-  readonly disableZoomInteraction = input(false);
-
-  /**
    * Output event‑stream van het kaartcomponent.
    *
    * Emit o.a.:
@@ -139,15 +141,15 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     viewChild.required<ElementRef<HTMLElement>>("mapElement");
   private readonly eventsMap: EventsKey[] = [];
   private lastChangeResolutionEvent: ObjectEvent | undefined;
-  private readonly mapService = inject(GgcMapService);
-  private readonly coreMapService = inject(CoreMapService);
-  private readonly mapEventsService = inject(CoreMapEventsService);
-  private readonly coreLoadingService = inject(CoreLoadingService);
   private readonly coreDrawService = inject(CoreDrawService, {
     optional: true
   });
+  private readonly coreLoadingService = inject(CoreLoadingService);
+  private readonly coreMapService = inject(CoreMapService);
   private readonly coreSelectionService = inject(CoreSelectionService);
   private readonly ggcLayerService = inject(GgcLayerService);
+  private readonly mapEventsService = inject(CoreMapEventsService);
+  private readonly mapService = inject(GgcMapService);
   // ol event type name
   private readonly OL_MOVEEND: MapEventTypes = "moveend";
   private readonly OL_SINGLECLICK: MapBrowserEventTypes = "singleclick";

@@ -40,9 +40,9 @@ export class ExampleMapDriedExtraOverzichtComponent
   // DOCS-SKIP:START
   readonly componentInfo: ComponentInfo = {
     route: "/map-dried-extra-overzicht",
-    title: "Overzichtskaart toevoegen aan 3D kaart",
+    title: "Overzichtskaart toevoegen (3D)",
     introduction:
-      "Voeg een kleine overzichtskaart toe aan de 3D kaart ter verduidelijking van de gekozen locatie.",
+      "Voeg een kleine overzichtskaart toe aan de 3D kaart om de positie op de kaart te tonen.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER, Tags.DRIED],
@@ -57,12 +57,12 @@ export class ExampleMapDriedExtraOverzichtComponent
     () =>
       "code/examples/example-map/example-map-dried-extra-overzicht/kaartconfig.json"
   );
-  protected readonly mapConfigOverzicht = httpResource<Webservice[]>(
+  protected readonly mapConfigOverzichtkaart = httpResource<Webservice[]>(
     () =>
       "code/examples/example-map/example-map-dried-extra-overzicht/kaartconfig-overzicht.json"
   );
   protected mapIndex = "index-kaart";
-  protected mapIndexOverzicht = "index-kaart-overzicht";
+  protected mapIndexOverzichtkaart = "index-kaart-overzicht";
 
   protected cameraOptions: CameraOptions;
   protected viewerOptions: ViewerOptions = {
@@ -107,7 +107,7 @@ export class ExampleMapDriedExtraOverzichtComponent
     });
     this.mapService.changeSelectionLayerStyle(
       selectionStyle,
-      this.mapIndexOverzicht
+      this.mapIndexOverzichtkaart
     );
   }
 
@@ -123,21 +123,17 @@ export class ExampleMapDriedExtraOverzichtComponent
       geometry: new Polygon([rdCorners])
     });
 
-    this.mapService.clearSelectionLayer(this.mapIndexOverzicht);
+    this.mapService.clearSelectionLayer(this.mapIndexOverzichtkaart);
     this.mapService.addFeaturesToSelectionLayer(
       [bboxFeature],
-      this.mapIndexOverzicht
+      this.mapIndexOverzichtkaart
     );
 
     const geo = bboxFeature.getGeometry()!.clone();
     geo.scale(2.5);
     const polyExtent = geo.getExtent();
     this.mapService.zoomToExtent(polyExtent, {
-      mapIndex: this.mapIndexOverzicht
+      mapIndex: this.mapIndexOverzichtkaart
     });
-  }
-
-  private wgs84ToRd(lon: number, lat: number): [number, number] {
-    return proj4("EPSG:4326", defs, [lon, lat]);
   }
 }

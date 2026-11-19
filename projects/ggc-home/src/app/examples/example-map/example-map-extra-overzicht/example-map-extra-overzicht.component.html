@@ -22,21 +22,21 @@
     <p>
       In dit voorbeeld is een overzichtskaart toegevoegd aan de kaart. In de
       overzichtskaart geeft het blauwe kader aan welk gebied op de hoofdkaart
-      zichtbaar is. Zo kan de gebruiker in één oogopslag zien waar hij zich
-      bevindt in het grotere geheel. Wanneer er in de hoofdkaart wordt geschoven
-      of gezoomd, wordt de overzichtskaart automatisch bijgewerkt.
-
-      De hoofdkaart en de overzichtskaart hebben ieder een eigen mapIndex.
-      Hierdoor kunnen de kaarten onafhankelijk van elkaar worden geconfigureerd.
-      De overzichtskaart kan bijvoorbeeld een andere achtergrondkaart hebben dan
-      de hoofdkaart.
+      zichtbaar is. Wanneer het kaartbeeld in de hoofdkaart verandert door
+      verplaatsing van de camera of zoomen, wordt de overzichtskaart automatisch
+      bijgewerkt. De hoekcoordinaten van de hoofdkaart worden opgehaald met
+      getCanvasCornerCoordinates.
+    </p>
+    <p>
+      De overzichtskaart heeft een eigen mapIndex. Hierdoor kan de
+      overzichtskaart onafhankelijk van de hoofdkaart worden geconfigureerd.
     </p>
   </div>
 
   <div page-functionality>
     <!-- DOCS:START functionality -->
     <div class="map-container">
-      <div class="map-wrapper main-map">
+      <div class="map-wrapper">
         <ggc-map
           [mapIndex]="mapIndex"
           [minZoomlevel]="2"
@@ -45,8 +45,8 @@
       </div>
       <div class="map-wrapper overview-map">
         <ggc-map
-          [mapIndex]="mapIndexOverzicht"
-          [webServices]="mapConfigOverzicht.value() ?? []"
+          [mapIndex]="mapIndexOverzichtkaart"
+          [webServices]="mapConfigOverzichtkaart.value() ?? []"
           [disableZoomInteraction]="true"
         ></ggc-map>
       </div>

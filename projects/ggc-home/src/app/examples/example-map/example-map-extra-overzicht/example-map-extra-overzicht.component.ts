@@ -31,7 +31,7 @@ export class ExampleMapExtraOverzichtComponent
     route: "/map-extra-overzicht",
     title: "Overzichtskaart toevoegen",
     introduction:
-      "Voeg een kleine overzichtskaart toe aan de kaart ter verduidelijking van de gekozen locatie.",
+      "Voeg een kleine overzichtskaart toe aan de kaart om de positie op de kaart te tonen.",
     components: [Components.GGC_MAP],
     theme: [Themes.KAARTLAGEN],
     tags: [Tags.LAYER],
@@ -46,12 +46,12 @@ export class ExampleMapExtraOverzichtComponent
     () =>
       "code/examples/example-map/example-map-extra-overzicht/kaartconfig.json"
   );
-  protected readonly mapConfigOverzicht = httpResource<Webservice[]>(
+  protected readonly mapConfigOverzichtkaart = httpResource<Webservice[]>(
     () =>
       "code/examples/example-map/example-map-extra-overzicht/kaartconfig-overzicht.json"
   );
   protected mapIndex = "index-kaart";
-  protected mapIndexOverzicht = "index-kaart-overzicht";
+  protected mapIndexOverzichtkaart = "index-kaart-overzicht";
 
   private readonly mapService: GgcMapService = inject(GgcMapService);
   private overzichtKaartZoomFactor = 12;
@@ -67,13 +67,7 @@ export class ExampleMapExtraOverzichtComponent
     this.mapService
       .getMap(this.mapIndex)
       .getView()
-      .on("change:resolution", () => {
-        this.handleMapEventFromView();
-      });
-    this.mapService
-      .getMap(this.mapIndex)
-      .getView()
-      .on("change:center", () => {
+      .on(["change:resolution", "change:center"], () => {
         this.handleMapEventFromView();
       });
   }
@@ -88,7 +82,7 @@ export class ExampleMapExtraOverzichtComponent
     });
     this.mapService.changeSelectionLayerStyle(
       selectionStyle,
-      this.mapIndexOverzicht
+      this.mapIndexOverzichtkaart
     );
   }
 
@@ -100,15 +94,15 @@ export class ExampleMapExtraOverzichtComponent
     const resolution = view.getResolution()!;
     const extent = view.calculateExtent(map.getSize());
 
-    const newZoomLevel = Math.max(
+    const zoomLevelOverzichtkaart = Math.max(
       resolutionToZoomlevel(resolution * this.overzichtKaartZoomFactor),
       1
     );
 
     void this.mapService.zoomToCoordinate(
       center,
-      this.mapIndexOverzicht,
-      newZoomLevel
+      this.mapIndexOverzichtkaart,
+      zoomLevelOverzichtkaart
     );
 
     const polygon = fromExtent(extent);
@@ -116,10 +110,10 @@ export class ExampleMapExtraOverzichtComponent
       geometry: polygon
     });
 
-    this.mapService.clearSelectionLayer(this.mapIndexOverzicht);
+    this.mapService.clearSelectionLayer(this.mapIndexOverzichtkaart);
     this.mapService.addFeaturesToSelectionLayer(
       [bboxFeature],
-      this.mapIndexOverzicht
+      this.mapIndexOverzichtkaart
     );
   }
 }

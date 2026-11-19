@@ -1,0 +1,43 @@
+@mixin styles {
+  .map-container {
+    position: relative;
+    height: 600px;
+  }
+
+  .map-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .overview-map {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 250px;
+    height: 180px;
+    z-index: 10;
+
+    border: 5px solid #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+    background-color: #dddddd;
+  }
+
+  @media (max-width: 576px) {
+    .map-container {
+      height: min(600px, 70vh);
+      min-height: 360px;
+    }
+
+    .overview-map {
+      box-sizing: border-box;
+      width: min(250px, calc(100% - 24px));
+      height: auto;
+      aspect-ratio: 25 / 18;
+      right: 12px;
+      bottom: 12px;
+    }
+  }
+}

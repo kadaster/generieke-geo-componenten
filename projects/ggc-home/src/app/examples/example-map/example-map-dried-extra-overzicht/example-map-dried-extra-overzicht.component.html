@@ -22,15 +22,16 @@
     <p>
       In dit voorbeeld is een overzichtskaart toegevoegd aan de 3D kaart. In de
       overzichtskaart geeft het blauwe kader aan welk gebied op de hoofdkaart
-      zichtbaar is. Zo kan de gebruiker in één oogopslag zien waar hij zich
-      bevindt in het grotere geheel. Wanneer er in de 3D hoofdkaart wordt
-      geschoven of gezoomd, wordt de overzichtskaart automatisch bijgewerkt.
+      zichtbaar is. Wanneer het kaartbeeld in de 3D hoofdkaart verandert door
+      verplaatsing van de camera of zoomen, wordt de overzichtskaart automatisch
+      bijgewerkt. De hoekcoordinaten van de hoofdkaart worden opgehaald met
+      getCanvasCornerCoordinates. Als een van deze hoeken geen contact maakt met
+      de globe (als de horizon of lucht zicthbaar zijn), toont de
+      overzichtskaart geen blauw kader.
     </p>
     <p>
       De overzichtskaart heeft een eigen mapIndex. Hierdoor kan de
       overzichtskaart onafhankelijk van de 3D hoofdkaart worden geconfigureerd.
-      De 3D-hoofdkaart wordt apart aangestuurd via de Cesium viewer- en
-      cameraservices.
     </p>
   </div>
 
@@ -54,7 +55,7 @@
       </div>
       <div class="col-xl-9 col-md-8 col-sm-12">
         <div class="map-container">
-          <div class="map-wrapper main-map">
+          <div class="map-wrapper">
             <ggc-map-3d-viewer
               [viewerOptions]="viewerOptions"
               [cameraOptions]="cameraOptions"
@@ -65,8 +66,8 @@
           </div>
           <div class="map-wrapper overview-map">
             <ggc-map
-              [mapIndex]="mapIndexOverzicht"
-              [webServices]="mapConfigOverzicht.value() ?? []"
+              [mapIndex]="mapIndexOverzichtkaart"
+              [webServices]="mapConfigOverzichtkaart.value() ?? []"
               [disableZoomInteraction]="true"
             ></ggc-map>
           </div>

@@ -479,13 +479,13 @@ export const routes: Routes = [
   },
   {
     path: "map-extra-overzicht",
-    title: "Kaart met extra overzicht | GGC-Home",
+    title: "Kaart met overzichtskaart | GGC-Home",
     component: ExampleMapExtraOverzichtComponent,
     data: { label: "map-extra-overzicht" }
   },
   {
     path: "map-dried-extra-overzicht",
-    title: "Kaart met extra overzicht 3D | GGC-Home",
+    title: "Kaart met overzichtskaart 3D | GGC-Home",
     component: ExampleMapDriedExtraOverzichtComponent,
     data: { label: "map-dried-extra-overzicht" }
   }

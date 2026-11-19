@@ -415,7 +415,7 @@ export class GgcMapService {
   }
 
   /**
-   * Verwijdert alle zoomknoppen en -interacties van een kaart.
+   * Verwijdert alle zoominteracties en -knoppen van een kaart.
    *
    * @param mapIndex Index van de kaart waarvoor de zoominteracties worden verwijderd
    */
