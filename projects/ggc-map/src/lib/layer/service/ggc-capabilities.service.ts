@@ -206,7 +206,6 @@ export class GgcCapabilitiesService {
           return webService;
         }
 
-        // TODO: ophalen layers i.p.v. requestCapabilities op true zetten? Capabilities zijn er al..
         webService.layers = serviceCapabilities.layers.map((layer) => ({
           layerId: crypto.randomUUID(),
           layerName: layer.name,
