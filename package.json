@@ -95,7 +95,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/aria": "22.0.2",
+    "@angular/aria": "22.3.0",
     "@angular/cdk": "22.0.2",
     "@angular/common": "22.2.6",
     "@angular/compiler": "22.2.6",
