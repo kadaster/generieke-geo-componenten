@@ -125,7 +125,7 @@
     "@angular/compiler-cli": "22.2.6",
     "@angular/language-service": "22.2.6",
     "@emnapi/core": "1.11.1",
-    "@emnapi/runtime": "1.11.1",
+    "@emnapi/runtime": "1.11.3",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
     "@types/bootstrap": "^4.6.6",
