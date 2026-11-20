@@ -8,6 +8,7 @@ export const createCesiumMock = (options?: { cameraPitch?: number }) => {
     getPickRay: vi.fn().mockName("Camera.getPickRay"),
     lookAtTransform: vi.fn().mockName("Camera.lookAtTransform"),
     lookAt: vi.fn().mockName("Camera.lookAt"),
+    viewBoundingSphere: vi.fn().mockName("Camera.viewBoundingSphere"),
     moveForward: vi.fn().mockName("Camera.moveForward"),
     moveBackward: vi.fn().mockName("Camera.moveBackward"),
     rotateUp: vi.fn().mockName("Camera.rotateUp"),

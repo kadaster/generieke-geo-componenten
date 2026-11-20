@@ -1,8 +1,19 @@
 import { inject, Service } from "@angular/core";
 import { CoreViewerService } from "./core-viewer.service";
-import { Cartesian3, Entity, HeightReference, Rectangle } from "@cesium/engine";
+import {
+  BoundingSphere,
+  Cartesian3,
+  Entity,
+  HeadingPitchRange,
+  HeightReference,
+  Math as CesiumMath,
+  Matrix4,
+  Rectangle
+} from "@cesium/engine";
 import { cameraUtils } from "../utils/camera-utils";
-import { CameraOptions } from "../model/interfaces";
+import { LookAtPosition } from "../model/interfaces";
+
+const LOCATION_RANGE = 500;
 
 /**
  * Service voor locatie-gerelateerde functionaliteit binnen de Cesium viewer.
@@ -28,8 +39,9 @@ export class GgcLocationService {
   /**
    * Zoomt de viewer naar de huidige geografische locatie.
    *
-   * Gebruikt een 'lookAtPosition' camera configuratie om de camera
-   * gericht naar de opgegeven coordinaten te bewegen.
+   * De camera kijkt vanaf een afstand van 500 meter naar de opgegeven
+   * coordinaten (met de terreinhoogte als hoogte) en behoudt de huidige
+   * heading en pitch van de camera.
    *
    * @param coordinates De geolocation coordinates (latitude/longitude)
    * @returns Promise die resolved wanneer de animatie voltooid is
@@ -37,20 +49,28 @@ export class GgcLocationService {
   async zoomToCurrentLocation(
     coordinates: GeolocationCoordinates
   ): Promise<void> {
-    const cameraOptions: CameraOptions = {
+    const viewer = this.coreViewerService.getViewer();
+    if (!viewer) return;
+
+    const lookAtPosition: LookAtPosition = {
       lookAtPosition: {
         lon: coordinates.longitude,
         lat: coordinates.latitude
-      }
-    } as CameraOptions;
-    const viewer = this.coreViewerService.getViewer();
-    if (viewer) {
-      await cameraUtils.flyToLookAtPosition(cameraOptions, viewer);
-    }
+      },
+      orientation: {
+        heading: CesiumMath.toDegrees(viewer.camera.heading),
+        pitch: CesiumMath.toDegrees(viewer.camera.pitch)
+      },
+      range: LOCATION_RANGE
+    };
+    await cameraUtils.flyToLookAtPosition(lookAtPosition, viewer);
   }
 
   /**
    * Zoomt de viewer naar een bounding box.
+   *
+   * De camera behoudt de huidige heading en pitch; de afstand wordt zo
+   * bepaald dat de volledige bounding box in beeld is.
    *
    * @param bbox Array met [west, south, east, north] in graden
    */
@@ -59,12 +79,17 @@ export class GgcLocationService {
     if (!viewer) return;
 
     const [west, south, east, north] = bbox;
-
     const rectangle = Rectangle.fromDegrees(west, south, east, north);
+    const { heading, pitch } = viewer.camera;
 
-    viewer.camera.setView({
-      destination: rectangle
-    });
+    // setView with a Rectangle positions the camera straight above the
+    // rectangle, so a tilted orientation would aim beside it. A range of 0
+    // lets Cesium compute the distance that fits the bounding sphere.
+    viewer.camera.viewBoundingSphere(
+      BoundingSphere.fromRectangle3D(rectangle),
+      new HeadingPitchRange(heading, pitch, 0)
+    );
+    viewer.camera.lookAtTransform(Matrix4.IDENTITY);
   }
 
   /**
