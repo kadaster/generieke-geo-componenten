@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execFileSync } = require('child_process');
+const fs = require("fs");
+const path = require("path");
+const { execFileSync } = require("child_process");
 
-const repoRoot = path.resolve(__dirname, '..');
+const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+
+const repoRoot = path.resolve(__dirname, "..");
 const workspaceRoot = path.dirname(repoRoot);
-const rootPackageJsonPath = path.join(repoRoot, 'package.json');
-const angularJsonPath = path.join(repoRoot, 'angular.json');
+const rootPackageJsonPath = path.join(repoRoot, "package.json");
+const angularJsonPath = path.join(repoRoot, "angular.json");
 
 function readJson(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
 function writeJson(filePath, value) {
@@ -18,28 +20,38 @@ function writeJson(filePath, value) {
 }
 
 function run(command, args, cwd) {
+  const shell =
+    process.platform === "win32" && command.toLowerCase().endsWith(".cmd");
+
   execFileSync(command, args, {
     cwd,
-    stdio: 'inherit',
+    stdio: "inherit",
+    shell
   });
 }
 
 function runCapture(command, args, cwd) {
   return execFileSync(command, args, {
     cwd,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"]
   }).trim();
 }
 
-function findFilesRecursive(startDir, fileName, maxDepth, currentDepth = 0, results = []) {
+function findFilesRecursive(
+  startDir,
+  fileName,
+  maxDepth,
+  currentDepth = 0,
+  results = []
+) {
   if (!fs.existsSync(startDir) || currentDepth > maxDepth) {
     return results;
   }
 
   const entries = fs.readdirSync(startDir, { withFileTypes: true });
   for (const entry of entries) {
-    if (entry.name.startsWith('.')) {
+    if (entry.name.startsWith(".")) {
       continue;
     }
 
@@ -50,7 +62,13 @@ function findFilesRecursive(startDir, fileName, maxDepth, currentDepth = 0, resu
     }
 
     if (entry.isDirectory()) {
-      findFilesRecursive(fullPath, fileName, maxDepth, currentDepth + 1, results);
+      findFilesRecursive(
+        fullPath,
+        fileName,
+        maxDepth,
+        currentDepth + 1,
+        results
+      );
     }
   }
 
@@ -62,42 +80,42 @@ function parseArgs(argv) {
     projects: null,
     targets: null,
     interactive: process.stdout.isTTY,
-    workspace: workspaceRoot,
+    workspace: workspaceRoot
   };
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
 
-    if (arg === '--projects' || arg === '--packages') {
+    if (arg === "--projects" || arg === "--packages") {
       options.projects = argv[index + 1]
-        .split(',')
+        .split(",")
         .map((item) => item.trim())
         .filter(Boolean);
       index += 1;
       continue;
     }
 
-    if (arg === '--targets') {
+    if (arg === "--targets") {
       options.targets = argv[index + 1]
-        .split(',')
+        .split(",")
         .map((item) => item.trim())
         .filter(Boolean);
       index += 1;
       continue;
     }
 
-    if (arg === '--workspace') {
+    if (arg === "--workspace") {
       options.workspace = path.resolve(argv[index + 1]);
       index += 1;
       continue;
     }
 
-    if (arg === '--interactive') {
+    if (arg === "--interactive") {
       options.interactive = true;
       continue;
     }
 
-    if (arg === '--no-interactive') {
+    if (arg === "--no-interactive") {
       options.interactive = false;
       continue;
     }
@@ -112,19 +130,19 @@ function getSnapshotSuffix() {
   const now = new Date();
   const parts = [
     now.getUTCFullYear(),
-    String(now.getUTCMonth() + 1).padStart(2, '0'),
-    String(now.getUTCDate()).padStart(2, '0'),
-    String(now.getUTCHours()).padStart(2, '0'),
-    String(now.getUTCMinutes()).padStart(2, '0'),
-    String(now.getUTCSeconds()).padStart(2, '0'),
-    String(now.getUTCMilliseconds()).padStart(3, '0'),
+    String(now.getUTCMonth() + 1).padStart(2, "0"),
+    String(now.getUTCDate()).padStart(2, "0"),
+    String(now.getUTCHours()).padStart(2, "0"),
+    String(now.getUTCMinutes()).padStart(2, "0"),
+    String(now.getUTCSeconds()).padStart(2, "0"),
+    String(now.getUTCMilliseconds()).padStart(3, "0")
   ];
 
-  return `snapshot.${parts.join('')}`;
+  return `snapshot.${parts.join("")}`;
 }
 
 function getSnapshotVersion(baseVersion, snapshotSuffix) {
-  const [mainVersion] = baseVersion.split('-');
+  const [mainVersion] = baseVersion.split("-");
   return `${mainVersion}-${snapshotSuffix}`;
 }
 
@@ -134,9 +152,9 @@ function getProjectConfigs() {
   const scripts = rootPackageJson.scripts || {};
 
   return Object.entries(angularConfig.projects)
-    .filter(([, config]) => config.projectType === 'library')
+    .filter(([, config]) => config.projectType === "library")
     .map(([projectName, config]) => {
-      const packageJsonPath = path.join(repoRoot, config.root, 'package.json');
+      const packageJsonPath = path.join(repoRoot, config.root, "package.json");
       const packageJson = readJson(packageJsonPath);
 
       return {
@@ -145,10 +163,12 @@ function getProjectConfigs() {
         packageJsonPath,
         packageRoot: path.dirname(packageJsonPath),
         projectRoot: path.join(repoRoot, config.root),
-        distDir: path.join(repoRoot, 'dist', projectName),
+        distDir: path.join(repoRoot, "dist", projectName),
         version: packageJson.version,
-        dependencies: Object.keys(packageJson.dependencies || {}).filter((dep) => dep.startsWith('@kadaster/ggc-')),
-        hasPackScript: Boolean(scripts[`pack:${projectName}`]),
+        dependencies: Object.keys(packageJson.dependencies || {}).filter(
+          (dep) => dep.startsWith("@kadaster/ggc-")
+        ),
+        hasPackScript: Boolean(scripts[`pack:${projectName}`])
       };
     })
     .filter((project) => project.hasPackScript)
@@ -162,21 +182,31 @@ function getSelectedProjects(allProjects, requestedProjects) {
 
   const requestedSet = new Set(requestedProjects);
   const selected = allProjects.filter(
-    (project) => requestedSet.has(project.projectName) || requestedSet.has(project.packageName),
+    (project) =>
+      requestedSet.has(project.projectName) ||
+      requestedSet.has(project.packageName)
   );
 
-  const foundKeys = new Set(selected.flatMap((project) => [project.projectName, project.packageName]));
-  const unknownProjects = requestedProjects.filter((name) => !foundKeys.has(name));
+  const foundKeys = new Set(
+    selected.flatMap((project) => [project.projectName, project.packageName])
+  );
+  const unknownProjects = requestedProjects.filter(
+    (name) => !foundKeys.has(name)
+  );
 
   if (unknownProjects.length > 0) {
-    throw new Error(`Onbekende projecten/packages: ${unknownProjects.join(', ')}`);
+    throw new Error(
+      `Onbekende projecten/packages: ${unknownProjects.join(", ")}`
+    );
   }
 
   return selected;
 }
 
 function sortProjectsByDependency(projects) {
-  const byPackageName = new Map(projects.map((project) => [project.packageName, project]));
+  const byPackageName = new Map(
+    projects.map((project) => [project.packageName, project])
+  );
   const visited = new Set();
   const visiting = new Set();
   const sorted = [];
@@ -187,7 +217,9 @@ function sortProjectsByDependency(projects) {
     }
 
     if (visiting.has(project.projectName)) {
-      throw new Error(`Circulaire dependency gevonden rond ${project.projectName}`);
+      throw new Error(
+        `Circulaire dependency gevonden rond ${project.projectName}`
+      );
     }
 
     visiting.add(project.projectName);
@@ -211,20 +243,22 @@ function sortProjectsByDependency(projects) {
 }
 
 function getChangedFiles() {
-  const output = runCapture('git', ['status', '--short'], repoRoot);
+  const output = runCapture("git", ["status", "--short"], repoRoot);
   if (!output) {
     return [];
   }
 
   return output
-    .split('\n')
+    .split("\n")
     .map((line) => line.slice(2).trim())
     .map((filePath) => {
-      const renamedParts = filePath.split(' -> ');
+      const renamedParts = filePath.split(" -> ");
       return renamedParts[renamedParts.length - 1].trim();
     })
     .filter(Boolean)
-    .map((filePath) => (path.isAbsolute(filePath) ? filePath : path.join(repoRoot, filePath)));
+    .map((filePath) =>
+      path.isAbsolute(filePath) ? filePath : path.join(repoRoot, filePath)
+    );
 }
 
 function getChangedProjects(allProjects) {
@@ -234,7 +268,11 @@ function getChangedProjects(allProjects) {
   for (const project of allProjects) {
     const hasChange = changedFiles.some((changedFile) => {
       const relativeToProject = path.relative(project.projectRoot, changedFile);
-      return relativeToProject && !relativeToProject.startsWith('..') && !path.isAbsolute(relativeToProject);
+      return (
+        relativeToProject &&
+        !relativeToProject.startsWith("..") &&
+        !path.isAbsolute(relativeToProject)
+      );
     });
 
     if (hasChange) {
@@ -246,10 +284,16 @@ function getChangedProjects(allProjects) {
 }
 
 function clearScreen() {
-  process.stdout.write('\x1Bc');
+  process.stdout.write("\x1Bc");
 }
 
-function renderCheckboxPrompt({ title, items, cursorIndex, selectedIndexes, description }) {
+function renderCheckboxPrompt({
+  title,
+  items,
+  cursorIndex,
+  selectedIndexes,
+  description
+}) {
   clearScreen();
   process.stdout.write(`${title}\n\n`);
   if (description) {
@@ -257,17 +301,26 @@ function renderCheckboxPrompt({ title, items, cursorIndex, selectedIndexes, desc
   }
 
   items.forEach((item, index) => {
-    const cursor = index === cursorIndex ? '>' : ' ';
-    const checked = selectedIndexes.has(index) ? 'x' : ' ';
+    const cursor = index === cursorIndex ? ">" : " ";
+    const checked = selectedIndexes.has(index) ? "x" : " ";
     process.stdout.write(`${cursor} [${checked}] ${item}\n`);
   });
 
-  process.stdout.write('\nGebruik pijltjes, spatie om te togglen, a voor alles, n voor niets, Enter om te bevestigen.\n');
+  process.stdout.write(
+    "\nGebruik pijltjes, spatie om te togglen, a voor alles, n voor niets, Enter om te bevestigen.\n"
+  );
 }
 
-function promptForCheckboxSelection({ title, items, defaultSelectedIndexes, description }) {
+function promptForCheckboxSelection({
+  title,
+  items,
+  defaultSelectedIndexes,
+  description
+}) {
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
-    return Promise.resolve([...defaultSelectedIndexes].sort((left, right) => left - right));
+    return Promise.resolve(
+      [...defaultSelectedIndexes].sort((left, right) => left - right)
+    );
   }
 
   return new Promise((resolve, reject) => {
@@ -276,12 +329,12 @@ function promptForCheckboxSelection({ title, items, defaultSelectedIndexes, desc
     let settled = false;
 
     function cleanup() {
-      process.stdin.off('data', onData);
+      process.stdin.off("data", onData);
       if (process.stdin.isTTY) {
         process.stdin.setRawMode(false);
       }
       process.stdin.pause();
-      process.stdout.write('\n');
+      process.stdout.write("\n");
     }
 
     function finish(result) {
@@ -308,31 +361,31 @@ function promptForCheckboxSelection({ title, items, defaultSelectedIndexes, desc
         items,
         cursorIndex,
         selectedIndexes,
-        description,
+        description
       });
     }
 
     function onData(buffer) {
-      const key = buffer.toString('utf8');
+      const key = buffer.toString("utf8");
 
-      if (key === '\u0003') {
-        fail(new Error('Afgebroken.'));
+      if (key === "\u0003") {
+        fail(new Error("Afgebroken."));
         return;
       }
 
-      if (key === '\u001b[A') {
+      if (key === "\u001b[A") {
         cursorIndex = cursorIndex > 0 ? cursorIndex - 1 : items.length - 1;
         render();
         return;
       }
 
-      if (key === '\u001b[B') {
+      if (key === "\u001b[B") {
         cursorIndex = cursorIndex < items.length - 1 ? cursorIndex + 1 : 0;
         render();
         return;
       }
 
-      if (key === ' ') {
+      if (key === " ") {
         if (selectedIndexes.has(cursorIndex)) {
           selectedIndexes.delete(cursorIndex);
         } else {
@@ -342,44 +395,50 @@ function promptForCheckboxSelection({ title, items, defaultSelectedIndexes, desc
         return;
       }
 
-      if (key === 'a' || key === 'A') {
+      if (key === "a" || key === "A") {
         items.forEach((_, index) => selectedIndexes.add(index));
         render();
         return;
       }
 
-      if (key === 'n' || key === 'N') {
+      if (key === "n" || key === "N") {
         selectedIndexes.clear();
         render();
         return;
       }
 
-      if (key === '\r' || key === '\n') {
+      if (key === "\r" || key === "\n") {
         finish([...selectedIndexes].sort((left, right) => left - right));
       }
     }
 
-    process.stdin.setEncoding('utf8');
+    process.stdin.setEncoding("utf8");
     process.stdin.resume();
     process.stdin.setRawMode(true);
-    process.stdin.on('data', onData);
+    process.stdin.on("data", onData);
     render();
   });
 }
 
 async function promptForProjects(allProjects, changedProjects) {
-  const changedNames = new Set(changedProjects.map((project) => project.projectName));
+  const changedNames = new Set(
+    changedProjects.map((project) => project.projectName)
+  );
   const defaultSelectedIndexes = allProjects
-    .map((project, index) => (changedNames.has(project.projectName) ? index : -1))
+    .map((project, index) =>
+      changedNames.has(project.projectName) ? index : -1
+    )
     .filter((index) => index >= 0);
 
   const selectedIndexes = await promptForCheckboxSelection({
-    title: 'Beschikbare packages voor snapshot',
-    description: '[*] in de label betekent dat er git-wijzigingen in die library zijn gevonden.',
+    title: "Beschikbare packages voor snapshot",
+    description:
+      "[*] in de label betekent dat er git-wijzigingen in die library zijn gevonden.",
     items: allProjects.map(
-      (project) => `${changedNames.has(project.projectName) ? '*' : ' '} ${project.projectName} (${project.packageName})`,
+      (project) =>
+        `${changedNames.has(project.projectName) ? "*" : " "} ${project.projectName} (${project.packageName})`
     ),
-    defaultSelectedIndexes,
+    defaultSelectedIndexes
   });
 
   return selectedIndexes.map((index) => allProjects[index]);
@@ -403,7 +462,7 @@ function cleanupOldTarballs(project) {
   }
 
   for (const entry of fs.readdirSync(project.distDir)) {
-    if (entry.endsWith('.tgz')) {
+    if (entry.endsWith(".tgz")) {
       fs.unlinkSync(path.join(project.distDir, entry));
     }
   }
@@ -412,18 +471,20 @@ function cleanupOldTarballs(project) {
 function findGeneratedTarball(project) {
   const tarballs = fs
     .readdirSync(project.distDir)
-    .filter((entry) => entry.endsWith('.tgz'))
+    .filter((entry) => entry.endsWith(".tgz"))
     .sort();
 
   if (tarballs.length !== 1) {
-    throw new Error(`Verwacht precies 1 tgz in ${project.distDir}, gevonden: ${tarballs.join(', ') || 'geen'}`);
+    throw new Error(
+      `Verwacht precies 1 tgz in ${project.distDir}, gevonden: ${tarballs.join(", ") || "geen"}`
+    );
   }
 
   return path.join(project.distDir, tarballs[0]);
 }
 
 function detectInstallTargets(workspace, packageNames, explicitTargets) {
-  const packageJsonFiles = findFilesRecursive(workspace, 'package.json', 3);
+  const packageJsonFiles = findFilesRecursive(workspace, "package.json", 3);
   const targets = [];
   const normalizedExplicitTargets = explicitTargets
     ? explicitTargets.map((target) => path.resolve(workspace, target))
@@ -435,7 +496,7 @@ function detectInstallTargets(workspace, packageNames, explicitTargets) {
       continue;
     }
 
-    const angularJsonCandidate = path.join(projectDir, 'angular.json');
+    const angularJsonCandidate = path.join(projectDir, "angular.json");
     if (!fs.existsSync(angularJsonCandidate)) {
       continue;
     }
@@ -445,10 +506,12 @@ function detectInstallTargets(workspace, packageNames, explicitTargets) {
       ...(packageJson.dependencies || {}),
       ...(packageJson.devDependencies || {}),
       ...(packageJson.peerDependencies || {}),
-      ...(packageJson.optionalDependencies || {}),
+      ...(packageJson.optionalDependencies || {})
     };
 
-    const matchingPackages = packageNames.filter((packageName) => Object.hasOwn(allDependencies, packageName));
+    const matchingPackages = packageNames.filter((packageName) =>
+      Object.hasOwn(allDependencies, packageName)
+    );
     if (matchingPackages.length === 0) {
       continue;
     }
@@ -465,7 +528,7 @@ function detectInstallTargets(workspace, packageNames, explicitTargets) {
     targets.push({
       name: packageJson.name || path.basename(projectDir),
       dir: projectDir,
-      matchingPackages,
+      matchingPackages
     });
   }
 
@@ -474,25 +537,26 @@ function detectInstallTargets(workspace, packageNames, explicitTargets) {
 
 async function promptForTargets(targets) {
   const selectedIndexes = await promptForCheckboxSelection({
-    title: 'Gevonden Angular-projecten voor installatie',
+    title: "Gevonden Angular-projecten voor installatie",
     items: targets.map(
-      (target) => `${path.basename(target.dir)} - ${target.dir} :: ${target.matchingPackages.join(', ')}`,
+      (target) =>
+        `${path.basename(target.dir)} - ${target.dir} :: ${target.matchingPackages.join(", ")}`
     ),
-    defaultSelectedIndexes: [],
+    defaultSelectedIndexes: []
   });
 
   return selectedIndexes.map((index) => targets[index]);
 }
 
 function ensureSnapshotDirectory(targetDir) {
-  const snapshotDir = path.join(targetDir, '.snapshots', 'ggc');
+  const snapshotDir = path.join(targetDir, ".snapshots", "ggc");
   fs.mkdirSync(snapshotDir, { recursive: true });
   return snapshotDir;
 }
 
 function stageTarballs(target, orderedProjects, tarballsByPackageName) {
   const stagedTarballsByPackageName = new Map();
-  const snapshotDir = path.join(target.dir, '.snapshots', 'ggc');
+  const snapshotDir = path.join(target.dir, ".snapshots", "ggc");
 
   fs.rmSync(snapshotDir, { recursive: true, force: true });
   ensureSnapshotDirectory(target.dir);
@@ -503,7 +567,10 @@ function stageTarballs(target, orderedProjects, tarballsByPackageName) {
     }
 
     const sourceTarballPath = tarballsByPackageName.get(project.packageName);
-    const targetTarballPath = path.join(snapshotDir, path.basename(sourceTarballPath));
+    const targetTarballPath = path.join(
+      snapshotDir,
+      path.basename(sourceTarballPath)
+    );
 
     fs.copyFileSync(sourceTarballPath, targetTarballPath);
 
@@ -513,12 +580,21 @@ function stageTarballs(target, orderedProjects, tarballsByPackageName) {
   return stagedTarballsByPackageName;
 }
 
-function installSnapshots(target, orderedProjects, stagedTarballsByPackageName) {
-  const installArgs = ['install'];
+function installSnapshots(
+  target,
+  orderedProjects,
+  stagedTarballsByPackageName
+) {
+  const installArgs = ["install"];
 
   for (const project of orderedProjects) {
     if (target.matchingPackages.includes(project.packageName)) {
-      installArgs.push(path.relative(target.dir, stagedTarballsByPackageName.get(project.packageName)));
+      installArgs.push(
+        path.relative(
+          target.dir,
+          stagedTarballsByPackageName.get(project.packageName)
+        )
+      );
     }
   }
 
@@ -527,9 +603,9 @@ function installSnapshots(target, orderedProjects, stagedTarballsByPackageName) 
   }
 
   console.log(`\nInstalleren in ${target.dir}`);
-  console.log(`Packages: ${target.matchingPackages.join(', ')}`);
+  console.log(`Packages: ${target.matchingPackages.join(", ")}`);
 
-  run('npm', installArgs, target.dir);
+  run(npmCommand, installArgs, target.dir);
 }
 
 async function main() {
@@ -549,30 +625,39 @@ async function main() {
   if (selectedProjects.length === 0) {
     console.log(
       hasProjectChanges
-        ? 'Geen packages geselecteerd.'
-        : 'Geen gewijzigde library-packages gevonden. Kies interactief packages of gebruik --packages.',
+        ? "Geen packages geselecteerd."
+        : "Geen gewijzigde library-packages gevonden. Kies interactief packages of gebruik --packages."
     );
     return;
   }
 
   const snapshotSuffix = getSnapshotSuffix();
-  const originalVersions = new Map(selectedProjects.map((project) => [project.projectName, project.version]));
+  const originalVersions = new Map(
+    selectedProjects.map((project) => [project.projectName, project.version])
+  );
   const tarballsByPackageName = new Map();
   const snapshotVersionsByProjectName = new Map(
-    selectedProjects.map((project) => [project.projectName, getSnapshotVersion(project.version, snapshotSuffix)]),
+    selectedProjects.map((project) => [
+      project.projectName,
+      getSnapshotVersion(project.version, snapshotSuffix)
+    ])
   );
 
   console.log(`\nSnapshot suffix: ${snapshotSuffix}`);
-  console.log(`Projecten: ${selectedProjects.map((project) => project.projectName).join(', ')}`);
+  console.log(
+    `Projecten: ${selectedProjects.map((project) => project.projectName).join(", ")}`
+  );
 
   try {
     for (const project of selectedProjects) {
-      const snapshotVersion = snapshotVersionsByProjectName.get(project.projectName);
+      const snapshotVersion = snapshotVersionsByProjectName.get(
+        project.projectName
+      );
       console.log(`\nBuilden en packen van ${project.projectName}`);
       writeSnapshotVersion(project, snapshotVersion);
       cleanupOldTarballs(project);
 
-      run('npm', ['run', `pack:${project.projectName}`], repoRoot);
+      run(npmCommand, ["run", `pack:${project.projectName}`], repoRoot);
 
       const tarballPath = findGeneratedTarball(project);
 
@@ -588,30 +673,37 @@ async function main() {
   const detectedTargets = detectInstallTargets(
     options.workspace,
     selectedProjects.map((project) => project.packageName),
-    options.targets,
+    options.targets
   );
 
   if (detectedTargets.length === 0) {
-    console.log('\nGeen Angular-projecten in de workspace gevonden met een dependency op de geselecteerde GGC-packages.');
+    console.log(
+      "\nGeen Angular-projecten in de workspace gevonden met een dependency op de geselecteerde GGC-packages."
+    );
     return;
   }
 
-  const selectedTargets = options.targets || !options.interactive
-    ? detectedTargets
-    : await promptForTargets(detectedTargets);
+  const selectedTargets =
+    options.targets || !options.interactive
+      ? detectedTargets
+      : await promptForTargets(detectedTargets);
 
   if (selectedTargets.length === 0) {
-    console.log('\nGeen doelprojecten geselecteerd.');
+    console.log("\nGeen doelprojecten geselecteerd.");
     return;
   }
 
-  console.log('\nInstallatiedoelen:');
+  console.log("\nInstallatiedoelen:");
   for (const target of selectedTargets) {
-    console.log(`- ${target.dir} (${target.matchingPackages.join(', ')})`);
+    console.log(`- ${target.dir} (${target.matchingPackages.join(", ")})`);
   }
 
   for (const target of selectedTargets) {
-    const stagedTarballsByPackageName = stageTarballs(target, selectedProjects, tarballsByPackageName);
+    const stagedTarballsByPackageName = stageTarballs(
+      target,
+      selectedProjects,
+      tarballsByPackageName
+    );
     installSnapshots(target, selectedProjects, stagedTarballsByPackageName);
   }
 }
