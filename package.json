@@ -112,8 +112,8 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular-devkit/architect": "0.2202.6",
-    "@angular-devkit/core": "22.2.6",
+    "@angular-devkit/architect": "0.2203.0",
+    "@angular-devkit/core": "22.3.0",
     "@angular-eslint/builder": "^22.0.0",
     "@angular-eslint/eslint-plugin": "^22.0.0",
     "@angular-eslint/eslint-plugin-template": "^22.0.0",
@@ -121,7 +121,7 @@
     "@angular-eslint/template-parser": "^22.0.0",
     "@angular-eslint/utils": "22.0.0",
     "@angular/build": "^22.2.6",
-    "@angular/cli": "22.2.6",
+    "@angular/cli": "22.3.0",
     "@angular/compiler-cli": "22.2.6",
     "@angular/language-service": "22.2.6",
     "@emnapi/core": "1.11.1",
