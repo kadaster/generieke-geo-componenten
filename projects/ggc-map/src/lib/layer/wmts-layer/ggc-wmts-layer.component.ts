@@ -6,7 +6,10 @@ import { Geometry } from "ol/geom";
 import TileLayer from "ol/layer/Tile";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import TileSource from "ol/source/Tile";
-import WMTS, { optionsFromCapabilities } from "ol/source/WMTS";
+import WMTS, {
+  optionsFromCapabilities,
+  Options as WmtsSourceOptions
+} from "ol/source/WMTS";
 import { Subscription } from "rxjs";
 import { AbstractClickableLayer } from "../abstract-clickable-layer/abstract-clickable-layer.directive";
 import { Capabilities } from "../model/capabilities.model";
@@ -56,6 +59,13 @@ export class GgcWmtsLayerComponent
   private capabilities: Capabilities | undefined;
 
   /**
+   * De opties waarmee de huidige WMTS source is opgebouwd. Deze zijn nodig om
+   * bij een style-wissel een nieuwe source te maken; de style ligt bij WMTS
+   * namelijk vast in de source.
+   */
+  private wmtsSourceOptions: WmtsSourceOptions | undefined;
+
+  /**
    * Injectie van de GgcCapabilitiesService.
    */
   private readonly ggcCapabilitiesService = inject(GgcCapabilitiesService);
@@ -90,14 +100,10 @@ export class GgcWmtsLayerComponent
       .subscribe((result) => {
         if (result) {
           this.capabilities = new Capabilities(result);
-          const options = optionsFromCapabilities(result, {
-            format: "image/png",
-            style: "default",
-            crossOrigin: "anonymous",
-            ...this.options()?.sourceOptions,
-            ...(this.options()?.layer && { layer: this.options()?.layer }),
-            projection: this.rdNewConfig.projectionCode
-          });
+          const options = this.createWmtsSourceOptions(
+            result,
+            this.options()?.activeStyle
+          );
           if (options) {
             // Set transition to 0 when opacity < 1 to prevent flicker
             const opacity = this.options()?.layerOptions?.opacity;
@@ -105,6 +111,7 @@ export class GgcWmtsLayerComponent
               options.transition = 0;
               this.layerOptions.opacity = opacity;
             }
+            this.wmtsSourceOptions = options;
             this.wmtsSource = new WMTS(options);
 
             this.setLayer(
@@ -116,6 +123,7 @@ export class GgcWmtsLayerComponent
             );
           } else {
             this.capabilities = undefined;
+            this.wmtsSourceOptions = undefined;
             console.error("Could not generate options from capabilities");
           }
 
@@ -130,9 +138,53 @@ export class GgcWmtsLayerComponent
           );
         } else {
           this.capabilities = undefined;
+          this.wmtsSourceOptions = undefined;
           console.error("Invalid capabilities");
         }
       });
+  }
+
+  /**
+   * Set the active style for the layer.
+   * Bij WMTS zit de style in de voorgerenderde tiles, waardoor de WMTS source
+   * opnieuw wordt opgebouwd. De bestaande laag blijft daarbij behouden, zodat de
+   * volgorde van de lagen op de kaart niet verandert.
+   * @param styleName the name of the style that should be applied.
+   */
+  override setActiveStyle(styleName: string): void {
+    this.options.set({ ...this.options(), activeStyle: styleName });
+    if (!this.wmtsSourceOptions || !this.olLayer) {
+      return;
+    }
+    this.wmtsSourceOptions = { ...this.wmtsSourceOptions, style: styleName };
+    this.wmtsSource = new WMTS(this.wmtsSourceOptions);
+    this.olLayer.setSource(this.wmtsSource);
+  }
+
+  /*
+   * Bouwt de opties voor de WMTS source op basis van de capabilities.
+   *
+   * `optionsFromCapabilities` zoekt de style op via de `Title` uit de
+   * capabilities, terwijl `styleName` de `Identifier` van de style is (zoals ook
+   * in `styles` van de layerOptions staat). Daarom wordt de style na het
+   * opbouwen van de opties direct op die identifier gezet.
+   */
+  private createWmtsSourceOptions(
+    capabilities: Record<string, any>,
+    styleName: string | undefined
+  ): WmtsSourceOptions | null {
+    const options = optionsFromCapabilities(capabilities, {
+      format: "image/png",
+      style: "default",
+      crossOrigin: "anonymous",
+      ...this.options()?.sourceOptions,
+      ...(this.options()?.layer && { layer: this.options()?.layer }),
+      projection: this.rdNewConfig.projectionCode
+    });
+    if (options && styleName) {
+      options.style = styleName;
+    }
+    return options;
   }
 
   /**

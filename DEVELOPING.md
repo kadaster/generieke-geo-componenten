@@ -91,6 +91,12 @@ Ga naar Settings en zoek op prettier (Languages & Frameworks > Javascript > Pret
 
 Wil je bijvoorbeeld voor 2 componenten een patch release en voor 2 andere componenten een minor release maken, start dan de workflow 2x.
 
+## Dependency-updates
+
+[Renovate](https://github.com/apps/renovate) gebruikt de configuratie in [renovate.json](renovate.json) om updates voor de npm-workspace en GitHub Actions voor te stellen. Waar nodig wordt ook `package-lock.json` bijgewerkt. Bekende monorepo-dependencies worden gegroepeerd en het Dependency Dashboard geeft een overzicht van de updates. Het Dockerfile wordt wel gedetecteerd, maar de image wordt niet bijgewerkt omdat de registry een variabele is.
+
+Pull requests worden na review en geslaagde CI handmatig gemerged. Interne GGC-dependencies blijven onderdeel van het bestaande releaseproces.
+
 ## TS docs.
 
 Om de TS docs HTML te genereren kun je het script `npm run tsdocs:generate` runnen.
