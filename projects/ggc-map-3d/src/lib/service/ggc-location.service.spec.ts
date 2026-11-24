@@ -67,15 +67,23 @@ describe("GgcLocationService", () => {
     );
   });
 
-  it("should zoom to bbox keeping heading and pitch", () => {
-    service.zoomToBBox([5.75, 51.8, 5.9, 51.88]);
+  it("should zoom to bbox at terrain height keeping heading and pitch", async () => {
+    vi.spyOn(cameraUtils, "getTerrainHeight").mockResolvedValue(57);
 
+    await service.zoomToBBox([5.75, 51.8, 5.9, 51.88]);
+
+    expect(cameraUtils.getTerrainHeight).toHaveBeenCalledWith(
+      { lon: expect.closeTo(5.825), lat: expect.closeTo(51.84) },
+      cesiumMock.terrainProvider
+    );
     const [boundingSphere, offset] = vi.mocked(
       cesiumMock.camera!.viewBoundingSphere
     ).mock.calls[0];
     expect(boundingSphere).toEqual(
       BoundingSphere.fromRectangle3D(
-        Rectangle.fromDegrees(5.75, 51.8, 5.9, 51.88)
+        Rectangle.fromDegrees(5.75, 51.8, 5.9, 51.88),
+        undefined,
+        57
       )
     );
     expect(offset).toEqual(new HeadingPitchRange(Math.PI / 4, -Math.PI / 6, 0));

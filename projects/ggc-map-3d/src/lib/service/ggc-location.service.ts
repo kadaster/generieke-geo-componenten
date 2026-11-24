@@ -73,20 +73,25 @@ export class GgcLocationService {
    * bepaald dat de volledige bounding box in beeld is.
    *
    * @param bbox Array met [west, south, east, north] in graden
+   * @returns Promise die resolvet wanneer de camera is verplaatst
    */
-  zoomToBBox(bbox: number[]) {
+  async zoomToBBox(bbox: number[]): Promise<void> {
     const viewer = this.coreViewerService.getViewer();
     if (!viewer) return;
 
     const [west, south, east, north] = bbox;
     const rectangle = Rectangle.fromDegrees(west, south, east, north);
     const { heading, pitch } = viewer.camera;
+    const terrainHeight = await cameraUtils.getTerrainHeight(
+      { lon: (west + east) / 2, lat: (south + north) / 2 },
+      viewer.terrainProvider
+    );
 
     // setView with a Rectangle positions the camera straight above the
     // rectangle, so a tilted orientation would aim beside it. A range of 0
     // lets Cesium compute the distance that fits the bounding sphere.
     viewer.camera.viewBoundingSphere(
-      BoundingSphere.fromRectangle3D(rectangle),
+      BoundingSphere.fromRectangle3D(rectangle, undefined, terrainHeight),
       new HeadingPitchRange(heading, pitch, 0)
     );
     viewer.camera.lookAtTransform(Matrix4.IDENTITY);
