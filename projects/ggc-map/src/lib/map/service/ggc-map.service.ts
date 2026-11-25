@@ -415,11 +415,12 @@ export class GgcMapService {
   }
 
   /**
-   * Verwijdert alle zoominteracties en -knoppen van een kaart.
+   * Verwijdert alle interacties en knoppen van een kaart. Kan bijvoorbeeld
+   * worden gebruikt om de zoominteracties uit te schakelen.
    *
-   * @param mapIndex Index van de kaart waarvoor de zoominteracties worden verwijderd
+   * @param mapIndex Index van de kaart waarvoor de interacties worden verwijderd
    */
-  disableZoomInteractions(mapIndex: string): void {
+  disableAllMapInteractions(mapIndex: string): void {
     const map = this.getMap(mapIndex);
     map.getControls().clear();
     map.getInteractions().clear();

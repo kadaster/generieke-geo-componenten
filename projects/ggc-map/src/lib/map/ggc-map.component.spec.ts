@@ -25,7 +25,7 @@ describe("MapComponent, ngAfterViewInit", () => {
   let fixture: ComponentFixture<GgcMapComponent>;
   let coreMapService: Mocked<CoreMapService>;
   let coreSelectionService: CoreSelectionService;
-  let ggcMapServiceMock: Pick<GgcMapService, "disableZoomInteractions">;
+  let ggcMapServiceMock: Pick<GgcMapService, "disableAllMapInteractions">;
 
   const httpClientSpy = {
     get: vi.fn().mockName("HttpClient.get")
@@ -53,7 +53,7 @@ describe("MapComponent, ngAfterViewInit", () => {
     } as MockedObject<CoreMapService>;
 
     ggcMapServiceMock = {
-      disableZoomInteractions: vi
+      disableAllMapInteractions: vi
         .fn()
         .mockName("GgcMapService.disableZoomInteractions")
     };
@@ -108,7 +108,7 @@ describe("MapComponent, ngAfterViewInit", () => {
     expect(mapMock.getView).toHaveBeenCalled();
     expect(viewMock.on).toHaveBeenCalled();
     expect(viewMock.setZoom).toHaveBeenCalledWith(3);
-    expect(ggcMapServiceMock.disableZoomInteractions).not.toHaveBeenCalled();
+    expect(ggcMapServiceMock.disableAllMapInteractions).not.toHaveBeenCalled();
   });
 
   it("should disable zoom interactions when disableZoomInteraction is true", () => {
@@ -118,8 +118,8 @@ describe("MapComponent, ngAfterViewInit", () => {
 
     fixture.detectChanges();
 
-    expect(ggcMapServiceMock.disableZoomInteractions).toHaveBeenCalledOnce();
-    expect(ggcMapServiceMock.disableZoomInteractions).toHaveBeenCalledWith(
+    expect(ggcMapServiceMock.disableAllMapInteractions).toHaveBeenCalledOnce();
+    expect(ggcMapServiceMock.disableAllMapInteractions).toHaveBeenCalledWith(
       mapIndex
     );
   });

@@ -94,11 +94,11 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   ariaLabel = input<string>("viewer");
 
   /**
-   * Schakelt de zoominteracties van de kaart uit (default: false)
+   * Schakelt alle interacties (o.a. zoominteracties) van de kaart uit (default: false)
    *
    * @DefaultValue false
    */
-  readonly disableZoomInteraction = input(false);
+  readonly disableAllMapInteractions = input(false);
 
   /**
    * Minimum zoomlevel van de kaart (geldige waarde: 0-25)
@@ -195,8 +195,8 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
         this.minZoomlevel(),
         this.maxZoomlevel()
       );
-      if (this.disableZoomInteraction()) {
-        this.mapService.disableZoomInteractions(this.mapIndex());
+      if (this.disableAllMapInteractions()) {
+        this.mapService.disableAllMapInteractions(this.mapIndex());
       }
       map.setTarget(this.mapElement().nativeElement.id);
 

@@ -78,7 +78,7 @@ describe("MapService", () => {
     expect(targetMap.getControls().getLength()).toBeGreaterThan(0);
     expect(targetMap.getInteractions().getLength()).toBeGreaterThan(0);
 
-    mapService.disableZoomInteractions(targetMapIndex);
+    mapService.disableAllMapInteractions(targetMapIndex);
 
     expect(targetMap.getControls().getLength()).toBe(0);
     expect(targetMap.getInteractions().getLength()).toBe(0);
