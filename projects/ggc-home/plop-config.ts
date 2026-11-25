@@ -2,8 +2,14 @@
 export const directoryChoices = [
   { name: "examples (root - niet genest)", value: "examples" },
   { name: "examples/example-3d", value: "examples/example-3d" },
-  { name: "examples/example-dataset-switcher", value: "examples/example-dataset-switcher" },
-  { name: "examples/example-dataset-tree", value: "examples/example-dataset-tree" },
+  {
+    name: "examples/example-dataset-switcher",
+    value: "examples/example-dataset-switcher"
+  },
+  {
+    name: "examples/example-dataset-tree",
+    value: "examples/example-dataset-tree"
+  },
   { name: "examples/example-draw", value: "examples/example-draw" },
   { name: "examples/example-format", value: "examples/example-format" },
   { name: "examples/example-index", value: "examples/example-index" },
@@ -11,7 +17,10 @@ export const directoryChoices = [
   { name: "examples/example-legend", value: "examples/example-legend" },
   { name: "examples/example-map", value: "examples/example-map" },
   { name: "examples/example-measure", value: "examples/example-measure" },
-  { name: "examples/example-search-location", value: "examples/example-search-location" },
+  {
+    name: "examples/example-search-location",
+    value: "examples/example-search-location"
+  },
   { name: "examples/example-snapping", value: "examples/example-snapping" },
   { name: "examples/example-toolbar", value: "examples/example-toolbar" },
   "Aangepaste map..."

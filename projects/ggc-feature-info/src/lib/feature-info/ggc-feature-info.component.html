@@ -16,7 +16,9 @@
         <li class="ggc-fi-pager-value">
           {{ currentFeatureIndex() + 1 }} van
           {{
-            displayFeaturesProperties() ? displayFeaturesProperties()!.length : ""
+            displayFeaturesProperties()
+              ? displayFeaturesProperties()!.length
+              : ""
           }}
         </li>
         <li class="ggc-fi-pager-next">

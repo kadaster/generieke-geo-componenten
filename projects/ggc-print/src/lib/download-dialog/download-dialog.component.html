@@ -18,7 +18,10 @@
           aria-label="Sluit dit venster"
           (click)="closeModal()"
         >
-          <span [ngClass]="iconClose() + ' close-icon'" aria-hidden="true"></span>
+          <span
+            [ngClass]="iconClose() + ' close-icon'"
+            aria-hidden="true"
+          ></span>
         </button>
       </div>
       <div class="modal-body">

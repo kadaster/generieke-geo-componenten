@@ -21,7 +21,9 @@
           layer: layer()
         }"
         [ngTemplateOutlet]="
-          layerLabelComponent() ? layerLabelComponent() : defaultValueLayerTemplate
+          layerLabelComponent()
+            ? layerLabelComponent()
+            : defaultValueLayerTemplate
         "
       ></ng-container>
       <ng-template #defaultValueLayerTemplate>{{ title() }}</ng-template>
