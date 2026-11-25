@@ -70,6 +70,29 @@ describe("PdokLocationApiService", () => {
     expect(collections).toEqual(mockPdokLocationApiResult);
   });
 
+  it("should preserve custom collections set before collections load", () => {
+    const serviceWithPendingCollectionsRequest = TestBed.runInInjectionContext(
+      () => new PdokLocationApiService()
+    );
+
+    serviceWithPendingCollectionsRequest.setCustomCollections([
+      { id: "perceel", version: 2, relevance: 0.9 }
+    ]);
+
+    const collectionsReq = httpMock.expectOne((request) =>
+      request.url.endsWith("collections?f=json")
+    );
+    collectionsReq.flush(mockPdokLocationApiResult);
+
+    serviceWithPendingCollectionsRequest.search("test").subscribe();
+
+    const searchReq = httpMock.expectOne((request) =>
+      request.url.includes("perceel[version]=2")
+    );
+    expect(searchReq.request.url).toContain("perceel[relevance]=0.9");
+    searchReq.flush({ features: [], numberReturned: 0 });
+  });
+
   it("replays loaded collections to subscribers after loading", () => {
     let loadedCollections: unknown;
     const subscription = service.collectionsLoaded$.subscribe((collections) => {
@@ -194,19 +217,31 @@ describe("PdokLocationApiService", () => {
   });
 
   describe("item", () => {
-    it("moet een item ophalen via de href eigenschap", () => {
+    it("should fetch the item using the first valid href", () => {
       const mockFeature = {
-        properties: { href: "https://api.pdok.nl/item/123" }
+        properties: {
+          href: ["", "  ", "https://api.pdok.nl/item/123"]
+        }
       };
 
-      service.item(mockFeature as any).subscribe();
+      let result: unknown;
+      service.item(mockFeature as any).subscribe((item) => (result = item));
 
       const req = httpMock.expectOne("https://api.pdok.nl/item/123");
       expect(req.request.method).toBe("GET");
-      req.flush({});
+      req.flush({ id: "123" });
+
+      expect(result).toEqual({ id: "123" });
     });
 
-    it("moet null teruggeven als de href ontbreekt", () => {
+    it("should return null for an empty href array", () => {
+      service.item({ properties: { href: [] } } as any).subscribe((result) => {
+        expect(result).toBeNull();
+      });
+      httpMock.expectNone(() => true);
+    });
+
+    it("should return null when href is missing", () => {
       service.item({} as any).subscribe((result) => {
         expect(result).toBeNull();
       });

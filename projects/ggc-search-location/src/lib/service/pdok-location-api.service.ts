@@ -209,11 +209,12 @@ export class PdokLocationApiService {
   item(
     pdokLocationApiSearchFeature: PdokLocationApiSearchFeature
   ): Observable<PdokLocationApiCollectionFeature | null> {
-    if (pdokLocationApiSearchFeature?.properties?.href) {
+    const itemUrl = pdokLocationApiSearchFeature?.properties?.href?.find(
+      (url) => url.trim().length > 0
+    );
+    if (itemUrl) {
       return this.httpClient
-        .get<PdokLocationApiCollectionFeature>(
-          pdokLocationApiSearchFeature.properties.href
-        )
+        .get<PdokLocationApiCollectionFeature>(itemUrl)
         .pipe(
           retry({
             count: 3,
