@@ -199,7 +199,9 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
       dataset.services.forEach(
         async (service: DatasetTreeWebservice) =>
           await this.datasetTreeMapConnectService.setVisibilityLayers(
-            service.layers.map((layer: DatasetTreeLayer) => layer.layerId),
+            (service.layers ?? []).map(
+              (layer: DatasetTreeLayer) => layer.layerId
+            ),
             visible,
             this.viewerType(),
             this.mapIndex()
@@ -239,7 +241,7 @@ export class GgcDatasetSwitcherComponent implements OnChanges {
     for (const theme of themes) {
       for (const dataset of theme.datasets) {
         for (const service of dataset.services) {
-          for (const layer of service.layers) {
+          for (const layer of service.layers ?? []) {
             const visible = await this.datasetTreeMapConnectService.isVisible(
               layer.layerId,
               this.mapIndex(),

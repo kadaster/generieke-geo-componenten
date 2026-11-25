@@ -127,7 +127,7 @@ export class GgcLayerService {
   getInitialisedWebservices(mapIndex: string): WebserviceInitialisedEvent[] {
     return (this.initialisedWebservices.get(mapIndex) ?? []).map((event) => ({
       ...event,
-      layers: [...event.layers]
+      layers: [...event.layerIds]
     }));
   }
 
@@ -642,13 +642,13 @@ export class GgcLayerService {
         this.initialiseLayers(updatedService, mapIndex);
         const event: WebserviceInitialisedEvent = {
           mapIndex: mapIndex,
-          layers: updatedService.layers.map((layer) => layer.layerId || ""),
+          layerIds: updatedService.layers.map((layer) => layer.layerId || ""),
           serviceId: updatedService.serviceId
         };
         if (this.mapConfigurations.get(mapIndex)?.includes(service)) {
           this.initialisedWebservices.get(mapIndex)?.push({
             ...event,
-            layers: [...event.layers]
+            layerIds: [...event.layerIds]
           });
         }
         this.webserviceInitialisedSubject.next(event);

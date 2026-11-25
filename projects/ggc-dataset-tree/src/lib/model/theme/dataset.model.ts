@@ -21,7 +21,7 @@ export class Dataset {
 
   containsLayerId(layerId: string): boolean {
     return this.services.some((service) => {
-      return service.layers.some((layer) => {
+      return service.layers?.some((layer) => {
         return layer.layerId === layerId;
       });
     });

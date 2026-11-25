@@ -213,7 +213,6 @@ export class GgcCapabilitiesService {
           visible: webService.visible ?? false,
           zIndex: webService.zIndex
         }));
-        console.log(webService.layers);
         return webService;
       })
     );

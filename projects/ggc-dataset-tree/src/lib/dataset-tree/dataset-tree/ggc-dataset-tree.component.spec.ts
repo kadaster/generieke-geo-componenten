@@ -143,22 +143,22 @@ describe("DatasetTreeComponent", () => {
     webserviceInitialised.next({
       mapIndex: "other-map",
       serviceId: "service",
-      layers: ["wrong-map"]
+      layerIds: ["wrong-map"]
     });
     webserviceInitialised.next({
       mapIndex: DEFAULT_MAPINDEX,
       serviceId: "unmatched",
-      layers: ["wrong-service"]
+      layerIds: ["wrong-service"]
     });
     webserviceInitialised.next({
       mapIndex: DEFAULT_MAPINDEX,
       serviceId: "service",
-      layers: ["existing", "new", "new", ""]
+      layerIds: ["existing", "new", "new", ""]
     });
     webserviceInitialised.next({
       mapIndex: DEFAULT_MAPINDEX,
       serviceId: "service",
-      layers: ["new"]
+      layerIds: ["new"]
     });
     await fixture.whenStable();
     await new Promise(setImmediate);
@@ -171,7 +171,7 @@ describe("DatasetTreeComponent", () => {
     expect(
       nativeElement.querySelector("tr.ggc-dt-btn-ls-collapse")?.textContent
     ).toContain("dataset (2)");
-    expect(configuredService.layers.map((layer) => layer.layerId)).toEqual([
+    expect(configuredService.layers?.map((layer) => layer.layerId)).toEqual([
       "existing"
     ]);
     expect(otherService.layers).toEqual([]);
@@ -194,7 +194,7 @@ describe("DatasetTreeComponent", () => {
         of({
           mapIndex,
           serviceId: "service",
-          layers: [`layer-${mapIndex}`]
+          layerIds: [`layer-${mapIndex}`]
         })
       )
     );

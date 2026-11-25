@@ -95,6 +95,6 @@ export class LegendRemovedEvent {
 export class WebserviceInitialisedEvent {
   /** De mapIndex waar de webservice is geïnitialiseerd **/
   mapIndex: string;
-  layers: string[];
+  layerIds: string[];
   serviceId?: string;
 }

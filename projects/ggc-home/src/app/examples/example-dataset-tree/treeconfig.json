@@ -30,8 +30,7 @@
         "datasetName": "Bestuurlijke gebieden (wms)",
         "services": [
           {
-            "serviceId": "serviceBestuurlijkeGebieden",
-            "layers": []
+            "serviceId": "serviceBestuurlijkeGebieden"
           }
         ]
       }

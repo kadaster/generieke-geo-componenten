@@ -115,12 +115,12 @@ describe("DatasetTreeMapConnectService", () => {
       webserviceInitialised.next({
         mapIndex: "other",
         serviceId: "service",
-        layers: ["ignored"]
+        layerIds: ["ignored"]
       });
       const nextEvent = {
         mapIndex: "map",
         serviceId: "service",
-        layers: ["later"]
+        layerIds: ["later"]
       };
       webserviceInitialised.next(nextEvent);
 

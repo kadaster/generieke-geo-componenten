@@ -59,12 +59,13 @@ export class ExampleLayerStylesCapabilitiesComponent
       .subscribe((event) => {
         if (event.mapIndex === this.mapIndex) {
           this.styles.set(
-            this.layerService.getStyles(event.layers[0], this.mapIndex)
+            this.layerService.getStyles(event.layerIds[0], this.mapIndex)
           );
           this.activeStyle.set(
-            this.layerService.getActiveStyle(event.layers[0], this.mapIndex)?.name
+            this.layerService.getActiveStyle(event.layerIds[0], this.mapIndex)
+              ?.name
           );
-          this.layerId = event.layers[0];
+          this.layerId = event.layerIds[0];
         }
       });
   }

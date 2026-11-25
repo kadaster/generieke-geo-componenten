@@ -272,17 +272,17 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
             continue;
           }
           const layerIds = new Set(
-            service.layers.map((layer) => layer.layerId)
+            service.layers?.map((layer) => layer.layerId)
           );
           const addedLayers: DatasetTreeLayer[] = [];
-          for (const layerId of event.layers) {
+          for (const layerId of event.layerIds ?? []) {
             if (layerId && !layerIds.has(layerId)) {
               layerIds.add(layerId);
               addedLayers.push(new DatasetTreeLayer(layerId));
             }
           }
           if (addedLayers.length) {
-            service.layers = [...service.layers, ...addedLayers];
+            service.layers = [...(service.layers ?? []), ...addedLayers];
             servicesChanged = true;
           }
         }

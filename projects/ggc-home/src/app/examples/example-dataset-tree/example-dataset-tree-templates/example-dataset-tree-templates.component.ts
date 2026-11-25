@@ -94,7 +94,13 @@ export class ExampleDatasetTreeTemplatesComponent
   }
 
   getTypeOfDataset(dataset: Dataset): string {
-    const firstLayerId = dataset.services[0].layers[0].layerId;
+    const firstLayerId = dataset.services[0].layers?.[0].layerId;
+
+    if (!firstLayerId) {
+      throw new Error(
+        "layers object is empty, cannot determine type of dataset"
+      );
+    }
 
     if (!this.datasetTypeCache.has(firstLayerId)) {
       this.datasetTypeCache.set(firstLayerId, "loading");
