@@ -7,7 +7,13 @@ import { Viewer } from "@cesium/widgets";
 import { createCesiumMock } from "../viewer/viewer-mock";
 import { cameraUtils } from "../utils/camera-utils";
 import { vi } from "vitest";
-import { Entity } from "@cesium/engine";
+import {
+  BoundingSphere,
+  Entity,
+  HeadingPitchRange,
+  Matrix4,
+  Rectangle
+} from "@cesium/engine";
 
 describe("GgcLocationService", () => {
   let service: GgcLocationService;
@@ -23,9 +29,9 @@ describe("GgcLocationService", () => {
     coreViewerServiceMock = {
       getViewer: vi.fn().mockName("CoreViewerService.getViewer")
     } as MockedObject<CoreViewerService>;
-    cesiumMock = createCesiumMock();
+    cesiumMock = createCesiumMock({ cameraPitch: -Math.PI / 6 });
 
-    vi.spyOn(cameraUtils, "flyToLookAtPosition");
+    vi.spyOn(cameraUtils, "flyToLookAtPosition").mockResolvedValue();
 
     coreViewerServiceMock.getViewer.mockReturnValue(cesiumMock as Viewer);
     TestBed.configureTestingModule({
@@ -42,17 +48,47 @@ describe("GgcLocationService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should zoom to current location", async () => {
+  it("should zoom to current location keeping heading and pitch", async () => {
     await service.zoomToCurrentLocation(mockCoordinates);
 
     expect(cameraUtils.flyToLookAtPosition).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
         lookAtPosition: {
           lon: mockCoordinates.longitude,
           lat: mockCoordinates.latitude
-        }
-      }),
+        },
+        orientation: {
+          heading: expect.closeTo(45),
+          pitch: expect.closeTo(-30)
+        },
+        range: 500
+      },
       cesiumMock
+    );
+  });
+
+  it("should zoom to bbox at terrain height keeping heading and pitch", async () => {
+    vi.spyOn(cameraUtils, "getTerrainHeight").mockResolvedValue(57);
+
+    await service.zoomToBBox([5.75, 51.8, 5.9, 51.88]);
+
+    expect(cameraUtils.getTerrainHeight).toHaveBeenCalledWith(
+      { lon: expect.closeTo(5.825), lat: expect.closeTo(51.84) },
+      cesiumMock.terrainProvider
+    );
+    const [boundingSphere, offset] = vi.mocked(
+      cesiumMock.camera!.viewBoundingSphere
+    ).mock.calls[0];
+    expect(boundingSphere).toEqual(
+      BoundingSphere.fromRectangle3D(
+        Rectangle.fromDegrees(5.75, 51.8, 5.9, 51.88),
+        undefined,
+        57
+      )
+    );
+    expect(offset).toEqual(new HeadingPitchRange(Math.PI / 4, -Math.PI / 6, 0));
+    expect(cesiumMock.camera!.lookAtTransform).toHaveBeenCalledWith(
+      Matrix4.IDENTITY
     );
   });
 
