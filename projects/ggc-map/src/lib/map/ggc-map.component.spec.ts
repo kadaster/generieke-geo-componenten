@@ -55,7 +55,7 @@ describe("MapComponent, ngAfterViewInit", () => {
     ggcMapServiceMock = {
       disableAllMapInteractions: vi
         .fn()
-        .mockName("GgcMapService.disableZoomInteractions")
+        .mockName("GgcMapService.disableAllMapInteractions")
     };
 
     TestBed.configureTestingModule({
@@ -111,10 +111,10 @@ describe("MapComponent, ngAfterViewInit", () => {
     expect(ggcMapServiceMock.disableAllMapInteractions).not.toHaveBeenCalled();
   });
 
-  it("should disable zoom interactions when disableZoomInteraction is true", () => {
+  it("should disable all map interactions when disableAllMapInteractions is true", () => {
     const mapIndex = "overview-map";
     fixture.componentRef.setInput("mapIndex", mapIndex);
-    fixture.componentRef.setInput("disableZoomInteraction", true);
+    fixture.componentRef.setInput("disableAllMapInteractions", true);
 
     fixture.detectChanges();
 
