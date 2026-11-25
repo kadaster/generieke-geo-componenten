@@ -154,7 +154,7 @@ export class ExampleIndexComponent {
     new ExampleLayerStylesVectorTileComponent().componentInfo,
     new Example3dLayerGeojsonComponent().componentInfo,
     new ExampleMapExtraOverzichtComponent().componentInfo,
-    new ExampleMapDriedExtraOverzichtComponent().componentInfo
+    new ExampleMapDriedExtraOverzichtComponent().componentInfo,
     // PLOP:CARD
     new ExampleLayerStylesCapabilitiesComponent().componentInfo,
     new ExampleLayerStylesCapabilitiesVectorTileComponent().componentInfo
