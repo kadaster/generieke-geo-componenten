@@ -31,7 +31,7 @@ jobs:
           fi
       - run: npm ci --ignore-scripts
       - name: Cache node_modules
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
@@ -46,13 +46,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
       - name: Restore node_modules
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - run: npm run build:all
       - name: Cache dist
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: dist
           key: dist-${{ github.sha }}
@@ -83,7 +83,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
       - name: Restore node_modules
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
@@ -113,12 +113,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
       - name: Restore node_modules
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Restore dist
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: dist
           key: dist-${{ github.sha }}
