@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
@@ -11,7 +11,7 @@ import {
   Webservice
 } from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
-import { HttpClient } from "@angular/common/http";
+import { httpResource } from "@angular/common/http";
 import { GgcFeatureInfoComponent } from "@kadaster/ggc-feature-info";
 import { ViewerType } from "@kadaster/ggc-models";
 import { Tags } from "../../tags.enum";
@@ -49,9 +49,9 @@ export class Example3dFeatureInfoAutoConnectComponent {
   tsDocsUrl = `${document.baseURI}tsdocs/modules/ggc-map_src_public-api.html`;
   // DOCS-SKIP:END
 
-  protected cameraOptions: CameraOptions;
+  protected readonly cameraOptions: CameraOptions =
+    cameraOptionsTorentjeDenHaag;
   protected viewerType = ViewerType.DRIE_D;
-  protected webService: Webservice[];
   protected viewerOptions: ViewerOptions = {
     elementId: "cesium-feature-info",
     terrainModelUrl:
@@ -64,18 +64,7 @@ export class Example3dFeatureInfoAutoConnectComponent {
   protected kaartConfig =
     "code/examples/example-3d/example-3d-feature-info-auto-connect/kaartconfig.json";
 
-  private readonly httpClient = inject(HttpClient);
-
-  constructor() {
-    this.httpClient.get(this.kaartConfig).subscribe((data) => {
-      this.webService = data as Webservice[];
-    });
-  }
-
-  public onCesiumReady() {
-    // zoom to Torentje
-    setTimeout(() => {
-      this.cameraOptions = cameraOptionsTorentjeDenHaag;
-    });
-  }
+  protected readonly webServicesResource = httpResource<Webservice[]>(
+    () => this.kaartConfig
+  );
 }

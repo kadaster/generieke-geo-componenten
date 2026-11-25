@@ -17,12 +17,14 @@
     <p>{{ componentInfo.introduction }}</p>
     <p>
       Dit voorbeeld laat zien hoe een feature aan de kaart wordt toegevoegd met
-      de <code>GgcLayerService</code>.<br />
+      de <code>GgcLayerService</code>. De parameters in de URL bepalen welk
+      perceel op de kaart staat.<br />
       De features worden uit de
       <a href="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/api"
         >OGC API Features</a
       >
-      van de Kadastrale kaart opgehaald.
+      van de Kadastrale kaart opgehaald. In de beschrijving van deze API staan
+      de beschikbare parameters per kaartlaag.
     </p>
   </div>
 
@@ -31,11 +33,12 @@
       <!-- DOCS:START functionality -->
       <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
         <fieldset class="ggc-fieldset">
-          <legend>Voeg een perceel toe</legend>
+          <legend>Kies een perceel</legend>
           <div class="d-grid gap-2">
             <button
               (click)="selectPerceel1()"
               class="btn"
+              [attr.aria-pressed]="activeLocation === 'perceel1'"
               [class.btn-primary]="activeLocation === 'perceel1'"
               [class.btn-outline-primary]="activeLocation !== 'perceel1'"
             >
@@ -44,6 +47,7 @@
             <button
               (click)="selectPerceel2()"
               class="btn"
+              [attr.aria-pressed]="activeLocation === 'perceel2'"
               [class.btn-primary]="activeLocation === 'perceel2'"
               [class.btn-outline-primary]="activeLocation !== 'perceel2'"
             >

@@ -14,10 +14,14 @@ import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { WmtsLayerOptions } from "../../layer/model/wmts-layer.model";
 import { GgcWmtsLayerComponent } from "../../layer/wmts-layer/ggc-wmts-layer.component";
 import { GgcWmsLayerComponent } from "../../layer/wms-layer/ggc-wms-layer.component";
-import { AbstractConfigurableLayerOptions } from "../../layer/model/abstract-layer.model";
+import {
+  AbstractConfigurableLayerOptions,
+  UrlParameter
+} from "../../layer/model/abstract-layer.model";
 import { GgcLayerBrtAchtergrondkaartComponent } from "../../layer/layer-brt-achtergrondkaart/ggc-layer-brt-achtergrondkaart.component";
 import { Webservice } from "../../layer/model/webservice.model";
 import BaseLayer from "ol/layer/Base";
+import Layer from "ol/layer/Layer";
 import { viewResolutionIsInLayerResolutionRange } from "../../layer/utils/viewResolutionIsInLayerResolutionRange";
 import { Observable, of, Subject } from "rxjs";
 import { catchError, map } from "rxjs/operators";
@@ -32,7 +36,6 @@ import {
   Style
 } from "@kadaster/ggc-models";
 import { AbstractBaseLayer } from "../../layer/abstract-base-layer/abstract-base-layer.directive";
-import Layer from "ol/layer/Layer";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
 
@@ -86,6 +89,7 @@ export class GgcLayerService {
   /**
    * Observable voor layer change events.
    * Emits een event als een layer geïnitialiseerd is, is toegevoegd aan de kaart of is weggehaald uit de kaart.
+   * Ook het laden van GeoJSON-features en fouten daarbij worden gemeld.
    * Identiek aan de getLayerChangedObservable in GgcMapService.
    */
   getLayerChangedObservable(): Observable<LayerChangedEvent> {
@@ -190,14 +194,10 @@ export class GgcLayerService {
       );
       if (layer) {
         layer.setVisible(true);
-        this.mapLayerComponents
-          .get(
-            this.buildLayerComponentKey(
-              layerOptions.mapIndex,
-              layerOptions.layerId
-            )
-          )
-          ?.enable();
+        this.getLayerComponent(
+          layerOptions.mapIndex,
+          layerOptions.layerId
+        )?.enable();
         this.emitLayerChanged(
           layerOptions.layerId,
           layerOptions.mapIndex ?? DEFAULT_MAPINDEX,
@@ -210,6 +210,7 @@ export class GgcLayerService {
     if (layerOptions.requestCapabilities === true) {
       layerOptions.layerId ??= crypto.randomUUID();
     }
+    let layerId = layerOptions.layerId;
     this.applyCapabilitiesOnLayerOptions(
       layerOptions,
       webserviceType
@@ -217,21 +218,34 @@ export class GgcLayerService {
       const updatedLayerOptions = this.setLayerOptionsDefaults(
         capabilitiesLayerOptions
       );
-      switch (webserviceType) {
-        case Webservice2DType.GEOJSON:
-          return this.addGeojsonLayer(updatedLayerOptions);
-        case Webservice2DType.IMAGE:
-          return this.addImageLayer(updatedLayerOptions);
-        case Webservice2DType.VECTOR:
-          return this.addVectorTileLayer(updatedLayerOptions);
-        case Webservice2DType.WMS:
-          return this.addWmsLayer(updatedLayerOptions);
-        case Webservice2DType.WMTS:
-          return this.addWmtsLayer(updatedLayerOptions);
-        default:
-          return undefined;
-      }
+      layerId =
+        this.addLayerForWebserviceType(updatedLayerOptions, webserviceType) ??
+        layerId;
     });
+    return layerId;
+  }
+
+  /**
+   * Voegt de laag toe met de component die bij het webservice‑type hoort.
+   */
+  private addLayerForWebserviceType(
+    layerOptions: AbstractConfigurableLayerOptions,
+    webserviceType: Webservice2DType
+  ): string | undefined {
+    switch (webserviceType) {
+      case Webservice2DType.GEOJSON:
+        return this.addGeojsonLayer(layerOptions);
+      case Webservice2DType.IMAGE:
+        return this.addImageLayer(layerOptions);
+      case Webservice2DType.VECTOR:
+        return this.addVectorTileLayer(layerOptions);
+      case Webservice2DType.WMS:
+        return this.addWmsLayer(layerOptions);
+      case Webservice2DType.WMTS:
+        return this.addWmtsLayer(layerOptions);
+      default:
+        return undefined;
+    }
   }
 
   /**
@@ -341,9 +355,7 @@ export class GgcLayerService {
       } else {
         this.mapService.getMap(mapIndex).removeLayer(layer);
       }
-      this.mapLayerComponents
-        .get(this.buildLayerComponentKey(mapIndex, layerId))
-        ?.disable();
+      this.getLayerComponent(mapIndex, layerId)?.disable();
       // the layer service will automatically react on this event
       this.mapService.emitLayerChangedEvent(
         layerId,
@@ -567,15 +579,37 @@ export class GgcLayerService {
       return;
     }
     layerConfig.activeStyle = styleName;
-    const layerComponent = this.mapLayerComponents.get(
-      this.buildLayerComponentKey(mapIndex, layerId)
-    );
+    const layerComponent = this.getLayerComponent(mapIndex, layerId);
     if (layerComponent) {
       layerComponent.setActiveStyle(styleName);
     }
     const activeStyle = this.findStyleOfLayer(styleName, layerId, mapIndex);
     if (activeStyle) {
       this.updateStyleLegend(activeStyle, layerId, mapIndex);
+    }
+  }
+
+  /**
+   * Vervangt de volledige lijst URL-parameters van een GeoJSON-laag.
+   * De basis-URL blijft ongewijzigd en de bestaande laag wordt opnieuw geladen.
+   * Een lege lijst verwijdert de dynamische parameters.
+   *
+   * @param urlParameters - De volledige nieuwe lijst met queryparameters.
+   * @param layerId - De identifier van de laag.
+   * @param mapIndex - De kaart waarop de laag staat.
+   */
+  setUrlParameters(
+    urlParameters: UrlParameter[],
+    layerId: string,
+    mapIndex: string = DEFAULT_MAPINDEX
+  ): void {
+    this.getLayerComponent(mapIndex, layerId)?.setUrlParameters(urlParameters);
+
+    if (this.getTypeOfLayer(layerId, mapIndex) === Webservice2DType.GEOJSON) {
+      const geojsonLayerOptions: Partial<GeojsonLayerOptions> = {
+        urlParameters
+      };
+      this.updateMapConfigLayer(geojsonLayerOptions, layerId, mapIndex);
     }
   }
 
@@ -623,10 +657,7 @@ export class GgcLayerService {
         }
 
         if (updatedLayerOptions.visible || updatedLayerOptions.persistent) {
-          updatedLayerOptions.layerId = this.addLayer(
-            updatedLayerOptions,
-            layerType
-          );
+          this.addLayer(updatedLayerOptions, layerType);
         }
       }
     );
@@ -830,6 +861,15 @@ export class GgcLayerService {
     this.mapLayerComponents.set(
       this.buildLayerComponentKey(mapIndex, layerId ?? ""),
       layerComponent
+    );
+  }
+
+  private getLayerComponent(
+    mapIndex: string,
+    layerId: string
+  ): AbstractBaseLayer<Layer> | undefined {
+    return this.mapLayerComponents.get(
+      this.buildLayerComponentKey(mapIndex, layerId)
     );
   }
 

@@ -69,6 +69,8 @@ import { ExampleLayerStylesVectorTileComponent } from "./examples/example-layer/
 import { ExampleCapabilitiesLayerOptionsComponent } from "./examples/example-map/example-capabilities-layer-options/example-capabilities-layer-options.component";
 import { ExampleMapExtraOverzichtComponent } from "./examples/example-map/example-map-extra-overzicht/example-map-extra-overzicht.component";
 import { ExampleMapDriedExtraOverzichtComponent } from "./examples/example-map/example-map-dried-extra-overzicht/example-map-dried-extra-overzicht.component";
+import { ExampleLayerStylesCapabilitiesComponent } from "./examples/example-layer/example-layer-styles-capabilities/example-layer-styles-capabilities.component";
+import { ExampleLayerStylesCapabilitiesVectorTileComponent } from "./examples/example-layer/example-layer-styles-capabilities-vector-tile/example-layer-styles-capabilities-vector-tile.component";
 // PLOP:IMPORTROUTE
 
 export const routes: Routes = [
@@ -162,6 +164,18 @@ export const routes: Routes = [
     title: "Styles toepassen in Vector Tile kaartlagen | GGC-Home",
     component: ExampleLayerStylesVectorTileComponent,
     data: { label: "Styles in Vector Tile kaartlagen" }
+  },
+  {
+    path: "layer-styles-capabilities",
+    title: "Automatisch styles ophalen (WMS) | GGC-Home",
+    component: ExampleLayerStylesCapabilitiesComponent,
+    data: { label: "Automatisch styles ophalen (WMS)" }
+  },
+  {
+    path: "layer-styles-capabilities-vector-tile",
+    title: "Automatisch styles ophalen (Vector Tile) | GGC-Home",
+    component: ExampleLayerStylesCapabilitiesVectorTileComponent,
+    data: { label: "Automatisch styles ophalen (Vector Tile)" }
   },
   {
     path: "layer-html-config",

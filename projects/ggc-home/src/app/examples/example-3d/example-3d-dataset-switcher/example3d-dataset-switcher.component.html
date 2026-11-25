@@ -51,7 +51,11 @@
           ></ggc-map-3d-controls>
         </div>
         <ggc-dataset-switcher
-          [themes]="datasetSwitcherConfig"
+          [themes]="
+            datasetSwitcherConfigResource.hasValue()
+              ? datasetSwitcherConfigResource.value()
+              : []
+          "
           [datasetSwitcherButtons]="datasetSwitcherButtons"
           [viewerType]="viewerType"
         ></ggc-dataset-switcher>
@@ -61,8 +65,11 @@
           <ggc-map-3d-viewer
             [viewerOptions]="viewerOptions"
             [cameraOptions]="cameraOptions"
-            (ready)="onCesiumReady()"
-            [webServices]="webService"
+            [webServices]="
+              webServicesResource.hasValue()
+                ? webServicesResource.value()
+                : undefined
+            "
           ></ggc-map-3d-viewer>
         </div>
       </div>

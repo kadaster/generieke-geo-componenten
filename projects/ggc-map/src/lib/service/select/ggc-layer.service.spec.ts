@@ -19,6 +19,8 @@ import {
 } from "@kadaster/ggc-models";
 import { createWmtsCapabilitiesMock } from "../../layer/service/mock/wmts-capabilities.mock";
 import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
+import VectorLayer from "ol/layer/Vector";
+import { Webservice } from "../../layer/model/webservice.model";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
@@ -42,6 +44,10 @@ describe("LayerService", () => {
   beforeEach(() => {
     coreMapServiceSpy = {
       getLayer: vi.fn().mockName("CoreMapService.getLayer"),
+      checkMapIndex: vi
+        .fn()
+        .mockName("CoreMapService.checkMapIndex")
+        .mockReturnValue(true),
       getLayerChangedObservable: vi
         .fn()
         .mockName("coreMapService.getLayerChangedObservable")
@@ -306,6 +312,17 @@ describe("LayerService", () => {
       );
     });
 
+    it("should return the layerId when adding a layer", () => {
+      vi.spyOn(service, "addWmsLayer").mockReturnValue("layer1");
+
+      const layerId = service.addLayer(
+        { mapIndex: MAP_INDEX, layerId: "layer1" },
+        Webservice2DType.WMS
+      );
+
+      expect(layerId).toBe("layer1");
+    });
+
     it("should keep layer defaults idempotent when applied more than once", () => {
       const layerConfig = {
         layerId: "layer1",
@@ -390,6 +407,71 @@ describe("LayerService", () => {
           })
         }
       ]);
+    });
+  });
+
+  describe("URL parameters", () => {
+    it("should update a directly added GeoJSON layer without replacing it", () => {
+      const map = coreMapServiceSpy.getMap(MAP_INDEX);
+      const addLayer = vi.spyOn(map, "addLayer");
+      service.addGeojsonLayer({
+        layerId: "perceel",
+        mapIndex: MAP_INDEX,
+        url: "https://example.test/data.geojson?f=json"
+      });
+      const layer = addLayer.mock.calls[0][0];
+      if (!(layer instanceof VectorLayer)) {
+        throw new Error("Expected a vector layer");
+      }
+      coreMapServiceSpy.getLayer.mockReturnValue(layer);
+
+      service.setUrlParameters(
+        [{ parameterName: "filter", parameterValue: "nieuw" }],
+        "perceel",
+        MAP_INDEX
+      );
+
+      expect(layer.getSource()?.getUrl()).toBe(
+        "https://example.test/data.geojson?f=json&filter=nieuw"
+      );
+      expect(addLayer).toHaveBeenCalledTimes(1);
+      expect(map.removeLayer).not.toHaveBeenCalled();
+    });
+
+    it("should retain parameters for an inactive configured layer on the selected map", () => {
+      const webservice: Webservice = {
+        type: Webservice2DType.GEOJSON,
+        url: "https://example.test/data.geojson",
+        layers: [{ layerId: "perceel", visible: false }]
+      };
+      const otherWebservice: Webservice = {
+        type: Webservice2DType.GEOJSON,
+        url: "https://example.test/other.geojson",
+        layers: [{ layerId: "perceel", visible: false }]
+      };
+      service.loadWebservices([webservice], MAP_INDEX);
+      service.loadWebservices([otherWebservice], "other-map");
+      const urlParameters = [
+        { parameterName: "filter", parameterValue: "nieuw" }
+      ];
+
+      service.setUrlParameters(urlParameters, "perceel", MAP_INDEX);
+
+      expect(service.getLayerConfig("perceel", MAP_INDEX)).toMatchObject({
+        url: "https://example.test/data.geojson",
+        urlParameters
+      });
+      expect(service.getLayerConfig("perceel", "other-map")).not.toHaveProperty(
+        "urlParameters"
+      );
+
+      const addGeojsonLayer = vi
+        .spyOn(service, "addGeojsonLayer")
+        .mockReturnValue("perceel");
+      service.toggleVisibility("perceel", MAP_INDEX);
+      expect(addGeojsonLayer).toHaveBeenCalledWith(
+        expect.objectContaining({ urlParameters })
+      );
     });
   });
 
@@ -479,6 +561,21 @@ describe("LayerService", () => {
       );
 
       expect(emitSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it("should keep the existing layerId when addLayer returns undefined", () => {
+      const webservice = createWebservice();
+      const addLayerSpy = vi
+        .spyOn(service, "addLayer")
+        .mockReturnValue(undefined);
+
+      service.loadWebservices([webservice as any], MAP_INDEX);
+
+      expect(addLayerSpy).toHaveBeenCalledTimes(1);
+      expect(webservice.layers[0].layerId).toBe("layer1");
+      expect(service.getLayerConfig("layer1", MAP_INDEX)?.layerId).toBe(
+        "layer1"
+      );
     });
 
     it("should select the first style as activeStyle when activeStyle is missing", () => {
@@ -623,6 +720,40 @@ describe("LayerService", () => {
         expect(
           service.getLayerConfig("layer1", MAP_INDEX)?.requestCapabilities
         ).toBe(true);
+      });
+
+      it("should store the styles from the capabilities on the layer config and allow switching the active style and legend by layerId", () => {
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnLayerOptions"
+        ).mockImplementation((layerOptions) =>
+          of({ ...layerOptions, styles: defaultStyles })
+        );
+
+        service.loadWebservices(
+          [
+            createWebservice({
+              layerName: "laag",
+              requestCapabilities: true
+            }) as any
+          ],
+          MAP_INDEX
+        );
+
+        expect(service.getLayerConfig("layer1", MAP_INDEX)?.layerId).toBe(
+          "layer1"
+        );
+        expect(service.getStyles("layer1", MAP_INDEX)).toEqual(defaultStyles);
+
+        vi.spyOn(service, "getEnabled").mockReturnValue(true);
+        service.setActiveStyle("contrast", "layer1", MAP_INDEX);
+
+        expect(service.getActiveStyle("layer1", MAP_INDEX)?.name).toBe(
+          "contrast"
+        );
+        expect(
+          service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend
+        ).toEqual({ legendUrl: "contrast-legend" });
       });
     });
   });

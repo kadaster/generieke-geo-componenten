@@ -1,6 +1,6 @@
 import type { MockedObject } from "vitest";
 import { TestBed } from "@angular/core/testing";
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 import { GgcOgcApiCapabilitiesService } from "./ggc-ogc-api-capabilities.service";
 import {
   CoreOgcApiCapabilitiesService,
@@ -16,6 +16,39 @@ describe("GgcOgcApiCapabilitiesService", () => {
   let coreMock: MockedObject<CoreOgcApiCapabilitiesService>;
 
   const BASE_URL = "https://example.org/ogcapi";
+
+  const LANDING_PAGE: OGCAPILandingPageInfo = {
+    title: "OGC API Example",
+    links: {}
+  };
+
+  const RD_STYLE: OGCAPIStyle = {
+    id: "netherlandsrdnewquad-style",
+    title: "RD Style",
+    links: [
+      {
+        rel: "stylesheet",
+        type: "application/vnd.mapbox.style+json",
+        href: "https://styles.example/style.json"
+      }
+    ]
+  };
+
+  const createRDTileset = (tileLevels: string[]): OGCAPITileset => ({
+    dataType: "type",
+    tileMatrixSetId: "id",
+    tileMatrixSetDefinition: "def",
+    crs: "https://www.opengis.net/def/crs/EPSG/0/28992",
+    links: [],
+    tileMatrixSetURI: "https://tiles.example/tms/28992",
+    tileMatrixSetLimits: tileLevels.map((tileLevel) => ({
+      tileMatrix: tileLevel,
+      minTileRow: 0,
+      maxTileRow: 10,
+      minTileCol: 0,
+      maxTileCol: 10
+    }))
+  });
 
   beforeEach(() => {
     coreMock = {
@@ -111,42 +144,101 @@ describe("GgcOgcApiCapabilitiesService", () => {
       coreMock.getStyles.mockReturnValue(of([rdStyle, nonRdStyle]));
       coreMock.getTiles.mockReturnValue(of(tiles));
 
-      service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
-        next: (capabilities) => {
-          // Assert
-          expect(capabilities.title).toBe("OGC API Example");
-          expect(capabilities.abstract).toBe("Beschrijving");
-          expect(capabilities.url).toBe(BASE_URL);
-          expect(capabilities.type).toBe("OGCAPI");
+      const capabilities = await firstValueFrom(
+        service.getServiceCapabilitiesOgcApi(BASE_URL)
+      );
 
-          // RD tiles filter: 1 layer (alleen RD tileset)
-          expect(capabilities.layers.length).toBe(1);
+      expect(capabilities.title).toBe("OGC API Example");
+      expect(capabilities.abstract).toBe("Beschrijving");
+      expect(capabilities.url).toBe(BASE_URL);
+      expect(capabilities.type).toBe("OGCAPI");
 
-          const layer = capabilities.layers[0];
-          expect(layer.name).toBe("RD Tiles"); // name == tiles.title
-          expect(layer.title).toBe("RD Tiles");
+      // RD tiles filter: 1 layer (alleen RD tileset)
+      expect(capabilities.layers.length).toBe(1);
 
-          // URL-transformatie van {tileMatrix}/{tileRow}/{tileCol} → {z}/{x}/{y}
-          expect(layer.url).toContain("{z}/{x}/{y}");
-          expect(layer.url).toContain("?apiKey=abc");
+      const layer = capabilities.layers[0];
+      expect(layer.name).toBe("RD Tiles"); // name == tiles.title
+      expect(layer.title).toBe("RD Tiles");
 
-          // Styles: alleen RD style (gefilterd op id .includes('netherlandsrdnewquad'))
-          expect(layer.styles.length).toBe(1);
-          expect(layer.styles[0].name).toBe(rdStyle.id);
-          expect(layer.styles[0].title).toBe("RD Style");
-          expect(layer.styles[0].legendURL).toBe(
-            "https://styles.example/style.json"
-          );
+      // URL-transformatie van {tileMatrix}/{tileRow}/{tileCol} → {z}/{x}/{y}
+      expect(layer.url).toContain("{z}/{x}/{y}");
+      expect(layer.url).toContain("?apiKey=abc");
 
-          // Resoluties voor tileMatrix level 12
-          // initialResolution = 3440.64; minlevel=12, maxlevel=12
-          // minResolution = 3440.64 / 2^(12-1) = 0.42
-          // maxResolution = 3440.64 / 2^(12) = 0.84
-          expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(0.42, 6);
-          expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(0.84, 6);
-        }
-      });
+      // Styles: alleen RD style (gefilterd op id .includes('netherlandsrdnewquad'))
+      expect(layer.styles.length).toBe(1);
+      expect(layer.styles[0].name).toBe(rdStyle.id);
+      expect(layer.styles[0].title).toBe("RD Style");
+      expect(layer.styles[0].legendURL).toBe(
+        "https://styles.example/style.json"
+      );
     });
+
+    it.each([
+      {
+        omschrijving: "uit één tilelevel",
+        tileLevels: ["12"],
+        expectedMinResolution: 0.42,
+        expectedMaxResolution: 0.84
+      },
+      {
+        omschrijving: "uit het laagste en hoogste van meerdere tilelevels",
+        tileLevels: ["10", "11", "12"],
+        expectedMinResolution: 0.42,
+        expectedMaxResolution: 3.36
+      },
+      {
+        omschrijving: "zonder de onbruikbare tilelevels mee te tellen",
+        tileLevels: ["10", "onbruikbaar", "12"],
+        expectedMinResolution: 0.42,
+        expectedMaxResolution: 3.36
+      },
+      {
+        omschrijving: "met tilelevels geklemd op het bereik 0..16",
+        tileLevels: ["-5", "99"],
+        expectedMinResolution: 0.02625,
+        expectedMaxResolution: 3440.64
+      },
+      {
+        omschrijving: "als volledig bereik wanneer geen tilelevel bruikbaar is",
+        tileLevels: ["onbruikbaar"],
+        expectedMinResolution: 0.02625,
+        expectedMaxResolution: 3440.64
+      },
+      {
+        omschrijving: "als volledig bereik wanneer er geen tilelevels zijn",
+        tileLevels: [],
+        expectedMinResolution: 0.02625,
+        expectedMaxResolution: 3440.64
+      }
+    ])(
+      // Het hoogste tilelevel bepaalt de minResolution (één level hoger, zodat
+      // de laag van...tot zichtbaar is), het laagste bepaalt de maxResolution.
+      "leidt de resoluties af $omschrijving",
+      async ({ tileLevels, expectedMinResolution, expectedMaxResolution }) => {
+        coreMock.getLandingPageInfo.mockReturnValue(of(LANDING_PAGE));
+        coreMock.getStyles.mockReturnValue(of([RD_STYLE]));
+        coreMock.getTiles.mockReturnValue(
+          of({
+            title: "RD Tiles",
+            tilesets: [createRDTileset(tileLevels)]
+          } as OGCAPITile)
+        );
+
+        const capabilities = await firstValueFrom(
+          service.getServiceCapabilitiesOgcApi(BASE_URL)
+        );
+
+        const layer = capabilities.layers[0];
+        expect(parseFloat(layer.minResolution ?? "0")).toBeCloseTo(
+          expectedMinResolution,
+          6
+        );
+        expect(parseFloat(layer.maxResolution ?? "0")).toBeCloseTo(
+          expectedMaxResolution,
+          6
+        );
+      }
+    );
 
     it('gebruikt fallback URL wanneer geen rel="item" link beschikbaar is', async () => {
       const landingPage: OGCAPILandingPageInfo = {
@@ -194,15 +286,15 @@ describe("GgcOgcApiCapabilitiesService", () => {
       coreMock.getStyles.mockReturnValue(of([rdStyle]));
       coreMock.getTiles.mockReturnValue(of(tiles));
 
-      service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
-        next: (capabilities) => {
-          expect(capabilities.layers.length).toBe(1);
-          const layer = capabilities.layers[0];
-          expect(layer.url).toBe(
-            "https://tiles.example/tms/28992/{z}/{x}/{y}?f=mvt"
-          );
-        }
-      });
+      const capabilities = await firstValueFrom(
+        service.getServiceCapabilitiesOgcApi(BASE_URL)
+      );
+
+      expect(capabilities.layers.length).toBe(1);
+      const layer = capabilities.layers[0];
+      expect(layer.url).toBe(
+        "https://tiles.example/tms/28992/{z}/{x}/{y}?f=mvt"
+      );
     });
 
     it("levert lege layers als er geen RD tilesets zijn", async () => {
@@ -243,11 +335,11 @@ describe("GgcOgcApiCapabilitiesService", () => {
       coreMock.getStyles.mockReturnValue(of(styles));
       coreMock.getTiles.mockReturnValue(of(tiles));
 
-      service.getServiceCapabilitiesOgcApi(BASE_URL).subscribe({
-        next: (capabilities) => {
-          expect(capabilities.layers.length).toBe(0);
-        }
-      });
+      const capabilities = await firstValueFrom(
+        service.getServiceCapabilitiesOgcApi(BASE_URL)
+      );
+
+      expect(capabilities.layers.length).toBe(0);
     });
   });
 });

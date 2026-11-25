@@ -4,7 +4,10 @@ import { Options } from "ol/layer/Base";
 import OlMap from "ol/Map";
 import { CrsConfig } from "../../core/model/crs-config.model";
 import { GgcCrsConfigService } from "../../core/service/ggc-crs-config.service";
-import { AbstractBaseLayerOptions } from "../model/abstract-layer.model";
+import {
+  AbstractBaseLayerOptions,
+  UrlParameter
+} from "../model/abstract-layer.model";
 import { DEFAULT_MAPINDEX } from "@kadaster/ggc-models";
 import { CoreMapService } from "../../map/service/core-map.service";
 import { CoreSelectionService } from "../../service/select/core-selection.service";
@@ -61,11 +64,18 @@ export abstract class AbstractBaseLayer<T extends Layer>
   /**
    * Set the active style for the layer.
    * The function will find the style in styles with the corresponding style name and applies it.
-   * This function only supports WMS and vector tile layers.
+   * This function only supports WMS, WMTS and vector tile layers.
    * @param styleName the name of the style that should be applied.
    */
   setActiveStyle(styleName: string) {
     // placeholder
+  }
+
+  /**
+   * Vervangt de URL-parameters. Alleen GeoJSON-lagen ondersteunen dit.
+   */
+  setUrlParameters(urlParameters: UrlParameter[]): void {
+    void urlParameters;
   }
 
   public getLayerId(): string {

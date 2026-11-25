@@ -10,6 +10,7 @@ import {
   OnInit,
   output,
   signal,
+  untracked,
   viewChild
 } from "@angular/core";
 import {
@@ -201,11 +202,15 @@ export class GgcViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((viewer) => (this.camera = viewer?.camera));
 
     // Webservices pas laden zodra de viewer geïnitialiseerd is, en opnieuw
-    // laden bij elke wijziging van de input.
+    // laden bij elke wijziging van de input. Het laden zelf is untracked,
+    // zodat signals die subscribers (zoals legend en dataset-tree) synchroon
+    // lezen geen herhaalde laadactie veroorzaken.
     effect(() => {
       const webServices = this.webServices();
       if (this.isInitialized() && webServices) {
-        this.ggcSharedLayerService.loadWebservices(webServices);
+        untracked(() =>
+          this.ggcSharedLayerService.loadWebservices(webServices)
+        );
       }
     });
 

@@ -8,6 +8,11 @@
   padding: 0 16px 16px 16px;
 }
 
+.ggc-link-list .utrecht-link-list__item {
+  display: block;
+  break-inside: avoid;
+}
+
 .voorbeelden-banner-button {
   background-color: var(--ggc-color-primary-400);
   width: 100%;

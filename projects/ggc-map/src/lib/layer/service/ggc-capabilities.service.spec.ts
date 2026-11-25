@@ -296,7 +296,7 @@ describe("GgcCapabilitiesService", () => {
       expect(result).toEqual(wmsLayerOptions);
     });
 
-    it("WMTS: matcht op layer en mapt alleen title", async () => {
+    it("WMTS: matcht op layer en mapt de title; resoluties komen uit de TileMatrixSet en worden niet op de laag gezet", async () => {
       const wmtsMock: ServiceCapabilities = {
         url: baseUrl,
         type: "WMTS",
@@ -489,5 +489,195 @@ describe("GgcCapabilitiesService", () => {
         ).not.toHaveBeenCalled();
       }
     );
+
+    describe("styles", () => {
+      it("WMS: mapt de styles inclusief titel en legenda uit de capabilities", async () => {
+        wmsWmtsSvcSpy.getServiceCapabilitiesWMS.mockReturnValue(
+          of({
+            url: baseUrl,
+            type: "WMS",
+            layers: [
+              {
+                name: "laag",
+                title: "Laag",
+                styles: [
+                  {
+                    name: "bever",
+                    title: "Bever",
+                    legendURL: "https://example.test/bever.png"
+                  },
+                  { name: "otter", legendURL: "" }
+                ]
+              }
+            ]
+          })
+        );
+        const wmsLayerOptions: WmsLayerOptions = {
+          url: baseUrl,
+          layers: "laag"
+        };
+
+        const result = await firstValueFrom(
+          service.mapCapabilitiesOnLayerOptions(
+            wmsLayerOptions,
+            Webservice2DType.WMS
+          )
+        );
+
+        expect(result.styles).toEqual([
+          {
+            name: "bever",
+            title: "Bever",
+            legend: { legendUrl: "https://example.test/bever.png" }
+          },
+          { name: "otter", title: "otter", legend: undefined }
+        ]);
+      });
+
+      it("WMS: overschrijft de styles uit de configuratie niet", async () => {
+        wmsWmtsSvcSpy.getServiceCapabilitiesWMS.mockReturnValue(
+          of({
+            url: baseUrl,
+            type: "WMS",
+            layers: [
+              {
+                name: "laag",
+                title: "Laag",
+                styles: [
+                  {
+                    name: "uit-capabilities",
+                    legendURL: "https://example.test/legend.png"
+                  }
+                ]
+              }
+            ]
+          })
+        );
+        const wmsLayerOptions: WmsLayerOptions = {
+          url: baseUrl,
+          layers: "laag",
+          styles: [{ name: "eigen-style" }]
+        };
+
+        const result = await firstValueFrom(
+          service.mapCapabilitiesOnLayerOptions(
+            wmsLayerOptions,
+            Webservice2DType.WMS
+          )
+        );
+
+        expect(result.styles).toEqual([{ name: "eigen-style" }]);
+      });
+
+      it("Vector: mapt de styles met de mapbox stylesheet als legenda", async () => {
+        const landingPageUrl = "https://api.example.test/ogc/v1";
+        ogcApiSvcSpy.getServiceCapabilitiesOgcApi.mockReturnValue(
+          of({
+            url: landingPageUrl,
+            type: "OGCAPI",
+            layers: [
+              {
+                name: "tiles",
+                title: "Tiles",
+                styles: [
+                  {
+                    name: "standaard__netherlandsrdnewquad",
+                    title: "Standaardvisualisatie",
+                    legendURL: `${landingPageUrl}/styles/standaard__netherlandsrdnewquad?f=mapbox`
+                  }
+                ]
+              }
+            ]
+          })
+        );
+        const vectorTileLayerOptions: VectorTileLayerOptions = {
+          url: `${landingPageUrl}/tiles/NetherlandsRDNewQuad/{z}/{y}/{x}?f=mvt`
+        };
+
+        const result = await firstValueFrom(
+          service.mapCapabilitiesOnLayerOptions(
+            vectorTileLayerOptions,
+            Webservice2DType.VECTOR
+          )
+        );
+
+        expect(result.styles).toEqual([
+          {
+            name: "standaard__netherlandsrdnewquad",
+            title: "Standaardvisualisatie",
+            legend: {
+              name: "standaard__netherlandsrdnewquad",
+              url: `${landingPageUrl}/styles/standaard__netherlandsrdnewquad?f=mapbox`
+            }
+          }
+        ]);
+      });
+
+      it("WMTS: mapt de styles inclusief legenda uit de capabilities", async () => {
+        wmsWmtsSvcSpy.getServiceCapabilitiesWMTS.mockReturnValue(
+          of({
+            url: baseUrl,
+            type: "WMTS",
+            layers: [
+              {
+                name: "wmts:layer",
+                title: "WMTS Layer",
+                styles: [
+                  {
+                    name: "default",
+                    title: "Standaard",
+                    legendURL: "https://example.test/legend.png"
+                  },
+                  { name: "grijs", legendURL: "" }
+                ]
+              }
+            ]
+          })
+        );
+        const wmtsLayerOptions: WmtsLayerOptions = {
+          url: baseUrl,
+          layer: "wmts:layer"
+        };
+
+        const result = await firstValueFrom(
+          service.mapCapabilitiesOnLayerOptions(
+            wmtsLayerOptions,
+            Webservice2DType.WMTS
+          )
+        );
+
+        expect(result.styles).toEqual([
+          {
+            name: "default",
+            title: "Standaard",
+            legend: { legendUrl: "https://example.test/legend.png" }
+          },
+          { name: "grijs", title: "grijs", legend: undefined }
+        ]);
+      });
+
+      it("WMS: laat styles leeg wanneer de capabilities geen styles bevatten", async () => {
+        wmsWmtsSvcSpy.getServiceCapabilitiesWMS.mockReturnValue(
+          of({
+            url: baseUrl,
+            type: "WMS",
+            layers: [{ name: "laag", title: "Laag", styles: [] }]
+          })
+        );
+        const wmsLayerOptions: WmsLayerOptions = {
+          url: baseUrl,
+          layers: "laag"
+        };
+
+        const result = await firstValueFrom(
+          service.mapCapabilitiesOnLayerOptions(
+            wmsLayerOptions,
+            Webservice2DType.WMS
+          )
+        );
+
+        expect(result.styles).toBeUndefined();
+      });
+    });
   });
 });

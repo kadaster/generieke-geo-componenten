@@ -1,6 +1,16 @@
 import { LegendType, Style } from "@kadaster/ggc-models";
 
 /**
+ * Een naam en waarde van een URL-queryparameter.
+ */
+export interface UrlParameter {
+  /** De naam van de parameter. */
+  parameterName: string;
+  /** De waarde van de parameter. */
+  parameterValue: string;
+}
+
+/**
  * Basale laagopties die gebruikt worden om een laag aan een specifieke kaart te koppelen.
  */
 export interface AbstractBaseLayerOptions {
@@ -119,22 +129,23 @@ export interface AbstractConfigurableLayerOptions extends AbstractBaseLayerOptio
   opacity?: number;
 
   /**
-   * Optioneel: De mogelijke styles van deze laag. Dit wordt momenteel alleen gesupport voor WMS en vector tile layers.
+   * Optioneel: De mogelijke styles van deze laag. Dit wordt momenteel alleen gesupport voor WMS, WMTS en vector tile layers.
+   * Kan worden opgehaald via de capabilities service, zie requestCapabilities.
    */
   styles?: Style[];
 
   /**
    * Optioneel: De name van de actieve style van deze laag. In styles moet ook een style aanwezig zijn met deze name.
    * Als activeStyle niet is ingesteld, dan wordt de eerste style in styles gebruikt als actieve style.
-   * Dit wordt momenteel alleen gesupport voor WMS en vector tile layers.
+   * Dit wordt momenteel alleen gesupport voor WMS, WMTS en vector tile layers.
    */
   activeStyle?: string;
 
   /**
    * Optioneel: wanneer true, dan worden bij het laden van de webservices de capabilities
    * van de service opgehaald en worden de layerOptions daarmee aangevuld (bijvoorbeeld
-   * `title`, `minResolution` en `maxResolution`). Reeds ingestelde waarden worden niet overschreven.
-   * PDOK WMTS kaartlagen geven geen max/minResolution terug, waardoor deze niet automatisch worden ingesteld.
+   * `title`, `minResolution`, `maxResolution` en `styles`).
+   * Reeds ingestelde waarden worden niet overschreven.
    * Na het succesvol ophalen van de capabilities wordt deze waarde op false gezet, zodat de
    * capabilities niet opnieuw worden opgehaald. Default false.
    */

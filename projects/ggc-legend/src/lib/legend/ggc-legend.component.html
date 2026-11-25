@@ -63,7 +63,7 @@
   @if (isLegendUrl(layerLegend.legend)) {
     <ggc-legend-url
       [legend]="layerLegend.legend"
-      [layerName]="layerLegend.layerName"
+      [layerTitle]="layerLegend.layerTitle"
     ></ggc-legend-url>
   } @else if (isIconListArray(layerLegend.legend)) {
     <ggc-legend-icon [icons]="layerLegend.legend"></ggc-legend-icon>
