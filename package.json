@@ -144,7 +144,7 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.7",
     "jquery": "3.8.0",
-    "jsdom": "^29.1.1",
+    "jsdom": "^31.0.0",
     "ng-packagr": "^22.0.0",
     "ngx-highlightjs": "^14.0.1",
     "ol": "^10.9.0",
