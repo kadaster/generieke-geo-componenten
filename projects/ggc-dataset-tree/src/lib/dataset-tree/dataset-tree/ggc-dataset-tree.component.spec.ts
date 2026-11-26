@@ -188,7 +188,7 @@ describe("DatasetTreeComponent", () => {
     expect(getWebserviceInitialisedObservable).not.toHaveBeenCalled();
   });
 
-  it("should apply already initialised layers when the map or flat view changes", async () => {
+  it("should update layerIds when mapIndex changes", async () => {
     getWebserviceInitialisedObservable.mockImplementation((mapIndex: string) =>
       Promise.resolve(
         of({
