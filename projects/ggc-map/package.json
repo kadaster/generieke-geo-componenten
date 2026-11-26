@@ -7,7 +7,7 @@
     "ol": "^10.8.0"
   },
   "optionalDependencies": {
-    "ol-mapbox-style": "^12.3.3",
+    "ol-mapbox-style": "^12.3.3 || ^13.4.1",
     "proj4": "^2.8.0"
   },
   "dependencies": {
