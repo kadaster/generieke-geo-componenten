@@ -187,4 +187,38 @@ describe("CoreOgcApiFeaturesService", () => {
 
     expect(result.length).toBe(11);
   });
+  it("should fetch a single feature without adding a limit when the URL ends with a feature id", async () => {
+    const url = "https://api.test/collections/addresses/items/42";
+    const response = {
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [4, 52] },
+      properties: { id: 42 }
+    };
+
+    const promise = service.fetchAllOgcApiFeatures(url, 100, 5000);
+
+    const request = httpTestingController.expectOne(
+      (r) => r.url === url && !r.params.has("limit")
+    );
+    request.flush(response);
+
+    const result = await promise;
+    expect(result.length).toBe(1);
+    expect(result[0]).toBeInstanceOf(Feature);
+    expect(result[0].getGeometry()).toBeTruthy();
+  });
+
+  it("should return no features for an empty single-feature response", async () => {
+    const url = "https://api.test/collections/addresses/items/42";
+
+    const promise = service.fetchAllOgcApiFeatures(url, 100, 5000);
+
+    const request = httpTestingController.expectOne(
+      (r) => r.url === url && !r.params.has("limit")
+    );
+    request.flush(null);
+
+    const result = await promise;
+    expect(result).toEqual([]);
+  });
 });
