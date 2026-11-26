@@ -27,7 +27,10 @@ import {
   WebserviceInitialisedEvent
 } from "@kadaster/ggc-models";
 import { LayerEnabledCallback } from "../../model/layer-enabled-callback.model";
-import { DatasetTreeLayer } from "../../model/theme/dataset-tree-webservice.model";
+import {
+  DatasetTreeLayer,
+  DatasetTreeWebservice
+} from "../../model/theme/dataset-tree-webservice.model";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
 import { from, switchMap } from "rxjs";
 
@@ -263,47 +266,69 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
       return;
     }
 
-    const updateTheme = (theme: Theme): boolean => {
-      let datasetsChanged = false;
-      for (const dataset of theme.datasets) {
-        let servicesChanged = false;
-        for (const service of dataset.services) {
-          if (service.serviceId !== event.serviceId) {
-            continue;
-          }
-          const layerIds = new Set(
-            service.layers?.map((layer) => layer.layerId)
-          );
-          const addedLayers: DatasetTreeLayer[] = [];
-          for (const layerId of event.layerIds ?? []) {
-            if (layerId && !layerIds.has(layerId)) {
-              layerIds.add(layerId);
-              addedLayers.push(new DatasetTreeLayer(layerId));
-            }
-          }
-          if (addedLayers.length) {
-            service.layers = [...(service.layers ?? []), ...addedLayers];
-            servicesChanged = true;
-          }
-        }
-        if (servicesChanged) {
-          dataset.services = [...dataset.services];
-          datasetsChanged = true;
-        }
-      }
-      if (datasetsChanged) {
-        theme.datasets = [...theme.datasets];
-      }
-      const themesChanged = theme.themes.map(updateTheme).some(Boolean);
-      if (themesChanged) {
-        theme.themes = [...theme.themes];
-      }
-      return datasetsChanged || themesChanged;
-    };
-
     this.processedThemes.update((themes) => {
-      const changed = themes.map(updateTheme).some(Boolean);
+      const changed = themes
+        .map((theme) => this.updateThemeLayers(theme, event))
+        .some(Boolean);
       return changed ? [...themes] : themes;
     });
+  }
+
+  private updateThemeLayers(
+    theme: Theme,
+    event: WebserviceInitialisedEvent
+  ): boolean {
+    const datasetsChanged = theme.datasets
+      .map((dataset) => this.updateDatasetLayers(dataset, event))
+      .some(Boolean);
+    if (datasetsChanged) {
+      theme.datasets = [...theme.datasets];
+    }
+
+    const childThemesChanged = theme.themes
+      .map((childTheme) => this.updateThemeLayers(childTheme, event))
+      .some(Boolean);
+    if (childThemesChanged) {
+      theme.themes = [...theme.themes];
+    }
+
+    return datasetsChanged || childThemesChanged;
+  }
+
+  private updateDatasetLayers(
+    dataset: Dataset,
+    event: WebserviceInitialisedEvent
+  ): boolean {
+    const servicesChanged = dataset.services
+      .map((service) => this.addInitialisedLayersToService(service, event))
+      .some(Boolean);
+    if (servicesChanged) {
+      dataset.services = [...dataset.services];
+    }
+    return servicesChanged;
+  }
+
+  private addInitialisedLayersToService(
+    service: DatasetTreeWebservice,
+    event: WebserviceInitialisedEvent
+  ): boolean {
+    if (service.serviceId !== event.serviceId) {
+      return false;
+    }
+
+    const layerIds = new Set(service.layers?.map((layer) => layer.layerId));
+    const addedLayers: DatasetTreeLayer[] = [];
+    for (const layerId of event.layerIds ?? []) {
+      if (layerId && !layerIds.has(layerId)) {
+        layerIds.add(layerId);
+        addedLayers.push(new DatasetTreeLayer(layerId));
+      }
+    }
+    if (addedLayers.length === 0) {
+      return false;
+    }
+
+    service.layers = [...(service.layers ?? []), ...addedLayers];
+    return true;
   }
 }
