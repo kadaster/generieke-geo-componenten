@@ -127,7 +127,7 @@ export class GgcLayerService {
   getInitialisedWebservices(mapIndex: string): WebserviceInitialisedEvent[] {
     return (this.initialisedWebservices.get(mapIndex) ?? []).map((event) => ({
       ...event,
-      layers: [...event.layerIds]
+      layerIds: [...event.layerIds]
     }));
   }
 

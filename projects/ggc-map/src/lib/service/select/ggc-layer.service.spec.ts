@@ -772,7 +772,7 @@ describe("LayerService", () => {
         service.loadWebservices([webservice], MAP_INDEX);
 
         expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([
-          { mapIndex: MAP_INDEX, serviceId: "service", layers: ["layer"] }
+          { mapIndex: MAP_INDEX, serviceId: "service", layerIds: ["layer"] }
         ]);
         expect(service.getInitialisedWebservices("another-map")).toEqual([]);
         service.loadWebservices([], MAP_INDEX);
