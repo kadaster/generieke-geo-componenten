@@ -1,7 +1,15 @@
-import { AfterViewInit, Component, inject } from "@angular/core";
+import { AfterViewInit, Component, DestroyRef, inject } from "@angular/core";
 import { httpResource } from "@angular/common/http";
 import { GgcMapComponent, GgcMapService, Webservice } from "@kadaster/ggc-map";
-import { Webservice as Webservice3D } from "@kadaster/ggc-map-3d";
+import {
+  CameraOptions,
+  cameraOptionsTorentjeDenHaag,
+  GgcControlsComponent,
+  GgcViewerComponent,
+  GgcViewerService,
+  ViewerOptions,
+  Webservice as Webservice3D
+} from "@kadaster/ggc-map-3d";
 import { ExampleFormatComponent } from "../../example-format/example-format.component";
 import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
@@ -10,17 +18,20 @@ import { Tags } from "../../tags.enum";
 import Feature from "ol/Feature";
 import Stroke from "ol/style/Stroke";
 import Style from "ol/style/Style";
-import {
-  CameraOptions,
-  cameraOptionsTorentjeDenHaag,
-  GgcViewerComponent,
-  ViewerOptions,
-  GgcViewerService,
-  GgcControlsComponent
-} from "@kadaster/ggc-map-3d";
 import proj4 from "proj4";
 import { Polygon } from "ol/geom";
 import { defs } from "@kadaster/ggc-models";
+import {
+  animationFrames,
+  animationFrameScheduler,
+  defaultIfEmpty,
+  filter,
+  map,
+  switchMap,
+  take,
+  throttleTime
+} from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "ggc-home-example-map-dried-extra-overzicht",
@@ -75,8 +86,10 @@ export class ExampleMapDriedExtraOverzichtComponent
     }
   };
 
-  private readonly mapService: GgcMapService = inject(GgcMapService);
+  private readonly componentDestroyRef = inject(DestroyRef);
   private readonly ggcViewerService = inject(GgcViewerService);
+  private readonly mapService: GgcMapService = inject(GgcMapService);
+  private bboxFeature: Feature<Polygon> | undefined;
 
   ngAfterViewInit() {
     this.connectOverzichtKaart();
@@ -91,10 +104,51 @@ export class ExampleMapDriedExtraOverzichtComponent
     });
   }
 
-  private connectOverzichtKaart() {
-    this.ggcViewerService.getCameraValuesObservable().subscribe(() => {
-      this.handleMapEvent();
-    });
+  private connectOverzichtKaart(): void {
+    this.createCornerCoordinatesStream()
+      .pipe(takeUntilDestroyed(this.componentDestroyRef))
+      .subscribe((corners) => {
+        if (corners === undefined) {
+          this.handleNoCorners();
+          return;
+        }
+
+        this.setOverzichtkaartGreyedOut(false);
+        const rdCorners = this.toRdCorners(corners);
+
+        this.zoomOverzichtkaartToScaledBbox(rdCorners);
+      });
+  }
+
+  private createCornerCoordinatesStream() {
+    return this.ggcViewerService.getCameraValuesObservable().pipe(
+      // Beperk het aantal camera-events tot ongeveer twee updates per frame
+      throttleTime(8, animationFrameScheduler, {
+        leading: true,
+        trailing: true
+      }),
+      // Start hoekbepaling opnieuw bij elke nieuwe camerastand. Probeer voor maximaal 3 frames geldige hoeken te berekenen.
+      switchMap(() =>
+        animationFrames().pipe(
+          take(3),
+          map(() => this.ggcViewerService.getCanvasCornerCoordinates()),
+          filter((corners) => corners !== undefined),
+          take(1),
+          defaultIfEmpty(undefined)
+        )
+      )
+    );
+  }
+
+  private handleNoCorners(): void {
+    this.setOverzichtkaartGreyedOut(true);
+
+    if (!this.bboxFeature) {
+      return;
+    }
+
+    this.mapService.clearSelectionLayer(this.mapIndexOverzichtkaart);
+    this.bboxFeature = undefined;
   }
 
   private setBoxStyle() {
@@ -111,28 +165,55 @@ export class ExampleMapDriedExtraOverzichtComponent
     );
   }
 
-  private handleMapEvent() {
-    const corners = this.ggcViewerService.getCanvasCornerCoordinates();
-    if (corners === undefined) return;
+  private setOverzichtkaartGreyedOut(greyedOut: boolean) {
+    const mapTargetElement = this.mapService
+      .getMap(this.mapIndexOverzichtkaart)
+      .getTargetElement();
 
-    const rdCorners = corners.map((corner) => {
-      return proj4("EPSG:4326", defs, [corner!.longitude, corner!.latitude]);
+    mapTargetElement.style.filter = greyedOut
+      ? "grayscale(1) brightness(0.75)"
+      : "none";
+  }
+
+  private toRdCorners(
+    corners: {
+      longitude: number;
+      latitude: number;
+    }[]
+  ): [number, number][] {
+    return corners.map((corner) => {
+      const projected = proj4("EPSG:4326", defs, [
+        corner.longitude,
+        corner.latitude
+      ]);
+
+      return [projected[0], projected[1]];
     });
+  }
 
-    const bboxFeature = new Feature({
-      geometry: new Polygon([rdCorners])
-    });
+  private zoomOverzichtkaartToScaledBbox(rdCorners: [number, number][]): void {
+    if (this.bboxFeature) {
+      this.bboxFeature.getGeometry()?.setCoordinates([rdCorners]);
+    } else {
+      this.bboxFeature = new Feature({
+        geometry: new Polygon([rdCorners])
+      });
 
-    this.mapService.clearSelectionLayer(this.mapIndexOverzichtkaart);
-    this.mapService.addFeaturesToSelectionLayer(
-      [bboxFeature],
-      this.mapIndexOverzichtkaart
-    );
+      this.mapService.addFeaturesToSelectionLayer(
+        [this.bboxFeature],
+        this.mapIndexOverzichtkaart
+      );
+    }
 
-    const geo = bboxFeature.getGeometry()!.clone();
-    geo.scale(2.5);
-    const polyExtent = geo.getExtent();
-    this.mapService.zoomToExtent(polyExtent, {
+    const bboxGeometry = this.bboxFeature?.getGeometry();
+    if (!bboxGeometry) {
+      return;
+    }
+
+    const bboxClone = bboxGeometry.clone();
+    bboxClone.scale(2.5);
+
+    this.mapService.zoomToExtent(bboxClone.getExtent(), {
       mapIndex: this.mapIndexOverzichtkaart
     });
   }

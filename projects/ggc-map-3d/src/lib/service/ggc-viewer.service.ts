@@ -11,6 +11,7 @@ import {
   Cartesian2,
   Cartesian3,
   Cartographic,
+  Ellipsoid,
   Math as CesiumMath,
   Rectangle
 } from "@cesium/engine";
@@ -110,6 +111,8 @@ export class GgcViewerService {
    *
    * @param viewer De Cesium-viewer waarvoor de coördinaten worden berekend.
    * @returns Een array met hoekcoördinaten (longitude/latitude in graden, height in meters).
+   * Indien beschikbaar worden de hoekcoördinaten gebaseerd op terreinhoogte; als fallback
+   * worden coördinaten op basis van de ellipsoïde (platte globe) gebruikt.
    * Retourneert undefined wanneer geen viewer beschikbaar is of wanneer voor minstens één hoek
    * geen raakpunt met de globe kan worden bepaald (bijv. camera kijkt naar horizon/lucht).
    */
@@ -138,7 +141,9 @@ export class GgcViewerService {
       const ray = camera.getPickRay(corner);
       if (!ray) return undefined;
 
-      const cartesian = scene.globe.pick(ray, scene);
+      const cartesian =
+        scene.globe.pick(ray, scene) ??
+        camera.pickEllipsoid(corner, scene.globe.ellipsoid ?? Ellipsoid.WGS84);
       if (!cartesian) return undefined;
 
       const cartographic = Cartographic.fromCartesian(cartesian);

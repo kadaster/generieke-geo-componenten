@@ -105,6 +105,28 @@ describe("GgcViewerService", () => {
 
       expect(corners).toHaveLength(4);
     });
+    it("should fallback to ellipsoid pick when globe pick returns undefined", () => {
+      const viewer = createViewerWithCanvas({
+        globePickResult: undefined,
+        ellipsoidPickResult: Cartesian3.fromDegrees(5, 52)
+      });
+
+      const corners = service.getCanvasCornerCoordinates(viewer);
+
+      expect(corners).toHaveLength(4);
+      expect(corners?.[0].longitude).toBeCloseTo(5);
+      expect(corners?.[0].latitude).toBeCloseTo(52);
+    });
+    it("should return undefined when globe and ellipsoid pick return undefined", () => {
+      const viewer = createViewerWithCanvas({
+        globePickResult: undefined,
+        ellipsoidPickResult: undefined
+      });
+
+      const corners = service.getCanvasCornerCoordinates(viewer);
+
+      expect(corners).toBeUndefined();
+    });
   });
 
   describe("getExtent", () => {
@@ -125,18 +147,31 @@ function getJson(): string {
   }`;
 }
 
-function createViewerWithCanvas(): Viewer {
+function createViewerWithCanvas(options?: {
+  globePickResult?: Cartesian3 | undefined;
+  ellipsoidPickResult?: Cartesian3 | undefined;
+}): Viewer {
+  const defaultPickResult = Cartesian3.fromDegrees(5, 52);
+  const globePickResult =
+    options && "globePickResult" in options
+      ? options.globePickResult
+      : defaultPickResult;
+  const ellipsoidPickResult =
+    options && "ellipsoidPickResult" in options
+      ? options.ellipsoidPickResult
+      : defaultPickResult;
   return {
     scene: {
       camera: {
-        getPickRay: vi.fn().mockReturnValue({})
+        getPickRay: vi.fn().mockReturnValue({}),
+        pickEllipsoid: vi.fn().mockReturnValue(ellipsoidPickResult)
       },
       canvas: {
         clientWidth: 200,
         clientHeight: 100
       },
       globe: {
-        pick: vi.fn().mockReturnValue(Cartesian3.fromDegrees(5, 52))
+        pick: vi.fn().mockReturnValue(globePickResult)
       }
     }
   } as unknown as Viewer;
