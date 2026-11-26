@@ -30,7 +30,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-conversion/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-conversion/tsconfig.spec.json"
           }
@@ -73,7 +73,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-map-3d/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
@@ -115,7 +115,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-dataset-tree/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-dataset-tree/tsconfig.spec.json"
           }
@@ -158,7 +158,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-feature-info/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
@@ -280,7 +280,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-home/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
@@ -322,7 +322,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-legend/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
@@ -363,7 +363,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-map/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-map/tsconfig.spec.json"
           }
@@ -405,7 +405,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-models/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-models/tsconfig.spec.json"
           }
@@ -448,7 +448,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-print/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"],
             "tsConfig": "projects/ggc-print/tsconfig.spec.json"
           }
@@ -491,7 +491,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-search-location/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"]
           }
         },
@@ -533,7 +533,7 @@
           "options": {
             "runner": "vitest",
             "coverageInclude": ["projects/ggc-toolbar/src/**/*.ts"],
-            "runnerConfig": "vitest.config.ts",
+            "runnerConfig": "vitest.config.mts",
             "setupFiles": ["src/test/setup-tests.ts"]
           }
         },

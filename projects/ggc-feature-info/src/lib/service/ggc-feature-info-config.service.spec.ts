@@ -593,7 +593,9 @@ describe("GgcFeatureInfoConfigService > ", () => {
         " and the old value will be displayed",
       () => {
         const replaceValueMethod = "replaceValue";
-        const consoleWarnSpy = vi.spyOn(console, "warn");
+        const consoleWarnSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
 
         const date: string = new Date(2020, 1, 3, 12, 1, 10).toDateString();
         const currentFeature = {

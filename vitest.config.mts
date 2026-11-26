@@ -1,5 +1,10 @@
 import { defineConfig } from "vitest/config";
+import { createRequire } from "node:module";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const nodeRequire = createRequire(import.meta.url);
+const configDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   resolve: {
@@ -7,7 +12,7 @@ export default defineConfig({
       {
         find: /^@kadaster\/ggc-map$/,
         replacement: path.resolve(
-          require.resolve("@kadaster/ggc-map/package.json"),
+          nodeRequire.resolve("@kadaster/ggc-map/package.json"),
           "../src/public-api.ts"
         )
       },
@@ -15,14 +20,14 @@ export default defineConfig({
         // nodig voor Vitest UI
         find: /^@kadaster\/ggc-models$/,
         replacement: path.resolve(
-          require.resolve("@kadaster/ggc-models/package.json"),
+          nodeRequire.resolve("@kadaster/ggc-models/package.json"),
           "../src/public-api.ts"
         )
       },
       {
         find: /^@geoblocks\/print$/,
         replacement: path.resolve(
-          __dirname,
+          configDirectory,
           "src/test/vitest-stubs/geoblocks-print.ts"
         )
       }
