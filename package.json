@@ -105,7 +105,7 @@
     "@angular/router": "22.3.0",
     "@cesium/engine": "21.0.1",
     "@cesium/widgets": "13.2.1",
-    "@piwikpro/ngx-piwik-pro": "^2.6.0",
+    "@piwikpro/ngx-piwik-pro": "^3.0.0",
     "jsonschema": "^1.5.0",
     "lru-cache": "^11.2.2",
     "rxjs": "^7.8.2",
