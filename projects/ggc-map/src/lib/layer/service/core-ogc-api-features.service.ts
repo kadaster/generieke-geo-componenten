@@ -31,6 +31,14 @@ export class CoreOgcApiFeaturesService {
 
     let url = new URL(initialUrl);
 
+    // An URL with a feature ID (/items/{id}) returns a single Feature
+    // instead of a FeatureCollection; pagination and limit do not apply.
+    if (this.isSingleFeatureUrl(initialUrl)) {
+      const response = await firstValueFrom(
+        this.http.get<Feature>(url.toString())
+      );
+      return response ? this.geoJsonFormat.readFeatures(response) : allFeatures;
+    }
     url.searchParams.set("limit", String(limit));
 
     while (allFeatures.length < maxFeatures) {
@@ -66,5 +74,10 @@ export class CoreOgcApiFeaturesService {
 
   private isValidOgcApiFeatureUrl(url: string): boolean {
     return url.includes("/collections/") && url.includes("/items");
+  }
+
+  private isSingleFeatureUrl(url: string): boolean {
+    const { pathname } = new URL(url);
+    return /\/items\/[^/]+\/?$/.test(pathname);
   }
 }
