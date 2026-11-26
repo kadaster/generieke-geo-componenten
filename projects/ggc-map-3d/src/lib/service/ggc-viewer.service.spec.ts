@@ -7,10 +7,14 @@ import { Viewer } from "@cesium/widgets";
 import { Cartesian3, Rectangle } from "@cesium/engine";
 import { MAX_VIEWDISTANCE, MIN_VIEWDISTANCE } from "../utils/camera-utils";
 import { createCesiumMock } from "../viewer/viewer-mock";
+import { firstValueFrom } from "rxjs";
+import { CameraValues } from "../model/interfaces";
+import { CoreCameraService } from "./core-camera.service";
 
 describe("GgcViewerService", () => {
   let service: GgcViewerService;
   let coreViewerService: MockedObject<CoreViewerService>;
+  let coreCameraService: CoreCameraService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -18,6 +22,7 @@ describe("GgcViewerService", () => {
     coreViewerService = TestBed.inject(
       CoreViewerService
     ) as MockedObject<CoreViewerService>;
+    coreCameraService = TestBed.inject(CoreCameraService);
   });
 
   it("should be created", () => {
@@ -66,6 +71,42 @@ describe("GgcViewerService", () => {
     });
   });
 
+  describe("viewer access", () => {
+    it("should expose camera value updates", async () => {
+      const cameraValues: CameraValues = {
+        cameraPosition: { lat: 52, lon: 5 },
+        orientation: { heading: 90 }
+      };
+      const cameraValuesPromise = firstValueFrom(
+        service.getCameraValuesObservable()
+      );
+
+      coreCameraService.setCameraValues(cameraValues);
+
+      await expect(cameraValuesPromise).resolves.toEqual(cameraValues);
+    });
+    it("should return undefined when no viewer is available", () => {
+      expect(service.getCanvasCornerCoordinates()).toBeUndefined();
+    });
+    it("should get canvas corner coordinates from the current viewer", () => {
+      const viewer = createViewerWithCanvas();
+      coreViewerService.setViewer(viewer);
+
+      const corners = service.getCanvasCornerCoordinates();
+
+      expect(corners).toHaveLength(4);
+      expect(corners?.[0].longitude).toBeCloseTo(5);
+      expect(corners?.[0].latitude).toBeCloseTo(52);
+    });
+    it("should get canvas corner coordinates from the provided viewer", () => {
+      const viewer = createViewerWithCanvas();
+
+      const corners = service.getCanvasCornerCoordinates(viewer);
+
+      expect(corners).toHaveLength(4);
+    });
+  });
+
   describe("getExtent", () => {
     it("should get the extent of a simple polygon", () => {
       const geojson = getJson();
@@ -82,4 +123,21 @@ function getJson(): string {
       [[10,10],[10,20],[20,20],[20,10],[10,10]]
     ]
   }`;
+}
+
+function createViewerWithCanvas(): Viewer {
+  return {
+    scene: {
+      camera: {
+        getPickRay: vi.fn().mockReturnValue({})
+      },
+      canvas: {
+        clientWidth: 200,
+        clientHeight: 100
+      },
+      globe: {
+        pick: vi.fn().mockReturnValue(Cartesian3.fromDegrees(5, 52))
+      }
+    }
+  } as unknown as Viewer;
 }

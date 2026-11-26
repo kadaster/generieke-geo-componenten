@@ -413,4 +413,16 @@ export class GgcMapService {
         return new WKT().readGeometry(geometry);
     }
   }
+
+  /**
+   * Verwijdert alle interacties en knoppen van een kaart. Kan bijvoorbeeld
+   * worden gebruikt om de zoominteracties uit te schakelen.
+   *
+   * @param mapIndex Index van de kaart waarvoor de interacties worden verwijderd
+   */
+  disableAllMapInteractions(mapIndex: string): void {
+    const map = this.getMap(mapIndex);
+    map.getControls().clear();
+    map.getInteractions().clear();
+  }
 }

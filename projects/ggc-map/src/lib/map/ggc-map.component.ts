@@ -36,6 +36,7 @@ import {
   MapComponentEventTypes,
   MapViewState
 } from "@kadaster/ggc-models";
+import { GgcMapService } from "./service/ggc-map.service";
 
 /**
  * `<ggc-map></ggc-map>` toont een 2D kaart waar verschillende lagen aan toegevoegd
@@ -93,7 +94,14 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
   ariaLabel = input<string>("viewer");
 
   /**
-   * minZoomlevel van de kaart (geldige waarde: 0-25)
+   * Schakelt alle interacties (o.a. zoominteracties) van de kaart uit (default: false)
+   *
+   * @DefaultValue false
+   */
+  readonly disableAllMapInteractions = input(false);
+
+  /**
+   * Minimum zoomlevel van de kaart (geldige waarde: 0-25)
    * Waarde wordt geclamped binnen CRS‑limieten (0-25).
    * Wanneer minZoomlevel > maxZoomlevel wordt UNSUCCESSFUL event gestuurd.
    */
@@ -133,14 +141,15 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
     viewChild.required<ElementRef<HTMLElement>>("mapElement");
   private readonly eventsMap: EventsKey[] = [];
   private lastChangeResolutionEvent: ObjectEvent | undefined;
-  private readonly coreMapService = inject(CoreMapService);
-  private readonly mapEventsService = inject(CoreMapEventsService);
-  private readonly coreLoadingService = inject(CoreLoadingService);
   private readonly coreDrawService = inject(CoreDrawService, {
     optional: true
   });
+  private readonly coreLoadingService = inject(CoreLoadingService);
+  private readonly coreMapService = inject(CoreMapService);
   private readonly coreSelectionService = inject(CoreSelectionService);
   private readonly ggcLayerService = inject(GgcLayerService);
+  private readonly mapEventsService = inject(CoreMapEventsService);
+  private readonly mapService = inject(GgcMapService);
   // ol event type name
   private readonly OL_MOVEEND: MapEventTypes = "moveend";
   private readonly OL_SINGLECLICK: MapBrowserEventTypes = "singleclick";
@@ -186,6 +195,9 @@ export class GgcMapComponent implements AfterViewInit, OnDestroy {
         this.minZoomlevel(),
         this.maxZoomlevel()
       );
+      if (this.disableAllMapInteractions()) {
+        this.mapService.disableAllMapInteractions(this.mapIndex());
+      }
       map.setTarget(this.mapElement().nativeElement.id);
 
       this.eventsMap.push(

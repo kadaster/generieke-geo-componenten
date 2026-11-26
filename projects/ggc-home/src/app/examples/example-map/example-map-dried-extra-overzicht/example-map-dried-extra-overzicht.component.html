@@ -1,0 +1,79 @@
+<ggc-home-example-format
+  [title]="componentInfo.title"
+  [pathModule]="urlComponentModule"
+  [urlTSDocs]="tsDocsUrl"
+  pathExtraConfig="example-map/example-map-dried-extra-overzicht/kaartconfig-overzicht.json"
+  extraConfigLabel="Overzichtskaart configuratie (json)"
+>
+  @if (componentInfo.tags && componentInfo.tags?.length > 0) {
+    <div page-labels>
+      @for (tag of componentInfo.tags; track tag) {
+        <span class="badge rounded-pill tag-technical mx-1">{{
+          tag.toLocaleLowerCase()
+        }}</span>
+      }
+    </div>
+  }
+
+  <div page-introduction>
+    <p>
+      {{ componentInfo.introduction }}
+    </p>
+    <p>
+      In dit voorbeeld is een overzichtskaart toegevoegd aan de 3D kaart. In de
+      overzichtskaart geeft het blauwe kader aan welk gebied op de hoofdkaart
+      zichtbaar is. Wanneer het kaartbeeld in de 3D hoofdkaart verandert door
+      verplaatsing van de camera of zoomen, wordt de overzichtskaart automatisch
+      bijgewerkt. De hoekcoordinaten van de hoofdkaart worden opgehaald met
+      getCanvasCornerCoordinates. Als een van deze hoeken geen contact maakt met
+      de globe (als de horizon of lucht zicthbaar zijn), toont de
+      overzichtskaart geen blauw kader.
+    </p>
+    <p>
+      De overzichtskaart heeft een eigen mapIndex. Hierdoor kan de
+      overzichtskaart onafhankelijk van de 3D hoofdkaart worden geconfigureerd.
+    </p>
+  </div>
+
+  <div page-functionality>
+    <!-- DOCS:START functionality -->
+    <div class="row">
+      <div class="col-xl-3 col-md-4 col-sm-12">
+        <div class="cesium-controls">
+          <span><b>3D controls</b></span>
+          <br />
+          <ggc-map-3d-controls
+            [downIcon]="'fas fa-chevron-down'"
+            [upIcon]="'fas fa-chevron-up'"
+            [leftIcon]="'fas fa-chevron-left'"
+            [rightIcon]="'fas fa-chevron-right'"
+            [minusIcon]="'fas fa-minus'"
+            [plusIcon]="'fas fa-plus'"
+            [defaultCameraPosition]="'far fa-eye'"
+          ></ggc-map-3d-controls>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-8 col-sm-12">
+        <div class="map-container">
+          <div class="map-wrapper">
+            <ggc-map-3d-viewer
+              [viewerOptions]="viewerOptions"
+              [cameraOptions]="cameraOptions"
+              [hideLogo]="true"
+              (ready)="onCesiumReady()"
+              [webServices]="mapConfig.value() ?? []"
+            ></ggc-map-3d-viewer>
+          </div>
+          <div class="map-wrapper overview-map">
+            <ggc-map
+              [mapIndex]="mapIndexOverzichtkaart"
+              [webServices]="mapConfigOverzichtkaart.value() ?? []"
+              [disableAllMapInteractions]="true"
+            ></ggc-map>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- DOCS:END functionality -->
+  </div>
+</ggc-home-example-format>

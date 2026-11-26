@@ -1,12 +1,21 @@
 import { inject, Service } from "@angular/core";
 import { CoreViewerService } from "./core-viewer.service";
+import { CoreCameraService } from "./core-camera.service";
 import {
   getCameraValues,
   MAX_VIEWDISTANCE,
   MIN_VIEWDISTANCE
 } from "../utils/camera-utils";
 import { CameraValues } from "../model/interfaces";
-import { Cartesian3, Rectangle } from "@cesium/engine";
+import {
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  Math as CesiumMath,
+  Rectangle
+} from "@cesium/engine";
+import { Viewer } from "@cesium/widgets";
+import { Observable } from "rxjs";
 
 /**
  * Service met helper-functionaliteit rondom de Cesium viewer.
@@ -14,6 +23,7 @@ import { Cartesian3, Rectangle } from "@cesium/engine";
  * Deze service biedt:
  * - Toegang tot de huidige {@link CameraValues};
  * - Berekeningen voor extent, center en kijkafstand;
+ * - Berekeningen voor hoekcoördinaten van het canvas;
  * - Hulpfuncties voor het werken met GeoJSON extents.
  *
  * Wordt voornamelijk gebruikt door viewer-logica zoals camera positioning
@@ -21,6 +31,7 @@ import { Cartesian3, Rectangle } from "@cesium/engine";
  */
 @Service()
 export class GgcViewerService {
+  private readonly coreCameraService = inject(CoreCameraService);
   private readonly coreViewerService = inject(CoreViewerService);
 
   /**
@@ -34,6 +45,16 @@ export class GgcViewerService {
       return getCameraValues(viewer.camera, viewer);
     }
     return undefined;
+  }
+
+  // Onderstaande functie toegevoegd om problemen met compileren te ondervangen.
+  /**
+   * Geeft een observable met updates van de camerawaarden van de viewer.
+   *
+   * @returns Een {@link Observable} van {@link CameraValues}
+   */
+  getCameraValuesObservable(): Observable<CameraValues> {
+    return this.coreCameraService.getCameraValuesObservable();
   }
 
   /**
@@ -81,6 +102,54 @@ export class GgcViewerService {
       MAX_VIEWDISTANCE,
       Math.max(width, height, MIN_VIEWDISTANCE)
     );
+  }
+
+  /**
+   * Berekent de geografische coördinaten van de vier hoeken van het canvas
+   * (linksboven, rechtsboven, rechtsonder, linksonder).
+   *
+   * @param viewer De Cesium-viewer waarvoor de coördinaten worden berekend.
+   * @returns Een array met hoekcoördinaten (longitude/latitude in graden, height in meters).
+   * Retourneert undefined wanneer geen viewer beschikbaar is of wanneer voor minstens één hoek
+   * geen raakpunt met de globe kan worden bepaald (bijv. camera kijkt naar horizon/lucht).
+   */
+  getCanvasCornerCoordinates(
+    viewer: Viewer | undefined = this.coreViewerService.getViewer()
+  ): { longitude: number; latitude: number; height: number }[] | undefined {
+    if (!viewer) return undefined;
+    const scene = viewer.scene;
+    const camera = scene.camera;
+    const canvas = scene.canvas;
+
+    const corners = [
+      new Cartesian2(0, 0),
+      new Cartesian2(canvas.clientWidth, 0),
+      new Cartesian2(canvas.clientWidth, canvas.clientHeight),
+      new Cartesian2(0, canvas.clientHeight)
+    ];
+
+    const result: {
+      longitude: number;
+      latitude: number;
+      height: number;
+    }[] = [];
+
+    for (const corner of corners) {
+      const ray = camera.getPickRay(corner);
+      if (!ray) return undefined;
+
+      const cartesian = scene.globe.pick(ray, scene);
+      if (!cartesian) return undefined;
+
+      const cartographic = Cartographic.fromCartesian(cartesian);
+
+      result.push({
+        longitude: CesiumMath.toDegrees(cartographic.longitude),
+        latitude: CesiumMath.toDegrees(cartographic.latitude),
+        height: cartographic.height
+      });
+    }
+    return result;
   }
 
   /**

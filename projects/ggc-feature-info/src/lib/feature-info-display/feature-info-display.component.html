@@ -2,7 +2,9 @@
   @case (featureInfoDisplayTypeEnum.LIST) {
     <dl class="ggc-fi-list-item">
       @for (key of objectKeys() | featureinfokeys; track key) {
-        @if (!headerValueTemplates().has(key) || headerValueTemplates().get(key)) {
+        @if (
+          !headerValueTemplates().has(key) || headerValueTemplates().get(key)
+        ) {
           <dt class="ggc-fi-list-title">
             <ng-container
               [ngTemplateOutlet]="
