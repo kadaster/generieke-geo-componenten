@@ -9,7 +9,7 @@ import { ComponentInfo } from "../../component-info.model";
 import { Components } from "../../components.enum";
 import { Themes } from "../../themes.enum";
 import { Tags } from "../../tags.enum";
-import { LayerChangedEventTrigger, Style } from "@kadaster/ggc-models";
+import { Style } from "@kadaster/ggc-models";
 
 @Component({
   selector: "ggc-home-example-layer-styles-capabilities-vector-tile",
@@ -67,20 +67,6 @@ export class ExampleLayerStylesCapabilitiesVectorTileComponent
           this.layerId = event.layerIds[0];
         }
       });
-    this.layerService.getLayerChangedObservable().subscribe((event) => {
-      if (
-        event.mapIndex === this.mapIndex &&
-        event.layerId === this.layerId &&
-        event.eventTrigger === LayerChangedEventTrigger.LAYER_ADDED
-      ) {
-        this.styles.set(
-          this.layerService.getStyles(this.layerId, this.mapIndex)
-        );
-        this.activeStyle.set(
-          this.layerService.getActiveStyle(this.layerId, this.mapIndex)?.name
-        );
-      }
-    });
   }
 
   onStyleSelectionChange(styleName: string) {
