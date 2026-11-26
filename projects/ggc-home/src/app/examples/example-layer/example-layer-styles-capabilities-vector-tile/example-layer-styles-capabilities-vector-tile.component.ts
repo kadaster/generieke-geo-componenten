@@ -53,6 +53,20 @@ export class ExampleLayerStylesCapabilitiesVectorTileComponent
       .subscribe((data) => {
         this.mapConfig = data as Webservice[];
       });
+    this.layerService
+      .getWebserviceInitialisedObservable()
+      .subscribe((event) => {
+        if (event.mapIndex === this.mapIndex) {
+          this.styles.set(
+            this.layerService.getStyles(event.layerIds[0], this.mapIndex)
+          );
+          this.activeStyle.set(
+            this.layerService.getActiveStyle(event.layerIds[0], this.mapIndex)
+              ?.name
+          );
+          this.layerId = event.layerIds[0];
+        }
+      });
     this.layerService.getLayerChangedObservable().subscribe((event) => {
       if (
         event.mapIndex === this.mapIndex &&
