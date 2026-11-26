@@ -136,9 +136,9 @@
     "@typescript-eslint/parser": "^8.62.1",
     "@typescript-eslint/types": "^8.62.1",
     "@typescript-eslint/utils": "^8.62.1",
-    "@vitest/coverage-istanbul": "^4.1.9",
-    "@vitest/coverage-v8": "^4.1.9",
-    "@vitest/ui": "^4.1.8",
+    "@vitest/coverage-istanbul": "^5.0.0",
+    "@vitest/coverage-v8": "^5.0.0",
+    "@vitest/ui": "^5.0.0",
     "bootstrap": "^4.6.2",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "10.1.8",
@@ -159,7 +159,7 @@
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.62.1",
     "url": "^0.11.4",
-    "vitest": "^4.1.9"
+    "vitest": "^5.0.0"
   },
   "workspaces": [
     "projects/*"
