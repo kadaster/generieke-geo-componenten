@@ -70,6 +70,7 @@ export interface PdokLocationApiSearchResponse {
 
 /**
  * Een specifiek zoekresultaat (Feature) uit de PDOK Location API.
+ * Is een vertaling van searchFeatureGeoJSON, zie ook https://api.pdok.nl/kadaster/location-api/v1/api
  */
 export interface PdokLocationApiSearchFeature {
   /** De begrenzende rechthoek (bounding box) van het object [minx, miny, maxx, maxy]. */
@@ -85,12 +86,12 @@ export interface PdokLocationApiSearchFeature {
     /** Uit welke collectie dit resultaat komt. */
     collection_id: string;
     /** Versie van de broncollectie. */
-    collection_version: string;
+    collection_version: number;
     /** De geformatteerde weergavenaam voor de gebruiker. */
     display_name: string;
     /** Geformatteerde naam met HTML-tags voor highlighting van de zoekterm. */
     highlight: string;
-    href: string;
+    href: string[];
     /** De berekende relevantie-score. */
     score: number;
   };
