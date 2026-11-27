@@ -248,7 +248,7 @@ export class GgcDatasetTreeComponent implements AfterContentInit {
     ];
   }
 
-  private hasServiceId(themes: Theme[]): boolean {
+  private hasServiceId(themes: Theme[] = []): boolean {
     return themes.some(
       (theme) =>
         (theme.datasets ?? []).some((dataset) =>
