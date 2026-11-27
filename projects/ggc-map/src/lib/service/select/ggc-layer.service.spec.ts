@@ -7,7 +7,7 @@ import {
   withInterceptorsFromDi
 } from "@angular/common/http";
 import { CoreWmsWmtsCapabilitiesRequestService } from "../../layer/service/core-wms-wmts-capabilities-request.service";
-import { of, throwError } from "rxjs";
+import { of, Subject, throwError } from "rxjs";
 import { WmsLayerOptions } from "../../layer/model/wms-layer.model";
 import { CoreMapService } from "../../map/service/core-map.service";
 import OlMap from "ol/Map";
@@ -21,6 +21,7 @@ import { createWmtsCapabilitiesMock } from "../../layer/service/mock/wmts-capabi
 import { GgcCapabilitiesService } from "../../layer/service/ggc-capabilities.service";
 import VectorLayer from "ol/layer/Vector";
 import { Webservice } from "../../layer/model/webservice.model";
+import { AbstractConfigurableLayerOptions } from "../../layer/model/abstract-layer.model";
 
 describe("LayerService", () => {
   let service: GgcLayerService;
@@ -754,6 +755,163 @@ describe("LayerService", () => {
         expect(
           service.getLayerConfig("layer1", MAP_INDEX)?.activeLegend
         ).toEqual({ legendUrl: "contrast-legend" });
+      });
+
+      it("should retain initialised webservice events for the current map configuration", () => {
+        const capabilitiesService = TestBed.inject(GgcCapabilitiesService);
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnWebservice"
+        ).mockImplementation((webservice) => of(webservice));
+        const webservice = {
+          url: "url",
+          type: Webservice2DType.WMS,
+          serviceId: "service",
+          requestCapabilities: true,
+          layers: [{ layerId: "layer", visible: false }]
+        };
+        service.loadWebservices([webservice], MAP_INDEX);
+
+        expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([
+          { mapIndex: MAP_INDEX, serviceId: "service", layerIds: ["layer"] }
+        ]);
+        expect(service.getInitialisedWebservices("another-map")).toEqual([]);
+        service.loadWebservices([], MAP_INDEX);
+        expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([]);
+      });
+
+      it("should emit the webservice event only after all layers are initialised", () => {
+        const firstLayerCapabilities =
+          new Subject<AbstractConfigurableLayerOptions>();
+        const secondLayerCapabilities =
+          new Subject<AbstractConfigurableLayerOptions>();
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnWebservice"
+        ).mockImplementation((webservice) => of(webservice));
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnLayerOptions"
+        ).mockImplementation((layerOptions) =>
+          layerOptions.layerId === "first"
+            ? firstLayerCapabilities
+            : secondLayerCapabilities
+        );
+        const addLayerSpy = vi.spyOn(service, "addLayer").mockReturnValue("id");
+        const onWebserviceInitialised = vi.fn();
+        service
+          .getWebserviceInitialisedObservable()
+          .subscribe(onWebserviceInitialised);
+        const webservice: Webservice = {
+          url: "url",
+          type: Webservice2DType.WMS,
+          serviceId: "service",
+          requestCapabilities: true,
+          layers: [
+            { layerId: "first", requestCapabilities: true },
+            { layerId: "second", requestCapabilities: true }
+          ]
+        };
+
+        service.loadWebservices([webservice], MAP_INDEX);
+        expect(onWebserviceInitialised).not.toHaveBeenCalled();
+        expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([]);
+
+        secondLayerCapabilities.next({ layerId: "second", title: "Second" });
+        expect(addLayerSpy).toHaveBeenCalledTimes(1);
+        expect(onWebserviceInitialised).not.toHaveBeenCalled();
+        expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([]);
+
+        firstLayerCapabilities.next({ layerId: "first", title: "First" });
+        const event = {
+          mapIndex: MAP_INDEX,
+          serviceId: "service",
+          layerIds: ["first", "second"]
+        };
+        expect(addLayerSpy).toHaveBeenCalledTimes(2);
+        expect(service.getLayerConfig("first", MAP_INDEX)?.title).toBe("First");
+        expect(service.getLayerConfig("second", MAP_INDEX)?.title).toBe(
+          "Second"
+        );
+        expect(onWebserviceInitialised).toHaveBeenCalledExactlyOnceWith(event);
+        expect(service.getInitialisedWebservices(MAP_INDEX)).toEqual([event]);
+      });
+
+      it("should emit the webservice event when there are no layers", () => {
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnWebservice"
+        ).mockImplementation((webservice) => of(webservice));
+        const onWebserviceInitialised = vi.fn();
+        service
+          .getWebserviceInitialisedObservable()
+          .subscribe(onWebserviceInitialised);
+
+        service.loadWebservices(
+          [
+            {
+              url: "url",
+              type: Webservice2DType.WMS,
+              serviceId: "service",
+              requestCapabilities: true,
+              layers: []
+            }
+          ],
+          MAP_INDEX
+        );
+
+        expect(onWebserviceInitialised).toHaveBeenCalledExactlyOnceWith({
+          mapIndex: MAP_INDEX,
+          serviceId: "service",
+          layerIds: []
+        });
+      });
+
+      it("should emit the webservice event after a layer capabilities request fails", () => {
+        const layerCapabilities =
+          new Subject<AbstractConfigurableLayerOptions>();
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnWebservice"
+        ).mockImplementation((webservice) => of(webservice));
+        vi.spyOn(
+          capabilitiesService,
+          "mapCapabilitiesOnLayerOptions"
+        ).mockReturnValue(layerCapabilities);
+        const onWebserviceInitialised = vi.fn();
+        service
+          .getWebserviceInitialisedObservable()
+          .subscribe(onWebserviceInitialised);
+
+        service.loadWebservices(
+          [
+            {
+              url: "url",
+              type: Webservice2DType.WMS,
+              serviceId: "service",
+              requestCapabilities: true,
+              layers: [
+                {
+                  layerId: "layer",
+                  visible: false,
+                  requestCapabilities: true
+                }
+              ]
+            }
+          ],
+          MAP_INDEX
+        );
+        expect(onWebserviceInitialised).not.toHaveBeenCalled();
+
+        layerCapabilities.error(new Error("capabilities error"));
+        expect(service.getLayerConfig("layer", MAP_INDEX)).toEqual(
+          expect.objectContaining({ requestCapabilities: true, visible: false })
+        );
+        expect(onWebserviceInitialised).toHaveBeenCalledExactlyOnceWith({
+          mapIndex: MAP_INDEX,
+          serviceId: "service",
+          layerIds: ["layer"]
+        });
       });
     });
   });

@@ -29,7 +29,7 @@ export class CoreDatasetTreeService {
   ): Promise<number> {
     let count = 0;
     for (const service of dataset.services) {
-      for (const layer of service.layers) {
+      for (const layer of service.layers ?? []) {
         const visible = await this.datasetTreeMapConnectService.isVisible(
           layer.layerId,
           mapName,
@@ -45,7 +45,8 @@ export class CoreDatasetTreeService {
 
   countAllLayersOfDataset(dataset: Dataset): number {
     return dataset.services.reduce(
-      (count, service: DatasetTreeWebservice) => count + service.layers.length,
+      (count, service: DatasetTreeWebservice) =>
+        count + (service.layers?.length ?? 0),
       0
     );
   }

@@ -23,7 +23,11 @@ export class DatasetTreeWebservice {
    * Maakt een nieuwe webservice aan die kaartlagen bevat.
    *
    * @param layers - De verzameling kaartlagen die onder deze service vallen.
+   * @param serviceId - Het id van de webservice. Indien gevuld, worden alle lagen van deze service getoond in de dataset tree.
    */
 
-  constructor(public layers: DatasetTreeLayer[]) {}
+  constructor(
+    public layers?: DatasetTreeLayer[],
+    public serviceId?: string
+  ) {}
 }

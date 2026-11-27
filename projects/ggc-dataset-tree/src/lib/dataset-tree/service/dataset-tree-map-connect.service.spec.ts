@@ -1,9 +1,13 @@
 import type { MockedObject } from "vitest";
 import { DatasetTreeMapConnectService } from "./dataset-tree-map-connect.service";
 import { TestBed } from "@angular/core/testing";
-import { of, EMPTY } from "rxjs";
+import { of, EMPTY, firstValueFrom, Subject, take, toArray } from "rxjs";
 import { GgcDatasetTreeConnectService } from "./connect.service";
-import { DEFAULT_CESIUM_MAPINDEX, ViewerType } from "@kadaster/ggc-models";
+import {
+  DEFAULT_CESIUM_MAPINDEX,
+  ViewerType,
+  WebserviceInitialisedEvent
+} from "@kadaster/ggc-models";
 
 describe("DatasetTreeMapConnectService", () => {
   let service: DatasetTreeMapConnectService;
@@ -89,6 +93,41 @@ describe("DatasetTreeMapConnectService", () => {
       });
 
       expect(mockConnectService.getGgcOLLayerService).toHaveBeenCalled();
+    });
+
+    it("should forward current and subsequent initialisation events for the requested map", async () => {
+      const webserviceInitialised = new Subject<WebserviceInitialisedEvent>();
+      const initialEvent = {
+        mapIndex: "map",
+        serviceId: "service",
+        layers: ["initial"]
+      };
+      mockMapLayerService.getWebserviceInitialisedObservable = vi
+        .fn()
+        .mockReturnValue(webserviceInitialised.asObservable());
+      mockMapLayerService.getInitialisedWebservices = vi
+        .fn()
+        .mockReturnValue([initialEvent]);
+      const observable =
+        await service.getWebserviceInitialisedObservable("map");
+      const events = firstValueFrom(observable.pipe(take(2), toArray()));
+
+      webserviceInitialised.next({
+        mapIndex: "other",
+        serviceId: "service",
+        layerIds: ["ignored"]
+      });
+      const nextEvent = {
+        mapIndex: "map",
+        serviceId: "service",
+        layerIds: ["later"]
+      };
+      webserviceInitialised.next(nextEvent);
+
+      expect(await events).toEqual([initialEvent, nextEvent]);
+      expect(
+        mockMapLayerService.getInitialisedWebservices
+      ).toHaveBeenCalledWith("map");
     });
 
     it("should return 3D layer stream", async () => {

@@ -1,5 +1,5 @@
 import { inject, Service } from "@angular/core";
-import { EMPTY, map, Observable, Subject } from "rxjs";
+import { defer, EMPTY, from, map, merge, Observable, Subject } from "rxjs";
 import { GgcDatasetTreeConnectService } from "./connect.service";
 import {
   CesiumLayerChangedEvent,
@@ -8,6 +8,7 @@ import {
   ViewerType,
   Webservice2DType,
   Webservice3DType,
+  WebserviceInitialisedEvent,
   DEFAULT_MAPINDEX
 } from "@kadaster/ggc-models";
 import { filter } from "rxjs/operators";
@@ -76,6 +77,34 @@ export class DatasetTreeMapConnectService {
         );
     }
     return (await this.getGgcOLLayerService()).getLayerChangedObservable();
+  }
+
+  async getWebserviceInitialisedObservable(
+    mapIndex: string
+  ): Promise<Observable<WebserviceInitialisedEvent>> {
+    const layerService = await this.getGgcOLLayerService();
+    if (!layerService) {
+      return EMPTY;
+    }
+
+    // Combine the already initialised events with the live events
+    const initialised$ = defer(() =>
+      from(
+        (layerService.getInitialisedWebservices?.(
+          mapIndex
+        ) as WebserviceInitialisedEvent[]) ?? []
+      )
+    );
+
+    const live$: Observable<WebserviceInitialisedEvent> = layerService
+      .getWebserviceInitialisedObservable()
+      .pipe(
+        filter(
+          (event: WebserviceInitialisedEvent) => event.mapIndex === mapIndex
+        )
+      );
+
+    return merge(initialised$, live$);
   }
 
   /**

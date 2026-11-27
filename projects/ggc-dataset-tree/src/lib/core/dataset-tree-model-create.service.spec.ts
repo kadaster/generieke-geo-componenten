@@ -55,19 +55,27 @@ describe("DatasetTreeModelCreateService", () => {
       const serviceFromFactory = service.serviceFactory(myService);
 
       expect(serviceFromFactory).toBeDefined();
-      expect(serviceFromFactory.layers.length).toBe(2);
-      expect(serviceFromFactory.layers[0]).toEqual(
+      expect(serviceFromFactory.layers?.length).toBe(2);
+      expect(serviceFromFactory.layers?.[0]).toEqual(
         expect.objectContaining({
           layerId: "id1"
         })
       );
-      expect(serviceFromFactory.layers[1]).toEqual(
+      expect(serviceFromFactory.layers?.[1]).toEqual(
         expect.objectContaining({
           layerId: "id2"
         })
       );
     }
   ));
+
+  it("should preserve the service ID when copying a webservice", () => {
+    const service = TestBed.inject(GgcDatasetTreeModelCreateService);
+    const original = new DatasetTreeWebservice([myLayer], "service-id");
+
+    expect(service.serviceFactory(original)).toEqual(original);
+    expect(service.serviceFactory(original)).not.toBe(original);
+  });
 
   it("datasetFactory should return a dataset", inject(
     [GgcDatasetTreeModelCreateService],

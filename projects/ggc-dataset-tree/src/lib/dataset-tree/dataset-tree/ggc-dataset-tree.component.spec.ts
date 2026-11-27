@@ -11,12 +11,21 @@ import {
   DatasetTreeWebservice
 } from "../../model/theme/dataset-tree-webservice.model";
 import { DatasetTreeMapConnectService } from "../service/dataset-tree-map-connect.service";
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
+import {
+  DEFAULT_MAPINDEX,
+  ViewerType,
+  WebserviceInitialisedEvent
+} from "@kadaster/ggc-models";
+import { By } from "@angular/platform-browser";
+import { LayerToggleComponent } from "../layer-toggle/layer-toggle.component";
 
 describe("DatasetTreeComponent", () => {
   let component: GgcDatasetTreeComponent;
   let fixture: ComponentFixture<GgcDatasetTreeComponent>;
   let nativeElement: HTMLElement;
+  let webserviceInitialised: Subject<WebserviceInitialisedEvent>;
+  let getWebserviceInitialisedObservable: ReturnType<typeof vi.fn>;
 
   function createTreeForTest(niveau: number, open = false): Theme[] {
     let i;
@@ -41,12 +50,18 @@ describe("DatasetTreeComponent", () => {
   }
 
   beforeEach(() => {
+    webserviceInitialised = new Subject<WebserviceInitialisedEvent>();
+    getWebserviceInitialisedObservable = vi
+      .fn()
+      .mockResolvedValue(webserviceInitialised.asObservable());
     const datasetTreeMapConnectServiceSpy = {
       isVisible: vi.fn().mockName("DatasetTreeMapConnectService.isVisible"),
       getTitle: vi.fn().mockName("DatasetTreeMapConnectService.getTitle"),
       getLayerChangedObservable: vi
         .fn()
-        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable")
+        .mockName("DatasetTreeMapConnectService.getLayerChangedObservable"),
+      getTriggerObservable: vi.fn().mockReturnValue(of()),
+      getWebserviceInitialisedObservable
     };
     TestBed.configureTestingModule({
       imports: [
@@ -85,8 +100,152 @@ describe("DatasetTreeComponent", () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("should be created and have subscribed to datasetTreeService", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should add matching layers to nested services without modifying the input", async () => {
+    const configuredService = new DatasetTreeWebservice(
+      [new DatasetTreeLayer("existing")],
+      "service"
+    );
+    const otherService = new DatasetTreeWebservice([], "other");
+    const themes = [
+      new Theme(
+        "parent",
+        [],
+        [
+          new Theme(
+            "child",
+            [
+              new Dataset(
+                "dataset",
+                [configuredService, otherService],
+                "",
+                true
+              )
+            ],
+            [],
+            true
+          )
+        ],
+        true
+      )
+    ];
+    fixture.componentRef.setInput("themes", themes);
+    fixture.componentRef.setInput("autoConnectLayerStatus", false);
+    await fixture.whenStable();
+
+    webserviceInitialised.next({
+      mapIndex: "other-map",
+      serviceId: "service",
+      layerIds: ["wrong-map"]
+    });
+    webserviceInitialised.next({
+      mapIndex: DEFAULT_MAPINDEX,
+      serviceId: "unmatched",
+      layerIds: ["wrong-service"]
+    });
+    webserviceInitialised.next({
+      mapIndex: DEFAULT_MAPINDEX,
+      serviceId: "service",
+      layerIds: ["existing", "new", "new", ""]
+    });
+    webserviceInitialised.next({
+      mapIndex: DEFAULT_MAPINDEX,
+      serviceId: "service",
+      layerIds: ["new"]
+    });
+    await fixture.whenStable();
+    await new Promise(setImmediate);
+    await fixture.whenStable();
+
+    const layerIds = fixture.debugElement
+      .queryAll(By.directive(LayerToggleComponent))
+      .map((element) => element.componentInstance.layer()?.layerId);
+    expect(layerIds).toEqual(["existing", "new"]);
+    expect(
+      nativeElement.querySelector("tr.ggc-dt-btn-ls-collapse")?.textContent
+    ).toContain("dataset (2)");
+    expect(configuredService.layers?.map((layer) => layer.layerId)).toEqual([
+      "existing"
+    ]);
+    expect(otherService.layers).toEqual([]);
+  });
+
+  it("should not connect to 2D for a 3D tree", async () => {
+    fixture.componentRef.setInput("viewerType", ViewerType.DRIE_D);
+    fixture.componentRef.setInput("themes", [
+      new Theme("theme", [
+        new Dataset("dataset", [new DatasetTreeWebservice([], "service")], "")
+      ])
+    ]);
+    await fixture.whenStable();
+    expect(getWebserviceInitialisedObservable).not.toHaveBeenCalled();
+  });
+
+  it("should update layerIds when mapIndex changes", async () => {
+    getWebserviceInitialisedObservable.mockImplementation((mapIndex: string) =>
+      Promise.resolve(
+        of({
+          mapIndex,
+          serviceId: "service",
+          layerIds: [`layer-${mapIndex}`]
+        })
+      )
+    );
+    fixture.componentRef.setInput("autoConnectLayerStatus", false);
+    fixture.componentRef.setInput("hideTree", true);
+    fixture.componentRef.setInput("themes", [
+      new Theme(
+        "parent",
+        [
+          new Dataset(
+            "parent dataset",
+            [new DatasetTreeWebservice([], "service")],
+            ""
+          )
+        ],
+        [
+          new Theme("child", [
+            new Dataset(
+              "child dataset",
+              [new DatasetTreeWebservice([], "service")],
+              ""
+            )
+          ])
+        ]
+      )
+    ]);
+    fixture.componentRef.setInput("showOnlyDatasets", true);
+    fixture.componentRef.setInput("mapIndex", "first");
+    await fixture.whenStable();
+
+    const layerIds = () =>
+      fixture.debugElement
+        .queryAll(By.directive(LayerToggleComponent))
+        .map((element) => element.componentInstance.layer()?.layerId);
+    expect(layerIds()).toEqual(["layer-first", "layer-first"]);
+
+    fixture.componentRef.setInput("mapIndex", "second");
+    await fixture.whenStable();
+    expect(layerIds()).toEqual(["layer-second", "layer-second"]);
+  });
+
+  it("should unsubscribe from webservice events when destroyed", async () => {
+    fixture.componentRef.setInput("themes", [
+      new Theme("theme", [
+        new Dataset("dataset", [new DatasetTreeWebservice([], "service")], "")
+      ])
+    ]);
+    await fixture.whenStable();
+    expect(webserviceInitialised.observed).toBe(true);
+    fixture.destroy();
+    expect(webserviceInitialised.observed).toBe(false);
   });
 
   describe("Theme", () => {
