@@ -141,7 +141,7 @@
     "@vitest/ui": "^5.1.1",
     "bootstrap": "^4.6.2",
     "eslint": "^10.6.0",
-    "eslint-config-prettier": "10.1.8",
+    "eslint-config-prettier": "10.1.9",
     "eslint-plugin-prettier": "5.5.7",
     "jquery": "3.8.0",
     "jsdom": "^31.0.0",
